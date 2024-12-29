@@ -2,6 +2,7 @@ using Finder.Business.Auth.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Finder.Database;
 

@@ -22,7 +22,6 @@
     <ItemGroup>
       <Folder Include="Business\Auth\" />
       <Folder Include="Business\Project\" />
-      <Folder Include="Business\Shared\" />
     </ItemGroup>
 
 </Project>

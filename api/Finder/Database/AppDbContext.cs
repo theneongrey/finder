@@ -1,0 +1,53 @@
+using Finder.Business.Auth.Entities;
+using Finder.Business.Project.Entities;
+using Finder.Business.Shared.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Finder.Database;
+
+public class AppDbContext : DbContext
+{
+    public DbSet<Project> Project { get; set; }
+    public DbSet<Person> Persons { get; set; }
+    public DbSet<LoginToken> LoginTokens { get; set; }
+    
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Person).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Project).Assembly);
+    }
+    
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var modifiedOrAddedEntities = ChangeTracker.Entries();
+
+        foreach (var entry in modifiedOrAddedEntities)
+        {
+            if (entry.Entity is not BaseEntity baseEntity)
+            {
+                continue;
+            }
+
+            switch (entry.State)
+            {
+                case EntityState.Modified:
+                    baseEntity.Edited = DateTime.UtcNow;
+                    break;
+                case EntityState.Added:
+                    baseEntity.Created = DateTime.UtcNow;
+                    baseEntity.Edited = DateTime.UtcNow;
+                    break;
+                case EntityState.Detached:
+                case EntityState.Unchanged:
+                case EntityState.Deleted:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+}

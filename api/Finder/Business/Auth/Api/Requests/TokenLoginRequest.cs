@@ -1,6 +1,6 @@
 namespace Finder.Business.Auth.Api.Requests;
 
-public class LoginRequest
+public class TokenLoginRequest
 {
     public required string LoginToken { get; set; }
 }

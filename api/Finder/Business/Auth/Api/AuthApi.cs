@@ -10,14 +10,14 @@ public static class AuthApi
 {
     public static void WithAuthApi(this WebApplication app)
     {
-        app.MapPost("/requestLoginMail", async ([FromBody] RequestLoginMailRequest request, LoginService loginService) =>
+        app.MapPost("/api/auth/requestLoginMail", async ([FromBody] RequestLoginMailRequest request, LoginService loginService) =>
         {
             await loginService.RequestLoginMail(request.Email, request.RedirectUrl);
         });
 
-        app.MapPost("/login", async ([FromBody] LoginRequest request, LoginService loginService) =>
+        app.MapPost("/api/auth/tokenLogin", async ([FromBody] TokenLoginRequest request, LoginService loginService) =>
         {
-            var result = await loginService.Login(request.LoginToken);
+            var result = await loginService.LoginByToken(request.LoginToken);
             if (result.IsSuccess)
             {
                 return Results.Ok(result.Payload);
@@ -26,21 +26,34 @@ public static class AuthApi
             return Results.Unauthorized();
         });
         
-        app.MapGet("/who", async (PersonService personService) =>
+        app.MapPost("/api/auth/codeLogin", async ([FromBody] CodeLoginRequest request, LoginService loginService) =>
+        {
+            var result = await loginService.LoginByCode(request.Email, request.LoginCode);
+            if (result.IsSuccess)
+            {
+                return Results.Ok(result.Payload);
+            }
+            
+            return Results.Unauthorized();
+        });
+        
+        app.MapGet("/api/auth/who", async (PersonService personService) =>
         {
             var result = await personService.GetPerson();
             if (!result.IsSuccess)
             {
-                return Results.NoContent();
+                return Results.Ok(new PersonResponse());
             }
 
             return Results.Ok(new PersonResponse
             {
-                Name = result.Payload!.Name
+                Name = result.Payload!.Name,
+                Email = result.Payload!.Email,
+                IsAuthenticated = true
             });
         });
         
-        app.MapPost("/name", async ([FromBody] SetNameRequest request, PersonService loginService) =>
+        app.MapPost("/api/auth/name", async ([FromBody] SetNameRequest request, PersonService loginService) =>
         {
             var result = await loginService.SetName(request.Name);
             if (!result.IsSuccess)
@@ -48,10 +61,15 @@ public static class AuthApi
                 return Results.NotFound();
             }
 
-            return Results.Ok();
+            return Results.Ok(new PersonResponse
+            {
+                Name = result.Payload!.Name,
+                Email = result.Payload!.Email,
+                IsAuthenticated = true
+            });
         }).RequireAuthorization();
         
-        app.MapPost("/logout", async (LoginService loginService) =>
+        app.MapPost("/api/auth/logout", async (LoginService loginService) =>
         {
             await loginService.Logout();
         });

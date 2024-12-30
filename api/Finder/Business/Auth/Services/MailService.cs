@@ -33,7 +33,7 @@ public class MailService
                 message.Subject = _loginOptions.Subject;
                 message.Body = new TextPart("html")
                 {
-                    Text = $"<p>{_loginOptions.Text}</p><p><a href=\"{loginLink}\">Login</a></p>"
+                    Text = $"<p>{_loginOptions.Text} {token.Code}</p><p><a href=\"{loginLink}\">Login</a></p>"
                 };
             }
             else
@@ -41,7 +41,7 @@ public class MailService
                 message.Subject = _loginOptions.SubjectNew;
                 message.Body = new TextPart("html")
                 {
-                    Text = $"<p>{_loginOptions.TextNew}</p><p><a href=\"{loginLink}\">Login</a></p>"
+                    Text = $"<p>{_loginOptions.TextNew} {token.Code}</p><p><a href=\"{loginLink}\">Login</a></p>"
                 };
             }
 

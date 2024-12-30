@@ -34,23 +34,23 @@ public class PersonService
         return Result<Person>.Success(person);
     }
 
-    public async Task<Result> SetName(string name)
+    public async Task<Result<Person?>> SetName(string name)
     {
         var userId = GetUserId();
         if (!userId.HasValue)
         {
-            return Result.Fail();
+            return Result<Person?>.Fail();
         }
         
         var person = await _dbContext.Persons.SingleOrDefaultAsync(p => p.Id == userId);
         if (person == null)
         {
-            return Result.Fail();
+            return Result<Person?>.Fail();
         }
         
         person.Name = name;
         await _dbContext.SaveChangesAsync();
-        return Result.Success();
+        return Result<Person?>.Success(person);
     }
 
     private Guid? GetUserId()

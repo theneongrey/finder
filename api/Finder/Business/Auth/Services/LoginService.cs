@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Shared;
 using Finder.Database;
@@ -10,6 +11,9 @@ namespace Finder.Business.Auth.Services;
 
 public class LoginService
 {
+    private const int MaxRetries = 3;
+    private readonly TimeSpan _loginTimeout = TimeSpan.FromHours(1);
+    
     private readonly AppDbContext _dbContext;
     private readonly MailService _mailService;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -20,24 +24,64 @@ public class LoginService
         _mailService = mailService;
         _httpContextAccessor = httpContextAccessor;
     }
-
-    public async Task<Result<string?>> Login(string token)
+    
+    public async Task<Result<string?>> LoginByToken(string token)
     {
         var loginToken = await _dbContext.LoginTokens
-                .Include(loginToken => loginToken.Person)
-                .SingleOrDefaultAsync(t => t.Token == token);
-        if (loginToken == null)
+            .Include(loginToken => loginToken.Person)
+            .SingleOrDefaultAsync(t => t.Token == token);
+        if (loginToken == null || IsTokenExpired(loginToken))
         {
             return Result<string?>.Fail(404);
         }
 
+        return await SignIn(loginToken);
+    }
+
+    public async Task<Result<string?>> LoginByCode(string email, string code)
+    {
+        var loginToken = await _dbContext.LoginTokens
+            .Include(loginToken => loginToken.Person)
+            .SingleOrDefaultAsync(t => t.Person.Email == email);
+        
+        if (loginToken == null || loginToken.Code == null || IsTokenExpired(loginToken))
+        {
+            return Result<string?>.Fail(401);
+        }
+        
+        if (loginToken.Code != code)
+        {
+            loginToken.Retries++;
+            if (loginToken.Retries >= MaxRetries)
+            {
+                loginToken.Code = null;
+            }
+            
+            await _dbContext.SaveChangesAsync();
+            return Result<string?>.Fail(401);
+        }
+
+        return await SignIn(loginToken);
+    }
+
+    private bool IsTokenExpired(LoginToken loginToken)
+    {
+        return DateTime.UtcNow - loginToken.Edited > _loginTimeout;
+    }
+
+    private async Task<Result<string?>> SignIn(LoginToken loginToken)
+    {
         await _httpContextAccessor.HttpContext!.SignInAsync(new ClaimsPrincipal(
             new ClaimsIdentity([
                 new Claim(ClaimTypes.NameIdentifier, loginToken.Person.Id.ToString())
             ], CookieAuthenticationDefaults.AuthenticationScheme)));
+        
+        loginToken.Person.HasLoggedIn = true;
+        await _dbContext.SaveChangesAsync();
 
         return Result<string?>.Success(loginToken.RedirectUrl);
     }
+
 
     public async Task Logout()
     {
@@ -51,8 +95,6 @@ public class LoginService
         await _dbContext.SaveChangesAsync();
         await SendLoginMail(person, loginToken);
     }
-
-
 
     private async Task<Person> GetOrCreatePersonByEmail(string email)
     {
@@ -87,8 +129,16 @@ public class LoginService
 
         loginToken.RedirectUrl = redirectUrl;
         loginToken.Token = Guid.NewGuid().ToString("N");
+        loginToken.Code = GetRandomSixDigitCode();
+        loginToken.Retries = 0;
 
         return loginToken;
+    }
+
+    private string GetRandomSixDigitCode()
+    {
+        var code = RandomNumberGenerator.GetInt32(0, 1000000);
+        return code.ToString("D6");
     }
 
     private async Task SendLoginMail(Person person, LoginToken token)

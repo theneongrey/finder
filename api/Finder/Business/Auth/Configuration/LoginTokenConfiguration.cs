@@ -13,6 +13,9 @@ public class LoginTokenConfiguration : IEntityTypeConfiguration<LoginToken>
         builder.Property(p => p.Token)
             .HasMaxLength(32);
         
+        builder.Property(p => p.Code)
+            .HasMaxLength(6);
+        
         builder.Property(p => p.RedirectUrl)
             .HasMaxLength(512);
 

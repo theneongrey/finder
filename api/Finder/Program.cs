@@ -2,7 +2,6 @@ using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Services;
 using Finder.Database;
 using Finder.Options;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddCors();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -36,6 +36,16 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
 app.UseAuthentication();
 app.UseAuthorization();
 app.WithAuthApi();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors(policyBuilder => policyBuilder
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .WithOrigins("http://localhost:4200")
+    );
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

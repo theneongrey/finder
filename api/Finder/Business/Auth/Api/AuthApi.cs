@@ -31,14 +31,14 @@ public static class AuthApi
             var result = await personService.GetPerson();
             if (!result.IsSuccess)
             {
-                return Results.NotFound();
+                return Results.NoContent();
             }
 
             return Results.Ok(new PersonResponse
             {
                 Name = result.Payload!.Name
             });
-        }).RequireAuthorization();
+        });
         
         app.MapPost("/name", async ([FromBody] SetNameRequest request, PersonService loginService) =>
         {

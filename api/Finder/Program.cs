@@ -31,8 +31,6 @@ var app = builder.Build();
 using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     scope.ServiceProvider.GetService<AppDbContext>()!.Database.Migrate();
-    HttpContext x;
-    
 }
 
 app.UseAuthentication();

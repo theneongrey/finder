@@ -9,6 +9,28 @@ export const routes: Routes = [
       import('./features/project/project.component').then(
         (m) => m.ProjectComponent,
       ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/project/overview/project-overview.component').then(
+            (m) => m.ProjectOverviewComponent,
+          ),
+      },
+    ],
+  },
+  {
+    canActivate: [userAuthentication()],
+    path: 'settings',
+    children: [
+      {
+        path: 'set-name',
+        loadComponent: () =>
+          import('./features/settings/set-name/set-name.component').then(
+            (m) => m.SetNameComponent,
+          ),
+      },
+    ],
   },
   {
     path: 'auth',
@@ -32,6 +54,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/auth/code-login/code-login.component').then(
             (m) => m.CodeLoginComponent,
+          ),
+      },
+      {
+        path: 'token-login',
+        loadComponent: () =>
+          import('./features/auth/token-login/token-login.component').then(
+            (m) => m.TokenLoginComponent,
           ),
       },
       {

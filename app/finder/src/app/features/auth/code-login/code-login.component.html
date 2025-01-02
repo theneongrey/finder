@@ -4,7 +4,7 @@
     <label class="tw-block tw-mx-auto" for="code">Please enter the code sent to you by email</label>
     <input id="code" class="tw-border-black tw-border tw-w-40 tw-mx-auto"
            [class.invlid]="form.get('code')!.invalid && form.get('code')!.dirty"
-           formControlName="code" maxlength="6" />
+           formControlName="code" maxlength="6" autofocus />
     <button (click)="(verifyCode())" [disabled]="form.invalid">Verify code</button>
   </div>
 </form>

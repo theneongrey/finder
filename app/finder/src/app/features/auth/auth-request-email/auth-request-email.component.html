@@ -4,7 +4,7 @@
     <label class="tw-block tw-mx-auto" for="email">Please enter your email</label>
     <input id="email" class="tw-border-black tw-border"
            [class.invalid]="form.get('email')!.invalid && form.get('email')!.dirty"
-           type="email" formControlName="email" />
+           type="email" formControlName="email" autofocus />
     <button (click)="(sendLoginMail())" [disabled]="form.invalid">Send Mail</button>
   </div>
 </form>

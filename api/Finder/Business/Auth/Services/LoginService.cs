@@ -3,9 +3,11 @@ using System.Security.Cryptography;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Shared;
 using Finder.Database;
+using Finder.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Auth.Services;
 
@@ -17,12 +19,14 @@ public class LoginService
     private readonly AppDbContext _dbContext;
     private readonly MailService _mailService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly LoginOptions _loginOptions;
 
-    public LoginService(AppDbContext dbContext, MailService mailService, IHttpContextAccessor httpContextAccessor)
+    public LoginService(AppDbContext dbContext, MailService mailService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions)
     {
         _dbContext = dbContext;
         _mailService = mailService;
         _httpContextAccessor = httpContextAccessor;
+        _loginOptions = loginOptions.Value;
     }
     
     public async Task<Result<string?>> LoginByToken(string token)
@@ -128,7 +132,7 @@ public class LoginService
         }
 
         loginToken.RedirectUrl = redirectUrl;
-        loginToken.Token = Guid.NewGuid().ToString("N");
+        loginToken.Token = _loginOptions.AuthToken ?? Guid.NewGuid().ToString("N");
         loginToken.Code = GetRandomSixDigitCode();
         loginToken.Retries = 0;
 

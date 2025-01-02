@@ -20,146 +20,140 @@ export const UserStore = signalStore(
     user: undefined as User | undefined,
     loginRequestEmailWasSent: false,
     loginMail: undefined as string | undefined,
-    loginAttemptSuccessful: false,
   }),
   withProps(() => ({
     userService: inject(UserService),
     loggerService: inject(LoggerService),
   })),
-  withMethods((store) => ({
-    setRedirectUrl(redirectUrl: string) {
-      patchState(store, { redirectUrl });
-    },
+  withMethods((store) => {
+    const handleGetUser = store.userService.getUser().pipe(
+      tapResponse({
+        next: (user) => patchState(store, { user }),
+        error: (error) => {
+          patchState(store, { user: undefined });
+          store.loggerService.log('Error while loading user', error);
+        },
+      }),
+    );
 
-    getUser: rxMethod<void>(
-      pipe(
-        switchMap(() => {
-          return store.userService.getUser().pipe(
-            tapResponse({
-              next: (user) => patchState(store, { user }),
-              error: (error) => {
-                patchState(store, { user: undefined });
-                store.loggerService.log('Error while loading user', error);
-              },
-            }),
-          );
-        }),
+    return {
+      setRedirectUrl(redirectUrl: string | undefined) {
+        patchState(store, { redirectUrl });
+      },
+
+      getUser: rxMethod<void>(pipe(switchMap(() => handleGetUser))),
+
+      requestLoginMail: rxMethod<string>(
+        pipe(
+          distinctUntilChanged(),
+          tap((email) => patchState(store, { loginMail: email })),
+          switchMap((email) => {
+            return store.userService
+              .requestLoginMail(email, store.redirectUrl())
+              .pipe(
+                tapResponse({
+                  next: () =>
+                    patchState(store, { loginRequestEmailWasSent: true }),
+                  error: (error) => {
+                    patchState(store, { loginMail: undefined });
+                    store.loggerService.log(
+                      'Error requestimg login mail',
+                      error,
+                    );
+                  },
+                }),
+              );
+          }),
+        ),
       ),
-    ),
 
-    requestLoginMail: rxMethod<string>(
-      pipe(
-        distinctUntilChanged(),
-        tap((email) => patchState(store, { loginMail: email })),
-        switchMap((email) => {
-          return store.userService
-            .requestLoginMail(email, store.redirectUrl())
-            .pipe(
-              tapResponse({
-                next: () =>
-                  patchState(store, { loginRequestEmailWasSent: true }),
-                error: (error) => {
-                  patchState(store, { loginMail: undefined });
-                  store.loggerService.log('Error requestimg login mail', error);
-                },
-              }),
-            );
-        }),
-      ),
-    ),
-
-    loginByToken: rxMethod<string>(
-      pipe(
-        distinctUntilChanged(),
-        filter((loginToken) => !!loginToken),
-        switchMap((loginToken) => {
-          return store.userService.loginByToken(loginToken).pipe(
-            tapResponse({
-              next: (redirectUrl) => {
-                if (redirectUrl) {
-                  patchState(store, { redirectUrl });
-                }
-                patchState(store, { loginAttemptSuccessful: true });
-              },
-              error: (error) => {
-                patchState(store, { loginAttemptSuccessful: false });
-                store.loggerService.log(
-                  'Error while logging in with token',
-                  error,
-                );
-              },
-            }),
-          );
-        }),
-      ),
-    ),
-
-    loginByCode: rxMethod<string>(
-      pipe(
-        distinctUntilChanged(),
-        filter((loginCode) => !!store.loginMail() && !!loginCode),
-        switchMap((loginCode) => {
-          return store.userService
-            .loginByCode(store.loginMail()!, loginCode)
-            .pipe(
+      loginByToken: rxMethod<string>(
+        pipe(
+          distinctUntilChanged(),
+          filter((loginToken) => !!loginToken),
+          switchMap((loginToken) => {
+            return store.userService.loginByToken(loginToken).pipe(
               tapResponse({
                 next: (redirectUrl) => {
                   if (redirectUrl) {
                     patchState(store, { redirectUrl });
                   }
-                  patchState(store, { loginAttemptSuccessful: true });
                 },
                 error: (error) => {
-                  patchState(store, { loginAttemptSuccessful: false });
                   store.loggerService.log(
-                    'Error while logging in with code',
+                    'Error while logging in with token',
+                    error,
+                  );
+                },
+              }),
+              switchMap(() => handleGetUser),
+            );
+          }),
+        ),
+      ),
+
+      loginByCode: rxMethod<string>(
+        pipe(
+          distinctUntilChanged(),
+          filter((loginCode) => !!store.loginMail() && !!loginCode),
+          switchMap((loginCode) => {
+            return store.userService
+              .loginByCode(store.loginMail()!, loginCode)
+              .pipe(
+                tapResponse({
+                  next: (redirectUrl) => {
+                    if (redirectUrl) {
+                      patchState(store, { redirectUrl });
+                    }
+                  },
+                  error: (error) => {
+                    store.loggerService.log(
+                      'Error while logging in with code',
+                      error,
+                    );
+                  },
+                }),
+                switchMap(() => handleGetUser),
+              );
+          }),
+        ),
+      ),
+
+      updateName: rxMethod<string>(
+        pipe(
+          distinctUntilChanged(),
+          filter((name) => !!store.user()?.isAuthenticated && !!name),
+          switchMap((name) => {
+            return store.userService.updateName(name).pipe(
+              tapResponse({
+                next: (user) => patchState(store, { user }),
+                error: (error) => {
+                  store.loggerService.log(
+                    'Error while updating the name',
                     error,
                   );
                 },
               }),
             );
-        }),
+          }),
+        ),
       ),
-    ),
 
-    updateName: rxMethod<string>(
-      pipe(
-        distinctUntilChanged(),
-        filter((name) => !!store.user()?.isAuthenticated && !!name),
-        switchMap((name) => {
-          return store.userService.updateName(name).pipe(
-            tapResponse({
-              next: () => patchState(store, { loginAttemptSuccessful: true }),
-              error: (error) => {
-                patchState(store, { loginAttemptSuccessful: false });
-                store.loggerService.log(
-                  'Error while logging in with code',
-                  error,
-                );
-              },
-            }),
-          );
-        }),
+      logout: rxMethod<void>(
+        pipe(
+          switchMap(() => {
+            return store.userService.logout().pipe(
+              tapResponse({
+                next: () => {},
+                error: (error) => {
+                  store.loggerService.log('Error while logging out', error);
+                },
+                finalize: () => patchState(store, { user: undefined }),
+              }),
+            );
+          }),
+        ),
       ),
-    ),
-
-    logout: rxMethod<void>(
-      pipe(
-        switchMap((name) => {
-          return store.userService.logout().pipe(
-            tapResponse({
-              next: () => patchState(store, { loginAttemptSuccessful: true }),
-              error: (error) => {
-                patchState(store, { loginAttemptSuccessful: false });
-                store.loggerService.log(
-                  'Error while logging in with code',
-                  error,
-                );
-              },
-            }),
-          );
-        }),
-      ),
-    ),
-  })),
+    };
+  }),
 );

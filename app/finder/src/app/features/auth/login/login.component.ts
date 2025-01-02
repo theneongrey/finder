@@ -3,7 +3,7 @@ import { UserStore } from '../../../common/data/user.store';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-auth-request-email',
+  selector: 'app-auth-login',
   imports: [],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -19,12 +19,19 @@ export class LoginComponent {
       }
 
       if (user.isAuthenticated) {
-        untracked(() => {
-          const redirectUrl = this.userStore.redirectUrl();
-          if (redirectUrl) {
-            router.navigate([redirectUrl]);
-          }
-        });
+        if (!user.name) {
+          router.navigate(['/settings/set-name']);
+        } else {
+          untracked(() => {
+            const redirectUrl = this.userStore.redirectUrl();
+            if (redirectUrl) {
+              this.userStore.setRedirectUrl(undefined);
+              router.navigate([redirectUrl]);
+            } else {
+              router.navigate(['/']);
+            }
+          });
+        }
       } else {
         router.navigate(['/auth/request-email']);
       }

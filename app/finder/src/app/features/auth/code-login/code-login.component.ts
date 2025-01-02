@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
-  selector: 'app-auth-request-email',
+  selector: 'app-auth-code-login',
   imports: [ReactiveFormsModule],
   templateUrl: './code-login.component.html',
   styleUrl: './code-login.component.css',
@@ -37,12 +37,6 @@ export class CodeLoginComponent implements AfterViewInit {
     effect(() => {
       if (this.userStore.user()?.isAuthenticated) {
         router.navigate(['/']);
-      }
-    });
-
-    effect(() => {
-      if (this.userStore.loginAttemptSuccessful()) {
-        untracked(() => this.userStore.getUser());
       }
     });
   }

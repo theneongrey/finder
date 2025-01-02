@@ -2,6 +2,7 @@ using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Services;
 using Finder.Database;
 using Finder.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,12 +25,15 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthentication().AddCookie(o =>
 {
     o.Cookie.Name = "login";
+    o.Events.OnRedirectToAccessDenied =
+        o.Events.OnRedirectToLogin = c =>
+        {
+            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.FromResult<object>(null);
+        };
+    
 });
-
-builder.Services.AddSpaStaticFiles(configuration =>
-{
-    configuration.RootPath = "App";
-});
+builder.Services.AddSpaStaticFiles(configuration => { configuration.RootPath = "App"; });
 
 var app = builder.Build();
 

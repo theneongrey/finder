@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<Project> Project { get; set; }
     public DbSet<Person> Persons { get; set; }
     public DbSet<LoginToken> LoginTokens { get; set; }
+    public DbSet<AllowedEmail> AllowedEmails { get; set; }
     
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     

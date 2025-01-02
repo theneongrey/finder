@@ -31,9 +31,11 @@ public class LoginService
     
     public async Task<Result<string?>> LoginByToken(string token)
     {
+        var cleanToken = token.ToLower().Trim();
+        
         var loginToken = await _dbContext.LoginTokens
             .Include(loginToken => loginToken.Person)
-            .SingleOrDefaultAsync(t => t.Token == token);
+            .SingleOrDefaultAsync(t => t.Token == cleanToken);
         if (loginToken == null || IsTokenExpired(loginToken))
         {
             return Result<string?>.Fail(404);
@@ -44,16 +46,19 @@ public class LoginService
 
     public async Task<Result<string?>> LoginByCode(string email, string code)
     {
+        var cleanEmail = email.Trim().ToLower();
+        var cleanCode = code.Trim().ToLower();
+        
         var loginToken = await _dbContext.LoginTokens
             .Include(loginToken => loginToken.Person)
-            .SingleOrDefaultAsync(t => t.Person.Email == email);
+            .SingleOrDefaultAsync(t => t.Person.Email == cleanEmail);
         
         if (loginToken == null || loginToken.Code == null || IsTokenExpired(loginToken))
         {
             return Result<string?>.Fail(401);
         }
         
-        if (loginToken.Code != code)
+        if (loginToken.Code != cleanCode)
         {
             loginToken.Retries++;
             if (loginToken.Retries >= MaxRetries)
@@ -81,6 +86,8 @@ public class LoginService
             ], CookieAuthenticationDefaults.AuthenticationScheme)));
         
         loginToken.Person.HasLoggedIn = true;
+        loginToken.Token = null;
+        loginToken.Code = null;
         await _dbContext.SaveChangesAsync();
 
         return Result<string?>.Success(loginToken.RedirectUrl);
@@ -92,12 +99,21 @@ public class LoginService
         await _httpContextAccessor.HttpContext!.SignOutAsync();
     }
 
-    public async Task RequestLoginMail(string email, string? redirectUrl)
+    public async Task<Result> RequestLoginMail(string email, string? redirectUrl)
     {
-        var person = await GetOrCreatePersonByEmail(email);
+        var cleanEmail = email.Trim().ToLower();
+        
+        if (_loginOptions.AllowListOnly && !_dbContext.AllowedEmails.Any(entry => entry.Email == cleanEmail))
+        {
+            return Result.Fail(403);
+        }
+        
+        var person = await GetOrCreatePersonByEmail(cleanEmail);
         var loginToken = await CreateLoginTokenForPerson(person, redirectUrl);
         await _dbContext.SaveChangesAsync();
         await SendLoginMail(person, loginToken);
+        
+        return Result.Success();
     }
 
     private async Task<Person> GetOrCreatePersonByEmail(string email)
@@ -132,7 +148,7 @@ public class LoginService
         }
 
         loginToken.RedirectUrl = redirectUrl;
-        loginToken.Token = _loginOptions.AuthToken ?? Guid.NewGuid().ToString("N");
+        loginToken.Token = _loginOptions.AuthToken ?? Guid.NewGuid().ToString("N").ToLower();
         loginToken.Code = GetRandomSixDigitCode();
         loginToken.Retries = 0;
 

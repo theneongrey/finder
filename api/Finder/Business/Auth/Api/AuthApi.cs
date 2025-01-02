@@ -12,7 +12,8 @@ public static class AuthApi
     {
         app.MapPost("/api/auth/requestLoginMail", async ([FromBody] RequestLoginMailRequest request, LoginService loginService) =>
         {
-            await loginService.RequestLoginMail(request.Email, request.RedirectUrl);
+            var result = await loginService.RequestLoginMail(request.Email, request.RedirectUrl);
+            return result.IsSuccess ? Results.Ok() : Results.Forbid();
         });
 
         app.MapPost("/api/auth/tokenLogin", async ([FromBody] TokenLoginRequest request, LoginService loginService) =>

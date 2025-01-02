@@ -26,6 +26,11 @@ builder.Services.AddAuthentication().AddCookie(o =>
     o.Cookie.Name = "login";
 });
 
+builder.Services.AddSpaStaticFiles(configuration =>
+{
+    configuration.RootPath = "App";
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
@@ -36,6 +41,8 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
 app.UseAuthentication();
 app.UseAuthorization();
 app.WithAuthApi();
+app.UseSpaStaticFiles();
+app.UseSpa(_ => { });
 
 if (app.Environment.IsDevelopment())
 {
@@ -53,6 +60,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.Run();

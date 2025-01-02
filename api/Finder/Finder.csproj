@@ -11,6 +11,7 @@
     <ItemGroup>
         <PackageReference Include="MailKit" Version="4.9.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
           <PrivateAssets>all</PrivateAssets>
@@ -20,8 +21,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Business\Auth\" />
-      <Folder Include="Business\Project\" />
+        <Content Include="App\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

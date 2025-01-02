@@ -21,18 +21,16 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      - name: Use Node.js 18 LTS
-        uses: actions/setup-node@v2
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20.x'
 
-      - name: Install NPM Modules
-        working-directory: ./app
-        run: npm install
-
-      - name: Build Project
-        working-directory: ./app
-        run: npm run build
+      - name: npm install, build
+        working-directory: ./app/finder
+        run: |
+          npm install
+          npm run build
 
       - name: Copy dist to dotnet api
         shell: bash

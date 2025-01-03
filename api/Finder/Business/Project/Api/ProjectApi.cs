@@ -18,13 +18,15 @@ public static class ProjectApi
         {
             var result = await projectService.Get(id);
             return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse());
-        });
+        }).RequireAuthorization();
 
         app.MapPost("/api/project",
                 async ([FromBody] ProjectRequest request, ProjectService projectService) =>
                 {
                     var result = await projectService.Create(request.Name);
-                    return !result.IsSuccess ? Results.BadRequest() : Results.Ok(result.Payload!.ToProjectOverviewResponse());
+                    return !result.IsSuccess
+                        ? Results.BadRequest()
+                        : Results.Ok(result.Payload!.ToProjectOverviewResponse());
                 })
             .RequireAuthorization();
 

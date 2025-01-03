@@ -1,3 +1,5 @@
-<div class="tw-flex tw-bg-red-50 tw-h-full">
-  Overview
+<div class="tw-flex tw-bg-red-50 tw-h-full tw-flex-col">
+  @for (project of projects(); track project.id) {
+    <div>{{ project.name }}</div>
+  }
 </div>

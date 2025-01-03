@@ -14,7 +14,7 @@ import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule, FloatLabel, InputOtp, Panel, Button],
+  imports: [ReactiveFormsModule, InputOtp, Panel, Button],
   templateUrl: './code-login.component.html',
   styleUrl: './code-login.component.css',
 })

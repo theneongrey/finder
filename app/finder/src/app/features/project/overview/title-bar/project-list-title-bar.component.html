@@ -1,5 +1,17 @@
 <div class="tw-flex">
   <div class="tw-mr-0 tw-ml-auto">
-    <p-button>Add Project</p-button>
+    <p-button (click)="showDialog.set(true)">Add Project</p-button>
   </div>
 </div>
+
+<p-dialog header="New Project" [modal]="true" [(visible)]="showDialog" [style]="{ width: '25rem' }">
+  <span class="p-text-secondary tw-block tw-mb-8">Create new project.</span>
+  <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
+    <label for="name" class="tw-font-semibold tw-w-24">Name</label>
+    <input pInputText id="name" class="tw-flex-auto" autocomplete="off" [(ngModel)]="projectName" />
+  </div>
+  <div class="tw-flex tw-justify-end tw-gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="showDialog.set(false)" />
+    <p-button label="Add Project" (click)="addProject()" [disabled]="!projectName()" />
+  </div>
+</p-dialog>

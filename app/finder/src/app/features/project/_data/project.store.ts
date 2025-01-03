@@ -1,0 +1,62 @@
+import {
+  patchState,
+  signalStore,
+  withMethods,
+  withProps,
+  withState,
+} from '@ngrx/signals';
+import { inject } from '@angular/core';
+import { LoggerService } from '../../../common/services/logger.service';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { pipe, switchMap } from 'rxjs';
+import { tapResponse } from '@ngrx/operators';
+import { Project } from '../_models/project.model';
+import { ProjectService } from '../_services/user.service';
+
+export const ProjectStore = signalStore(
+  { providedIn: 'root' },
+  withState({
+    projects: [] as Project[],
+  }),
+  withProps(() => {
+    return {
+      loggerService: inject(LoggerService),
+      projectService: inject(ProjectService),
+    };
+  }),
+  withMethods((store) => ({
+    getProjects: rxMethod<void>(
+      pipe(
+        switchMap(() => {
+          return store.projectService.getProjects().pipe(
+            tapResponse({
+              next: (projects) => {
+                patchState(store, { projects });
+              },
+              error: (error) => {
+                store.loggerService.log('Error while loading projects', error);
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
+    addProject: rxMethod<string>(
+      pipe(
+        switchMap((projectName) => {
+          return store.projectService.addProject(projectName).pipe(
+            tapResponse({
+              next: (project) => {
+                patchState(store, { projects: [...store.projects(), project] });
+              },
+              error: (error) => {
+                store.loggerService.log('Error addint a project', error);
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+  })),
+);

@@ -82,7 +82,8 @@ public class LoginService
     {
         await _httpContextAccessor.HttpContext!.SignInAsync(new ClaimsPrincipal(
             new ClaimsIdentity([
-                new Claim(ClaimTypes.NameIdentifier, loginToken.Person.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, loginToken.Person.Id.ToString()),
+                new Claim(ClaimTypes.Role, ((int)loginToken.Person.Role).ToString())
             ], CookieAuthenticationDefaults.AuthenticationScheme)));
         
         loginToken.Person.HasLoggedIn = true;
@@ -126,6 +127,7 @@ public class LoginService
             {
                 Id = Guid.NewGuid(),
                 Email = email,
+                Role = Role.Free
             };
             _dbContext.Persons.Add(person);
         }
@@ -151,6 +153,11 @@ public class LoginService
         loginToken.Token = _loginOptions.AuthToken ?? Guid.NewGuid().ToString("N").ToLower();
         loginToken.Code = GetRandomSixDigitCode();
         loginToken.Retries = 0;
+
+        if (_loginOptions.AuthToken != null)
+        {
+            Console.Out.WriteLine("Code" + loginToken.Code);
+        }
 
         return loginToken;
     }

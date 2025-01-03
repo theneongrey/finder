@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  effect,
-  Inject,
-  inject,
-  untracked,
-} from '@angular/core';
+import { AfterViewInit, Component, effect, inject } from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
 import {
   FormControl,
@@ -14,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-auth-code-login',
@@ -30,12 +22,14 @@ export class CodeLoginComponent implements AfterViewInit {
   });
 
   constructor(router: Router) {
-    if (!this.userStore.loginMail()) {
+    if (!this.userStore.loginMail.email()) {
+      console.log('redirect: no email stored');
       router.navigate(['/']);
     }
 
     effect(() => {
       if (this.userStore.user()?.isAuthenticated) {
+        console.log('redirect: user is authenticated');
         router.navigate(['/']);
       }
     });

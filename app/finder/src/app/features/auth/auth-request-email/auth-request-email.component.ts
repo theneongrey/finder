@@ -34,7 +34,10 @@ export class AuthRequestEmailComponent {
 
   constructor(router: Router) {
     effect(() => {
-      if (this.userStore.loginMail.state() === 'finished') {
+      if (
+        this.userStore.loginMail.state() === 'finished' &&
+        this.userStore.loginMail.email()
+      ) {
         router.navigate(['/auth/code-login']);
       }
     });

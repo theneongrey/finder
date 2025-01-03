@@ -1,20 +1,6 @@
-import {
-  AfterViewInit,
-  Component,
-  effect,
-  Inject,
-  inject,
-  untracked,
-} from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-auth-token-login',

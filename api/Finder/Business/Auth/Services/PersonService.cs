@@ -17,7 +17,7 @@ public class PersonService
         _httpContextAccessor = httpContextAccessor;
     }
     
-    public async Task<Result<Person>> GetPerson()
+    public async Task<Result<Person>> GetUser()
     {
         var userId = GetUserId();
         if (!userId.HasValue)

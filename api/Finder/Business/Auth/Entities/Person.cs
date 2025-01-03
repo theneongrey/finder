@@ -2,10 +2,18 @@
 
 namespace Finder.Business.Auth.Entities;
 
+public enum Role
+{
+    Admin,
+    Upgraded,
+    Free
+}
+
 public class Person : BaseEntity
 {
     public required Guid Id { get; set; }
     public required string Email { get; set; }
     public string? Name { get; set; }
     public bool HasLoggedIn { get; set; }
+    public required Role Role { get; set; }
 }

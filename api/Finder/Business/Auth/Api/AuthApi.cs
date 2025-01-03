@@ -1,5 +1,6 @@
 using Finder.Business.Auth.Api.Requests;
 using Finder.Business.Auth.Api.Responses;
+using Finder.Business.Auth.Entities;
 using Finder.Business.Auth.Services;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -40,7 +41,7 @@ public static class AuthApi
         
         app.MapGet("/api/auth/who", async (PersonService personService) =>
         {
-            var result = await personService.GetPerson();
+            var result = await personService.GetUser();
             if (!result.IsSuccess)
             {
                 return Results.Ok(new PersonResponse());
@@ -50,6 +51,7 @@ public static class AuthApi
             {
                 Name = result.Payload!.Name,
                 Email = result.Payload!.Email,
+                Role = Enum.GetName(result.Payload!.Role),
                 IsAuthenticated = true
             });
         });

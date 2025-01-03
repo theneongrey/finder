@@ -8,11 +8,12 @@ import {
 import { inject } from '@angular/core';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
-import { distinctUntilChanged, filter, of, pipe, switchMap, tap } from 'rxjs';
+import { distinctUntilChanged, filter, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { LoggerService } from '../services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 export const UserStore = signalStore(
   { providedIn: 'root' },
@@ -27,6 +28,7 @@ export const UserStore = signalStore(
   withProps(() => ({
     userService: inject(UserService),
     loggerService: inject(LoggerService),
+    router: inject(Router),
   })),
   withMethods((store) => {
     const handleGetUser = store.userService.getUser().pipe(
@@ -66,7 +68,7 @@ export const UserStore = signalStore(
                   next: () =>
                     patchState(store, {
                       loginMail: {
-                        email: undefined,
+                        ...store.loginMail(),
                         state: 'finished',
                       },
                     }),
@@ -178,7 +180,10 @@ export const UserStore = signalStore(
                 error: (error) => {
                   store.loggerService.log('Error while logging out', error);
                 },
-                finalize: () => patchState(store, { user: undefined }),
+                finalize: () => {
+                  patchState(store, { user: undefined });
+                  location.reload();
+                },
               }),
             );
           }),

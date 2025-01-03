@@ -8,7 +8,7 @@ export function userAuthentication(): CanActivateFn {
     const router = inject(Router);
     const activatedRoute = inject(ActivatedRoute);
 
-    if (userStore.user()) {
+    if (userStore.user()?.isAuthenticated) {
       return true;
     } else {
       if (activatedRoute.snapshot.url.length > 0) {

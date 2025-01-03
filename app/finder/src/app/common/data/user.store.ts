@@ -12,14 +12,17 @@ import { distinctUntilChanged, filter, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { LoggerService } from '../services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const UserStore = signalStore(
   { providedIn: 'root' },
   withState({
     redirectUrl: undefined as string | undefined,
     user: undefined as User | undefined,
-    loginRequestEmailWasSent: false,
-    loginMail: undefined as string | undefined,
+    loginMail: {
+      state: 'init' as 'init' | 'sent' | 'finished' | 'error' | 'forbidden',
+      email: undefined as string | undefined,
+    },
   }),
   withProps(() => ({
     userService: inject(UserService),
@@ -46,20 +49,47 @@ export const UserStore = signalStore(
       requestLoginMail: rxMethod<string>(
         pipe(
           distinctUntilChanged(),
-          tap((email) => patchState(store, { loginMail: email })),
+          tap((email) =>
+            patchState(store, {
+              loginMail: {
+                ...store.loginMail(),
+                state: 'sent',
+                email,
+              },
+            }),
+          ),
           switchMap((email) => {
             return store.userService
               .requestLoginMail(email, store.redirectUrl())
               .pipe(
                 tapResponse({
                   next: () =>
-                    patchState(store, { loginRequestEmailWasSent: true }),
-                  error: (error) => {
-                    patchState(store, { loginMail: undefined });
-                    store.loggerService.log(
-                      'Error requestimg login mail',
-                      error,
-                    );
+                    patchState(store, {
+                      loginMail: {
+                        email: undefined,
+                        state: 'finished',
+                      },
+                    }),
+                  error: (error: HttpErrorResponse) => {
+                    if (error.status === 401) {
+                      patchState(store, {
+                        loginMail: {
+                          ...store.loginMail(),
+                          state: 'forbidden',
+                        },
+                      });
+                    } else {
+                      patchState(store, {
+                        loginMail: {
+                          email: undefined,
+                          state: 'error',
+                        },
+                      });
+                      store.loggerService.log(
+                        'Error requestimg login mail',
+                        error,
+                      );
+                    }
                   },
                 }),
               );
@@ -95,10 +125,10 @@ export const UserStore = signalStore(
       loginByCode: rxMethod<string>(
         pipe(
           distinctUntilChanged(),
-          filter((loginCode) => !!store.loginMail() && !!loginCode),
+          filter((loginCode) => !!store.loginMail.email() && !!loginCode),
           switchMap((loginCode) => {
             return store.userService
-              .loginByCode(store.loginMail()!, loginCode)
+              .loginByCode(store.loginMail.email()!, loginCode)
               .pipe(
                 tapResponse({
                   next: (redirectUrl) => {

@@ -5,6 +5,9 @@
     <input id="email" class="tw-border-black tw-border"
            [class.invalid]="form.get('email')!.invalid && form.get('email')!.dirty"
            type="email" formControlName="email" autofocus />
+    @if (errorMessage()) {
+      <div class="tw-text-red-800">{{ errorMessage() }}</div>
+    }
     <button (click)="(sendLoginMail())" [disabled]="form.invalid">Send Mail</button>
   </div>
 </form>

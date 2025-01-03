@@ -7,10 +7,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Button } from 'primeng/button';
+import { Panel } from 'primeng/panel';
+import { FloatLabel } from 'primeng/floatlabel';
+import { InputText } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-settings-set-name',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Button, Panel, FloatLabel, InputText],
   templateUrl: './set-name.component.html',
   styleUrl: './set-name.component.css',
 })

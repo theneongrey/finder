@@ -1,10 +1,8 @@
 <form class="tw-flex tw-w-full tw-h-full tw-bg-red-50" [formGroup]="form">
-  <div class="tw-m-auto tw-flex tw-flex-col">
-    <h3 class="tw-mx-auto tw-mb-3">Login</h3>
-    <label class="tw-block tw-mx-auto" for="code">Please enter the code sent to you by email</label>
-    <input id="code" class="tw-border-black tw-border tw-w-40 tw-mx-auto"
-           [class.invlid]="form.get('code')!.invalid && form.get('code')!.dirty"
-           formControlName="code" maxlength="6" autofocus />
-    <button (click)="(verifyCode())" [disabled]="form.invalid">Verify code</button>
-  </div>
+  <p-panel class="tw-m-auto" header="Please enter the login code sent to you by e-mail">
+    <p-inputOtp id="code" class="tw-mx-auto" aria-label="code"
+                [class.invlid]="form.get('code')!.invalid && form.get('code')!.dirty"
+                formControlName="code" autofocus [integerOnly]="true" [length]="6" />
+    <p-button type="submit" (click)="(verifyCode())" [disabled]="form.invalid">Verify code</p-button>
+  </p-panel>
 </form>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
 import {
   FormControl,
@@ -7,14 +7,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FloatLabel } from 'primeng/floatlabel';
+import { InputOtp } from 'primeng/inputotp';
+import { Panel } from 'primeng/panel';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FloatLabel, InputOtp, Panel, Button],
   templateUrl: './code-login.component.html',
   styleUrl: './code-login.component.css',
 })
-export class CodeLoginComponent implements AfterViewInit {
+export class CodeLoginComponent {
   private userStore = inject(UserStore);
 
   form = new FormGroup({
@@ -35,33 +39,11 @@ export class CodeLoginComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.ensureDigitsOnly();
-  }
-
   verifyCode() {
     const code = this.form.get('code')!.value!;
 
     if (this.form.valid && code.length === 6) {
       this.userStore.loginByCode(code);
     }
-  }
-
-  private ensureDigitsOnly() {
-    document
-      .getElementById('code')!
-      .addEventListener('beforeinput', function (event) {
-        const { target }: any = event;
-
-        const nextVal =
-          target!.value.substring(0, target!.selectionStart) +
-          (event.data ?? '') +
-          target!.value.substring(target!.selectionEnd);
-
-        if (!/^(\d{0,7}|\d{3}-?\d{0,4}|)$/.test(nextVal)) {
-          event.preventDefault();
-        }
-        return;
-      });
   }
 }

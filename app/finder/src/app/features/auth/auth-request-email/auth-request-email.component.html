@@ -1,13 +1,14 @@
 <form class="tw-flex tw-w-full tw-h-full tw-bg-red-50" [formGroup]="form">
-  <div class="tw-m-auto tw-flex tw-flex-col">
-    <h3 class="tw-mx-auto tw-mb-3">Login</h3>
-    <label class="tw-block tw-mx-auto" for="email">Please enter your email</label>
-    <input id="email" class="tw-border-black tw-border"
-           [class.invalid]="form.get('email')!.invalid && form.get('email')!.dirty"
-           type="email" formControlName="email" autofocus />
+  <p-panel class="tw-m-auto" header="Request Login Mail">
+    <p-floatlabel variant="on">
+      <label class="tw-block tw-mx-auto" for="email">E-Mail</label>
+      <input pInputText id="email"
+             [class.ng-invalid]="form.get('email')!.invalid && form.get('email')!.dirty"
+             type="email" formControlName="email" autofocus />
+    </p-floatlabel>
     @if (errorMessage()) {
       <div class="tw-text-red-800">{{ errorMessage() }}</div>
     }
-    <button (click)="(sendLoginMail())" [disabled]="form.invalid">Send Mail</button>
-  </div>
+    <p-button (click)="(sendLoginMail())" [disabled]="form.invalid">Send Mail</p-button>
+  </p-panel>
 </form>

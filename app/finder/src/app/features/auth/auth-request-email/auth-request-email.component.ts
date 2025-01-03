@@ -7,10 +7,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { InputText } from 'primeng/inputtext';
+import { Button } from 'primeng/button';
+import { FloatLabel } from 'primeng/floatlabel';
+import { Panel } from 'primeng/panel';
 
 @Component({
   selector: 'app-auth-request-email',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, InputText, Button, FloatLabel, Panel],
   templateUrl: './auth-request-email.component.html',
   styleUrl: './auth-request-email.component.css',
 })

@@ -2,13 +2,12 @@ using Finder.Business.Auth.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Finder.Database;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Project> Project { get; set; }
+    public DbSet<Project> Projects { get; set; }
     public DbSet<Person> Persons { get; set; }
     public DbSet<LoginToken> LoginTokens { get; set; }
     public DbSet<AllowedEmail> AllowedEmails { get; set; }

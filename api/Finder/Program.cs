@@ -1,8 +1,10 @@
 using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Services;
+using Finder.Business.Project.Api;
+using Finder.Business.Project.Services;
+using Finder.Business.Shared.Services;
 using Finder.Database;
 using Finder.Options;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,8 +21,9 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.Configure<LoginOptions>(builder.Configuration.GetSection("Login"));
 builder.Services.AddScoped<LoginService>();
-builder.Services.AddScoped<PersonService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<MailService>();
+builder.Services.AddScoped<ProjectService>();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication().AddCookie(o =>
 {
@@ -29,7 +32,7 @@ builder.Services.AddAuthentication().AddCookie(o =>
         o.Events.OnRedirectToLogin = c =>
         {
             c.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         };
     
 });
@@ -45,6 +48,7 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
 app.UseAuthentication();
 app.UseAuthorization();
 app.WithAuthApi();
+app.WithProjectApi();
 app.UseSpaStaticFiles();
 app.UseSpa(_ => { });
 

@@ -1,9 +1,8 @@
 using Finder.Business.Auth.Api.Requests;
 using Finder.Business.Auth.Api.Responses;
-using Finder.Business.Auth.Entities;
 using Finder.Business.Auth.Services;
+using Finder.Business.Shared.Services;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Finder.Business.Auth.Api;
 
@@ -39,37 +38,26 @@ public static class AuthApi
             return Results.Unauthorized();
         });
         
-        app.MapGet("/api/auth/who", async (PersonService personService) =>
+        app.MapGet("/api/auth/who", async (UserService userService) =>
         {
-            var result = await personService.GetUser();
+            var result = await userService.GetUser();
             if (!result.IsSuccess)
             {
                 return Results.Ok(new PersonResponse());
             }
 
-            return Results.Ok(new PersonResponse
-            {
-                Name = result.Payload!.Name,
-                Email = result.Payload!.Email,
-                Role = Enum.GetName(result.Payload!.Role),
-                IsAuthenticated = true
-            });
+            return Results.Ok(result.Payload!.ToPersonResponse(true));
         });
         
-        app.MapPost("/api/auth/name", async ([FromBody] SetNameRequest request, PersonService loginService) =>
+        app.MapPost("/api/auth/name", async ([FromBody] SetNameRequest request, UserService userService) =>
         {
-            var result = await loginService.SetName(request.Name);
+            var result = await userService.SetName(request.Name);
             if (!result.IsSuccess)
             {
                 return Results.NotFound();
             }
 
-            return Results.Ok(new PersonResponse
-            {
-                Name = result.Payload!.Name,
-                Email = result.Payload!.Email,
-                IsAuthenticated = true
-            });
+            return Results.Ok(result.Payload!.ToPersonResponse(true));
         }).RequireAuthorization();
         
         app.MapPost("/api/auth/logout", async (LoginService loginService) =>

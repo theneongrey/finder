@@ -10,5 +10,5 @@ public class Project : BaseEntity
     
     public required List<Topic> Topics { get; set; } = [];
     
-    public Person? Creator { get; set; }
+    public required Person Creator { get; set; }
 }

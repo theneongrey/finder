@@ -58,5 +58,24 @@ export const ProjectStore = signalStore(
         }),
       ),
     ),
+
+    deleteProject: rxMethod<string>(
+      pipe(
+        switchMap((projectId) => {
+          return store.projectService.deleteProject(projectId).pipe(
+            tapResponse({
+              next: () => {
+                patchState(store, {
+                  projects: store.projects().filter((p) => p.id !== projectId),
+                });
+              },
+              error: (error) => {
+                store.loggerService.log('Error deleting project', error);
+              },
+            }),
+          );
+        }),
+      ),
+    ),
   })),
 );

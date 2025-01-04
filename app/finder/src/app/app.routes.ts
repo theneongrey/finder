@@ -3,8 +3,13 @@ import { userAuthentication } from './common/services/auth.guard';
 
 export const routes: Routes = [
   {
-    canActivate: [userAuthentication()],
     path: '',
+    redirectTo: 'projects',
+    pathMatch: 'full',
+  },
+  {
+    canActivate: [userAuthentication()],
+    path: 'projects',
     loadComponent: () =>
       import('./features/project/project.component').then(
         (m) => m.ProjectComponent,

@@ -11,7 +11,6 @@ import { ProjectStore } from '../_data/project.store';
 })
 export class ProjectOverviewComponent {
   private projectStore = inject(ProjectStore);
-  projects = this.projectStore.projects;
 
   constructor() {
     this.projectStore.getProjects();

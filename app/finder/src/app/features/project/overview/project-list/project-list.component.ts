@@ -5,10 +5,11 @@ import { Toast } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProjectStore } from '../../_data/project.store';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-project-list',
-  imports: [Button, Toast, ConfirmDialogModule],
+  imports: [Button, Toast, ConfirmDialogModule, RouterLink],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.css',

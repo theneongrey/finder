@@ -1,0 +1,17 @@
+<div class="tw-flex">
+  <div class="tw-mr-0 tw-ml-auto">
+    <p-button (click)="showDialog.set(true)">Add Question</p-button>
+  </div>
+</div>
+
+<p-dialog header="Add question" [modal]="true" [(visible)]="showDialog" [style]="{ width: '25rem' }">
+  <span class="p-text-secondary tw-block tw-mb-8">Create new question.</span>
+  <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
+    <label for="question" class="tw-font-semibold tw-w-24">Question</label>
+    <input pInputText id="question" class="tw-flex-auto" autocomplete="off" [(ngModel)]="question" />
+  </div>
+  <div class="tw-flex tw-justify-end tw-gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="showDialog.set(false)" />
+    <p-button label="Add Project" (click)="addQuestion()" [disabled]="!question()" />
+  </div>
+</p-dialog>

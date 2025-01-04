@@ -4,23 +4,42 @@ import { userAuthentication } from './common/services/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'projects',
+    redirectTo: 'project',
     pathMatch: 'full',
   },
   {
     canActivate: [userAuthentication()],
-    path: 'projects',
+    path: 'project',
     loadComponent: () =>
       import('./features/project/project.component').then(
         (m) => m.ProjectComponent,
       ),
     children: [
       {
-        path: '',
+        path: 'overview',
         loadComponent: () =>
           import('./features/project/overview/project-overview.component').then(
             (m) => m.ProjectOverviewComponent,
           ),
+      },
+      {
+        path: ':id/:action',
+        loadComponent: () =>
+          import('./features/project/detail/project-detail.component').then(
+            (m) => m.ProjectDetailComponent,
+          ),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import('./features/project/detail/project-detail.component').then(
+            (m) => m.ProjectDetailComponent,
+          ),
+      },
+      {
+        path: '**',
+        redirectTo: 'overview',
+        pathMatch: 'full',
       },
     ],
   },
@@ -69,6 +88,7 @@ export const routes: Routes = [
           ),
       },
       {
+        canActivate: [userAuthentication()],
         path: 'logout',
         loadComponent: () =>
           import('./features/auth/logout/logout.component').then(

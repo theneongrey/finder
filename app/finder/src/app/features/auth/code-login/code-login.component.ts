@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FloatLabel } from 'primeng/floatlabel';
 import { InputOtp } from 'primeng/inputotp';
 import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';

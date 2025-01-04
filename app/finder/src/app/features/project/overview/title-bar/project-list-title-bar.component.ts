@@ -12,14 +12,14 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './project-list-title-bar.component.css',
 })
 export class ProjectListTitleBarComponent {
-  #projectStore = inject(ProjectStore);
+  private projectStore = inject(ProjectStore);
 
   showDialog = model(false);
   projectName = model('');
 
   addProject() {
     if (this.projectName) {
-      this.#projectStore.addProject(this.projectName);
+      this.projectStore.addProject(this.projectName);
       this.showDialog.set(false);
     }
   }

@@ -10,14 +10,15 @@ import { LoggerService } from '../../../common/services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { Project } from '../_models/project.model';
-import { ProjectService } from '../_services/user.service';
+import { ProjectOverview } from '../_models/project-overview.model';
+import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
+import { Project } from '../_models/project-detail.model';
 
 export const ProjectStore = signalStore(
   { providedIn: 'root' },
   withState({
-    projects: [] as Project[],
+    projects: [] as ProjectOverview[],
     currentProject: undefined as Project | undefined,
   }),
   withProps(() => {

@@ -4,6 +4,7 @@ public class ProjectOverviewResponse
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
+    public required int TopicCount { get; set; } 
 }
 
 public static class ProjectOverviewMapper
@@ -14,6 +15,7 @@ public static class ProjectOverviewMapper
         {
             Id = project.Id.ToString(),
             Name = project.Name,
+            TopicCount = project.Topics.Count
         };
     }
 }

@@ -149,6 +149,9 @@ namespace Finder.Migrations
                     b.Property<DateTime>("Edited")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("OptionType")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(1024)
@@ -215,7 +218,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Topic");
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Vote", b =>

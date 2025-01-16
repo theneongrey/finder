@@ -9,17 +9,20 @@ public static class ProjectApi
 {
     public static void WithProjectApi(this WebApplication app)
     {
+        // Get all projects
         app.MapGet("/api/project",
                 async (ProjectService projectService) => Results.Ok(
                     (await projectService.GetAll()).Select(p => p.ToProjectOverviewResponse())))
             .RequireAuthorization();
 
+        // Get single project
         app.MapGet("/api/project/{id:guid}", async (Guid id, ProjectService projectService) =>
         {
             var result = await projectService.Get(id);
-            return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse());
+            return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectResponse());
         }).RequireAuthorization();
 
+        // Add project
         app.MapPost("/api/project",
                 async ([FromBody] ProjectRequest request, ProjectService projectService) =>
                 {
@@ -30,14 +33,16 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
 
+        // Update project
         app.MapPut("/api/project/{id:guid}",
                 async (Guid id, [FromBody] ProjectRequest request, ProjectService projectService) =>
                 {
                     var result = await projectService.Update(id, request.Name);
-                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectResponse());
+                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse());
                 })
             .RequireAuthorization();
 
+        // Delete project
         app.MapDelete("/api/project/{id:guid}",
                 async (Guid id, ProjectService projectService) =>
                 {
@@ -46,10 +51,11 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
         
+        // Add topic
         app.MapPost("/api/project/topic",
-                async ([FromBody] TopicRequest request, ProjectService projectService) =>
+                async ([FromBody] AddTopicRequest request, ProjectService projectService) =>
                 {
-                    var result = await projectService.AddTopic(request.ProjectId, request.Name);
+                    var result = await projectService.AddTopic(request, request.Name);
                     return !result.IsSuccess
                         ? Results.BadRequest()
                         : Results.Ok(result.Payload!.ToProjectOverviewResponse());

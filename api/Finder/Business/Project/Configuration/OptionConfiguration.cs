@@ -15,5 +15,8 @@ public class OptionConfiguration : IEntityTypeConfiguration<Option>
         
         builder.HasMany(p => p.Choices)
             .WithOne(p => p.Option);
+
+        builder.Property(p => p.OptionType)
+            .HasConversion<int>();
     }
 }

@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Services;
 using Finder.Business.Project.Api;
@@ -18,6 +20,13 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.Configure<LoginOptions>(builder.Configuration.GetSection("Login"));
 builder.Services.AddScoped<LoginService>();
@@ -34,7 +43,6 @@ builder.Services.AddAuthentication().AddCookie(o =>
             c.Response.StatusCode = StatusCodes.Status401Unauthorized;
             return Task.FromResult<object?>(null);
         };
-    
 });
 builder.Services.AddSpaStaticFiles(configuration => { configuration.RootPath = "App"; });
 

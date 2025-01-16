@@ -1,5 +1,4 @@
-import { Component, inject, input } from '@angular/core';
-import { Project } from '../../_models/project.model';
+import { Component, inject } from '@angular/core';
 import { Button } from 'primeng/button';
 import { Toast } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';

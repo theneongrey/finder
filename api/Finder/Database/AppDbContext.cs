@@ -8,6 +8,7 @@ namespace Finder.Database;
 public class AppDbContext : DbContext
 {
     public DbSet<Project> Projects { get; set; }
+    public DbSet<Topic> Topics { get; set; }
     public DbSet<Person> Persons { get; set; }
     public DbSet<LoginToken> LoginTokens { get; set; }
     public DbSet<AllowedEmail> AllowedEmails { get; set; }

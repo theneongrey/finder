@@ -17,7 +17,7 @@ export class ProjectDetailTitleBarComponent {
   action = input<string | undefined>(undefined);
 
   showDialog = model(false);
-  question = model('');
+  topic = model('');
 
   constructor() {
     effect(() => {
@@ -27,5 +27,5 @@ export class ProjectDetailTitleBarComponent {
     });
   }
 
-  addQuestion() {}
+  addTopic() {}
 }

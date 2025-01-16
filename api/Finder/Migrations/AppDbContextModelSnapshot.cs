@@ -110,6 +110,33 @@ namespace Finder.Migrations
                     b.ToTable("Persons");
                 });
 
+            modelBuilder.Entity("Finder.Business.Project.Entities.Choice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Edited")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("OptionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OptionId");
+
+                    b.ToTable("Choice");
+                });
+
             modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
                 {
                     b.Property<Guid>("Id")
@@ -122,17 +149,17 @@ namespace Finder.Migrations
                     b.Property<DateTime>("Edited")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(1024)
                         .HasColumnType("character varying(1024)");
 
+                    b.Property<Guid>("TopicId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("TopicId");
 
                     b.ToTable("Option");
                 });
@@ -162,33 +189,6 @@ namespace Finder.Migrations
                     b.HasIndex("CreatorId");
 
                     b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("Finder.Business.Project.Entities.Question", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Edited")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("character varying(1024)");
-
-                    b.Property<Guid>("TopicId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TopicId");
-
-                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Topic", b =>
@@ -224,21 +224,21 @@ namespace Finder.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("ChoiceId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("Edited")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("OptionId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OptionId");
+                    b.HasIndex("ChoiceId");
 
                     b.HasIndex("PersonId");
 
@@ -256,15 +256,26 @@ namespace Finder.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
+            modelBuilder.Entity("Finder.Business.Project.Entities.Choice", b =>
                 {
-                    b.HasOne("Finder.Business.Project.Entities.Question", "Question")
-                        .WithMany("Options")
-                        .HasForeignKey("QuestionId")
+                    b.HasOne("Finder.Business.Project.Entities.Option", "Option")
+                        .WithMany("Choices")
+                        .HasForeignKey("OptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Question");
+                    b.Navigation("Option");
+                });
+
+            modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
+                {
+                    b.HasOne("Finder.Business.Project.Entities.Topic", "Topic")
+                        .WithMany("Options")
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Topic");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
@@ -276,17 +287,6 @@ namespace Finder.Migrations
                         .IsRequired();
 
                     b.Navigation("Creator");
-                });
-
-            modelBuilder.Entity("Finder.Business.Project.Entities.Question", b =>
-                {
-                    b.HasOne("Finder.Business.Project.Entities.Topic", "Topic")
-                        .WithMany("Questions")
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Topic");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Topic", b =>
@@ -302,9 +302,9 @@ namespace Finder.Migrations
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Vote", b =>
                 {
-                    b.HasOne("Finder.Business.Project.Entities.Option", "Option")
+                    b.HasOne("Finder.Business.Project.Entities.Choice", "Choice")
                         .WithMany("Votes")
-                        .HasForeignKey("OptionId")
+                        .HasForeignKey("ChoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -314,14 +314,19 @@ namespace Finder.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Option");
+                    b.Navigation("Choice");
 
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
+            modelBuilder.Entity("Finder.Business.Project.Entities.Choice", b =>
                 {
                     b.Navigation("Votes");
+                });
+
+            modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
+                {
+                    b.Navigation("Choices");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
@@ -329,14 +334,9 @@ namespace Finder.Migrations
                     b.Navigation("Topics");
                 });
 
-            modelBuilder.Entity("Finder.Business.Project.Entities.Question", b =>
-                {
-                    b.Navigation("Options");
-                });
-
             modelBuilder.Entity("Finder.Business.Project.Entities.Topic", b =>
                 {
-                    b.Navigation("Questions");
+                    b.Navigation("Options");
                 });
 #pragma warning restore 612, 618
         }

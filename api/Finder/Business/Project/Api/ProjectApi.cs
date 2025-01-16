@@ -45,5 +45,15 @@ public static class ProjectApi
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();
+        
+        app.MapPost("/api/project/topic",
+                async ([FromBody] TopicRequest request, ProjectService projectService) =>
+                {
+                    var result = await projectService.AddTopic(request.ProjectId, request.Name);
+                    return !result.IsSuccess
+                        ? Results.BadRequest()
+                        : Results.Ok(result.Payload!.ToProjectOverviewResponse());
+                })
+            .RequireAuthorization();
     }
 }

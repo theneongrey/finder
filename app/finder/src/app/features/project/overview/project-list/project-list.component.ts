@@ -24,7 +24,8 @@ export class ProjectListComponent {
     this.projectStore.deleteProject(id);
   }
 
-  confirm(id: string, title: string) {
+  showDeleteDialog(event: MouseEvent, id: string, title: string) {
+    event.stopPropagation();
     this.confirmationService.confirm({
       header: 'Delete?',
       message: `Are you sure that you want to delete project ${title}?`,

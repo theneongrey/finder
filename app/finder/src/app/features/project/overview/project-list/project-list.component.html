@@ -5,7 +5,7 @@
         {{ project.name }}
       </div>
       <div class="tw-ml-auto tw-mr-0">
-        <p-button icon="pi pi-trash" (click)="confirm(project.id, project.name)"/>
+        <p-button icon="pi pi-trash" (click)="showDeleteDialog($event, project.id, project.name)"/>
       </div>
     </div>
   }

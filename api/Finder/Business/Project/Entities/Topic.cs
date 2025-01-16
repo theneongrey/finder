@@ -8,5 +8,5 @@ public class Topic : BaseEntity
     public required string Name { get; set; }
     
     public required Project Project { get; set; }
-    public required List<Question> Questions { get; set; } = [];
+    public required List<Option> Options { get; set; } = [];
 }

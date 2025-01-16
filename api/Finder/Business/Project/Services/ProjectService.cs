@@ -1,3 +1,4 @@
+using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Database;
@@ -80,5 +81,26 @@ public class ProjectService
         }
         
         return Result<Entities.Project>.Success(project); 
+    }
+
+    public async Task<Result<Entities.Project>> AddTopic(Guid projectId, string name)
+    {
+        var projectResult = await Get(projectId);
+        if (!projectResult.IsSuccess)
+        {
+            return projectResult;
+        }
+
+        var topic = new Topic
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Project = projectResult.Payload!,
+            Options = []
+        };
+        
+        projectResult.Payload!.Topics.Add(topic);
+        await _dbContext.SaveChangesAsync();
+        return projectResult;
     }
 }

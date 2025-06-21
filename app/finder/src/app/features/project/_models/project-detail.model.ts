@@ -1,6 +1,6 @@
 export enum OptionType {
-  YesNo = 'YesNo',
-  Rating = 'Rating',
+  YesNo = 0,
+  Rating = 1,
 }
 
 export interface Option {

@@ -1,11 +1,12 @@
 <div class="tw-flex">
+  <p-button [routerLink]="['/project']">Back</p-button>
   <div class="tw-mr-0 tw-ml-auto">
-    <p-button (click)="showDialog.set(true)">Add Question</p-button>
+    <p-button (click)="showDialog.set(true)">Add Topic</p-button>
   </div>
 </div>
 
 <p-dialog header="Add topic" [modal]="true" [(visible)]="showDialog" [style]="{ width: '25rem' }">
-  <span class="p-text-secondary tw-block tw-mb-8">Create new question.</span>
+  <span class="p-text-secondary tw-block tw-mb-8">Create new topic.</span>
   <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
     <label for="topic" class="tw-font-semibold tw-w-24">Topic</label>
     <input pInputText id="topic" class="tw-flex-auto" autocomplete="off" [(ngModel)]="topic" />

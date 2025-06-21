@@ -89,18 +89,18 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> AddTopic(AddTopicRequest topicRequest, string name)
+    public async Task<Result<Topic>> AddTopic(AddTopicRequest topicRequest)
     {
         var projectResult = await GetProjectOverview(topicRequest.ProjectId);
         if (projectResult == null)
         {
-            return Result<Entities.Project>.Fail(404);
+            return Result<Topic>.Fail(404);
         }
 
         var topic = new Topic
         {
             Id = Guid.NewGuid(),
-            Name = name,
+            Name = topicRequest.Name,
             Project = projectResult,
             Options = []
         };
@@ -122,7 +122,21 @@ public class ProjectService
         _dbContext.Topics.Add(topic);
         
         await _dbContext.SaveChangesAsync();
-        return Result<Entities.Project>.Success(projectResult);
+        return Result<Topic>.Success(topic);
+    }
+
+    public async Task<Result> DeleteTopic(Guid topicId)
+    {
+        var deletedTopics = await _dbContext.Topics
+            .Where(t => t.Id == topicId && t.Project.Creator.Id == _userService.GetUserId()).ExecuteDeleteAsync();
+
+        if (deletedTopics == 0)
+        {
+            return Result.Fail(404);
+        }
+
+        await _dbContext.SaveChangesAsync();
+        return Result.Success();
     }
 
     private List<Choice> GetChoicesByType(OptionType type, Option parent)

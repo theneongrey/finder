@@ -4,7 +4,7 @@ public class ProjectResponseOption
 {
     public required string Id { get; set; }
     public required string Text { get; set; }
-    public required string OptionType { get; set; }
+    public required int OptionType { get; set; }
 }
 
 public class ProjectResponseTopic
@@ -29,11 +29,11 @@ public static class ProjectMapper
         {
             Id = option.Id.ToString(),
             Text = option.Text,
-            OptionType = Enum.GetName(option.OptionType)!
+            OptionType = (int)option.OptionType
         };
     }
     
-    private static ProjectResponseTopic ToProjectResponseTopic(this Entities.Topic topic)
+    public static ProjectResponseTopic ToProjectResponseTopic(this Entities.Topic topic)
     {
         return new ProjectResponseTopic
         {

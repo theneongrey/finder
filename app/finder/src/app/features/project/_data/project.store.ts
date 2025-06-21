@@ -13,7 +13,8 @@ import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
-import { Project } from '../_models/project-detail.model';
+import { Project, Topic } from '../_models/project-detail.model';
+import { CreateOption } from '../_models/create-option.model';
 
 export const ProjectStore = signalStore(
   { providedIn: 'root' },
@@ -38,7 +39,10 @@ export const ProjectStore = signalStore(
                 patchState(store, { projects });
               },
               error: (error) => {
-                store.loggerService.log('Error while loading projects', error);
+                store.loggerService.log(
+                  '[ProjectStore] Error while loading projects',
+                  error,
+                );
               },
             }),
           );
@@ -55,7 +59,10 @@ export const ProjectStore = signalStore(
                 patchState(store, { currentProject: project });
               },
               error: (error) => {
-                store.loggerService.log('Error while loading project', error);
+                store.loggerService.log(
+                  '[ProjectStore] Error while loading project',
+                  error,
+                );
               },
             }),
           );
@@ -73,7 +80,10 @@ export const ProjectStore = signalStore(
                 store.router.navigate([`/project/${project.id}/add`]);
               },
               error: (error) => {
-                store.loggerService.log('Error addint a project', error);
+                store.loggerService.log(
+                  '[ProjectStore] Error addint a project',
+                  error,
+                );
               },
             }),
           );
@@ -92,7 +102,77 @@ export const ProjectStore = signalStore(
                 });
               },
               error: (error) => {
-                store.loggerService.log('Error deleting project', error);
+                store.loggerService.log(
+                  '[ProjectStore] Error deleting project',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
+    addTopic: rxMethod<{
+      projectId: string;
+      name: string;
+      options: CreateOption[];
+    }>(
+      pipe(
+        switchMap((topic) => {
+          return store.projectService
+            .addTopic(topic.projectId, topic.name, topic.options)
+            .pipe(
+              tapResponse({
+                next: (responseTopic) => {
+                  patchState(store, {
+                    currentProject: {
+                      ...store.currentProject()!,
+                      topics: [
+                        ...store.currentProject()!.topics,
+                        responseTopic,
+                      ],
+                    },
+                  });
+
+                  store.router.navigate([
+                    `/project/${topic.projectId}/${responseTopic.id}`,
+                  ]);
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error while adding a topic',
+                    error,
+                  );
+                },
+              }),
+            );
+        }),
+      ),
+    ),
+
+    deleteTopic: rxMethod<string>(
+      pipe(
+        switchMap((topicId) => {
+          return store.projectService.deleteTopic(topicId).pipe(
+            tapResponse({
+              next: () => {
+                patchState(store, {
+                  currentProject: {
+                    ...store.currentProject()!,
+                    topics: [
+                      ...store
+                        .currentProject()!
+                        .topics.filter((t) => t.id !== topicId),
+                    ],
+                  },
+                });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error deleting topic',
+                  error,
+                );
               },
             }),
           );

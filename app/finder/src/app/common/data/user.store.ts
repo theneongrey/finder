@@ -36,13 +36,19 @@ export const UserStore = signalStore(
         next: (user) => patchState(store, { user }),
         error: (error) => {
           patchState(store, { user: undefined });
-          store.loggerService.log('Error while loading user', error);
+          store.loggerService.error(
+            '[UserStore] Error while loading user',
+            error,
+          );
         },
       }),
     );
 
     return {
       setRedirectUrl(redirectUrl: string | undefined) {
+        store.loggerService.debug(
+          `[UserStore] updating redirect url ${redirectUrl}`,
+        );
         patchState(store, { redirectUrl });
       },
 
@@ -87,8 +93,8 @@ export const UserStore = signalStore(
                           state: 'error',
                         },
                       });
-                      store.loggerService.log(
-                        'Error requestimg login mail',
+                      store.loggerService.error(
+                        '[UserStore] Error requesting login mail',
                         error,
                       );
                     }
@@ -113,7 +119,7 @@ export const UserStore = signalStore(
                 },
                 error: (error) => {
                   store.loggerService.log(
-                    'Error while logging in with token',
+                    '[UserStore] Error while logging in with token',
                     error,
                   );
                 },
@@ -134,13 +140,16 @@ export const UserStore = signalStore(
               .pipe(
                 tapResponse({
                   next: (redirectUrl) => {
+                    store.loggerService.debug(
+                      `[UserStore] Login successful redirecting to ${redirectUrl}`,
+                    );
                     if (redirectUrl) {
                       patchState(store, { redirectUrl });
                     }
                   },
                   error: (error) => {
-                    store.loggerService.log(
-                      'Error while logging in with code',
+                    store.loggerService.error(
+                      '[UserStore] Error while logging in with code',
                       error,
                     );
                   },
@@ -160,8 +169,8 @@ export const UserStore = signalStore(
               tapResponse({
                 next: (user) => patchState(store, { user }),
                 error: (error) => {
-                  store.loggerService.log(
-                    'Error while updating the name',
+                  store.loggerService.error(
+                    '[UserStore] Error while updating the name',
                     error,
                   );
                 },
@@ -178,7 +187,10 @@ export const UserStore = signalStore(
               tapResponse({
                 next: () => {},
                 error: (error) => {
-                  store.loggerService.log('Error while logging out', error);
+                  store.loggerService.error(
+                    '[UserStore] Error while logging out',
+                    error,
+                  );
                 },
                 finalize: () => {
                   patchState(store, { user: undefined });

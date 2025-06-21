@@ -16,12 +16,14 @@ export class UserService {
   ) {}
 
   getUser() {
-    this.loggerService.log('fetching user');
+    this.loggerService.debug('[User service] fetching user');
     return this.httpClient.get<User>(`${this.baseUrl}/api/auth/who`);
   }
 
   requestLoginMail(email: string, redirectUrl?: string) {
-    this.loggerService.log('request login email');
+    this.loggerService.debug(
+      `[User service] request login email for ${email} and ${redirectUrl}`,
+    );
     return this.httpClient.post<void>(
       `${this.baseUrl}/api/auth/requestLoginMail`,
       {
@@ -32,14 +34,14 @@ export class UserService {
   }
 
   loginByToken(loginToken: string) {
-    this.loggerService.log('login by token');
+    this.loggerService.debug('[User service] login by token');
     return this.httpClient.post<string>(`${this.baseUrl}/api/auth/tokenLogin`, {
       loginToken,
     });
   }
 
   loginByCode(email: string, loginCode: string) {
-    this.loggerService.log('login by code');
+    this.loggerService.debug('[User service] login by code');
     return this.httpClient.post<string>(`${this.baseUrl}/api/auth/codeLogin`, {
       email,
       loginCode,
@@ -47,14 +49,14 @@ export class UserService {
   }
 
   updateName(name: string) {
-    this.loggerService.log('update name');
+    this.loggerService.debug('[User service] update name');
     return this.httpClient.post<User>(`${this.baseUrl}/api/auth/name`, {
       name,
     });
   }
 
   logout() {
-    this.loggerService.log('log out');
+    this.loggerService.debug('log out');
     return this.httpClient.post<void>(`${this.baseUrl}/api/auth/logout`, {});
   }
 }

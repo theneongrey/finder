@@ -12,8 +12,8 @@ import { ProjectDetailTopicListComponent } from './topic-list/project-detail-top
 })
 export class ProjectDetailComponent {
   private projectStore = inject(ProjectStore);
-  id = input<string>('');
-  action = input<string>('');
+  id = input('');
+  action = input('');
   project = this.projectStore.currentProject;
 
   constructor(router: Router) {

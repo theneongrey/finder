@@ -1,9 +1,8 @@
-<div>
+<div class="tw-flex tw-flex-col tw-h-full tw-w-full">
   <app-project-detail-title-bar [action]="action()" />
-</div>
-<div>
+  <div class="tw-flex-grow">
   @if (project(); as project) {
-    <h4 class="tw-mb-5">Project: {{ project.name }}</h4>
     <app-project-detail-topic-list [topics]="project.topics" />
   }
+  </div>
 </div>

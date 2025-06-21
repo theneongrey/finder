@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { environment } from '../../../common/env/environment';
 import { LoggerService } from '../../../common/services/logger.service';
-import { Project } from '../_models/project-detail.model';
+import { Option, Project, Topic } from '../_models/project-detail.model';
+import { CreateOption } from '../_models/create-option.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,19 +18,19 @@ export class ProjectService {
   ) {}
 
   getProjects() {
-    this.loggerService.log('fetching projects');
+    this.loggerService.debug('[ProjectService] fetching projects');
     return this.httpClient.get<ProjectOverview[]>(
       `${this.baseUrl}/api/project`,
     );
   }
 
   getProject(id: string) {
-    this.loggerService.log('fetching project');
+    this.loggerService.debug('[ProjectService] fetching project');
     return this.httpClient.get<Project>(`${this.baseUrl}/api/project/${id}`);
   }
 
   addProject(projectName: string) {
-    this.loggerService.log('fetching project');
+    this.loggerService.debug('[ProjectService] fetching project');
     return this.httpClient.post<ProjectOverview>(
       `${this.baseUrl}/api/project`,
       {
@@ -39,7 +40,7 @@ export class ProjectService {
   }
 
   updateProject(id: string, projectName: string) {
-    this.loggerService.log('fetching project');
+    this.loggerService.debug('[ProjectService] fetching project');
     return this.httpClient.put<ProjectOverview>(
       `${this.baseUrl}/api/project/${id}`,
       {
@@ -49,7 +50,23 @@ export class ProjectService {
   }
 
   deleteProject(id: string) {
-    this.loggerService.log('fetching project');
+    this.loggerService.debug('[ProjectService] fetching project');
     return this.httpClient.delete(`${this.baseUrl}/api/project/${id}`);
+  }
+
+  addTopic(projectId: string, name: string, options: CreateOption[]) {
+    this.loggerService.debug(`[ProjectService] adding topic ${name}`);
+    return this.httpClient.post<Topic>(`${this.baseUrl}/api/project/topic`, {
+      name: name,
+      projectId: projectId,
+      options: options,
+    });
+  }
+
+  deleteTopic(topicId: string) {
+    this.loggerService.debug(`[ProjectService] deleting topic ${topicId}`);
+    return this.httpClient.delete(
+      `${this.baseUrl}/api/project/topic/${topicId}`,
+    );
   }
 }

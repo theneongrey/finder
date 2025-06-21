@@ -55,10 +55,20 @@ public static class ProjectApi
         app.MapPost("/api/project/topic",
                 async ([FromBody] AddTopicRequest request, ProjectService projectService) =>
                 {
-                    var result = await projectService.AddTopic(request, request.Name);
+                    var result = await projectService.AddTopic(request);
                     return !result.IsSuccess
                         ? Results.BadRequest()
-                        : Results.Ok(result.Payload!.ToProjectOverviewResponse());
+                        : Results.Ok(new { Id = result.Payload!.ToProjectResponseTopic() });
+                })
+            .RequireAuthorization();
+        
+        
+        // Delete topic
+        app.MapDelete("/api/project/topic/{id:guid}",
+                async (Guid id, ProjectService projectService) =>
+                {
+                    var result = await projectService.DeleteTopic(id);
+                    return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();
     }

@@ -6,21 +6,26 @@ import { ProjectStore } from '../../_data/project.store';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-project-list-title-bar',
+  selector: 'app-project-overview-title-bar',
   imports: [Button, Dialog, InputText, FormsModule],
-  templateUrl: './project-list-title-bar.component.html',
-  styleUrl: './project-list-title-bar.component.css',
+  templateUrl: './project-overview-title-bar.component.html',
+  styleUrl: './project-overview-title-bar.component.css',
 })
-export class ProjectListTitleBarComponent {
+export class ProjectOverviewTitleBarComponent {
   private projectStore = inject(ProjectStore);
 
   showDialog = model(false);
   projectName = model('');
 
   addProject() {
-    if (this.projectName) {
-      this.projectStore.addProject(this.projectName);
+    if (this.projectName()) {
+      this.projectStore.addProject(this.projectName());
       this.showDialog.set(false);
     }
+  }
+
+  displayDialog() {
+    this.projectName.set('');
+    this.showDialog.set(true);
   }
 }

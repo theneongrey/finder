@@ -1,12 +1,12 @@
 <div class="tw-flex">
-  <p-button [routerLink]="['/project']">Back</p-button>
+  <p-button [routerLink]="['/project']">Back to overview</p-button>
   <div class="tw-mr-0 tw-ml-auto">
-    <p-button (click)="showDialog.set(true)">Add Topic</p-button>
+    <p-button (click)="displayDialog()">Add Topic</p-button>
   </div>
 </div>
 
 <p-dialog header="Add topic" [modal]="true" [(visible)]="showDialog" [style]="{ width: '25rem' }">
-  <span class="p-text-secondary tw-block tw-mb-8">Create new topic.</span>
+  <span class="p-text-secondary tw-block tw-mb-8">A topic is a specific thing that you want to decide like &quot;What color should the bedroom walls be&quot;</span>
   <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
     <label for="topic" class="tw-font-semibold tw-w-24">Topic</label>
     <input pInputText id="topic" class="tw-flex-auto" autocomplete="off" [(ngModel)]="topic" />

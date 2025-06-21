@@ -7,6 +7,7 @@ export interface Option {
   id: string;
   text: string;
   optionType: OptionType;
+  votes: number;
 }
 
 export interface Topic {

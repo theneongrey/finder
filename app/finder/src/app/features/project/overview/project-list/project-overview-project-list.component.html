@@ -4,7 +4,7 @@
       <h4 class="tw-mb-5">Projects</h4>
 
       @for (project of projects; track project.id) {
-        <div class="tw-flex tw-h-8 tw-cursor-pointer hover:tw-bg-sky-700 hover:tw-text-white" [routerLink]="['/project', project.id]">
+        <div class="tw-flex tw-h-8 tw-cursor-pointer hover:tw-bg-sky-700 hover:tw-text-white" [routerLink]="['/project/detail', project.id]">
           <div class="tw-w-[400px]">
             {{ project.name }}
           </div>

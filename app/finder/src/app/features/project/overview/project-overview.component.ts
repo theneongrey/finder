@@ -1,11 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { ProjectListTitleBarComponent } from './title-bar/project-list-title-bar.component';
-import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectOverviewTitleBarComponent } from './title-bar/project-overview-title-bar.component';
 import { ProjectStore } from '../_data/project.store';
+import { ProjectOverviewProjectListComponent } from './project-list/project-overview-project-list.component';
 
 @Component({
   selector: 'app-project-overview',
-  imports: [ProjectListTitleBarComponent, ProjectListComponent],
+  imports: [
+    ProjectOverviewTitleBarComponent,
+    ProjectOverviewProjectListComponent,
+  ],
   templateUrl: './project-overview.component.html',
   styleUrl: './project-overview.component.css',
 })

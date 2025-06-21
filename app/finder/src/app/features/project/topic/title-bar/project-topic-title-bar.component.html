@@ -1,0 +1,18 @@
+<div class="tw-flex">
+  <p-button [routerLink]="['/project/detail', project()?.id]">Back to {{ project()?.name }}</p-button>
+  <div class="tw-mr-0 tw-ml-auto">
+    <p-button (click)="displayDialog()">Add option</p-button>
+  </div>
+</div>
+
+<p-dialog header="Add option" [modal]="true" [(visible)]="showDialog" [style]="{ width: '25rem' }">
+  <span class="p-text-secondary tw-block tw-mb-8">An option is the actual &quot;thing&quot; that should be voted like: &quot;Dark red&quot; or &quot;Navy blue&quot;</span>
+  <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
+    <label for="option" class="tw-font-semibold tw-w-24">Option</label>
+    <input pInputText id="option" class="tw-flex-auto" autocomplete="off" [(ngModel)]="option" />
+  </div>
+  <div class="tw-flex tw-justify-end tw-gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="showDialog.set(false)" />
+    <p-button label="Add option" (click)="addOption()" [disabled]="!option()" />
+  </div>
+</p-dialog>

@@ -1,39 +1,38 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Topic } from '../../_models/project-detail.model';
 import { DataView } from 'primeng/dataview';
 import { ProjectStore } from '../../_data/project.store';
 import { Button } from 'primeng/button';
-import { RouterLink } from '@angular/router';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-project-detail-topic-list',
-  imports: [FormsModule, DataView, Button, RouterLink, ConfirmDialog],
+  selector: 'app-project-topic-option-list',
+  imports: [FormsModule, DataView, Button, ConfirmDialog],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './project-detail-topic-list.component.html',
-  styleUrl: './project-detail-topic-list.component.css',
+  templateUrl: './project-topic-option-list.component.html',
+  styleUrl: './project-topic-option-list.component.css',
 })
-export class ProjectDetailTopicListComponent {
+export class ProjectTopicOptionListComponent {
   private projectStore = inject(ProjectStore);
   private confirmationService = inject(ConfirmationService);
 
-  topics = input.required<Topic[]>();
-  project = this.projectStore.currentProject;
+  topic = input<Topic>();
+  options = computed(() => this.topic()?.options);
 
   showDeleteDialog(event: MouseEvent, id: string, title: string) {
     event.stopPropagation();
     this.confirmationService.confirm({
       header: 'Delete?',
-      message: `Are you sure that you want to delete topic "${title}?"`,
+      message: `Are you sure that you want to delete the option "${title}?"`,
       accept: () => {
-        this.deleteTopic(id);
+        this.deleteOption(id);
       },
     });
   }
 
-  deleteTopic(id: string) {
-    this.projectStore.deleteTopic(id);
+  deleteOption(id: string) {
+    this.projectStore.deleteOption(id);
   }
 }

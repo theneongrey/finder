@@ -58,7 +58,7 @@ public static class ProjectApi
                     var result = await projectService.AddTopic(request);
                     return !result.IsSuccess
                         ? Results.BadRequest()
-                        : Results.Ok(new { Id = result.Payload!.ToProjectResponseTopic() });
+                        : Results.Ok(result.Payload!.ToProjectResponseTopic());
                 })
             .RequireAuthorization();
         
@@ -68,6 +68,27 @@ public static class ProjectApi
                 async (Guid id, ProjectService projectService) =>
                 {
                     var result = await projectService.DeleteTopic(id);
+                    return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
+                })
+            .RequireAuthorization();
+        
+        // Add option
+        app.MapPost("/api/project/topic/option",
+                async ([FromBody] AddOptionToTopicRequest request, ProjectService projectService) =>
+                {
+                    var result = await projectService.AddOptionToTopic(request);
+                    return !result.IsSuccess
+                        ? Results.BadRequest()
+                        : Results.Ok(result.Payload!.ToProjectResponseOption());
+                })
+            .RequireAuthorization();
+        
+        
+        // Delete topic
+        app.MapDelete("/api/project/topic/option/{id:guid}",
+                async (Guid id, ProjectService projectService) =>
+                {
+                    var result = await projectService.DeleteOption(id);
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();

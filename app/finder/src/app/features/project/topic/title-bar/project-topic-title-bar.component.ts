@@ -5,20 +5,24 @@ import { InputText } from 'primeng/inputtext';
 import { ProjectStore } from '../../_data/project.store';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { OptionType } from '../../_models/project-detail.model';
+import { LoggerService } from '../../../../common/services/logger.service';
 
 @Component({
-  selector: 'app-project-detail-title-bar',
+  selector: 'app-project-topic-title-bar',
   imports: [Button, Dialog, InputText, FormsModule, RouterLink],
-  templateUrl: './project-detail-title-bar.component.html',
-  styleUrl: './project-detail-title-bar.component.css',
+  templateUrl: './project-topic-title-bar.component.html',
+  styleUrl: './project-topic-title-bar.component.css',
 })
-export class ProjectDetailTitleBarComponent {
+export class ProjectTopicTitleBarComponent {
   private projectStore = inject(ProjectStore);
+  private loggerService = inject(LoggerService);
   project = this.projectStore.currentProject;
   action = input<string | undefined>(undefined);
+  topicId = input.required<string>();
 
   showDialog = model(false);
-  topic = model('');
+  option = model('');
 
   constructor() {
     effect(() => {
@@ -28,18 +32,25 @@ export class ProjectDetailTitleBarComponent {
     });
   }
 
-  addTopic() {
-    if (this.topic()) {
-      this.projectStore.addTopic({
-        projectId: this.project()!.id,
-        name: this.topic(),
+  addOption() {
+    this.loggerService.debug(
+      '[ProjectTopicTitleBar] adding new option',
+      this.option(),
+      this.topicId(),
+    );
+
+    if (this.option()) {
+      this.projectStore.addOption({
+        topicId: this.topicId()!,
+        text: this.option(),
       });
       this.showDialog.set(false);
+      this.option.set('');
     }
   }
 
   displayDialog() {
-    this.topic.set('');
+    this.option.set('');
     this.showDialog.set(true);
   }
 }

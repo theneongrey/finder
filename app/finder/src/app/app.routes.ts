@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { userAuthentication } from './common/services/auth.guard';
+import { ProjectTopicComponent } from './features/project/topic/project-topic.component';
 
 export const routes: Routes = [
   {
@@ -23,14 +24,28 @@ export const routes: Routes = [
           ),
       },
       {
-        path: ':id/:action',
+        path: 'detail/:id/:action',
         loadComponent: () =>
           import('./features/project/detail/project-detail.component').then(
             (m) => m.ProjectDetailComponent,
           ),
       },
       {
-        path: ':id',
+        path: 'detail/:id/topic/:topicId/:action',
+        loadComponent: () =>
+          import('./features/project/topic/project-topic.component').then(
+            (m) => m.ProjectTopicComponent,
+          ),
+      },
+      {
+        path: 'detail/:id/topic/:topicId',
+        loadComponent: () =>
+          import('./features/project/topic/project-topic.component').then(
+            (m) => m.ProjectTopicComponent,
+          ),
+      },
+      {
+        path: 'detail/:id',
         loadComponent: () =>
           import('./features/project/detail/project-detail.component').then(
             (m) => m.ProjectDetailComponent,

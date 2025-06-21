@@ -7,13 +7,13 @@ import { RouterLink } from '@angular/router';
 import { DataView } from 'primeng/dataview';
 
 @Component({
-  selector: 'app-project-list',
+  selector: 'app-project-overview-project-list',
   imports: [Button, DataView, ConfirmDialogModule, RouterLink],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './project-list.component.html',
-  styleUrl: './project-list.component.css',
+  templateUrl: './project-overview-project-list.component.html',
+  styleUrl: './project-overview-project-list.component.css',
 })
-export class ProjectListComponent {
+export class ProjectOverviewProjectListComponent {
   private projectStore = inject(ProjectStore);
   private confirmationService = inject(ConfirmationService);
 
@@ -23,7 +23,7 @@ export class ProjectListComponent {
     event.stopPropagation();
     this.confirmationService.confirm({
       header: 'Delete?',
-      message: `Are you sure that you want to delete project ${title}?`,
+      message: `Are you sure that you want to delete project "${title}?"`,
       accept: () => {
         this.deleteProject(id);
       },

@@ -5,6 +5,7 @@ public class ProjectResponseOption
     public required string Id { get; set; }
     public required string Text { get; set; }
     public required int OptionType { get; set; }
+    public required int Votes { get; set; }
 }
 
 public class ProjectResponseTopic
@@ -23,13 +24,14 @@ public class ProjectResponse
 
 public static class ProjectMapper
 {
-    private static ProjectResponseOption ToProjectResponseOption(this Entities.Option option)
+    public static ProjectResponseOption ToProjectResponseOption(this Entities.Option option)
     {
         return new ProjectResponseOption
         {
             Id = option.Id.ToString(),
             Text = option.Text,
-            OptionType = (int)option.OptionType
+            OptionType = (int)option.OptionType,
+            Votes = option.Choices.Sum(c => c.Votes.Count)
         };
     }
     

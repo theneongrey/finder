@@ -13,8 +13,7 @@ import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
-import { Project, Topic } from '../_models/project-detail.model';
-import { CreateOption } from '../_models/create-option.model';
+import { OptionType, Project } from '../_models/project-detail.model';
 
 export const ProjectStore = signalStore(
   { providedIn: 'root' },
@@ -77,7 +76,7 @@ export const ProjectStore = signalStore(
             tapResponse({
               next: (project) => {
                 patchState(store, { projects: [...store.projects(), project] });
-                store.router.navigate([`/project/${project.id}/add`]);
+                store.router.navigate([`/project/detail/${project.id}/add`]);
               },
               error: (error) => {
                 store.loggerService.log(
@@ -116,15 +115,19 @@ export const ProjectStore = signalStore(
     addTopic: rxMethod<{
       projectId: string;
       name: string;
-      options: CreateOption[];
     }>(
       pipe(
         switchMap((topic) => {
           return store.projectService
-            .addTopic(topic.projectId, topic.name, topic.options)
+            .addTopic(topic.projectId, topic.name)
             .pipe(
               tapResponse({
                 next: (responseTopic) => {
+                  store.loggerService.debug(
+                    `[ProjectStore] Added topic`,
+                    responseTopic,
+                  );
+
                   patchState(store, {
                     currentProject: {
                       ...store.currentProject()!,
@@ -136,7 +139,7 @@ export const ProjectStore = signalStore(
                   });
 
                   store.router.navigate([
-                    `/project/${topic.projectId}/${responseTopic.id}`,
+                    `/project/detail/${topic.projectId}/topic/${responseTopic.id}/add`,
                   ]);
                 },
                 error: (error) => {
@@ -171,6 +174,73 @@ export const ProjectStore = signalStore(
               error: (error) => {
                 store.loggerService.log(
                   '[ProjectStore] Error deleting topic',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
+    addOption: rxMethod<{
+      topicId: string;
+      text: string;
+    }>(
+      pipe(
+        switchMap((option) => {
+          return store.projectService
+            .addOption(option.topicId, option.text)
+            .pipe(
+              tapResponse({
+                next: (responseOption) => {
+                  patchState(store, {
+                    currentProject: {
+                      ...store.currentProject()!,
+                      topics: store.currentProject()!.topics.map((t) =>
+                        t.id !== option.topicId
+                          ? t
+                          : {
+                              ...t,
+                              options: [...t.options, responseOption],
+                            },
+                      ),
+                    },
+                  });
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error while adding an option',
+                    error,
+                  );
+                },
+              }),
+            );
+        }),
+      ),
+    ),
+
+    deleteOption: rxMethod<string>(
+      pipe(
+        switchMap((optionId) => {
+          return store.projectService.deleteOption(optionId).pipe(
+            tapResponse({
+              next: () => {
+                patchState(store, {
+                  currentProject: {
+                    ...store.currentProject()!,
+                    topics: [
+                      ...store.currentProject()!.topics.map((t) => ({
+                        ...t,
+                        options: t.options.filter((o) => o.id !== optionId),
+                      })),
+                    ],
+                  },
+                });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error deleting option',
                   error,
                 );
               },

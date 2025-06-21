@@ -3,7 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { environment } from '../../../common/env/environment';
 import { LoggerService } from '../../../common/services/logger.service';
-import { Option, Project, Topic } from '../_models/project-detail.model';
+import {
+  Option,
+  OptionType,
+  Project,
+  Topic,
+} from '../_models/project-detail.model';
 import { CreateOption } from '../_models/create-option.model';
 
 @Injectable({
@@ -54,12 +59,11 @@ export class ProjectService {
     return this.httpClient.delete(`${this.baseUrl}/api/project/${id}`);
   }
 
-  addTopic(projectId: string, name: string, options: CreateOption[]) {
+  addTopic(projectId: string, name: string) {
     this.loggerService.debug(`[ProjectService] adding topic ${name}`);
     return this.httpClient.post<Topic>(`${this.baseUrl}/api/project/topic`, {
       name: name,
       projectId: projectId,
-      options: options,
     });
   }
 
@@ -67,6 +71,25 @@ export class ProjectService {
     this.loggerService.debug(`[ProjectService] deleting topic ${topicId}`);
     return this.httpClient.delete(
       `${this.baseUrl}/api/project/topic/${topicId}`,
+    );
+  }
+
+  addOption(topicId: string, text: string) {
+    this.loggerService.debug(`[ProjectService] adding option ${text}`);
+    return this.httpClient.post<Option>(
+      `${this.baseUrl}/api/project/topic/option`,
+      {
+        text: text,
+        topicId: topicId,
+        optionType: OptionType.YesNo,
+      },
+    );
+  }
+
+  deleteOption(optionId: string) {
+    this.loggerService.debug(`[ProjectService] deleting option ${optionId}`);
+    return this.httpClient.delete(
+      `${this.baseUrl}/api/project/topic/option/${optionId}`,
     );
   }
 }

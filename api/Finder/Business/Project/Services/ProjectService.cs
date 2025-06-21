@@ -72,7 +72,7 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
         return Result.Success();
     }
-    
+
     public async Task<Result<Entities.Project>> Get(Guid projectId)
     {
         var project = await _dbContext.Projects
@@ -105,22 +105,8 @@ public class ProjectService
             Options = []
         };
 
-        foreach (var requestOption in topicRequest.Options)
-        {
-            var option = new Option
-            {
-                Id = Guid.NewGuid(),
-                Text = requestOption.Text,
-                OptionType = requestOption.OptionType,
-                Topic = topic,
-                Choices = []
-            };
-            option.Choices = GetChoicesByType(option.OptionType, option);
-            topic.Options.Add(option); 
-        }
-        
         _dbContext.Topics.Add(topic);
-        
+
         await _dbContext.SaveChangesAsync();
         return Result<Topic>.Success(topic);
     }
@@ -131,6 +117,48 @@ public class ProjectService
             .Where(t => t.Id == topicId && t.Project.Creator.Id == _userService.GetUserId()).ExecuteDeleteAsync();
 
         if (deletedTopics == 0)
+        {
+            return Result.Fail(404);
+        }
+
+        await _dbContext.SaveChangesAsync();
+        return Result.Success();
+    }
+
+    public async Task<Result<Option>> AddOptionToTopic(AddOptionToTopicRequest topicRequest)
+    {
+        var topic = await _dbContext.Topics
+            .Where(t => t.Id == topicRequest.TopicId && t.Project.Creator.Id == _userService.GetUserId())
+            .FirstOrDefaultAsync();
+
+        if (topic is null)
+        {
+            return Result<Option>.Fail(404);
+        }
+
+        var option = new Option
+        {
+            Id = Guid.NewGuid(),
+            Text = topicRequest.Text,
+            OptionType = topicRequest.OptionType,
+            Topic = topic,
+            Choices = []
+        };
+        option.Choices = GetChoicesByType(option.OptionType, option);
+        topic.Options.Add(option);
+
+        _dbContext.Options.Add(option);
+
+        await _dbContext.SaveChangesAsync();
+        return Result<Option>.Success(option);
+    }
+
+    public async Task<Result> DeleteOption(Guid optionId)
+    {
+        var deletedOption = await _dbContext.Options
+            .Where(o => o.Id == optionId && o.Topic.Project.Creator.Id == _userService.GetUserId()).ExecuteDeleteAsync();
+
+        if (deletedOption == 0)
         {
             return Result.Fail(404);
         }
@@ -159,7 +187,7 @@ public class ProjectService
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
-    
+
     private async Task<Entities.Project?> GetProjectOverview(Guid projectId)
     {
         return await _dbContext.Projects

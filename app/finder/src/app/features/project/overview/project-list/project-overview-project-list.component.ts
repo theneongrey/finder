@@ -5,10 +5,17 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProjectStore } from '../../_data/project.store';
 import { RouterLink } from '@angular/router';
 import { DataView } from 'primeng/dataview';
+import { ProjectRoleToNamePipe } from '../../_utils/pipe/permission-to-name.pipe';
 
 @Component({
   selector: 'app-project-overview-project-list',
-  imports: [Button, DataView, ConfirmDialogModule, RouterLink],
+  imports: [
+    Button,
+    DataView,
+    ConfirmDialogModule,
+    RouterLink,
+    ProjectRoleToNamePipe,
+  ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-overview-project-list.component.html',
   styleUrl: './project-overview-project-list.component.css',

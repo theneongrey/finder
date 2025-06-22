@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { DataView } from 'primeng/dataview';
 import { Select } from 'primeng/select';
+import { ProjectRoleToNamePipe } from '../../_utils/pipe/permission-to-name.pipe';
 
 @Component({
   selector: 'app-project-detail-title-bar',
@@ -18,6 +19,7 @@ import { Select } from 'primeng/select';
     RouterLink,
     DataView,
     Select,
+    ProjectRoleToNamePipe,
   ],
   templateUrl: './project-detail-title-bar.component.html',
   styleUrl: './project-detail-title-bar.component.css',

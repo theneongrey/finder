@@ -12,10 +12,10 @@
             Topics: {{ project.topicCount }}
           </div>
           <div class="tw-w-[400px]">
-            Creator: {{ project.creator }}
+            Role: {{ project.role | projectRoleToName }}
           </div>
           <div class="tw-w-[400px]">
-            Role: {{ project.role }}
+            Creator: {{ project.creator }}
           </div>
           <div class="tw-ml-auto tw-mr-0">
             <p-button icon="pi pi-trash" (click)="showDeleteDialog($event, project.id, project.name)"/>

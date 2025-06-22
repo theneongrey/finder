@@ -31,6 +31,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'detail/:id/vote/:topicId/:optionId',
+        loadComponent: () =>
+          import('./features/project/vote/project-vote.component').then(
+            (m) => m.ProjectVoteComponent,
+          ),
+      },
+      {
+        path: 'detail/:id/vote/:topicId',
+        loadComponent: () =>
+          import('./features/project/vote/project-vote.component').then(
+            (m) => m.ProjectVoteComponent,
+          ),
+      },
+      {
         path: 'detail/:id/topic/:topicId/:action',
         loadComponent: () =>
           import('./features/project/topic/project-topic.component').then(

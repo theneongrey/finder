@@ -16,12 +16,9 @@ export class ProjectTopicComponent {
   topicId = input('');
   action = input('');
   project = this.projectStore.currentProject;
-  topic = computed(() => {
-    const result = this.project()?.topics.find((t) => t.id === this.topicId());
-    console.log('update topic', result);
-
-    return result;
-  });
+  topic = computed(() =>
+    this.project()?.topics.find((t) => t.id === this.topicId()),
+  );
 
   constructor(router: Router) {
     effect(() => {

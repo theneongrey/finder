@@ -4,14 +4,16 @@
       <h4 class="tw-mb-5">Project: {{ project()?.name }}</h4>
 
       @for (topic of topics; track topic.id) {
-        <div class="tw-flex tw-h-8 tw-cursor-pointer hover:tw-bg-sky-700 hover:tw-text-white" [routerLink]="['/project/detail', project()?.id, 'topic', topic.id]">
+        <div class="tw-flex tw-h-8">
           <div class="tw-w-[400px]">
             {{ topic.name }}
           </div>
           <div>
             Options: {{ topic.options?.length ?? 0 }}
-          </div>
-          <div class="tw-ml-auto tw-mr-0">
+          </div>12
+          <div class="tw-flex tw-ml-auto tw-mr-0 tw-gap-2">
+            <p-button icon="pi pi-pencil" [routerLink]="['/project/detail', project()?.id, 'topic', topic.id]"/>
+            <p-button icon="pi pi-check-circle" [routerLink]="['/project/detail', project()?.id, 'vote', topic.id]"/>
             <p-button icon="pi pi-trash" (click)="showDeleteDialog($event, topic.id, topic.name)"/>
           </div>
         </div>

@@ -1,4 +1,5 @@
 using Finder.Business.Auth.Entities;
+using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +14,12 @@ public class AppDbContext : DbContext
     public DbSet<Person> Persons { get; set; }
     public DbSet<LoginToken> LoginTokens { get; set; }
     public DbSet<AllowedEmail> AllowedEmails { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
     
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Person).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Project).Assembly);
     }
     

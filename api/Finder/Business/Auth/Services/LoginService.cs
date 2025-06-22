@@ -1,9 +1,10 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Finder.Business.Auth.Entities;
+using Finder.Business.Auth.Setup;
 using Finder.Business.Shared;
+using Finder.Business.Shared.Services;
 using Finder.Database;
-using Finder.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,13 +19,15 @@ public class LoginService
     
     private readonly AppDbContext _dbContext;
     private readonly MailService _mailService;
+    private readonly UserService _userService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly LoginOptions _loginOptions;
 
-    public LoginService(AppDbContext dbContext, MailService mailService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions)
+    public LoginService(AppDbContext dbContext, MailService mailService, UserService userService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions)
     {
         _dbContext = dbContext;
         _mailService = mailService;
+        _userService = userService;
         _httpContextAccessor = httpContextAccessor;
         _loginOptions = loginOptions.Value;
     }
@@ -104,35 +107,17 @@ public class LoginService
     {
         var cleanEmail = email.Trim().ToLower();
         
-        if (_loginOptions.AllowListOnly && !_dbContext.AllowedEmails.Any(entry => entry.Email == cleanEmail))
+        var person = await _userService.GetOrCreatePersonByEmail(cleanEmail, _loginOptions.AllowListOnly, true);
+        if (!person.IsSuccess)
         {
             return Result.Fail(403);
         }
         
-        var person = await GetOrCreatePersonByEmail(cleanEmail);
-        var loginToken = await CreateLoginTokenForPerson(person, redirectUrl);
+        var loginToken = await CreateLoginTokenForPerson(person.Payload!, redirectUrl);
         await _dbContext.SaveChangesAsync();
-        await SendLoginMail(person, loginToken);
+        await SendLoginMail(person.Payload!, loginToken);
         
         return Result.Success();
-    }
-
-    private async Task<Person> GetOrCreatePersonByEmail(string email)
-    {
-        var person = await _dbContext.Persons.SingleOrDefaultAsync(p => p.Email == email);
-
-        if (person is null)
-        {
-            person = new Person
-            {
-                Id = Guid.NewGuid(),
-                Email = email,
-                Role = Role.Free
-            };
-            _dbContext.Persons.Add(person);
-        }
-
-        return person;
     }
 
     private async Task<LoginToken> CreateLoginTokenForPerson(Person person, string? redirectUrl)

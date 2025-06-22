@@ -2,11 +2,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Services;
+using Finder.Business.Auth.Setup;
+using Finder.Business.Permission.Api;
+using Finder.Business.Permission.Setup;
 using Finder.Business.Project.Api;
 using Finder.Business.Project.Services;
+using Finder.Business.Project.Setup;
 using Finder.Business.Shared.Services;
 using Finder.Database;
-using Finder.Options;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,22 +31,12 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
-builder.Services.Configure<LoginOptions>(builder.Configuration.GetSection("Login"));
-builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<MailService>();
-builder.Services.AddScoped<ProjectService>();
-builder.Services.AddAuthorization();
-builder.Services.AddAuthentication().AddCookie(o =>
-{
-    o.Cookie.Name = "login";
-    o.Events.OnRedirectToAccessDenied =
-        o.Events.OnRedirectToLogin = c =>
-        {
-            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.FromResult<object?>(null);
-        };
-});
+
+builder.Services.AddAuthServices(builder.Configuration);
+builder.Services.AddProjectServices();
+builder.Services.AddPermissionServices(builder.Configuration);
+
 builder.Services.AddSpaStaticFiles(configuration => { configuration.RootPath = "App"; });
 
 var app = builder.Build();
@@ -57,6 +50,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.WithAuthApi();
 app.WithProjectApi();
+app.WithPermissionApi();
 app.UseSpaStaticFiles();
 app.UseSpa(_ => { });
 

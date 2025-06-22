@@ -16,4 +16,6 @@ public class Person : BaseEntity
     public string? Name { get; set; }
     public bool HasLoggedIn { get; set; }
     public required Role Role { get; set; }
+
+    public List<Permission.Entities.Permission> Permissions { get; set; } = [];
 }

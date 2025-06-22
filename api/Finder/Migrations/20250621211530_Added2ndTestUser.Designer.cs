@@ -3,6 +3,7 @@ using System;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Finder.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250621211530_Added2ndTestUser")]
+    partial class Added2ndTestUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,27 +113,6 @@ namespace Finder.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("Finder.Business.Permission.Entities.Permission", b =>
-                {
-                    b.Property<Guid>("PersonKey")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProjectKey")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("PermissionType")
-                        .HasColumnType("integer");
-
-                    b.HasKey("PersonKey", "ProjectKey");
-
-                    b.HasIndex("ProjectKey");
-
-                    b.HasIndex("PersonKey", "ProjectKey")
-                        .IsUnique();
-
-                    b.ToTable("Permissions");
-                });
-
             modelBuilder.Entity("Finder.Business.Project.Entities.Choice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -188,6 +170,24 @@ namespace Finder.Migrations
                     b.ToTable("Options");
                 });
 
+            modelBuilder.Entity("Finder.Business.Project.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("PersonKey")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProjectKey")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("PersonKey", "ProjectKey");
+
+                    b.HasIndex("ProjectKey");
+
+                    b.HasIndex("PersonKey", "ProjectKey")
+                        .IsUnique();
+
+                    b.ToTable("Permission");
+                });
+
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
                 {
                     b.Property<Guid>("Id")
@@ -208,7 +208,7 @@ namespace Finder.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<int>("VisibilityType")
+                    b.Property<int>("PermissionType")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -283,25 +283,6 @@ namespace Finder.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Finder.Business.Permission.Entities.Permission", b =>
-                {
-                    b.HasOne("Finder.Business.Auth.Entities.Person", "Person")
-                        .WithMany("Permissions")
-                        .HasForeignKey("PersonKey")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Finder.Business.Project.Entities.Project", "Project")
-                        .WithMany("Permissions")
-                        .HasForeignKey("ProjectKey")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Project");
-                });
-
             modelBuilder.Entity("Finder.Business.Project.Entities.Choice", b =>
                 {
                     b.HasOne("Finder.Business.Project.Entities.Option", "Option")
@@ -322,6 +303,25 @@ namespace Finder.Migrations
                         .IsRequired();
 
                     b.Navigation("Topic");
+                });
+
+            modelBuilder.Entity("Finder.Business.Project.Entities.Permission", b =>
+                {
+                    b.HasOne("Finder.Business.Auth.Entities.Person", "Person")
+                        .WithMany("Permissions")
+                        .HasForeignKey("PersonKey")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Finder.Business.Project.Entities.Project", "Project")
+                        .WithMany("Permissions")
+                        .HasForeignKey("ProjectKey")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>

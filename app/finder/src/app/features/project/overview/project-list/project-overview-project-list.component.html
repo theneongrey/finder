@@ -8,8 +8,14 @@
           <div class="tw-w-[400px]">
             {{ project.name }}
           </div>
-          <div>
+          <div class="tw-w-[200px]">
             Topics: {{ project.topicCount }}
+          </div>
+          <div class="tw-w-[400px]">
+            Creator: {{ project.creator }}
+          </div>
+          <div class="tw-w-[400px]">
+            Role: {{ project.role }}
           </div>
           <div class="tw-ml-auto tw-mr-0">
             <p-button icon="pi pi-trash" (click)="showDeleteDialog($event, project.id, project.name)"/>

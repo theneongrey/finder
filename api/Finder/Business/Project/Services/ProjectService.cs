@@ -1,3 +1,5 @@
+using Finder.Business.Permission.Entities;
+using Finder.Business.Permission.Services;
 using Finder.Business.Project.Api.Requests;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
@@ -11,34 +13,41 @@ public class ProjectService
 {
     private readonly AppDbContext _dbContext;
     private readonly UserService _userService;
+    private readonly PermissionService _permissionService;
 
-    public ProjectService(AppDbContext dbContext, UserService userService)
+    private Guid? UserId => _userService.GetUserId();
+
+    public ProjectService(AppDbContext dbContext, UserService userService, PermissionService permissionService)
     {
         _dbContext = dbContext;
         _userService = userService;
+        _permissionService = permissionService;
     }
 
     public async Task<List<Entities.Project>> GetAll()
     {
         return await _dbContext.Projects
             .Include(p => p.Topics)
-            .Where(p => p.Creator.Id == _userService.GetUserId()).ToListAsync();
+            .Include(p => p.Creator)
+            .Include(p => p.Permissions)
+            .Where(p => p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId))
+            .ToListAsync();
     }
 
     public async Task<Result<Entities.Project>> Create(string projectName)
     {
-        var user = await _userService.GetUser();
-        if (!user.IsSuccess)
+        var userRequest = await _userService.GetUser();
+        if (!userRequest.IsSuccess)
         {
-            return Result<Entities.Project>.Fail(user.Code);
+            return Result<Entities.Project>.Fail(userRequest.Code);
         }
 
         var project = new Entities.Project
         {
             Id = Guid.NewGuid(),
             Name = projectName,
-            Creator = user.Payload!,
-            Topics = [],
+            Creator = userRequest.Payload!,
+            VisibilityType = VisibilityType.SelectedOnly
         };
 
         _dbContext.Projects.Add(project);
@@ -48,7 +57,13 @@ public class ProjectService
 
     public async Task<Result<Entities.Project>> Update(Guid projectId, string projectName)
     {
-        var projectToUpdate = await GetProjectOverview(projectId);
+        var projectToUpdate = await _dbContext.Projects
+            .Include(p => p.Permissions)
+            .Where(p => p.Id == projectId &&
+                        (p.Creator.Id == UserId || p.Permissions.Any(permission =>
+                            permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
+            .SingleOrDefaultAsync();
+
         if (projectToUpdate is null)
         {
             return Result<Entities.Project>.Fail(404);
@@ -62,7 +77,9 @@ public class ProjectService
     public async Task<Result> Delete(Guid projectId)
     {
         var deletedProjects = await _dbContext.Projects
-            .Where(p => p.Id == projectId && p.Creator.Id == _userService.GetUserId()).ExecuteDeleteAsync();
+            .Where(p => p.Id == projectId && (p.Creator.Id == UserId || p.Permissions.Any(permission =>
+                permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
+            .ExecuteDeleteAsync();
 
         if (deletedProjects == 0)
         {
@@ -76,14 +93,27 @@ public class ProjectService
     public async Task<Result<Entities.Project>> Get(Guid projectId)
     {
         var project = await _dbContext.Projects
+            .Include(p => p.Creator)
+            .Include(p => p.Permissions)
+            .ThenInclude(p => p.Person)
             .Include(p => p.Topics)
             .ThenInclude(t => t.Options)
             .ThenInclude(o => o.Choices)
             .ThenInclude(c => c.Votes)
-            .Where(p => p.Id == projectId && p.Creator.Id == _userService.GetUserId()).SingleOrDefaultAsync();
+            .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.Open || p.Creator.Id == UserId ||
+                                              p.Permissions.Any(permission => permission.PersonKey == UserId)))
+            .SingleOrDefaultAsync();
         if (project == null)
         {
             return Result<Entities.Project>.Fail(404);
+        }
+
+        // person was not explicitly permitted, but can see it, because project is open for all
+        // add person to permissions, so that it can be tracked who has seen this project
+        if (project.Permissions.All(permission => permission.PersonKey != UserId))
+        {
+            var user = await _userService.GetUser();
+            await _permissionService.AddOrUpdatePermissionForUser(user.Payload!, false, project, PermissionType.Voter, true);
         }
 
         return Result<Entities.Project>.Success(project);
@@ -91,7 +121,15 @@ public class ProjectService
 
     public async Task<Result<Topic>> AddTopic(AddTopicRequest topicRequest)
     {
-        var projectResult = await GetProjectOverview(topicRequest.ProjectId);
+        var projectResult = await _dbContext.Projects
+            .Include(p => p.Topics)
+            .Where(p => p.Id == topicRequest.ProjectId && (p.VisibilityType == VisibilityType.Open ||
+                                                           p.Creator.Id == UserId ||
+                                                           p.Permissions.Any(permission =>
+                                                               permission.Person.Id == UserId &&
+                                                               permission.PermissionType >= PermissionType.Maintainer)))
+            .SingleOrDefaultAsync();
+
         if (projectResult == null)
         {
             return Result<Topic>.Fail(404);
@@ -101,8 +139,7 @@ public class ProjectService
         {
             Id = Guid.NewGuid(),
             Name = topicRequest.Name,
-            Project = projectResult,
-            Options = []
+            Project = projectResult
         };
 
         _dbContext.Topics.Add(topic);
@@ -114,7 +151,12 @@ public class ProjectService
     public async Task<Result> DeleteTopic(Guid topicId)
     {
         var deletedTopics = await _dbContext.Topics
-            .Where(t => t.Id == topicId && t.Project.Creator.Id == _userService.GetUserId()).ExecuteDeleteAsync();
+            .Where(t => t.Id == topicId && (t.Project.VisibilityType == VisibilityType.Open ||
+                                            t.Project.Creator.Id == UserId ||
+                                            t.Project.Permissions.Any(permission =>
+                                                permission.Person.Id == UserId &&
+                                                permission.PermissionType >= PermissionType.Maintainer)))
+            .ExecuteDeleteAsync();
 
         if (deletedTopics == 0)
         {
@@ -128,7 +170,11 @@ public class ProjectService
     public async Task<Result<Option>> AddOptionToTopic(AddOptionToTopicRequest topicRequest)
     {
         var topic = await _dbContext.Topics
-            .Where(t => t.Id == topicRequest.TopicId && t.Project.Creator.Id == _userService.GetUserId())
+            .Where(t => t.Id == topicRequest.TopicId && (t.Project.VisibilityType == VisibilityType.Open ||
+                                                         t.Project.Creator.Id == UserId ||
+                                                         t.Project.Permissions.Any(permission =>
+                                                             permission.Person.Id == UserId &&
+                                                             permission.PermissionType >= PermissionType.Maintainer)))
             .FirstOrDefaultAsync();
 
         if (topic is null)
@@ -141,8 +187,7 @@ public class ProjectService
             Id = Guid.NewGuid(),
             Text = topicRequest.Text,
             OptionType = topicRequest.OptionType,
-            Topic = topic,
-            Choices = []
+            Topic = topic
         };
         option.Choices = GetChoicesByType(option.OptionType, option);
         topic.Options.Add(option);
@@ -156,7 +201,12 @@ public class ProjectService
     public async Task<Result> DeleteOption(Guid optionId)
     {
         var deletedOption = await _dbContext.Options
-            .Where(o => o.Id == optionId && o.Topic.Project.Creator.Id == _userService.GetUserId()).ExecuteDeleteAsync();
+            .Where(o => o.Id == optionId && (o.Topic.Project.VisibilityType == VisibilityType.Open ||
+                                             o.Topic.Project.Creator.Id == UserId ||
+                                             o.Topic.Project.Permissions.Any(permission =>
+                                                 permission.Person.Id == UserId &&
+                                                 permission.PermissionType >= PermissionType.Maintainer)))
+            .ExecuteDeleteAsync();
 
         if (deletedOption == 0)
         {
@@ -173,26 +223,18 @@ public class ProjectService
         {
             OptionType.Rating =>
             [
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "Yes", Votes = [] },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "No", Votes = [] }
+                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "Yes" },
+                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "No" }
             ],
             OptionType.YesNo =>
             [
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "1", Votes = [] },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "2", Votes = [] },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "3", Votes = [] },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "4", Votes = [] },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "5", Votes = [] }
+                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "1" },
+                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "2" },
+                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "3" },
+                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "4" },
+                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "5" }
             ],
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
-    }
-
-    private async Task<Entities.Project?> GetProjectOverview(Guid projectId)
-    {
-        return await _dbContext.Projects
-            .Include(p => p.Topics)
-            .Where(p => p.Id == projectId && p.Creator.Id == _userService.GetUserId())
-            .SingleOrDefaultAsync();
     }
 }

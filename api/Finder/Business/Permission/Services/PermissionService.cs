@@ -1,0 +1,140 @@
+using Finder.Business.Auth.Entities;
+using Finder.Business.Permission.Entities;
+using Finder.Business.Permission.Setup;
+using Finder.Business.Project.Entities;
+using Finder.Business.Shared;
+using Finder.Business.Shared.Services;
+using Finder.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
+namespace Finder.Business.Permission.Services;
+
+public class PermissionService
+{
+    private readonly AppDbContext _dbContext;
+    private readonly UserService _userService;
+    private readonly MailService _mailService;
+    private readonly ShareMailOptions _shareMailOptions;
+
+    private Guid? UserId => _userService.GetUserId();
+
+    public PermissionService(AppDbContext dbContext, UserService userService, MailService mailService, IOptions<ShareMailOptions> shareMailOptions)
+    {
+        _dbContext = dbContext;
+        _userService = userService;
+        _mailService = mailService;
+        _shareMailOptions = shareMailOptions.Value;
+    }
+
+    public async Task<Result> UpdateVisibilityType(Guid projectId, VisibilityType visibilityType)
+    {
+        var project = await _dbContext.Projects
+            .Where(p => p.Id == projectId &&
+                        (p.Creator.Id == UserId || p.Permissions.Any(permission =>
+                            permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
+            .FirstOrDefaultAsync();
+
+        if (project == null)
+        {
+            return Result.Fail(404);
+        }
+
+        project.VisibilityType = visibilityType;
+        await _dbContext.SaveChangesAsync();
+        return Result.Success();
+    }
+
+    public async Task<Result<Project.Entities.Project>> AddOrUpdatePermissionForUser(string email, Guid projectId, PermissionType permissionType)
+    {
+        var cleanEmail = email.Trim().ToLower();
+        
+        var isNewUser = false;
+        var userRequest = await _userService.GetOrCreatePersonByEmail(cleanEmail, false, true);
+        var user = userRequest.Payload;
+        if (!userRequest.IsSuccess || user!.Id == UserId)
+        {
+            return Result<Project.Entities.Project>.Fail(403); 
+        }
+        
+        if (!user.HasLoggedIn)
+        {
+            isNewUser = true;
+        }
+        
+        var project = await _dbContext.Projects
+            .Include(p => p.Permissions)
+            .ThenInclude(p => p.Person)
+            .Where(p => p.Id == projectId && 
+                        p.Creator.Id != user.Id && // can't edit rights for creator
+                        (p.Creator.Id == UserId || // only creator or owner can update rights
+                         p.Permissions.Any(permission => permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
+            .FirstOrDefaultAsync();
+        
+        if (project == null)
+        {
+            return Result<Project.Entities.Project>.Fail(404);
+        }
+        
+        return await AddOrUpdatePermissionForUser(user, isNewUser, project, permissionType);
+    }
+
+    public async Task<Result<Project.Entities.Project>> AddOrUpdatePermissionForUser(Person user, bool isNewUser, Project.Entities.Project project,
+        PermissionType permissionType, bool silent = false)
+    {
+        var permission = project.Permissions.Find(p => p.Person.Id == user.Id);
+        if (permission is not null)
+        {
+            if (permission.PermissionType != permissionType)
+            {
+                permission.PermissionType = permissionType;
+            }
+            else
+            {
+                return Result<Project.Entities.Project>.Success(project);
+            }
+        }
+        else
+        {
+            project.Permissions.Add(new Entities.Permission
+            {
+                Project = project,
+                Person = user,
+                PermissionType = permissionType
+            });
+        }
+
+        if (await _dbContext.SaveChangesAsync() == 0)
+        {
+            return Result<Project.Entities.Project>.Fail(400, "Error while writing to database");
+        }
+        
+        if (!silent)
+        {
+            var actionUser = await _userService.GetUser();
+            if (permission is not null)
+            {
+                await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
+                    Enum.GetName(permissionType) ?? "Unknown",
+                    _shareMailOptions.Update);
+            }
+            else
+            {
+                if (isNewUser)
+                {
+                    await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
+                        Enum.GetName(permissionType) ?? "Unknown",
+                        _shareMailOptions.SharedAndInvited);
+                }
+                else
+                {
+                    await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
+                        Enum.GetName(permissionType) ?? "Unknown",
+                        _shareMailOptions.Shared);
+                }
+            }
+        }
+
+        return Result<Project.Entities.Project>.Success(project);
+    }
+}

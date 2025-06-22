@@ -13,7 +13,8 @@ import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
-import { OptionType, Project } from '../_models/project-detail.model';
+import { Project } from '../_models/project-detail.model';
+import { PermissionService } from '../_services/permission.service';
 
 export const ProjectStore = signalStore(
   { providedIn: 'root' },
@@ -25,6 +26,7 @@ export const ProjectStore = signalStore(
     return {
       loggerService: inject(LoggerService),
       projectService: inject(ProjectService),
+      permissionService: inject(PermissionService),
       router: inject(Router),
     };
   }),
@@ -246,6 +248,37 @@ export const ProjectStore = signalStore(
               },
             }),
           );
+        }),
+      ),
+    ),
+
+    share: rxMethod<{
+      email: string;
+      permissionType: number;
+      projectId: string;
+    }>(
+      pipe(
+        switchMap((share) => {
+          return store.permissionService
+            .share(share.projectId, share.email, share.permissionType)
+            .pipe(
+              tapResponse({
+                next: (sharedWith) => {
+                  patchState(store, {
+                    currentProject: {
+                      ...store.currentProject()!,
+                      sharedWith: sharedWith,
+                    },
+                  });
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error while sharing',
+                    error,
+                  );
+                },
+              }),
+            );
         }),
       ),
     ),

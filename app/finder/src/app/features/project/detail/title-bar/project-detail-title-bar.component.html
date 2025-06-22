@@ -1,18 +1,59 @@
 <div class="tw-flex">
   <p-button [routerLink]="['/project']">Back to overview</p-button>
-  <div class="tw-mr-0 tw-ml-auto">
-    <p-button (click)="displayDialog()">Add Topic</p-button>
+  <div class="tw-flex tw-mr-0 tw-ml-auto tw-gap-2">
+    <p-button (click)="displayShareDialog()">Share</p-button>
+    <p-button (click)="displayAddTopicDialog()">Add Topic</p-button>
   </div>
 </div>
 
-<p-dialog header="Add topic" [modal]="true" [(visible)]="showDialog" [style]="{ width: '25rem' }">
+<p-dialog header="Add topic" [modal]="true" [(visible)]="showAddTopicDialog" [style]="{ width: '25rem' }">
   <span class="p-text-secondary tw-block tw-mb-8">A topic is a specific thing that you want to decide like &quot;What color should the bedroom walls be&quot;</span>
   <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
     <label for="topic" class="tw-font-semibold tw-w-24">Topic</label>
     <input pInputText id="topic" class="tw-flex-auto" autocomplete="off" [(ngModel)]="topic" />
   </div>
   <div class="tw-flex tw-justify-end tw-gap-2">
-    <p-button label="Cancel" severity="secondary" (click)="showDialog.set(false)" />
+    <p-button label="Cancel" severity="secondary" (click)="showAddTopicDialog.set(false)" />
     <p-button label="Add topic" (click)="addTopic()" [disabled]="!topic()" />
+  </div>
+</p-dialog>
+
+<p-dialog header="Currently shared with" [modal]="true" [(visible)]="showShareOverviewDialog"
+          [style]="{ width: '25rem' }">
+  <span class="p-text-secondary tw-block tw-mb-8">Currently shared with</span>
+  <p-dataview [value]="project()?.sharedWith">
+    <ng-template #list let-sharedWith>
+      @for (sharedWith of sharedWith; track sharedWith.name) {
+        <div class="tw-flex tw-h-8">
+          <div class="tw-w-[200px]">
+            {{ sharedWith.name }}
+          </div>
+          <div>
+            {{ sharedWith.role }}
+          </div>
+        </div>
+      }
+    </ng-template>
+  </p-dataview>
+
+  <div class="tw-ml-auto tw-mr-0">
+    <p-button label="Add" (click)="showAdditionalShareDialog()" />
+  </div>
+  <div class="tw-flex tw-justify-end tw-gap-2">
+    <p-button label="Close" severity="secondary" (click)="showShareOverviewDialog.set(false)" />
+  </div>
+</p-dialog>
+
+<p-dialog header="Share" [modal]="true" [(visible)]="showShare" [style]="{ width: '25rem' }">
+  <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
+    <label for="email" class="tw-font-semibold tw-w-24">Email</label>
+    <input pInputText id="email" type="email" class="tw-flex-auto" autocomplete="off" [(ngModel)]="email" />
+  </div>
+
+  <p-select appendTo="body" [options]="availablePermissions" [(ngModel)]="selectedPermission" optionLabel="name" optionValue="id" placeholder="Permission" class="tw-w-full tw-mb-2" />
+
+  <div class="tw-flex tw-justify-end tw-gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="showShare.set(false)" />
+    <p-button label="Share" (click)="share()" [disabled]="!email()" />
   </div>
 </p-dialog>

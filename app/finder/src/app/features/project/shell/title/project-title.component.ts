@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { UserStore } from '../../../../common/data/user.store';
 import { RouterLink } from '@angular/router';
 

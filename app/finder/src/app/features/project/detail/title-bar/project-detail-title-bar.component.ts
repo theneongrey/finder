@@ -5,25 +5,55 @@ import { InputText } from 'primeng/inputtext';
 import { ProjectStore } from '../../_data/project.store';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { DataView } from 'primeng/dataview';
+import { Select } from 'primeng/select';
 
 @Component({
   selector: 'app-project-detail-title-bar',
-  imports: [Button, Dialog, InputText, FormsModule, RouterLink],
+  imports: [
+    Button,
+    Dialog,
+    InputText,
+    FormsModule,
+    RouterLink,
+    DataView,
+    Select,
+  ],
   templateUrl: './project-detail-title-bar.component.html',
   styleUrl: './project-detail-title-bar.component.css',
 })
 export class ProjectDetailTitleBarComponent {
   private projectStore = inject(ProjectStore);
+
+  availablePermissions = [
+    {
+      id: 0,
+      name: 'Voter',
+    },
+    {
+      id: 1,
+      name: 'Maintainer',
+    },
+    {
+      id: 2,
+      name: 'Owner',
+    },
+  ];
+
   project = this.projectStore.currentProject;
   action = input<string | undefined>(undefined);
 
-  showDialog = model(false);
+  showAddTopicDialog = model(false);
+  showShareOverviewDialog = model(false);
+  showShare = model(false);
   topic = model('');
+  email = model('');
+  selectedPermission = model(0);
 
   constructor() {
     effect(() => {
       if (this.project() && this.action() == 'add') {
-        this.showDialog.set(true);
+        this.showAddTopicDialog.set(true);
       }
     });
   }
@@ -34,12 +64,35 @@ export class ProjectDetailTitleBarComponent {
         projectId: this.project()!.id,
         name: this.topic(),
       });
-      this.showDialog.set(false);
+      this.showAddTopicDialog.set(false);
     }
   }
 
-  displayDialog() {
+  displayAddTopicDialog() {
     this.topic.set('');
-    this.showDialog.set(true);
+    this.showAddTopicDialog.set(true);
+  }
+
+  displayShareDialog() {
+    if (this.project()!.sharedWith.length > 0) {
+      this.showShareOverviewDialog.set(true);
+    } else {
+      this.showAdditionalShareDialog();
+    }
+  }
+
+  showAdditionalShareDialog() {
+    this.showShareOverviewDialog.set(false);
+    this.showShare.set(true);
+  }
+
+  share() {
+    if (this.email()) {
+      this.projectStore.share({
+        email: this.email(),
+        permissionType: this.selectedPermission(),
+        projectId: this.project()!.id,
+      });
+    }
   }
 }

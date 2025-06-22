@@ -8,5 +8,5 @@ public class Choice : BaseEntity
     public required string Text { get; set; }
     
     public required Option Option { get; set; }
-    public required List<Vote> Votes { get; set; } = [];
+    public List<Vote> Votes { get; set; } = [];
 }

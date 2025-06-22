@@ -1,6 +1,7 @@
 using Finder.Business.Project.Api.Requests;
 using Finder.Business.Project.Api.Responses;
 using Finder.Business.Project.Services;
+using Finder.Business.Shared.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finder.Business.Project.Api;
@@ -11,34 +12,34 @@ public static class ProjectApi
     {
         // Get all projects
         app.MapGet("/api/project",
-                async (ProjectService projectService) => Results.Ok(
-                    (await projectService.GetAll()).Select(p => p.ToProjectOverviewResponse())))
+                async (ProjectService projectService, UserService userService) => Results.Ok(
+                    (await projectService.GetAll()).Select(p => p.ToProjectOverviewResponse(userService.GetUserId()))))
             .RequireAuthorization();
 
         // Get single project
-        app.MapGet("/api/project/{id:guid}", async (Guid id, ProjectService projectService) =>
+        app.MapGet("/api/project/{id:guid}", async (Guid id, ProjectService projectService, UserService userService) =>
         {
             var result = await projectService.Get(id);
-            return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectResponse());
+            return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectResponse(userService.GetUserId()));
         }).RequireAuthorization();
 
         // Add project
         app.MapPost("/api/project",
-                async ([FromBody] ProjectRequest request, ProjectService projectService) =>
+                async ([FromBody] ProjectRequest request, ProjectService projectService, UserService userService) =>
                 {
                     var result = await projectService.Create(request.Name);
                     return !result.IsSuccess
                         ? Results.BadRequest()
-                        : Results.Ok(result.Payload!.ToProjectOverviewResponse());
+                        : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
 
         // Update project
         app.MapPut("/api/project/{id:guid}",
-                async (Guid id, [FromBody] ProjectRequest request, ProjectService projectService) =>
+                async (Guid id, [FromBody] ProjectRequest request, ProjectService projectService, UserService userService) =>
                 {
                     var result = await projectService.Update(id, request.Name);
-                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse());
+                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
 

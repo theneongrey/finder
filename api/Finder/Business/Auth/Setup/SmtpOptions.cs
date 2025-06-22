@@ -1,4 +1,4 @@
-namespace Finder.Options;
+namespace Finder.Business.Auth.Setup;
 
 public class SmtpOptions
 {

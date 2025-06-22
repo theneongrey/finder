@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { UserStore } from './common/data/user.store';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,9 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor() {
+    const userStore = inject(UserStore);
+    userStore.getUser();
+  }
+}

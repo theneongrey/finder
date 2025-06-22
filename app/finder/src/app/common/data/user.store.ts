@@ -33,7 +33,10 @@ export const UserStore = signalStore(
   withMethods((store) => {
     const handleGetUser = store.userService.getUser().pipe(
       tapResponse({
-        next: (user) => patchState(store, { user }),
+        next: (user) => {
+          store.loggerService.debug('[UserStore] patching user', user);
+          patchState(store, { user });
+        },
         error: (error) => {
           patchState(store, { user: undefined });
           store.loggerService.error(

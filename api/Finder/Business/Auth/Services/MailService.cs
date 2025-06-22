@@ -1,5 +1,5 @@
 using Finder.Business.Auth.Entities;
-using Finder.Options;
+using Finder.Business.Auth.Setup;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;

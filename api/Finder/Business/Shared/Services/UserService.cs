@@ -9,6 +9,8 @@ public class UserService
 {
     private readonly AppDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private Guid? _cachedId;
+    private Result<Person>? _cachedUser;
 
     public UserService(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
@@ -18,6 +20,11 @@ public class UserService
     
     public async Task<Result<Person>> GetUser()
     {
+        if (_cachedUser is not null)
+        {
+            return _cachedUser;
+        }
+        
         var userId = GetUserId();
         if (!userId.HasValue)
         {
@@ -30,7 +37,9 @@ public class UserService
             return Result<Person>.Fail();
         }
         
-        return Result<Person>.Success(person);
+        _cachedUser = Result<Person>.Success(person);
+        
+        return _cachedUser;
     }
 
     public async Task<Result<Person?>> SetName(string name)
@@ -51,15 +60,46 @@ public class UserService
         await _dbContext.SaveChangesAsync();
         return Result<Person?>.Success(person);
     }
+    
+    public async Task<Result<Person>> GetOrCreatePersonByEmail(string email, bool checkAllowListOnly, bool inviteAdminOnly)
+    {
+        var person = await _dbContext.Persons.SingleOrDefaultAsync(p => p.Email == email);
+
+        if (person is null)
+        {
+            if (checkAllowListOnly && !_dbContext.AllowedEmails.Any(entry => entry.Email == email)
+                || inviteAdminOnly && (await GetUser()).Payload?.Role != Role.Admin)
+            {
+                return Result<Person>.Fail(403);
+            }
+            
+            person = new Person
+            {
+                Id = Guid.NewGuid(),
+                Email = email,
+                Role = Role.Free,
+            };
+            _dbContext.Persons.Add(person);
+        }
+
+        return Result<Person>.Success(person);
+    }
 
     public Guid? GetUserId()
     {
+        if (_cachedId is not null)
+        {
+            return _cachedId;
+        }
+        
         var id = _httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (id == null)
         {
             return null;
-        }       
+        }
+
+        _cachedId = Guid.Parse(id);
         
-        return Guid.Parse(id);
+        return _cachedId;
     }
 }

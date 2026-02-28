@@ -282,5 +282,45 @@ export const ProjectStore = signalStore(
         }),
       ),
     ),
+
+    vote: rxMethod<{
+      optionId: string;
+      choice: string;
+    }>(
+      pipe(
+        switchMap((vote) => {
+          return store.projectService.vote(vote.optionId, vote.choice).pipe(
+            tapResponse({
+              next: (sharedWith) => {
+                patchState(store, {
+                  currentProject: {
+                    ...store.currentProject()!,
+                    topics: [
+                      ...store.currentProject()!.topics.map((t) => ({
+                        ...t,
+                        options: t.options.map((o) =>
+                          o.id !== vote.optionId
+                            ? o
+                            : {
+                                ...o,
+                                choice: vote.choice,
+                              },
+                        ),
+                      })),
+                    ],
+                  },
+                });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error while sharing',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
   })),
 );

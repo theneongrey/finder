@@ -6,7 +6,7 @@ namespace Finder.Business.Project.Entities;
 public class Vote : BaseEntity
 {
     public required Guid Id { get; set; }
-    
-    public required Choice Choice { get; set; }
+    public required string Choice { get; set; }
+    public required Option Option { get; set; }
     public required Person Person { get; set; }
 }

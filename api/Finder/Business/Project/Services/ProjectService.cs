@@ -98,7 +98,6 @@ public class ProjectService
             .ThenInclude(p => p.Person)
             .Include(p => p.Topics)
             .ThenInclude(t => t.Options)
-            .ThenInclude(o => o.Choices)
             .ThenInclude(c => c.Votes)
             .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.Open || p.Creator.Id == UserId ||
                                               p.Permissions.Any(permission => permission.PersonKey == UserId)))
@@ -189,7 +188,6 @@ public class ProjectService
             OptionType = topicRequest.OptionType,
             Topic = topic
         };
-        option.Choices = GetChoicesByType(option.OptionType, option);
         topic.Options.Add(option);
 
         _dbContext.Options.Add(option);
@@ -215,26 +213,5 @@ public class ProjectService
 
         await _dbContext.SaveChangesAsync();
         return Result.Success();
-    }
-
-    private List<Choice> GetChoicesByType(OptionType type, Option parent)
-    {
-        return type switch
-        {
-            OptionType.Rating =>
-            [
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "Yes" },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "No" }
-            ],
-            OptionType.YesNo =>
-            [
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "1" },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "2" },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "3" },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "4" },
-                new Choice { Id = Guid.NewGuid(), Option = parent, Text = "5" }
-            ],
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-        };
     }
 }

@@ -6,10 +6,11 @@ import { ProjectStore } from '../../_data/project.store';
 import { Button } from 'primeng/button';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-project-topic-option-list',
-  imports: [FormsModule, DataView, Button, ConfirmDialog],
+  imports: [FormsModule, DataView, Button, ConfirmDialog, RouterLink],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-topic-option-list.component.html',
   styleUrl: './project-topic-option-list.component.css',
@@ -19,6 +20,7 @@ export class ProjectTopicOptionListComponent {
   private confirmationService = inject(ConfirmationService);
 
   topic = input<Topic>();
+  projectId = input<string>();
   options = computed(() => this.topic()?.options);
 
   showDeleteDialog(event: MouseEvent, id: string, title: string) {

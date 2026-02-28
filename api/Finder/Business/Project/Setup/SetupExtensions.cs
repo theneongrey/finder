@@ -7,6 +7,7 @@ public static class SetupExtensions
     public static IServiceCollection AddProjectServices(this IServiceCollection services)
     {
         services.AddScoped<ProjectService>();
+        services.AddScoped<VoteService>();
         
         return services;
     }

@@ -92,4 +92,16 @@ export class ProjectService {
       `${this.baseUrl}/api/project/topic/option/${optionId}`,
     );
   }
+
+  vote(optionId: string, choice: string) {
+    this.loggerService.debug(
+      `[ProjectService] voted for ${optionId} with ${choice}`,
+    );
+    return this.httpClient.put(
+      `${this.baseUrl}/api/project/topic/vote/${optionId}`,
+      {
+        choice,
+      },
+    );
+  }
 }

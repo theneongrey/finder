@@ -13,7 +13,7 @@ public class OptionConfiguration : IEntityTypeConfiguration<Option>
         builder.Property(p => p.Text)
             .HasMaxLength(1024);
         
-        builder.HasMany(p => p.Choices)
+        builder.HasMany(p => p.Votes)
             .WithOne(p => p.Option);
 
         builder.Property(p => p.OptionType)

@@ -10,6 +10,7 @@ export interface Option {
   text: string;
   optionType: OptionType;
   votes: number;
+  choice: string;
 }
 
 export interface Topic {

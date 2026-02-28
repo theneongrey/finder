@@ -10,7 +10,7 @@
           </div>
           <div>
             Options: {{ topic.options?.length ?? 0 }}
-          </div>12
+          </div>
           <div class="tw-flex tw-ml-auto tw-mr-0 tw-gap-2">
             <p-button icon="pi pi-pencil" [routerLink]="['/project/detail', project()?.id, 'topic', topic.id]"/>
             <p-button icon="pi pi-check-circle" [routerLink]="['/project/detail', project()?.id, 'vote', topic.id]"/>

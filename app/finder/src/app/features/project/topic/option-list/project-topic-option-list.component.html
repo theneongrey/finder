@@ -11,7 +11,8 @@
           <div>
             votes: {{ option.votes }}
           </div>
-          <div class="tw-ml-auto tw-mr-0">
+          <div class="tw-flex tw-ml-auto tw-mr-0 tw-gap-2">
+            <p-button icon="pi pi-check-circle" [routerLink]="['/project/detail', projectId(), 'vote', topic()!.id, option.id]"/>
             <p-button icon="pi pi-trash" (click)="showDeleteDialog($event, option.id, option.text)"/>
           </div>
         </div>

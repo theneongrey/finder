@@ -54,12 +54,12 @@ public static class ProjectApi
         
         // Add topic
         app.MapPost("/api/project/topic",
-                async ([FromBody] AddTopicRequest request, ProjectService projectService) =>
+                async ([FromBody] AddTopicRequest request, ProjectService projectService, UserService userService) =>
                 {
                     var result = await projectService.AddTopic(request);
                     return !result.IsSuccess
                         ? Results.BadRequest()
-                        : Results.Ok(result.Payload!.ToProjectResponseTopic());
+                        : Results.Ok(result.Payload!.ToProjectResponseTopic(userService.GetUserId()));
                 })
             .RequireAuthorization();
         
@@ -75,21 +75,29 @@ public static class ProjectApi
         
         // Add option
         app.MapPost("/api/project/topic/option",
-                async ([FromBody] AddOptionToTopicRequest request, ProjectService projectService) =>
+                async ([FromBody] AddOptionToTopicRequest request, ProjectService projectService, UserService userService) =>
                 {
                     var result = await projectService.AddOptionToTopic(request);
                     return !result.IsSuccess
                         ? Results.BadRequest()
-                        : Results.Ok(result.Payload!.ToProjectResponseOption());
+                        : Results.Ok(result.Payload!.ToProjectResponseOption(userService.GetUserId()));
                 })
             .RequireAuthorization();
-        
         
         // Delete topic
         app.MapDelete("/api/project/topic/option/{id:guid}",
                 async (Guid id, ProjectService projectService) =>
                 {
                     var result = await projectService.DeleteOption(id);
+                    return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
+                })
+            .RequireAuthorization();
+        
+        // Vote
+        app.MapPut("/api/project/topic/vote/{optionId:guid}",
+                async (Guid optionId, VoteService voteService, [FromBody] VoteRequest request) =>
+                {
+                    var result = await voteService.Vote(optionId, request.Choice);
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();

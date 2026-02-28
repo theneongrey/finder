@@ -6,6 +6,7 @@ public class ProjectResponseOption
     public required string Text { get; set; }
     public required int OptionType { get; set; }
     public required int Votes { get; set; }
+    public required string? Choice { get; set; }
 }
 
 public class ProjectSharedWith
@@ -34,24 +35,25 @@ public class ProjectResponse
 
 public static class ProjectMapper
 {
-    public static ProjectResponseOption ToProjectResponseOption(this Entities.Option option)
+    public static ProjectResponseOption ToProjectResponseOption(this Entities.Option option, Guid? userId)
     {
         return new ProjectResponseOption
         {
             Id = option.Id.ToString(),
             Text = option.Text,
             OptionType = (int)option.OptionType,
-            Votes = option.Choices.Sum(c => c.Votes.Count)
+            Votes = option.Votes.Count,
+            Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice,
         };
     }
 
-    public static ProjectResponseTopic ToProjectResponseTopic(this Entities.Topic topic)
+    public static ProjectResponseTopic ToProjectResponseTopic(this Entities.Topic topic, Guid? userId)
     {
         return new ProjectResponseTopic
         {
             Id = topic.Id.ToString(),
             Name = topic.Name,
-            Options = topic.Options.Select(ToProjectResponseOption).ToArray()
+            Options = topic.Options.Select(o => o.ToProjectResponseOption(userId)).ToArray()
         };
     }
 
@@ -83,7 +85,7 @@ public static class ProjectMapper
         {
             Id = project.Id.ToString(),
             Name = project.Name,
-            Topics = project.Topics.Select(ToProjectResponseTopic).ToArray(),
+            Topics = project.Topics.Select(t => t.ToProjectResponseTopic(userId)).ToArray(),
             PermissionType = (int)project.VisibilityType,
             Creator = project.Creator.Name ??  project.Creator.Email,
             Role = project.GetRole(userId),

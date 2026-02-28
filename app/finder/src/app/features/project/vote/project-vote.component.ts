@@ -10,6 +10,7 @@ import { ProjectStore } from '../_data/project.store';
 import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
+import { Option } from '../_models/project-detail.model';
 
 @Component({
   selector: 'app-project-vote',
@@ -42,20 +43,42 @@ export class ProjectVoteComponent implements OnInit {
   ngOnInit(): void {
     if (!this.optionId()) {
       if (this.id() && this.topic()) {
-        void this.router.navigate([
-          '/project/detail/',
-          this.id(),
-          'vote',
-          this.topicId()!,
-          this.topic()!.options[0].id,
-        ]);
+        this.navigateToNextOption(undefined, true);
       } else {
         void this.router.navigate(['/project']);
       }
     }
   }
 
-  voteYes() {}
+  voteYes() {
+    this.projectStore.vote({ optionId: this.optionId(), choice: '1' });
+    this.navigateToNextOption(this.optionId());
+  }
 
-  voteNo() {}
+  voteNo() {
+    this.projectStore.vote({ optionId: this.optionId(), choice: '2' });
+    this.navigateToNextOption(this.optionId());
+  }
+
+  skip() {
+    this.navigateToNextOption(this.optionId());
+  }
+
+  private navigateToNextOption(
+    ignore: string | undefined,
+    replaceUrl: boolean = false,
+  ) {
+    const options = this.topic()!.options;
+    let nextOption = options.find((o) => !o.choice && o.id !== ignore);
+    if (!nextOption) {
+      nextOption = options[0];
+    }
+
+    void this.router.navigate(
+      ['/project/detail/', this.id(), 'vote', this.topicId()!, nextOption.id],
+      {
+        replaceUrl,
+      },
+    );
+  }
 }

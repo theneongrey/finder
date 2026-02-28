@@ -3,8 +3,9 @@
     <div>
       <div>{{ option()?.text }}</div>
       <div class="tw-flex tw-gap-2 tw-mt-2">
-        <p-button label="Yes" (click)="voteYes()" />
-        <p-button label="No" (click)="voteNo" />
+        <p-button label="Yes" [severity]="option()?.choice === '1' ? 'secondary' : undefined" (click)="voteYes()" />
+        <p-button label="No" [severity]="option()?.choice === '0' ? 'secondary' : undefined" (click)="voteNo()" />
+        <p-button label="Skip" [severity]="'help'" (click)="skip()" />
       </div>
     </div>
   </p-card>

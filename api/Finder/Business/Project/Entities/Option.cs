@@ -16,5 +16,5 @@ public class Option : BaseEntity
     public required OptionType OptionType { get; set; }
     
     public required Topic Topic { get; set; }
-    public List<Choice> Choices { get; set; } = [];
+    public List<Vote> Votes { get; set; } = [];
 }

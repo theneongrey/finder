@@ -1,5 +1,4 @@
-﻿# Random comment - to test deployment
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /
 
 # copy csproj and restore as distinct layers

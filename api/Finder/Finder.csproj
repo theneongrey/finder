@@ -22,9 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\.dockerignore">
-          <Link>.dockerignore</Link>
-        </Content>
         <Content Include="App\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>

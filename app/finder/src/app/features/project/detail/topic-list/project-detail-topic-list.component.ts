@@ -1,4 +1,9 @@
-import { Component, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Topic } from '../../_models/project-detail.model';
 import { DataView } from 'primeng/dataview';
@@ -14,6 +19,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-detail-topic-list.component.html',
   styleUrl: './project-detail-topic-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailTopicListComponent {
   private projectStore = inject(ProjectStore);

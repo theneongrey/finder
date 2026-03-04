@@ -1,4 +1,10 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+} from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
 import {
   FormControl,
@@ -17,6 +23,7 @@ import { Panel } from 'primeng/panel';
   imports: [ReactiveFormsModule, InputText, Button, FloatLabel, Panel],
   templateUrl: './auth-request-email.component.html',
   styleUrl: './auth-request-email.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthRequestEmailComponent {
   private userStore = inject(UserStore);
@@ -36,7 +43,9 @@ export class AuthRequestEmailComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  constructor(router: Router) {
+  constructor() {
+    const router = inject(Router);
+
     effect(() => {
       if (
         this.userStore.loginMail.state() === 'finished' &&

@@ -1,4 +1,10 @@
-import { Component, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Topic } from '../../_models/project-detail.model';
 import { DataView } from 'primeng/dataview';
@@ -14,6 +20,7 @@ import { RouterLink } from '@angular/router';
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-topic-option-list.component.html',
   styleUrl: './project-topic-option-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectTopicOptionListComponent {
   private projectStore = inject(ProjectStore);

@@ -291,7 +291,7 @@ export const ProjectStore = signalStore(
         switchMap((vote) => {
           return store.projectService.vote(vote.optionId, vote.choice).pipe(
             tapResponse({
-              next: (sharedWith) => {
+              next: (_) => {
                 patchState(store, {
                   currentProject: {
                     ...store.currentProject()!,

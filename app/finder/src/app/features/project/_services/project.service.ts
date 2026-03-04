@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { environment } from '../../../common/env/environment';
@@ -9,18 +9,14 @@ import {
   Project,
   Topic,
 } from '../_models/project-detail.model';
-import { CreateOption } from '../_models/create-option.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
+  private readonly loggerService = inject(LoggerService);
+  private readonly httpClient = inject(HttpClient);
   private readonly baseUrl = environment.baseUrl;
-
-  constructor(
-    private readonly loggerService: LoggerService,
-    private readonly httpClient: HttpClient,
-  ) {}
 
   getProjects() {
     this.loggerService.debug('[ProjectService] fetching projects');

@@ -1,4 +1,9 @@
-import { Component, inject, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  model,
+} from '@angular/core';
 import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { InputText } from 'primeng/inputtext';
@@ -10,6 +15,7 @@ import { FormsModule } from '@angular/forms';
   imports: [Button, Dialog, InputText, FormsModule],
   templateUrl: './project-overview-title-bar.component.html',
   styleUrl: './project-overview-title-bar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectOverviewTitleBarComponent {
   private projectStore = inject(ProjectStore);

@@ -1,4 +1,9 @@
-import { Component, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
 import {
   FormControl,
@@ -17,6 +22,7 @@ import { InputText } from 'primeng/inputtext';
   imports: [ReactiveFormsModule, Button, Panel, FloatLabel, InputText],
   templateUrl: './set-name.component.html',
   styleUrl: './set-name.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetNameComponent {
   private userStore = inject(UserStore);
@@ -25,7 +31,9 @@ export class SetNameComponent {
     name: new FormControl('', [Validators.required]),
   });
 
-  constructor(router: Router) {
+  constructor() {
+    const router = inject(Router);
+
     effect(() => {
       if (this.userStore.user()?.name) {
         router.navigate(['/']);

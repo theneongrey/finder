@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { userAuthentication } from './common/services/auth.guard';
-import { ProjectTopicComponent } from './features/project/topic/project-topic.component';
 
 export const routes: Routes = [
   {
@@ -98,9 +97,9 @@ export const routes: Routes = [
       {
         path: 'request-email',
         loadComponent: () =>
-          import(
-            './features/auth/auth-request-email/auth-request-email.component'
-          ).then((m) => m.AuthRequestEmailComponent),
+          import('./features/auth/auth-request-email/auth-request-email.component').then(
+            (m) => m.AuthRequestEmailComponent,
+          ),
       },
       {
         path: 'code-login',

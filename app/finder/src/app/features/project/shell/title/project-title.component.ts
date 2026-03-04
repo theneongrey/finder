@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { UserStore } from '../../../../common/data/user.store';
 import { RouterLink } from '@angular/router';
 
@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   templateUrl: './project-title.component.html',
   styleUrl: './project-title.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectTitleComponent {
   private userStore = inject(UserStore);

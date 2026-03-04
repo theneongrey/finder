@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Button } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -19,6 +19,7 @@ import { ProjectRoleToNamePipe } from '../../_utils/pipe/permission-to-name.pipe
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-overview-project-list.component.html',
   styleUrl: './project-overview-project-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectOverviewProjectListComponent {
   private projectStore = inject(ProjectStore);

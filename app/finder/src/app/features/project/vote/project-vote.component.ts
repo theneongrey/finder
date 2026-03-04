@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -10,13 +11,13 @@ import { ProjectStore } from '../_data/project.store';
 import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { Option } from '../_models/project-detail.model';
 
 @Component({
   selector: 'app-project-vote',
   templateUrl: './project-vote.component.html',
   styleUrl: './project-vote.component.css',
   imports: [Button, Card],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectVoteComponent implements OnInit {
   private readonly projectStore = inject(ProjectStore);
@@ -64,10 +65,7 @@ export class ProjectVoteComponent implements OnInit {
     this.navigateToNextOption(this.optionId());
   }
 
-  private navigateToNextOption(
-    ignore: string | undefined,
-    replaceUrl: boolean = false,
-  ) {
+  private navigateToNextOption(ignore: string | undefined, replaceUrl = false) {
     const options = this.topic()!.options;
     let nextOption = options.find((o) => !o.choice && o.id !== ignore);
     if (!nextOption) {

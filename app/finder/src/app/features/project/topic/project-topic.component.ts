@@ -1,6 +1,12 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
 import { ProjectStore } from '../_data/project.store';
-import { Router } from '@angular/router';
 import { ProjectTopicTitleBarComponent } from './title-bar/project-topic-title-bar.component';
 import { ProjectTopicOptionListComponent } from './option-list/project-topic-option-list.component';
 
@@ -9,6 +15,7 @@ import { ProjectTopicOptionListComponent } from './option-list/project-topic-opt
   templateUrl: './project-topic.component.html',
   styleUrl: './project-topic.component.css',
   imports: [ProjectTopicTitleBarComponent, ProjectTopicOptionListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectTopicComponent {
   private projectStore = inject(ProjectStore);
@@ -20,7 +27,7 @@ export class ProjectTopicComponent {
     this.project()?.topics.find((t) => t.id === this.topicId()),
   );
 
-  constructor(router: Router) {
+  constructor() {
     effect(() => {
       this.projectStore.getProject(this.id());
     });

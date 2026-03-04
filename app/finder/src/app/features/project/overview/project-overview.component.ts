@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ProjectOverviewTitleBarComponent } from './title-bar/project-overview-title-bar.component';
 import { ProjectStore } from '../_data/project.store';
 import { ProjectOverviewProjectListComponent } from './project-list/project-overview-project-list.component';
@@ -11,6 +11,7 @@ import { ProjectOverviewProjectListComponent } from './project-list/project-over
   ],
   templateUrl: './project-overview.component.html',
   styleUrl: './project-overview.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectOverviewComponent {
   private projectStore = inject(ProjectStore);

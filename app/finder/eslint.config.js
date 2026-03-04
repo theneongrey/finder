@@ -2,11 +2,11 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
+const { defineConfig } = require("eslint/config");
 
-module.exports = tseslint.config(
+module.exports = defineConfig([
   {
     files: ["**/*.ts"],
-    plugins: ["unused-imports"],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -31,15 +31,7 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
-      "unused-imports/no-unused-imports": "error"
+      "@angular-eslint/prefer-on-push-component-change-detection": "error",
     },
   },
-  {
-    files: ["**/*.html"],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility,
-    ],
-    rules: {},
-  }
-);
+]);

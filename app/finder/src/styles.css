@@ -1,4 +1,5 @@
 @import "primeicons/primeicons.css";
+@import "tailwindcss";
 
 @tailwind base;
 @tailwind components;

@@ -17,12 +17,5 @@ export const AppTheme = definePreset(Aura, {
       900: '{sky.900}',
       950: '{sky.950}',
     },
-    form: {
-      field: {
-        border: {
-          radius: '0',
-        },
-      },
-    },
   },
 });

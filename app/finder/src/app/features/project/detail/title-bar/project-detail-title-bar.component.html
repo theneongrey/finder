@@ -1,18 +1,18 @@
-<div class="tw-flex">
+<div class="tw:flex">
   <p-button [routerLink]="['/project']">Back to overview</p-button>
-  <div class="tw-flex tw-mr-0 tw-ml-auto tw-gap-2">
+  <div class="tw:flex tw:mr-0 tw:ml-auto tw:gap-2">
     <p-button (click)="displayShareDialog()">Share</p-button>
     <p-button (click)="displayAddTopicDialog()">Add Topic</p-button>
   </div>
 </div>
 
 <p-dialog header="Add topic" [modal]="true" [(visible)]="showAddTopicDialog" [style]="{ width: '25rem' }">
-  <span class="p-text-secondary tw-block tw-mb-8">A topic is a specific thing that you want to decide like &quot;What color should the bedroom walls be&quot;</span>
-  <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
-    <label for="topic" class="tw-font-semibold tw-w-24">Topic</label>
-    <input pInputText id="topic" class="tw-flex-auto" autocomplete="off" [(ngModel)]="topic" />
+  <span class="p-text-secondary tw:block tw:mb-8">A topic is a specific thing that you want to decide like &quot;What color should the bedroom walls be&quot;</span>
+  <div class="tw:flex tw:items-center tw:gap-4 tw:mb-4">
+    <label for="topic" class="tw:font-semibold tw:w-24">Topic</label>
+    <input pInputText id="topic" class="tw:flex-auto" autocomplete="off" [(ngModel)]="topic" />
   </div>
-  <div class="tw-flex tw-justify-end tw-gap-2">
+  <div class="tw:flex tw-justify-end tw-gap-2">
     <p-button label="Cancel" severity="secondary" (click)="showAddTopicDialog.set(false)" />
     <p-button label="Add topic" (click)="addTopic()" [disabled]="!topic()" />
   </div>

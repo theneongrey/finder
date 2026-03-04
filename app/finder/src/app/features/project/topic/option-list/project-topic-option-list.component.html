@@ -1,7 +1,7 @@
-<div class="tw-flex tw-bg-red-50 tw-h-full tw-flex-col tw-p-5">
+<div class="tw:flex tw:bg-red-50 tw:h-full tw:flex-col tw:p-5">
   <p-dataview [value]="options()">
     <ng-template #list let-options>
-      <h4 class="tw-mb-5">Topic: {{ topic()?.name }}</h4>
+      <h4 class="tw:mb-5">Topic: {{ topic()?.name }}</h4>
 
       @for (option of options; track option.id) {
         <div class="tw-flex tw-h-8">

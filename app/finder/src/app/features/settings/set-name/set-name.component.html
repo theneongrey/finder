@@ -1,7 +1,7 @@
-<form class="tw-flex tw-w-full tw-h-full tw-bg-red-50" [formGroup]="form">
-  <p-panel class="tw-m-auto" header="Please enter your name">
+<form class="tw:flex tw:w-full tw:h-full tw:bg-red-50" [formGroup]="form">
+  <p-panel class="tw:m-auto" header="Please enter your name">
     <p-floatlabel variant="on">
-      <label class="tw-block tw-mx-auto" for="name">Name</label>
+      <label class="tw:block tw:mx-auto" for="name">Name</label>
       <input pInputText id="name" [class.invalid]="form.get('name')!.invalid && form.get('name')!.dirty"
              formControlName="email" autofocus />
     </p-floatlabel>

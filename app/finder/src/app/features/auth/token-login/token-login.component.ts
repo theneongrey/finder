@@ -1,4 +1,9 @@
-import { Component, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,11 +12,15 @@ import { ActivatedRoute, Router } from '@angular/router';
   imports: [],
   templateUrl: './token-login.component.html',
   styleUrl: './token-login.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TokenLoginComponent {
   private userStore = inject(UserStore);
 
-  constructor(route: ActivatedRoute, router: Router) {
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+
     const loginToken = route.snapshot.queryParams['token'];
     const redirecturl = route.snapshot.queryParams['redirecturl'];
 

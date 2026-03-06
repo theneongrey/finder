@@ -1,6 +1,6 @@
-<div class="tw-flex tw-flex-col tw-h-full tw-w-full">
+<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
   <app-project-topic-title-bar [action]="action()" [topicId]="topicId()" />
-  <div class="tw-flex-grow">
+  <div class="tw:flex-grow">
   @if (topic(); as topic) {
     <app-project-topic-option-list [topic]="topic" [projectId]="id()" />
   }

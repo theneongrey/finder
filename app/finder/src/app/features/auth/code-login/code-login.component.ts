@@ -1,4 +1,9 @@
-import { Component, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
 import {
   FormControl,
@@ -16,6 +21,7 @@ import { Button } from 'primeng/button';
   imports: [ReactiveFormsModule, InputOtp, Panel, Button],
   templateUrl: './code-login.component.html',
   styleUrl: './code-login.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CodeLoginComponent {
   private userStore = inject(UserStore);
@@ -24,7 +30,9 @@ export class CodeLoginComponent {
     code: new FormControl('', [Validators.required]),
   });
 
-  constructor(router: Router) {
+  constructor() {
+    const router = inject(Router);
+
     if (!this.userStore.loginMail.email()) {
       console.log('redirect: no email stored');
       router.navigate(['/']);

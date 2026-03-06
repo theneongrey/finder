@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../env/environment';
 import { LoggerService } from './logger.service';
 import { HttpClient } from '@angular/common/http';
@@ -8,12 +8,10 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class UserService {
-  private readonly baseUrl = environment.baseUrl;
+  private readonly loggerService = inject(LoggerService);
+  private readonly httpClient = inject(HttpClient);
 
-  constructor(
-    private readonly loggerService: LoggerService,
-    private readonly httpClient: HttpClient,
-  ) {}
+  private readonly baseUrl = environment.baseUrl;
 
   getUser() {
     this.loggerService.debug('[User service] fetching user');

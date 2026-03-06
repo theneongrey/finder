@@ -1,6 +1,6 @@
-<form class="tw-flex tw-w-full tw-h-full tw-bg-red-50" [formGroup]="form">
-  <p-panel class="tw-m-auto" header="Please enter the login code sent to you by e-mail">
-    <p-inputOtp id="code" class="tw-mx-auto" aria-label="code"
+<form class="tw:flex tw:w-full tw:h-full tw:bg-red-50" [formGroup]="form">
+  <p-panel class="tw:m-auto" header="Please enter the login code sent to you by e-mail">
+    <p-inputOtp id="code" class="tw:mx-auto" aria-label="code"
                 [class.invlid]="form.get('code')!.invalid && form.get('code')!.dirty"
                 formControlName="code" autofocus [integerOnly]="true" [length]="6" />
     <p-button type="submit" (click)="(verifyCode())" [disabled]="form.invalid">Verify code</p-button>

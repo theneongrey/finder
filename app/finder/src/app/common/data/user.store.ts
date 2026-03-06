@@ -188,7 +188,9 @@ export const UserStore = signalStore(
           switchMap(() => {
             return store.userService.logout().pipe(
               tapResponse({
-                next: () => {},
+                next: () => {
+                  /* no action */
+                },
                 error: (error) => {
                   store.loggerService.error(
                     '[UserStore] Error while logging out',

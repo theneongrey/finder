@@ -1,4 +1,10 @@
-import { Component, effect, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
 import { ProjectStore } from '../_data/project.store';
 import { Router } from '@angular/router';
 import { ProjectDetailTitleBarComponent } from './title-bar/project-detail-title-bar.component';
@@ -9,6 +15,7 @@ import { ProjectDetailTopicListComponent } from './topic-list/project-detail-top
   imports: [ProjectDetailTitleBarComponent, ProjectDetailTopicListComponent],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailComponent {
   private projectStore = inject(ProjectStore);
@@ -16,7 +23,7 @@ export class ProjectDetailComponent {
   action = input('');
   project = this.projectStore.currentProject;
 
-  constructor(router: Router) {
+  constructor() {
     effect(() => {
       this.projectStore.getProject(this.id());
     });

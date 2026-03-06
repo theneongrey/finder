@@ -1,4 +1,11 @@
-import { Component, effect, inject, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { InputText } from 'primeng/inputtext';
@@ -23,6 +30,7 @@ import { ProjectRoleToNamePipe } from '../../_utils/pipe/permission-to-name.pipe
   ],
   templateUrl: './project-detail-title-bar.component.html',
   styleUrl: './project-detail-title-bar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailTitleBarComponent {
   private projectStore = inject(ProjectStore);

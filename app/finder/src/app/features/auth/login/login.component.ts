@@ -1,4 +1,10 @@
-import { Component, effect, inject, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  untracked,
+} from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
 import { Router } from '@angular/router';
 
@@ -7,11 +13,14 @@ import { Router } from '@angular/router';
   imports: [],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
   private userStore = inject(UserStore);
 
-  constructor(router: Router) {
+  constructor() {
+    const router = inject(Router);
+
     effect(() => {
       const user = this.userStore.user();
       if (!user) {

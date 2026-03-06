@@ -1,17 +1,17 @@
-<div class="tw-flex tw-bg-red-50 tw-h-full tw-flex-col tw-p-5">
+<div class="tw:flex tw:bg-red-50 tw:h-full tw:flex-col tw:p-5">
   <p-dataview [value]="options()">
     <ng-template #list let-options>
-      <h4 class="tw-mb-5">Topic: {{ topic()?.name }}</h4>
+      <h4 class="tw:mb-5">Topic: {{ topic()?.name }}</h4>
 
       @for (option of options; track option.id) {
-        <div class="tw-flex tw-h-8">
-          <div class="tw-w-[400px]">
+        <div class="tw:flex tw:h-8">
+          <div class="tw:w-[400px]">
             {{ option.text }}
           </div>
           <div>
             votes: {{ option.votes }}
           </div>
-          <div class="tw-flex tw-ml-auto tw-mr-0 tw-gap-2">
+          <div class="tw:flex tw:ml-auto tw:mr-0 tw:gap-2">
             <p-button icon="pi pi-check-circle" [routerLink]="['/project/detail', projectId(), 'vote', topic()!.id, option.id]"/>
             <p-button icon="pi pi-trash" (click)="showDeleteDialog($event, option.id, option.text)"/>
           </div>

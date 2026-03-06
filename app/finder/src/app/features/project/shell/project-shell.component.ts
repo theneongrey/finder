@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ProjectTitleComponent } from './title/project-title.component';
 import { RouterOutlet } from '@angular/router';
 
@@ -7,5 +7,6 @@ import { RouterOutlet } from '@angular/router';
   imports: [ProjectTitleComponent, RouterOutlet],
   templateUrl: './project-shell.component.html',
   styleUrl: './project-shell.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectShellComponent {}

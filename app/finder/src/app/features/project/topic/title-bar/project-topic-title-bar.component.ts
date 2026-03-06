@@ -1,11 +1,17 @@
-import { Component, effect, inject, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { InputText } from 'primeng/inputtext';
 import { ProjectStore } from '../../_data/project.store';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { OptionType } from '../../_models/project-detail.model';
 import { LoggerService } from '../../../../common/services/logger.service';
 
 @Component({
@@ -13,6 +19,7 @@ import { LoggerService } from '../../../../common/services/logger.service';
   imports: [Button, Dialog, InputText, FormsModule, RouterLink],
   templateUrl: './project-topic-title-bar.component.html',
   styleUrl: './project-topic-title-bar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectTopicTitleBarComponent {
   private projectStore = inject(ProjectStore);

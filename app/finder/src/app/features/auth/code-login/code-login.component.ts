@@ -22,6 +22,9 @@ import { Button } from 'primeng/button';
   templateUrl: './code-login.component.html',
   styleUrl: './code-login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'tw:m-auto',
+  },
 })
 export class CodeLoginComponent {
   private userStore = inject(UserStore);

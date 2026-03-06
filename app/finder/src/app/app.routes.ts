@@ -1,11 +1,17 @@
 import { Routes } from '@angular/router';
 import { userAuthentication } from './common/services/auth.guard';
+import { authRoutes } from './features/auth/shell/auth-shell.routes';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'project',
+    redirectTo: 'home',
     pathMatch: 'full',
+  },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./features/home/home.component').then((m) => m.HomeComponent),
   },
   {
     canActivate: [userAuthentication()],
@@ -86,43 +92,10 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-    children: [
-      {
-        path: 'login',
-        loadComponent: () =>
-          import('./features/auth/login/login.component').then(
-            (m) => m.LoginComponent,
-          ),
-      },
-      {
-        path: 'request-email',
-        loadComponent: () =>
-          import('./features/auth/auth-request-email/auth-request-email.component').then(
-            (m) => m.AuthRequestEmailComponent,
-          ),
-      },
-      {
-        path: 'code-login',
-        loadComponent: () =>
-          import('./features/auth/code-login/code-login.component').then(
-            (m) => m.CodeLoginComponent,
-          ),
-      },
-      {
-        path: 'token-login',
-        loadComponent: () =>
-          import('./features/auth/token-login/token-login.component').then(
-            (m) => m.TokenLoginComponent,
-          ),
-      },
-      {
-        canActivate: [userAuthentication()],
-        path: 'logout',
-        loadComponent: () =>
-          import('./features/auth/logout/logout.component').then(
-            (m) => m.LogoutComponent,
-          ),
-      },
-    ],
+    loadComponent: () =>
+      import('./features/auth/shell/auth-shell.component').then(
+        (m) => m.AuthShellComponent,
+      ),
+    children: authRoutes,
   },
 ];

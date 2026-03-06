@@ -24,6 +24,9 @@ import { Panel } from 'primeng/panel';
   templateUrl: './auth-request-email.component.html',
   styleUrl: './auth-request-email.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'tw:m-auto',
+  },
 })
 export class AuthRequestEmailComponent {
   private userStore = inject(UserStore);

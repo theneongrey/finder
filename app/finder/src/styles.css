@@ -1,9 +1,41 @@
 @import "primeicons/primeicons.css";
 @import "tailwindcss" prefix(tw);
+@import "@fontsource/roboto/300.css";
+@import "@fontsource/roboto/400.css";
+@import "@fontsource/roboto/500.css";
+@import "@fontsource/roboto/700.css";
+
+@theme {
+  --color-main-blue: #6D9BDF;
+  --color-error: #AD3448;
+}
 
 html, body {
+  font-family: 'Roboto', sans-serif;
+
   height: 100%;
   width: 100%;
+
+  --p-button-border-radius: 20px;
+  --p-button-padding-x: 40px;
+
+  .main-bg {
+    --color-main-blue: #6D9BDF;
+
+    background-color: var(--color-main-blue);
+
+    --p-button-primary-background: white;
+    --p-button-primary-hover-background: #235CB1;
+    --p-button-primary-active-background: white;
+
+    --p-button-primary-border-color: transparent;
+    --p-button-primary-hover-border-color: transparent;
+    --p-button-primary-active-border-color: transparent;
+
+    --p-button-primary-color: var(--color-main-blue);
+    --p-button-primary-hover-color: var(--color-main-blue);
+    --p-button-primary-active-color: var(--color-main-blue);
+  }
 }
 
 input.invalid {

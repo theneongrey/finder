@@ -10,8 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-auth-token-login',
   imports: [],
-  templateUrl: './token-login.component.html',
-  styleUrl: './token-login.component.css',
+  template: '',
+  styles: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TokenLoginComponent {

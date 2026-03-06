@@ -1,13 +1,13 @@
 <form class="tw:flex tw:w-full tw:h-full tw:bg-red-50" [formGroup]="form">
-  <p-panel class="tw-m-auto" header="Request Login Mail">
+  <p-panel class="tw:m-auto" header="Request Login Mail">
     <p-floatlabel variant="on">
-      <label class="tw-block tw-mx-auto" for="email">E-Mail</label>
+      <label class="tw:block tw:mx-auto" for="email">E-Mail</label>
       <input pInputText id="email"
              [class.ng-invalid]="form.get('email')!.invalid && form.get('email')!.dirty"
              type="email" formControlName="email" autofocus />
     </p-floatlabel>
     @if (errorMessage()) {
-      <div class="tw-text-red-800">{{ errorMessage() }}</div>
+      <div class="tw:text-red-800">{{ errorMessage() }}</div>
     }
     <p-button type="submit" (click)="(sendLoginMail())" [disabled]="form.invalid">Send Mail</p-button>
   </p-panel>

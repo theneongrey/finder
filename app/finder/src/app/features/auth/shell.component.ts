@@ -5,20 +5,17 @@ import {
   inject,
   untracked,
 } from '@angular/core';
-import { UserStore } from '../../../common/data/user.store';
-import { Router } from '@angular/router';
+import { UserStore } from '../../common/data/user.store';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-auth-login',
-  imports: [],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  selector: 'app-auth-shell',
+  imports: [RouterOutlet],
+  templateUrl: './shell.component.html',
+  styleUrl: './shell.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'tw:m-auto',
-  },
 })
-export class LoginComponent {
+export class AuthShellComponent {
   private userStore = inject(UserStore);
 
   constructor() {
@@ -40,7 +37,7 @@ export class LoginComponent {
               this.userStore.setRedirectUrl(undefined);
               router.navigate([redirectUrl]);
             } else {
-              router.navigate(['/logged-in']);
+              router.navigate(['/']);
             }
           });
         }

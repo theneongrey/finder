@@ -2,24 +2,41 @@ namespace Finder.Business.Project.Api.Responses;
 
 public class ProjectOverviewResponse
 {
-    public required string Id { get; set; }
-    public required string Name { get; set; }
-    public required string Creator { get; set; }
-    public required int TopicCount { get; set; } 
-    public required ProjectRole Role { get; set; }
+    public required string Id { get; init; }
+    public required string Name { get; init; }
+    public required string Creator { get; init; }
+    public required ICollection<ProjectOverviewTopicResponse> Topics { get; init; }
+    public required int TopicCount { get; init; } 
+    public required DateTime LastUpdated { get; init; }
+}
+
+public class ProjectOverviewTopicResponse
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; } 
 }
 
 public static class ProjectOverviewMapper
 {
     public static ProjectOverviewResponse ToProjectOverviewResponse(this Entities.Project project, Guid? userId)
     {
+        var newwestTopic = project.Topics.OrderByDescending(t => t.Edited).FirstOrDefault();
+        var lastUpdated = newwestTopic is not null && newwestTopic.Edited > project.Edited
+            ? newwestTopic.Edited
+            : project.Edited;
+        
         return new ProjectOverviewResponse
         {
             Id = project.Id.ToString(),
             Name = project.Name,
             Creator = project.Creator.Name ?? "",
+            Topics = project.Topics.Take(3).Select(t => new ProjectOverviewTopicResponse
+            {
+                Id = t.Id,
+                Name = t.Name
+            }).ToArray(),
             TopicCount = project.Topics.Count,
-            Role = project.GetRole(userId)
+            LastUpdated = DateTime.SpecifyKind(lastUpdated, DateTimeKind.Utc)
         };
     }
 }

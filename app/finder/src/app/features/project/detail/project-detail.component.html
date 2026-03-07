@@ -1,8 +1,10 @@
 <div class="tw:flex tw:flex-col tw:h-full tw:w-full">
   <app-project-detail-title-bar [action]="action()" />
   <div class="tw:flex-grow">
-  @if (project(); as project) {
-    <app-project-detail-topic-list [topics]="project.topics" />
-  }
+    @if (project(); as project) {
+      <app-project-detail-topic-list [topics]="project.topics" />
+    }
   </div>
 </div>
+
+<p-confirmdialog />

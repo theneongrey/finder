@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { InputOtp } from 'primeng/inputotp';
 import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';
+import { LoggerService } from '../../../common/services/logger.service';
 
 @Component({
   selector: 'app-auth-code-login',
@@ -22,9 +23,13 @@ import { Button } from 'primeng/button';
   templateUrl: './code-login.component.html',
   styleUrl: './code-login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'tw:m-auto',
+  },
 })
 export class CodeLoginComponent {
   private userStore = inject(UserStore);
+  private loggerService = new LoggerService();
 
   form = new FormGroup({
     code: new FormControl('', [Validators.required]),
@@ -34,14 +39,14 @@ export class CodeLoginComponent {
     const router = inject(Router);
 
     if (!this.userStore.loginMail.email()) {
-      console.log('redirect: no email stored');
+      this.loggerService.log('redirect: no email stored');
       router.navigate(['/']);
     }
 
     effect(() => {
       if (this.userStore.user()?.isAuthenticated) {
-        console.log('redirect: user is authenticated');
-        router.navigate(['/']);
+        this.loggerService.log('redirect: user is authenticated');
+        router.navigate(['/logged-in']);
       }
     });
   }

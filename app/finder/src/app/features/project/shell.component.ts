@@ -3,10 +3,10 @@ import { ProjectTitleComponent } from './title/project-title.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-project-shell',
+  selector: 'app-project',
   imports: [ProjectTitleComponent, RouterOutlet],
-  templateUrl: './project-shell.component.html',
-  styleUrl: './project-shell.component.css',
+  templateUrl: './shell.component.html',
+  styleUrl: './shell.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectShellComponent {}

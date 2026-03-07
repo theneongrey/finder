@@ -1,8 +1,8 @@
 <form [formGroup]="form">
-  <p-panel class="tw:m-auto" header="Please enter the login code sent to you by e-mail">
-    <p-inputOtp id="code" class="tw:mx-auto" aria-label="code"
+  <p-panel class="main-bg tw:w-80" header="Please enter the login code sent to you by e-mail">
+    <p-inputOtp id="code" class="tw:mx-auto tw:mb-5 tw:mt-5" aria-label="code"
                 [class.invlid]="form.get('code')!.invalid && form.get('code')!.dirty"
                 formControlName="code" autofocus [integerOnly]="true" [length]="6" />
-    <p-button type="submit" (click)="(verifyCode())" [disabled]="form.invalid">Verify code</p-button>
+    <p-button class="tw:ml-auto tw:mr-0" type="submit" (click)="(verifyCode())" [disabled]="form.invalid">Verify code</p-button>
   </p-panel>
 </form>

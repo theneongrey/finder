@@ -40,7 +40,7 @@ export class LoginComponent {
               this.userStore.setRedirectUrl(undefined);
               router.navigate([redirectUrl]);
             } else {
-              router.navigate(['/']);
+              router.navigate(['/logged-in']);
             }
           });
         }

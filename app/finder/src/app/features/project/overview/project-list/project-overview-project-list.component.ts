@@ -1,20 +1,33 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Button } from 'primeng/button';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  model,
+} from '@angular/core';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProjectStore } from '../../_data/project.store';
 import { RouterLink } from '@angular/router';
-import { DataView } from 'primeng/dataview';
-import { ProjectRoleToNamePipe } from '../../_utils/pipe/permission-to-name.pipe';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { Card } from 'primeng/card';
+import { Button } from 'primeng/button';
+import { Dialog } from 'primeng/dialog';
+import { InputText } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { FloatLabel } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-project-overview-project-list',
   imports: [
-    Button,
-    DataView,
     ConfirmDialogModule,
     RouterLink,
-    ProjectRoleToNamePipe,
+    ScrollPanelModule,
+    Card,
+    Button,
+    Dialog,
+    InputText,
+    FormsModule,
+    FloatLabel,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-overview-project-list.component.html',
@@ -27,6 +40,16 @@ export class ProjectOverviewProjectListComponent {
 
   projects = this.projectStore.projects;
 
+  showAddProjectDialog = model(false);
+  projectName = model('');
+
+  addProject() {
+    if (this.projectName()) {
+      this.projectStore.addProject(this.projectName());
+      this.showAddProjectDialog.set(false);
+    }
+  }
+
   showDeleteDialog(event: MouseEvent, id: string, title: string) {
     event.stopPropagation();
     this.confirmationService.confirm({
@@ -36,6 +59,11 @@ export class ProjectOverviewProjectListComponent {
         this.deleteProject(id);
       },
     });
+  }
+
+  displayAddProjectDialog() {
+    this.projectName.set('');
+    this.showAddProjectDialog.set(true);
   }
 
   deleteProject(id: string) {

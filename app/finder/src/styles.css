@@ -11,30 +11,67 @@
 }
 
 html, body {
+  --color-main-blue: #6D9BDF;
+  --color-main-blue-hover: #235CB1;
+
   font-family: 'Roboto', sans-serif;
 
   height: 100%;
   width: 100%;
 
-  --p-button-border-radius: 20px;
+  /* button */
+  --p-button-border-radius: 12px;
   --p-button-padding-x: 40px;
+  --p-button-primary-background: var(--color-main-blue);
+  --p-button-primary-border-color: transparent;
+  --p-button-primary-hover-border-color: transparent;
+  --p-button-primary-active-border-color: transparent;
+
+  --p-button-primary-hover-color: white;
+  --p-button-primary-hover-background: var(--color-main-blue-hover);
+
+  --p-panel-border-radius: 0;
+
+  p-button.small {
+    --p-button-padding-x: 12px;
+    --p-button-padding-y: 2px;
+  }
 
   .main-bg {
-    --color-main-blue: #6D9BDF;
-
     background-color: var(--color-main-blue);
 
     --p-button-primary-background: white;
-    --p-button-primary-hover-background: #235CB1;
+    --p-button-primary-hover-background: var(--color-main-blue-hover);
     --p-button-primary-active-background: white;
-
-    --p-button-primary-border-color: transparent;
-    --p-button-primary-hover-border-color: transparent;
-    --p-button-primary-active-border-color: transparent;
 
     --p-button-primary-color: var(--color-main-blue);
     --p-button-primary-hover-color: var(--color-main-blue);
     --p-button-primary-active-color: var(--color-main-blue);
+
+    .p-panel-content {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .p-card {
+    box-shadow: none;
+    background: var(--color-main-blue);
+
+    &:hover {
+      background: var(--color-main-blue-hover);
+    }
+
+    .p-card-body {
+      height: 100%;
+      padding: 0;
+
+      .p-card-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%
+      }
+    }
   }
 }
 

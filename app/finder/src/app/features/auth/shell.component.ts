@@ -5,14 +5,14 @@ import {
   inject,
   untracked,
 } from '@angular/core';
-import { UserStore } from '../../../common/data/user.store';
+import { UserStore } from '../../common/data/user.store';
 import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-auth-shell',
   imports: [RouterOutlet],
-  templateUrl: './auth-shell.component.html',
-  styleUrl: './auth-shell.component.css',
+  templateUrl: './shell.component.html',
+  styleUrl: './shell.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthShellComponent {

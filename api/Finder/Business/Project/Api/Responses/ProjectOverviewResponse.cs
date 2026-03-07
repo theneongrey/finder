@@ -20,6 +20,11 @@ public static class ProjectOverviewMapper
 {
     public static ProjectOverviewResponse ToProjectOverviewResponse(this Entities.Project project, Guid? userId)
     {
+        var newwestTopic = project.Topics.OrderByDescending(t => t.Edited).FirstOrDefault();
+        var lastUpdated = newwestTopic is not null && newwestTopic.Edited > project.Edited
+            ? newwestTopic.Edited
+            : project.Edited;
+        
         return new ProjectOverviewResponse
         {
             Id = project.Id.ToString(),
@@ -31,7 +36,7 @@ public static class ProjectOverviewMapper
                 Name = t.Name
             }).ToArray(),
             TopicCount = project.Topics.Count,
-            LastUpdated = DateTime.SpecifyKind(project.Edited, DateTimeKind.Utc)
+            LastUpdated = DateTime.SpecifyKind(lastUpdated, DateTimeKind.Utc)
         };
     }
 }

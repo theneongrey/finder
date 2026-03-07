@@ -37,7 +37,13 @@ export const ProjectStore = signalStore(
           return store.projectService.getProjects().pipe(
             tapResponse({
               next: (projects) => {
-                patchState(store, { projects });
+                patchState(store, {
+                  projects: projects.sort(
+                    (a, b) =>
+                      new Date(b.lastUpdated).getTime() -
+                      new Date(a.lastUpdated).getTime(),
+                  ),
+                });
               },
               error: (error) => {
                 store.loggerService.log(

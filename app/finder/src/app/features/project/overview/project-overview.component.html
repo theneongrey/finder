@@ -1,5 +1,98 @@
-<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
-  <div class="tw:flex-grow">
-    <app-project-overview-project-list />
+<div
+  class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:p-2 tw:md:px-0 tw:md:py-5"
+>
+  <p-scrollpanel class="tw:w-full tw:flex-1 tw:min-h-0">
+    <div
+      class="tw:grid tw:gap-2 tw:grid-cols-auto-fit tw:grid-cols-1 tw:md:grid-cols-3"
+    >
+      <p-card
+        fHideOnSmall
+        class="tw:cursor-pointer tw:opacity-50 tw:hover:opacity-100 tw:transition-opacity tw:duration-300 tw:py-5"
+        (click)="displayAddProjectDialog()"
+      >
+        <div class="tw:m-auto tw:flex tw:flex-col">
+          <span
+            class="pi pi-plus tw:text-white tw:mx-auto"
+            style="font-size: 50px"
+          ></span>
+          <div class="tw:mt-5 tw:text-white">Add Project</div>
+        </div>
+      </p-card>
+      @for (project of projects(); track project.id) {
+        <p-card
+          class="tw:cursor-pointer content-card tw:p-1"
+          [routerLink]="['/project/detail', project.id]"
+        >
+          <div
+            class="tw:bg-white tw:rounded-[10px] tw:w-full tw:h-full tw:p-6 tw:shadow-xl"
+          >
+            <div class="p-card-subtitle">{{ project.creator }}</div>
+            <div class="p-card-title tw:mb-2">{{ project.name }}</div>
+            @for (topic of project.topics; track topic.id) {
+              <div>{{ topic.name }}</div>
+            }
+            @if (project.topicCount > 3) {
+              <div>... {{ project.topicCount - 3 }} more</div>
+            }
+          </div>
+          <div class="tw:flex tw:m-1 tw:mt-2">
+            <div class="tw:text-white tw:opacity-70 tw:mx-auto">
+              {{ project.lastUpdated | timeSince }}
+            </div>
+          </div>
+        </p-card>
+      }
+    </div>
+  </p-scrollpanel>
+
+  <div
+    class="tw:absolute tw:bottom-0 tw:left-0 tw:right-0 tw:bg-gradient-to-t tw:from-white tw:to-transparent tw:z-10 tw:pt-40 tw:pointer-events-none"
+  >
+    <p-card
+      fShowOnSmall
+      class="tw:cursor-pointer tw:py-3 tw:md:collapse tw:m-1 tw:pointer-events-auto"
+      (click)="displayAddProjectDialog()"
+    >
+      <div class="tw:m-auto tw:flex tw:flex-row">
+        <span class="pi pi-plus tw:text-white tw:mt-0.5"></span>
+        <div class="tw:ml-1.5 tw:text-white">Add Project</div>
+      </div>
+    </p-card>
   </div>
 </div>
+
+<p-dialog
+  header="New Project"
+  [modal]="true"
+  [(visible)]="showAddProjectDialog"
+  [style]="{ width: '25rem' }"
+>
+  <span class="p-text-secondary tw:block tw:mb-8"
+    >A project is a collection of things to decide, like a &quot;Birthday
+    party&quot;</span
+  >
+  <div class="tw:mb-5 tw:mt-5">
+    <p-floatlabel variant="on">
+      <label for="name">Name</label>
+      <input
+        pInputText
+        id="name"
+        class="tw:w-full"
+        autocomplete="off"
+        [(ngModel)]="projectName"
+      />
+    </p-floatlabel>
+  </div>
+  <div class="tw:flex tw:justify-end tw:gap-2">
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (click)="showAddProjectDialog.set(false)"
+    />
+    <p-button
+      label="Add Project"
+      (click)="addProject()"
+      [disabled]="!projectName()"
+    />
+  </div>
+</p-dialog>

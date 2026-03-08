@@ -8,31 +8,37 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[fMaxHeightMinusHeader]',
+  selector: '[fMaxHeightMinusHeaderAndFooter]',
   host: {
     '[style.max-height]': 'maxHeight()',
   },
 })
 export class MaxHeightMinusHeaderDirective implements OnInit, OnDestroy {
-  private elementRef = inject(ElementRef);
   private resizeObserver: ResizeObserver | null = null;
   protected maxHeight = signal('100vh');
 
   ngOnInit(): void {
     const header = document.querySelector('header');
-    if (!header) return;
+    const footer = document.querySelector('footer');
 
     const updateHeight = () => {
-      const headerHeight = header.getBoundingClientRect().height;
-      this.maxHeight.set(`calc(100vh - ${headerHeight}px)`);
+      const headerHeight = header?.getBoundingClientRect().height ?? 0;
+      const footerHeight = footer?.getBoundingClientRect().height ?? 0;
+      this.maxHeight.set(`calc(100vh - ${headerHeight}px - ${footerHeight}px)`);
     };
 
     // Initiale Berechnung
     updateHeight();
 
     // ResizeObserver für dynamische Header-Höhenänderungen
-    this.resizeObserver = new ResizeObserver(updateHeight);
-    this.resizeObserver.observe(header);
+    if (header) {
+      this.resizeObserver = new ResizeObserver(updateHeight);
+      this.resizeObserver.observe(header);
+    }
+    if (footer) {
+      this.resizeObserver = new ResizeObserver(updateHeight);
+      this.resizeObserver.observe(footer);
+    }
   }
 
   ngOnDestroy(): void {

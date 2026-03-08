@@ -13,11 +13,12 @@ import { TimeSincePipe } from './_pipe/time-ago.pipe';
 import { RouterLink } from '@angular/router';
 import { HideOnSmallDirective } from '../../../common/ui/directives/hide-on-small.directive';
 import { MessageService } from 'primeng/api';
-import { ShowOnSmallDirective } from '../../../common/ui/directives/show-on-small.directive';
 import { Button } from 'primeng/button';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Dialog } from 'primeng/dialog';
+import { FooterService } from '../_services/footer.service';
+import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'app-project-overview',
@@ -29,11 +30,11 @@ import { Dialog } from 'primeng/dialog';
     FormsModule,
     TimeSincePipe,
     HideOnSmallDirective,
-    ShowOnSmallDirective,
     Button,
     FloatLabel,
     InputText,
     Dialog,
+    Tag,
   ],
   providers: [MessageService],
   templateUrl: './project-overview.component.html',
@@ -52,7 +53,15 @@ export class ProjectOverviewComponent {
   projectName = model('');
 
   constructor() {
+    const footerService = inject(FooterService);
+
     this.projectStore.getProjects();
+    footerService.setButtons([
+      {
+        icon: 'pi pi-plus',
+        action: () => this.displayAddProjectDialog(),
+      },
+    ]);
   }
 
   addProject() {

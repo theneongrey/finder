@@ -1,9 +1,10 @@
-<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
+<div class="tw:flex tw:flex-col tw:h-full tw:w-full main-blue-big">
   <app-project-title />
   <main
-    fMaxHeightMinusHeader
-    class="tw:flex-grow tw:max-w-5xl tw:mx-auto tw:w-full"
+    fMaxHeightMinusHeaderAndFooter
+    class="tw:flex-grow tw:max-w-5xl tw:mx-auto tw:w-full tw:h-full tw:bg-white tw:rounded-t-2xl"
   >
     <router-outlet />
   </main>
+  <app-project-footer />
 </div>

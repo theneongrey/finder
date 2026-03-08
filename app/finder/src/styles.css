@@ -5,16 +5,21 @@
 @import "@fontsource/roboto/500.css";
 @import "@fontsource/roboto/700.css";
 
-@theme {
-  --color-main-blue: #6D9BDF;
-  --color-error: #AD3448;
+:root {
 }
 
-html, body {
-  --color-main-blue: #6D9BDF;
-  --color-main-blue-hover: #235CB1;
+@theme {
+  --color-main-blue: #6d9bdf;
+  --color-main-blue-big: #6d9bdf;
+  --color-error: #ad3448;
+}
 
-  font-family: 'Roboto', sans-serif;
+html,
+body {
+  --color-main-blue: #6d9bdf;
+  --color-main-blue-hover: #235cb1;
+
+  font-family: "Roboto", sans-serif;
 
   height: 100%;
   width: 100%;
@@ -37,9 +42,17 @@ html, body {
     --p-button-padding-y: 2px;
   }
 
-  .main-bg {
-    background-color: var(--color-main-blue);
+  .main-blue-big {
+    background: linear-gradient(
+      225deg,
+      #7aa6e6 0%,
+      #6d9bdf 35%,
+      #638fd6 65%,
+      #557fc4 100%
+    );
+  }
 
+  .main-bg-content {
     --p-button-primary-background: white;
     --p-button-primary-hover-background: var(--color-main-blue-hover);
     --p-button-primary-active-background: white;
@@ -69,7 +82,7 @@ html, body {
       .p-card-content {
         display: flex;
         flex-direction: column;
-        height: 100%
+        height: 100%;
       }
     }
   }

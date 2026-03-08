@@ -1,0 +1,26 @@
+<div class="tw:bg-white">
+  <footer
+    fShowOnSmall
+    class="main-bg-content main-blue-big tw:max-w-5xl tw:mx-auto tw:w-full tw:flex tw:h-15 tw:p-2 tw:rounded-t-2xl"
+  >
+    <p-button
+      class="tw:my-auto tw:mr-5"
+      icon="pi pi-home"
+      [routerLink]="['/project']"
+    />
+    @let _title = title();
+    @if (_title) {
+      <h2 class="tw:text-white tw:my-auto">{{ _title }}</h2>
+    }
+    <div class="tw:flex tw:gap-2 tw:ml-auto">
+      @for (button of buttons(); track button.icon) {
+        <p-button
+          class="tw:my-auto"
+          [icon]="button.icon"
+          [label]="button.label"
+          (click)="button.action()"
+        />
+      }
+    </div>
+  </footer>
+</div>

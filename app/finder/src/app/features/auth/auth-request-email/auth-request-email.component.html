@@ -1,17 +1,30 @@
 <form [formGroup]="form">
-  <p-panel header="Login" class="main-bg tw:w-150">
+  <p-panel header="Login" class="main-bg-content md:tw:w-150">
     <div class="tw:mb-5 tw:mt-5">
       <p-floatlabel variant="on">
         <label for="email">E-Mail</label>
-        <input pInputText id="email" class="tw:w-full"
-               [class.ng-invalid]="form.get('email')!.invalid && form.get('email')!.dirty"
-               type="email" formControlName="email" autofocus />
+        <input
+          pInputText
+          id="email"
+          class="tw:w-full"
+          [class.ng-invalid]="
+            form.get('email')!.invalid && form.get('email')!.dirty
+          "
+          type="email"
+          formControlName="email"
+          autofocus
+        />
       </p-floatlabel>
       @if (errorMessage()) {
         <div class="tw:text-error">{{ errorMessage() }}</div>
       }
     </div>
-    <p-button class="tw:ml-auto tw:mr-0" type="submit" (click)="(sendLoginMail())" [disabled]="form.invalid"
-              label="Request login code"></p-button>
+    <p-button
+      class="tw:ml-auto tw:mr-0"
+      type="submit"
+      (click)="sendLoginMail()"
+      [disabled]="form.invalid"
+      label="Request login code"
+    ></p-button>
   </p-panel>
 </form>

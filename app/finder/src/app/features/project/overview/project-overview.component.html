@@ -1,9 +1,7 @@
-<div
-  class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:p-2 tw:md:px-0 tw:md:py-5"
->
+<div class="tw:flex tw:h-full tw:max-h-full tw:flex-col">
   <p-scrollpanel class="tw:w-full tw:flex-1 tw:min-h-0">
     <div
-      class="tw:grid tw:gap-2 tw:grid-cols-auto-fit tw:grid-cols-1 tw:md:grid-cols-3"
+      class="tw:grid tw:gap-2 tw:grid-cols-auto-fit tw:grid-cols-1 tw:md:grid-cols-3 tw:p-2"
     >
       <p-card
         fHideOnSmall
@@ -24,16 +22,18 @@
           [routerLink]="['/project/detail', project.id]"
         >
           <div
-            class="tw:bg-white tw:rounded-[10px] tw:w-full tw:h-full tw:p-6 tw:shadow-xl"
+            class="tw:bg-white tw:rounded-[10px] tw:w-full tw:h-full tw:p-3 tw:shadow-xl"
           >
             <div class="p-card-subtitle">{{ project.creator }}</div>
             <div class="p-card-title tw:mb-2">{{ project.name }}</div>
-            @for (topic of project.topics; track topic.id) {
-              <div>{{ topic.name }}</div>
-            }
-            @if (project.topicCount > 3) {
-              <div>... {{ project.topicCount - 3 }} more</div>
-            }
+            <div class="tw:flex tw:gap-1 tw:flex-wrap">
+              @for (topic of project.topics; track topic.id) {
+                <p-tag>{{ topic.name }}</p-tag>
+              }
+              @if (project.topicCount > 3) {
+                <p-tag>+ {{ project.topicCount - 3 }}</p-tag>
+              }
+            </div>
           </div>
           <div class="tw:flex tw:m-1 tw:mt-2">
             <div class="tw:text-white tw:opacity-70 tw:mx-auto">
@@ -44,21 +44,6 @@
       }
     </div>
   </p-scrollpanel>
-
-  <div
-    class="tw:absolute tw:bottom-0 tw:left-0 tw:right-0 tw:bg-gradient-to-t tw:from-white tw:to-transparent tw:z-10 tw:pt-40 tw:pointer-events-none"
-  >
-    <p-card
-      fShowOnSmall
-      class="tw:cursor-pointer tw:py-3 tw:md:collapse tw:m-1 tw:pointer-events-auto"
-      (click)="displayAddProjectDialog()"
-    >
-      <div class="tw:m-auto tw:flex tw:flex-row">
-        <span class="pi pi-plus tw:text-white tw:mt-0.5"></span>
-        <div class="tw:ml-1.5 tw:text-white">Add Project</div>
-      </div>
-    </p-card>
-  </div>
 </div>
 
 <p-dialog

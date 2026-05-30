@@ -1,0 +1,36 @@
+@let _topic = topic();
+
+<app-side-color-card
+  [color]="_topic.type | hierarchyByType"
+  class="tw:cursor-pointer"
+>
+  <div class="tw:flex tw:items-start tw:justify-between tw:mb-6 tw:gap-3">
+    <div>
+      <app-topic-type-icon [type]="_topic.type" />
+    </div>
+    <div class="tw:flex tw:flex-col tw:flex-1">
+      <p
+        class="tw:text-[12px] tw:font-bold"
+        [class]="_topic.type | hierarchyByType"
+      >
+        {{ _topic.type | topicByType }}
+      </p>
+      <h3>{{ _topic.name }}</h3>
+      <p class="label-sm">Options: {{ _topic.options.length }}</p>
+    </div>
+    <p-button
+      icon="pi pi-ellipsis-v"
+      [text]="true"
+      (click)="menu.toggle($event)"
+    />
+    <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+  </div>
+
+  <div class="p-fluid">
+    <p-button
+      class="tw:flex tw:w-full"
+      [routerLink]="['/project/detail', projectId(), 'vote', _topic.id]"
+      label="Vote"
+    />
+  </div>
+</app-side-color-card>

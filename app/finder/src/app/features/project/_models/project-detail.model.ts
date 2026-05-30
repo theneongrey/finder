@@ -13,9 +13,12 @@ export interface Option {
   choice: string;
 }
 
+export type TopicType = 'selection' | 'appointment' | 'rating';
+
 export interface Topic {
   id: string;
   name: string;
+  type: TopicType;
   options: Option[];
 }
 
@@ -27,6 +30,7 @@ export interface SharedWith {
 export interface Project {
   id: string;
   name: string;
+  description: string;
   topics: Topic[];
   creator: string;
   role: ProjectRole;

@@ -7,10 +7,11 @@ import {
 } from '@angular/core';
 import { UserStore } from '../../common/data/user.store';
 import { Router, RouterOutlet } from '@angular/router';
+import { BackgroundAnimationComponent } from '../../common/ui/components/background-animation/background-animation.component';
 
 @Component({
   selector: 'app-auth-shell',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, BackgroundAnimationComponent],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

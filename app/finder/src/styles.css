@@ -9,15 +9,24 @@
 }
 
 @theme {
-  --color-main-blue: #6d9bdf;
-  --color-main-blue-big: #6d9bdf;
   --color-error: #ad3448;
+  --color-primary: #86bba1;
+  --color-primary-dark: #356852;
+  --color-secondary: #a2d2ff;
+  --color-tertiary: #ffd1b3;
+  --color-neutral: #757875;
+  --color-on-surface-variant: #404944;
 }
 
 html,
 body {
-  --color-main-blue: #6d9bdf;
-  --color-main-blue-hover: #235cb1;
+  --color-error: #ad3448;
+  --color-primary: #86bba1;
+  --color-primary-dark: #356852;
+  --color-secondary: #a2d2ff;
+  --color-tertiary: #ffd1b3;
+  --color-neutral: #757875;
+  --color-on-surface-variant: #404944;
 
   font-family: "Roboto", sans-serif;
 
@@ -27,13 +36,9 @@ body {
   /* button */
   --p-button-border-radius: 12px;
   --p-button-padding-x: 40px;
-  --p-button-primary-background: var(--color-main-blue);
-  --p-button-primary-border-color: transparent;
-  --p-button-primary-hover-border-color: transparent;
-  --p-button-primary-active-border-color: transparent;
 
   --p-button-primary-hover-color: white;
-  --p-button-primary-hover-background: var(--color-main-blue-hover);
+  --p-button-primary-hover-background: var(--color-primary);
 
   --p-panel-border-radius: 0;
 
@@ -42,50 +47,40 @@ body {
     --p-button-padding-y: 2px;
   }
 
-  .main-blue-big {
-    background: linear-gradient(
-      225deg,
-      #7aa6e6 0%,
-      #6d9bdf 35%,
-      #638fd6 65%,
-      #557fc4 100%
-    );
+  p-tag.p-tag {
+    background-color: #86bba133;
+    font-weight: normal;
+    font-size: 80%;
   }
+}
 
-  .main-bg-content {
-    --p-button-primary-background: white;
-    --p-button-primary-hover-background: var(--color-main-blue-hover);
-    --p-button-primary-active-background: white;
+h1 {
+  font-size: 20px;
+  line-height: 1.4;
+}
 
-    --p-button-primary-color: var(--color-main-blue);
-    --p-button-primary-hover-color: var(--color-main-blue);
-    --p-button-primary-active-color: var(--color-main-blue);
+h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 700;
+}
 
-    .p-panel-content {
-      display: flex;
-      flex-direction: column;
-    }
-  }
+h3 {
+  font-size: 16px;
+  line-height: 24px;
+}
 
-  .p-card {
-    box-shadow: none;
-    background: var(--color-main-blue);
+p.label-sm {
+  font-size: 12px;
+  line-height: 1.2;
+}
 
-    &:hover {
-      background: var(--color-main-blue-hover);
-    }
+.p-fluid button {
+  width: 100%;
+}
 
-    .p-card-body {
-      height: 100%;
-      padding: 0;
-
-      .p-card-content {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      }
-    }
-  }
+.p-condensed button {
+  padding: 4px;
 }
 
 input.invalid {

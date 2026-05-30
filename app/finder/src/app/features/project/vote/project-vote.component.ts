@@ -11,6 +11,7 @@ import { ProjectStore } from '../_data/project.store';
 import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
+import { TitleService } from '../../../common/services/title.service';
 
 @Component({
   selector: 'app-project-vote',
@@ -20,6 +21,7 @@ import { Card } from 'primeng/card';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectVoteComponent implements OnInit {
+  private readonly titleService = inject(TitleService);
   private readonly projectStore = inject(ProjectStore);
   private readonly router = inject(Router);
 
@@ -36,6 +38,7 @@ export class ProjectVoteComponent implements OnInit {
   );
 
   constructor() {
+    this.titleService.setBackroute(`/project/detail/${this.project()?.id}`);
     effect(() => {
       this.projectStore.getProject(this.id());
     });

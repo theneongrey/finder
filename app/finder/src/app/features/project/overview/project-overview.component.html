@@ -1,49 +1,30 @@
-<div class="tw:flex tw:h-full tw:max-h-full tw:flex-col">
-  <p-scrollpanel class="tw:w-full tw:flex-1 tw:min-h-0">
-    <div
-      class="tw:grid tw:gap-2 tw:grid-cols-auto-fit tw:grid-cols-1 tw:md:grid-cols-3 tw:p-2"
-    >
-      <p-card
-        fHideOnSmall
-        class="tw:cursor-pointer tw:opacity-50 tw:hover:opacity-100 tw:transition-opacity tw:duration-300 tw:py-5"
-        (click)="displayAddProjectDialog()"
+<div class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:mx-4">
+  <section class="tw:mb-5">
+    <h2>Projects</h2>
+    <p class="tw:text-on-surface-variant">These are your current projects</p>
+  </section>
+  <div class="tw:grid tw:gap-4 tw:grid-cols-auto-fit tw:pb-8">
+    @for (project of projects(); track project.id) {
+      <app-side-color-card
+        color="primary"
+        class="tw:cursor-pointer"
+        [routerLink]="['/project/detail', project.id]"
       >
-        <div class="tw:m-auto tw:flex tw:flex-col">
-          <span
-            class="pi pi-plus tw:text-white tw:mx-auto"
-            style="font-size: 50px"
-          ></span>
-          <div class="tw:mt-5 tw:text-white">Add Project</div>
-        </div>
-      </p-card>
-      @for (project of projects(); track project.id) {
-        <p-card
-          class="tw:cursor-pointer content-card tw:p-1"
-          [routerLink]="['/project/detail', project.id]"
-        >
-          <div
-            class="tw:bg-white tw:rounded-[10px] tw:w-full tw:h-full tw:p-3 tw:shadow-xl"
-          >
-            <div class="p-card-subtitle">{{ project.creator }}</div>
-            <div class="p-card-title tw:mb-2">{{ project.name }}</div>
-            <div class="tw:flex tw:gap-1 tw:flex-wrap">
-              @for (topic of project.topics; track topic.id) {
-                <p-tag>{{ topic.name }}</p-tag>
-              }
-              @if (project.topicCount > 3) {
-                <p-tag>+ {{ project.topicCount - 3 }}</p-tag>
-              }
-            </div>
-          </div>
-          <div class="tw:flex tw:m-1 tw:mt-2">
-            <div class="tw:text-white tw:opacity-70 tw:mx-auto">
-              {{ project.lastUpdated | timeSince }}
-            </div>
-          </div>
-        </p-card>
-      }
-    </div>
-  </p-scrollpanel>
+        <p-tag class="tw:-ml-[2px]">by {{ project.creator }}</p-tag>
+        <p class="p-card-title tw:mb-4 tw:mt-1">{{ project.name }}</p>
+        <p class="tw:text-on-surface-variant tw:mb-2">Descritption here</p>
+        <p class="tw:opacity-60 tw:mx-auto tw:mt-1">
+          {{ project.lastUpdated | timeSince }}
+        </p>
+      </app-side-color-card>
+    }
+    <p-button
+      class="tw:right-4 tw:fixed tw:bottom-4"
+      icon="pi pi-plus"
+      [routerLink]="['/project/add']"
+      pTooltip="Add project"
+    />
+  </div>
 </div>
 
 <p-dialog

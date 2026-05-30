@@ -9,6 +9,13 @@ export const projectRoutes: Routes = [
       ),
   },
   {
+    path: 'add',
+    loadComponent: () =>
+      import('./add-project/add-project.component').then(
+        (m) => m.ProjectAddProjectComponent,
+      ),
+  },
+  {
     path: 'detail/:id/:action',
     loadComponent: () =>
       import('./detail/project-detail.component').then(

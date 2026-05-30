@@ -18,9 +18,13 @@ import { InputText } from 'primeng/inputtext';
 import { ProjectRoleToNamePipe } from '../_utils/pipe/permission-to-name.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Select } from 'primeng/select';
-import { Card } from 'primeng/card';
-import { ScrollPanel } from 'primeng/scrollpanel';
 import { RouterLink } from '@angular/router';
+import { TitleService } from '../../../common/services/title.service';
+import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
+import { HierarchyByTypePipe } from './_pipe/hierarchy-by-type.pipe';
+import { TypeIconComponent } from './type-icon/type-icon.component';
+import { Menu } from 'primeng/menu';
+import { ProjectDetailItemComponent } from './project-detail-item/project-detail-item.component';
 
 @Component({
   selector: 'app-project-detail',
@@ -34,9 +38,7 @@ import { RouterLink } from '@angular/router';
     ReactiveFormsModule,
     Select,
     FormsModule,
-    Card,
-    ScrollPanel,
-    RouterLink,
+    ProjectDetailItemComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-detail.component.html',
@@ -44,9 +46,10 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailComponent {
-  private projectStore = inject(ProjectStore);
-  private confirmationService = inject(ConfirmationService);
-  private footerService = inject(FooterService);
+  private readonly titleService = inject(TitleService);
+  private readonly projectStore = inject(ProjectStore);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly footerService = inject(FooterService);
 
   id = input('');
   action = input('');
@@ -76,6 +79,8 @@ export class ProjectDetailComponent {
   topics = computed(() => this.project()?.topics);
 
   constructor() {
+    this.titleService.setBackroute('/project/');
+
     effect(() => {
       this.projectStore.getProject(this.id());
     });
@@ -103,11 +108,12 @@ export class ProjectDetailComponent {
     ]);
   }
 
-  showDeleteTopicDialog(event: MouseEvent, id: string, title: string) {
-    event.stopPropagation();
+  showDeleteTopicDialog(id: string, title: string) {
     this.confirmationService.confirm({
-      header: 'Delete?',
+      header: 'Delete topic?',
       message: `Are you sure that you want to delete topic "${title}?"`,
+      acceptLabel: 'Delete topic',
+      rejectLabel: 'Cancel',
       accept: () => {
         this.deleteTopic(id);
       },

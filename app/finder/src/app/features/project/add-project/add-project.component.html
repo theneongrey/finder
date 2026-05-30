@@ -1,0 +1,40 @@
+<form class="tw:mx-4 tw:flex tw:flex-col tw:gap-2 tw:h-full">
+  <h2>Create project</h2>
+  <p class="tw:block tw:mb-2 tw:text-on-surface-variant">
+    A project is a collection of things to decide, like a &quot;Birthday
+    party&quot;
+  </p>
+  <div class="tw:mb-5 tw:mt-5">
+    <label for="name">Project name</label>
+    <input
+      pInputText
+      id="name"
+      name="name"
+      class="tw:w-full"
+      autocomplete="off"
+      placeholder="e.g. Birthday party"
+      [(ngModel)]="projectName"
+    />
+  </div>
+  <div class="tw:mb-5 tw:mt-5">
+    <label for="description">Project description</label>
+    <textarea
+      pTextarea
+      id="description"
+      name="description"
+      class="tw:w-full"
+      autocomplete="off"
+      placeholder="e.g. date, location, gifts etc."
+      [(ngModel)]="projectDescription"
+    ></textarea>
+  </div>
+  <div class="tw:flex tw:gap-1 tw:mt-auto tw:mb-4 p-fluid">
+    <p-button
+      class="tw:flex-1"
+      label="Create project"
+      icon="pi pi-plus-circle"
+      (click)="addProject()"
+      [disabled]="!projectName()"
+    />
+  </div>
+</form>

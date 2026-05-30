@@ -84,11 +84,11 @@ export const ProjectStore = signalStore(
             tapResponse({
               next: (project) => {
                 patchState(store, { projects: [...store.projects(), project] });
-                store.router.navigate([`/project/detail/${project.id}/add`]);
+                store.router.navigate([`/project/detail/${project.id}`]);
               },
               error: (error) => {
                 store.loggerService.log(
-                  '[ProjectStore] Error addint a project',
+                  '[ProjectStore] Error adding a project',
                   error,
                 );
               },
@@ -297,7 +297,7 @@ export const ProjectStore = signalStore(
         switchMap((vote) => {
           return store.projectService.vote(vote.optionId, vote.choice).pipe(
             tapResponse({
-              next: (_) => {
+              next: () => {
                 patchState(store, {
                   currentProject: {
                     ...store.currentProject()!,

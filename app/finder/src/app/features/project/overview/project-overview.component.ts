@@ -19,6 +19,7 @@ import { InputText } from 'primeng/inputtext';
 import { Dialog } from 'primeng/dialog';
 import { FooterService } from '../_services/footer.service';
 import { Tag } from 'primeng/tag';
+import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
 
 @Component({
   selector: 'app-project-overview',
@@ -26,15 +27,14 @@ import { Tag } from 'primeng/tag';
     ConfirmDialogModule,
     RouterLink,
     ScrollPanelModule,
-    Card,
     FormsModule,
     TimeSincePipe,
-    HideOnSmallDirective,
     Button,
     FloatLabel,
     InputText,
     Dialog,
     Tag,
+    SideColorCardComponent,
   ],
   providers: [MessageService],
   templateUrl: './project-overview.component.html',

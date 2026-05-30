@@ -1,20 +1,32 @@
-<header
-  class="main-bg-content tw:max-w-5xl tw:mx-auto tw:w-full tw:flex tw:h-01 tw:p-2"
->
-  <a href="/" class="tw:my-auto">
-    <img
-      alt="logo"
-      ngSrc="logo-white.svg"
-      width="165"
-      height="33"
-      class="tw:mx-auto tw:mt-auto"
+<header class="tw:mx-auto tw:w-full tw:flex tw:h-[60px] tw:p-2 tw:gap-2">
+  @if (this.backRoute()) {
+    <p-button
+      icon="pi pi-arrow-left"
+      [routerLink]="[this.backRoute()]"
+      [text]="true"
     />
-  </a>
+  } @else {
+    <a href="/" class="tw:my-auto">
+      <img
+        alt="logo"
+        ngSrc="logo.svg"
+        width="40"
+        height="8"
+        class="tw:mx-auto tw:mt-auto icon"
+      />
+    </a>
+  }
 
-  <p-button
-    class="tw:my-auto tw:mr-0 tw:ml-auto"
-    icon="pi pi-sign-out"
-    [routerLink]="['/auth/logout']"
-    pTooltip="logout"
-  />
+  <h1 class="tw:my-auto tw:text-headline-md tw:font-bold tw:text-primary-dark">
+    Finder
+  </h1>
+
+  @if (user(); as user) {
+    <app-user-avatar
+      class="tw:my-auto tw:mr-0 tw:ml-auto"
+      [user]="user"
+      (click)="menu.toggle($event)"
+    />
+    <p-menu #menu [model]="items" [popup]="true" appendTo="body" />
+  }
 </header>

@@ -37,9 +37,6 @@ body {
   --p-button-border-radius: 12px;
   --p-button-padding-x: 40px;
 
-  --p-button-primary-hover-color: white;
-  --p-button-primary-hover-background: var(--color-primary);
-
   --p-panel-border-radius: 0;
 
   p-button.small {

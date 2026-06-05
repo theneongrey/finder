@@ -1,17 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TopicType } from '../../_models/project-detail.model';
+import { OptionType } from '../../_models/project-detail.model';
 
 @Pipe({
   name: 'hierarchyByType',
 })
 export class HierarchyByTypePipe implements PipeTransform {
-  transform(type: TopicType): 'primary' | 'secondary' | 'tertiary' {
+  transform(type: OptionType): 'primary' | 'secondary' | 'tertiary' {
     switch (type) {
-      case 'selection':
+      case OptionType.YesNo:
         return 'primary';
-      case 'appointment':
+      case OptionType.Rating:
         return 'secondary';
-      case 'rating':
+      case OptionType.Date:
         return 'tertiary';
       default:
         return 'primary';

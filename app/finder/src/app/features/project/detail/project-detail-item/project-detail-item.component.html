@@ -1,19 +1,19 @@
 @let _topic = topic();
 
 <app-side-color-card
-  [color]="_topic.type | hierarchyByType"
+  [color]="_topic.optionType | hierarchyByType"
   class="tw:cursor-pointer"
 >
   <div class="tw:flex tw:items-start tw:justify-between tw:mb-6 tw:gap-3">
     <div>
-      <app-topic-type-icon [type]="_topic.type" />
+      <app-topic-type-icon [type]="_topic.optionType" />
     </div>
     <div class="tw:flex tw:flex-col tw:flex-1">
       <p
         class="tw:text-[12px] tw:font-bold"
-        [class]="_topic.type | hierarchyByType"
+        [class]="_topic.optionType | hierarchyByType"
       >
-        {{ _topic.type | topicByType }}
+        {{ _topic.optionType | topicByType }}
       </p>
       <h3>{{ _topic.name }}</h3>
       <p class="label-sm">Options: {{ _topic.options.length }}</p>

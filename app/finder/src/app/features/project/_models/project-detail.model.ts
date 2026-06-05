@@ -1,8 +1,9 @@
 import { ProjectRole } from './project-role.enum';
 
 export enum OptionType {
-  YesNo = 0,
-  Rating = 1,
+  YesNo,
+  Rating,
+  Date,
 }
 
 export interface Option {
@@ -12,13 +13,10 @@ export interface Option {
   choice: string;
 }
 
-export type TopicType = 'selection' | 'appointment' | 'rating';
-
 export interface Topic {
   id: string;
   name: string;
   optionType: OptionType;
-  type: TopicType;
   options: Option[];
 }
 

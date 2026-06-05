@@ -1,18 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TopicType } from '../../_models/project-detail.model';
+import { OptionType } from '../../_models/project-detail.model';
 
 @Pipe({
   name: 'topicByType',
 })
 export class TopicByTypePipe implements PipeTransform {
-  transform(type: TopicType): string {
+  transform(type: OptionType): string {
     switch (type) {
-      case 'selection':
+      case OptionType.YesNo:
         return 'SELECTION';
-      case 'appointment':
-        return 'APPOINTMENT';
-      case 'rating':
+      case OptionType.Rating:
         return 'RATING';
+      case OptionType.Date:
+        return 'DATE';
       default:
         return 'UNKNOWN';
     }

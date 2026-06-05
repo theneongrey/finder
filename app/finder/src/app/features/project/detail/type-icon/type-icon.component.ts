@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { TopicType } from '../../_models/project-detail.model';
+import { OptionType } from '../../_models/project-detail.model';
 
 @Component({
   selector: 'app-topic-type-icon',
@@ -9,5 +9,6 @@ import { TopicType } from '../../_models/project-detail.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TypeIconComponent {
-  type = input.required<TopicType>();
+  type = input.required<OptionType>();
+  readonly OptionType = OptionType;
 }

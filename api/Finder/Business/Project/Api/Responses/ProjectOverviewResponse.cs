@@ -19,7 +19,7 @@ public class ProjectOverviewTopicResponse
 
 public static class ProjectOverviewMapper
 {
-    public static ProjectOverviewResponse ToProjectOverviewResponse(this Entities.Project project, Guid? userId)
+    public static ProjectOverviewResponse ToProjectOverviewResponse(this Entities.Project project)
     {
         var newestTopic = project.Topics.OrderByDescending(t => t.Edited).FirstOrDefault();
         var lastUpdated = newestTopic is not null && newestTopic.Edited > project.Edited

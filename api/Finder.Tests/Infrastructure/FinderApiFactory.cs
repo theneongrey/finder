@@ -1,11 +1,16 @@
+using System.Data.Common;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Finder.Tests.Infrastructure;
 
@@ -15,15 +20,29 @@ public class FinderApiFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Testing");
-
-        builder.ConfigureAppConfiguration(config =>
-        {
-            config.AddInMemoryCollection([new KeyValuePair<string, string?>("TestDbName", _dbName)]);
-        });
-
         builder.ConfigureServices(services =>
         {
+            var dbContextDescriptor =
+                services.SingleOrDefault(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<AppDbContext>));
+            services.Remove(dbContextDescriptor);
+
+            var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
+            services.Remove(dbConnectionDescriptor);
+
+            services.AddSingleton<DbConnection>(_ =>
+            {
+                var connection = new SqliteConnection($"DataSource={_dbName};Mode=Memory;Cache=Shared");
+                connection.Open();
+                return connection;
+            });
+
+            services.AddDbContext<AppDbContext>((container, options) =>
+            {
+                var connection = container.GetRequiredService<DbConnection>();
+                options.UseSqlite(connection);
+                options.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
+            });
+
             services.AddAuthentication(TestAuthHandler.SchemeName)
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { });
 
@@ -35,6 +54,15 @@ public class FinderApiFactory : WebApplicationFactory<Program>
                 options.DefaultScheme = TestAuthHandler.SchemeName;
             });
         });
+    }
+
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        var host = base.CreateHost(builder);
+        using var scope = host.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.EnsureCreated();
+        return host;
     }
 
     public HttpClient CreateAuthenticatedClient(Guid userId)
@@ -59,12 +87,13 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         return person;
     }
 
-    public async Task<Project> SeedProject(Guid creatorId, string name = "Test Project", string description = "Test Description")
+    public async Task<Project> SeedProject(Guid creatorId, string name = "Test Project",
+        string description = "Test Description")
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var creator = await db.Persons.FindAsync(creatorId)
-            ?? throw new InvalidOperationException($"User {creatorId} not found. Call SeedUser first.");
+                      ?? throw new InvalidOperationException($"User {creatorId} not found. Call SeedUser first.");
         var project = new Project
         {
             Id = Guid.NewGuid(),

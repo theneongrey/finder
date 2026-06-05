@@ -5,8 +5,8 @@ namespace Finder.Business.Project.Entities;
 
 public enum VisibilityType
 {
-    SelectedOnly,
-    Open
+    VisibleForSelectedOnly,
+    VisibleForEverbody
 }
 
 public class Project : BaseEntity

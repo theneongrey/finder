@@ -30,11 +30,14 @@ export class ProjectInputComponent {
   projectDescription = model('');
 
   constructor() {
-    inject(TitleService).setBackroute('/project/');
+    const titleService: TitleService = inject(TitleService);
+    titleService.setBackroute('/project/');
+    titleService.setTitle('Create Project');
 
     effect(() => {
       const projectId = this.id();
       if (this.mode() === 'edit' && projectId) {
+        titleService.setTitle('Update Project');
         this.projectStore.getProject(projectId);
       }
     });

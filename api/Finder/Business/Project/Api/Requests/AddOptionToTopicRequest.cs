@@ -6,5 +6,4 @@ public class AddOptionToTopicRequest
 {
     public required Guid TopicId { get; set; }
     public required string Text { get; set; }
-    public required OptionType OptionType { get; set; }
 }

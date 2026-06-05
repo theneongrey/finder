@@ -8,7 +8,6 @@ export enum OptionType {
 export interface Option {
   id: string;
   text: string;
-  optionType: OptionType;
   votes: number;
   choice: string;
 }
@@ -18,6 +17,7 @@ export type TopicType = 'selection' | 'appointment' | 'rating';
 export interface Topic {
   id: string;
   name: string;
+  optionType: OptionType;
   type: TopicType;
   options: Option[];
 }

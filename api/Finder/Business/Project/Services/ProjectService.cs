@@ -48,7 +48,7 @@ public class ProjectService
             Name = name,
             Description = description,
             Creator = userRequest.Payload!,
-            VisibilityType = VisibilityType.SelectedOnly
+            VisibilityType = VisibilityType.VisibleForSelectedOnly
         };
 
         _dbContext.Projects.Add(project);
@@ -102,7 +102,7 @@ public class ProjectService
             .Include(p => p.Topics)
             .ThenInclude(t => t.Options)
             .ThenInclude(c => c.Votes)
-            .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.Open || p.Creator.Id == UserId ||
+            .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
                                               p.Permissions.Any(permission => permission.PersonKey == UserId)))
             .SingleOrDefaultAsync();
         if (project == null)
@@ -125,7 +125,7 @@ public class ProjectService
     {
         var projectResult = await _dbContext.Projects
             .Include(p => p.Topics)
-            .Where(p => p.Id == topicRequest.ProjectId && (p.VisibilityType == VisibilityType.Open ||
+            .Where(p => p.Id == topicRequest.ProjectId && (p.VisibilityType == VisibilityType.VisibleForEverbody ||
                                                            p.Creator.Id == UserId ||
                                                            p.Permissions.Any(permission =>
                                                                permission.Person.Id == UserId &&
@@ -140,6 +140,7 @@ public class ProjectService
         var topic = new Topic
         {
             Id = Guid.NewGuid(),
+            OptionType = topicRequest.OptionType,
             Name = topicRequest.Name,
             Project = projectResult
         };
@@ -153,7 +154,7 @@ public class ProjectService
     public async Task<Result> DeleteTopic(Guid topicId)
     {
         var deletedTopics = await _dbContext.Topics
-            .Where(t => t.Id == topicId && (t.Project.VisibilityType == VisibilityType.Open ||
+            .Where(t => t.Id == topicId && (t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                                             t.Project.Creator.Id == UserId ||
                                             t.Project.Permissions.Any(permission =>
                                                 permission.Person.Id == UserId &&
@@ -172,7 +173,7 @@ public class ProjectService
     public async Task<Result<Option>> AddOptionToTopic(AddOptionToTopicRequest topicRequest)
     {
         var topic = await _dbContext.Topics
-            .Where(t => t.Id == topicRequest.TopicId && (t.Project.VisibilityType == VisibilityType.Open ||
+            .Where(t => t.Id == topicRequest.TopicId && (t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                                                          t.Project.Creator.Id == UserId ||
                                                          t.Project.Permissions.Any(permission =>
                                                              permission.Person.Id == UserId &&
@@ -188,7 +189,6 @@ public class ProjectService
         {
             Id = Guid.NewGuid(),
             Text = topicRequest.Text,
-            OptionType = topicRequest.OptionType,
             Topic = topic
         };
         topic.Options.Add(option);
@@ -202,7 +202,7 @@ public class ProjectService
     public async Task<Result> DeleteOption(Guid optionId)
     {
         var deletedOption = await _dbContext.Options
-            .Where(o => o.Id == optionId && (o.Topic.Project.VisibilityType == VisibilityType.Open ||
+            .Where(o => o.Id == optionId && (o.Topic.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                                              o.Topic.Project.Creator.Id == UserId ||
                                              o.Topic.Project.Permissions.Any(permission =>
                                                  permission.Person.Id == UserId &&

@@ -79,12 +79,11 @@ export class ProjectDetailComponent {
     });
 
     effect(() => {
-      if (this.project() && this.action() == 'add') {
-        this.showAddTopicDialog.set(true);
+      const project = this.project();
+      if (project) {
+        this.titleService.setTitle(project.name);
       }
     });
-
-    this.projectStore.getProjects();
   }
 
   showDeleteTopicDialog(id: string, title: string) {

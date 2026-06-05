@@ -19,6 +19,7 @@ export class ProjectTitleComponent {
   private userStore = inject(UserStore);
   private titleService = inject(TitleService);
   user = this.userStore.user;
+  title = this.titleService.title;
   backRoute = this.titleService.backRoute;
 
   items: MenuItem[] = [

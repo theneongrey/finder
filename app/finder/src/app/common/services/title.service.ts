@@ -9,16 +9,24 @@ import { tap } from 'rxjs/operators';
 export class TitleService {
   private router = inject(Router);
 
-  resetOnNavigation = this.router.events
+  // reset on navigation
+  private _ = this.router.events
     .pipe(
       filter((e): e is NavigationStart => e instanceof NavigationStart),
       tap(() => this.#backRoute.set(undefined)),
     )
     .subscribe();
+
   #backRoute = signal<string | undefined>(undefined);
   backRoute = this.#backRoute.asReadonly();
+  #title = signal<string>('Finder');
+  title = this.#title.asReadonly();
 
-  setBackroute(route: string) {
-    this.#backRoute.set(route);
+  setBackroute(backRoute: string) {
+    this.#backRoute.set(backRoute);
+  }
+
+  setTitle(title: string) {
+    this.#title.set(title);
   }
 }

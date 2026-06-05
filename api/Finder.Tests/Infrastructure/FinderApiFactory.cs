@@ -100,7 +100,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             Name = name,
             Description = description,
             Creator = creator,
-            VisibilityType = VisibilityType.SelectedOnly
+            VisibilityType = VisibilityType.VisibleForSelectedOnly
         };
         db.Projects.Add(project);
         await db.SaveChangesAsync();

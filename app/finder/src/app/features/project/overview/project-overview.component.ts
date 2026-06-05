@@ -14,6 +14,7 @@ import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Tag } from 'primeng/tag';
 import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
+import { TitleService } from '../../../common/services/title.service';
 
 @Component({
   selector: 'app-project-overview',
@@ -44,6 +45,7 @@ export class ProjectOverviewComponent {
   projectName = model('');
 
   constructor() {
+    inject(TitleService).setTitle('Finder');
     this.projectStore.getProjects();
   }
 }

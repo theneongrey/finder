@@ -1,6 +1,5 @@
 <div class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:mx-4">
   @if (project(); as project) {
-    <h2>{{ project.name }}</h2>
     <p class="tw:text-on-surface-variant">{{ project.description }}</p>
 
     @if (topics()?.length ?? 0 > 0) {

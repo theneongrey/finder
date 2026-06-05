@@ -4,7 +4,6 @@ public class ProjectResponseOption
 {
     public required string Id { get; set; }
     public required string Text { get; set; }
-    public required int OptionType { get; set; }
     public required int Votes { get; set; }
     public required string? Choice { get; set; }
 }
@@ -19,6 +18,7 @@ public class ProjectResponseTopic
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
+    public required int OptionType { get; set; }
     public required ProjectResponseOption[] Options { get; set; }
 }
 
@@ -26,6 +26,7 @@ public class ProjectResponse
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
+    public required string Description { get; set; }
     public required ProjectResponseTopic[] Topics { get; set; }
     public required int PermissionType { get; set; }
     public required string Creator { get; set; }
@@ -41,7 +42,6 @@ public static class ProjectMapper
         {
             Id = option.Id.ToString(),
             Text = option.Text,
-            OptionType = (int)option.OptionType,
             Votes = option.Votes.Count,
             Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice,
         };
@@ -53,6 +53,7 @@ public static class ProjectMapper
         {
             Id = topic.Id.ToString(),
             Name = topic.Name,
+            OptionType = (int)topic.OptionType,
             Options = topic.Options.Select(o => o.ToProjectResponseOption(userId)).ToArray()
         };
     }
@@ -85,6 +86,7 @@ public static class ProjectMapper
         {
             Id = project.Id.ToString(),
             Name = project.Name,
+            Description = project.Description,
             Topics = project.Topics.Select(t => t.ToProjectResponseTopic(userId)).ToArray(),
             PermissionType = (int)project.VisibilityType,
             Creator = project.Creator.Name ??  project.Creator.Email,

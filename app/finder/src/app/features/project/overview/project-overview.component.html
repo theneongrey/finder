@@ -5,20 +5,10 @@
   </section>
   <div class="tw:grid tw:gap-4 tw:grid-cols-auto-fit tw:pb-8">
     @for (project of projects(); track project.id) {
-      <app-side-color-card
-        color="primary"
-        class="tw:cursor-pointer"
-        [routerLink]="['/project/detail', project.id]"
-      >
-        <p-tag class="tw:-ml-[2px]">by {{ project.creator }}</p-tag>
-        <p class="p-card-title tw:mb-4 tw:mt-1">{{ project.name }}</p>
-        <p class="tw:text-on-surface-variant tw:mb-2">
-          {{ project.description }}
-        </p>
-        <p class="tw:opacity-60 tw:mx-auto tw:mt-1">
-          {{ project.lastUpdated | timeSince }}
-        </p>
-      </app-side-color-card>
+      <app-project-item
+        [project]="project"
+        (deletionRequested)="deletionRequested(project)"
+      />
     }
     <p-button
       class="tw:right-4 tw:fixed tw:bottom-4"
@@ -28,3 +18,5 @@
     />
   </div>
 </div>
+
+<p-confirmdialog />

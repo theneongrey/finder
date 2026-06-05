@@ -8,13 +8,12 @@ import { ProjectStore } from '../_data/project.store';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FormsModule } from '@angular/forms';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
-import { TimeSincePipe } from './_pipe/time-ago.pipe';
 import { RouterLink } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { Tag } from 'primeng/tag';
-import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
 import { TitleService } from '../../../common/services/title.service';
+import { ProjectItemComponent } from './project-item/project-item.component';
+import { ProjectOverview } from '../_models/project-overview.model';
 
 @Component({
   selector: 'app-project-overview',
@@ -23,12 +22,10 @@ import { TitleService } from '../../../common/services/title.service';
     RouterLink,
     ScrollPanelModule,
     FormsModule,
-    TimeSincePipe,
     Button,
-    Tag,
-    SideColorCardComponent,
+    ProjectItemComponent,
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
   styleUrl: './project-overview.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +35,7 @@ import { TitleService } from '../../../common/services/title.service';
 })
 export class ProjectOverviewComponent {
   private projectStore = inject(ProjectStore);
+  private readonly confirmationService = inject(ConfirmationService);
 
   projects = this.projectStore.projects;
 
@@ -47,5 +45,21 @@ export class ProjectOverviewComponent {
   constructor() {
     inject(TitleService).setTitle('Finder');
     this.projectStore.getProjects();
+  }
+
+  deletionRequested(project: ProjectOverview) {
+    this.confirmationService.confirm({
+      header: 'Delete project?',
+      message: `Are you sure that you want to delete project "${project.name}"?"`,
+      acceptLabel: 'Delete project',
+      rejectLabel: 'Cancel',
+      accept: () => {
+        this.deleteProject(project.id);
+      },
+    });
+  }
+
+  private deleteProject(projectId: string) {
+    this.projectStore.deleteProject(projectId);
   }
 }

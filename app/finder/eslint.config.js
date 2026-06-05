@@ -32,6 +32,21 @@ module.exports = defineConfig([
         },
       ],
       "@angular-eslint/prefer-on-push-component-change-detection": "error",
+      "curly": ["error", "all"],
+      "no-empty": "error",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          vars: "all",
+          args: "after-used",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+      "@typescript-eslint/no-unused-private-class-members": "error",
     },
   },
 ]);

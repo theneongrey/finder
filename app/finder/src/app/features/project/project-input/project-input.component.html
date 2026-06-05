@@ -31,9 +31,9 @@
   <div class="tw:flex tw:gap-1 tw:mt-auto tw:mb-4 p-fluid">
     <p-button
       class="tw:flex-1"
-      label="Create project"
-      icon="pi pi-plus-circle"
-      (click)="addProject()"
+      [label]="mode() === 'add' ? 'Create project' : 'Update project'"
+      [icon]="mode() === 'add' ? 'pi pi-plus-circle' : 'pi pi-save'"
+      (click)="submit()"
       [disabled]="!projectName()"
     />
   </div>

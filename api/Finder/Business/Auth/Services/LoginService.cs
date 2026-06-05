@@ -78,7 +78,7 @@ public class LoginService
 
     private bool IsTokenExpired(LoginToken loginToken)
     {
-        return DateTime.UtcNow - loginToken.Edited > _loginTimeout;
+        return DateTime.UtcNow - loginToken.Created > _loginTimeout;
     }
 
     private async Task<Result<string?>> SignIn(LoginToken loginToken)

@@ -8,7 +8,7 @@ import {
 import { inject } from '@angular/core';
 import { LoggerService } from '../../../common/services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
@@ -59,6 +59,7 @@ export const ProjectStore = signalStore(
 
     getProject: rxMethod<string>(
       pipe(
+        tap(() => patchState(store, { currentProject: undefined })),
         switchMap((id) => {
           return store.projectService.getProject(id).pipe(
             tapResponse({
@@ -77,23 +78,54 @@ export const ProjectStore = signalStore(
       ),
     ),
 
-    addProject: rxMethod<string>(
+    addProject: rxMethod<{ name: string; description: string }>(
       pipe(
-        switchMap((projectName) => {
-          return store.projectService.addProject(projectName).pipe(
-            tapResponse({
-              next: (project) => {
-                patchState(store, { projects: [...store.projects(), project] });
-                store.router.navigate([`/project/detail/${project.id}`]);
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[ProjectStore] Error adding a project',
-                  error,
-                );
-              },
-            }),
-          );
+        switchMap((project) => {
+          return store.projectService
+            .addProject(project.name, project.description)
+            .pipe(
+              tapResponse({
+                next: (project) => {
+                  patchState(store, {
+                    projects: [...store.projects(), project],
+                  });
+                  store.router.navigate([`/project/detail/${project.id}`]);
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error adding a project',
+                    error,
+                  );
+                },
+              }),
+            );
+        }),
+      ),
+    ),
+
+    editProject: rxMethod<{ id: string; name: string; description: string }>(
+      pipe(
+        switchMap((project) => {
+          return store.projectService
+            .updateProject(project.id, project.name, project.description)
+            .pipe(
+              tapResponse({
+                next: (updated) => {
+                  patchState(store, {
+                    projects: store
+                      .projects()
+                      .map((p) => (p.id === updated.id ? updated : p)),
+                  });
+                  store.router.navigate([`/project/detail/${updated.id}`]);
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error updating project',
+                    error,
+                  );
+                },
+              }),
+            );
         }),
       ),
     ),

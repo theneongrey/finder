@@ -25,9 +25,9 @@ public static class ProjectApi
 
         // Add project
         app.MapPost("/api/project",
-                async ([FromBody] ProjectRequest request, ProjectService projectService, UserService userService) =>
+                async ([FromBody] AddProjectRequest request, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.Create(request.Name);
+                    var result = await projectService.Create(request.Name, request.Description);
                     return !result.IsSuccess
                         ? Results.BadRequest()
                         : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
@@ -36,9 +36,9 @@ public static class ProjectApi
 
         // Update project
         app.MapPut("/api/project/{id:guid}",
-                async (Guid id, [FromBody] ProjectRequest request, ProjectService projectService, UserService userService) =>
+                async (Guid id, [FromBody] AddProjectRequest request, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.Update(id, request.Name);
+                    var result = await projectService.Update(id, request.Name, request.Description);
                     return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();

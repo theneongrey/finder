@@ -34,7 +34,7 @@ public class ProjectService
             .ToListAsync();
     }
 
-    public async Task<Result<Entities.Project>> Create(string projectName)
+    public async Task<Result<Entities.Project>> Create(string requestName, string projectName)
     {
         var userRequest = await _userService.GetUser();
         if (!userRequest.IsSuccess)
@@ -46,6 +46,7 @@ public class ProjectService
         {
             Id = Guid.NewGuid(),
             Name = projectName,
+            Description = requestName,
             Creator = userRequest.Payload!,
             VisibilityType = VisibilityType.SelectedOnly
         };
@@ -55,7 +56,7 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> Update(Guid projectId, string projectName)
+    public async Task<Result<Entities.Project>> Update(Guid projectId, string projectName, string projectDescription)
     {
         var projectToUpdate = await _dbContext.Projects
             .Include(p => p.Permissions)
@@ -70,6 +71,7 @@ public class ProjectService
         }
 
         projectToUpdate.Name = projectName;
+        projectToUpdate.Description = projectDescription;
         await _dbContext.SaveChangesAsync();
         return Result<Entities.Project>.Success(projectToUpdate);
     }

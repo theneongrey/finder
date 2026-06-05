@@ -4,6 +4,7 @@ public class ProjectOverviewResponse
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
+    public required string Description { get; init; }
     public required string Creator { get; init; }
     public required ICollection<ProjectOverviewTopicResponse> Topics { get; init; }
     public required int TopicCount { get; init; } 
@@ -29,6 +30,7 @@ public static class ProjectOverviewMapper
         {
             Id = project.Id.ToString(),
             Name = project.Name,
+            Description = project.Description,
             Creator = project.Creator.Name ?? "",
             Topics = project.Topics.Take(3).Select(t => new ProjectOverviewTopicResponse
             {

@@ -10,7 +10,6 @@ import {
 import { ProjectStore } from '../_data/project.store';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { FooterService } from '../_services/footer.service';
 import { Button } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Dialog } from 'primeng/dialog';
@@ -18,12 +17,7 @@ import { InputText } from 'primeng/inputtext';
 import { ProjectRoleToNamePipe } from '../_utils/pipe/permission-to-name.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Select } from 'primeng/select';
-import { RouterLink } from '@angular/router';
 import { TitleService } from '../../../common/services/title.service';
-import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
-import { HierarchyByTypePipe } from './_pipe/hierarchy-by-type.pipe';
-import { TypeIconComponent } from './type-icon/type-icon.component';
-import { Menu } from 'primeng/menu';
 import { ProjectDetailItemComponent } from './project-detail-item/project-detail-item.component';
 
 @Component({
@@ -49,7 +43,6 @@ export class ProjectDetailComponent {
   private readonly titleService = inject(TitleService);
   private readonly projectStore = inject(ProjectStore);
   private readonly confirmationService = inject(ConfirmationService);
-  private readonly footerService = inject(FooterService);
 
   id = input('');
   action = input('');
@@ -86,26 +79,12 @@ export class ProjectDetailComponent {
     });
 
     effect(() => {
-      this.footerService.setTitle(this.projectStore.currentProject()?.name);
-    });
-
-    effect(() => {
       if (this.project() && this.action() == 'add') {
         this.showAddTopicDialog.set(true);
       }
     });
 
     this.projectStore.getProjects();
-    this.footerService.setButtons([
-      {
-        icon: 'pi pi-plus',
-        action: () => this.displayAddTopicDialog(),
-      },
-      {
-        icon: 'pi pi-share-alt',
-        action: () => this.displayShareDialog(),
-      },
-    ]);
   }
 
   showDeleteTopicDialog(id: string, title: string) {

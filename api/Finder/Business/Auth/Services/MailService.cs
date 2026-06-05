@@ -22,7 +22,7 @@ public class MailService
         try
         {
             var loginLink = _loginOptions.LoginLink.Replace("{{token}}", token.Token)
-                .Replace("{{redirecturl", token.RedirectUrl);
+                .Replace("{{redirecturl}}", token.RedirectUrl);
             
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Finder", _smtpOptions.User));

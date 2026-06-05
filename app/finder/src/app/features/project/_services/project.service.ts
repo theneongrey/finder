@@ -30,23 +30,22 @@ export class ProjectService {
     return this.httpClient.get<Project>(`${this.baseUrl}/api/project/${id}`);
   }
 
-  addProject(projectName: string) {
+  addProject(name: string, description: string) {
     this.loggerService.debug('[ProjectService] fetching project');
     return this.httpClient.post<ProjectOverview>(
       `${this.baseUrl}/api/project`,
       {
-        name: projectName,
+        name,
+        description,
       },
     );
   }
 
-  updateProject(id: string, projectName: string) {
-    this.loggerService.debug('[ProjectService] fetching project');
+  updateProject(id: string, name: string, description: string) {
+    this.loggerService.debug('[ProjectService] updating project');
     return this.httpClient.put<ProjectOverview>(
       `${this.baseUrl}/api/project/${id}`,
-      {
-        name: projectName,
-      },
+      { name, description },
     );
   }
 

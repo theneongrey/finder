@@ -11,9 +11,22 @@ export const projectRoutes: Routes = [
   {
     path: 'add',
     loadComponent: () =>
-      import('./add-project/add-project.component').then(
-        (m) => m.ProjectAddProjectComponent,
+      import('./project-input/project-input.component').then(
+        (m) => m.ProjectInputComponent,
       ),
+    data: {
+      mode: 'add',
+    },
+  },
+  {
+    path: 'edit/:id',
+    loadComponent: () =>
+      import('./project-input/project-input.component').then(
+        (m) => m.ProjectInputComponent,
+      ),
+    data: {
+      mode: 'edit',
+    },
   },
   {
     path: 'detail/:id/:action',

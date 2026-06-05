@@ -1,9 +1,9 @@
 @import "primeicons/primeicons.css";
 @import "tailwindcss" prefix(tw);
-@import "@fontsource/roboto/300.css";
-@import "@fontsource/roboto/400.css";
-@import "@fontsource/roboto/500.css";
-@import "@fontsource/roboto/700.css";
+@import "@fontsource/plus-jakarta-sans/300.css";
+@import "@fontsource/plus-jakarta-sans/400.css";
+@import "@fontsource/plus-jakarta-sans/500.css";
+@import "@fontsource/plus-jakarta-sans/700.css";
 
 :root {
 }
@@ -28,7 +28,7 @@ body {
   --color-neutral: #757875;
   --color-on-surface-variant: #404944;
 
-  font-family: "Roboto", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 
   height: 100%;
   width: 100%;

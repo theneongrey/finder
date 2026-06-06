@@ -20,6 +20,7 @@ import { Select } from 'primeng/select';
 import { TitleService } from '../../../common/services/title.service';
 import { ProjectDetailItemComponent } from './project-detail-item/project-detail-item.component';
 import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-project-detail',
@@ -35,6 +36,7 @@ import { AddCardComponent } from '../../../common/ui/components/add-card/add-car
     Select,
     FormsModule,
     ProjectDetailItemComponent,
+    RouterLink,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-detail.component.html',
@@ -102,36 +104,6 @@ export class ProjectDetailComponent {
 
   deleteTopic(id: string) {
     this.projectStore.deleteTopic(id);
-  }
-
-  deleteProject(id: string) {
-    this.projectStore.deleteProject(id);
-  }
-
-  showDeleteProjectDialog(event: MouseEvent, id: string, title: string) {
-    event.stopPropagation();
-    this.confirmationService.confirm({
-      header: 'Delete?',
-      message: `Are you sure that you want to delete project "${title}?"`,
-      accept: () => {
-        this.deleteProject(id);
-      },
-    });
-  }
-
-  addTopic() {
-    if (this.topic()) {
-      this.projectStore.addTopic({
-        projectId: this.project()!.id,
-        name: this.topic(),
-      });
-      this.showAddTopicDialog.set(false);
-    }
-  }
-
-  displayAddTopicDialog() {
-    this.topic.set('');
-    this.showAddTopicDialog.set(true);
   }
 
   displayShareDialog() {

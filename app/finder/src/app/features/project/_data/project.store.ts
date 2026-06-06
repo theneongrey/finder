@@ -8,12 +8,12 @@ import {
 import { inject } from '@angular/core';
 import { LoggerService } from '../../../common/services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap } from 'rxjs';
+import { forkJoin, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
-import { Project } from '../_models/project-detail.model';
+import { OptionType, Project } from '../_models/project-detail.model';
 import { PermissionService } from '../_services/permission.service';
 
 export const ProjectStore = signalStore(
@@ -155,32 +155,35 @@ export const ProjectStore = signalStore(
     addTopic: rxMethod<{
       projectId: string;
       name: string;
+      optionType: OptionType;
+      options?: string[];
     }>(
       pipe(
         switchMap((topic) => {
           return store.projectService
-            .addTopic(topic.projectId, topic.name)
+            .addTopic(topic.projectId, topic.name, topic.optionType)
             .pipe(
+              switchMap((responseTopic) => {
+                const optionRequests = topic.options?.length
+                  ? topic.options.map((o) =>
+                      store.projectService.addOption(responseTopic.id, o),
+                    )
+                  : [];
+
+                return (
+                  optionRequests.length ? forkJoin(optionRequests) : of([])
+                ).pipe(
+                  map((addedOptions) => ({ responseTopic, addedOptions })),
+                );
+              }),
               tapResponse({
-                next: (responseTopic) => {
+                next: ({ responseTopic }) => {
                   store.loggerService.debug(
                     `[ProjectStore] Added topic`,
                     responseTopic,
                   );
 
-                  patchState(store, {
-                    currentProject: {
-                      ...store.currentProject()!,
-                      topics: [
-                        ...store.currentProject()!.topics,
-                        responseTopic,
-                      ],
-                    },
-                  });
-
-                  store.router.navigate([
-                    `/project/detail/${topic.projectId}/topic/${responseTopic.id}/add`,
-                  ]);
+                  store.router.navigate([`/project/detail/${topic.projectId}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(

@@ -22,7 +22,7 @@
 }
 
 .p-card-primary {
-  border-color: var(--color-primary);
+  border-color: var(--color-primary-dark);
 }
 
 .p-card-secondary {

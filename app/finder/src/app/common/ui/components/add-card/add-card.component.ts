@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostBinding,
   input,
   output,
 } from '@angular/core';
@@ -18,5 +19,6 @@ export class AddCardComponent {
   description = input<string>('');
   icon = input<string>('pi-plus');
   disabled = input<boolean>(false);
+  iconLeft = input<boolean>(false);
   action = output<void>();
 }

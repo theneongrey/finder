@@ -14,3 +14,7 @@
     background: color-mix(in srgb, var(--color-primary) 6%, transparent);
   }
 }
+
+:host ::ng-deep .icon-left .p-card-body {
+  padding: 0.5rem;
+}

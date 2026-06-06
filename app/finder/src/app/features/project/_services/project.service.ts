@@ -54,11 +54,12 @@ export class ProjectService {
     return this.httpClient.delete(`${this.baseUrl}/api/project/${id}`);
   }
 
-  addTopic(projectId: string, name: string) {
+  addTopic(projectId: string, name: string, optionType: OptionType) {
     this.loggerService.debug(`[ProjectService] adding topic ${name}`);
     return this.httpClient.post<Topic>(`${this.baseUrl}/api/project/topic`, {
       name: name,
       projectId: projectId,
+      optionType: optionType,
     });
   }
 
@@ -76,7 +77,6 @@ export class ProjectService {
       {
         text: text,
         topicId: topicId,
-        optionType: OptionType.YesNo,
       },
     );
   }

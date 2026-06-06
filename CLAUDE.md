@@ -54,6 +54,8 @@ Endpoints are registered in `Program.cs` via extension methods (`WithProjectApi(
 ### Frontend — `app/finder/`
 
 Angular 21, fully standalone components (no NgModules), lazy-loaded routes.
+When told to use a primeng component use app\finder\primngllms.txt as reference.
+When calling the backend, don't do it directly in the component. Use a store as a layer inbetween.
 
 **State:** NgRx Signals (`@ngrx/signals`). There are two stores:
 - `common/data/user.store.ts` — auth state (user, loginMail, redirectUrl)

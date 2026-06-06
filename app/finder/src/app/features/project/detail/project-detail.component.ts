@@ -19,12 +19,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Select } from 'primeng/select';
 import { TitleService } from '../../../common/services/title.service';
 import { ProjectDetailItemComponent } from './project-detail-item/project-detail-item.component';
+import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
 
 @Component({
   selector: 'app-project-detail',
   imports: [
     ConfirmDialog,
     Button,
+    AddCardComponent,
     DataView,
     Dialog,
     InputText,

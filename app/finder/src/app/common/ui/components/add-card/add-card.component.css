@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.p-card {
+  height: 100%;
+  border: 2px dashed var(--color-primary);
+  box-shadow: none;
+  background: transparent;
+  transition-duration: 300ms;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  }
+}

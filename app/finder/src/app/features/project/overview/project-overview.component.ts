@@ -2,28 +2,22 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  model,
 } from '@angular/core';
 import { ProjectStore } from '../_data/project.store';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { FormsModule } from '@angular/forms';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Button } from 'primeng/button';
 import { TitleService } from '../../../common/services/title.service';
 import { ProjectItemComponent } from './project-item/project-item.component';
 import { ProjectOverview } from '../_models/project-overview.model';
+import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
 
 @Component({
   selector: 'app-project-overview',
   imports: [
     ConfirmDialogModule,
-    RouterLink,
-    ScrollPanelModule,
-    FormsModule,
-    Button,
     ProjectItemComponent,
+    AddCardComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
@@ -36,15 +30,17 @@ import { ProjectOverview } from '../_models/project-overview.model';
 export class ProjectOverviewComponent {
   private projectStore = inject(ProjectStore);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly router = inject(Router);
 
   projects = this.projectStore.projects;
-
-  showAddProjectDialog = model(false);
-  projectName = model('');
 
   constructor() {
     inject(TitleService).setTitle('Finder');
     this.projectStore.getProjects();
+  }
+
+  navigateToAdd() {
+    this.router.navigate(['/project/add']);
   }
 
   deletionRequested(project: ProjectOverview) {

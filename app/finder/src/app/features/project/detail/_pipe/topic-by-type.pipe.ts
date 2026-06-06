@@ -8,7 +8,7 @@ export class TopicByTypePipe implements PipeTransform {
   transform(type: OptionType): string {
     switch (type) {
       case OptionType.YesNo:
-        return 'SELECTION';
+        return 'YES/NO';
       case OptionType.Rating:
         return 'RATING';
       case OptionType.Date:

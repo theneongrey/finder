@@ -1,0 +1,29 @@
+<p-card
+  class="add-card tw:transition-transform tw:select-none"
+  [class.tw:opacity-40]="disabled()"
+  [class.tw:cursor-pointer]="!disabled()"
+  [class.tw:cursor-not-allowed]="disabled()"
+  [class.tw:active:scale-[0.97]]="!disabled()"
+  (click)="!disabled() && action.emit()"
+>
+  <div
+    class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:text-center"
+  >
+    <span
+      class="tw:flex tw:items-center tw:justify-center tw:w-13 tw:h-13 tw:rounded-full tw:text-primary-dark tw:mb-3"
+      style="
+        background: color-mix(in srgb, var(--color-primary) 15%, transparent);
+      "
+    >
+      <i class="pi" [class]="icon()"></i>
+    </span>
+    @if (cto()) {
+      <p class="p-card-title">{{ cto() }}</p>
+    }
+    @if (description()) {
+      <p class="label-sm tw:m-0">
+        {{ description() }}
+      </p>
+    }
+  </div>
+</p-card>

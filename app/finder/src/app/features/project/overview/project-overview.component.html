@@ -10,11 +10,10 @@
         (deletionRequested)="deletionRequested(project)"
       />
     }
-    <p-button
-      class="tw:right-4 tw:fixed tw:bottom-4"
-      icon="pi pi-plus"
-      [routerLink]="['/project/add']"
-      pTooltip="Add project"
+    <app-add-card
+      cto="New project"
+      description="Start a collaborative project"
+      (action)="navigateToAdd()"
     />
   </div>
 </div>

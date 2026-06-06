@@ -1,9 +1,13 @@
 <div class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:mx-4">
   @if (project(); as project) {
-    <p class="tw:text-on-surface-variant">{{ project.description }}</p>
+    @if (project.description) {
+      <p class="tw:text-on-surface-variant tw:mb-8">
+        {{ project.description }}
+      </p>
+    }
 
     @if (topics()?.length ?? 0 > 0) {
-      <h2 class="tw:mb-4 tw:mt-16">Current topics</h2>
+      <h2 class="tw:mb-4">Current topics</h2>
 
       <div class="tw:flex tw:flex-col tw:gap-4">
         @for (topic of topics(); track topic.id) {
@@ -16,26 +20,15 @@
       </div>
     }
 
-    <h2 class="tw:mb-4 tw:mt-8">Add topics</h2>
-    <div class="tw:flex tw:gap-4 p-condensed tw:pb-8">
-      <p-button
-        label="Add appointment"
-        icon="pi pi-calendar"
-        iconPos="top"
-        variant="outlined"
+    <h2 class="tw:mb-4 tw:mt-8">Create new topic</h2>
+    <div class="tw:grid tw:grid-cols-3 tw:gap-4 tw:pb-8">
+      <app-add-card
+        description="Appointment"
+        icon="pi-calendar"
+        [disabled]="true"
       />
-      <p-button
-        label="Add selection"
-        icon="pi pi-check-square"
-        iconPos="top"
-        variant="outlined"
-      />
-      <p-button
-        label="Add rating"
-        icon="pi pi-star"
-        iconPos="top"
-        variant="outlined"
-      />
+      <app-add-card description="Yes/No" icon="pi-check-square" />
+      <app-add-card description="Rating" icon="pi-star" [disabled]="true" />
     </div>
   }
 </div>

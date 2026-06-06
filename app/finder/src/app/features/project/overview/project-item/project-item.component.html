@@ -5,16 +5,14 @@
   class="tw:cursor-pointer"
   [routerLink]="['/project/detail', _project.id]"
 >
-  <div
-    class="tw:flex tw:items-start tw:justify-between tw:mb-6 tw:gap-3 tw:w-full"
-  >
+  <div class="tw:flex tw:items-start tw:justify-between tw:gap-3 tw:w-full">
     <div>
       <p-tag class="tw:-ml-[2px]">by {{ _project.creator }}</p-tag>
       <p class="p-card-title tw:mb-4 tw:mt-1">{{ _project.name }}</p>
-      <p class="tw:text-on-surface-variant tw:mb-2">
+      <p class="label-sm tw:mb-2">
         {{ _project.description }}
       </p>
-      <p class="tw:opacity-60 tw:mx-auto tw:mt-1">
+      <p class="tw:opacity-60 tw:mx-auto tw:mt-1 label-sm">
         {{ _project.lastUpdated | timeSince }}
       </p>
     </div>

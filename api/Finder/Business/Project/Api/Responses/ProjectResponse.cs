@@ -19,7 +19,7 @@ public class ProjectResponseTopic
     public required string Id { get; set; }
     public required string Name { get; set; }
     public required int OptionType { get; set; }
-    public required ProjectResponseOption[] Options { get; set; }
+    public required int OptionCount { get; set; }
 }
 
 public class ProjectResponse
@@ -47,14 +47,14 @@ public static class ProjectMapper
         };
     }
 
-    public static ProjectResponseTopic ToProjectResponseTopic(this Entities.Topic topic, Guid? userId)
+    public static ProjectResponseTopic ToProjectResponseTopic(this Entities.Topic topic)
     {
         return new ProjectResponseTopic
         {
             Id = topic.Id.ToString(),
             Name = topic.Name,
             OptionType = (int)topic.OptionType,
-            Options = topic.Options.Select(o => o.ToProjectResponseOption(userId)).ToArray()
+            OptionCount = topic.Options.Count
         };
     }
 
@@ -87,7 +87,7 @@ public static class ProjectMapper
             Id = project.Id.ToString(),
             Name = project.Name,
             Description = project.Description,
-            Topics = project.Topics.Select(t => t.ToProjectResponseTopic(userId)).ToArray(),
+            Topics = project.Topics.Select(t => t.ToProjectResponseTopic()).ToArray(),
             PermissionType = (int)project.VisibilityType,
             Creator = project.Creator.Name ??  project.Creator.Email,
             Role = project.GetRole(userId),

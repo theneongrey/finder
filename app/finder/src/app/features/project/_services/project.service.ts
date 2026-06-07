@@ -8,6 +8,7 @@ import {
   OptionType,
   Project,
   Topic,
+  TopicDetail,
 } from '../_models/project-detail.model';
 
 @Injectable({
@@ -52,6 +53,13 @@ export class ProjectService {
   deleteProject(id: string) {
     this.loggerService.debug('[ProjectService] fetching project');
     return this.httpClient.delete(`${this.baseUrl}/api/project/${id}`);
+  }
+
+  getTopic(id: string) {
+    this.loggerService.debug('[ProjectService] fetching topic');
+    return this.httpClient.get<TopicDetail>(
+      `${this.baseUrl}/api/project/topic/${id}`,
+    );
   }
 
   addTopic(projectId: string, name: string, optionType: OptionType) {

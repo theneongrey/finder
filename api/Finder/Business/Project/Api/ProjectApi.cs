@@ -59,11 +59,19 @@ public static class ProjectApi
                     var result = await projectService.AddTopic(request);
                     return !result.IsSuccess
                         ? Results.BadRequest()
-                        : Results.Ok(result.Payload!.ToProjectResponseTopic(userService.GetUserId()));
+                        : Results.Ok(result.Payload!.ToTopicResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
-        
-        
+
+        // Get topic
+        app.MapGet("/api/project/topic/{id:guid}",
+                async (Guid id, ProjectService projectService, UserService userService) =>
+                {
+                    var result = await projectService.GetTopic(id);
+                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToTopicResponse(userService.GetUserId()));
+                })
+            .RequireAuthorization();
+
         // Delete topic
         app.MapDelete("/api/project/topic/{id:guid}",
                 async (Guid id, ProjectService projectService) =>

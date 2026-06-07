@@ -16,6 +16,7 @@ import { InputGroup } from 'primeng/inputgroup';
 import { InputText } from 'primeng/inputtext';
 import { TitleService } from '../../../common/services/title.service';
 import { RoutingService } from '../../../common/services/routing.service';
+import { OptionDetail } from '../_models/project-detail.model';
 
 interface Comment {
   author: string;
@@ -28,7 +29,15 @@ interface Comment {
   selector: 'app-votes-overview',
   templateUrl: './votes-overview.component.html',
   styleUrl: './votes-overview.component.css',
-  imports: [RouterLink, NgClass, ProgressBar, Tag, Button, InputGroup, InputText],
+  imports: [
+    RouterLink,
+    NgClass,
+    ProgressBar,
+    Tag,
+    Button,
+    InputGroup,
+    InputText,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VotesOverviewComponent {
@@ -40,15 +49,13 @@ export class VotesOverviewComponent {
   id = input('');
   topicId = input('');
 
-  project = this.projectStore.currentProject;
-
-  topic = computed(() =>
-    this.project()?.topics.find((t) => t.id === this.topicId()),
-  );
+  topic = this.projectStore.currentTopic;
 
   sortedOptions = computed(() => {
     const options = this.topic()?.options ?? [];
-    return [...options].sort((a, b) => b.votes - a.votes);
+    return [...options].sort(
+      (a, b) => this.getYesVotes(b).length - this.getYesVotes(a).length,
+    );
   });
 
   votedCount = computed(
@@ -57,8 +64,8 @@ export class VotesOverviewComponent {
 
   totalCount = computed(() => this.topic()?.options.length ?? 0);
 
-  hasOpenOptions = computed(() =>
-    this.topic()?.options.some((o) => !o.choice) ?? false,
+  hasOpenOptions = computed(
+    () => this.topic()?.options.some((o) => !o.choice) ?? false,
   );
 
   progressPercent = computed(() => {
@@ -95,6 +102,10 @@ export class VotesOverviewComponent {
     });
 
     effect(() => {
+      this.projectStore.getTopic(this.topicId());
+    });
+
+    effect(() => {
       const topic = this.topic();
       if (topic) {
         titleService.setBackroute('/project/detail/' + this.id());
@@ -103,7 +114,7 @@ export class VotesOverviewComponent {
     });
   }
 
-  voteIcon(choice: string): string {
+  voteIcon(choice: string | null): string {
     if (choice === '1') {
       return 'pi-check-circle';
     }
@@ -113,7 +124,7 @@ export class VotesOverviewComponent {
     return 'pi-question-circle';
   }
 
-  voteLabel(choice: string): string {
+  voteLabel(choice: string | null): string {
     if (choice === '1') {
       return 'Yes';
     }
@@ -123,7 +134,7 @@ export class VotesOverviewComponent {
     return 'Open';
   }
 
-  voteColorClass(choice: string): string {
+  voteColorClass(choice: string | null): string {
     if (choice === '1') {
       return 'tw:text-green-600';
     }
@@ -131,5 +142,18 @@ export class VotesOverviewComponent {
       return 'tw:text-red-600';
     }
     return 'tw:text-gray-400';
+  }
+
+  getYesVotes(option: OptionDetail) {
+    return option.votes.filter((vote) => vote.choice === '1');
+  }
+
+  hasMostVotes(option: OptionDetail) {
+    const yesVoteCount = this.getYesVotes(option).length;
+
+    return (
+      yesVoteCount > 0 &&
+      yesVoteCount == this.getYesVotes(this.sortedOptions()[0]).length
+    );
   }
 }

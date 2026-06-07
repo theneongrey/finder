@@ -6,18 +6,37 @@ export enum OptionType {
   Date,
 }
 
-export interface Option {
-  id: string;
-  text: string;
-  votes: number;
-  choice: string;
-}
-
 export interface Topic {
   id: string;
   name: string;
   optionType: OptionType;
-  options: Option[];
+  optionCount: number;
+}
+
+export interface Vote {
+  person: string;
+  choice: string;
+}
+
+export interface OptionDetail {
+  id: string;
+  text: string;
+  votes: Vote[];
+  choice: string | null;
+}
+
+export interface TopicDetail {
+  id: string;
+  name: string;
+  optionType: OptionType;
+  options: OptionDetail[];
+}
+
+export interface Option {
+  id: string;
+  text: string;
+  votes: number;
+  choice: string | null;
 }
 
 export interface SharedWith {

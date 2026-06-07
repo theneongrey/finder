@@ -72,10 +72,7 @@
                 >
                   {{ option.text }}
                 </h4>
-                @if (
-                  (i === 0 || option.votes === sortedOptions()[0].votes) &&
-                  option.votes > 0
-                ) {
+                @if (hasMostVotes(option)) {
                   <p-tag value="Most Votes" icon="pi pi-trophy" />
                 }
               </div>
@@ -104,7 +101,10 @@
                 style="font-size: 13px"
               ></i>
               <span class="tw:text-xs tw:text-gray-500">
-                {{ option.votes }} vote{{ option.votes !== 1 ? "s" : "" }}
+                {{ getYesVotes(option).length }} of
+                {{ option.votes.length }} vote{{
+                  getYesVotes(option).length !== 1 ? "s" : ""
+                }}
               </span>
             </div>
 

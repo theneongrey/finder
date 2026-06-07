@@ -101,7 +101,6 @@ public class ProjectService
             .ThenInclude(p => p.Person)
             .Include(p => p.Topics)
             .ThenInclude(t => t.Options)
-            .ThenInclude(c => c.Votes)
             .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
                                               p.Permissions.Any(permission => permission.PersonKey == UserId)))
             .SingleOrDefaultAsync();
@@ -168,6 +167,26 @@ public class ProjectService
 
         await _dbContext.SaveChangesAsync();
         return Result.Success();
+    }
+
+    public async Task<Result<Topic>> GetTopic(Guid topicId)
+    {
+        var topic = await _dbContext.Topics
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Where(t => t.Id == topicId && (
+                t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
+                t.Project.Creator.Id == UserId ||
+                t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
+            .SingleOrDefaultAsync();
+
+        if (topic is null)
+        {
+            return Result<Topic>.Fail(404);
+        }
+
+        return Result<Topic>.Success(topic);
     }
 
     public async Task<Result<Option>> AddOptionToTopic(AddOptionToTopicRequest topicRequest)

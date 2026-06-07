@@ -13,7 +13,7 @@ import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
-import { OptionType, Project } from '../_models/project-detail.model';
+import { OptionType, Project, TopicDetail } from '../_models/project-detail.model';
 import { PermissionService } from '../_services/permission.service';
 
 export const ProjectStore = signalStore(
@@ -21,6 +21,7 @@ export const ProjectStore = signalStore(
   withState({
     projects: [] as ProjectOverview[],
     currentProject: undefined as Project | undefined,
+    currentTopic: undefined as TopicDetail | undefined,
   }),
   withProps(() => {
     return {
@@ -69,6 +70,27 @@ export const ProjectStore = signalStore(
               error: (error) => {
                 store.loggerService.log(
                   '[ProjectStore] Error while loading project',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
+    getTopic: rxMethod<string>(
+      pipe(
+        tap(() => patchState(store, { currentTopic: undefined })),
+        switchMap((id) => {
+          return store.projectService.getTopic(id).pipe(
+            tapResponse({
+              next: (topic) => {
+                patchState(store, { currentTopic: topic });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error while loading topic',
                   error,
                 );
               },
@@ -237,19 +259,23 @@ export const ProjectStore = signalStore(
             .pipe(
               tapResponse({
                 next: (responseOption) => {
-                  patchState(store, {
-                    currentProject: {
-                      ...store.currentProject()!,
-                      topics: store.currentProject()!.topics.map((t) =>
-                        t.id !== option.topicId
-                          ? t
-                          : {
-                              ...t,
-                              options: [...t.options, responseOption],
-                            },
-                      ),
-                    },
-                  });
+                  const currentTopic = store.currentTopic();
+                  if (currentTopic?.id === option.topicId) {
+                    patchState(store, {
+                      currentTopic: {
+                        ...currentTopic,
+                        options: [
+                          ...currentTopic.options,
+                          {
+                            id: responseOption.id,
+                            text: responseOption.text,
+                            votes: [],
+                            choice: null,
+                          },
+                        ],
+                      },
+                    });
+                  }
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -269,17 +295,17 @@ export const ProjectStore = signalStore(
           return store.projectService.deleteOption(optionId).pipe(
             tapResponse({
               next: () => {
-                patchState(store, {
-                  currentProject: {
-                    ...store.currentProject()!,
-                    topics: [
-                      ...store.currentProject()!.topics.map((t) => ({
-                        ...t,
-                        options: t.options.filter((o) => o.id !== optionId),
-                      })),
-                    ],
-                  },
-                });
+                const currentTopic = store.currentTopic();
+                if (currentTopic) {
+                  patchState(store, {
+                    currentTopic: {
+                      ...currentTopic,
+                      options: currentTopic.options.filter(
+                        (o) => o.id !== optionId,
+                      ),
+                    },
+                  });
+                }
               },
               error: (error) => {
                 store.loggerService.log(
@@ -333,28 +359,23 @@ export const ProjectStore = signalStore(
           return store.projectService.vote(vote.optionId, vote.choice).pipe(
             tapResponse({
               next: () => {
-                patchState(store, {
-                  currentProject: {
-                    ...store.currentProject()!,
-                    topics: [
-                      ...store.currentProject()!.topics.map((t) => ({
-                        ...t,
-                        options: t.options.map((o) =>
-                          o.id !== vote.optionId
-                            ? o
-                            : {
-                                ...o,
-                                choice: vote.choice,
-                              },
-                        ),
-                      })),
-                    ],
-                  },
-                });
+                const currentTopic = store.currentTopic();
+                if (currentTopic) {
+                  patchState(store, {
+                    currentTopic: {
+                      ...currentTopic,
+                      options: currentTopic.options.map((o) =>
+                        o.id !== vote.optionId
+                          ? o
+                          : { ...o, choice: vote.choice },
+                      ),
+                    },
+                  });
+                }
               },
               error: (error) => {
                 store.loggerService.log(
-                  '[ProjectStore] Error while sharing',
+                  '[ProjectStore] Error while voting',
                   error,
                 );
               },

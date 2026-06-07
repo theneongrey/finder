@@ -41,10 +41,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   topicId = input('');
   action = input('');
   optionId = input('');
-  project = this.projectStore.currentProject;
-  topic = computed(() =>
-    this.project()?.topics.find((t) => t.id === this.topicId()),
-  );
+  topic = this.projectStore.currentTopic;
   option = computed(() =>
     this.topic()?.options.find((o) => o.id === this.optionId()),
   );
@@ -65,9 +62,17 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   rightCueOpacity = signal(0);
 
   constructor() {
-    this.titleService.setBackroute(`/project/detail/${this.project()?.id}`);
     effect(() => {
       this.projectStore.getProject(this.id());
+    });
+    effect(() => {
+      this.projectStore.getTopic(this.topicId());
+    });
+    effect(() => {
+      const projectId = this.id();
+      if (projectId) {
+        this.titleService.setBackroute(`/project/detail/${projectId}`);
+      }
     });
     effect(() => {
       this.optionId();

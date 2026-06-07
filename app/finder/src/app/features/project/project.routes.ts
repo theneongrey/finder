@@ -60,20 +60,6 @@ export const projectRoutes: Routes = [
       ),
   },
   {
-    path: 'detail/:id/topic/:topicId/:action',
-    loadComponent: () =>
-      import('./topic/project-topic.component').then(
-        (m) => m.ProjectTopicComponent,
-      ),
-  },
-  {
-    path: 'detail/:id/topic/:topicId',
-    loadComponent: () =>
-      import('./topic/project-topic.component').then(
-        (m) => m.ProjectTopicComponent,
-      ),
-  },
-  {
     path: 'detail/:id',
     loadComponent: () =>
       import('./detail/project-detail.component').then(

@@ -88,13 +88,13 @@ public class LoginService
                 new Claim(ClaimTypes.NameIdentifier, loginToken.Person.Id.ToString()),
                 new Claim(ClaimTypes.Role, ((int)loginToken.Person.Role).ToString())
             ], CookieAuthenticationDefaults.AuthenticationScheme)));
+
+        var redirectUrl = loginToken.RedirectUrl;
         
-        loginToken.Person.HasLoggedIn = true;
-        loginToken.Token = null;
-        loginToken.Code = null;
+        _dbContext.Remove(loginToken);
         await _dbContext.SaveChangesAsync();
 
-        return Result<string?>.Success(loginToken.RedirectUrl);
+        return Result<string?>.Success(redirectUrl);
     }
 
 
@@ -123,16 +123,18 @@ public class LoginService
     private async Task<LoginToken> CreateLoginTokenForPerson(Person person, string? redirectUrl)
     {
         var loginToken = await _dbContext.LoginTokens.SingleOrDefaultAsync(t => t.Person.Id == person.Id);
-
-        if (loginToken is null)
+        if (loginToken is not null)
         {
-            loginToken = new LoginToken
-            {
-                Id = Guid.NewGuid(),
-                Person = person,
-            };
-            _dbContext.LoginTokens.Add(loginToken);
+            _dbContext.LoginTokens.Remove(loginToken);
+            await _dbContext.SaveChangesAsync();
         }
+        
+        loginToken = new LoginToken
+        {
+            Id = Guid.NewGuid(),
+            Person = person,
+        };
+        _dbContext.LoginTokens.Add(loginToken);
 
         loginToken.RedirectUrl = redirectUrl;
         loginToken.Token = _loginOptions.AuthToken ?? Guid.NewGuid().ToString("N").ToLower();

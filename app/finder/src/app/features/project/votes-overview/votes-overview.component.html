@@ -6,7 +6,7 @@
     >
       <div class="tw:flex tw:justify-between tw:items-start tw:mb-3">
         <div>
-          <h2 class="tw:text-lg tw:font-semibold tw:text-gray-900">
+          <h2>
             {{ topic.name }}
           </h2>
           <div class="tw:flex tw:items-center tw:gap-2 tw:mt-1">
@@ -21,7 +21,7 @@
         </div>
         <div class="tw:text-right tw:flex tw:flex-col tw:items-end tw:gap-1">
           <a
-            href="#comments-section"
+            href="{{ currentUrl + '#comments-section' }}"
             class="tw:inline-flex tw:items-center tw:gap-1.5 tw:bg-primary/20 tw:text-primary tw:px-3 tw:py-1.5 tw:rounded-full tw:text-sm tw:font-bold tw:no-underline"
           >
             <i class="pi pi-comment" style="font-size: 16px"></i>
@@ -33,7 +33,7 @@
               >of {{ totalCount() }}</span
             >
           </p>
-          <p class="tw:text-xs tw:text-gray-500">rated</p>
+          <p class="label-sm">rated</p>
         </div>
       </div>
 
@@ -48,7 +48,7 @@
       </div>
 
       <div class="tw:mt-4 tw:flex tw:justify-between tw:items-center">
-        <p class="tw:text-sm tw:text-gray-500 tw:italic">Closes in 2 days</p>
+        <p class="label-sm">Closes in 2 days</p>
         <a
           [routerLink]="['/project/detail', id(), 'vote', topicId()]"
           class="tw:bg-primary tw:text-white tw:px-4 tw:py-2 tw:rounded-full tw:text-sm tw:font-semibold tw:flex tw:items-center tw:gap-2 tw:no-underline"
@@ -62,10 +62,8 @@
     <!-- Options Grid -->
     <div>
       <div class="tw:flex tw:justify-between tw:items-end tw:mb-3">
-        <h3 class="tw:text-base tw:font-semibold tw:text-gray-900">
-          Candidates
-        </h3>
-        <span class="tw:text-xs tw:text-gray-500">Sorted by popularity</span>
+        <h3>Candidates</h3>
+        <p class="label-sm">Sorted by popularity</p>
       </div>
 
       <div class="tw:grid tw:grid-cols-1 tw:gap-4">
@@ -80,7 +78,10 @@
                 >
                   {{ option.text }}
                 </h4>
-                @if (i === 0 && option.votes > 0) {
+                @if (
+                  (i === 0 || option.votes === sortedOptions()[0].votes) &&
+                  option.votes > 0
+                ) {
                   <span
                     class="tw:inline-flex tw:items-center tw:gap-1 tw:bg-primary/20 tw:text-primary-dark tw:text-xs tw:font-semibold tw:px-2 tw:py-0.5 tw:rounded-full tw:w-fit"
                   >
@@ -94,7 +95,10 @@
               >
                 <i
                   class="pi"
-                  [ngClass]="[voteIcon(option.choice), voteColorClass(option.choice)]"
+                  [ngClass]="[
+                    voteIcon(option.choice),
+                    voteColorClass(option.choice),
+                  ]"
                   style="font-size: 22px"
                 ></i>
                 <span
@@ -106,22 +110,30 @@
             </div>
 
             <div class="tw:flex tw:items-center tw:gap-2 tw:mb-3">
-              <i class="pi pi-users tw:text-gray-400" style="font-size: 13px"></i>
+              <i
+                class="pi pi-users tw:text-gray-400 tw:text"
+                style="font-size: 13px"
+              ></i>
               <span class="tw:text-xs tw:text-gray-500">
-                {{ option.votes }} vote{{ option.votes !== 1 ? 's' : '' }}
+                {{ option.votes }} vote{{ option.votes !== 1 ? "s" : "" }}
               </span>
             </div>
 
             <a
               class="tw:w-full tw:py-2 tw:bg-gray-100 tw:rounded-xl tw:text-sm tw:font-semibold tw:text-primary tw:flex tw:items-center tw:justify-center tw:gap-2 tw:no-underline"
-              [routerLink]="['/project/detail', id(), 'vote', topicId(), option.id]"
+              [routerLink]="[
+                '/project/detail',
+                id(),
+                'vote',
+                topicId(),
+                option.id,
+              ]"
             >
               <i
                 class="pi"
                 [ngClass]="option.choice ? 'pi-refresh' : 'pi-play'"
-                style="font-size: 16px"
               ></i>
-              {{ option.choice ? 'Re-Vote' : 'Vote' }}
+              {{ option.choice ? "Re-Vote" : "Vote" }}
             </a>
           </div>
         }
@@ -129,49 +141,47 @@
     </div>
 
     <!-- Comments Section -->
-    <div
-      id="comments-section"
-      class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:border tw:border-gray-100"
-    >
-      <h3 class="tw:text-base tw:font-semibold tw:text-gray-900 tw:mb-4">
-        Comments
-      </h3>
-
-      <div class="tw:flex tw:flex-col tw:gap-3 tw:mb-4">
-        @for (comment of comments; track comment.author) {
-          <div class="tw:flex tw:gap-2">
-            <div
-              class="tw:w-8 tw:h-8 tw:rounded-full tw:bg-primary tw:text-white tw:flex tw:items-center tw:justify-center tw:text-sm tw:font-bold tw:shrink-0"
-            >
-              {{ comment.initials }}
-            </div>
-            <div
-              class="tw:bg-gray-50 tw:p-3 tw:rounded-2xl tw:rounded-tl-none tw:flex-1"
-            >
-              <p class="tw:text-sm tw:font-bold tw:text-gray-900">
-                {{ comment.author }}
-              </p>
-              <p class="tw:text-sm tw:text-gray-600">{{ comment.text }}</p>
-              <span
-                class="tw:text-[10px] tw:text-gray-400 tw:mt-1 tw:uppercase tw:tracking-wider tw:font-semibold tw:block"
-                >{{ comment.time }}</span
+    <div>
+      <h3 id="comments-section">Comments</h3>
+      <div
+        class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:border tw:border-gray-100"
+      >
+        <div class="tw:flex tw:flex-col tw:gap-3 tw:mb-4">
+          @for (comment of comments; track comment.author) {
+            <div class="tw:flex tw:gap-2">
+              <div
+                class="tw:w-8 tw:h-8 tw:rounded-full tw:bg-primary tw:text-white tw:flex tw:items-center tw:justify-center tw:text-sm tw:font-bold tw:shrink-0"
               >
+                {{ comment.initials }}
+              </div>
+              <div
+                class="tw:bg-gray-50 tw:p-3 tw:rounded-2xl tw:rounded-tl-none tw:flex-1"
+              >
+                <p class="tw:text-sm tw:font-bold tw:text-gray-900">
+                  {{ comment.author }}
+                </p>
+                <p class="tw:text-sm tw:text-gray-600">{{ comment.text }}</p>
+                <span
+                  class="tw:text-[10px] tw:text-gray-400 tw:mt-1 tw:uppercase tw:tracking-wider tw:font-semibold tw:block"
+                  >{{ comment.time }}</span
+                >
+              </div>
             </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
 
-      <div class="tw:relative tw:flex tw:items-center">
-        <input
-          type="text"
-          placeholder="New comment..."
-          class="tw:w-full tw:bg-gray-50 tw:border tw:border-gray-200 tw:rounded-full tw:py-3 tw:pl-5 tw:pr-12 tw:text-sm tw:outline-none"
-        />
-        <button
-          class="tw:absolute tw:right-3 tw:bg-primary tw:text-white tw:w-8 tw:h-8 tw:rounded-full tw:flex tw:items-center tw:justify-center"
-        >
-          <i class="pi pi-send" style="font-size: 14px"></i>
-        </button>
+        <div class="tw:relative tw:flex tw:items-center">
+          <input
+            type="text"
+            placeholder="New comment..."
+            class="tw:w-full tw:bg-gray-50 tw:border tw:border-gray-200 tw:rounded-full tw:py-3 tw:pl-5 tw:pr-12 tw:text-sm tw:outline-none"
+          />
+          <button
+            class="tw:absolute tw:right-3 tw:bg-primary tw:text-white tw:w-8 tw:h-8 tw:rounded-full tw:flex tw:items-center tw:justify-center"
+          >
+            <i class="pi pi-send" style="font-size: 14px"></i>
+          </button>
+        </div>
       </div>
     </div>
   } @else {

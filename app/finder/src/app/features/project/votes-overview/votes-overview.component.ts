@@ -10,6 +10,7 @@ import { ProjectStore } from '../_data/project.store';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { TitleService } from '../../../common/services/title.service';
+import { RoutingService } from '../../../common/services/routing.service';
 
 interface Comment {
   author: string;
@@ -27,6 +28,9 @@ interface Comment {
 })
 export class VotesOverviewComponent {
   private readonly projectStore = inject(ProjectStore);
+  private readonly routingService = inject(RoutingService);
+
+  currentUrl = this.routingService.currentUrl();
 
   id = input('');
   topicId = input('');
@@ -55,8 +59,8 @@ export class VotesOverviewComponent {
 
   comments: Comment[] = [
     {
-      author: 'Sarah',
-      initials: 'S',
+      author: 'Bob',
+      initials: 'B',
       text: 'The color really matches our living room!',
       time: '2h ago',
     },

@@ -1,0 +1,37 @@
+<p-dialog
+  header="Share"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }"
+>
+  <div class="tw:flex tw:items-center tw:gap-4 tw:mb-4">
+    <label for="email" class="tw:font-semibold tw:w-24">Email</label>
+    <input
+      pInputText
+      id="email"
+      type="email"
+      class="tw:flex-auto"
+      autocomplete="off"
+      [(ngModel)]="email"
+    />
+  </div>
+
+  <p-select
+    appendTo="body"
+    [options]="availablePermissions"
+    [(ngModel)]="selectedPermission"
+    optionLabel="name"
+    optionValue="id"
+    placeholder="Permission"
+    class="tw:w-full tw:mb-2"
+  />
+
+  <div class="tw:flex tw:justify-end tw:gap-2">
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (click)="visible.set(false)"
+    />
+    <p-button label="Share" (click)="share()" [disabled]="!email()" />
+  </div>
+</p-dialog>

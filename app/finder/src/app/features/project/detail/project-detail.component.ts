@@ -11,10 +11,7 @@ import { ProjectStore } from '../_data/project.store';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { Dialog } from 'primeng/dialog';
-import { InputText } from 'primeng/inputtext';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Select } from 'primeng/select';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TitleService } from '../../../common/services/title.service';
 import { ProjectDetailItemComponent } from './project-detail-item/project-detail-item.component';
 import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
@@ -22,6 +19,8 @@ import { RouterLink } from '@angular/router';
 import { Avatar } from 'primeng/avatar';
 import { AvatarGroup } from 'primeng/avatargroup';
 import { Tooltip } from 'primeng/tooltip';
+import { ShareDialogComponent } from './share-dialog/share-dialog.component';
+import { ProjectRole } from '../_models/project-role.enum';
 
 @Component({
   selector: 'app-project-detail',
@@ -29,16 +28,13 @@ import { Tooltip } from 'primeng/tooltip';
     ConfirmDialog,
     Button,
     AddCardComponent,
-    Dialog,
-    InputText,
     ReactiveFormsModule,
-    Select,
-    FormsModule,
     ProjectDetailItemComponent,
     RouterLink,
     Avatar,
     AvatarGroup,
     Tooltip,
+    ShareDialogComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-detail.component.html',
@@ -54,27 +50,11 @@ export class ProjectDetailComponent {
   action = input('');
   project = this.projectStore.currentProject;
 
-  availablePermissions = [
-    {
-      id: 0,
-      name: 'Voter',
-    },
-    {
-      id: 1,
-      name: 'Maintainer',
-    },
-    {
-      id: 2,
-      name: 'Owner',
-    },
-  ];
-
-  showAddTopicDialog = model(false);
   showShare = model(false);
-  topic = model('');
-  email = model('');
-  selectedPermission = model(0);
   topics = computed(() => this.project()?.topics);
+  role = computed(() => this.project()?.role ?? ProjectRole.Unknown);
+
+  readonly ProjectRole = ProjectRole;
 
   constructor() {
     this.titleService.setBackroute('/project/');
@@ -98,23 +78,8 @@ export class ProjectDetailComponent {
       acceptLabel: 'Delete topic',
       rejectLabel: 'Cancel',
       accept: () => {
-        this.deleteTopic(id);
+        this.projectStore.deleteTopic(id);
       },
     });
-  }
-
-  deleteTopic(id: string) {
-    this.projectStore.deleteTopic(id);
-  }
-
-  share() {
-    if (this.email()) {
-      this.projectStore.share({
-        email: this.email(),
-        permissionType: this.selectedPermission(),
-        projectId: this.project()!.id,
-      });
-      this.showShare.set(false);
-    }
   }
 }

@@ -9,13 +9,13 @@ import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 
 @Component({
-  selector: 'app-project-title',
+  selector: 'app-project-title-bar',
   imports: [Menu, UserAvatarComponent, Button, RouterLink, NgOptimizedImage],
-  templateUrl: './project-title.component.html',
-  styleUrl: './project-title.component.css',
+  templateUrl: './project-title-bar.component.html',
+  styleUrl: './project-title-bar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectTitleComponent {
+export class ProjectTitleBarComponent {
   private userStore = inject(UserStore);
   private titleService = inject(TitleService);
   user = this.userStore.user;

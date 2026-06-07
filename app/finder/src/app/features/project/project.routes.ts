@@ -53,6 +53,13 @@ export const projectRoutes: Routes = [
       ),
   },
   {
+    path: 'detail/:id/votes-overview/:topicId',
+    loadComponent: () =>
+      import('./votes-overview/votes-overview.component').then(
+        (m) => m.VotesOverviewComponent,
+      ),
+  },
+  {
     path: 'detail/:id/topic/:topicId/:action',
     loadComponent: () =>
       import('./topic/project-topic.component').then(

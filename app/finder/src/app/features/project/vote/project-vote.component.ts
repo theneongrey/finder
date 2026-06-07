@@ -39,7 +39,6 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
   id = input('');
   topicId = input('');
-  action = input('');
   optionId = input('');
   topic = this.projectStore.currentTopic;
   option = computed(() =>
@@ -70,8 +69,10 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     });
     effect(() => {
       const projectId = this.id();
-      if (projectId) {
+      const currentProject = this.projectStore.currentProject();
+      if (projectId && currentProject) {
         this.titleService.setBackroute(`/project/detail/${projectId}`);
+        this.titleService.setTitle(currentProject.name);
       }
     });
     effect(() => {

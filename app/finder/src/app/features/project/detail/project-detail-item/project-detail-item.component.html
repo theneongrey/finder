@@ -28,9 +28,20 @@
 
   <div class="p-fluid">
     <p-button
+      [severity]="_topic.nextOpenOptionId ? 'primary' : 'secondary'"
       class="tw:flex tw:w-full"
-      [routerLink]="['/project/detail', projectId(), 'vote', _topic.id]"
-      label="Vote"
+      [routerLink]="
+        _topic.nextOpenOptionId
+          ? [
+              '/project/detail',
+              projectId(),
+              'vote',
+              _topic.id,
+              _topic.nextOpenOptionId,
+            ]
+          : ['/project/detail', projectId(), 'votes-overview', _topic.id]
+      "
+      [label]="_topic.nextOpenOptionId ? 'Vote' : 'Poll overview'"
     />
   </div>
 </app-side-color-card>

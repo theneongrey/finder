@@ -11,6 +11,7 @@ export interface Topic {
   name: string;
   optionType: OptionType;
   optionCount: number;
+  nextOpenOptionId?: string;
 }
 
 export interface Vote {

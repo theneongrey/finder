@@ -38,24 +38,18 @@
       </div>
 
       <!-- Progress Bar -->
-      <div
-        class="tw:w-full tw:h-3 tw:bg-gray-200 tw:rounded-full tw:overflow-hidden"
-      >
-        <div
-          class="tw:h-full tw:bg-primary tw:rounded-full tw:transition-all tw:duration-1000"
-          [style.width.%]="progressPercent()"
-        ></div>
-      </div>
+      <p-progressBar [value]="progressPercent()" />
 
       <div class="tw:mt-4 tw:flex tw:justify-between tw:items-center">
         <p class="label-sm">Closes in 2 days</p>
-        <a
-          [routerLink]="['/project/detail', id(), 'vote', topicId()]"
-          class="tw:bg-primary tw:text-white tw:px-4 tw:py-2 tw:rounded-full tw:text-sm tw:font-semibold tw:flex tw:items-center tw:gap-2 tw:no-underline"
-        >
-          <i class="pi pi-arrow-right-arrow-left" style="font-size: 16px"></i>
-          Continue voting
-        </a>
+        @if (hasOpenOptions()) {
+          <p-button
+            label="Continue voting"
+            icon="pi pi-arrow-right-arrow-left"
+            [routerLink]="['/project/detail', id(), 'vote', topicId()]"
+            size="small"
+          />
+        }
       </div>
     </div>
 
@@ -82,12 +76,7 @@
                   (i === 0 || option.votes === sortedOptions()[0].votes) &&
                   option.votes > 0
                 ) {
-                  <span
-                    class="tw:inline-flex tw:items-center tw:gap-1 tw:bg-primary/20 tw:text-primary-dark tw:text-xs tw:font-semibold tw:px-2 tw:py-0.5 tw:rounded-full tw:w-fit"
-                  >
-                    <i class="pi pi-trophy" style="font-size: 12px"></i>
-                    Most Votes
-                  </span>
+                  <p-tag value="Most Votes" icon="pi pi-trophy" />
                 }
               </div>
               <div
@@ -119,8 +108,10 @@
               </span>
             </div>
 
-            <a
-              class="tw:w-full tw:py-2 tw:bg-gray-100 tw:rounded-xl tw:text-sm tw:font-semibold tw:text-primary tw:flex tw:items-center tw:justify-center tw:gap-2 tw:no-underline"
+            <p-button
+              [label]="option.choice ? 'Re-Vote' : 'Vote'"
+              [icon]="option.choice ? 'pi pi-refresh' : 'pi pi-play'"
+              [severity]="option.choice ? 'secondary' : 'primary'"
               [routerLink]="[
                 '/project/detail',
                 id(),
@@ -128,13 +119,8 @@
                 topicId(),
                 option.id,
               ]"
-            >
-              <i
-                class="pi"
-                [ngClass]="option.choice ? 'pi-refresh' : 'pi-play'"
-              ></i>
-              {{ option.choice ? "Re-Vote" : "Vote" }}
-            </a>
+              styleClass="tw:w-full"
+            />
           </div>
         }
       </div>
@@ -170,18 +156,10 @@
           }
         </div>
 
-        <div class="tw:relative tw:flex tw:items-center">
-          <input
-            type="text"
-            placeholder="New comment..."
-            class="tw:w-full tw:bg-gray-50 tw:border tw:border-gray-200 tw:rounded-full tw:py-3 tw:pl-5 tw:pr-12 tw:text-sm tw:outline-none"
-          />
-          <button
-            class="tw:absolute tw:right-3 tw:bg-primary tw:text-white tw:w-8 tw:h-8 tw:rounded-full tw:flex tw:items-center tw:justify-center"
-          >
-            <i class="pi pi-send" style="font-size: 14px"></i>
-          </button>
-        </div>
+        <p-inputgroup>
+          <input pInputText type="text" placeholder="New comment..." />
+          <p-button icon="pi pi-send" />
+        </p-inputgroup>
       </div>
     </div>
   } @else {

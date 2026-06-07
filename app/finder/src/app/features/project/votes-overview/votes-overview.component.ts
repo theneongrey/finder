@@ -9,6 +9,11 @@ import {
 import { ProjectStore } from '../_data/project.store';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
+import { ProgressBar } from 'primeng/progressbar';
+import { Tag } from 'primeng/tag';
+import { Button } from 'primeng/button';
+import { InputGroup } from 'primeng/inputgroup';
+import { InputText } from 'primeng/inputtext';
 import { TitleService } from '../../../common/services/title.service';
 import { RoutingService } from '../../../common/services/routing.service';
 
@@ -23,7 +28,7 @@ interface Comment {
   selector: 'app-votes-overview',
   templateUrl: './votes-overview.component.html',
   styleUrl: './votes-overview.component.css',
-  imports: [RouterLink, NgClass],
+  imports: [RouterLink, NgClass, ProgressBar, Tag, Button, InputGroup, InputText],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VotesOverviewComponent {
@@ -51,6 +56,10 @@ export class VotesOverviewComponent {
   );
 
   totalCount = computed(() => this.topic()?.options.length ?? 0);
+
+  hasOpenOptions = computed(() =>
+    this.topic()?.options.some((o) => !o.choice) ?? false,
+  );
 
   progressPercent = computed(() => {
     const total = this.totalCount();

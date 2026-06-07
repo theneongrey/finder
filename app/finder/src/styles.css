@@ -35,6 +35,7 @@ body {
 
   /* button */
   --p-button-border-radius: 12px;
+  --p-inputgroup-addon-border-radius: 12px;
   --p-button-padding-x: 40px;
 
   --p-panel-border-radius: 0;
@@ -49,6 +50,12 @@ body {
     font-weight: normal;
     font-size: 80%;
   }
+}
+
+.p-inputgroup:has(> p-button:last-child) .p-button {
+  border-radius: 0px;
+  border-start-end-radius: var(--p-inputgroup-addon-border-radius);
+  border-end-end-radius: var(--p-inputgroup-addon-border-radius);
 }
 
 h1 {

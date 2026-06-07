@@ -1,5 +1,6 @@
 using System.Data.Common;
 using Finder.Business.Auth.Entities;
+using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Database;
 using Microsoft.AspNetCore.Authentication;
@@ -52,6 +53,8 @@ public class FinderApiFactory : WebApplicationFactory<Program>
                 options.DefaultChallengeScheme = TestAuthHandler.SchemeName;
                 options.DefaultForbidScheme = TestAuthHandler.SchemeName;
                 options.DefaultScheme = TestAuthHandler.SchemeName;
+                options.DefaultSignInScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignOutScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
             });
         });
     }
@@ -105,5 +108,77 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         db.Projects.Add(project);
         await db.SaveChangesAsync();
         return project;
+    }
+
+    public async Task<Topic> SeedTopic(Guid projectId, string name = "Test Topic",
+        OptionType optionType = OptionType.YesNo)
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var project = await db.Projects.FindAsync(projectId)
+                      ?? throw new InvalidOperationException($"Project {projectId} not found. Call SeedProject first.");
+        var topic = new Topic
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            OptionType = optionType,
+            Project = project
+        };
+        db.Topics.Add(topic);
+        await db.SaveChangesAsync();
+        return topic;
+    }
+
+    public async Task<Option> SeedOption(Guid topicId, string text = "Test Option")
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var topic = await db.Topics.FindAsync(topicId)
+                    ?? throw new InvalidOperationException($"Topic {topicId} not found. Call SeedTopic first.");
+        var option = new Option
+        {
+            Id = Guid.NewGuid(),
+            Text = text,
+            Topic = topic
+        };
+        db.Options.Add(option);
+        await db.SaveChangesAsync();
+        return option;
+    }
+
+    public async Task SeedPermission(Guid projectId, Guid userId, PermissionType permissionType)
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var project = await db.Projects.Include(p => p.Permissions).FirstOrDefaultAsync(p => p.Id == projectId)
+                      ?? throw new InvalidOperationException($"Project {projectId} not found.");
+        var user = await db.Persons.FindAsync(userId)
+                   ?? throw new InvalidOperationException($"User {userId} not found.");
+        db.Permissions.Add(new Permission
+        {
+            Project = project,
+            Person = user,
+            PermissionType = permissionType
+        });
+        await db.SaveChangesAsync();
+    }
+
+    public async Task<LoginToken> SeedLoginToken(Guid userId, string token, string code)
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var person = await db.Persons.FindAsync(userId)
+                     ?? throw new InvalidOperationException($"User {userId} not found.");
+        var loginToken = new LoginToken
+        {
+            Id = Guid.NewGuid(),
+            Person = person,
+            Token = token.ToLower(),
+            Code = code,
+            Retries = 0
+        };
+        db.LoginTokens.Add(loginToken);
+        await db.SaveChangesAsync();
+        return loginToken;
     }
 }

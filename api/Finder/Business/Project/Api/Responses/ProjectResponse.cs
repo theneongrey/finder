@@ -12,6 +12,7 @@ public class ProjectSharedWith
 {
     public required string Name { get; set; }
     public required ProjectRole Role { get; set; }
+    public string? Picture { get; set; }
 }
 
 public class ProjectResponseTopic
@@ -66,7 +67,8 @@ public static class ProjectMapper
         return new ProjectSharedWith
         {
             Name = permission.Person.Name ?? permission.Person.Email,
-            Role = permission.PermissionType.ToProjectRole()
+            Role = permission.PermissionType.ToProjectRole(),
+            Picture = permission.Person.Picture
         };
     }
 
@@ -81,7 +83,8 @@ public static class ProjectMapper
                 new ProjectSharedWith
                 {
                     Name = project.Creator.Name ?? project.Creator.Email,
-                    Role = ProjectRole.Creator
+                    Role = ProjectRole.Creator,
+                    Picture = project.Creator.Picture
                 });
         }
 

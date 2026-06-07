@@ -11,7 +11,6 @@ import { Menu } from 'primeng/menu';
 import { SideColorCardComponent } from '../../../../common/ui/components/side-color-card/side-color-card.component';
 import { TypeIconComponent } from '../type-icon/type-icon.component';
 import { RouterLink } from '@angular/router';
-import { TopicByTypePipe } from '../_pipe/topic-by-type.pipe';
 
 @Component({
   selector: 'app-project-detail-item',
@@ -22,7 +21,6 @@ import { TopicByTypePipe } from '../_pipe/topic-by-type.pipe';
     SideColorCardComponent,
     TypeIconComponent,
     RouterLink,
-    TopicByTypePipe,
   ],
   templateUrl: './project-detail-item.component.html',
   styleUrl: './project-detail-item.component.css',

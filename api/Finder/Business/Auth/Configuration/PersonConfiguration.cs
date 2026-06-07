@@ -15,6 +15,9 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder.Property(n => n.Name)
             .HasMaxLength(250);
+
+        builder.Property(n => n.Picture)
+            .HasMaxLength(100);
         
         builder.Property(c => c.Role)
             .HasConversion<int>();

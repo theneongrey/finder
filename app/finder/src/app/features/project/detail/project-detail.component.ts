@@ -11,16 +11,17 @@ import { ProjectStore } from '../_data/project.store';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { DataView } from 'primeng/dataview';
 import { Dialog } from 'primeng/dialog';
 import { InputText } from 'primeng/inputtext';
-import { ProjectRoleToNamePipe } from '../_utils/pipe/permission-to-name.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Select } from 'primeng/select';
 import { TitleService } from '../../../common/services/title.service';
 import { ProjectDetailItemComponent } from './project-detail-item/project-detail-item.component';
 import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
 import { RouterLink } from '@angular/router';
+import { Avatar } from 'primeng/avatar';
+import { AvatarGroup } from 'primeng/avatargroup';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-project-detail',
@@ -28,15 +29,16 @@ import { RouterLink } from '@angular/router';
     ConfirmDialog,
     Button,
     AddCardComponent,
-    DataView,
     Dialog,
     InputText,
-    ProjectRoleToNamePipe,
     ReactiveFormsModule,
     Select,
     FormsModule,
     ProjectDetailItemComponent,
     RouterLink,
+    Avatar,
+    AvatarGroup,
+    Tooltip,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-detail.component.html',
@@ -68,7 +70,6 @@ export class ProjectDetailComponent {
   ];
 
   showAddTopicDialog = model(false);
-  showShareOverviewDialog = model(false);
   showShare = model(false);
   topic = model('');
   email = model('');
@@ -106,19 +107,6 @@ export class ProjectDetailComponent {
     this.projectStore.deleteTopic(id);
   }
 
-  displayShareDialog() {
-    if (this.project()!.sharedWith.length > 0) {
-      this.showShareOverviewDialog.set(true);
-    } else {
-      this.showAdditionalShareDialog();
-    }
-  }
-
-  showAdditionalShareDialog() {
-    this.showShareOverviewDialog.set(false);
-    this.showShare.set(true);
-  }
-
   share() {
     if (this.email()) {
       this.projectStore.share({
@@ -126,6 +114,7 @@ export class ProjectDetailComponent {
         permissionType: this.selectedPermission(),
         projectId: this.project()!.id,
       });
+      this.showShare.set(false);
     }
   }
 }

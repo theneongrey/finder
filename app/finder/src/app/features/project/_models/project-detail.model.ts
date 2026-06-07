@@ -43,6 +43,7 @@ export interface Option {
 export interface SharedWith {
   name: string;
   role: ProjectRole;
+  picture?: string;
 }
 
 export interface Project {

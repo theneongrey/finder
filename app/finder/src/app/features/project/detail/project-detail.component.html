@@ -6,6 +6,37 @@
       </p>
     }
 
+    <div class="tw:mb-8">
+      <div class="tw:flex tw:items-center tw:justify-between tw:mb-4">
+        <h2>Members</h2>
+        <p-button
+          icon="pi pi-user-plus"
+          label="Invite"
+          severity="secondary"
+          size="small"
+          (click)="showShare.set(true)"
+        />
+      </div>
+      @if (project.sharedWith.length > 0) {
+        <p-avatar-group>
+          @for (member of project.sharedWith; track member.name) {
+            <p-avatar
+              [image]="member.picture ?? undefined"
+              [label]="
+                member.picture ? undefined : member.name[0].toUpperCase()
+              "
+              shape="circle"
+              size="large"
+              [pTooltip]="member.name"
+              tooltipPosition="bottom"
+            />
+          }
+        </p-avatar-group>
+      } @else {
+        <p class="tw:text-sm tw:text-gray-500">No other members yet.</p>
+      }
+    </div>
+
     @if (topics()?.length ?? 0 > 0) {
       <h2 class="tw:mb-4">Current topics</h2>
 
@@ -38,40 +69,6 @@
 </div>
 
 <p-confirmdialog />
-
-<p-dialog
-  header="Currently shared with"
-  [modal]="true"
-  [(visible)]="showShareOverviewDialog"
-  [style]="{ width: '25rem' }"
->
-  <span class="p-text-secondary tw:block tw:mb-8">Currently shared with</span>
-  <p-dataview [value]="project()?.sharedWith">
-    <ng-template #list let-sharedWith>
-      @for (sharedWith of sharedWith; track sharedWith.name) {
-        <div class="tw:flex tw:h-8">
-          <div class="tw:w-[200px]">
-            {{ sharedWith.name }}
-          </div>
-          <div>
-            {{ sharedWith.role | projectRoleToName }}
-          </div>
-        </div>
-      }
-    </ng-template>
-  </p-dataview>
-
-  <div class="tw:ml-auto tw:mr-0">
-    <p-button label="Add" (click)="showAdditionalShareDialog()" />
-  </div>
-  <div class="tw:flex tw:justify-end tw:gap-2">
-    <p-button
-      label="Close"
-      severity="secondary"
-      (click)="showShareOverviewDialog.set(false)"
-    />
-  </div>
-</p-dialog>
 
 <p-dialog
   header="Share"

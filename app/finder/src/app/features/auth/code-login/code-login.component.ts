@@ -40,13 +40,13 @@ export class CodeLoginComponent {
 
     if (!this.userStore.loginMail.email()) {
       this.loggerService.log('redirect: no email stored');
-      router.navigate(['/']);
+      void router.navigate(['/']);
     }
 
     effect(() => {
       if (this.userStore.user()?.isAuthenticated) {
         this.loggerService.log('redirect: user is authenticated');
-        router.navigate(['/logged-in']);
+        void router.navigate(['/logged-in']);
       }
     });
   }

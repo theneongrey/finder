@@ -8,7 +8,7 @@ import {
 import { inject } from '@angular/core';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
-import { distinctUntilChanged, filter, pipe, switchMap, tap } from 'rxjs';
+import { catchError, distinctUntilChanged, EMPTY, filter, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { LoggerService } from '../services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
@@ -114,20 +114,19 @@ export const UserStore = signalStore(
           filter((loginToken) => !!loginToken),
           switchMap((loginToken) => {
             return store.userService.loginByToken(loginToken).pipe(
-              tapResponse({
-                next: (redirectUrl) => {
-                  if (redirectUrl) {
-                    patchState(store, { redirectUrl });
-                  }
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[UserStore] Error while logging in with token',
-                    error,
-                  );
-                },
+              switchMap((redirectUrl) => {
+                if (redirectUrl) {
+                  patchState(store, { redirectUrl });
+                }
+                return handleGetUser;
               }),
-              switchMap(() => handleGetUser),
+              catchError((error) => {
+                store.loggerService.log(
+                  '[UserStore] Error while logging in with token',
+                  error,
+                );
+                return EMPTY;
+              }),
             );
           }),
         ),
@@ -141,23 +140,22 @@ export const UserStore = signalStore(
             return store.userService
               .loginByCode(store.loginMail.email()!, loginCode)
               .pipe(
-                tapResponse({
-                  next: (redirectUrl) => {
-                    store.loggerService.debug(
-                      `[UserStore] Login successful redirecting to ${redirectUrl}`,
-                    );
-                    if (redirectUrl) {
-                      patchState(store, { redirectUrl });
-                    }
-                  },
-                  error: (error) => {
-                    store.loggerService.error(
-                      '[UserStore] Error while logging in with code',
-                      error,
-                    );
-                  },
+                switchMap((redirectUrl) => {
+                  store.loggerService.debug(
+                    `[UserStore] Login successful redirecting to ${redirectUrl}`,
+                  );
+                  if (redirectUrl) {
+                    patchState(store, { redirectUrl });
+                  }
+                  return handleGetUser;
                 }),
-                switchMap(() => handleGetUser),
+                catchError((error) => {
+                  store.loggerService.error(
+                    '[UserStore] Error while logging in with code',
+                    error,
+                  );
+                  return EMPTY;
+                }),
               );
           }),
         ),

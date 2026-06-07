@@ -1,12 +1,121 @@
-<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
-  <p-card [header]="topic()?.name" class="tw:flex tw:m-auto">
-    <div>
-      <div>{{ option()?.text }}</div>
-      <div class="tw:flex tw:gap-2 tw:mt-2">
-        <p-button label="Yes" [severity]="option()?.choice === '1' ? 'secondary' : undefined" (click)="voteYes()" />
-        <p-button label="No" [severity]="option()?.choice === '0' ? 'secondary' : undefined" (click)="voteNo()" />
-        <p-button label="Skip" [severity]="'help'" (click)="skip()" />
+<div
+  class="tw:flex tw:flex-col tw:h-full tw:w-full tw:items-center tw:justify-center tw:relative tw:overflow-hidden tw:px-4 tw:gap-6"
+>
+  <!-- Topic context + overview button -->
+  <div class="tw:text-center tw:flex tw:flex-col tw:items-center tw:gap-2">
+    <h2>
+      {{ topic()?.name }}
+    </h2>
+    @if (totalCount() > 0) {
+      <span class="tw:text-sm tw:text-surface-500">
+        {{ votedCount() }} / {{ totalCount() }} voted
+      </span>
+      <div
+        class="tw:w-24 tw:h-1.5 tw:bg-surface-200 tw:rounded-full tw:overflow-hidden"
+      >
+        <div
+          class="tw:h-full tw:bg-primary tw:rounded-full tw:transition-all tw:duration-300"
+          [style.width.%]="
+            totalCount() > 0 ? (votedCount() / totalCount()) * 100 : 0
+          "
+        ></div>
+      </div>
+    }
+    <p-button
+      label="Overview"
+      icon="pi pi-list"
+      [rounded]="true"
+      size="small"
+      (click)="navigateToOverview()"
+    />
+    <p class="tw:text-sm tw:text-surface-400">
+      Swipe right for Yes, left for No
+    </p>
+  </div>
+
+  <!-- Swipe area -->
+  <div class="vote-card-container tw:w-full tw:max-w-sm tw:h-72 tw:relative">
+    <!-- Left cue (No) -->
+    <div
+      class="tw:absolute tw:-left-4 tw:top-1/2 tw:-translate-y-1/2 tw:z-20 tw:pointer-events-none tw:transition-opacity tw:duration-150"
+      [style.opacity]="leftCueOpacity()"
+    >
+      <div
+        class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:items-center tw:justify-center tw:shadow-lg"
+      >
+        <i class="pi pi-thumbs-down tw:text-2xl"></i>
       </div>
     </div>
-  </p-card>
+
+    <!-- Right cue (Yes) -->
+    <div
+      class="tw:absolute tw:-right-4 tw:top-1/2 tw:-translate-y-1/2 tw:z-20 tw:pointer-events-none tw:transition-opacity tw:duration-150"
+      [style.opacity]="rightCueOpacity()"
+    >
+      <div
+        class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-green-600 tw:text-white tw:flex tw:items-center tw:justify-center tw:shadow-lg"
+      >
+        <i class="pi pi-thumbs-up tw:text-2xl"></i>
+      </div>
+    </div>
+
+    <!-- Stacked cards (visual depth) -->
+    <div
+      class="tw:absolute tw:inset-0 tw:rounded-3xl tw:-z-20 tw:translate-y-4 tw:scale-90 tw:opacity-60 tw:border tw:border-surface-200 tw:bg-surface-100"
+    ></div>
+    <div
+      class="tw:absolute tw:inset-0 tw:rounded-3xl tw:-z-10 tw:translate-y-2 tw:scale-95 tw:opacity-80 tw:border tw:border-surface-200 tw:bg-surface-50"
+    ></div>
+
+    <!-- Main swipe card -->
+    <div
+      #voteCard
+      class="vote-card tw:w-full tw:h-full tw:bg-white tw:rounded-3xl tw:shadow-xl tw:flex tw:flex-col tw:overflow-hidden tw:border tw:border-surface-100 tw:cursor-grab tw:select-none"
+      [style.transform]="cardTransform()"
+      [style.transition]="cardTransition()"
+      [style.opacity]="cardOpacity()"
+      (mousedown)="onDragStart($event)"
+      (touchstart)="onDragStart($event)"
+    >
+      <!-- Icon placeholder -->
+      <div
+        class="tw:flex-1 tw:bg-surface-100 tw:flex tw:items-center tw:justify-center"
+      >
+        <i class="pi pi-image tw:text-6xl tw:text-surface-300"></i>
+      </div>
+
+      <!-- Card content -->
+      <div class="tw:p-6 tw:flex-shrink-0">
+        <p
+          class="tw:text-base tw:font-semibold tw:text-surface-900 tw:leading-snug"
+        >
+          {{ option()?.text }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="tw:flex tw:items-center tw:gap-8">
+    <button
+      class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-white tw:text-red-500 tw:border tw:border-surface-200 tw:shadow-sm tw:flex tw:items-center tw:justify-center tw:hover:bg-red-50 tw:transition-all tw:active:scale-90 tw:duration-200"
+      (click)="swipeNo()"
+    >
+      <i class="pi pi-times tw:text-2xl"></i>
+    </button>
+
+    <button
+      class="tw:w-12 tw:h-12 tw:rounded-full tw:bg-surface-100 tw:text-surface-500 tw:flex tw:items-center tw:justify-center tw:hover:bg-surface-200 tw:transition-all tw:active:scale-90"
+      (click)="skip()"
+    >
+      <i class="pi pi-forward tw:text-lg"></i>
+    </button>
+
+    <button
+      class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-white tw:text-primary tw:border tw:border-surface-200 tw:shadow-sm tw:flex tw:items-center tw:justify-center tw:hover:bg-primary-50 tw:transition-all tw:active:scale-90 tw:duration-200"
+      (click)="swipeYes()"
+    >
+      <i class="pi pi-heart tw:text-2xl"></i>
+    </button>
+  </div>
 </div>

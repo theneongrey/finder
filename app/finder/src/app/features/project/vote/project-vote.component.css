@@ -1,0 +1,7 @@
+.vote-card-container {
+  perspective: 1000px;
+}
+
+.vote-card:active {
+  cursor: grabbing;
+}

@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UserStore } from '../../../common/data/user.store';
+import { UserStore } from '../../../data/user.store';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
-import { UserAvatarComponent } from '../../../common/ui/components/user-avatar/user-avatar.component';
+import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 import { Button } from 'primeng/button';
-import { TitleService } from '../../../common/services/title.service';
+import { TitleService } from '../../../services/title.service';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 
 @Component({
-  selector: 'app-project-title-bar',
+  selector: 'app-title-bar',
   imports: [Menu, UserAvatarComponent, Button, RouterLink, NgOptimizedImage],
-  templateUrl: './project-title-bar.component.html',
-  styleUrl: './project-title-bar.component.css',
+  templateUrl: './title-bar.component.html',
+  styleUrl: './title-bar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectTitleBarComponent {
+export class TitleBarComponent {
   private userStore = inject(UserStore);
   private titleService = inject(TitleService);
   user = this.userStore.user;

@@ -30,23 +30,23 @@ import { LoggerService } from '../../../common/services/logger.service';
 export class CodeLoginComponent {
   private userStore = inject(UserStore);
   private loggerService = new LoggerService();
+  private router = inject(Router);
+  private attempts = 0;
 
   form = new FormGroup({
     code: new FormControl('', [Validators.required]),
   });
 
   constructor() {
-    const router = inject(Router);
-
     if (!this.userStore.loginMail.email()) {
       this.loggerService.log('redirect: no email stored');
-      void router.navigate(['/']);
+      void this.router.navigate(['/']);
     }
 
     effect(() => {
       if (this.userStore.user()?.isAuthenticated) {
         this.loggerService.log('redirect: user is authenticated');
-        void router.navigate(['/logged-in']);
+        void this.router.navigate(['/logged-in']);
       }
     });
   }
@@ -55,6 +55,11 @@ export class CodeLoginComponent {
     const code = this.form.get('code')!.value!;
 
     if (this.form.valid && code.length === 6) {
+      this.attempts++;
+      if (this.attempts >= 3) {
+        void this.router.navigate(['/logout']);
+        return;
+      }
       this.userStore.loginByCode(code);
     }
   }

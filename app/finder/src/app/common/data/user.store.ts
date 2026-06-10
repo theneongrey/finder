@@ -8,7 +8,15 @@ import {
 import { inject } from '@angular/core';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
-import { catchError, distinctUntilChanged, EMPTY, filter, pipe, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  EMPTY,
+  filter,
+  pipe,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { LoggerService } from '../services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';

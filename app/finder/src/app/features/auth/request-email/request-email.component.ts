@@ -13,30 +13,31 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { InputText } from 'primeng/inputtext';
-import { Button } from 'primeng/button';
-import { FloatLabel } from 'primeng/floatlabel';
-import { Panel } from 'primeng/panel';
+import { Message } from 'primeng/message';
 
 @Component({
-  selector: 'app-auth-request-email',
-  imports: [ReactiveFormsModule, InputText, Button, FloatLabel, Panel],
-  templateUrl: './auth-request-email.component.html',
-  styleUrl: './auth-request-email.component.css',
+  selector: 'app-request-email',
+  imports: [ReactiveFormsModule, Message],
+  templateUrl: './request-email.component.html',
+  styleUrl: './request-email.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'tw:m-auto',
+    class:
+      'tw:flex tw:items-center tw:justify-center tw:flex-1 tw:w-full tw:px-4 tw:py-8',
   },
 })
-export class AuthRequestEmailComponent {
+export class RequestEmailComponent {
   private userStore = inject(UserStore);
+
+  isLoading = computed(() => this.userStore.loginMail.state() === 'sent');
+
   errorMessage = computed(() => {
-    const loginMailState = this.userStore.loginMail.state();
-    switch (loginMailState) {
+    const state = this.userStore.loginMail.state();
+    switch (state) {
       case 'error':
-        return 'Error while sending the mail. Please check your mail and try again.';
+        return 'Error while sending the mail. Please check your email and try again.';
       case 'forbidden':
-        return 'The given email is not allowed. Please contact the admin for an invitation.';
+        return 'This email is not allowed. Please contact the admin for an invitation.';
       default:
         return undefined;
     }

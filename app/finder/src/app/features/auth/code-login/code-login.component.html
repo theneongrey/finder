@@ -1,6 +1,10 @@
-<form [formGroup]="form" (ngSubmit)="verifyCode()" (keydown.enter)="verifyCode()">
+<form
+  [formGroup]="form"
+  (ngSubmit)="verifyCode()"
+  (keydown.enter)="verifyCode()"
+>
   <p-panel
-    class="main-bg-content tw:w-80"
+    class="tw:w-80"
     header="Please enter the login code sent to you by e-mail"
   >
     <p-inputOtp
@@ -13,10 +17,7 @@
       [integerOnly]="true"
       [length]="6"
     />
-    <p-button
-      class="tw:ml-auto tw:mr-0"
-      type="submit"
-      [disabled]="form.invalid"
+    <p-button class="tw:ml-auto tw:mr-0" type="submit" [disabled]="form.invalid"
       >Verify code</p-button
     >
   </p-panel>

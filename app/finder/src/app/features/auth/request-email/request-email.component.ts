@@ -14,10 +14,15 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/message';
+import { Panel } from 'primeng/panel';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
 
 @Component({
   selector: 'app-request-email',
-  imports: [ReactiveFormsModule, Message],
+  imports: [ReactiveFormsModule, Message, Panel, Button, InputText, InputGroup, InputGroupAddon],
   templateUrl: './request-email.component.html',
   styleUrl: './request-email.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

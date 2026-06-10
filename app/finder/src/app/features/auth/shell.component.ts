@@ -8,10 +8,17 @@ import {
 import { UserStore } from '../../common/data/user.store';
 import { Router, RouterOutlet } from '@angular/router';
 import { BackgroundAnimationComponent } from '../../common/ui/components/background-animation/background-animation.component';
+import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
+import { MaxHeightMinusHeaderDirective } from '../../common/ui/directives/max-height-minus-header.directive';
 
 @Component({
   selector: 'app-auth-shell',
-  imports: [RouterOutlet, BackgroundAnimationComponent],
+  imports: [
+    RouterOutlet,
+    BackgroundAnimationComponent,
+    TitleBarComponent,
+    MaxHeightMinusHeaderDirective,
+  ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

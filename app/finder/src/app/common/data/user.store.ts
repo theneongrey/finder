@@ -195,7 +195,7 @@ export const UserStore = signalStore(
             return store.userService.logout().pipe(
               tapResponse({
                 next: () => {
-                  /* no action */
+                  patchState(store, { user: undefined });
                 },
                 error: (error) => {
                   store.loggerService.error(
@@ -204,7 +204,6 @@ export const UserStore = signalStore(
                   );
                 },
                 finalize: () => {
-                  patchState(store, { user: undefined });
                   location.reload();
                 },
               }),

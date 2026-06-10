@@ -16,6 +16,6 @@ export class LogoutComponent {
     const router = inject(Router);
 
     this.userStore.logout();
-    router.navigate(['/']);
+    void router.navigate(['/']);
   }
 }

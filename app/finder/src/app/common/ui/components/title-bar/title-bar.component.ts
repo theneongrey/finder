@@ -21,6 +21,7 @@ export class TitleBarComponent {
   user = this.userStore.user;
   title = this.titleService.title;
   backRoute = this.titleService.backRoute;
+  isHidden = this.titleService.isHidden;
 
   items: MenuItem[] = [
     {

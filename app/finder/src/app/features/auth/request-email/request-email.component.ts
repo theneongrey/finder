@@ -19,10 +19,19 @@ import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { TitleService } from '../../../common/services/title.service';
 
 @Component({
   selector: 'app-request-email',
-  imports: [ReactiveFormsModule, Message, Panel, Button, InputText, InputGroup, InputGroupAddon],
+  imports: [
+    ReactiveFormsModule,
+    Message,
+    Panel,
+    Button,
+    InputText,
+    InputGroup,
+    InputGroupAddon,
+  ],
   templateUrl: './request-email.component.html',
   styleUrl: './request-email.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,6 +63,10 @@ export class RequestEmailComponent {
 
   constructor() {
     const router = inject(Router);
+    const titleService = inject(TitleService);
+
+    titleService.setTitle('');
+    titleService.setBackroute('/');
 
     effect(() => {
       if (

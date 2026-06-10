@@ -13,7 +13,10 @@ export class TitleService {
   private _ = this.router.events
     .pipe(
       filter((e): e is NavigationStart => e instanceof NavigationStart),
-      tap(() => this.#backRoute.set(undefined)),
+      tap(() => {
+        this.#backRoute.set(undefined);
+        this.#isHidden.set(false);
+      }),
     )
     .subscribe();
 
@@ -21,6 +24,8 @@ export class TitleService {
   backRoute = this.#backRoute.asReadonly();
   #title = signal<string>('Finder');
   title = this.#title.asReadonly();
+  #isHidden = signal<boolean>(false);
+  isHidden = this.#isHidden.asReadonly();
 
   setBackroute(backRoute: string) {
     this.#backRoute.set(backRoute);
@@ -28,5 +33,9 @@ export class TitleService {
 
   setTitle(title: string) {
     this.#title.set(title);
+  }
+
+  hide() {
+    this.#isHidden.set(true);
   }
 }

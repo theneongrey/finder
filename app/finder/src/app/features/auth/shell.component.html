@@ -1,5 +1,9 @@
 <app-background-animation>
-  <div class="main-bg-content tw:flex tw:w-full tw:h-full">
+  <app-title-bar class="tw:sticky tw:top-0 tw:z-10" />
+  <main
+    fMaxHeightMinusHeader
+    class="main-bg-content tw:flex tw:w-full tw:h-full"
+  >
     <router-outlet />
-  </div>
+  </main>
 </app-background-animation>

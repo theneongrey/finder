@@ -6,5 +6,24 @@
     "email": "Correo electrónico",
     "language": "Idioma",
     "save": "Guardar"
+  },
+  "auth": {
+    "login": {
+      "loggingIn": "Iniciando sesión"
+    },
+    "requestEmail": {
+      "title": "Iniciar sesión",
+      "subtitle": "Introduce tu dirección de correo electrónico para recibir un código de acceso.",
+      "email": "Correo electrónico",
+      "requestCode": "Solicitar código",
+      "errorSending": "Error al enviar el correo. Por favor, comprueba tu correo electrónico e inténtalo de nuevo.",
+      "errorForbidden": "Este correo electrónico no está permitido. Por favor, contacta con el administrador para una invitación."
+    },
+    "codeLogin": {
+      "title": "Verificar código",
+      "subtitle": "Introduce el código de acceso enviado a tu correo electrónico.",
+      "code": "Código de acceso",
+      "verify": "Verificar código"
+    }
   }
 }

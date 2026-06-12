@@ -20,6 +20,7 @@ import { InputText } from 'primeng/inputtext';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { TitleService } from '../../../common/services/title.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-request-email',
@@ -31,6 +32,7 @@ import { TitleService } from '../../../common/services/title.service';
     InputText,
     InputGroup,
     InputGroupAddon,
+    TranslatePipe,
   ],
   templateUrl: './request-email.component.html',
   styleUrl: './request-email.component.css',
@@ -42,16 +44,24 @@ import { TitleService } from '../../../common/services/title.service';
 })
 export class RequestEmailComponent {
   private userStore = inject(UserStore);
+  private translateService = inject(TranslateService);
 
   isLoading = computed(() => this.userStore.loginMail.state() === 'sent');
+
+  private errorSendingMessage = this.translateService.translate(
+    'auth.requestEmail.errorSending',
+  );
+  private errorForbiddenMessage = this.translateService.translate(
+    'auth.requestEmail.errorForbidden',
+  );
 
   errorMessage = computed(() => {
     const state = this.userStore.loginMail.state();
     switch (state) {
       case 'error':
-        return 'Error while sending the mail. Please check your email and try again.';
+        return this.errorSendingMessage();
       case 'forbidden':
-        return 'This email is not allowed. Please contact the admin for an invitation.';
+        return this.errorForbiddenMessage();
       default:
         return undefined;
     }

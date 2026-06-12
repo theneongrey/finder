@@ -7,12 +7,12 @@
     <ng-template #header>
       <div class="tw:flex tw:flex-col tw:gap-1">
         <span class="tw:text-2xl tw:font-bold tw:text-on-surface tw:mx-auto"
-          >Sign In</span
+          >{{ 'auth.requestEmail.title' | translate }}</span
         >
         <span
           class="tw:text-sm tw:text-on-surface-variant tw:mx-auto tw:text-center tw:mt-2"
         >
-          Enter your email address to receive a login code.
+          {{ 'auth.requestEmail.subtitle' | translate }}
         </span>
       </div>
     </ng-template>
@@ -23,7 +23,7 @@
           class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
           for="email"
         >
-          Email Address
+          {{ 'auth.requestEmail.email' | translate }}
         </label>
         <p-inputgroup>
           <p-inputgroup-addon>
@@ -46,7 +46,7 @@
       <p-button
         class="tw:mt-2"
         type="submit"
-        label="Request Code"
+        [label]="'auth.requestEmail.requestCode' | translate"
         icon="pi pi-arrow-right"
         iconPos="right"
         [loading]="isLoading()"

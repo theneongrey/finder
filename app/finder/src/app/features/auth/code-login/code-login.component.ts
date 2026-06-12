@@ -17,10 +17,11 @@ import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';
 import { LoggerService } from '../../../common/services/logger.service';
 import { TitleService } from '../../../common/services/title.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule, InputOtp, Panel, Button],
+  imports: [ReactiveFormsModule, InputOtp, Panel, Button, TranslatePipe],
   templateUrl: './code-login.component.html',
   styleUrl: './code-login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

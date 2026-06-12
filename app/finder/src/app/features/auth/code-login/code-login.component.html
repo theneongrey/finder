@@ -8,12 +8,12 @@
     <ng-template #header>
       <div class="tw:flex tw:flex-col tw:gap-1">
         <span class="tw:text-2xl tw:font-bold tw:text-on-surface tw:mx-auto"
-          >Verify Code</span
+          >{{ 'auth.codeLogin.title' | translate }}</span
         >
         <span
           class="tw:text-sm tw:text-on-surface-variant tw:mx-auto tw:text-center tw:mt-2"
         >
-          Enter the login code sent to your email address.
+          {{ 'auth.codeLogin.subtitle' | translate }}
         </span>
       </div>
     </ng-template>
@@ -24,7 +24,7 @@
           class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
           for="code"
         >
-          Login Code
+          {{ 'auth.codeLogin.code' | translate }}
         </label>
         <p-inputOtp
           id="code"
@@ -40,7 +40,7 @@
       <p-button
         class="tw:mt-2"
         type="submit"
-        label="Verify Code"
+        [label]="'auth.codeLogin.verify' | translate"
         icon="pi pi-check"
         iconPos="right"
         [disabled]="form.invalid"

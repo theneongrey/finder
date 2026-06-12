@@ -10,9 +10,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth-login',
-  imports: [],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  template: '',
+  styles: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'tw:m-auto',

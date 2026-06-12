@@ -6,5 +6,24 @@
     "email": "Email Address",
     "language": "Language",
     "save": "Save"
+  },
+  "auth": {
+    "login": {
+      "loggingIn": "Logging in"
+    },
+    "requestEmail": {
+      "title": "Sign In",
+      "subtitle": "Enter your email address to receive a login code.",
+      "email": "Email Address",
+      "requestCode": "Request Code",
+      "errorSending": "Error while sending the mail. Please check your email and try again.",
+      "errorForbidden": "This email is not allowed. Please contact the admin for an invitation."
+    },
+    "codeLogin": {
+      "title": "Verify Code",
+      "subtitle": "Enter the login code sent to your email address.",
+      "code": "Login Code",
+      "verify": "Verify Code"
+    }
   }
 }

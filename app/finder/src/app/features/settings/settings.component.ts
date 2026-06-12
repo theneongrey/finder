@@ -25,6 +25,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   getStoredLanguage,
   LANGUAGE_STORAGE_KEY,
+  SUPPORTED_LANGUAGES,
   SupportedLanguage,
 } from '../../common/i18n/languages';
 
@@ -79,7 +80,12 @@ export class SettingsComponent {
     effect(() => {
       const user = this.user();
       if (user) {
-        this.form.patchValue({ name: user.name, email: user.email });
+        const language = (
+          SUPPORTED_LANGUAGES as readonly string[]
+        ).includes(user.language)
+          ? (user.language as SupportedLanguage)
+          : getStoredLanguage();
+        this.form.patchValue({ name: user.name, email: user.email, language });
       }
     });
 
@@ -95,7 +101,10 @@ export class SettingsComponent {
 
   save() {
     if (this.form.valid) {
-      this.userStore.updateName(this.form.controls.name.value ?? '');
+      this.userStore.updateProfile({
+        name: this.form.controls.name.value ?? '',
+        language: this.form.controls.language.value ?? getStoredLanguage(),
+      });
     }
   }
 }

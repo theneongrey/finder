@@ -17,6 +17,7 @@ public class Person : BaseEntity
     public string? Picture { get; set; }
     public bool HasLoggedIn { get; set; }
     public required Role Role { get; set; }
+    public string Language { get; set; } = "en";
 
     public List<Permission.Entities.Permission> Permissions { get; set; } = [];
 }

@@ -90,7 +90,7 @@ Thin wrapper around MailKit. Builds the HTML body from `LoginOptions` templates 
 Bound from `appsettings.json`. `AuthToken` is a development escape hatch: when set, every login request uses the same static token and the generated code is printed to stdout, bypassing the email step entirely.
 
 ### `AuthApi` (`Api/AuthApi.cs`)
-Minimal API endpoint registrations. All endpoints are public except `POST /api/auth/name`, which requires an authenticated session (`RequireAuthorization()`).
+Minimal API endpoint registrations. All endpoints in this file are public — none require an authenticated session. Profile management (display name, language) lives in the `User` feature (`PUT /api/user`, `RequireAuthorization()`).
 
 ---
 

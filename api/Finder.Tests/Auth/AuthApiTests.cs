@@ -40,31 +40,6 @@ public class AuthApiTests : IClassFixture<FinderApiFactory>
         Assert.Equal(user.Email, json["email"]!.GetValue<string>());
     }
 
-    // --- POST /api/auth/name ---
-
-    [Fact]
-    public async Task SetName_WhenAuthenticated_ReturnsUpdatedPerson()
-    {
-        var user = await _factory.SeedUser();
-        using var client = _factory.CreateAuthenticatedClient(user.Id);
-
-        var response = await client.PostAsJsonAsync("/api/auth/name", new { name = "Alice" });
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
-        Assert.Equal("Alice", json["name"]!.GetValue<string>());
-    }
-
-    [Fact]
-    public async Task SetName_WhenUnauthenticated_Returns401()
-    {
-        using var client = _factory.CreateClient();
-
-        var response = await client.PostAsJsonAsync("/api/auth/name", new { name = "Alice" });
-
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
     // --- POST /api/auth/logout ---
 
     [Fact]

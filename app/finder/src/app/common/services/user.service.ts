@@ -46,10 +46,11 @@ export class UserService {
     });
   }
 
-  updateName(name: string) {
-    this.loggerService.debug('[User service] update name');
-    return this.httpClient.post<User>(`${this.baseUrl}/api/auth/name`, {
+  updateProfile(name: string, language: string) {
+    this.loggerService.debug('[User service] update profile');
+    return this.httpClient.put<User>(`${this.baseUrl}/api/user`, {
       name,
+      language,
     });
   }
 

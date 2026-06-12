@@ -26,7 +26,14 @@ No project permission required — these are public or require only a valid sess
 | POST | `/api/auth/codeLogin` | None | Log in via one-time code |
 | GET | `/api/auth/who` | None | Return the current user (empty if not logged in) |
 | POST | `/api/auth/logout` | None | Log out |
-| POST | `/api/auth/name` | Authenticated | Set the current user's display name |
+
+---
+
+## User Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| PUT | `/api/user` | Authenticated | Update the current user's display name and language |
 
 ---
 

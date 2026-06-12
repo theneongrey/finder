@@ -7,6 +7,8 @@ using Finder.Business.Permission.Setup;
 using Finder.Business.Project.Api;
 using Finder.Business.Project.Setup;
 using Finder.Business.Shared.Services;
+using Finder.Business.User.Api;
+using Finder.Business.User.Setup;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +36,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddAuthServices(builder.Configuration);
 builder.Services.AddProjectServices();
 builder.Services.AddPermissionServices(builder.Configuration);
+builder.Services.AddUserServices();
 
 var app = builder.Build();
 
@@ -48,6 +51,7 @@ app.UseAuthorization();
 app.WithAuthApi();
 app.WithProjectApi();
 app.WithPermissionApi();
+app.WithUserApi();
 
 if (app.Environment.IsDevelopment())
 {

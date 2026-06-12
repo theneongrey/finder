@@ -169,17 +169,18 @@ export const UserStore = signalStore(
         ),
       ),
 
-      updateName: rxMethod<string>(
+      updateProfile: rxMethod<{ name: string; language: string }>(
         pipe(
-          distinctUntilChanged(),
-          filter((name) => !!store.user()?.isAuthenticated && !!name),
-          switchMap((name) => {
-            return store.userService.updateName(name).pipe(
+          filter(
+            ({ name }) => !!store.user()?.isAuthenticated && !!name,
+          ),
+          switchMap(({ name, language }) => {
+            return store.userService.updateProfile(name, language).pipe(
               tapResponse({
                 next: (user) => patchState(store, { user }),
                 error: (error) => {
                   store.loggerService.error(
-                    '[UserStore] Error while updating the name',
+                    '[UserStore] Error while updating the profile',
                     error,
                   );
                 },

@@ -42,25 +42,6 @@ public class UserService
         return _cachedUser;
     }
 
-    public async Task<Result<Person?>> SetName(string name)
-    {
-        var userId = GetUserId();
-        if (!userId.HasValue)
-        {
-            return Result<Person?>.Fail();
-        }
-        
-        var person = await _dbContext.Persons.SingleOrDefaultAsync(p => p.Id == userId);
-        if (person == null)
-        {
-            return Result<Person?>.Fail();
-        }
-        
-        person.Name = name;
-        await _dbContext.SaveChangesAsync();
-        return Result<Person?>.Success(person);
-    }
-    
     public async Task<Result<Person>> GetOrCreatePersonByEmail(string email, bool checkAllowListOnly, bool inviteAdminOnly)
     {
         var person = await _dbContext.Persons.SingleOrDefaultAsync(p => p.Email == email);

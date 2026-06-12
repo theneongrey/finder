@@ -1,7 +1,7 @@
 using Finder.Business.Auth.Api.Requests;
-using Finder.Business.Auth.Api.Responses;
 using Finder.Business.Auth.Services;
 using Finder.Business.Shared.Services;
+using Finder.Business.User.Api.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finder.Business.Auth.Api;
@@ -48,18 +48,7 @@ public static class AuthApi
 
             return Results.Ok(result.Payload!.ToPersonResponse(true));
         });
-        
-        app.MapPost("/api/auth/name", async ([FromBody] SetNameRequest request, UserService userService) =>
-        {
-            var result = await userService.SetName(request.Name);
-            if (!result.IsSuccess)
-            {
-                return Results.NotFound();
-            }
 
-            return Results.Ok(result.Payload!.ToPersonResponse(true));
-        }).RequireAuthorization();
-        
         app.MapPost("/api/auth/logout", async (LoginService loginService) =>
         {
             await loginService.Logout();

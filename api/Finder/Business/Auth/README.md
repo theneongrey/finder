@@ -41,7 +41,7 @@ sequenceDiagram
 ### Steps in detail
 
 1. **Request** — `POST /api/auth/requestLoginMail`  
-   The client sends an email address and an optional `redirectUrl`. The API normalises the email (trim + lowercase), then calls `UserService.GetOrCreatePersonByEmail`. If registration is gated (`AllowListOnly: true`), the email must exist in the `AllowedEmails` table.
+   The client sends an email address and an optional `redirectUrl`. The API normalises the email (trim + lowercase), then calls `UserService.GetOrCreatePersonByEmail` to find or create the `Person`.
 
 2. **Token generation** — `LoginService.CreateLoginTokenForPerson`  
    Each `Person` has at most one `LoginToken` row (one-to-one). The method upserts that row with:
@@ -98,7 +98,6 @@ Minimal API endpoint registrations. All endpoints in this file are public — no
 
 | Key | Description |
 |---|---|
-| `Login:AllowListOnly` | If `true`, only emails in `AllowedEmails` can create new accounts. |
 | `Login:LoginLink` | URL template. Must contain `{{token}}` and `{{redirecturl}}`. |
 | `Login:AuthToken` | Dev only. Fixes the magic-link token and skips email. |
 | `Login:Subject` / `Login:Text` | Email content for returning users. |

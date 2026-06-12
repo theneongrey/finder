@@ -42,14 +42,13 @@ public class UserService
         return _cachedUser;
     }
 
-    public async Task<Result<Person>> GetOrCreatePersonByEmail(string email, bool checkAllowListOnly, bool inviteAdminOnly)
+    public async Task<Result<Person>> GetOrCreatePersonByEmail(string email, bool inviteAdminOnly)
     {
         var person = await _dbContext.Persons.SingleOrDefaultAsync(p => p.Email == email);
 
         if (person is null)
         {
-            if (checkAllowListOnly && !_dbContext.AllowedEmails.Any(entry => entry.Email == email)
-                || inviteAdminOnly && (await GetUser()).Payload?.Role != Role.Admin)
+            if (inviteAdminOnly && (await GetUser()).Payload?.Role != Role.Admin)
             {
                 return Result<Person>.Fail(403);
             }

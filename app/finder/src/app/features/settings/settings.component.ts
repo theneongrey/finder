@@ -83,7 +83,7 @@ export class SettingsComponent {
     const previousUrl =
       router.getCurrentNavigation()?.previousNavigation?.finalUrl;
     titleService.setBackroute(
-      previousUrl ? router.serializeUrl(previousUrl) : '/',
+      previousUrl ? router.serializeUrl(previousUrl) : '/project',
     );
 
     effect(() => {

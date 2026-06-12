@@ -5,7 +5,9 @@
     "namePlaceholder": "Dein Name",
     "email": "E-Mail-Adresse",
     "language": "Sprache",
-    "save": "Speichern"
+    "save": "Speichern",
+    "saveSuccess": "Dein Profil wurde aktualisiert.",
+    "saveError": "Dein Profil konnte nicht aktualisiert werden. Bitte versuche es erneut."
   },
   "auth": {
     "login": {

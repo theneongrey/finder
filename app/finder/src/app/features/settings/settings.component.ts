@@ -3,9 +3,12 @@ import {
   Component,
   effect,
   inject,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Events } from '@ngrx/signals/events';
 import { UserStore } from '../../common/data/user.store';
+import { profileUpdateFinished } from '../../common/data/user-profile.feature';
 import {
   FormControl,
   FormGroup,
@@ -18,13 +21,14 @@ import { InputText } from 'primeng/inputtext';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { Select } from 'primeng/select';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
 import { UserAvatarComponent } from '../../common/ui/components/user-avatar/user-avatar.component';
 import { TitleService } from '../../common/services/title.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   getStoredLanguage,
-  LANGUAGE_STORAGE_KEY,
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
 } from '../../common/i18n/languages';
@@ -38,10 +42,12 @@ import {
     InputGroup,
     InputGroupAddon,
     Select,
+    Toast,
     TitleBarComponent,
     UserAvatarComponent,
     TranslatePipe,
   ],
+  providers: [MessageService],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,8 +55,11 @@ import {
 export class SettingsComponent {
   private userStore = inject(UserStore);
   private translateService = inject(TranslateService);
+  private events = inject(Events);
+  private messageService = inject(MessageService);
 
   user = this.userStore.user;
+  isSaving = signal(false);
 
   languages = [
     { label: 'English', value: 'en' },
@@ -80,9 +89,9 @@ export class SettingsComponent {
     effect(() => {
       const user = this.user();
       if (user) {
-        const language = (
-          SUPPORTED_LANGUAGES as readonly string[]
-        ).includes(user.language)
+        const language = (SUPPORTED_LANGUAGES as readonly string[]).includes(
+          user.language,
+        )
           ? (user.language as SupportedLanguage)
           : getStoredLanguage();
         this.form.patchValue({ name: user.name, email: user.email, language });
@@ -94,13 +103,26 @@ export class SettingsComponent {
       .subscribe((language) => {
         if (language) {
           this.translateService.use(language);
-          localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
         }
+      });
+
+    this.events
+      .on(profileUpdateFinished)
+      .pipe(takeUntilDestroyed())
+      .subscribe(({ payload }) => {
+        this.isSaving.set(false);
+        this.messageService.add({
+          severity: payload.success ? 'success' : 'error',
+          detail: this.translateService.instant(
+            payload.success ? 'settings.saveSuccess' : 'settings.saveError',
+          ),
+        });
       });
   }
 
   save() {
     if (this.form.valid) {
+      this.isSaving.set(true);
       this.userStore.updateProfile({
         name: this.form.controls.name.value ?? '',
         language: this.form.controls.language.value ?? getStoredLanguage(),

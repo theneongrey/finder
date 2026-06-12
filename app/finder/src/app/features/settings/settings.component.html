@@ -1,4 +1,8 @@
 <div class="tw:flex tw:flex-col tw:h-full tw:w-full">
+  <p-toast
+    [breakpoints]="{ '920px': { width: '250px' } }"
+    position="top-center"
+  />
   <app-title-bar class="tw:sticky tw:top-0 tw:z-10" />
 
   <main
@@ -6,9 +10,7 @@
   >
     <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
       @if (user(); as currentUser) {
-        <div
-          class="tw:rounded-full tw:border-4 tw:border-white tw:shadow-md"
-        >
+        <div class="tw:rounded-full tw:border-4 tw:border-white tw:shadow-md">
           <app-user-avatar [user]="currentUser" size="xlarge" />
         </div>
       }
@@ -24,7 +26,7 @@
           class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
           for="name"
         >
-          {{ 'settings.name' | translate }}
+          {{ "settings.name" | translate }}
         </label>
         <p-inputgroup>
           <p-inputgroup-addon>
@@ -46,7 +48,7 @@
           class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
           for="email"
         >
-          {{ 'settings.email' | translate }}
+          {{ "settings.email" | translate }}
         </label>
         <p-inputgroup>
           <p-inputgroup-addon>
@@ -64,7 +66,7 @@
           class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
           for="language"
         >
-          {{ 'settings.language' | translate }}
+          {{ "settings.language" | translate }}
         </label>
         <p-select
           id="language"
@@ -82,7 +84,8 @@
         [label]="'settings.save' | translate"
         icon="pi pi-check"
         iconPos="right"
-        [disabled]="form.invalid"
+        [disabled]="form.invalid || isSaving()"
+        [loading]="isSaving()"
         [fluid]="true"
       />
     </form>

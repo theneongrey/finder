@@ -5,7 +5,9 @@
     "namePlaceholder": "Your name",
     "email": "Email Address",
     "language": "Language",
-    "save": "Save"
+    "save": "Save",
+    "saveSuccess": "Your profile has been updated.",
+    "saveError": "Your profile could not be updated. Please try again."
   },
   "auth": {
     "login": {

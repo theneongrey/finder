@@ -2,23 +2,50 @@
   [formGroup]="form"
   (ngSubmit)="verifyCode()"
   (keydown.enter)="verifyCode()"
+  class="tw:w-full tw:max-w-md"
 >
-  <p-panel
-    class="tw:w-80"
-    header="Please enter the login code sent to you by e-mail"
-  >
-    <p-inputOtp
-      id="code"
-      class="tw:mx-auto tw:mb-5 tw:mt-5"
-      aria-label="code"
-      [class.invlid]="form.get('code')!.invalid && form.get('code')!.dirty"
-      formControlName="code"
-      autofocus
-      [integerOnly]="true"
-      [length]="6"
-    />
-    <p-button class="tw:ml-auto tw:mr-0" type="submit" [disabled]="form.invalid"
-      >Verify code</p-button
-    >
+  <p-panel>
+    <ng-template #header>
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <span class="tw:text-2xl tw:font-bold tw:text-on-surface tw:mx-auto"
+          >Verify Code</span
+        >
+        <span
+          class="tw:text-sm tw:text-on-surface-variant tw:mx-auto tw:text-center tw:mt-2"
+        >
+          Enter the login code sent to your email address.
+        </span>
+      </div>
+    </ng-template>
+
+    <div class="tw:flex tw:flex-col tw:gap-4 tw:mt-6">
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label
+          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          for="code"
+        >
+          Login Code
+        </label>
+        <p-inputOtp
+          id="code"
+          class="tw:mx-auto"
+          aria-label="code"
+          formControlName="code"
+          autofocus
+          [integerOnly]="true"
+          [length]="6"
+        />
+      </div>
+
+      <p-button
+        class="tw:mt-2"
+        type="submit"
+        label="Verify Code"
+        icon="pi pi-check"
+        iconPos="right"
+        [disabled]="form.invalid"
+        [fluid]="true"
+      />
+    </div>
   </p-panel>
 </form>

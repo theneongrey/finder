@@ -16,6 +16,7 @@ import { InputOtp } from 'primeng/inputotp';
 import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';
 import { LoggerService } from '../../../common/services/logger.service';
+import { TitleService } from '../../../common/services/title.service';
 
 @Component({
   selector: 'app-auth-code-login',
@@ -38,6 +39,11 @@ export class CodeLoginComponent {
   });
 
   constructor() {
+    const titleService = inject(TitleService);
+
+    titleService.setTitle('');
+    titleService.setBackroute('/project');
+
     if (!this.userStore.loginMail.email()) {
       this.loggerService.log('redirect: no email stored');
       void this.router.navigate(['/']);

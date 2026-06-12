@@ -37,7 +37,7 @@ export class AuthShellComponent {
 
       if (user.isAuthenticated) {
         if (!user.name) {
-          router.navigate(['/settings/set-name']);
+          router.navigate(['/settings']);
         } else {
           untracked(() => {
             const redirectUrl = this.userStore.redirectUrl();

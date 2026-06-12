@@ -29,5 +29,10 @@ export class TitleBarComponent {
       icon: 'pi pi-sign-out',
       routerLink: ['/auth/logout'],
     },
+    {
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      routerLink: ['/settings'],
+    },
   ];
 }

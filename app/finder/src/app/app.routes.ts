@@ -19,6 +19,14 @@ export const routes: Routes = [
     redirectTo: 'project',
   },
   {
+    path: 'auth',
+    loadComponent: () =>
+      import('./features/auth/shell.component').then(
+        (m) => m.AuthShellComponent,
+      ),
+    children: authRoutes,
+  },
+  {
     canActivate: [userAuthentication()],
     path: 'project',
     loadComponent: () =>
@@ -30,22 +38,9 @@ export const routes: Routes = [
   {
     canActivate: [userAuthentication()],
     path: 'settings',
-    children: [
-      {
-        path: 'set-name',
-        loadComponent: () =>
-          import('./features/settings/set-name/set-name.component').then(
-            (m) => m.SetNameComponent,
-          ),
-      },
-    ],
-  },
-  {
-    path: 'auth',
     loadComponent: () =>
-      import('./features/auth/shell.component').then(
-        (m) => m.AuthShellComponent,
+      import('./features/settings/settings.component').then(
+        (m) => m.SettingsComponent,
       ),
-    children: authRoutes,
   },
 ];

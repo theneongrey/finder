@@ -1,0 +1,21 @@
+<form [formRoot]="myForm" (submit)="updateName()" class="tw:flex tw:w-full tw:h-full">
+  <p-panel class="tw:m-auto" header="Please enter your name">
+    <div class="tw:flex tw:flex-col tw:gap-4 tw:mt-6">
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label class="tw:text-sm tw:font-semibold tw:text-on-surface-variant" for="name">
+          Name
+        </label>
+        <input pInputText id="name" [formField]="myForm.name" autofocus />
+      </div>
+      <p-button
+        class="tw:mt-2"
+        type="submit"
+        label="Save Name"
+        icon="pi pi-check"
+        iconPos="right"
+        [disabled]="myForm().invalid()"
+        [fluid]="true"
+      />
+    </div>
+  </p-panel>
+</form>

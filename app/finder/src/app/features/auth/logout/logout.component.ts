@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-auth-logout',
   imports: [],
-  templateUrl: './logout.component.html',
-  styleUrl: './logout.component.css',
+  template: '',
+  styles: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogoutComponent {

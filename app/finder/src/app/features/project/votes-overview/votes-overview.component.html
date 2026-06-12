@@ -15,7 +15,7 @@
             ></span>
             <span
               class="tw:text-xs tw:font-semibold tw:text-primary tw:uppercase tw:tracking-wider"
-              >Active</span
+              >{{ 'project.votesOverview.active' | translate }}</span
             >
           </div>
         </div>
@@ -29,11 +29,11 @@
           </a>
           <p class="tw:text-xl tw:font-semibold tw:text-primary tw:mt-1">
             {{ votedCount() }}
-            <span class="tw:text-gray-500 tw:text-base tw:font-normal"
-              >of {{ totalCount() }}</span
-            >
+            <span class="tw:text-gray-500 tw:text-base tw:font-normal">{{
+              'project.votesOverview.of' | translate: { total: totalCount() }
+            }}</span>
           </p>
-          <p class="label-sm">rated</p>
+          <p class="label-sm">{{ 'project.votesOverview.rated' | translate }}</p>
         </div>
       </div>
 
@@ -41,10 +41,10 @@
       <p-progressBar [value]="progressPercent()" />
 
       <div class="tw:mt-4 tw:flex tw:justify-between tw:items-center">
-        <p class="label-sm">Closes in 2 days</p>
+        <p class="label-sm">{{ 'project.votesOverview.closesIn' | translate }}</p>
         @if (hasOpenOptions()) {
           <p-button
-            label="Continue voting"
+            [label]="'project.votesOverview.continueVoting' | translate"
             icon="pi pi-arrow-right-arrow-left"
             [routerLink]="['/project/detail', id(), 'vote', topicId()]"
             size="small"
@@ -56,8 +56,8 @@
     <!-- Options Grid -->
     <div>
       <div class="tw:flex tw:justify-between tw:items-end tw:mb-3">
-        <h3>Candidates</h3>
-        <p class="label-sm">Sorted by popularity</p>
+        <h3>{{ 'project.votesOverview.candidates' | translate }}</h3>
+        <p class="label-sm">{{ 'project.votesOverview.sortedByPopularity' | translate }}</p>
       </div>
 
       <div class="tw:grid tw:grid-cols-1 tw:gap-4">
@@ -73,7 +73,7 @@
                   {{ option.text }}
                 </h4>
                 @if (hasMostVotes(option)) {
-                  <p-tag value="Most Votes" icon="pi pi-trophy" />
+                  <p-tag [value]="'project.votesOverview.mostVotes' | translate" icon="pi pi-trophy" />
                 }
               </div>
               <div
@@ -101,15 +101,16 @@
                 style="font-size: 13px"
               ></i>
               <span class="tw:text-xs tw:text-gray-500">
-                {{ getYesVotes(option).length }} of
-                {{ option.votes.length }} vote{{
-                  getYesVotes(option).length !== 1 ? "s" : ""
-                }}
+                {{ votesCountLabel(option) }}
               </span>
             </div>
 
             <p-button
-              [label]="option.choice ? 'Re-Vote' : 'Vote'"
+              [label]="
+                option.choice
+                  ? ('project.votesOverview.reVote' | translate)
+                  : ('project.common.vote' | translate)
+              "
               [icon]="option.choice ? 'pi pi-refresh' : 'pi pi-play'"
               [severity]="option.choice ? 'secondary' : 'primary'"
               [routerLink]="[
@@ -128,7 +129,7 @@
 
     <!-- Comments Section -->
     <div>
-      <h3 id="comments-section">Comments</h3>
+      <h3 id="comments-section">{{ 'project.votesOverview.comments' | translate }}</h3>
       <div
         class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:border tw:border-gray-100"
       >
@@ -157,14 +158,18 @@
         </div>
 
         <p-inputgroup>
-          <input pInputText type="text" placeholder="New comment..." />
+          <input
+            pInputText
+            type="text"
+            [placeholder]="'project.votesOverview.newComment' | translate"
+          />
           <p-button icon="pi pi-send" />
         </p-inputgroup>
       </div>
     </div>
   } @else {
     <div class="tw:flex tw:justify-center tw:items-center tw:h-32">
-      <p class="tw:text-gray-500">Loading...</p>
+      <p class="tw:text-gray-500">{{ 'project.votesOverview.loading' | translate }}</p>
     </div>
   }
 </div>

@@ -1,7 +1,7 @@
 <div class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:mx-4">
   <section class="tw:mb-5">
-    <h2>Projects</h2>
-    <p>These are your current projects</p>
+    <h2>{{ 'project.overview.title' | translate }}</h2>
+    <p>{{ 'project.overview.subtitle' | translate }}</p>
   </section>
   <div class="tw:grid tw:gap-4 tw:grid-cols-auto-fit tw:pb-8">
     @for (project of projects(); track project.id) {
@@ -11,8 +11,8 @@
       />
     }
     <app-add-card
-      cto="New project"
-      description="Start a collaborative project"
+      [cto]="'project.overview.addNew.cto' | translate"
+      [description]="'project.overview.addNew.description' | translate"
       (action)="navigateToAdd()"
     />
   </div>

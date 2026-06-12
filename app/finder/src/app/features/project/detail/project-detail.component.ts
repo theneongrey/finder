@@ -21,6 +21,7 @@ import { AvatarGroup } from 'primeng/avatargroup';
 import { Tooltip } from 'primeng/tooltip';
 import { ShareDialogComponent } from './share-dialog/share-dialog.component';
 import { ProjectRole } from '../_models/project-role.enum';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-project-detail',
@@ -35,6 +36,7 @@ import { ProjectRole } from '../_models/project-role.enum';
     AvatarGroup,
     Tooltip,
     ShareDialogComponent,
+    TranslatePipe,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-detail.component.html',
@@ -45,6 +47,7 @@ export class ProjectDetailComponent {
   private readonly titleService = inject(TitleService);
   private readonly projectStore = inject(ProjectStore);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly translateService = inject(TranslateService);
 
   id = input('');
   action = input('');
@@ -73,10 +76,12 @@ export class ProjectDetailComponent {
 
   showDeleteTopicDialog(id: string, title: string) {
     this.confirmationService.confirm({
-      header: 'Delete topic?',
-      message: `Are you sure that you want to delete topic "${title}?"`,
-      acceptLabel: 'Delete topic',
-      rejectLabel: 'Cancel',
+      header: this.translateService.instant('project.detail.deleteTopicConfirm.header'),
+      message: this.translateService.instant('project.detail.deleteTopicConfirm.message', {
+        name: title,
+      }),
+      acceptLabel: this.translateService.instant('project.detail.deleteTopicConfirm.accept'),
+      rejectLabel: this.translateService.instant('project.common.cancel'),
       accept: () => {
         this.projectStore.deleteTopic(id);
       },

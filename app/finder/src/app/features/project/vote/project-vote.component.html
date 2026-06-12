@@ -8,7 +8,10 @@
     </h2>
     @if (totalCount() > 0) {
       <span class="tw:text-sm tw:text-surface-500">
-        {{ votedCount() }} / {{ totalCount() }} voted
+        {{
+          'project.vote.votedProgress'
+            | translate: { voted: votedCount(), total: totalCount() }
+        }}
       </span>
       <div
         class="tw:w-24 tw:h-1.5 tw:bg-surface-200 tw:rounded-full tw:overflow-hidden"
@@ -22,14 +25,14 @@
       </div>
     }
     <p-button
-      label="Overview"
+      [label]="'project.vote.overview' | translate"
       icon="pi pi-list"
       [rounded]="true"
       size="small"
       (click)="navigateToOverview()"
     />
     <p class="tw:text-sm tw:text-surface-400">
-      Swipe right for Yes, left for No
+      {{ 'project.vote.swipeHint' | translate }}
     </p>
   </div>
 

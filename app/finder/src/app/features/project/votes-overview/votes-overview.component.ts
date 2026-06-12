@@ -17,6 +17,7 @@ import { InputText } from 'primeng/inputtext';
 import { TitleService } from '../../../common/services/title.service';
 import { RoutingService } from '../../../common/services/routing.service';
 import { OptionDetail } from '../_models/project-detail.model';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 interface Comment {
   author: string;
@@ -37,12 +38,14 @@ interface Comment {
     Button,
     InputGroup,
     InputText,
+    TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VotesOverviewComponent {
   private readonly projectStore = inject(ProjectStore);
   private readonly routingService = inject(RoutingService);
+  private readonly translateService = inject(TranslateService);
 
   currentUrl = this.routingService.currentUrl();
 
@@ -96,6 +99,7 @@ export class VotesOverviewComponent {
 
   constructor() {
     const titleService = inject(TitleService);
+    const title = this.translateService.translate('project.votesOverview.title');
 
     effect(() => {
       this.projectStore.getProject(this.id());
@@ -109,7 +113,7 @@ export class VotesOverviewComponent {
       const topic = this.topic();
       if (topic) {
         titleService.setBackroute('/project/detail/' + this.id());
-        titleService.setTitle('Voting overview');
+        titleService.setTitle(title());
       }
     });
   }
@@ -126,12 +130,12 @@ export class VotesOverviewComponent {
 
   voteLabel(choice: string | null): string {
     if (choice === '1') {
-      return 'Yes';
+      return this.translateService.instant('project.votesOverview.voteLabel.yes');
     }
     if (choice === '2') {
-      return 'No';
+      return this.translateService.instant('project.votesOverview.voteLabel.no');
     }
-    return 'Open';
+    return this.translateService.instant('project.votesOverview.voteLabel.open');
   }
 
   voteColorClass(choice: string | null): string {
@@ -155,5 +159,15 @@ export class VotesOverviewComponent {
       yesVoteCount > 0 &&
       yesVoteCount == this.getYesVotes(this.sortedOptions()[0]).length
     );
+  }
+
+  votesCountLabel(option: OptionDetail): string {
+    const yes = this.getYesVotes(option).length;
+    const total = option.votes.length;
+    const key =
+      yes === 1
+        ? 'project.votesOverview.votesCount'
+        : 'project.votesOverview.votesCountPlural';
+    return this.translateService.instant(key, { yes, total });
   }
 }

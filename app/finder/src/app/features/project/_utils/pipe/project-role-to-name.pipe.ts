@@ -1,22 +1,28 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { ProjectRole } from '../../_models/project-role.enum';
 
 @Pipe({
   name: 'projectRoleToName',
+  pure: false,
 })
 export class ProjectRoleToNamePipe implements PipeTransform {
-  transform(role: ProjectRole): unknown {
+  private readonly translateService = inject(TranslateService);
+
+  transform(role: ProjectRole): string {
+    this.translateService.currentLang();
+
     switch (role) {
       case ProjectRole.Voter:
-        return 'Voter';
+        return this.translateService.instant('project.roles.voter');
       case ProjectRole.Maintainer:
-        return 'Maintainer';
+        return this.translateService.instant('project.roles.maintainer');
       case ProjectRole.Owner:
-        return 'Owner';
+        return this.translateService.instant('project.roles.owner');
       case ProjectRole.Creator:
-        return 'Creator';
+        return this.translateService.instant('project.roles.creator');
     }
 
-    return 'Unknown';
+    return this.translateService.instant('project.roles.unknown');
   }
 }

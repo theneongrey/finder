@@ -10,14 +10,16 @@
     </div>
     <div class="tw:flex tw:flex-col tw:flex-1">
       <h3>{{ _topic.name }}</h3>
-      <p class="label-sm">Options: {{ _topic.optionCount }}</p>
+      <p class="label-sm">
+        {{ 'project.detail.item.options' | translate: { count: _topic.optionCount } }}
+      </p>
     </div>
     <p-button
       icon="pi pi-ellipsis-v"
       [text]="true"
       (click)="menu.toggle($event)"
     />
-    <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+    <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
   </div>
 
   <div class="p-fluid">
@@ -35,7 +37,11 @@
             ]
           : ['/project/detail', projectId(), 'votes-overview', _topic.id]
       "
-      [label]="_topic.nextOpenOptionId ? 'Vote' : 'Poll overview'"
+      [label]="
+        _topic.nextOpenOptionId
+          ? ('project.common.vote' | translate)
+          : ('project.detail.item.pollOverview' | translate)
+      "
     />
   </div>
 </app-side-color-card>

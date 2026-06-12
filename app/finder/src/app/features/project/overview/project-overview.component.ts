@@ -11,6 +11,7 @@ import { TitleService } from '../../../common/services/title.service';
 import { ProjectItemComponent } from './project-item/project-item.component';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-project-overview',
@@ -18,6 +19,7 @@ import { AddCardComponent } from '../../../common/ui/components/add-card/add-car
     ConfirmDialogModule,
     ProjectItemComponent,
     AddCardComponent,
+    TranslatePipe,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
@@ -31,6 +33,7 @@ export class ProjectOverviewComponent {
   private projectStore = inject(ProjectStore);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly router = inject(Router);
+  private readonly translateService = inject(TranslateService);
 
   projects = this.projectStore.projects;
 
@@ -45,10 +48,12 @@ export class ProjectOverviewComponent {
 
   deletionRequested(project: ProjectOverview) {
     this.confirmationService.confirm({
-      header: 'Delete project?',
-      message: `Are you sure that you want to delete project "${project.name}"?"`,
-      acceptLabel: 'Delete project',
-      rejectLabel: 'Cancel',
+      header: this.translateService.instant('project.overview.deleteConfirm.header'),
+      message: this.translateService.instant('project.overview.deleteConfirm.message', {
+        name: project.name,
+      }),
+      acceptLabel: this.translateService.instant('project.overview.deleteConfirm.accept'),
+      rejectLabel: this.translateService.instant('project.common.cancel'),
       accept: () => {
         this.deleteProject(project.id);
       },

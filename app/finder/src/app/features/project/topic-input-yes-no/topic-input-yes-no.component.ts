@@ -15,6 +15,7 @@ import { AddCardComponent } from '../../../common/ui/components/add-card/add-car
 import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
 import { ProjectStore } from '../_data/project.store';
 import { OptionType } from '../_models/project-detail.model';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 interface OptionEntry {
   text: string;
@@ -31,12 +32,14 @@ interface OptionEntry {
     Button,
     AddCardComponent,
     SideColorCardComponent,
+    TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopicInputYesNoComponent {
   private readonly projectStore = inject(ProjectStore);
   private readonly router = inject(Router);
+  private readonly translateService = inject(TranslateService);
 
   id = input<string>('');
 
@@ -45,7 +48,9 @@ export class TopicInputYesNoComponent {
 
   constructor() {
     const titleService = inject(TitleService);
-    titleService.setTitle('Create poll');
+
+    const title = this.translateService.translate('project.topicInput.yesNo.createPoll');
+    effect(() => titleService.setTitle(title()));
 
     effect(() => {
       const projectId = this.id();

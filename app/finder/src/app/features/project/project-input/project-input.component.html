@@ -1,36 +1,39 @@
 <form class="tw:mx-4 tw:flex tw:flex-col tw:gap-2 tw:h-full">
   <p class="tw:block tw:mb-2">
-    A project is a collection of things to decide, like a &quot;Birthday
-    party&quot;
+    {{ 'project.input.description' | translate }}
   </p>
   <div class="tw:mb-5 tw:mt-5">
-    <label for="name">Project name</label>
+    <label for="name">{{ 'project.input.name' | translate }}</label>
     <input
       pInputText
       id="name"
       name="name"
       class="tw:w-full"
       autocomplete="off"
-      placeholder="e.g. Birthday party"
+      [placeholder]="'project.input.namePlaceholder' | translate"
       [(ngModel)]="projectName"
     />
   </div>
   <div class="tw:mb-5 tw:mt-5">
-    <label for="description">Project description</label>
+    <label for="description">{{ 'project.input.descriptionLabel' | translate }}</label>
     <textarea
       pTextarea
       id="description"
       name="description"
       class="tw:w-full tw:h-30"
       autocomplete="off"
-      placeholder="e.g. this is a project about planning a birthday party. It includes things like date, location, gifts etc."
+      [placeholder]="'project.input.descriptionPlaceholder' | translate"
       [(ngModel)]="projectDescription"
     ></textarea>
   </div>
   <div class="tw:flex tw:gap-1 tw:mt-auto tw:mb-4 p-fluid">
     <p-button
       class="tw:flex-1"
-      [label]="mode() === 'add' ? 'Create project' : 'Update project'"
+      [label]="
+        mode() === 'add'
+          ? ('project.input.create' | translate)
+          : ('project.input.update' | translate)
+      "
       [icon]="mode() === 'add' ? 'pi pi-plus-circle' : 'pi pi-save'"
       (click)="submit()"
       [disabled]="!projectName()"

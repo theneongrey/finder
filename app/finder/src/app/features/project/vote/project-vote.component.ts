@@ -16,12 +16,13 @@ import { ProjectStore } from '../_data/project.store';
 import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { TitleService } from '../../../common/services/title.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-project-vote',
   templateUrl: './project-vote.component.html',
   styleUrl: './project-vote.component.css',
-  imports: [Button],
+  imports: [Button, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(window:mouseup)': 'onDragEnd()',

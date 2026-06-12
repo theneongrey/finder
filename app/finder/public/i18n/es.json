@@ -25,5 +25,122 @@
       "code": "Código de acceso",
       "verify": "Verificar código"
     }
+  },
+  "project": {
+    "common": {
+      "cancel": "Cancelar",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "vote": "Votar"
+    },
+    "roles": {
+      "unknown": "Desconocido",
+      "voter": "Votante",
+      "maintainer": "Mantenedor",
+      "owner": "Propietario",
+      "creator": "Creador"
+    },
+    "overview": {
+      "title": "Proyectos",
+      "subtitle": "Estos son tus proyectos actuales",
+      "addNew": {
+        "cto": "Nuevo proyecto",
+        "description": "Inicia un proyecto colaborativo"
+      },
+      "item": {
+        "by": "de {{name}}"
+      },
+      "deleteConfirm": {
+        "header": "¿Eliminar proyecto?",
+        "message": "¿Estás seguro de que quieres eliminar el proyecto \"{{name}}\"?",
+        "accept": "Eliminar proyecto"
+      }
+    },
+    "detail": {
+      "members": "Miembros",
+      "invite": "Invitar",
+      "noMembers": "Aún no hay otros miembros.",
+      "currentTopics": "Temas actuales",
+      "createNewTopic": "Crear nuevo tema",
+      "topicTypes": {
+        "appointment": "Cita",
+        "yesNo": "Sí/No",
+        "rating": "Valoración"
+      },
+      "deleteTopicConfirm": {
+        "header": "¿Eliminar tema?",
+        "message": "¿Estás seguro de que quieres eliminar el tema \"{{name}}\"?",
+        "accept": "Eliminar tema"
+      },
+      "item": {
+        "options": "Opciones: {{count}}",
+        "pollOverview": "Resumen de la encuesta"
+      }
+    },
+    "share": {
+      "title": "Compartir",
+      "email": "Correo electrónico",
+      "permission": "Permiso",
+      "share": "Compartir"
+    },
+    "input": {
+      "description": "Un proyecto es una colección de cosas que decidir, como una \"fiesta de cumpleaños\"",
+      "name": "Nombre del proyecto",
+      "namePlaceholder": "p. ej. fiesta de cumpleaños",
+      "descriptionLabel": "Descripción del proyecto",
+      "descriptionPlaceholder": "p. ej. este es un proyecto sobre la planificación de una fiesta de cumpleaños. Incluye cosas como fecha, lugar, regalos, etc.",
+      "create": "Crear proyecto",
+      "update": "Actualizar proyecto"
+    },
+    "topicInput": {
+      "yesNo": {
+        "question": "Tu pregunta",
+        "questionPlaceholder": "¿Qué color de sofá queda mejor?",
+        "answerOptions": "Opciones de respuesta",
+        "minOptions": "Mín. 1 opción",
+        "optionPlaceholder": "Opción {{number}}",
+        "urlPlaceholder": "Enlace opcional (URL)",
+        "addOption": "Añadir opción",
+        "createPoll": "Crear encuesta"
+      }
+    },
+    "vote": {
+      "votedProgress": "{{voted}} / {{total}} votados",
+      "overview": "Resumen",
+      "swipeHint": "Desliza a la derecha para Sí, a la izquierda para No"
+    },
+    "votesOverview": {
+      "title": "Resumen de votación",
+      "active": "Activo",
+      "of": "de {{total}}",
+      "rated": "valorado",
+      "closesIn": "Cierra en 2 días",
+      "continueVoting": "Continuar votando",
+      "candidates": "Candidatos",
+      "sortedByPopularity": "Ordenado por popularidad",
+      "mostVotes": "Más votos",
+      "voteLabel": {
+        "yes": "Sí",
+        "no": "No",
+        "open": "Abierto"
+      },
+      "reVote": "Volver a votar",
+      "votesCount": "{{yes}} de {{total}} voto",
+      "votesCountPlural": "{{yes}} de {{total}} votos",
+      "newComment": "Nuevo comentario...",
+      "loading": "Cargando...",
+      "comments": "Comentarios"
+    },
+    "timeAgo": {
+      "justNow": "justo ahora",
+      "minuteAgo": "hace {{count}} minuto",
+      "minutesAgo": "hace {{count}} minutos",
+      "hourAgo": "hace {{count}} hora",
+      "hoursAgo": "hace {{count}} horas",
+      "dayAgo": "hace {{count}} día",
+      "daysAgo": "hace {{count}} días",
+      "monthAgo": "hace {{count}} mes",
+      "monthsAgo": "hace {{count}} meses"
+    }
   }
 }

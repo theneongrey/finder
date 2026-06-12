@@ -1,21 +1,90 @@
-<form [formRoot]="myForm" (submit)="updateName()" class="tw:flex tw:w-full tw:h-full">
-  <p-panel class="tw:m-auto" header="Please enter your name">
-    <div class="tw:flex tw:flex-col tw:gap-4 tw:mt-6">
+<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
+  <app-title-bar class="tw:sticky tw:top-0 tw:z-10" />
+
+  <main
+    class="tw:flex-grow tw:w-full tw:max-w-md tw:mx-auto tw:px-4 tw:py-6 tw:flex tw:flex-col tw:gap-8"
+  >
+    <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+      @if (user(); as currentUser) {
+        <div
+          class="tw:rounded-full tw:border-4 tw:border-white tw:shadow-md"
+        >
+          <app-user-avatar [user]="currentUser" size="xlarge" />
+        </div>
+      }
+    </div>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="save()"
+      class="tw:flex tw:flex-col tw:gap-6"
+    >
       <div class="tw:flex tw:flex-col tw:gap-1">
-        <label class="tw:text-sm tw:font-semibold tw:text-on-surface-variant" for="name">
+        <label
+          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          for="name"
+        >
           Name
         </label>
-        <input pInputText id="name" [formField]="myForm.name" autofocus />
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <i class="pi pi-user"></i>
+          </p-inputgroup-addon>
+          <input
+            pInputText
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="Your name"
+            autocomplete="name"
+          />
+        </p-inputgroup>
       </div>
+
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label
+          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          for="email"
+        >
+          Email Address
+        </label>
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <i class="pi pi-envelope"></i>
+          </p-inputgroup-addon>
+          <input pInputText id="email" type="email" formControlName="email" />
+          <p-inputgroup-addon>
+            <i class="pi pi-lock"></i>
+          </p-inputgroup-addon>
+        </p-inputgroup>
+      </div>
+
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label
+          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          for="language"
+        >
+          Language
+        </label>
+        <p-select
+          id="language"
+          formControlName="language"
+          [options]="languages"
+          optionLabel="label"
+          optionValue="value"
+          class="tw:w-full"
+        />
+      </div>
+
       <p-button
         class="tw:mt-2"
         type="submit"
-        label="Save Name"
+        label="Save"
         icon="pi pi-check"
         iconPos="right"
-        [disabled]="myForm().invalid()"
+        [disabled]="form.invalid"
         [fluid]="true"
       />
-    </div>
-  </p-panel>
-</form>
+    </form>
+  </main>
+</div>

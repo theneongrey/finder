@@ -16,5 +16,6 @@ import { User } from '../../../models/user.model';
 })
 export class UserAvatarComponent {
   user = input.required<User>();
-  firstLetter = computed(() => this.user.name[0].toUpperCase());
+  size = input<'normal' | 'large' | 'xlarge'>('normal');
+  firstLetter = computed(() => this.user().name?.[0]?.toUpperCase() ?? '');
 }

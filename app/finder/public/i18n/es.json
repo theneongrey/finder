@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "title": "Configuración",
+    "name": "Nombre",
+    "namePlaceholder": "Tu nombre",
+    "email": "Correo electrónico",
+    "language": "Idioma",
+    "save": "Guardar"
+  }
+}

@@ -4,6 +4,7 @@ import {
   effect,
   inject,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserStore } from '../../common/data/user.store';
 import {
   FormControl,
@@ -20,6 +21,12 @@ import { Select } from 'primeng/select';
 import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
 import { UserAvatarComponent } from '../../common/ui/components/user-avatar/user-avatar.component';
 import { TitleService } from '../../common/services/title.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+  getStoredLanguage,
+  LANGUAGE_STORAGE_KEY,
+  SupportedLanguage,
+} from '../../common/i18n/languages';
 
 @Component({
   selector: 'app-settings',
@@ -32,6 +39,7 @@ import { TitleService } from '../../common/services/title.service';
     Select,
     TitleBarComponent,
     UserAvatarComponent,
+    TranslatePipe,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
@@ -39,25 +47,28 @@ import { TitleService } from '../../common/services/title.service';
 })
 export class SettingsComponent {
   private userStore = inject(UserStore);
+  private translateService = inject(TranslateService);
 
   user = this.userStore.user;
 
   languages = [
     { label: 'English', value: 'en' },
     { label: 'Deutsch', value: 'de' },
+    { label: 'Español', value: 'es' },
   ];
 
   form = new FormGroup({
     name: new FormControl('', [Validators.required]),
     email: new FormControl({ value: '', disabled: true }),
-    language: new FormControl('en'),
+    language: new FormControl<SupportedLanguage>(getStoredLanguage()),
   });
 
   constructor() {
     const titleService = inject(TitleService);
     const router = inject(Router);
 
-    titleService.setTitle('Settings');
+    const title = this.translateService.translate('settings.title');
+    effect(() => titleService.setTitle(title()));
 
     const previousUrl =
       router.getCurrentNavigation()?.previousNavigation?.finalUrl;
@@ -71,6 +82,15 @@ export class SettingsComponent {
         this.form.patchValue({ name: user.name, email: user.email });
       }
     });
+
+    this.form.controls.language.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe((language) => {
+        if (language) {
+          this.translateService.use(language);
+          localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+        }
+      });
   }
 
   save() {

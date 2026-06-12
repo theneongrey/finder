@@ -24,7 +24,7 @@
           class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
           for="name"
         >
-          Name
+          {{ 'settings.name' | translate }}
         </label>
         <p-inputgroup>
           <p-inputgroup-addon>
@@ -35,7 +35,7 @@
             id="name"
             type="text"
             formControlName="name"
-            placeholder="Your name"
+            [placeholder]="'settings.namePlaceholder' | translate"
             autocomplete="name"
           />
         </p-inputgroup>
@@ -46,7 +46,7 @@
           class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
           for="email"
         >
-          Email Address
+          {{ 'settings.email' | translate }}
         </label>
         <p-inputgroup>
           <p-inputgroup-addon>
@@ -64,7 +64,7 @@
           class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
           for="language"
         >
-          Language
+          {{ 'settings.language' | translate }}
         </label>
         <p-select
           id="language"
@@ -79,7 +79,7 @@
       <p-button
         class="tw:mt-2"
         type="submit"
-        label="Save"
+        [label]="'settings.save' | translate"
         icon="pi pi-check"
         iconPos="right"
         [disabled]="form.invalid"

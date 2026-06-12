@@ -23,6 +23,8 @@
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "@ngrx/operators": "21.1.1",
     "@ngrx/signals": "21.1.1",
+    "@ngx-translate/core": "^18.0.0",
+    "@ngx-translate/http-loader": "^18.0.0",
     "@primeng/themes": "21.0.4",
     "@tailwindcss/postcss": "4.3.1",
     "primeicons": "7.0.0",

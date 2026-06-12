@@ -5,6 +5,9 @@ import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
 import { AppTheme } from './common/theme/ngpime.preset';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { getStoredLanguage } from './common/i18n/languages';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +21,14 @@ export const appConfig: ApplicationConfig = {
         },
       },
       ripple: true,
+    }),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: '/i18n/',
+        suffix: '.json',
+      }),
+      fallbackLang: 'en',
+      lang: getStoredLanguage(),
     }),
   ],
 };

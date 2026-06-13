@@ -219,6 +219,47 @@ export const ProjectStore = signalStore(
       ),
     ),
 
+    editTopic: rxMethod<{
+      projectId: string;
+      topicId: string;
+      name: string;
+      options: { id?: string; text: string }[];
+      removedOptionIds: string[];
+    }>(
+      pipe(
+        switchMap((topic) => {
+          return store.projectService.updateTopic(topic.topicId, topic.name).pipe(
+            switchMap(() => {
+              const optionRequests = [
+                ...topic.options.map((o) =>
+                  o.id
+                    ? store.projectService.updateOption(o.id, o.text)
+                    : store.projectService.addOption(topic.topicId, o.text),
+                ),
+                ...topic.removedOptionIds.map((id) =>
+                  store.projectService.deleteOption(id),
+                ),
+              ];
+
+              return optionRequests.length ? forkJoin(optionRequests) : of([]);
+            }),
+            tapResponse({
+              next: () => {
+                store.loggerService.debug(`[ProjectStore] Updated topic`, topic.topicId);
+                store.router.navigate([`/project/detail/${topic.projectId}`]);
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error while editing a topic',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
     deleteTopic: rxMethod<string>(
       pipe(
         switchMap((topicId) => {

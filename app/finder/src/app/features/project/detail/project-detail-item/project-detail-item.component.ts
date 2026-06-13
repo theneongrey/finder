@@ -6,7 +6,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { Topic } from '../../_models/project-detail.model';
+import { OptionType, Topic } from '../../_models/project-detail.model';
 import { Button } from 'primeng/button';
 import { HierarchyByTypePipe } from '../_pipe/hierarchy-by-type.pipe';
 import { Menu } from 'primeng/menu';
@@ -45,6 +45,17 @@ export class ProjectDetailItemComponent {
     {
       label: this.editLabel(),
       icon: 'pi pi-pencil',
+      routerLink:
+        this.topic().optionType === OptionType.YesNo
+          ? [
+              '/project/detail',
+              this.projectId(),
+              'topic',
+              'edit',
+              'yesno',
+              this.topic().id,
+            ]
+          : undefined,
     },
     {
       label: this.deleteLabel(),

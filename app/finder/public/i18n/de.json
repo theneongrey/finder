@@ -62,21 +62,21 @@
       "members": "Mitglieder",
       "invite": "Einladen",
       "noMembers": "Noch keine weiteren Mitglieder.",
-      "currentTopics": "Aktuelle Themen",
-      "createNewTopic": "Neues Thema erstellen",
+      "currentTopics": "Aktuelle Umfragen",
+      "createNewTopic": "Neue Umfrage erstellen",
       "topicTypes": {
         "appointment": "Termin",
         "yesNo": "Ja/Nein",
         "rating": "Bewertung"
       },
       "deleteTopicConfirm": {
-        "header": "Thema löschen?",
-        "message": "Bist du sicher, dass du das Thema \"{{name}}\" löschen möchtest?",
-        "accept": "Thema löschen"
+        "header": "Umfrage löschen?",
+        "message": "Bist du sicher, dass du die Umfrage \"{{name}}\" löschen möchtest?",
+        "accept": "Umfrage löschen"
       },
       "item": {
         "options": "Optionen: {{count}}",
-        "pollOverview": "Umfrageübersicht"
+        "pollOverview": "Umfrage-übersicht"
       }
     },
     "share": {
@@ -103,7 +103,8 @@
         "optionPlaceholder": "Option {{number}}",
         "urlPlaceholder": "Optionaler Link (URL)",
         "addOption": "Option hinzufügen",
-        "createPoll": "Umfrage erstellen"
+        "createPoll": "Umfrage erstellen",
+        "updatePoll": "Umfrage aktualisieren"
       }
     },
     "vote": {

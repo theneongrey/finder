@@ -72,6 +72,15 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
 
+        // Update topic
+        app.MapPut("/api/project/topic/{id:guid}",
+                async (Guid id, [FromBody] UpdateTopicRequest request, ProjectService projectService, UserService userService) =>
+                {
+                    var result = await projectService.UpdateTopic(id, request.Name);
+                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToTopicResponse(userService.GetUserId()));
+                })
+            .RequireAuthorization();
+
         // Delete topic
         app.MapDelete("/api/project/topic/{id:guid}",
                 async (Guid id, ProjectService projectService) =>
@@ -80,7 +89,7 @@ public static class ProjectApi
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();
-        
+
         // Add option
         app.MapPost("/api/project/topic/option",
                 async ([FromBody] AddOptionToTopicRequest request, ProjectService projectService, UserService userService) =>
@@ -92,6 +101,17 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
         
+        // Update option
+        app.MapPut("/api/project/topic/option/{id:guid}",
+                async (Guid id, [FromBody] UpdateOptionRequest request, ProjectService projectService, UserService userService) =>
+                {
+                    var result = await projectService.UpdateOption(id, request.Text);
+                    return !result.IsSuccess
+                        ? Results.NotFound()
+                        : Results.Ok(result.Payload!.ToTopicResponseOption(userService.GetUserId()));
+                })
+            .RequireAuthorization();
+
         // Delete topic
         app.MapDelete("/api/project/topic/option/{id:guid}",
                 async (Guid id, ProjectService projectService) =>

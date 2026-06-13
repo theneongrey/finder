@@ -93,8 +93,12 @@
   >
     <p-button
       class="tw:w-full tw:max-w-md"
-      [label]="'project.topicInput.yesNo.createPoll' | translate"
-      icon="pi pi-send"
+      [label]="
+        mode() === 'add'
+          ? ('project.topicInput.yesNo.createPoll' | translate)
+          : ('project.topicInput.yesNo.updatePoll' | translate)
+      "
+      [icon]="mode() === 'add' ? 'pi pi-send' : 'pi pi-save'"
       [disabled]="!isValid()"
       (click)="submit()"
     />

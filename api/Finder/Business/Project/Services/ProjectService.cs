@@ -125,8 +125,7 @@ public class ProjectService
     {
         var projectResult = await _dbContext.Projects
             .Include(p => p.Topics)
-            .Where(p => p.Id == topicRequest.ProjectId && (p.VisibilityType == VisibilityType.VisibleForEverbody ||
-                                                           p.Creator.Id == UserId ||
+            .Where(p => p.Id == topicRequest.ProjectId && (p.Creator.Id == UserId ||
                                                            p.Permissions.Any(permission =>
                                                                permission.Person.Id == UserId &&
                                                                permission.PermissionType >= PermissionType.Maintainer)))
@@ -151,11 +150,32 @@ public class ProjectService
         return Result<Topic>.Success(topic);
     }
 
+    public async Task<Result<Topic>> UpdateTopic(Guid topicId, string name)
+    {
+        var topic = await _dbContext.Topics
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Where(t => t.Id == topicId && (t.Project.Creator.Id == UserId ||
+                                            t.Project.Permissions.Any(permission =>
+                                                permission.Person.Id == UserId &&
+                                                permission.PermissionType >= PermissionType.Maintainer)))
+            .SingleOrDefaultAsync();
+
+        if (topic is null)
+        {
+            return Result<Topic>.Fail(404);
+        }
+
+        topic.Name = name;
+        await _dbContext.SaveChangesAsync();
+        return Result<Topic>.Success(topic);
+    }
+
     public async Task<Result> DeleteTopic(Guid topicId)
     {
         var deletedTopics = await _dbContext.Topics
-            .Where(t => t.Id == topicId && (t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
-                                            t.Project.Creator.Id == UserId ||
+            .Where(t => t.Id == topicId && (t.Project.Creator.Id == UserId ||
                                             t.Project.Permissions.Any(permission =>
                                                 permission.Person.Id == UserId &&
                                                 permission.PermissionType >= PermissionType.Maintainer)))
@@ -193,8 +213,7 @@ public class ProjectService
     public async Task<Result<Option>> AddOptionToTopic(AddOptionToTopicRequest topicRequest)
     {
         var topic = await _dbContext.Topics
-            .Where(t => t.Id == topicRequest.TopicId && (t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
-                                                         t.Project.Creator.Id == UserId ||
+            .Where(t => t.Id == topicRequest.TopicId && (t.Project.Creator.Id == UserId ||
                                                          t.Project.Permissions.Any(permission =>
                                                              permission.Person.Id == UserId &&
                                                              permission.PermissionType >= PermissionType.Maintainer)))
@@ -219,11 +238,31 @@ public class ProjectService
         return Result<Option>.Success(option);
     }
 
+    public async Task<Result<Option>> UpdateOption(Guid optionId, string text)
+    {
+        var option = await _dbContext.Options
+            .Include(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Where(o => o.Id == optionId && (o.Topic.Project.Creator.Id == UserId ||
+                                             o.Topic.Project.Permissions.Any(permission =>
+                                                 permission.Person.Id == UserId &&
+                                                 permission.PermissionType >= PermissionType.Maintainer)))
+            .FirstOrDefaultAsync();
+
+        if (option is null)
+        {
+            return Result<Option>.Fail(404);
+        }
+
+        option.Text = text;
+        await _dbContext.SaveChangesAsync();
+        return Result<Option>.Success(option);
+    }
+
     public async Task<Result> DeleteOption(Guid optionId)
     {
         var deletedOption = await _dbContext.Options
-            .Where(o => o.Id == optionId && (o.Topic.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
-                                             o.Topic.Project.Creator.Id == UserId ||
+            .Where(o => o.Id == optionId && (o.Topic.Project.Creator.Id == UserId ||
                                              o.Topic.Project.Permissions.Any(permission =>
                                                  permission.Person.Id == UserId &&
                                                  permission.PermissionType >= PermissionType.Maintainer)))

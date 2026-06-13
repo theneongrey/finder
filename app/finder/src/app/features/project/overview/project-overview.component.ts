@@ -38,7 +38,7 @@ export class ProjectOverviewComponent {
   projects = this.projectStore.projects;
 
   constructor() {
-    inject(TitleService).setTitle('Finder');
+    inject(TitleService).setTitle('votean');
     this.projectStore.getProjects();
   }
 

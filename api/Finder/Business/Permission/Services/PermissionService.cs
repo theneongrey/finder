@@ -27,6 +27,22 @@ public class PermissionService
         _shareMailOptions = shareMailOptions.Value;
     }
 
+    public async Task<Result<List<Person>>> GetInvitedPersons()
+    {
+        var user = await _userService.GetUser();
+        if (!user.IsSuccess || user.Payload!.Role != Role.Admin)
+        {
+            return Result<List<Person>>.Fail(403);
+        }
+
+        var invitedPersons = await _dbContext.Persons
+            .Where(p => !p.HasLoggedIn)
+            .OrderByDescending(p => p.Created)
+            .ToListAsync();
+
+        return Result<List<Person>>.Success(invitedPersons);
+    }
+
     public async Task<Result> UpdateVisibilityType(Guid projectId, VisibilityType visibilityType)
     {
         var project = await _dbContext.Projects

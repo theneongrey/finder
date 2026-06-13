@@ -8,6 +8,7 @@ import {
   OptionType,
   Project,
   Topic,
+  TopicDetail,
 } from '../_models/project-detail.model';
 
 @Injectable({
@@ -30,23 +31,22 @@ export class ProjectService {
     return this.httpClient.get<Project>(`${this.baseUrl}/api/project/${id}`);
   }
 
-  addProject(projectName: string) {
+  addProject(name: string, description: string) {
     this.loggerService.debug('[ProjectService] fetching project');
     return this.httpClient.post<ProjectOverview>(
       `${this.baseUrl}/api/project`,
       {
-        name: projectName,
+        name,
+        description,
       },
     );
   }
 
-  updateProject(id: string, projectName: string) {
-    this.loggerService.debug('[ProjectService] fetching project');
+  updateProject(id: string, name: string, description: string) {
+    this.loggerService.debug('[ProjectService] updating project');
     return this.httpClient.put<ProjectOverview>(
       `${this.baseUrl}/api/project/${id}`,
-      {
-        name: projectName,
-      },
+      { name, description },
     );
   }
 
@@ -55,11 +55,19 @@ export class ProjectService {
     return this.httpClient.delete(`${this.baseUrl}/api/project/${id}`);
   }
 
-  addTopic(projectId: string, name: string) {
+  getTopic(id: string) {
+    this.loggerService.debug('[ProjectService] fetching topic');
+    return this.httpClient.get<TopicDetail>(
+      `${this.baseUrl}/api/project/topic/${id}`,
+    );
+  }
+
+  addTopic(projectId: string, name: string, optionType: OptionType) {
     this.loggerService.debug(`[ProjectService] adding topic ${name}`);
     return this.httpClient.post<Topic>(`${this.baseUrl}/api/project/topic`, {
       name: name,
       projectId: projectId,
+      optionType: optionType,
     });
   }
 
@@ -77,7 +85,6 @@ export class ProjectService {
       {
         text: text,
         topicId: topicId,
-        optionType: OptionType.YesNo,
       },
     );
   }

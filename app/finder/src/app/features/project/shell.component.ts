@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ProjectTitleComponent } from './title/project-title.component';
+import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
 import { RouterOutlet } from '@angular/router';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { MaxHeightMinusHeaderDirective } from '../../common/ui/directives/max-height-minus-header.directive';
@@ -7,7 +7,7 @@ import { MaxHeightMinusHeaderDirective } from '../../common/ui/directives/max-he
 @Component({
   selector: 'app-project',
   imports: [
-    ProjectTitleComponent,
+    TitleBarComponent,
     RouterOutlet,
     ScrollPanelModule,
     MaxHeightMinusHeaderDirective,

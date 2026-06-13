@@ -1,0 +1,38 @@
+@if (!isHidden()) {
+  <header
+    class="tw:mx-auto tw:w-full tw:flex tw:h-[60px] tw:p-2 tw:gap-2 tw:bg-gradient-to-b tw:from-white tw:from-75% tw:to-[#86bba1]/0"
+  >
+    @if (this.backRoute()) {
+      <p-button
+        icon="pi pi-arrow-left"
+        [routerLink]="[this.backRoute()]"
+        [text]="true"
+      />
+    } @else {
+      <a href="/" class="tw:my-auto">
+        <img
+          alt="logo"
+          ngSrc="logo.svg"
+          width="40"
+          height="8"
+          class="tw:mx-auto tw:mt-auto icon"
+        />
+      </a>
+    }
+
+    <h1
+      class="tw:my-auto tw:text-headline-md tw:font-bold tw:text-primary-dark tw:top-[2px] tw:relative"
+    >
+      {{ title() }}
+    </h1>
+
+    @if (user()?.isAuthenticated) {
+      <app-user-avatar
+        class="tw:my-auto tw:mr-0 tw:ml-auto"
+        [user]="user()!"
+        (click)="menu.toggle($event)"
+      />
+      <p-menu #menu [model]="items" [popup]="true" appendTo="body" />
+    }
+  </header>
+}

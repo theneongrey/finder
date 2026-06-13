@@ -2,40 +2,26 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  model,
 } from '@angular/core';
 import { ProjectStore } from '../_data/project.store';
-import { Card } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { FormsModule } from '@angular/forms';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
-import { TimeSincePipe } from './_pipe/time-ago.pipe';
-import { RouterLink } from '@angular/router';
-import { HideOnSmallDirective } from '../../../common/ui/directives/hide-on-small.directive';
-import { MessageService } from 'primeng/api';
-import { ShowOnSmallDirective } from '../../../common/ui/directives/show-on-small.directive';
-import { Button } from 'primeng/button';
-import { FloatLabel } from 'primeng/floatlabel';
-import { InputText } from 'primeng/inputtext';
-import { Dialog } from 'primeng/dialog';
+import { Router } from '@angular/router';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { TitleService } from '../../../common/services/title.service';
+import { ProjectItemComponent } from './project-item/project-item.component';
+import { ProjectOverview } from '../_models/project-overview.model';
+import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-project-overview',
   imports: [
     ConfirmDialogModule,
-    RouterLink,
-    ScrollPanelModule,
-    Card,
-    FormsModule,
-    TimeSincePipe,
-    HideOnSmallDirective,
-    ShowOnSmallDirective,
-    Button,
-    FloatLabel,
-    InputText,
-    Dialog,
+    ProjectItemComponent,
+    AddCardComponent,
+    TranslatePipe,
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
   styleUrl: './project-overview.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,25 +31,36 @@ import { Dialog } from 'primeng/dialog';
 })
 export class ProjectOverviewComponent {
   private projectStore = inject(ProjectStore);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly router = inject(Router);
+  private readonly translateService = inject(TranslateService);
 
   projects = this.projectStore.projects;
 
-  showAddProjectDialog = model(false);
-  projectName = model('');
-
   constructor() {
+    inject(TitleService).setTitle('Finder');
     this.projectStore.getProjects();
   }
 
-  addProject() {
-    if (this.projectName()) {
-      this.projectStore.addProject(this.projectName());
-      this.showAddProjectDialog.set(false);
-    }
+  navigateToAdd() {
+    this.router.navigate(['/project/add']);
   }
 
-  displayAddProjectDialog() {
-    this.projectName.set('');
-    this.showAddProjectDialog.set(true);
+  deletionRequested(project: ProjectOverview) {
+    this.confirmationService.confirm({
+      header: this.translateService.instant('project.overview.deleteConfirm.header'),
+      message: this.translateService.instant('project.overview.deleteConfirm.message', {
+        name: project.name,
+      }),
+      acceptLabel: this.translateService.instant('project.overview.deleteConfirm.accept'),
+      rejectLabel: this.translateService.instant('project.common.cancel'),
+      accept: () => {
+        this.deleteProject(project.id);
+      },
+    });
+  }
+
+  private deleteProject(projectId: string) {
+    this.projectStore.deleteProject(projectId);
   }
 }

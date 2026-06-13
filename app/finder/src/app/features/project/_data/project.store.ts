@@ -8,12 +8,12 @@ import {
 import { inject } from '@angular/core';
 import { LoggerService } from '../../../common/services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap } from 'rxjs';
+import { forkJoin, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
-import { Project } from '../_models/project-detail.model';
+import { OptionType, Project, TopicDetail } from '../_models/project-detail.model';
 import { PermissionService } from '../_services/permission.service';
 
 export const ProjectStore = signalStore(
@@ -21,6 +21,7 @@ export const ProjectStore = signalStore(
   withState({
     projects: [] as ProjectOverview[],
     currentProject: undefined as Project | undefined,
+    currentTopic: undefined as TopicDetail | undefined,
   }),
   withProps(() => {
     return {
@@ -59,6 +60,7 @@ export const ProjectStore = signalStore(
 
     getProject: rxMethod<string>(
       pipe(
+        tap(() => patchState(store, { currentProject: undefined })),
         switchMap((id) => {
           return store.projectService.getProject(id).pipe(
             tapResponse({
@@ -77,23 +79,75 @@ export const ProjectStore = signalStore(
       ),
     ),
 
-    addProject: rxMethod<string>(
+    getTopic: rxMethod<string>(
       pipe(
-        switchMap((projectName) => {
-          return store.projectService.addProject(projectName).pipe(
+        tap(() => patchState(store, { currentTopic: undefined })),
+        switchMap((id) => {
+          return store.projectService.getTopic(id).pipe(
             tapResponse({
-              next: (project) => {
-                patchState(store, { projects: [...store.projects(), project] });
-                store.router.navigate([`/project/detail/${project.id}/add`]);
+              next: (topic) => {
+                patchState(store, { currentTopic: topic });
               },
               error: (error) => {
                 store.loggerService.log(
-                  '[ProjectStore] Error addint a project',
+                  '[ProjectStore] Error while loading topic',
                   error,
                 );
               },
             }),
           );
+        }),
+      ),
+    ),
+
+    addProject: rxMethod<{ name: string; description: string }>(
+      pipe(
+        switchMap((project) => {
+          return store.projectService
+            .addProject(project.name, project.description)
+            .pipe(
+              tapResponse({
+                next: (project) => {
+                  patchState(store, {
+                    projects: [...store.projects(), project],
+                  });
+                  store.router.navigate([`/project/detail/${project.id}`]);
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error adding a project',
+                    error,
+                  );
+                },
+              }),
+            );
+        }),
+      ),
+    ),
+
+    editProject: rxMethod<{ id: string; name: string; description: string }>(
+      pipe(
+        switchMap((project) => {
+          return store.projectService
+            .updateProject(project.id, project.name, project.description)
+            .pipe(
+              tapResponse({
+                next: (updated) => {
+                  patchState(store, {
+                    projects: store
+                      .projects()
+                      .map((p) => (p.id === updated.id ? updated : p)),
+                  });
+                  store.router.navigate([`/project/detail/${updated.id}`]);
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error updating project',
+                    error,
+                  );
+                },
+              }),
+            );
         }),
       ),
     ),
@@ -123,32 +177,35 @@ export const ProjectStore = signalStore(
     addTopic: rxMethod<{
       projectId: string;
       name: string;
+      optionType: OptionType;
+      options?: string[];
     }>(
       pipe(
         switchMap((topic) => {
           return store.projectService
-            .addTopic(topic.projectId, topic.name)
+            .addTopic(topic.projectId, topic.name, topic.optionType)
             .pipe(
+              switchMap((responseTopic) => {
+                const optionRequests = topic.options?.length
+                  ? topic.options.map((o) =>
+                      store.projectService.addOption(responseTopic.id, o),
+                    )
+                  : [];
+
+                return (
+                  optionRequests.length ? forkJoin(optionRequests) : of([])
+                ).pipe(
+                  map((addedOptions) => ({ responseTopic, addedOptions })),
+                );
+              }),
               tapResponse({
-                next: (responseTopic) => {
+                next: ({ responseTopic }) => {
                   store.loggerService.debug(
                     `[ProjectStore] Added topic`,
                     responseTopic,
                   );
 
-                  patchState(store, {
-                    currentProject: {
-                      ...store.currentProject()!,
-                      topics: [
-                        ...store.currentProject()!.topics,
-                        responseTopic,
-                      ],
-                    },
-                  });
-
-                  store.router.navigate([
-                    `/project/detail/${topic.projectId}/topic/${responseTopic.id}/add`,
-                  ]);
+                  store.router.navigate([`/project/detail/${topic.projectId}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -202,19 +259,23 @@ export const ProjectStore = signalStore(
             .pipe(
               tapResponse({
                 next: (responseOption) => {
-                  patchState(store, {
-                    currentProject: {
-                      ...store.currentProject()!,
-                      topics: store.currentProject()!.topics.map((t) =>
-                        t.id !== option.topicId
-                          ? t
-                          : {
-                              ...t,
-                              options: [...t.options, responseOption],
-                            },
-                      ),
-                    },
-                  });
+                  const currentTopic = store.currentTopic();
+                  if (currentTopic?.id === option.topicId) {
+                    patchState(store, {
+                      currentTopic: {
+                        ...currentTopic,
+                        options: [
+                          ...currentTopic.options,
+                          {
+                            id: responseOption.id,
+                            text: responseOption.text,
+                            votes: [],
+                            choice: null,
+                          },
+                        ],
+                      },
+                    });
+                  }
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -234,17 +295,17 @@ export const ProjectStore = signalStore(
           return store.projectService.deleteOption(optionId).pipe(
             tapResponse({
               next: () => {
-                patchState(store, {
-                  currentProject: {
-                    ...store.currentProject()!,
-                    topics: [
-                      ...store.currentProject()!.topics.map((t) => ({
-                        ...t,
-                        options: t.options.filter((o) => o.id !== optionId),
-                      })),
-                    ],
-                  },
-                });
+                const currentTopic = store.currentTopic();
+                if (currentTopic) {
+                  patchState(store, {
+                    currentTopic: {
+                      ...currentTopic,
+                      options: currentTopic.options.filter(
+                        (o) => o.id !== optionId,
+                      ),
+                    },
+                  });
+                }
               },
               error: (error) => {
                 store.loggerService.log(
@@ -297,29 +358,24 @@ export const ProjectStore = signalStore(
         switchMap((vote) => {
           return store.projectService.vote(vote.optionId, vote.choice).pipe(
             tapResponse({
-              next: (_) => {
-                patchState(store, {
-                  currentProject: {
-                    ...store.currentProject()!,
-                    topics: [
-                      ...store.currentProject()!.topics.map((t) => ({
-                        ...t,
-                        options: t.options.map((o) =>
-                          o.id !== vote.optionId
-                            ? o
-                            : {
-                                ...o,
-                                choice: vote.choice,
-                              },
-                        ),
-                      })),
-                    ],
-                  },
-                });
+              next: () => {
+                const currentTopic = store.currentTopic();
+                if (currentTopic) {
+                  patchState(store, {
+                    currentTopic: {
+                      ...currentTopic,
+                      options: currentTopic.options.map((o) =>
+                        o.id !== vote.optionId
+                          ? o
+                          : { ...o, choice: vote.choice },
+                      ),
+                    },
+                  });
+                }
               },
               error: (error) => {
                 store.loggerService.log(
-                  '[ProjectStore] Error while sharing',
+                  '[ProjectStore] Error while voting',
                   error,
                 );
               },

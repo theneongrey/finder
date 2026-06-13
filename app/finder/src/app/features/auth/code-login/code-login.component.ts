@@ -16,10 +16,12 @@ import { InputOtp } from 'primeng/inputotp';
 import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';
 import { LoggerService } from '../../../common/services/logger.service';
+import { TitleService } from '../../../common/services/title.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule, InputOtp, Panel, Button],
+  imports: [ReactiveFormsModule, InputOtp, Panel, Button, TranslatePipe],
   templateUrl: './code-login.component.html',
   styleUrl: './code-login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,23 +32,28 @@ import { LoggerService } from '../../../common/services/logger.service';
 export class CodeLoginComponent {
   private userStore = inject(UserStore);
   private loggerService = new LoggerService();
+  private router = inject(Router);
+  private attempts = 0;
 
   form = new FormGroup({
     code: new FormControl('', [Validators.required]),
   });
 
   constructor() {
-    const router = inject(Router);
+    const titleService = inject(TitleService);
+
+    titleService.setTitle('');
+    titleService.setBackroute('/project');
 
     if (!this.userStore.loginMail.email()) {
       this.loggerService.log('redirect: no email stored');
-      router.navigate(['/']);
+      void this.router.navigate(['/']);
     }
 
     effect(() => {
       if (this.userStore.user()?.isAuthenticated) {
         this.loggerService.log('redirect: user is authenticated');
-        router.navigate(['/logged-in']);
+        void this.router.navigate(['/logged-in']);
       }
     });
   }
@@ -55,6 +62,11 @@ export class CodeLoginComponent {
     const code = this.form.get('code')!.value!;
 
     if (this.form.valid && code.length === 6) {
+      this.attempts++;
+      if (this.attempts >= 3) {
+        void this.router.navigate(['/logout']);
+        return;
+      }
       this.userStore.loginByCode(code);
     }
   }

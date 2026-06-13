@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-auth-logout',
   imports: [],
-  templateUrl: './logout.component.html',
-  styleUrl: './logout.component.css',
+  template: '',
+  styles: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogoutComponent {
@@ -16,6 +16,6 @@ export class LogoutComponent {
     const router = inject(Router);
 
     this.userStore.logout();
-    router.navigate(['/']);
+    void router.navigate(['/']);
   }
 }

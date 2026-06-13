@@ -9,11 +9,34 @@ export const projectRoutes: Routes = [
       ),
   },
   {
-    path: 'detail/:id/:action',
+    path: 'add',
     loadComponent: () =>
-      import('./detail/project-detail.component').then(
-        (m) => m.ProjectDetailComponent,
+      import('./project-input/project-input.component').then(
+        (m) => m.ProjectInputComponent,
       ),
+    data: {
+      mode: 'add',
+    },
+  },
+  {
+    path: 'edit/:id',
+    loadComponent: () =>
+      import('./project-input/project-input.component').then(
+        (m) => m.ProjectInputComponent,
+      ),
+    data: {
+      mode: 'edit',
+    },
+  },
+  {
+    path: 'detail/:id/topic/add/yesno',
+    loadComponent: () =>
+      import('./topic-input-yes-no/topic-input-yes-no.component').then(
+        (m) => m.TopicInputYesNoComponent,
+      ),
+    data: {
+      mode: 'add',
+    },
   },
   {
     path: 'detail/:id/vote/:topicId/:optionId',
@@ -30,17 +53,10 @@ export const projectRoutes: Routes = [
       ),
   },
   {
-    path: 'detail/:id/topic/:topicId/:action',
+    path: 'detail/:id/votes-overview/:topicId',
     loadComponent: () =>
-      import('./topic/project-topic.component').then(
-        (m) => m.ProjectTopicComponent,
-      ),
-  },
-  {
-    path: 'detail/:id/topic/:topicId',
-    loadComponent: () =>
-      import('./topic/project-topic.component').then(
-        (m) => m.ProjectTopicComponent,
+      import('./votes-overview/votes-overview.component').then(
+        (m) => m.VotesOverviewComponent,
       ),
   },
   {

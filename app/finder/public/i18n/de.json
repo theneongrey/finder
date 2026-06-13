@@ -1,0 +1,148 @@
+{
+  "settings": {
+    "title": "Einstellungen",
+    "name": "Name",
+    "namePlaceholder": "Dein Name",
+    "email": "E-Mail-Adresse",
+    "language": "Sprache",
+    "save": "Speichern",
+    "saveSuccess": "Dein Profil wurde aktualisiert.",
+    "saveError": "Dein Profil konnte nicht aktualisiert werden. Bitte versuche es erneut."
+  },
+  "auth": {
+    "login": {
+      "loggingIn": "Anmeldung läuft"
+    },
+    "requestEmail": {
+      "title": "Anmelden",
+      "subtitle": "Gib deine E-Mail-Adresse ein, um einen Anmeldecode zu erhalten.",
+      "email": "E-Mail-Adresse",
+      "requestCode": "Code anfordern",
+      "errorSending": "Fehler beim Senden der E-Mail. Bitte überprüfe deine E-Mail-Adresse und versuche es erneut.",
+      "errorForbidden": "Diese E-Mail-Adresse ist nicht zugelassen. Bitte kontaktiere den Administrator für eine Einladung."
+    },
+    "codeLogin": {
+      "title": "Code bestätigen",
+      "subtitle": "Gib den Anmeldecode ein, der an deine E-Mail-Adresse gesendet wurde.",
+      "code": "Anmeldecode",
+      "verify": "Code bestätigen"
+    }
+  },
+  "project": {
+    "common": {
+      "cancel": "Abbrechen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "vote": "Abstimmen"
+    },
+    "roles": {
+      "unknown": "Unbekannt",
+      "voter": "Abstimmender",
+      "maintainer": "Verwalter",
+      "owner": "Besitzer",
+      "creator": "Ersteller"
+    },
+    "overview": {
+      "title": "Projekte",
+      "subtitle": "Das sind deine aktuellen Projekte",
+      "addNew": {
+        "cto": "Neues Projekt",
+        "description": "Starte ein gemeinsames Projekt"
+      },
+      "item": {
+        "by": "von {{name}}"
+      },
+      "deleteConfirm": {
+        "header": "Projekt löschen?",
+        "message": "Bist du sicher, dass du das Projekt \"{{name}}\" löschen möchtest?",
+        "accept": "Projekt löschen"
+      }
+    },
+    "detail": {
+      "members": "Mitglieder",
+      "invite": "Einladen",
+      "noMembers": "Noch keine weiteren Mitglieder.",
+      "currentTopics": "Aktuelle Themen",
+      "createNewTopic": "Neues Thema erstellen",
+      "topicTypes": {
+        "appointment": "Termin",
+        "yesNo": "Ja/Nein",
+        "rating": "Bewertung"
+      },
+      "deleteTopicConfirm": {
+        "header": "Thema löschen?",
+        "message": "Bist du sicher, dass du das Thema \"{{name}}\" löschen möchtest?",
+        "accept": "Thema löschen"
+      },
+      "item": {
+        "options": "Optionen: {{count}}",
+        "pollOverview": "Umfrageübersicht"
+      }
+    },
+    "share": {
+      "title": "Teilen",
+      "email": "E-Mail",
+      "permission": "Berechtigung",
+      "share": "Teilen"
+    },
+    "input": {
+      "description": "Ein Projekt ist eine Sammlung von Dingen, über die entschieden werden soll, wie z. B. eine \"Geburtstagsparty\"",
+      "name": "Projektname",
+      "namePlaceholder": "z. B. Geburtstagsparty",
+      "descriptionLabel": "Projektbeschreibung",
+      "descriptionPlaceholder": "z. B. dies ist ein Projekt zur Planung einer Geburtstagsparty. Es umfasst Dinge wie Datum, Ort, Geschenke usw.",
+      "create": "Projekt erstellen",
+      "update": "Projekt aktualisieren"
+    },
+    "topicInput": {
+      "yesNo": {
+        "question": "Deine Frage",
+        "questionPlaceholder": "Welche Couchfarbe passt am besten?",
+        "answerOptions": "Antwortmöglichkeiten",
+        "minOptions": "Mind. 1 Option",
+        "optionPlaceholder": "Option {{number}}",
+        "urlPlaceholder": "Optionaler Link (URL)",
+        "addOption": "Option hinzufügen",
+        "createPoll": "Umfrage erstellen"
+      }
+    },
+    "vote": {
+      "votedProgress": "{{voted}} / {{total}} abgestimmt",
+      "overview": "Übersicht",
+      "swipeHint": "Nach rechts wischen für Ja, nach links für Nein"
+    },
+    "votesOverview": {
+      "title": "Abstimmungsübersicht",
+      "active": "Aktiv",
+      "of": "von {{total}}",
+      "rated": "bewertet",
+      "closesIn": "Schließt in 2 Tagen",
+      "continueVoting": "Weiter abstimmen",
+      "candidates": "Kandidaten",
+      "sortedByPopularity": "Sortiert nach Beliebtheit",
+      "mostVotes": "Meiste Stimmen",
+      "voteLabel": {
+        "yes": "Ja",
+        "no": "Nein",
+        "open": "Offen"
+      },
+      "reVote": "Erneut abstimmen",
+      "votesCount": "{{yes}} von {{total}} Stimme",
+      "votesCountPlural": "{{yes}} von {{total}} Stimmen",
+      "newComment": "Neuer Kommentar...",
+      "loading": "Lädt...",
+      "comments": "Kommentare"
+    },
+    "timeAgo": {
+      "justNow": "gerade jetzt",
+      "minuteAgo": "vor {{count}} Minute",
+      "minutesAgo": "vor {{count}} Minuten",
+      "hourAgo": "vor {{count}} Stunde",
+      "hoursAgo": "vor {{count}} Stunden",
+      "dayAgo": "vor {{count}} Tag",
+      "daysAgo": "vor {{count}} Tagen",
+      "monthAgo": "vor {{count}} Monat",
+      "monthsAgo": "vor {{count}} Monaten"
+    }
+  }
+}

@@ -1,14 +1,14 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Finder.Business.Auth.Api;
-using Finder.Business.Auth.Services;
 using Finder.Business.Auth.Setup;
 using Finder.Business.Permission.Api;
 using Finder.Business.Permission.Setup;
 using Finder.Business.Project.Api;
-using Finder.Business.Project.Services;
 using Finder.Business.Project.Setup;
 using Finder.Business.Shared.Services;
+using Finder.Business.User.Api;
+using Finder.Business.User.Setup;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,14 +36,14 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddAuthServices(builder.Configuration);
 builder.Services.AddProjectServices();
 builder.Services.AddPermissionServices(builder.Configuration);
-
-builder.Services.AddSpaStaticFiles(configuration => { configuration.RootPath = "App"; });
+builder.Services.AddUserServices();
 
 var app = builder.Build();
 
 using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
-    scope.ServiceProvider.GetService<AppDbContext>()!.Database.Migrate();
+    var db = scope.ServiceProvider.GetService<AppDbContext>()!;
+    db.Database.Migrate();
 }
 
 app.UseAuthentication();
@@ -51,8 +51,7 @@ app.UseAuthorization();
 app.WithAuthApi();
 app.WithProjectApi();
 app.WithPermissionApi();
-app.UseSpaStaticFiles();
-app.UseSpa(_ => { });
+app.WithUserApi();
 
 if (app.Environment.IsDevelopment())
 {
@@ -73,3 +72,5 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 
 app.Run();
+
+public partial class Program { }

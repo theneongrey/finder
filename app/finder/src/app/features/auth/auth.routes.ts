@@ -10,8 +10,8 @@ export const authRoutes: Routes = [
   {
     path: 'request-email',
     loadComponent: () =>
-      import('./auth-request-email/auth-request-email.component').then(
-        (m) => m.AuthRequestEmailComponent,
+      import('./request-email/request-email.component').then(
+        (m) => m.RequestEmailComponent,
       ),
   },
   {

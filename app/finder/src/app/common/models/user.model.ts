@@ -5,4 +5,5 @@ export interface User {
   name: string;
   role: UserRole;
   isAuthenticated: boolean;
+  language: string;
 }

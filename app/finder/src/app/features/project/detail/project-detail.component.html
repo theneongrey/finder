@@ -1,10 +1,93 @@
-<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
-  <app-project-detail-title-bar [action]="action()" />
-  <div class="tw:flex-grow">
-    @if (project(); as project) {
-      <app-project-detail-topic-list [topics]="project.topics" />
+<div class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:mx-4">
+  @if (project(); as project) {
+    @if (project.description) {
+      <p class="tw:mb-8">
+        {{ project.description }}
+      </p>
     }
-  </div>
+
+    <div class="tw:mb-8">
+      <div class="tw:flex tw:items-center tw:justify-between tw:mb-4">
+        <h2>{{ 'project.detail.members' | translate }}</h2>
+        @if (role() >= ProjectRole.Owner) {
+          <p-button
+            icon="pi pi-user-plus"
+            [label]="'project.detail.invite' | translate"
+            severity="secondary"
+            size="small"
+            (click)="showShare.set(true)"
+          />
+        }
+      </div>
+      @if (project.sharedWith.length > 0) {
+        <p-avatar-group>
+          @for (member of project.sharedWith; track member.name) {
+            <p-avatar
+              [image]="member.picture ?? undefined"
+              [label]="
+                member.picture ? undefined : member.name[0].toUpperCase()
+              "
+              shape="circle"
+              size="large"
+              [pTooltip]="member.name"
+              tooltipPosition="bottom"
+            />
+          }
+        </p-avatar-group>
+      } @else {
+        <p class="tw:text-sm tw:text-gray-500">
+          {{ 'project.detail.noMembers' | translate }}
+        </p>
+      }
+    </div>
+
+    @if (topics()?.length ?? 0 > 0) {
+      <h2 class="tw:mb-4">{{ 'project.detail.currentTopics' | translate }}</h2>
+
+      <div class="tw:flex tw:flex-col tw:gap-4">
+        @for (topic of topics(); track topic.id) {
+          <app-project-detail-item
+            [projectId]="project.id"
+            [topic]="topic"
+            (deletionRequested)="showDeleteTopicDialog(topic.id, topic.name)"
+          />
+        }
+      </div>
+    }
+
+    @if (role() >= ProjectRole.Maintainer) {
+      <h2 class="tw:mb-4 tw:mt-8">
+        {{ 'project.detail.createNewTopic' | translate }}
+      </h2>
+      <div class="tw:grid tw:grid-cols-3 tw:gap-4 tw:pb-8">
+        <app-add-card
+          [description]="'project.detail.topicTypes.appointment' | translate"
+          icon="pi-calendar"
+          [disabled]="true"
+        />
+        <app-add-card
+          [description]="'project.detail.topicTypes.yesNo' | translate"
+          icon="pi-check-square"
+          [routerLink]="[
+            '/project/detail',
+            project.id,
+            'topic',
+            'add',
+            'yesno',
+          ]"
+        />
+        <app-add-card
+          [description]="'project.detail.topicTypes.rating' | translate"
+          icon="pi-star"
+          [disabled]="true"
+        />
+      </div>
+    }
+  }
 </div>
 
 <p-confirmdialog />
+
+@if (project(); as project) {
+  <app-share-dialog [projectId]="project.id" [(visible)]="showShare" />
+}

@@ -4,7 +4,6 @@ public class ProjectResponseOption
 {
     public required string Id { get; set; }
     public required string Text { get; set; }
-    public required int OptionType { get; set; }
     public required int Votes { get; set; }
     public required string? Choice { get; set; }
 }
@@ -13,19 +12,23 @@ public class ProjectSharedWith
 {
     public required string Name { get; set; }
     public required ProjectRole Role { get; set; }
+    public string? Picture { get; set; }
 }
 
 public class ProjectResponseTopic
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
-    public required ProjectResponseOption[] Options { get; set; }
+    public required int OptionType { get; set; }
+    public required int OptionCount { get; set; }
+    public string? NextOpenOptionId { get; set; }
 }
 
 public class ProjectResponse
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
+    public required string Description { get; set; }
     public required ProjectResponseTopic[] Topics { get; set; }
     public required int PermissionType { get; set; }
     public required string Creator { get; set; }
@@ -41,7 +44,6 @@ public static class ProjectMapper
         {
             Id = option.Id.ToString(),
             Text = option.Text,
-            OptionType = (int)option.OptionType,
             Votes = option.Votes.Count,
             Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice,
         };
@@ -53,7 +55,10 @@ public static class ProjectMapper
         {
             Id = topic.Id.ToString(),
             Name = topic.Name,
-            Options = topic.Options.Select(o => o.ToProjectResponseOption(userId)).ToArray()
+            OptionType = (int)topic.OptionType,
+            OptionCount = topic.Options.Count,
+            NextOpenOptionId = topic.Options
+                .FirstOrDefault(o => o.Votes.All(v => v.Person.Id != userId))?.Id.ToString()
         };
     }
 
@@ -62,7 +67,8 @@ public static class ProjectMapper
         return new ProjectSharedWith
         {
             Name = permission.Person.Name ?? permission.Person.Email,
-            Role = permission.PermissionType.ToProjectRole()
+            Role = permission.PermissionType.ToProjectRole(),
+            Picture = permission.Person.Picture
         };
     }
 
@@ -77,7 +83,8 @@ public static class ProjectMapper
                 new ProjectSharedWith
                 {
                     Name = project.Creator.Name ?? project.Creator.Email,
-                    Role = ProjectRole.Creator
+                    Role = ProjectRole.Creator,
+                    Picture = project.Creator.Picture
                 });
         }
 
@@ -85,6 +92,7 @@ public static class ProjectMapper
         {
             Id = project.Id.ToString(),
             Name = project.Name,
+            Description = project.Description,
             Topics = project.Topics.Select(t => t.ToProjectResponseTopic(userId)).ToArray(),
             PermissionType = (int)project.VisibilityType,
             Creator = project.Creator.Name ??  project.Creator.Email,

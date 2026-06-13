@@ -50,7 +50,7 @@ public class PermissionService
         var cleanEmail = email.Trim().ToLower();
         
         var isNewUser = false;
-        var userRequest = await _userService.GetOrCreatePersonByEmail(cleanEmail, false, true);
+        var userRequest = await _userService.GetOrCreatePersonByEmail(cleanEmail, true);
         var user = userRequest.Payload;
         if (!userRequest.IsSuccess || user!.Id == UserId)
         {

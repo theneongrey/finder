@@ -1,0 +1,43 @@
+<p-dialog
+  [header]="'project.share.title' | translate"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }"
+>
+  <div class="tw:flex tw:items-center tw:gap-4 tw:mb-4">
+    <label for="email" class="tw:font-semibold tw:w-24">{{
+      'project.share.email' | translate
+    }}</label>
+    <input
+      pInputText
+      id="email"
+      type="email"
+      class="tw:flex-auto"
+      autocomplete="off"
+      [(ngModel)]="email"
+    />
+  </div>
+
+  <p-select
+    appendTo="body"
+    [options]="availablePermissions()"
+    [(ngModel)]="selectedPermission"
+    optionLabel="name"
+    optionValue="id"
+    [placeholder]="'project.share.permission' | translate"
+    class="tw:w-full tw:mb-2"
+  />
+
+  <div class="tw:flex tw:justify-end tw:gap-2">
+    <p-button
+      [label]="'project.common.cancel' | translate"
+      severity="secondary"
+      (click)="visible.set(false)"
+    />
+    <p-button
+      [label]="'project.share.share' | translate"
+      (click)="share()"
+      [disabled]="!email()"
+    />
+  </div>
+</p-dialog>

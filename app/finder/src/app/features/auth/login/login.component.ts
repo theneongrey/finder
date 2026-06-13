@@ -10,9 +10,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth-login',
-  imports: [],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  template: '',
+  styles: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'tw:m-auto',
@@ -32,7 +31,7 @@ export class LoginComponent {
 
       if (user.isAuthenticated) {
         if (!user.name) {
-          router.navigate(['/settings/set-name']);
+          router.navigate(['/settings']);
         } else {
           untracked(() => {
             const redirectUrl = this.userStore.redirectUrl();

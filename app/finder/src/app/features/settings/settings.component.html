@@ -1,0 +1,93 @@
+<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
+  <p-toast
+    [breakpoints]="{ '920px': { width: '250px' } }"
+    position="top-center"
+  />
+  <app-title-bar class="tw:sticky tw:top-0 tw:z-10" />
+
+  <main
+    class="tw:flex-grow tw:w-full tw:max-w-md tw:mx-auto tw:px-4 tw:py-6 tw:flex tw:flex-col tw:gap-8"
+  >
+    <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+      @if (user(); as currentUser) {
+        <div class="tw:rounded-full tw:border-4 tw:border-white tw:shadow-md">
+          <app-user-avatar [user]="currentUser" size="xlarge" />
+        </div>
+      }
+    </div>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="save()"
+      class="tw:flex tw:flex-col tw:gap-6"
+    >
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label
+          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          for="name"
+        >
+          {{ "settings.name" | translate }}
+        </label>
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <i class="pi pi-user"></i>
+          </p-inputgroup-addon>
+          <input
+            pInputText
+            id="name"
+            type="text"
+            formControlName="name"
+            [placeholder]="'settings.namePlaceholder' | translate"
+            autocomplete="name"
+          />
+        </p-inputgroup>
+      </div>
+
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label
+          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          for="email"
+        >
+          {{ "settings.email" | translate }}
+        </label>
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <i class="pi pi-envelope"></i>
+          </p-inputgroup-addon>
+          <input pInputText id="email" type="email" formControlName="email" />
+          <p-inputgroup-addon>
+            <i class="pi pi-lock"></i>
+          </p-inputgroup-addon>
+        </p-inputgroup>
+      </div>
+
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label
+          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          for="language"
+        >
+          {{ "settings.language" | translate }}
+        </label>
+        <p-select
+          id="language"
+          formControlName="language"
+          [options]="languages"
+          optionLabel="label"
+          optionValue="value"
+          class="tw:w-full"
+        />
+      </div>
+
+      <p-button
+        class="tw:mt-2"
+        type="submit"
+        [label]="'settings.save' | translate"
+        icon="pi pi-check"
+        iconPos="right"
+        [disabled]="form.invalid || isSaving()"
+        [loading]="isSaving()"
+        [fluid]="true"
+      />
+    </form>
+  </main>
+</div>

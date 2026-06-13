@@ -1,6 +1,7 @@
 export interface ProjectOverview {
   id: string;
   name: string;
+  description: string;
   topics: {
     id: string;
     name: string;

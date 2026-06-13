@@ -34,7 +34,7 @@ public class ProjectService
             .ToListAsync();
     }
 
-    public async Task<Result<Entities.Project>> Create(string projectName)
+    public async Task<Result<Entities.Project>> Create(string name, string description)
     {
         var userRequest = await _userService.GetUser();
         if (!userRequest.IsSuccess)
@@ -45,9 +45,10 @@ public class ProjectService
         var project = new Entities.Project
         {
             Id = Guid.NewGuid(),
-            Name = projectName,
+            Name = name,
+            Description = description,
             Creator = userRequest.Payload!,
-            VisibilityType = VisibilityType.SelectedOnly
+            VisibilityType = VisibilityType.VisibleForSelectedOnly
         };
 
         _dbContext.Projects.Add(project);
@@ -55,10 +56,11 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> Update(Guid projectId, string projectName)
+    public async Task<Result<Entities.Project>> Update(Guid projectId, string projectName, string projectDescription)
     {
         var projectToUpdate = await _dbContext.Projects
             .Include(p => p.Permissions)
+            .Include(p => p.Creator)
             .Where(p => p.Id == projectId &&
                         (p.Creator.Id == UserId || p.Permissions.Any(permission =>
                             permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
@@ -70,6 +72,7 @@ public class ProjectService
         }
 
         projectToUpdate.Name = projectName;
+        projectToUpdate.Description = projectDescription;
         await _dbContext.SaveChangesAsync();
         return Result<Entities.Project>.Success(projectToUpdate);
     }
@@ -98,8 +101,8 @@ public class ProjectService
             .ThenInclude(p => p.Person)
             .Include(p => p.Topics)
             .ThenInclude(t => t.Options)
-            .ThenInclude(c => c.Votes)
-            .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.Open || p.Creator.Id == UserId ||
+            .ThenInclude(o => o.Votes)
+            .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
                                               p.Permissions.Any(permission => permission.PersonKey == UserId)))
             .SingleOrDefaultAsync();
         if (project == null)
@@ -122,7 +125,7 @@ public class ProjectService
     {
         var projectResult = await _dbContext.Projects
             .Include(p => p.Topics)
-            .Where(p => p.Id == topicRequest.ProjectId && (p.VisibilityType == VisibilityType.Open ||
+            .Where(p => p.Id == topicRequest.ProjectId && (p.VisibilityType == VisibilityType.VisibleForEverbody ||
                                                            p.Creator.Id == UserId ||
                                                            p.Permissions.Any(permission =>
                                                                permission.Person.Id == UserId &&
@@ -137,6 +140,7 @@ public class ProjectService
         var topic = new Topic
         {
             Id = Guid.NewGuid(),
+            OptionType = topicRequest.OptionType,
             Name = topicRequest.Name,
             Project = projectResult
         };
@@ -150,7 +154,7 @@ public class ProjectService
     public async Task<Result> DeleteTopic(Guid topicId)
     {
         var deletedTopics = await _dbContext.Topics
-            .Where(t => t.Id == topicId && (t.Project.VisibilityType == VisibilityType.Open ||
+            .Where(t => t.Id == topicId && (t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                                             t.Project.Creator.Id == UserId ||
                                             t.Project.Permissions.Any(permission =>
                                                 permission.Person.Id == UserId &&
@@ -166,10 +170,30 @@ public class ProjectService
         return Result.Success();
     }
 
+    public async Task<Result<Topic>> GetTopic(Guid topicId)
+    {
+        var topic = await _dbContext.Topics
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Where(t => t.Id == topicId && (
+                t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
+                t.Project.Creator.Id == UserId ||
+                t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
+            .SingleOrDefaultAsync();
+
+        if (topic is null)
+        {
+            return Result<Topic>.Fail(404);
+        }
+
+        return Result<Topic>.Success(topic);
+    }
+
     public async Task<Result<Option>> AddOptionToTopic(AddOptionToTopicRequest topicRequest)
     {
         var topic = await _dbContext.Topics
-            .Where(t => t.Id == topicRequest.TopicId && (t.Project.VisibilityType == VisibilityType.Open ||
+            .Where(t => t.Id == topicRequest.TopicId && (t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                                                          t.Project.Creator.Id == UserId ||
                                                          t.Project.Permissions.Any(permission =>
                                                              permission.Person.Id == UserId &&
@@ -185,7 +209,6 @@ public class ProjectService
         {
             Id = Guid.NewGuid(),
             Text = topicRequest.Text,
-            OptionType = topicRequest.OptionType,
             Topic = topic
         };
         topic.Options.Add(option);
@@ -199,7 +222,7 @@ public class ProjectService
     public async Task<Result> DeleteOption(Guid optionId)
     {
         var deletedOption = await _dbContext.Options
-            .Where(o => o.Id == optionId && (o.Topic.Project.VisibilityType == VisibilityType.Open ||
+            .Where(o => o.Id == optionId && (o.Topic.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                                              o.Topic.Project.Creator.Id == UserId ||
                                              o.Topic.Project.Permissions.Any(permission =>
                                                  permission.Person.Id == UserId &&

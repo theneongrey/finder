@@ -12,8 +12,8 @@ public static class ProjectApi
     {
         // Get all projects
         app.MapGet("/api/project",
-                async (ProjectService projectService, UserService userService) => Results.Ok(
-                    (await projectService.GetAll()).Select(p => p.ToProjectOverviewResponse(userService.GetUserId()))))
+                async (ProjectService projectService) => Results.Ok(
+                    (await projectService.GetAll()).Select(p => p.ToProjectOverviewResponse())))
             .RequireAuthorization();
 
         // Get single project
@@ -25,21 +25,21 @@ public static class ProjectApi
 
         // Add project
         app.MapPost("/api/project",
-                async ([FromBody] ProjectRequest request, ProjectService projectService, UserService userService) =>
+                async ([FromBody] AddProjectRequest request, ProjectService projectService) =>
                 {
-                    var result = await projectService.Create(request.Name);
+                    var result = await projectService.Create(request.Name, request.Description);
                     return !result.IsSuccess
                         ? Results.BadRequest()
-                        : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
+                        : Results.Ok(result.Payload!.ToProjectOverviewResponse());
                 })
             .RequireAuthorization();
 
         // Update project
         app.MapPut("/api/project/{id:guid}",
-                async (Guid id, [FromBody] ProjectRequest request, ProjectService projectService, UserService userService) =>
+                async (Guid id, [FromBody] AddProjectRequest request, ProjectService projectService) =>
                 {
-                    var result = await projectService.Update(id, request.Name);
-                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
+                    var result = await projectService.Update(id, request.Name, request.Description);
+                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse());
                 })
             .RequireAuthorization();
 
@@ -59,11 +59,19 @@ public static class ProjectApi
                     var result = await projectService.AddTopic(request);
                     return !result.IsSuccess
                         ? Results.BadRequest()
-                        : Results.Ok(result.Payload!.ToProjectResponseTopic(userService.GetUserId()));
+                        : Results.Ok(result.Payload!.ToTopicResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
-        
-        
+
+        // Get topic
+        app.MapGet("/api/project/topic/{id:guid}",
+                async (Guid id, ProjectService projectService, UserService userService) =>
+                {
+                    var result = await projectService.GetTopic(id);
+                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToTopicResponse(userService.GetUserId()));
+                })
+            .RequireAuthorization();
+
         // Delete topic
         app.MapDelete("/api/project/topic/{id:guid}",
                 async (Guid id, ProjectService projectService) =>

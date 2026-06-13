@@ -1,0 +1,22 @@
+@switch (type()) {
+  @case (OptionType.YesNo) {
+    <div class="tw:bg-primary/20 tw:p-3 tw:rounded-[8px]">
+      <i class="pi pi-check-square tw:text-primary-dark"></i>
+    </div>
+  }
+  @case (OptionType.Date) {
+    <div class="tw:bg-secondary/20 tw:p-3 tw:rounded-[8px]">
+      <i class="pi pi-calendar tw:text-secondary"></i>
+    </div>
+  }
+  @case (OptionType.Rating) {
+    <div class="tw:bg-tertiary/20 tw:p-3 tw:rounded-[8px]">
+      <i class="pi pi-star tw:text-tertiary"></i>
+    </div>
+  }
+  @default {
+    <div class="tw:bg-primary/20 tw:p-3 tw:rounded-[8px]">
+      <i class="pi pi-question tw:text-primary-dark"></i>
+    </div>
+  }
+}

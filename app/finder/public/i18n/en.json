@@ -1,0 +1,148 @@
+{
+  "settings": {
+    "title": "Settings",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "Email Address",
+    "language": "Language",
+    "save": "Save",
+    "saveSuccess": "Your profile has been updated.",
+    "saveError": "Your profile could not be updated. Please try again."
+  },
+  "auth": {
+    "login": {
+      "loggingIn": "Logging in"
+    },
+    "requestEmail": {
+      "title": "Sign In",
+      "subtitle": "Enter your email address to receive a login code.",
+      "email": "Email Address",
+      "requestCode": "Request Code",
+      "errorSending": "Error while sending the mail. Please check your email and try again.",
+      "errorForbidden": "This email is not allowed. Please contact the admin for an invitation."
+    },
+    "codeLogin": {
+      "title": "Verify Code",
+      "subtitle": "Enter the login code sent to your email address.",
+      "code": "Login Code",
+      "verify": "Verify Code"
+    }
+  },
+  "project": {
+    "common": {
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "vote": "Vote"
+    },
+    "roles": {
+      "unknown": "Unknown",
+      "voter": "Voter",
+      "maintainer": "Maintainer",
+      "owner": "Owner",
+      "creator": "Creator"
+    },
+    "overview": {
+      "title": "Projects",
+      "subtitle": "These are your current projects",
+      "addNew": {
+        "cto": "New project",
+        "description": "Start a collaborative project"
+      },
+      "item": {
+        "by": "by {{name}}"
+      },
+      "deleteConfirm": {
+        "header": "Delete project?",
+        "message": "Are you sure that you want to delete project \"{{name}}\"?",
+        "accept": "Delete project"
+      }
+    },
+    "detail": {
+      "members": "Members",
+      "invite": "Invite",
+      "noMembers": "No other members yet.",
+      "currentTopics": "Current topics",
+      "createNewTopic": "Create new topic",
+      "topicTypes": {
+        "appointment": "Appointment",
+        "yesNo": "Yes/No",
+        "rating": "Rating"
+      },
+      "deleteTopicConfirm": {
+        "header": "Delete topic?",
+        "message": "Are you sure that you want to delete topic \"{{name}}\"?",
+        "accept": "Delete topic"
+      },
+      "item": {
+        "options": "Options: {{count}}",
+        "pollOverview": "Poll overview"
+      }
+    },
+    "share": {
+      "title": "Share",
+      "email": "Email",
+      "permission": "Permission",
+      "share": "Share"
+    },
+    "input": {
+      "description": "A project is a collection of things to decide, like a \"Birthday party\"",
+      "name": "Project name",
+      "namePlaceholder": "e.g. Birthday party",
+      "descriptionLabel": "Project description",
+      "descriptionPlaceholder": "e.g. this is a project about planning a birthday party. It includes things like date, location, gifts etc.",
+      "create": "Create project",
+      "update": "Update project"
+    },
+    "topicInput": {
+      "yesNo": {
+        "question": "Your question",
+        "questionPlaceholder": "Which couch color fits best?",
+        "answerOptions": "Answer options",
+        "minOptions": "Min. 1 option",
+        "optionPlaceholder": "Option {{number}}",
+        "urlPlaceholder": "Optional link (URL)",
+        "addOption": "Add option",
+        "createPoll": "Create poll"
+      }
+    },
+    "vote": {
+      "votedProgress": "{{voted}} / {{total}} voted",
+      "overview": "Overview",
+      "swipeHint": "Swipe right for Yes, left for No"
+    },
+    "votesOverview": {
+      "title": "Voting overview",
+      "active": "Active",
+      "of": "of {{total}}",
+      "rated": "rated",
+      "closesIn": "Closes in 2 days",
+      "continueVoting": "Continue voting",
+      "candidates": "Candidates",
+      "sortedByPopularity": "Sorted by popularity",
+      "mostVotes": "Most Votes",
+      "voteLabel": {
+        "yes": "Yes",
+        "no": "No",
+        "open": "Open"
+      },
+      "reVote": "Re-Vote",
+      "votesCount": "{{yes}} of {{total}} vote",
+      "votesCountPlural": "{{yes}} of {{total}} votes",
+      "newComment": "New comment...",
+      "loading": "Loading...",
+      "comments": "Comments"
+    },
+    "timeAgo": {
+      "justNow": "just now",
+      "minuteAgo": "{{count}} minute ago",
+      "minutesAgo": "{{count}} minutes ago",
+      "hourAgo": "{{count}} hour ago",
+      "hoursAgo": "{{count}} hours ago",
+      "dayAgo": "{{count}} day ago",
+      "daysAgo": "{{count}} days ago",
+      "monthAgo": "{{count}} month ago",
+      "monthsAgo": "{{count}} months ago"
+    }
+  }
+}

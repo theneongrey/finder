@@ -1,0 +1,58 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="sendLoginMail()"
+  class="tw:w-full tw:max-w-md"
+>
+  <p-panel>
+    <ng-template #header>
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <span class="tw:text-2xl tw:font-bold tw:text-on-surface tw:mx-auto"
+          >{{ 'auth.requestEmail.title' | translate }}</span
+        >
+        <span
+          class="tw:text-sm tw:text-on-surface-variant tw:mx-auto tw:text-center tw:mt-2"
+        >
+          {{ 'auth.requestEmail.subtitle' | translate }}
+        </span>
+      </div>
+    </ng-template>
+
+    <div class="tw:flex tw:flex-col tw:gap-4 tw:mt-6">
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label
+          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          for="email"
+        >
+          {{ 'auth.requestEmail.email' | translate }}
+        </label>
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <i class="pi pi-envelope"></i>
+          </p-inputgroup-addon>
+          <input
+            pInputText
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="name@example.com"
+            autofocus
+          />
+        </p-inputgroup>
+        @if (errorMessage()) {
+          <p-message severity="error">{{ errorMessage() }}</p-message>
+        }
+      </div>
+
+      <p-button
+        class="tw:mt-2"
+        type="submit"
+        [label]="'auth.requestEmail.requestCode' | translate"
+        icon="pi pi-arrow-right"
+        iconPos="right"
+        [loading]="isLoading()"
+        [disabled]="form.invalid || isLoading()"
+        [fluid]="true"
+      />
+    </div>
+  </p-panel>
+</form>

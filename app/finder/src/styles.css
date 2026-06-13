@@ -10,22 +10,22 @@
 
 @theme {
   --color-error: #ad3448;
-  --color-primary: #86bba1;
-  --color-primary-dark: #356852;
-  --color-secondary: #a2d2ff;
-  --color-tertiary: #ffd1b3;
-  --color-neutral: #757875;
+  --color-primary: #4797bf;
+  --color-primary-dark: #397999;
+  --color-secondary: #627d8b;
+  --color-tertiary: #e8af63;
+  --color-neutral: #1a1c1e;
   --color-on-surface-variant: #404944;
 }
 
 html,
 body {
   --color-error: #ad3448;
-  --color-primary: #86bba1;
-  --color-primary-dark: #356852;
-  --color-secondary: #a2d2ff;
-  --color-tertiary: #ffd1b3;
-  --color-neutral: #757875;
+  --color-primary: #4797bf;
+  --color-primary-dark: #397999;
+  --color-secondary: #627d8b;
+  --color-tertiary: #e8af63;
+  --color-neutral: #1a1c1e;
   --color-on-surface-variant: #404944;
 
   font-family: "Plus Jakarta Sans", sans-serif;

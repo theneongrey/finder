@@ -1,4 +1,5 @@
 using Finder.Business.Permission.Api.Requests;
+using Finder.Business.Permission.Api.Responses;
 using Finder.Business.Permission.Services;
 using Finder.Business.Project.Api.Responses;
 using Finder.Business.Shared.Services;
@@ -10,6 +11,20 @@ public static class PermissionApi
 {
     public static void WithPermissionApi(this WebApplication app)
     {
+        // Get persons who have been invited but never logged in
+        app.MapGet("/api/permission/invited",
+                async (PermissionService permissionService) =>
+                {
+                    var result = await permissionService.GetInvitedPersons();
+                    if (!result.IsSuccess)
+                    {
+                        return Results.Forbid();
+                    }
+
+                    return Results.Ok(result.Payload!.Select(p => p.ToInvitedPersonResponse()));
+                })
+            .RequireAuthorization();
+
         // Update project visibility
         app.MapPut("/api/permission/type/{projectId:guid}",
                 async (Guid projectId, [FromBody] UpdatePermissionTypeRequest typeRequest,

@@ -22,7 +22,7 @@ export class TitleService {
 
   #backRoute = signal<string | undefined>(undefined);
   backRoute = this.#backRoute.asReadonly();
-  #title = signal<string>('Finder');
+  #title = signal<string>('votean');
   title = this.#title.asReadonly();
   #isHidden = signal<boolean>(false);
   isHidden = this.#isHidden.asReadonly();

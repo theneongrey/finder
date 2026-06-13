@@ -1,0 +1,22 @@
+<header class="main-bg tw:flex tw:w-full tw:h-20 tw:p-2">
+  <div class="tw:max-w-5xl tw:mx-auto tw:w-full tw:flex">
+    <a href="/" class="tw:my-auto">
+      <img
+        alt="logo"
+        ngSrc="logo-white.svg"
+        width="165"
+        height="33"
+        class="tw:mx-auto tw:mt-auto"
+      />
+    </a>
+
+    <div class="tw:ml-auto tw:mr-0 tw:flex">
+      <p-button
+        class="tw:my-auto"
+        icon="pi pi-sign-out"
+        [routerLink]="['/auth/logout']"
+        pTooltip="logout"
+      />
+    </div>
+  </div>
+</header>

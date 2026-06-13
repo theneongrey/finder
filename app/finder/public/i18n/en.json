@@ -103,7 +103,8 @@
         "optionPlaceholder": "Option {{number}}",
         "urlPlaceholder": "Optional link (URL)",
         "addOption": "Add option",
-        "createPoll": "Create poll"
+        "createPoll": "Create poll",
+        "updatePoll": "Update poll"
       }
     },
     "vote": {

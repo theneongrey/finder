@@ -29,13 +29,23 @@ export const projectRoutes: Routes = [
     },
   },
   {
-    path: 'detail/:id/topic/add/yesno',
+    path: 'detail/:projectId/topic/add/yesno',
     loadComponent: () =>
       import('./topic-input-yes-no/topic-input-yes-no.component').then(
         (m) => m.TopicInputYesNoComponent,
       ),
     data: {
       mode: 'add',
+    },
+  },
+  {
+    path: 'detail/:projectId/topic/edit/yesno/:topicId',
+    loadComponent: () =>
+      import('./topic-input-yes-no/topic-input-yes-no.component').then(
+        (m) => m.TopicInputYesNoComponent,
+      ),
+    data: {
+      mode: 'edit',
     },
   },
   {

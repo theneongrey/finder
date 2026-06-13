@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Tests.Infrastructure;
 using Xunit;
@@ -107,6 +108,60 @@ public class TopicApiTests : IClassFixture<FinderApiFactory>
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
+    // --- PUT /api/project/topic/{id} ---
+
+    [Fact]
+    public async Task UpdateTopic_WhenCreator_ReturnsUpdatedTopic()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id);
+        var topic = await _factory.SeedTopic(project.Id, "Original Name");
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var response = await client.PutAsJsonAsync($"/api/project/topic/{topic.Id}", new { name = "Updated Name" });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.Equal(topic.Id.ToString(), json["id"]!.GetValue<string>());
+        Assert.Equal("Updated Name", json["name"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task UpdateTopic_WhenNotPermitted_Returns404()
+    {
+        var owner = await _factory.SeedUser();
+        var other = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        var topic = await _factory.SeedTopic(project.Id);
+        await _factory.SeedPermission(project.Id, other.Id, PermissionType.Voter);
+        using var client = _factory.CreateAuthenticatedClient(other.Id);
+
+        var response = await client.PutAsJsonAsync($"/api/project/topic/{topic.Id}", new { name = "Hacked" });
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateTopic_WhenNotFound_Returns404()
+    {
+        var user = await _factory.SeedUser();
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var response = await client.PutAsJsonAsync($"/api/project/topic/{Guid.NewGuid()}", new { name = "Updated" });
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateTopic_WhenUnauthenticated_Returns401()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.PutAsJsonAsync($"/api/project/topic/{Guid.NewGuid()}", new { name = "Updated" });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
     // --- DELETE /api/project/topic/{id} ---
 
     [Fact]
@@ -195,6 +250,62 @@ public class TopicApiTests : IClassFixture<FinderApiFactory>
 
         var response = await client.PostAsJsonAsync("/api/project/topic/option",
             new { topicId = Guid.NewGuid(), text = "Option A" });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    // --- PUT /api/project/topic/option/{id} ---
+
+    [Fact]
+    public async Task UpdateOption_WhenCreator_ReturnsUpdatedOption()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id);
+        var topic = await _factory.SeedTopic(project.Id);
+        var option = await _factory.SeedOption(topic.Id, "Original Text");
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var response = await client.PutAsJsonAsync($"/api/project/topic/option/{option.Id}", new { text = "Updated Text" });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.Equal(option.Id.ToString(), json["id"]!.GetValue<string>());
+        Assert.Equal("Updated Text", json["text"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task UpdateOption_WhenNotPermitted_Returns404()
+    {
+        var owner = await _factory.SeedUser();
+        var other = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        var topic = await _factory.SeedTopic(project.Id);
+        var option = await _factory.SeedOption(topic.Id);
+        await _factory.SeedPermission(project.Id, other.Id, PermissionType.Voter);
+        using var client = _factory.CreateAuthenticatedClient(other.Id);
+
+        var response = await client.PutAsJsonAsync($"/api/project/topic/option/{option.Id}", new { text = "Hacked" });
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateOption_WhenNotFound_Returns404()
+    {
+        var user = await _factory.SeedUser();
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var response = await client.PutAsJsonAsync($"/api/project/topic/option/{Guid.NewGuid()}", new { text = "Updated" });
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateOption_WhenUnauthenticated_Returns401()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.PutAsJsonAsync($"/api/project/topic/option/{Guid.NewGuid()}", new { text = "Updated" });
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }

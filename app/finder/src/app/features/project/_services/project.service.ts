@@ -71,6 +71,14 @@ export class ProjectService {
     });
   }
 
+  updateTopic(topicId: string, name: string) {
+    this.loggerService.debug(`[ProjectService] updating topic ${topicId}`);
+    return this.httpClient.put<TopicDetail>(
+      `${this.baseUrl}/api/project/topic/${topicId}`,
+      { name },
+    );
+  }
+
   deleteTopic(topicId: string) {
     this.loggerService.debug(`[ProjectService] deleting topic ${topicId}`);
     return this.httpClient.delete(
@@ -86,6 +94,14 @@ export class ProjectService {
         text: text,
         topicId: topicId,
       },
+    );
+  }
+
+  updateOption(optionId: string, text: string) {
+    this.loggerService.debug(`[ProjectService] updating option ${optionId}`);
+    return this.httpClient.put<Option>(
+      `${this.baseUrl}/api/project/topic/option/${optionId}`,
+      { text },
     );
   }
 

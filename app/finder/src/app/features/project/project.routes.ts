@@ -19,7 +19,7 @@ export const projectRoutes: Routes = [
     },
   },
   {
-    path: 'edit/:id',
+    path: 'edit/:projectId',
     loadComponent: () =>
       import('./project-input/project-input.component').then(
         (m) => m.ProjectInputComponent,
@@ -49,28 +49,28 @@ export const projectRoutes: Routes = [
     },
   },
   {
-    path: 'detail/:id/vote/:topicId/:optionId',
+    path: 'detail/:projectId/vote/:topicId/:optionId',
     loadComponent: () =>
       import('./vote/project-vote.component').then(
         (m) => m.ProjectVoteComponent,
       ),
   },
   {
-    path: 'detail/:id/vote/:topicId',
+    path: 'detail/:projectId/vote/:topicId',
     loadComponent: () =>
       import('./vote/project-vote.component').then(
         (m) => m.ProjectVoteComponent,
       ),
   },
   {
-    path: 'detail/:id/votes-overview/:topicId',
+    path: 'detail/:projectId/votes-overview/:topicId',
     loadComponent: () =>
       import('./votes-overview/votes-overview.component').then(
         (m) => m.VotesOverviewComponent,
       ),
   },
   {
-    path: 'detail/:id',
+    path: 'detail/:projectId',
     loadComponent: () =>
       import('./detail/project-detail.component').then(
         (m) => m.ProjectDetailComponent,

@@ -38,7 +38,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
   voteCardRef = viewChild.required<ElementRef<HTMLElement>>('voteCard');
 
-  id = input('');
+  projectId = input('');
   topicId = input('');
   optionId = input('');
   topic = this.projectStore.currentTopic;
@@ -63,13 +63,13 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
   constructor() {
     effect(() => {
-      this.projectStore.getProject(this.id());
+      this.projectStore.getProject(this.projectId());
     });
     effect(() => {
       this.projectStore.getTopic(this.topicId());
     });
     effect(() => {
-      const projectId = this.id();
+      const projectId = this.projectId();
       const currentProject = this.projectStore.currentProject();
       if (projectId && currentProject) {
         this.titleService.setBackroute(`/project/detail/${projectId}`);
@@ -84,7 +84,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (!this.optionId()) {
-      if (this.id() && this.topic()) {
+      if (this.projectId() && this.topic()) {
         this.navigateToNextOption(undefined, true);
       } else {
         void this.router.navigate(['/project']);
@@ -173,7 +173,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   navigateToOverview(): void {
     void this.router.navigate([
       '/project/detail/',
-      this.id(),
+      this.projectId(),
       'votes-overview',
       this.topicId(),
     ]);
@@ -224,14 +224,25 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     const nextOption = options.find((o) => !o.choice && o.id !== ignore);
     if (!nextOption) {
       void this.router.navigate(
-        ['/project/detail/', this.id(), 'votes-overview', this.topicId()!],
+        [
+          '/project/detail/',
+          this.projectId(),
+          'votes-overview',
+          this.topicId()!,
+        ],
         { replaceUrl },
       );
       return;
     }
 
     void this.router.navigate(
-      ['/project/detail/', this.id(), 'vote', this.topicId()!, nextOption.id],
+      [
+        '/project/detail/',
+        this.projectId(),
+        'vote',
+        this.topicId()!,
+        nextOption.id,
+      ],
       { replaceUrl },
     );
   }

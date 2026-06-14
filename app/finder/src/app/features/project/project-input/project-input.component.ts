@@ -26,7 +26,7 @@ export class ProjectInputComponent {
   private readonly translateService = inject(TranslateService);
 
   mode = input<'add' | 'edit'>('add');
-  id = input<string>();
+  projectId = input<string>();
 
   projectName = model('');
   projectDescription = model('');
@@ -45,7 +45,7 @@ export class ProjectInputComponent {
     });
 
     effect(() => {
-      const projectId = this.id();
+      const projectId = this.projectId();
       if (this.mode() === 'edit' && projectId) {
         this.projectStore.getProject(projectId);
       }
@@ -56,7 +56,7 @@ export class ProjectInputComponent {
       if (
         this.mode() === 'edit' &&
         currentProject &&
-        currentProject.id === this.id()
+        currentProject.id === this.projectId()
       ) {
         this.projectName.set(currentProject.name);
         this.projectDescription.set(currentProject.description);
@@ -81,10 +81,10 @@ export class ProjectInputComponent {
   }
 
   private editProject() {
-    const id = this.id();
-    if (id && this.projectName()) {
+    const projectId = this.projectId();
+    if (projectId && this.projectName()) {
       this.projectStore.editProject({
-        id,
+        id: projectId,
         name: this.projectName(),
         description: this.projectDescription(),
       });

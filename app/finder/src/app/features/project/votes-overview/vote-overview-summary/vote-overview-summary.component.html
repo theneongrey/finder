@@ -6,6 +6,11 @@
       <h2>
         {{ topic().name }}
       </h2>
+      @if (topic().description) {
+        <p class="tw:text-sm tw:text-gray-500 tw:mt-1">
+          {{ topic().description }}
+        </p>
+      }
       <div class="tw:flex tw:items-center tw:gap-2 tw:mt-1">
         <span
           class="tw:w-2 tw:h-2 tw:rounded-full tw:bg-primary tw:animate-pulse tw:inline-block"

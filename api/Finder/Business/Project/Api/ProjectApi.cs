@@ -76,7 +76,7 @@ public static class ProjectApi
         app.MapPut("/api/project/topic/{id:guid}",
                 async (Guid id, [FromBody] UpdateTopicRequest request, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.UpdateTopic(id, request.Name);
+                    var result = await projectService.UpdateTopic(id, request.Name, request.Description);
                     return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToTopicResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();

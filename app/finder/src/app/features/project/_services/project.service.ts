@@ -63,20 +63,26 @@ export class ProjectService {
     );
   }
 
-  addTopic(projectId: string, name: string, optionType: OptionType) {
+  addTopic(
+    projectId: string,
+    name: string,
+    optionType: OptionType,
+    description: string,
+  ) {
     this.loggerService.debug(`[ProjectService] adding topic ${name}`);
     return this.httpClient.post<Topic>(`${this.baseUrl}/api/project/topic`, {
       name: name,
       projectId: projectId,
       optionType: optionType,
+      description: description,
     });
   }
 
-  updateTopic(topicId: string, name: string) {
+  updateTopic(topicId: string, name: string, description: string) {
     this.loggerService.debug(`[ProjectService] updating topic ${topicId}`);
     return this.httpClient.put<TopicDetail>(
       `${this.baseUrl}/api/project/topic/${topicId}`,
-      { name },
+      { name, description },
     );
   }
 

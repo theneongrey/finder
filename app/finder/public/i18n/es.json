@@ -97,10 +97,12 @@
     "topicInput": {
       "yesNo": {
         "question": "Tu pregunta",
-        "questionPlaceholder": "¿Qué color de sofá queda mejor?",
+        "questionPlaceholder": "p. ej. ¿Dónde deberíamos celebrar la fiesta de cumpleaños?",
+        "description": "Descripción",
+        "descriptionPlaceholder": "p. ej. Decidamos juntos dónde celebrar la fiesta de cumpleaños de este año.",
         "answerOptions": "Opciones de respuesta",
         "minOptions": "Mín. 1 opción",
-        "optionPlaceholder": "Opción {{number}}",
+        "optionPlaceholder": "p. ej. Restaurante italiano en el centro",
         "urlPlaceholder": "Enlace opcional (URL)",
         "addOption": "Añadir opción",
         "createPoll": "Crear encuesta",

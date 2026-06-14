@@ -177,13 +177,14 @@ export const ProjectStore = signalStore(
     addTopic: rxMethod<{
       projectId: string;
       name: string;
+      description: string;
       optionType: OptionType;
       options?: string[];
     }>(
       pipe(
         switchMap((topic) => {
           return store.projectService
-            .addTopic(topic.projectId, topic.name, topic.optionType)
+            .addTopic(topic.projectId, topic.name, topic.optionType, topic.description)
             .pipe(
               switchMap((responseTopic) => {
                 const optionRequests = topic.options?.length
@@ -223,12 +224,13 @@ export const ProjectStore = signalStore(
       projectId: string;
       topicId: string;
       name: string;
+      description: string;
       options: { id?: string; text: string }[];
       removedOptionIds: string[];
     }>(
       pipe(
         switchMap((topic) => {
-          return store.projectService.updateTopic(topic.topicId, topic.name).pipe(
+          return store.projectService.updateTopic(topic.topicId, topic.name, topic.description).pipe(
             switchMap(() => {
               const optionRequests = [
                 ...topic.options.map((o) =>

@@ -6,6 +6,11 @@
     <h2>
       {{ topic()?.name }}
     </h2>
+    @if (topic()?.description) {
+      <p class="tw:text-sm tw:text-surface-500">
+        {{ topic()?.description }}
+      </p>
+    }
     @if (totalCount() > 0) {
       <span class="tw:text-sm tw:text-surface-500">
         {{

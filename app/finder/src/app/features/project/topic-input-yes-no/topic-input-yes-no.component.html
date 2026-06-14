@@ -1,11 +1,11 @@
-<div class="tw:flex tw:flex-col tw:gap-6 tw:mx-4 tw:pb-28">
+<div class="tw:flex tw:flex-col tw:gap-3 tw:mx-4 tw:pb-28">
   <!-- Your question -->
   <div class="tw:flex tw:flex-col tw:gap-1">
     <label class="tw:text-sm tw:font-semibold tw:px-1" for="question">
-      {{ 'project.topicInput.yesNo.question' | translate }}
+      {{ "project.topicInput.yesNo.question" | translate }}
     </label>
     <div
-      class="tw:bg-gray-50 tw:rounded-xl tw:py-4 tw:border tw:border-transparent tw:transition-all tw:duration-300"
+      class="tw:bg-gray-50 tw:rounded-xl tw:border tw:border-transparent tw:transition-all tw:duration-300"
     >
       <input
         pInputText
@@ -13,21 +13,42 @@
         name="question"
         class="tw:w-full tw:bg-transparent"
         autocomplete="off"
-        [placeholder]="'project.topicInput.yesNo.questionPlaceholder' | translate"
+        [placeholder]="
+          'project.topicInput.yesNo.questionPlaceholder' | translate
+        "
         [ngModel]="question()"
         (ngModelChange)="question.set($event)"
       />
     </div>
   </div>
 
+  <!-- Description -->
+  <div class="tw:flex tw:flex-col tw:gap-1">
+    <label class="tw:text-sm tw:font-semibold tw:px-1" for="description">
+      {{ "project.topicInput.yesNo.description" | translate }}
+    </label>
+    <textarea
+      pTextarea
+      id="description"
+      name="description"
+      class="tw:w-full tw:h-24"
+      autocomplete="off"
+      [placeholder]="
+        'project.topicInput.yesNo.descriptionPlaceholder' | translate
+      "
+      [ngModel]="description()"
+      (ngModelChange)="description.set($event)"
+    ></textarea>
+  </div>
+
   <!-- Answer options -->
-  <div class="tw:flex tw:flex-col tw:gap-2">
+  <div class="tw:flex tw:flex-col tw:gap-2 tw:mt-4">
     <div class="tw:flex tw:justify-between tw:items-center tw:px-1">
       <span class="tw:text-sm tw:font-semibold">
-        {{ 'project.topicInput.yesNo.answerOptions' | translate }}
+        {{ "project.topicInput.yesNo.answerOptions" | translate }}
       </span>
       <span class="tw:text-xs tw:text-neutral">{{
-        'project.topicInput.yesNo.minOptions' | translate
+        "project.topicInput.yesNo.minOptions" | translate
       }}</span>
     </div>
 
@@ -68,7 +89,9 @@
                   box-shadow: none;
                   padding-left: 0;
                 "
-                [placeholder]="'project.topicInput.yesNo.urlPlaceholder' | translate"
+                [placeholder]="
+                  'project.topicInput.yesNo.urlPlaceholder' | translate
+                "
                 [(ngModel)]="option.url"
                 [name]="'option-url-' + $index"
                 type="url"

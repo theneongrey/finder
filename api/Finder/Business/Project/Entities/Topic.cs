@@ -13,6 +13,7 @@ public class Topic : BaseEntity
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }
+    public required string Description { get; set; }
     public required OptionType OptionType { get; set; }
     
     public required Project Project { get; set; }

@@ -19,6 +19,7 @@ public class ProjectResponseTopic
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
+    public required string Description { get; set; }
     public required int OptionType { get; set; }
     public required int OptionCount { get; set; }
     public string? NextOpenOptionId { get; set; }
@@ -55,6 +56,7 @@ public static class ProjectMapper
         {
             Id = topic.Id.ToString(),
             Name = topic.Name,
+            Description = topic.Description,
             OptionType = (int)topic.OptionType,
             OptionCount = topic.Options.Count,
             NextOpenOptionId = topic.Options

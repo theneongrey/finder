@@ -97,10 +97,12 @@
     "topicInput": {
       "yesNo": {
         "question": "Deine Frage",
-        "questionPlaceholder": "Welche Couchfarbe passt am besten?",
+        "questionPlaceholder": "z. B. Wo sollen wir die Geburtstagsfeier feiern?",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "z. B. Lasst uns gemeinsam entscheiden, wo wir die diesjährige Geburtstagsfeier feiern.",
         "answerOptions": "Antwortmöglichkeiten",
         "minOptions": "Mind. 1 Option",
-        "optionPlaceholder": "Option {{number}}",
+        "optionPlaceholder": "z. B. Italienisches Restaurant in der Innenstadt",
         "urlPlaceholder": "Optionaler Link (URL)",
         "addOption": "Option hinzufügen",
         "createPoll": "Umfrage erstellen",

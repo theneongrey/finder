@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
+import { Textarea } from 'primeng/textarea';
 import { Button } from 'primeng/button';
 import { TitleService } from '../../../common/services/title.service';
 import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
@@ -29,6 +30,7 @@ interface OptionEntry {
   imports: [
     FormsModule,
     InputText,
+    Textarea,
     Button,
     AddCardComponent,
     SideColorCardComponent,
@@ -45,6 +47,7 @@ export class TopicInputYesNoComponent {
   topicId = input<string | undefined>(undefined);
 
   question = signal('');
+  description = signal('');
   options = signal<OptionEntry[]>([{ text: '', url: '' }]);
   removedOptionIds = signal<string[]>([]);
 
@@ -85,6 +88,7 @@ export class TopicInputYesNoComponent {
         currentTopic.id === this.topicId()
       ) {
         this.question.set(currentTopic.name);
+        this.description.set(currentTopic.description);
         this.options.set(
           currentTopic.options.length
             ? currentTopic.options.map((o) => ({
@@ -137,6 +141,7 @@ export class TopicInputYesNoComponent {
     this.projectStore.addTopic({
       projectId,
       name: this.question(),
+      description: this.description(),
       optionType: OptionType.YesNo,
       options: optionTexts,
     });
@@ -157,6 +162,7 @@ export class TopicInputYesNoComponent {
       projectId,
       topicId,
       name: this.question(),
+      description: this.description(),
       options,
       removedOptionIds: this.removedOptionIds(),
     });

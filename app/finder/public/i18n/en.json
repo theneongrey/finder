@@ -97,10 +97,12 @@
     "topicInput": {
       "yesNo": {
         "question": "Your question",
-        "questionPlaceholder": "Which couch color fits best?",
+        "questionPlaceholder": "e.g. Where should we celebrate the birthday party?",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Let's decide together where to celebrate this year's birthday party.",
         "answerOptions": "Answer options",
         "minOptions": "Min. 1 option",
-        "optionPlaceholder": "Option {{number}}",
+        "optionPlaceholder": "e.g. Italian restaurant downtown",
         "urlPlaceholder": "Optional link (URL)",
         "addOption": "Add option",
         "createPoll": "Create poll",

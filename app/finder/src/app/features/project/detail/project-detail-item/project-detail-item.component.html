@@ -10,8 +10,14 @@
     </div>
     <div class="tw:flex tw:flex-col tw:flex-1">
       <h3>{{ _topic.name }}</h3>
-      <p class="label-sm">
-        {{ 'project.detail.item.options' | translate: { count: _topic.optionCount } }}
+      @if (_topic.description) {
+        <p class="label-sm tw:mt-1">{{ _topic.description }}</p>
+      }
+      <p class="label-sm tw:mt-2">
+        {{
+          "project.detail.item.options"
+            | translate: { count: _topic.optionCount }
+        }}
       </p>
     </div>
     <p-button

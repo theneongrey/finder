@@ -4,6 +4,7 @@ WORKDIR /
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY Finder/*.csproj ./Finder/
+COPY Finder.Tests/*.csproj ./Finder.Tests/
 RUN dotnet restore
 
 # copy everything else and build app

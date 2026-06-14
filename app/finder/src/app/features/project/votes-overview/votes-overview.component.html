@@ -1,175 +1,28 @@
 <div class="tw:flex tw:flex-col tw:gap-6 tw:p-4 tw:pb-8">
   @if (topic(); as topic) {
-    <!-- Active Voting Progress Card -->
-    <div
-      class="tw:bg-white tw:rounded-2xl tw:p-6 tw:shadow-sm tw:border-l-4 tw:border-primary"
-    >
-      <div class="tw:flex tw:justify-between tw:items-start tw:mb-3">
-        <div>
-          <h2>
-            {{ topic.name }}
-          </h2>
-          <div class="tw:flex tw:items-center tw:gap-2 tw:mt-1">
-            <span
-              class="tw:w-2 tw:h-2 tw:rounded-full tw:bg-primary tw:animate-pulse tw:inline-block"
-            ></span>
-            <span
-              class="tw:text-xs tw:font-semibold tw:text-primary tw:uppercase tw:tracking-wider"
-              >{{ 'project.votesOverview.active' | translate }}</span
-            >
-          </div>
-        </div>
-        <div class="tw:text-right tw:flex tw:flex-col tw:items-end tw:gap-1">
-          <a
-            href="{{ currentUrl + '#comments-section' }}"
-            class="tw:inline-flex tw:items-center tw:gap-1.5 tw:bg-primary/20 tw:text-primary tw:px-3 tw:py-1.5 tw:rounded-full tw:text-sm tw:font-bold tw:no-underline"
-          >
-            <i class="pi pi-comment" style="font-size: 16px"></i>
-            <span>{{ comments.length }}</span>
-          </a>
-          <p class="tw:text-xl tw:font-semibold tw:text-primary tw:mt-1">
-            {{ votedCount() }}
-            <span class="tw:text-gray-500 tw:text-base tw:font-normal">{{
-              'project.votesOverview.of' | translate: { total: totalCount() }
-            }}</span>
-          </p>
-          <p class="label-sm">{{ 'project.votesOverview.rated' | translate }}</p>
-        </div>
-      </div>
+    <app-vote-overview-summary
+      [topic]="topic"
+      [currentUrl]="currentUrl"
+      [commentsCount]="topic.comments.length"
+      [projectId]="projectId()"
+      [topicId]="topicId()"
+    />
 
-      <!-- Progress Bar -->
-      <p-progressBar [value]="progressPercent()" />
+    <app-option-list
+      [options]="topic.options"
+      [projectId]="projectId()"
+      [topicId]="topicId()"
+    />
 
-      <div class="tw:mt-4 tw:flex tw:justify-between tw:items-center">
-        <p class="label-sm">{{ 'project.votesOverview.closesIn' | translate }}</p>
-        @if (hasOpenOptions()) {
-          <p-button
-            [label]="'project.votesOverview.continueVoting' | translate"
-            icon="pi pi-arrow-right-arrow-left"
-            [routerLink]="['/project/detail', id(), 'vote', topicId()]"
-            size="small"
-          />
-        }
-      </div>
-    </div>
-
-    <!-- Options Grid -->
-    <div>
-      <div class="tw:flex tw:justify-between tw:items-end tw:mb-3">
-        <h3>{{ 'project.votesOverview.candidates' | translate }}</h3>
-        <p class="label-sm">{{ 'project.votesOverview.sortedByPopularity' | translate }}</p>
-      </div>
-
-      <div class="tw:grid tw:grid-cols-1 tw:gap-4">
-        @for (option of sortedOptions(); track option.id; let i = $index) {
-          <div
-            class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:flex tw:flex-col tw:border tw:border-gray-100"
-          >
-            <div class="tw:flex tw:justify-between tw:items-start tw:mb-3">
-              <div class="tw:flex tw:flex-col tw:gap-1">
-                <h4
-                  class="tw:text-base tw:font-semibold tw:text-gray-900 tw:leading-tight"
-                >
-                  {{ option.text }}
-                </h4>
-                @if (hasMostVotes(option)) {
-                  <p-tag [value]="'project.votesOverview.mostVotes' | translate" icon="pi pi-trophy" />
-                }
-              </div>
-              <div
-                class="tw:flex tw:flex-col tw:items-center tw:shrink-0 tw:ml-3"
-              >
-                <i
-                  class="pi"
-                  [ngClass]="[
-                    voteIcon(option.choice),
-                    voteColorClass(option.choice),
-                  ]"
-                  style="font-size: 22px"
-                ></i>
-                <span
-                  class="tw:text-xs tw:font-medium tw:mt-0.5"
-                  [ngClass]="voteColorClass(option.choice)"
-                  >{{ voteLabel(option.choice) }}</span
-                >
-              </div>
-            </div>
-
-            <div class="tw:flex tw:items-center tw:gap-2 tw:mb-3">
-              <i
-                class="pi pi-users tw:text-gray-400 tw:text"
-                style="font-size: 13px"
-              ></i>
-              <span class="tw:text-xs tw:text-gray-500">
-                {{ votesCountLabel(option) }}
-              </span>
-            </div>
-
-            <p-button
-              [label]="
-                option.choice
-                  ? ('project.votesOverview.reVote' | translate)
-                  : ('project.common.vote' | translate)
-              "
-              [icon]="option.choice ? 'pi pi-refresh' : 'pi pi-play'"
-              [severity]="option.choice ? 'secondary' : 'primary'"
-              [routerLink]="[
-                '/project/detail',
-                id(),
-                'vote',
-                topicId(),
-                option.id,
-              ]"
-              styleClass="tw:w-full"
-            />
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Comments Section -->
-    <div>
-      <h3 id="comments-section">{{ 'project.votesOverview.comments' | translate }}</h3>
-      <div
-        class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:border tw:border-gray-100"
-      >
-        <div class="tw:flex tw:flex-col tw:gap-3 tw:mb-4">
-          @for (comment of comments; track comment.author) {
-            <div class="tw:flex tw:gap-2">
-              <div
-                class="tw:w-8 tw:h-8 tw:rounded-full tw:bg-primary tw:text-white tw:flex tw:items-center tw:justify-center tw:text-sm tw:font-bold tw:shrink-0"
-              >
-                {{ comment.initials }}
-              </div>
-              <div
-                class="tw:bg-gray-50 tw:p-3 tw:rounded-2xl tw:rounded-tl-none tw:flex-1"
-              >
-                <p class="tw:text-sm tw:font-bold tw:text-gray-900">
-                  {{ comment.author }}
-                </p>
-                <p class="tw:text-sm tw:text-gray-600">{{ comment.text }}</p>
-                <span
-                  class="tw:text-[10px] tw:text-gray-400 tw:mt-1 tw:uppercase tw:tracking-wider tw:font-semibold tw:block"
-                  >{{ comment.time }}</span
-                >
-              </div>
-            </div>
-          }
-        </div>
-
-        <p-inputgroup>
-          <input
-            pInputText
-            type="text"
-            [placeholder]="'project.votesOverview.newComment' | translate"
-          />
-          <p-button icon="pi pi-send" />
-        </p-inputgroup>
-      </div>
-    </div>
+    <app-comments-section
+      [comments]="topic.comments"
+      (addComment)="addComment($event)"
+    />
   } @else {
     <div class="tw:flex tw:justify-center tw:items-center tw:h-32">
-      <p class="tw:text-gray-500">{{ 'project.votesOverview.loading' | translate }}</p>
+      <p class="tw:text-gray-500">
+        {{ "project.votesOverview.loading" | translate }}
+      </p>
     </div>
   }
 </div>

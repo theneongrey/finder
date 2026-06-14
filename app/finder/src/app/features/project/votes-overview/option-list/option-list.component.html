@@ -1,0 +1,19 @@
+<div>
+  <div class="tw:flex tw:justify-between tw:items-end tw:mb-3">
+    <h3>{{ "project.votesOverview.candidates" | translate }}</h3>
+    <p class="label-sm">
+      {{ "project.votesOverview.sortedByPopularity" | translate }}
+    </p>
+  </div>
+
+  <div class="tw:grid tw:grid-cols-1 tw:gap-4">
+    @for (option of sortedOptions(); track option.id) {
+      <app-option-card
+        [option]="option"
+        [isMostVoted]="hasMostVotes(option)"
+        [projectId]="projectId()"
+        [topicId]="topicId()"
+      />
+    }
+  </div>
+</div>

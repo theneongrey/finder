@@ -15,7 +15,10 @@ public class TopicConfiguration : IEntityTypeConfiguration<Topic>
 
         builder.HasMany(p => p.Options)
             .WithOne(p => p.Topic);
-        
+
+        builder.HasMany(p => p.Comments)
+            .WithOne(p => p.Topic);
+
         builder.Property(p => p.OptionType)
             .HasConversion<int>();
     }

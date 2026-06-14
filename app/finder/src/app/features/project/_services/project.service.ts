@@ -4,6 +4,7 @@ import { ProjectOverview } from '../_models/project-overview.model';
 import { environment } from '../../../common/env/environment';
 import { LoggerService } from '../../../common/services/logger.service';
 import {
+  Comment,
   Option,
   OptionType,
   Project,
@@ -120,6 +121,17 @@ export class ProjectService {
       `${this.baseUrl}/api/project/topic/vote/${optionId}`,
       {
         choice,
+      },
+    );
+  }
+
+  addComment(topicId: string, content: string) {
+    this.loggerService.debug(`[ProjectService] adding comment to topic ${topicId}`);
+    return this.httpClient.post<Comment>(
+      `${this.baseUrl}/api/project/topic/comment`,
+      {
+        topicId,
+        content,
       },
     );
   }

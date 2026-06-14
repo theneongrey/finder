@@ -49,7 +49,7 @@ export class ProjectDetailComponent {
   private readonly confirmationService = inject(ConfirmationService);
   private readonly translateService = inject(TranslateService);
 
-  id = input('');
+  projectId = input('');
   action = input('');
   project = this.projectStore.currentProject;
 
@@ -63,7 +63,7 @@ export class ProjectDetailComponent {
     this.titleService.setBackroute('/project/');
 
     effect(() => {
-      this.projectStore.getProject(this.id());
+      this.projectStore.getProject(this.projectId());
     });
 
     effect(() => {
@@ -76,11 +76,18 @@ export class ProjectDetailComponent {
 
   showDeleteTopicDialog(id: string, title: string) {
     this.confirmationService.confirm({
-      header: this.translateService.instant('project.detail.deleteTopicConfirm.header'),
-      message: this.translateService.instant('project.detail.deleteTopicConfirm.message', {
-        name: title,
-      }),
-      acceptLabel: this.translateService.instant('project.detail.deleteTopicConfirm.accept'),
+      header: this.translateService.instant(
+        'project.detail.deleteTopicConfirm.header',
+      ),
+      message: this.translateService.instant(
+        'project.detail.deleteTopicConfirm.message',
+        {
+          name: title,
+        },
+      ),
+      acceptLabel: this.translateService.instant(
+        'project.detail.deleteTopicConfirm.accept',
+      ),
       rejectLabel: this.translateService.instant('project.common.cancel'),
       accept: () => {
         this.projectStore.deleteTopic(id);

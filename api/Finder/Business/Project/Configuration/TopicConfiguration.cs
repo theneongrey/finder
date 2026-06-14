@@ -13,6 +13,9 @@ public class TopicConfiguration : IEntityTypeConfiguration<Topic>
         builder.Property(p => p.Name)
             .HasMaxLength(1024);
 
+        builder.Property(p => p.Description)
+            .HasMaxLength(200);
+
         builder.HasMany(p => p.Options)
             .WithOne(p => p.Topic);
 

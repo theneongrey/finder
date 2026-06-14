@@ -105,7 +105,7 @@ public static class ProjectApi
         app.MapPut("/api/project/topic/option/{id:guid}",
                 async (Guid id, [FromBody] UpdateOptionRequest request, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.UpdateOption(id, request.Text);
+                    var result = await projectService.UpdateOption(id, request.Text, request.Description, request.Url);
                     return !result.IsSuccess
                         ? Results.NotFound()
                         : Results.Ok(result.Payload!.ToTopicResponseOption(userService.GetUserId()));

@@ -93,22 +93,34 @@ export class ProjectService {
     );
   }
 
-  addOption(topicId: string, text: string) {
+  addOption(
+    topicId: string,
+    text: string,
+    description: string,
+    url: string,
+  ) {
     this.loggerService.debug(`[ProjectService] adding option ${text}`);
     return this.httpClient.post<Option>(
       `${this.baseUrl}/api/project/topic/option`,
       {
         text: text,
+        description: description,
+        url: url,
         topicId: topicId,
       },
     );
   }
 
-  updateOption(optionId: string, text: string) {
+  updateOption(
+    optionId: string,
+    text: string,
+    description: string,
+    url: string,
+  ) {
     this.loggerService.debug(`[ProjectService] updating option ${optionId}`);
     return this.httpClient.put<Option>(
       `${this.baseUrl}/api/project/topic/option/${optionId}`,
-      { text },
+      { text, description, url },
     );
   }
 

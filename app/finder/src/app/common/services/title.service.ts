@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -9,16 +10,19 @@ import { tap } from 'rxjs/operators';
 export class TitleService {
   private router = inject(Router);
 
-  // reset on navigation
-  private _ = this.router.events
-    .pipe(
-      filter((e): e is NavigationStart => e instanceof NavigationStart),
-      tap(() => {
-        this.#backRoute.set(undefined);
-        this.#isHidden.set(false);
-      }),
-    )
-    .subscribe();
+  constructor() {
+    // reset on navigation
+    this.router.events
+      .pipe(
+        filter((e): e is NavigationStart => e instanceof NavigationStart),
+        tap(() => {
+          this.#backRoute.set(undefined);
+          this.#isHidden.set(false);
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
+  }
 
   #backRoute = signal<string | undefined>(undefined);
   backRoute = this.#backRoute.asReadonly();

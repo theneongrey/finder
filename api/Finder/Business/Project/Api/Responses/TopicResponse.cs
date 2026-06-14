@@ -10,6 +10,9 @@ public class TopicResponseOption
 {
     public required string Id { get; set; }
     public required string Text { get; set; }
+    public required string Description { get; set; }
+    public required string Url { get; set; }
+    public required string PreviewImageUrl { get; set; }
     public required TopicResponseVote[] Votes { get; set; }
     public required string? Choice { get; set; }
 }
@@ -41,6 +44,9 @@ public static class TopicMapper
         {
             Id = option.Id.ToString(),
             Text = option.Text,
+            Description = option.Description,
+            Url = option.Url,
+            PreviewImageUrl = option.PreviewImageUrl,
             Votes = option.Votes.Select(v => v.ToTopicResponseVote()).ToArray(),
             Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice
         };

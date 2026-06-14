@@ -85,20 +85,33 @@
       (mousedown)="onDragStart($event)"
       (touchstart)="onDragStart($event)"
     >
-      <!-- Icon placeholder -->
+      <!-- Image / icon placeholder -->
       <div
-        class="tw:flex-1 tw:bg-surface-100 tw:flex tw:items-center tw:justify-center"
+        class="tw:flex-1 tw:bg-surface-100 tw:flex tw:items-center tw:justify-center tw:overflow-hidden"
       >
-        <i class="pi pi-image tw:text-6xl tw:text-surface-300"></i>
+        @if (option()?.previewImageUrl) {
+          <img
+            [src]="option()?.previewImageUrl"
+            alt=""
+            class="tw:w-full tw:h-full tw:object-cover"
+          />
+        } @else {
+          <i class="pi pi-image tw:text-6xl tw:text-surface-300"></i>
+        }
       </div>
 
       <!-- Card content -->
-      <div class="tw:p-6 tw:flex-shrink-0">
+      <div class="tw:p-6 tw:flex-shrink-0 tw:flex tw:flex-col tw:gap-1">
         <p
           class="tw:text-base tw:font-semibold tw:text-surface-900 tw:leading-snug"
         >
           {{ option()?.text }}
         </p>
+        @if (option()?.description) {
+          <p class="tw:text-sm tw:text-surface-500">
+            {{ option()?.description }}
+          </p>
+        }
       </div>
     </div>
   </div>

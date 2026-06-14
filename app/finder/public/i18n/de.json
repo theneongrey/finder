@@ -75,7 +75,7 @@
         "accept": "Umfrage löschen"
       },
       "item": {
-        "options": "Optionen: {{count}}",
+        "options": "Auswahlmöglichkeiten: {{count}}",
         "pollOverview": "Umfrage-übersicht"
       }
     },
@@ -103,7 +103,9 @@
         "answerOptions": "Antwortmöglichkeiten",
         "minOptions": "Mind. 1 Option",
         "optionPlaceholder": "z. B. Italienisches Restaurant in der Innenstadt",
+        "optionDescriptionPlaceholder": "Beschreibung",
         "urlPlaceholder": "Optionaler Link (URL)",
+        "previewImageUrlPlaceholder": "Optionales Vorschaubild (URL)",
         "addOption": "Option hinzufügen",
         "createPoll": "Umfrage erstellen",
         "updatePoll": "Umfrage aktualisieren"

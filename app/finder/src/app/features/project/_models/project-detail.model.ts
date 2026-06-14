@@ -23,6 +23,9 @@ export interface Vote {
 export interface OptionDetail {
   id: string;
   text: string;
+  description: string;
+  url: string;
+  previewImageUrl: string;
   votes: Vote[];
   choice: string | null;
 }
@@ -46,6 +49,9 @@ export interface TopicDetail {
 export interface Option {
   id: string;
   text: string;
+  description: string;
+  url: string;
+  previewImageUrl: string;
   votes: number;
   choice: string | null;
 }

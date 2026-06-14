@@ -103,7 +103,9 @@
         "answerOptions": "Opciones de respuesta",
         "minOptions": "Mín. 1 opción",
         "optionPlaceholder": "p. ej. Restaurante italiano en el centro",
+        "optionDescriptionPlaceholder": "Descripción",
         "urlPlaceholder": "Enlace opcional (URL)",
+        "previewImageUrlPlaceholder": "Imagen de vista previa opcional (URL)",
         "addOption": "Añadir opción",
         "createPoll": "Crear encuesta",
         "updatePoll": "Actualizar encuesta"

@@ -103,7 +103,9 @@
         "answerOptions": "Answer options",
         "minOptions": "Min. 1 option",
         "optionPlaceholder": "e.g. Italian restaurant downtown",
+        "optionDescriptionPlaceholder": "Description",
         "urlPlaceholder": "Optional link (URL)",
+        "previewImageUrlPlaceholder": "Optional preview image (URL)",
         "addOption": "Add option",
         "createPoll": "Create poll",
         "updatePoll": "Update poll"

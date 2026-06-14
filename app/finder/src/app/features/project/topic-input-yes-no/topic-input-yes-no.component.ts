@@ -20,6 +20,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 interface OptionEntry {
   id?: string;
   text: string;
+  description: string;
   url: string;
 }
 
@@ -48,7 +49,9 @@ export class TopicInputYesNoComponent {
 
   question = signal('');
   description = signal('');
-  options = signal<OptionEntry[]>([{ text: '', url: '' }]);
+  options = signal<OptionEntry[]>([
+    { text: '', description: '', url: '' },
+  ]);
   removedOptionIds = signal<string[]>([]);
 
   constructor() {
@@ -94,9 +97,10 @@ export class TopicInputYesNoComponent {
             ? currentTopic.options.map((o) => ({
                 id: o.id,
                 text: o.text,
-                url: '',
+                description: o.description,
+                url: o.url,
               }))
-            : [{ text: '', url: '' }],
+            : [{ text: '', description: '', url: '' }],
         );
       }
     });
@@ -109,7 +113,10 @@ export class TopicInputYesNoComponent {
   }
 
   addOption(): void {
-    this.options.update((opts) => [...opts, { text: '', url: '' }]);
+    this.options.update((opts) => [
+      ...opts,
+      { text: '', description: '', url: '' },
+    ]);
   }
 
   removeOption(index: number): void {
@@ -134,16 +141,20 @@ export class TopicInputYesNoComponent {
       return;
     }
 
-    const optionTexts = this.options()
+    const options = this.options()
       .filter((o) => !!o.text)
-      .map((o) => o.text);
+      .map((o) => ({
+        text: o.text,
+        description: o.description,
+        url: o.url,
+      }));
 
     this.projectStore.addTopic({
       projectId,
       name: this.question(),
       description: this.description(),
       optionType: OptionType.YesNo,
-      options: optionTexts,
+      options,
     });
   }
 
@@ -156,7 +167,12 @@ export class TopicInputYesNoComponent {
 
     const options = this.options()
       .filter((o) => !!o.text)
-      .map((o) => ({ id: o.id, text: o.text }));
+      .map((o) => ({
+        id: o.id,
+        text: o.text,
+        description: o.description,
+        url: o.url,
+      }));
 
     this.projectStore.editTopic({
       projectId,

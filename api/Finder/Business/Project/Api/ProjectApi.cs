@@ -129,5 +129,16 @@ public static class ProjectApi
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();
+
+        // Add comment
+        app.MapPost("/api/project/topic/comment",
+                async ([FromBody] AddCommentRequest request, ProjectService projectService) =>
+                {
+                    var result = await projectService.AddComment(request);
+                    return !result.IsSuccess
+                        ? Results.NotFound()
+                        : Results.Ok(result.Payload!.ToCommentResponse());
+                })
+            .RequireAuthorization();
     }
 }

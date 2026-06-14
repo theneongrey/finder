@@ -26,11 +26,19 @@ export interface OptionDetail {
   choice: string | null;
 }
 
+export interface Comment {
+  id: string;
+  content: string;
+  author: string;
+  created: string;
+}
+
 export interface TopicDetail {
   id: string;
   name: string;
   optionType: OptionType;
   options: OptionDetail[];
+  comments: Comment[];
 }
 
 export interface Option {

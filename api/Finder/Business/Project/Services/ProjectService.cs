@@ -196,6 +196,8 @@ public class ProjectService
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Person)
             .Where(t => t.Id == topicId && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
@@ -275,5 +277,36 @@ public class ProjectService
 
         await _dbContext.SaveChangesAsync();
         return Result.Success();
+    }
+
+    public async Task<Result<Comment>> AddComment(AddCommentRequest request)
+    {
+        var topic = await _dbContext.Topics
+            .Where(t => t.Id == request.TopicId && (
+                t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
+                t.Project.Creator.Id == UserId ||
+                t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
+            .FirstOrDefaultAsync();
+
+        if (topic is null)
+        {
+            return Result<Comment>.Fail(404);
+        }
+
+        var user = (await _userService.GetUser()).Payload!;
+
+        var comment = new Comment
+        {
+            Id = Guid.NewGuid(),
+            Content = request.Content,
+            Topic = topic,
+            Person = user
+        };
+        topic.Comments.Add(comment);
+
+        _dbContext.Comments.Add(comment);
+
+        await _dbContext.SaveChangesAsync();
+        return Result<Comment>.Success(comment);
     }
 }

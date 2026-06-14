@@ -11,10 +11,7 @@ import { RoutingService } from '../../../common/services/routing.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overview-summary.component';
 import { OptionListComponent } from './option-list/option-list.component';
-import {
-  CommentsSectionComponent,
-  Comment,
-} from './comments-section/comments-section.component';
+import { CommentsSectionComponent } from './comments-section/comments-section.component';
 
 @Component({
   selector: 'app-votes-overview',
@@ -40,27 +37,6 @@ export class VotesOverviewComponent {
 
   topic = this.projectStore.currentTopic;
 
-  comments: Comment[] = [
-    {
-      author: 'Bob',
-      initials: 'B',
-      text: 'The color really matches our living room!',
-      time: '2h ago',
-    },
-    {
-      author: 'Mike',
-      initials: 'M',
-      text: 'Looks very comfortable.',
-      time: '10min ago',
-    },
-    {
-      author: 'Anna',
-      initials: 'A',
-      text: 'Might be too delicate for everyday use.',
-      time: 'Yesterday',
-    },
-  ];
-
   constructor() {
     const titleService = inject(TitleService);
     const title = this.translateService.translate(
@@ -82,5 +58,9 @@ export class VotesOverviewComponent {
         titleService.setTitle(title());
       }
     });
+  }
+
+  addComment(content: string) {
+    this.projectStore.addComment({ topicId: this.topicId(), content });
   }
 }

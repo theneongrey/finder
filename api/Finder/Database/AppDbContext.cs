@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Topic> Topics { get; set; }
     public DbSet<Option> Options { get; set; }
     public DbSet<Vote> Votes { get; set; }
+    public DbSet<Comment> Comments { get; set; }
     public DbSet<Person> Persons { get; set; }
     public DbSet<LoginToken> LoginTokens { get; set; }
     public DbSet<Permission> Permissions { get; set; }

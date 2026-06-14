@@ -13,7 +13,7 @@ import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
-import { OptionType, Project, TopicDetail } from '../_models/project-detail.model';
+import { Comment, OptionType, Project, TopicDetail } from '../_models/project-detail.model';
 import { PermissionService } from '../_services/permission.service';
 
 export const ProjectStore = signalStore(
@@ -422,6 +422,39 @@ export const ProjectStore = signalStore(
               },
             }),
           );
+        }),
+      ),
+    ),
+
+    addComment: rxMethod<{
+      topicId: string;
+      content: string;
+    }>(
+      pipe(
+        switchMap((comment) => {
+          return store.projectService
+            .addComment(comment.topicId, comment.content)
+            .pipe(
+              tapResponse({
+                next: (addedComment: Comment) => {
+                  const currentTopic = store.currentTopic();
+                  if (currentTopic?.id === comment.topicId) {
+                    patchState(store, {
+                      currentTopic: {
+                        ...currentTopic,
+                        comments: [...currentTopic.comments, addedComment],
+                      },
+                    });
+                  }
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error while adding a comment',
+                    error,
+                  );
+                },
+              }),
+            );
         }),
       ),
     ),

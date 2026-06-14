@@ -20,6 +20,7 @@ public class TopicResponse
     public required string Name { get; set; }
     public required int OptionType { get; set; }
     public required TopicResponseOption[] Options { get; set; }
+    public required CommentResponse[] Comments { get; set; }
 }
 
 public static class TopicMapper
@@ -51,7 +52,11 @@ public static class TopicMapper
             Id = topic.Id.ToString(),
             Name = topic.Name,
             OptionType = (int)topic.OptionType,
-            Options = topic.Options.Select(o => o.ToTopicResponseOption(userId)).ToArray()
+            Options = topic.Options.Select(o => o.ToTopicResponseOption(userId)).ToArray(),
+            Comments = topic.Comments
+                .OrderBy(c => c.Created)
+                .Select(c => c.ToCommentResponse())
+                .ToArray()
         };
     }
 }

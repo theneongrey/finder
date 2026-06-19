@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+textarea {
+  transition: height 200ms ease-out;
+}

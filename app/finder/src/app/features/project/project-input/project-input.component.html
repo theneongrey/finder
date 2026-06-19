@@ -16,16 +16,13 @@
   </div>
   <div class="tw:mb-5 tw:mt-5">
     <label for="description">{{ 'project.input.descriptionLabel' | translate }}</label>
-    <textarea
-      pTextarea
-      id="description"
+    <app-auto-resize-textarea
       name="description"
-      class="tw:w-full tw:h-30"
-      autocomplete="off"
-      maxlength="200"
+      inputId="description"
+      [maxlength]="200"
       [placeholder]="'project.input.descriptionPlaceholder' | translate"
       [(ngModel)]="projectDescription"
-    ></textarea>
+    />
   </div>
   <div class="tw:flex tw:gap-1 tw:mt-auto tw:mb-4 p-fluid">
     <p-button

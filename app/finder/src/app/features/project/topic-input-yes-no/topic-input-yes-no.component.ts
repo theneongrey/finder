@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
-import { Textarea } from 'primeng/textarea';
 import { Button } from 'primeng/button';
+import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { TitleService } from '../../../common/services/title.service';
 import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
 import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
@@ -31,8 +31,8 @@ interface OptionEntry {
   imports: [
     FormsModule,
     InputText,
-    Textarea,
     Button,
+    AutoResizeTextareaComponent,
     AddCardComponent,
     SideColorCardComponent,
     TranslatePipe,

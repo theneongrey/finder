@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { ProjectStore } from '../_data/project.store';
-import { Textarea } from 'primeng/textarea';
+import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { TitleService } from '../../../common/services/title.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -18,7 +18,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   selector: 'app-project-add-project',
   templateUrl: './project-input.component.html',
   styleUrl: './project-input.component.css',
-  imports: [FormsModule, InputText, Button, Textarea, TranslatePipe],
+  imports: [FormsModule, InputText, Button, AutoResizeTextareaComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectInputComponent {

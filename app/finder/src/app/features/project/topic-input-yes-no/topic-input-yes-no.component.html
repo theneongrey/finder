@@ -27,19 +27,16 @@
     <label class="tw:text-sm tw:font-semibold tw:px-1" for="description">
       {{ "project.topicInput.yesNo.description" | translate }}
     </label>
-    <textarea
-      pTextarea
-      id="description"
+    <app-auto-resize-textarea
       name="description"
-      class="tw:w-full tw:h-24"
-      autocomplete="off"
-      maxlength="200"
+      inputId="description"
+      [maxlength]="200"
       [placeholder]="
         'project.topicInput.yesNo.descriptionPlaceholder' | translate
       "
       [ngModel]="description()"
       (ngModelChange)="description.set($event)"
-    ></textarea>
+    />
   </div>
 
   <!-- Answer options -->

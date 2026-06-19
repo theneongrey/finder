@@ -97,12 +97,12 @@
     "topicInput": {
       "yesNo": {
         "question": "Deine Frage",
-        "questionPlaceholder": "z. B. Wo sollen wir die Geburtstagsfeier feiern?",
+        "questionPlaceholder": "z. B. Wohin sollen wir gehen?",
         "description": "Beschreibung",
-        "descriptionPlaceholder": "z. B. Lasst uns gemeinsam entscheiden, wo wir die diesjährige Geburtstagsfeier feiern.",
+        "descriptionPlaceholder": "z. B. Hilf uns, einen Ort zu wählen.",
         "answerOptions": "Antwortmöglichkeiten",
         "minOptions": "Mind. 1 Option",
-        "optionPlaceholder": "z. B. Italienisches Restaurant in der Innenstadt",
+        "optionPlaceholder": "z. B. Italienisches Restaurant",
         "optionDescriptionPlaceholder": "Beschreibung",
         "urlPlaceholder": "Optionaler Link (URL)",
         "previewImageUrlPlaceholder": "Optionales Vorschaubild (URL)",

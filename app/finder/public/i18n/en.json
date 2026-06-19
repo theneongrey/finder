@@ -97,12 +97,12 @@
     "topicInput": {
       "yesNo": {
         "question": "Your question",
-        "questionPlaceholder": "e.g. Where should we celebrate the birthday party?",
+        "questionPlaceholder": "e.g. Where should we go?",
         "description": "Description",
-        "descriptionPlaceholder": "e.g. Let's decide together where to celebrate this year's birthday party.",
+        "descriptionPlaceholder": "e.g. Help us pick a location.",
         "answerOptions": "Answer options",
         "minOptions": "Min. 1 option",
-        "optionPlaceholder": "e.g. Italian restaurant downtown",
+        "optionPlaceholder": "e.g. Italian restaurant",
         "optionDescriptionPlaceholder": "Description",
         "urlPlaceholder": "Optional link (URL)",
         "previewImageUrlPlaceholder": "Optional preview image (URL)",

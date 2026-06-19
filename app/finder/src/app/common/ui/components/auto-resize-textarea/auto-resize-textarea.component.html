@@ -1,0 +1,13 @@
+<textarea
+  #textarea
+  pTextarea
+  rows="1"
+  class="tw:w-full tw:overflow-hidden tw:resize-none"
+  [placeholder]="placeholder()"
+  [attr.maxlength]="maxlength() ?? null"
+  [attr.id]="inputId() ?? null"
+  [value]="textValue()"
+  [disabled]="isDisabled()"
+  (input)="onInput($event)"
+  (blur)="onTouched()"
+></textarea>

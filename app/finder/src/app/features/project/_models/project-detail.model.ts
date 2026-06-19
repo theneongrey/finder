@@ -12,6 +12,7 @@ export interface Topic {
   description: string;
   optionType: OptionType;
   optionCount: number;
+  commentCount: number;
   nextOpenOptionId?: string;
 }
 

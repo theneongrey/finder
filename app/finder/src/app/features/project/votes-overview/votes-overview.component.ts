@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { ProjectStore } from '../_data/project.store';
 import { TitleService } from '../../../common/services/title.service';
-import { RoutingService } from '../../../common/services/routing.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overview-summary.component';
 import { OptionListComponent } from './option-list/option-list.component';
@@ -27,10 +26,7 @@ import { CommentsSectionComponent } from './comments-section/comments-section.co
 })
 export class VotesOverviewComponent {
   private readonly projectStore = inject(ProjectStore);
-  private readonly routingService = inject(RoutingService);
   private readonly translateService = inject(TranslateService);
-
-  currentUrl = this.routingService.currentUrl();
 
   projectId = input('');
   topicId = input('');

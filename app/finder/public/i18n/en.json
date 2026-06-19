@@ -76,6 +76,7 @@
       },
       "item": {
         "options": "Options: {{count}}",
+        "comments": "Comments: {{count}}",
         "pollOverview": "Poll overview"
       }
     },

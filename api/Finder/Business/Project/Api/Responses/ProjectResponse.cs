@@ -25,6 +25,7 @@ public class ProjectResponseTopic
     public required string Description { get; set; }
     public required int OptionType { get; set; }
     public required int OptionCount { get; set; }
+    public required int CommentCount { get; set; }
     public string? NextOpenOptionId { get; set; }
 }
 
@@ -65,6 +66,7 @@ public static class ProjectMapper
             Description = topic.Description,
             OptionType = (int)topic.OptionType,
             OptionCount = topic.Options.Count,
+            CommentCount = topic.Comments.Count,
             NextOpenOptionId = topic.Options
                 .FirstOrDefault(o => o.Votes.All(v => v.Person.Id != userId))?.Id.ToString()
         };

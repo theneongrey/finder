@@ -19,7 +19,6 @@ import { TopicDetail } from '../../_models/project-detail.model';
 })
 export class VoteOverviewSummaryComponent {
   topic = input.required<TopicDetail>();
-  currentUrl = input<string | undefined>('');
   commentsCount = input(0);
   projectId = input('');
   topicId = input('');

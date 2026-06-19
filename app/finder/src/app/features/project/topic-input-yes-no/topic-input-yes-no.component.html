@@ -40,96 +40,11 @@
   </div>
 
   <!-- Answer options -->
-  <div class="tw:flex tw:flex-col tw:gap-2 tw:mt-4">
-    <div class="tw:flex tw:justify-between tw:items-center tw:px-1">
-      <span class="tw:text-sm tw:font-semibold">
-        {{ "project.topicInput.yesNo.answerOptions" | translate }}
-      </span>
-      <span class="tw:text-xs tw:text-neutral">{{
-        "project.topicInput.yesNo.minOptions" | translate
-      }}</span>
-    </div>
-
-    <div class="tw:flex tw:flex-col tw:gap-3">
-      @for (option of options(); track $index) {
-        <app-side-color-card [color]="'primary'">
-          <div class="tw:flex tw:flex-col tw:gap-3">
-            <div class="tw:flex tw:items-center tw:gap-2">
-              <input
-                pInputText
-                class="tw:flex-1 tw:bg-gray-50 tw:rounded-lg"
-                maxlength="100"
-                [placeholder]="
-                  'project.topicInput.yesNo.optionPlaceholder'
-                    | translate: { number: $index + 1 }
-                "
-                [(ngModel)]="option.text"
-                [name]="'option-text-' + $index"
-              />
-              @if (options().length > 1) {
-                <p-button
-                  type="button"
-                  icon="pi pi-times"
-                  [text]="true"
-                  severity="secondary"
-                  (click)="removeOption($index)"
-                />
-              }
-            </div>
-            <div class="tw:flex tw:items-center tw:gap-2">
-              <i class="pi pi-align-left tw:text-neutral tw:text-sm"></i>
-              <input
-                pInputText
-                class="tw:flex-1 tw:bg-transparent"
-                style="
-                  border: none;
-                  border-bottom: 1px solid var(--color-neutral);
-                  border-radius: 0;
-                  box-shadow: none;
-                  padding-left: 0;
-                "
-                maxlength="100"
-                [placeholder]="
-                  'project.topicInput.yesNo.optionDescriptionPlaceholder'
-                    | translate
-                "
-                [(ngModel)]="option.description"
-                [name]="'option-description-' + $index"
-              />
-            </div>
-            <div class="tw:flex tw:items-center tw:gap-2">
-              <i class="pi pi-link tw:text-neutral tw:text-sm"></i>
-              <input
-                pInputText
-                class="tw:flex-1 tw:bg-transparent"
-                style="
-                  border: none;
-                  border-bottom: 1px solid var(--color-neutral);
-                  border-radius: 0;
-                  box-shadow: none;
-                  padding-left: 0;
-                "
-                maxlength="2048"
-                [placeholder]="
-                  'project.topicInput.yesNo.urlPlaceholder' | translate
-                "
-                [(ngModel)]="option.url"
-                [name]="'option-url-' + $index"
-                type="url"
-              />
-            </div>
-          </div>
-        </app-side-color-card>
-      }
-    </div>
-
-    <!-- Add option button -->
-    <app-add-card
-      [cto]="'project.topicInput.yesNo.addOption' | translate"
-      [iconLeft]="true"
-      (action)="addOption()"
-    />
-  </div>
+  <app-topic-options
+    [options]="options()"
+    (add)="addOption()"
+    (remove)="removeOption($event)"
+  />
 
   <!-- Bottom action bar -->
   <div

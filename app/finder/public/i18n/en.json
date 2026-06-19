@@ -106,6 +106,8 @@
         "optionDescriptionPlaceholder": "Description",
         "urlPlaceholder": "Optional link (URL)",
         "previewImageUrlPlaceholder": "Optional preview image (URL)",
+        "addDescription": "Description",
+        "addLink": "Link",
         "addOption": "Add option",
         "createPoll": "Create poll",
         "updatePoll": "Update poll"

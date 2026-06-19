@@ -106,6 +106,8 @@
         "optionDescriptionPlaceholder": "Beschreibung",
         "urlPlaceholder": "Optionaler Link (URL)",
         "previewImageUrlPlaceholder": "Optionales Vorschaubild (URL)",
+        "addDescription": "Beschreibung",
+        "addLink": "Link",
         "addOption": "Option hinzufügen",
         "createPoll": "Umfrage erstellen",
         "updatePoll": "Umfrage aktualisieren"

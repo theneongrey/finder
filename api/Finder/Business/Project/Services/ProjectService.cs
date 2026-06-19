@@ -234,7 +234,7 @@ public class ProjectService
             Text = topicRequest.Text,
             Description = topicRequest.Description,
             Url = topicRequest.Url,
-            PreviewImageUrl = topicRequest.PreviewImageUrl,
+            PreviewImageUrl = "",
             Topic = topic
         };
         topic.Options.Add(option);

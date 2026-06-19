@@ -11,18 +11,10 @@ import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { TitleService } from '../../../common/services/title.service';
-import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
-import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
 import { ProjectStore } from '../_data/project.store';
 import { OptionType } from '../_models/project-detail.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-
-interface OptionEntry {
-  id?: string;
-  text: string;
-  description: string;
-  url: string;
-}
+import { TopicOptionsComponent, OptionEntry } from './topic-options/topic-options.component';
 
 @Component({
   selector: 'app-topic-input-yes-no',
@@ -33,9 +25,8 @@ interface OptionEntry {
     InputText,
     Button,
     AutoResizeTextareaComponent,
-    AddCardComponent,
-    SideColorCardComponent,
     TranslatePipe,
+    TopicOptionsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

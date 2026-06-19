@@ -9,6 +9,7 @@ export enum OptionType {
 export interface Topic {
   id: string;
   name: string;
+  description: string;
   optionType: OptionType;
   optionCount: number;
   nextOpenOptionId?: string;
@@ -22,6 +23,9 @@ export interface Vote {
 export interface OptionDetail {
   id: string;
   text: string;
+  description: string;
+  url: string;
+  previewImageUrl: string;
   votes: Vote[];
   choice: string | null;
 }
@@ -36,6 +40,7 @@ export interface Comment {
 export interface TopicDetail {
   id: string;
   name: string;
+  description: string;
   optionType: OptionType;
   options: OptionDetail[];
   comments: Comment[];
@@ -44,6 +49,9 @@ export interface TopicDetail {
 export interface Option {
   id: string;
   text: string;
+  description: string;
+  url: string;
+  previewImageUrl: string;
   votes: number;
   choice: string | null;
 }

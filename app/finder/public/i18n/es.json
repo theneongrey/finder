@@ -97,11 +97,17 @@
     "topicInput": {
       "yesNo": {
         "question": "Tu pregunta",
-        "questionPlaceholder": "¿Qué color de sofá queda mejor?",
+        "questionPlaceholder": "p. ej. ¿A dónde vamos?",
+        "description": "Descripción",
+        "descriptionPlaceholder": "p. ej. Ayúdanos a elegir un lugar.",
         "answerOptions": "Opciones de respuesta",
         "minOptions": "Mín. 1 opción",
-        "optionPlaceholder": "Opción {{number}}",
+        "optionPlaceholder": "p. ej. Restaurante italiano",
+        "optionDescriptionPlaceholder": "Descripción",
         "urlPlaceholder": "Enlace opcional (URL)",
+        "previewImageUrlPlaceholder": "Imagen de vista previa opcional (URL)",
+        "addDescription": "Descripción",
+        "addLink": "Enlace",
         "addOption": "Añadir opción",
         "createPoll": "Crear encuesta",
         "updatePoll": "Actualizar encuesta"

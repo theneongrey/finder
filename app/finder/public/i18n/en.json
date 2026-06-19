@@ -97,11 +97,17 @@
     "topicInput": {
       "yesNo": {
         "question": "Your question",
-        "questionPlaceholder": "Which couch color fits best?",
+        "questionPlaceholder": "e.g. Where should we go?",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Help us pick a location.",
         "answerOptions": "Answer options",
         "minOptions": "Min. 1 option",
-        "optionPlaceholder": "Option {{number}}",
+        "optionPlaceholder": "e.g. Italian restaurant",
+        "optionDescriptionPlaceholder": "Description",
         "urlPlaceholder": "Optional link (URL)",
+        "previewImageUrlPlaceholder": "Optional preview image (URL)",
+        "addDescription": "Description",
+        "addLink": "Link",
         "addOption": "Add option",
         "createPoll": "Create poll",
         "updatePoll": "Update poll"

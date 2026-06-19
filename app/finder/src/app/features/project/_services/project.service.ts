@@ -63,20 +63,26 @@ export class ProjectService {
     );
   }
 
-  addTopic(projectId: string, name: string, optionType: OptionType) {
+  addTopic(
+    projectId: string,
+    name: string,
+    optionType: OptionType,
+    description: string,
+  ) {
     this.loggerService.debug(`[ProjectService] adding topic ${name}`);
     return this.httpClient.post<Topic>(`${this.baseUrl}/api/project/topic`, {
       name: name,
       projectId: projectId,
       optionType: optionType,
+      description: description,
     });
   }
 
-  updateTopic(topicId: string, name: string) {
+  updateTopic(topicId: string, name: string, description: string) {
     this.loggerService.debug(`[ProjectService] updating topic ${topicId}`);
     return this.httpClient.put<TopicDetail>(
       `${this.baseUrl}/api/project/topic/${topicId}`,
-      { name },
+      { name, description },
     );
   }
 
@@ -87,22 +93,34 @@ export class ProjectService {
     );
   }
 
-  addOption(topicId: string, text: string) {
+  addOption(
+    topicId: string,
+    text: string,
+    description: string,
+    url: string,
+  ) {
     this.loggerService.debug(`[ProjectService] adding option ${text}`);
     return this.httpClient.post<Option>(
       `${this.baseUrl}/api/project/topic/option`,
       {
         text: text,
+        description: description,
+        url: url,
         topicId: topicId,
       },
     );
   }
 
-  updateOption(optionId: string, text: string) {
+  updateOption(
+    optionId: string,
+    text: string,
+    description: string,
+    url: string,
+  ) {
     this.loggerService.debug(`[ProjectService] updating option ${optionId}`);
     return this.httpClient.put<Option>(
       `${this.baseUrl}/api/project/topic/option/${optionId}`,
-      { text },
+      { text, description, url },
     );
   }
 

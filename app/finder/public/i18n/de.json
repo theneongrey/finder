@@ -75,7 +75,7 @@
         "accept": "Umfrage löschen"
       },
       "item": {
-        "options": "Optionen: {{count}}",
+        "options": "Auswahlmöglichkeiten: {{count}}",
         "pollOverview": "Umfrage-übersicht"
       }
     },
@@ -97,11 +97,17 @@
     "topicInput": {
       "yesNo": {
         "question": "Deine Frage",
-        "questionPlaceholder": "Welche Couchfarbe passt am besten?",
+        "questionPlaceholder": "z. B. Wohin sollen wir gehen?",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "z. B. Hilf uns, einen Ort zu wählen.",
         "answerOptions": "Antwortmöglichkeiten",
         "minOptions": "Mind. 1 Option",
-        "optionPlaceholder": "Option {{number}}",
+        "optionPlaceholder": "z. B. Italienisches Restaurant",
+        "optionDescriptionPlaceholder": "Beschreibung",
         "urlPlaceholder": "Optionaler Link (URL)",
+        "previewImageUrlPlaceholder": "Optionales Vorschaubild (URL)",
+        "addDescription": "Beschreibung",
+        "addLink": "Link",
         "addOption": "Option hinzufügen",
         "createPoll": "Umfrage erstellen",
         "updatePoll": "Umfrage aktualisieren"

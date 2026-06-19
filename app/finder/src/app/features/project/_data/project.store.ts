@@ -13,7 +13,12 @@ import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
-import { Comment, OptionType, Project, TopicDetail } from '../_models/project-detail.model';
+import {
+  Comment,
+  OptionType,
+  Project,
+  TopicDetail,
+} from '../_models/project-detail.model';
 import { PermissionService } from '../_services/permission.service';
 
 export const ProjectStore = signalStore(
@@ -177,18 +182,29 @@ export const ProjectStore = signalStore(
     addTopic: rxMethod<{
       projectId: string;
       name: string;
+      description: string;
       optionType: OptionType;
-      options?: string[];
+      options?: { text: string; description: string; url: string }[];
     }>(
       pipe(
         switchMap((topic) => {
           return store.projectService
-            .addTopic(topic.projectId, topic.name, topic.optionType)
+            .addTopic(
+              topic.projectId,
+              topic.name,
+              topic.optionType,
+              topic.description,
+            )
             .pipe(
               switchMap((responseTopic) => {
                 const optionRequests = topic.options?.length
                   ? topic.options.map((o) =>
-                      store.projectService.addOption(responseTopic.id, o),
+                      store.projectService.addOption(
+                        responseTopic.id,
+                        o.text,
+                        o.description,
+                        o.url,
+                      ),
                     )
                   : [];
 
@@ -223,39 +239,62 @@ export const ProjectStore = signalStore(
       projectId: string;
       topicId: string;
       name: string;
-      options: { id?: string; text: string }[];
+      description: string;
+      options: {
+        id?: string;
+        text: string;
+        description: string;
+        url: string;
+      }[];
       removedOptionIds: string[];
     }>(
       pipe(
         switchMap((topic) => {
-          return store.projectService.updateTopic(topic.topicId, topic.name).pipe(
-            switchMap(() => {
-              const optionRequests = [
-                ...topic.options.map((o) =>
-                  o.id
-                    ? store.projectService.updateOption(o.id, o.text)
-                    : store.projectService.addOption(topic.topicId, o.text),
-                ),
-                ...topic.removedOptionIds.map((id) =>
-                  store.projectService.deleteOption(id),
-                ),
-              ];
+          return store.projectService
+            .updateTopic(topic.topicId, topic.name, topic.description)
+            .pipe(
+              switchMap(() => {
+                const optionRequests = [
+                  ...topic.options.map((o) =>
+                    o.id
+                      ? store.projectService.updateOption(
+                          o.id,
+                          o.text,
+                          o.description,
+                          o.url,
+                        )
+                      : store.projectService.addOption(
+                          topic.topicId,
+                          o.text,
+                          o.description,
+                          o.url,
+                        ),
+                  ),
+                  ...topic.removedOptionIds.map((id) =>
+                    store.projectService.deleteOption(id),
+                  ),
+                ];
 
-              return optionRequests.length ? forkJoin(optionRequests) : of([]);
-            }),
-            tapResponse({
-              next: () => {
-                store.loggerService.debug(`[ProjectStore] Updated topic`, topic.topicId);
-                store.router.navigate([`/project/detail/${topic.projectId}`]);
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[ProjectStore] Error while editing a topic',
-                  error,
-                );
-              },
-            }),
-          );
+                return optionRequests.length
+                  ? forkJoin(optionRequests)
+                  : of([]);
+              }),
+              tapResponse({
+                next: () => {
+                  store.loggerService.debug(
+                    `[ProjectStore] Updated topic`,
+                    topic.topicId,
+                  );
+                  store.router.navigate([`/project/detail/${topic.projectId}`]);
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error while editing a topic',
+                    error,
+                  );
+                },
+              }),
+            );
         }),
       ),
     ),
@@ -292,11 +331,18 @@ export const ProjectStore = signalStore(
     addOption: rxMethod<{
       topicId: string;
       text: string;
+      description: string;
+      url: string;
     }>(
       pipe(
         switchMap((option) => {
           return store.projectService
-            .addOption(option.topicId, option.text)
+            .addOption(
+              option.topicId,
+              option.text,
+              option.description,
+              option.url,
+            )
             .pipe(
               tapResponse({
                 next: (responseOption) => {
@@ -310,6 +356,9 @@ export const ProjectStore = signalStore(
                           {
                             id: responseOption.id,
                             text: responseOption.text,
+                            description: responseOption.description,
+                            url: responseOption.url,
+                            previewImageUrl: responseOption.previewImageUrl,
                             votes: [],
                             choice: null,
                           },

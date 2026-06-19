@@ -9,18 +9,12 @@ import {
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
+import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { TitleService } from '../../../common/services/title.service';
-import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
-import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
 import { ProjectStore } from '../_data/project.store';
 import { OptionType } from '../_models/project-detail.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-
-interface OptionEntry {
-  id?: string;
-  text: string;
-  url: string;
-}
+import { TopicOptionsComponent, OptionEntry } from './topic-options/topic-options.component';
 
 @Component({
   selector: 'app-topic-input-yes-no',
@@ -30,9 +24,9 @@ interface OptionEntry {
     FormsModule,
     InputText,
     Button,
-    AddCardComponent,
-    SideColorCardComponent,
+    AutoResizeTextareaComponent,
     TranslatePipe,
+    TopicOptionsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -45,7 +39,10 @@ export class TopicInputYesNoComponent {
   topicId = input<string | undefined>(undefined);
 
   question = signal('');
-  options = signal<OptionEntry[]>([{ text: '', url: '' }]);
+  description = signal('');
+  options = signal<OptionEntry[]>([
+    { text: '', description: '', url: '' },
+  ]);
   removedOptionIds = signal<string[]>([]);
 
   constructor() {
@@ -85,14 +82,16 @@ export class TopicInputYesNoComponent {
         currentTopic.id === this.topicId()
       ) {
         this.question.set(currentTopic.name);
+        this.description.set(currentTopic.description);
         this.options.set(
           currentTopic.options.length
             ? currentTopic.options.map((o) => ({
                 id: o.id,
                 text: o.text,
-                url: '',
+                description: o.description,
+                url: o.url,
               }))
-            : [{ text: '', url: '' }],
+            : [{ text: '', description: '', url: '' }],
         );
       }
     });
@@ -105,7 +104,10 @@ export class TopicInputYesNoComponent {
   }
 
   addOption(): void {
-    this.options.update((opts) => [...opts, { text: '', url: '' }]);
+    this.options.update((opts) => [
+      ...opts,
+      { text: '', description: '', url: '' },
+    ]);
   }
 
   removeOption(index: number): void {
@@ -130,15 +132,20 @@ export class TopicInputYesNoComponent {
       return;
     }
 
-    const optionTexts = this.options()
+    const options = this.options()
       .filter((o) => !!o.text)
-      .map((o) => o.text);
+      .map((o) => ({
+        text: o.text,
+        description: o.description,
+        url: o.url,
+      }));
 
     this.projectStore.addTopic({
       projectId,
       name: this.question(),
+      description: this.description(),
       optionType: OptionType.YesNo,
-      options: optionTexts,
+      options,
     });
   }
 
@@ -151,12 +158,18 @@ export class TopicInputYesNoComponent {
 
     const options = this.options()
       .filter((o) => !!o.text)
-      .map((o) => ({ id: o.id, text: o.text }));
+      .map((o) => ({
+        id: o.id,
+        text: o.text,
+        description: o.description,
+        url: o.url,
+      }));
 
     this.projectStore.editTopic({
       projectId,
       topicId,
       name: this.question(),
+      description: this.description(),
       options,
       removedOptionIds: this.removedOptionIds(),
     });

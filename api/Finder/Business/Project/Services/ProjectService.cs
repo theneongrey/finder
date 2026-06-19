@@ -141,6 +141,7 @@ public class ProjectService
             Id = Guid.NewGuid(),
             OptionType = topicRequest.OptionType,
             Name = topicRequest.Name,
+            Description = topicRequest.Description,
             Project = projectResult
         };
 
@@ -150,7 +151,7 @@ public class ProjectService
         return Result<Topic>.Success(topic);
     }
 
-    public async Task<Result<Topic>> UpdateTopic(Guid topicId, string name)
+    public async Task<Result<Topic>> UpdateTopic(Guid topicId, string name, string description)
     {
         var topic = await _dbContext.Topics
             .Include(t => t.Options)
@@ -168,6 +169,7 @@ public class ProjectService
         }
 
         topic.Name = name;
+        topic.Description = description;
         await _dbContext.SaveChangesAsync();
         return Result<Topic>.Success(topic);
     }
@@ -230,6 +232,9 @@ public class ProjectService
         {
             Id = Guid.NewGuid(),
             Text = topicRequest.Text,
+            Description = topicRequest.Description,
+            Url = topicRequest.Url,
+            PreviewImageUrl = "",
             Topic = topic
         };
         topic.Options.Add(option);
@@ -240,7 +245,7 @@ public class ProjectService
         return Result<Option>.Success(option);
     }
 
-    public async Task<Result<Option>> UpdateOption(Guid optionId, string text)
+    public async Task<Result<Option>> UpdateOption(Guid optionId, string text, string description, string url)
     {
         var option = await _dbContext.Options
             .Include(o => o.Votes)
@@ -257,6 +262,8 @@ public class ProjectService
         }
 
         option.Text = text;
+        option.Description = description;
+        option.Url = url;
         await _dbContext.SaveChangesAsync();
         return Result<Option>.Success(option);
     }

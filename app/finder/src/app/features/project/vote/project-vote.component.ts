@@ -5,7 +5,6 @@ import {
   computed,
   effect,
   ElementRef,
-  HostListener,
   inject,
   input,
   OnInit,

@@ -111,7 +111,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
     }
 
     public async Task<Topic> SeedTopic(Guid projectId, string name = "Test Topic",
-        OptionType optionType = OptionType.YesNo)
+        OptionType optionType = OptionType.YesNo, string description = "")
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -121,15 +121,17 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         {
             Id = Guid.NewGuid(),
             Name = name,
+            Description = description,
             OptionType = optionType,
-            Project = project
+            Project = project,
         };
         db.Topics.Add(topic);
         await db.SaveChangesAsync();
         return topic;
     }
 
-    public async Task<Option> SeedOption(Guid topicId, string text = "Test Option")
+    public async Task<Option> SeedOption(Guid topicId, string text = "Test Option", string description = "",
+        string url = "", string previewImageUrl = "")
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -139,6 +141,9 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         {
             Id = Guid.NewGuid(),
             Text = text,
+            Description = description,
+            Url = url,
+            PreviewImageUrl = previewImageUrl,
             Topic = topic
         };
         db.Options.Add(option);

@@ -2,7 +2,6 @@
   @if (topic(); as topic) {
     <app-vote-overview-summary
       [topic]="topic"
-      [currentUrl]="currentUrl"
       [commentsCount]="topic.comments.length"
       [projectId]="projectId()"
       [topicId]="topicId()"

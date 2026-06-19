@@ -13,12 +13,37 @@
       @if (_topic.description) {
         <p class="label-sm tw:mt-1">{{ _topic.description }}</p>
       }
-      <p class="label-sm tw:mt-2">
-        {{
-          "project.detail.item.options"
-            | translate: { count: _topic.optionCount }
-        }}
-      </p>
+      <div class="tw:flex tw:items-center tw:gap-3">
+        <span
+          [pTooltip]="
+            'project.detail.item.options'
+              | translate: { count: _topic.optionCount }
+          "
+          tooltipPosition="top"
+          class="tw:flex tw:items-center tw:gap-1 label-sm tw:cursor-default"
+        >
+          <i class="pi pi-list"></i>
+          <span>{{ _topic.optionCount }}</span>
+        </span>
+        <p-button
+          [text]="true"
+          size="small"
+          icon="pi pi-comments"
+          [label]="_topic.commentCount.toString()"
+          [pTooltip]="
+            'project.detail.item.comments'
+              | translate: { count: _topic.commentCount }
+          "
+          tooltipPosition="top"
+          [routerLink]="[
+            '/project/detail',
+            this.projectId(),
+            'votes-overview',
+            this.topic().id,
+          ]"
+          fragment="comments-section"
+        />
+      </div>
     </div>
     <p-button
       icon="pi pi-ellipsis-v"

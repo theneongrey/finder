@@ -102,6 +102,8 @@ public class ProjectService
             .Include(p => p.Topics)
             .ThenInclude(t => t.Options)
             .ThenInclude(o => o.Votes)
+            .Include(p => p.Topics)
+            .ThenInclude(t => t.Comments)
             .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
                                               p.Permissions.Any(permission => permission.PersonKey == UserId)))
             .SingleOrDefaultAsync();

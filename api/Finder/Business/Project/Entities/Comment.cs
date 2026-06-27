@@ -7,6 +7,7 @@ public class Comment : BaseEntity
 {
     public required Guid Id { get; set; }
     public required string Content { get; set; }
+    public string? Quote { get; set; }
 
     public required Topic Topic { get; set; }
     public required Person Person { get; set; }

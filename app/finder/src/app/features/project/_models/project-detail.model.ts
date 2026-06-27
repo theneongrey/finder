@@ -36,6 +36,7 @@ export interface Comment {
   content: string;
   author: string;
   created: string;
+  quote?: string;
 }
 
 export interface TopicDetail {

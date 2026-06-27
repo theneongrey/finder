@@ -308,6 +308,7 @@ public class ProjectService
         {
             Id = Guid.NewGuid(),
             Content = request.Content,
+            Quote = request.Quote,
             Topic = topic,
             Person = user
         };

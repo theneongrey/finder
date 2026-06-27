@@ -6,6 +6,7 @@ public class CommentResponse
     public required string Content { get; set; }
     public required string Author { get; set; }
     public required DateTime Created { get; set; }
+    public string? Quote { get; set; }
 }
 
 public static class CommentMapper
@@ -17,7 +18,8 @@ public static class CommentMapper
             Id = comment.Id.ToString(),
             Content = comment.Content,
             Author = comment.Person.Name ?? comment.Person.Email,
-            Created = comment.Created
+            Created = comment.Created,
+            Quote = comment.Quote
         };
     }
 }

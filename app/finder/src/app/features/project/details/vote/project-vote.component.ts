@@ -18,6 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
 import { VoteCardDateComponent } from './vote-card-date/vote-card-date.component';
+import { VoteCommentButtonComponent } from './vote-comment-button/vote-comment-button.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { OptionType } from '../../_models/project-detail.model';
 
@@ -31,6 +32,7 @@ import { OptionType } from '../../_models/project-detail.model';
     VoteCardImageComponent,
     VoteCardTextComponent,
     VoteCardDateComponent,
+    VoteCommentButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -61,6 +63,8 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   );
   totalCount = computed(() => this.topic()?.options.length ?? 0);
 
+  private readonly SWIPE_THRESHOLD = 75;
+
   private startX = 0;
   private isDragging = false;
   private currentDragX = 0;
@@ -71,6 +75,8 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   cardOpacity = signal(1);
   leftCueOpacity = signal(0);
   rightCueOpacity = signal(0);
+  showHint = signal(!sessionStorage.getItem('finder_voted_session'));
+  hintFading = signal(false);
 
   constructor() {
     effect(() => {
@@ -132,6 +138,10 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
       `translateX(${this.currentDragX}px) rotate(${rotation}deg)`,
     );
 
+    if (Math.abs(this.currentDragX) >= this.SWIPE_THRESHOLD / 2) {
+      this.dismissHint();
+    }
+
     if (this.currentDragX > 50) {
       this.rightCueOpacity.set(Math.min((this.currentDragX - 50) / 100, 1));
       this.leftCueOpacity.set(0);
@@ -152,7 +162,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     }
     this.isDragging = false;
 
-    if (Math.abs(this.currentDragX) > 150) {
+    if (Math.abs(this.currentDragX) > this.SWIPE_THRESHOLD) {
       this.animateAndVote(this.currentDragX > 0);
     } else {
       this.cardTransition.set(
@@ -185,10 +195,20 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     ]);
   }
 
+  dismissHint(): void {
+    if (!this.showHint() || this.hintFading()) {
+      return;
+    }
+    sessionStorage.setItem('finder_voted_session', '1');
+    this.hintFading.set(true);
+    setTimeout(() => this.showHint.set(false), 300);
+  }
+
   private animateAndVote(goRight: boolean): void {
     if (this.swipeInProgress) {
       return;
     }
+    this.dismissHint();
     const direction = goRight ? 1 : -1;
     this.swipeInProgress = true;
     this.cardTransition.set('transform 0.5s ease-in, opacity 0.5s ease-in');

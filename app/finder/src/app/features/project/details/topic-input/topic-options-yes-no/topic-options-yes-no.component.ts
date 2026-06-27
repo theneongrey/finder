@@ -17,13 +17,13 @@ export interface OptionEntry {
 }
 
 @Component({
-  selector: 'app-topic-options',
-  templateUrl: './topic-options.component.html',
-  styleUrl: './topic-options.component.css',
+  selector: 'app-topic-options-yes-no',
+  templateUrl: './topic-options-yes-no.component.html',
+  styleUrl: './topic-options-yes-no.component.css',
   imports: [AddCardComponent, TranslatePipe, OptionCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopicOptionsComponent {
+export class TopicOptionsYesNoComponent {
   options = input.required<OptionEntry[]>();
   add = output<void>();
   remove = output<number>();

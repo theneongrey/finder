@@ -3,6 +3,7 @@ using System;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Finder.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260627215530_AddCommentQuote")]
+    partial class AddCommentQuote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +62,7 @@ namespace Finder.Migrations
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("LoginTokens", (string)null);
+                    b.ToTable("LoginTokens");
                 });
 
             modelBuilder.Entity("Finder.Business.Auth.Entities.Person", b =>
@@ -102,7 +105,7 @@ namespace Finder.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Persons", (string)null);
+                    b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("Finder.Business.Permission.Entities.Permission", b =>
@@ -123,7 +126,7 @@ namespace Finder.Migrations
                     b.HasIndex("PersonKey", "ProjectKey")
                         .IsUnique();
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Comment", b =>
@@ -159,7 +162,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
@@ -201,7 +204,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Options", (string)null);
+                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
@@ -236,7 +239,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Topic", b =>
@@ -271,7 +274,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Topics", (string)null);
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Vote", b =>
@@ -303,7 +306,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Votes", (string)null);
+                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("Finder.Business.Auth.Entities.LoginToken", b =>

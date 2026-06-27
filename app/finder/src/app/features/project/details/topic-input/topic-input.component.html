@@ -40,11 +40,19 @@
   </div>
 
   <!-- Answer options -->
-  <app-topic-options
-    [options]="options()"
-    (add)="addOption()"
-    (remove)="removeOption($event)"
-  />
+  @if (optionType() === OptionType.Date) {
+    <app-topic-options-date
+      [options]="dateOptions()"
+      (add)="addOption()"
+      (remove)="removeOption($event)"
+    />
+  } @else {
+    <app-topic-options-yes-no
+      [options]="options()"
+      (add)="addOption()"
+      (remove)="removeOption($event)"
+    />
+  }
 
   <!-- Bottom action bar -->
   <div
@@ -53,9 +61,13 @@
     <p-button
       class="tw:w-full tw:max-w-md"
       [label]="
-        mode() === 'add'
-          ? ('project.topicInput.yesNo.createPoll' | translate)
-          : ('project.topicInput.yesNo.updatePoll' | translate)
+        optionType() === OptionType.Date
+          ? (mode() === 'add'
+              ? ('project.topicInput.date.createPoll' | translate)
+              : ('project.topicInput.date.updatePoll' | translate))
+          : (mode() === 'add'
+              ? ('project.topicInput.yesNo.createPoll' | translate)
+              : ('project.topicInput.yesNo.updatePoll' | translate))
       "
       [icon]="mode() === 'add' ? 'fa-regular fa-paper-plane' : 'fa-regular fa-floppy-disk'"
       [disabled]="!isValid()"

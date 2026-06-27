@@ -132,7 +132,11 @@
       "overview": "zur Übersicht",
       "swipeHintPre": "Nach rechts wischen für ",
       "swipeHintMid": ", nach links für ",
-      "skip": "Überspringen"
+      "skip": "Überspringen",
+      "tapToDismiss": "Tippen zum Schließen",
+      "addComment": "Kommentieren",
+      "commentPlaceholder": "Dein Kommentar...",
+      "submitComment": "Hinzufügen"
     },
     "votesOverview": {
       "active": "Aktiv",

@@ -10,7 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overview-summary.component';
 import { OptionListComponent } from './option-list/option-list.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
-import { TitleService } from '../../../../common/services/title.service';
+import { TitleBarService } from '../../../../common/services/title-bar.service';
 
 @Component({
   selector: 'app-votes-overview',
@@ -26,18 +26,14 @@ import { TitleService } from '../../../../common/services/title.service';
 export class VotesOverviewComponent {
   private readonly projectStore = inject(ProjectStore);
 
-  projectId = input('');
   topicId = input('');
+  projectId = this.projectStore.projectId;
 
   topic = this.projectStore.currentTopic;
   project = this.projectStore.currentProject;
 
   constructor() {
-    const titleService = inject(TitleService);
-
-    effect(() => {
-      this.projectStore.getProject(this.projectId());
-    });
+    const titleService = inject(TitleBarService);
 
     effect(() => {
       this.projectStore.getTopic(this.topicId());

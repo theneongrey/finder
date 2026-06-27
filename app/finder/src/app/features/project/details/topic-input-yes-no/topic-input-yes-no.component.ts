@@ -16,7 +16,7 @@ import {
   TopicOptionsComponent,
   OptionEntry,
 } from './topic-options/topic-options.component';
-import { TitleService } from '../../../../common/services/title.service';
+import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { AutoResizeTextareaComponent } from '../../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 
 @Component({
@@ -37,7 +37,7 @@ export class TopicInputYesNoComponent {
   private readonly translateService = inject(TranslateService);
 
   mode = input<'add' | 'edit'>('add');
-  projectId = input<string | undefined>(undefined);
+  projectId = this.projectStore.projectId;
   topicId = input<string | undefined>(undefined);
 
   question = signal('');
@@ -46,7 +46,7 @@ export class TopicInputYesNoComponent {
   removedOptionIds = signal<string[]>([]);
 
   constructor() {
-    const titleService = inject(TitleService);
+    const titleService = inject(TitleBarService);
 
     const createTitle = this.translateService.translate(
       'project.topicInput.yesNo.createPoll',

@@ -23,7 +23,7 @@ export class LoadingComponent implements OnDestroy {
   count = input<number>(1);
   direction = input<'horizontal' | 'vertical'>('vertical');
   gap = input<string>('4px');
-  minTime = input<number>(1000);
+  minTime = input<number>(500);
   skeletonWidth = input<string>('100%');
   skeletonHeight = input<string>('1rem');
   innercss = input<string>('');

@@ -9,6 +9,7 @@ import { ProjectStore } from '../_data/project.store';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
+import { TitleBarService } from '../../../common/services/title-bar.service';
 
 @Component({
   selector: 'app-project-overview',
@@ -18,7 +19,6 @@ import { TitleBarComponent } from '../../../common/ui/components/title-bar/title
     AddCardComponent,
     TranslatePipe,
     MaxHeightMinusHeaderDirective,
-    RouterOutlet,
     TitleBarComponent,
   ],
   providers: [MessageService, ConfirmationService],
@@ -33,11 +33,13 @@ export class ProjectOverviewComponent {
   private readonly confirmationService = inject(ConfirmationService);
   private readonly router = inject(Router);
   private readonly translateService = inject(TranslateService);
+  private readonly titleBarService = inject(TitleBarService);
 
   projects = this.projectStore.projects;
 
   constructor() {
     this.projectStore.getProjects();
+    this.titleBarService.clearTitle();
   }
 
   navigateToAdd() {

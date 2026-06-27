@@ -1,11 +1,12 @@
 import {
   patchState,
   signalStore,
+  withComputed,
   withMethods,
   withProps,
   withState,
 } from '@ngrx/signals';
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
@@ -28,6 +29,9 @@ export const ProjectStore = signalStore(
     currentProject: undefined as Project | undefined,
     currentTopic: undefined as TopicDetail | undefined,
   }),
+  withComputed((store) => ({
+    projectId: computed(() => store.currentProject()?.id),
+  })),
   withProps(() => {
     return {
       loggerService: inject(LoggerService),

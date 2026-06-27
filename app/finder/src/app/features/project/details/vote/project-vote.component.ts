@@ -17,7 +17,7 @@ import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
-import { TitleService } from '../../../../common/services/title.service';
+import { TitleBarService } from '../../../../common/services/title-bar.service';
 
 @Component({
   selector: 'app-project-vote',
@@ -38,13 +38,13 @@ import { TitleService } from '../../../../common/services/title.service';
   },
 })
 export class ProjectVoteComponent implements OnInit, AfterViewInit {
-  private readonly titleService = inject(TitleService);
+  private readonly titleService = inject(TitleBarService);
   private readonly projectStore = inject(ProjectStore);
   private readonly router = inject(Router);
 
   voteCardRef = viewChild.required<ElementRef<HTMLElement>>('voteCard');
 
-  projectId = input('');
+  projectId = this.projectStore.projectId;
   topicId = input('');
   optionId = input('');
   topic = this.projectStore.currentTopic;
@@ -68,9 +68,6 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   rightCueOpacity = signal(0);
 
   constructor() {
-    effect(() => {
-      this.projectStore.getProject(this.projectId());
-    });
     effect(() => {
       this.projectStore.getTopic(this.topicId());
     });

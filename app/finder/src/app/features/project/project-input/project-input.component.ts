@@ -10,11 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
-import { TitleService } from '../../../common/services/title.service';
+import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectStore } from '../_data/project.store';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
-import { RouterOutlet } from '@angular/router';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 
 @Component({
@@ -27,7 +26,6 @@ import { TitleBarComponent } from '../../../common/ui/components/title-bar/title
     AutoResizeTextareaComponent,
     TranslatePipe,
     MaxHeightMinusHeaderDirective,
-    RouterOutlet,
     TitleBarComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,7 +41,7 @@ export class ProjectInputComponent {
   projectDescription = model('');
 
   constructor() {
-    const titleService: TitleService = inject(TitleService);
+    const titleService: TitleBarService = inject(TitleBarService);
 
     const createTitle = this.translateService.translate('project.input.create');
     const updateTitle = this.translateService.translate('project.input.update');

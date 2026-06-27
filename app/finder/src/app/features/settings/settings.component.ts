@@ -24,7 +24,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
 import { UserAvatarComponent } from '../../common/ui/components/user-avatar/user-avatar.component';
-import { TitleService } from '../../common/services/title.service';
+import { TitleBarService } from '../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   getStoredLanguage,
@@ -72,7 +72,7 @@ export class SettingsComponent {
   });
 
   constructor() {
-    const titleService = inject(TitleService);
+    const titleService = inject(TitleBarService);
 
     const title = this.translateService.translate('settings.title');
     effect(() => titleService.setTitle(title()));

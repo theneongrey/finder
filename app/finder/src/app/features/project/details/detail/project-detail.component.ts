@@ -19,7 +19,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { ShareDialogComponent } from './share-dialog/share-dialog.component';
 import { ProjectRole } from '../../_models/project-role.enum';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TitleService } from '../../../../common/services/title.service';
+import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { ProjectStore } from '../../_data/project.store';
 import { AddCardComponent } from '../../../../common/ui/components/add-card/add-card.component';
 
@@ -43,12 +43,11 @@ import { AddCardComponent } from '../../../../common/ui/components/add-card/add-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailComponent {
-  private readonly titleService = inject(TitleService);
+  private readonly titleService = inject(TitleBarService);
   private readonly projectStore = inject(ProjectStore);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly translateService = inject(TranslateService);
 
-  projectId = input('');
   action = input('');
   project = this.projectStore.currentProject;
 
@@ -59,10 +58,6 @@ export class ProjectDetailComponent {
   readonly ProjectRole = ProjectRole;
 
   constructor() {
-    effect(() => {
-      this.projectStore.getProject(this.projectId());
-    });
-
     effect(() => {
       const project = this.project();
       if (project) {

@@ -40,7 +40,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './project-detail.component.html',
-  styleUrl: './project-detail.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailComponent {

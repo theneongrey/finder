@@ -13,7 +13,6 @@ import { MaxHeightMinusHeaderDirective } from '../../common/ui/directives/max-he
     MaxHeightMinusHeaderDirective,
   ],
   templateUrl: './shell.component.html',
-  styleUrl: './shell.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectShellComponent {}

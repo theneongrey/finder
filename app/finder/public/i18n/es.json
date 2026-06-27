@@ -1,4 +1,8 @@
 {
+  "titleBar": {
+    "logout": "Cerrar sesión",
+    "settings": "Configuración"
+  },
   "settings": {
     "title": "Configuración",
     "name": "Nombre",
@@ -117,10 +121,10 @@
     "vote": {
       "votedProgress": "{{voted}} / {{total}} votados",
       "overview": "al Resumen",
-      "swipeHint": "Desliza a la derecha para Sí, a la izquierda para No"
+      "swipeHint": "Desliza a la derecha para Sí, a la izquierda para No",
+      "skip": "Omitir"
     },
     "votesOverview": {
-      "title": "Resumen de votación",
       "active": "Activo",
       "of": "de {{total}}",
       "rated": "valorado",

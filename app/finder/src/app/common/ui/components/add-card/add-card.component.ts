@@ -16,7 +16,7 @@ import { Card } from 'primeng/card';
 export class AddCardComponent {
   cto = input<string>();
   description = input<string>('');
-  icon = input<string>('pi-plus');
+  icon = input<string>('fa-plus');
   disabled = input<boolean>(false);
   iconLeft = input<boolean>(false);
   action = output<void>();

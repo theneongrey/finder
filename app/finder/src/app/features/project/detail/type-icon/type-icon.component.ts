@@ -5,7 +5,6 @@ import { OptionType } from '../../_models/project-detail.model';
   selector: 'app-topic-type-icon',
   imports: [],
   templateUrl: './type-icon.component.html',
-  styleUrl: './type-icon.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TypeIconComponent {

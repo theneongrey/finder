@@ -35,7 +35,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 })
 export class ProjectDetailItemComponent {
   private readonly translateService = inject(TranslateService);
-  private readonly router = inject(Router);
 
   projectId = input.required<string>();
   topic = input.required<Topic>();
@@ -49,7 +48,7 @@ export class ProjectDetailItemComponent {
   menuItems = computed<MenuItem[]>(() => [
     {
       label: this.editLabel(),
-      icon: 'pi pi-pencil',
+      icon: 'fa-solid fa-pen',
       routerLink:
         this.topic().optionType === OptionType.YesNo
           ? [
@@ -64,7 +63,7 @@ export class ProjectDetailItemComponent {
     },
     {
       label: this.deleteLabel(),
-      icon: 'pi pi-trash',
+      icon: 'fa-regular fa-trash-can',
       command: () => this.deletionRequested.emit(),
     },
   ]);

@@ -8,7 +8,6 @@ import { SUPPORTED_LANGUAGES } from './common/i18n/languages';
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {

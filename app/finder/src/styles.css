@@ -1,4 +1,5 @@
 @import "primeicons/primeicons.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 @import "tailwindcss" prefix(tw);
 @import "@fontsource/plus-jakarta-sans/300.css";
 @import "@fontsource/plus-jakarta-sans/400.css";
@@ -34,12 +35,15 @@ body {
   width: 100%;
 
   /* button */
-  --p-button-border-radius: 100px;
-  --p-inputgroup-addon-border-radius: 100px;
+  --p-button-border-radius: 12px;
+  --p-inputgroup-addon-border-radius: 12px;
   --p-button-padding-x: 40px;
   --p-button-padding-y: 12px;
 
   --p-panel-border-radius: 12px;
+  --p-disabled-opacity: 0.4;
+
+  --p-form-field-border-radius: 12px;
 
   p-button.small {
     --p-button-padding-x: 12px;
@@ -73,10 +77,11 @@ h2 {
 h3 {
   font-size: 16px;
   line-height: 20px;
+  font-weight: 700;
 }
 
 p.label-sm {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.2;
 }
 

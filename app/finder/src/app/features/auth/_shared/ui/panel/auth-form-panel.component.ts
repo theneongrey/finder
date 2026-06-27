@@ -6,7 +6,6 @@ import { Panel } from 'primeng/panel';
   selector: 'app-auth-form-panel',
   imports: [ReactiveFormsModule, Panel],
   templateUrl: './auth-form-panel.component.html',
-  styleUrl: './auth-form-panel.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthFormPanelComponent {

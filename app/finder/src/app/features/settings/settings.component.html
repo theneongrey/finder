@@ -30,7 +30,7 @@
         </label>
         <p-inputgroup>
           <p-inputgroup-addon>
-            <i class="pi pi-user"></i>
+            <i class="fa-solid fa-user"></i>
           </p-inputgroup-addon>
           <input
             pInputText
@@ -52,11 +52,11 @@
         </label>
         <p-inputgroup>
           <p-inputgroup-addon>
-            <i class="pi pi-envelope"></i>
+            <i class="fa-solid fa-envelope"></i>
           </p-inputgroup-addon>
           <input pInputText id="email" type="email" formControlName="email" />
           <p-inputgroup-addon>
-            <i class="pi pi-lock"></i>
+            <i class="fa-solid fa-lock"></i>
           </p-inputgroup-addon>
         </p-inputgroup>
       </div>
@@ -82,7 +82,7 @@
         class="tw:mt-2"
         type="submit"
         [label]="'settings.save' | translate"
-        icon="pi pi-check"
+        icon="fa-solid fa-check"
         iconPos="right"
         [disabled]="form.invalid || isSaving()"
         [loading]="isSaving()"

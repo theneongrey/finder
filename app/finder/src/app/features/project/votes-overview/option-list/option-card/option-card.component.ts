@@ -14,7 +14,6 @@ import { OptionDetail } from '../../../_models/project-detail.model';
 @Component({
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
-  styleUrl: './option-card.component.css',
   imports: [NgClass, RouterLink, Tag, Button, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,12 +27,12 @@ export class OptionCardComponent {
 
   voteIcon(choice: string | null): string {
     if (choice === '1') {
-      return 'pi-check-circle';
+      return 'fa-circle-check';
     }
     if (choice === '2') {
-      return 'pi-times-circle';
+      return 'fa-circle-xmark';
     }
-    return 'pi-question-circle';
+    return 'fa-circle-question';
   }
 
   voteLabel(choice: string | null): string {

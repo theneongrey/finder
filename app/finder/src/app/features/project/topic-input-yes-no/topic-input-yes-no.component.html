@@ -57,7 +57,7 @@
           ? ('project.topicInput.yesNo.createPoll' | translate)
           : ('project.topicInput.yesNo.updatePoll' | translate)
       "
-      [icon]="mode() === 'add' ? 'pi pi-send' : 'pi pi-save'"
+      [icon]="mode() === 'add' ? 'fa-regular fa-paper-plane' : 'fa-regular fa-floppy-disk'"
       [disabled]="!isValid()"
       (click)="submit()"
     />

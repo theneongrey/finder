@@ -8,10 +8,10 @@
 
     <div class="tw:mb-8">
       <div class="tw:flex tw:items-center tw:justify-between tw:mb-4">
-        <h2>{{ 'project.detail.members' | translate }}</h2>
+        <h2>{{ "project.detail.members" | translate }}</h2>
         @if (role() >= ProjectRole.Owner) {
           <p-button
-            icon="pi pi-user-plus"
+            icon="fa-solid fa-user-plus"
             [label]="'project.detail.invite' | translate"
             severity="secondary"
             size="small"
@@ -36,13 +36,13 @@
         </p-avatar-group>
       } @else {
         <p class="tw:text-sm tw:text-gray-500">
-          {{ 'project.detail.noMembers' | translate }}
+          {{ "project.detail.noMembers" | translate }}
         </p>
       }
     </div>
 
     @if (topics()?.length ?? 0 > 0) {
-      <h2 class="tw:mb-4">{{ 'project.detail.currentTopics' | translate }}</h2>
+      <h2 class="tw:mb-4">{{ "project.detail.currentTopics" | translate }}</h2>
 
       <div class="tw:flex tw:flex-col tw:gap-4">
         @for (topic of topics(); track topic.id) {
@@ -57,17 +57,17 @@
 
     @if (role() >= ProjectRole.Maintainer) {
       <h2 class="tw:mb-4 tw:mt-8">
-        {{ 'project.detail.createNewTopic' | translate }}
+        {{ "project.detail.createNewTopic" | translate }}
       </h2>
       <div class="tw:grid tw:grid-cols-3 tw:gap-4 tw:pb-8">
         <app-add-card
           [description]="'project.detail.topicTypes.appointment' | translate"
-          icon="pi-calendar"
+          icon="fa-calendar"
           [disabled]="true"
         />
         <app-add-card
           [description]="'project.detail.topicTypes.yesNo' | translate"
-          icon="pi-check-square"
+          icon="fa-square-check"
           [routerLink]="[
             '/project/detail',
             project.id,
@@ -78,7 +78,7 @@
         />
         <app-add-card
           [description]="'project.detail.topicTypes.rating' | translate"
-          icon="pi-star"
+          icon="fa-star"
           [disabled]="true"
         />
       </div>

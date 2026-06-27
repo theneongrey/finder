@@ -23,7 +23,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
-  styleUrl: './project-overview.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'tw:h-full tw:max-h-full',

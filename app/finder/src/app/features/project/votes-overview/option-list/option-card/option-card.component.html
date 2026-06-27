@@ -17,14 +17,14 @@
         @if (isMostVoted()) {
           <p-tag
             [value]="'project.votesOverview.mostVotes' | translate"
-            icon="pi pi-trophy"
+            icon="fa-solid fa-trophy"
           />
         }
       </div>
     </div>
     <div class="tw:flex tw:flex-col tw:items-center tw:shrink-0 tw:ml-3">
       <i
-        class="pi"
+        class="fa-regular"
         [ngClass]="[voteIcon(option().choice), voteColorClass(option().choice)]"
         style="font-size: 22px"
       ></i>
@@ -37,27 +37,44 @@
   </div>
 
   <div class="tw:flex tw:items-center tw:gap-2 tw:mb-3">
-    <i class="pi pi-users tw:text-gray-400 tw:text" style="font-size: 13px"></i>
+    <i
+      class="fa-solid fa-users tw:text-gray-400 tw:text"
+      style="font-size: 13px"
+    ></i>
     <span class="tw:text-xs tw:text-gray-500">
       {{ votesCountLabel() }}
     </span>
   </div>
 
-  <p-button
-    [label]="
-      option().choice
-        ? ('project.votesOverview.reVote' | translate)
-        : ('project.common.vote' | translate)
-    "
-    [icon]="option().choice ? 'pi pi-refresh' : 'pi pi-play'"
-    [severity]="option().choice ? 'secondary' : 'primary'"
-    [routerLink]="[
-      '/project/detail',
-      projectId(),
-      'vote',
-      topicId(),
-      option().id,
-    ]"
-    styleClass="tw:w-full"
-  />
+  @if (option().choice) {
+    <div class="tw:flex tw:justify-end">
+      <p-button
+        [label]="'project.votesOverview.reVote' | translate"
+        icon="fa-solid fa-rotate"
+        severity="secondary"
+        variant="text"
+        size="small"
+        [routerLink]="[
+          '/project/detail',
+          projectId(),
+          'vote',
+          topicId(),
+          option().id,
+        ]"
+      />
+    </div>
+  } @else {
+    <p-button
+      [label]="'project.common.vote' | translate"
+      icon="fa-solid fa-play"
+      [routerLink]="[
+        '/project/detail',
+        projectId(),
+        'vote',
+        topicId(),
+        option().id,
+      ]"
+      styleClass="tw:w-full"
+    />
+  }
 </div>

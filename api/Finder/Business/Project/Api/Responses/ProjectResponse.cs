@@ -84,7 +84,8 @@ public static class ProjectMapper
 
     public static ProjectResponse ToProjectResponse(this Entities.Project project, Guid? userId)
     {
-        var sharedWith = project.Permissions.Where(p => p.PersonKey != userId)
+        var sharedWith = project.Permissions
+            .Where(p => p.PersonKey != userId && p.PersonKey != project.Creator.Id)
             .Select(ToProjectSharedWith);
 
         if (userId != project.Creator.Id)

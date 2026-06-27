@@ -43,21 +43,35 @@
     </span>
   </div>
 
-  <p-button
-    [label]="
-      option().choice
-        ? ('project.votesOverview.reVote' | translate)
-        : ('project.common.vote' | translate)
-    "
-    [icon]="option().choice ? 'pi pi-refresh' : 'pi pi-play'"
-    [severity]="option().choice ? 'secondary' : 'primary'"
-    [routerLink]="[
-      '/project/detail',
-      projectId(),
-      'vote',
-      topicId(),
-      option().id,
-    ]"
-    styleClass="tw:w-full"
-  />
+  @if (option().choice) {
+    <div class="tw:flex tw:justify-end">
+      <p-button
+        [label]="'project.votesOverview.reVote' | translate"
+        icon="pi pi-refresh"
+        severity="secondary"
+        variant="text"
+        size="small"
+        [routerLink]="[
+          '/project/detail',
+          projectId(),
+          'vote',
+          topicId(),
+          option().id,
+        ]"
+      />
+    </div>
+  } @else {
+    <p-button
+      [label]="'project.common.vote' | translate"
+      icon="pi pi-play"
+      [routerLink]="[
+        '/project/detail',
+        projectId(),
+        'vote',
+        topicId(),
+        option().id,
+      ]"
+      styleClass="tw:w-full"
+    />
+  }
 </div>

@@ -40,6 +40,7 @@ body {
   --p-button-padding-y: 12px;
 
   --p-panel-border-radius: 12px;
+  --p-disabled-opacity: 0.4;
 
   p-button.small {
     --p-button-padding-x: 12px;
@@ -76,7 +77,7 @@ h3 {
 }
 
 p.label-sm {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.2;
 }
 

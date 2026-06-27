@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { UserStore } from '../../../data/user.store';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
@@ -7,6 +7,7 @@ import { Button } from 'primeng/button';
 import { TitleService } from '../../../services/title.service';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-title-bar',
@@ -18,21 +19,26 @@ import { NgOptimizedImage } from '@angular/common';
 export class TitleBarComponent {
   private userStore = inject(UserStore);
   private titleService = inject(TitleService);
+  private translateService = inject(TranslateService);
+
   user = this.userStore.user;
   title = this.titleService.title;
   backRoute = this.titleService.backRoute;
   isHidden = this.titleService.isHidden;
 
-  items: MenuItem[] = [
+  private logoutLabel = this.translateService.translate('titleBar.logout');
+  private settingsLabel = this.translateService.translate('titleBar.settings');
+
+  items = computed<MenuItem[]>(() => [
     {
-      label: 'Logout',
+      label: this.logoutLabel(),
       icon: 'pi pi-sign-out',
       routerLink: ['/auth/logout'],
     },
     {
-      label: 'Settings',
+      label: this.settingsLabel(),
       icon: 'pi pi-cog',
       routerLink: ['/settings'],
     },
-  ];
+  ]);
 }

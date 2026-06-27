@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ProjectStore } from '../_data/project.store';
 import { TitleService } from '../../../common/services/title.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overview-summary.component';
 import { OptionListComponent } from './option-list/option-list.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
@@ -26,18 +26,15 @@ import { CommentsSectionComponent } from './comments-section/comments-section.co
 })
 export class VotesOverviewComponent {
   private readonly projectStore = inject(ProjectStore);
-  private readonly translateService = inject(TranslateService);
 
   projectId = input('');
   topicId = input('');
 
   topic = this.projectStore.currentTopic;
+  project = this.projectStore.currentProject;
 
   constructor() {
     const titleService = inject(TitleService);
-    const title = this.translateService.translate(
-      'project.votesOverview.title',
-    );
 
     effect(() => {
       this.projectStore.getProject(this.projectId());
@@ -49,9 +46,10 @@ export class VotesOverviewComponent {
 
     effect(() => {
       const topic = this.topic();
-      if (topic) {
+      const project = this.project();
+      if (topic && project) {
         titleService.setBackroute('/project/detail/' + this.projectId());
-        titleService.setTitle(title());
+        titleService.setTitle(project.name);
       }
     });
   }

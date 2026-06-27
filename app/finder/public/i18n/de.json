@@ -1,4 +1,8 @@
 {
+  "titleBar": {
+    "logout": "Abmelden",
+    "settings": "Einstellungen"
+  },
   "settings": {
     "title": "Einstellungen",
     "name": "Name",
@@ -120,7 +124,6 @@
       "swipeHint": "Nach rechts wischen für Ja, nach links für Nein"
     },
     "votesOverview": {
-      "title": "Abstimmungsübersicht",
       "active": "Aktiv",
       "of": "von {{total}}",
       "rated": "bewertet",

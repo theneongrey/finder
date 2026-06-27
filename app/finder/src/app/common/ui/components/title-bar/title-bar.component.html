@@ -32,7 +32,7 @@
         [user]="user()!"
         (click)="menu.toggle($event)"
       />
-      <p-menu #menu [model]="items" [popup]="true" appendTo="body" />
+      <p-menu #menu [model]="items()" [popup]="true" appendTo="body" />
     }
   </header>
 }

@@ -1,4 +1,8 @@
 {
+  "titleBar": {
+    "logout": "Logout",
+    "settings": "Settings"
+  },
   "settings": {
     "title": "Settings",
     "name": "Name",
@@ -120,7 +124,6 @@
       "swipeHint": "Swipe right for Yes, left for No"
     },
     "votesOverview": {
-      "title": "Voting overview",
       "active": "Active",
       "of": "of {{total}}",
       "rated": "rated",

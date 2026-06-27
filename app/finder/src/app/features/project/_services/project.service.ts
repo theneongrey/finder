@@ -138,7 +138,7 @@ export class ProjectService {
     );
   }
 
-  addComment(topicId: string, content: string) {
+  addComment(topicId: string, content: string, quote?: string) {
     this.loggerService.debug(
       `[ProjectService] adding comment to topic ${topicId}`,
     );
@@ -147,6 +147,7 @@ export class ProjectService {
       {
         topicId,
         content,
+        quote,
       },
     );
   }

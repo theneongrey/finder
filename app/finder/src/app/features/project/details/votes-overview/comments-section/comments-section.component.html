@@ -17,6 +17,13 @@
             <p class="tw:text-sm tw:font-bold tw:text-gray-900">
               {{ comment.author }}
             </p>
+            @if (comment.quote) {
+              <blockquote
+                class="tw:text-xs tw:text-gray-500 tw:italic tw:mb-1 tw:border-l-2 tw:border-gray-300 tw:pl-2"
+              >
+                {{ comment.quote }}
+              </blockquote>
+            }
             <p class="tw:text-sm tw:text-gray-600">{{ comment.content }}</p>
             <span
               class="tw:text-[10px] tw:text-gray-400 tw:mt-1 tw:uppercase tw:tracking-wider tw:font-semibold tw:block"

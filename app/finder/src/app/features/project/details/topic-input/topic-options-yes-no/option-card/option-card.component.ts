@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
-import { OptionEntry } from '../topic-options.component';
+import { OptionEntry } from '../topic-options-yes-no.component';
 import { SideColorCardComponent } from '../../../../../../common/ui/components/side-color-card/side-color-card.component';
 
 @Component({

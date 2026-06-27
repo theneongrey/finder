@@ -60,7 +60,7 @@ public static class TopicMapper
             Name = topic.Name,
             Description = topic.Description,
             OptionType = (int)topic.OptionType,
-            Options = topic.Options.Select(o => o.ToTopicResponseOption(userId)).ToArray(),
+            Options = topic.Options.OrderBy(o => o.Created).Select(o => o.ToTopicResponseOption(userId)).ToArray(),
             Comments = topic.Comments
                 .OrderBy(c => c.Created)
                 .Select(c => c.ToCommentResponse())

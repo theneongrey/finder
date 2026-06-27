@@ -219,11 +219,31 @@ export const ProjectStore = signalStore(
                 );
               }),
               tapResponse({
-                next: ({ responseTopic }) => {
+                next: ({ responseTopic, addedOptions }) => {
                   store.loggerService.debug(
                     `[ProjectStore] Added topic`,
                     responseTopic,
                   );
+
+                  const currentProject = store.currentProject();
+                  if (currentProject) {
+                    patchState(store, {
+                      currentProject: {
+                        ...currentProject,
+                        topics: [
+                          ...currentProject.topics,
+                          {
+                            id: responseTopic.id,
+                            name: responseTopic.name,
+                            description: responseTopic.description,
+                            optionType: responseTopic.optionType,
+                            optionCount: addedOptions.length,
+                            commentCount: 0,
+                          },
+                        ],
+                      },
+                    });
+                  }
 
                   store.router.navigate([`/project/detail/${topic.projectId}`]);
                 },
@@ -482,11 +502,12 @@ export const ProjectStore = signalStore(
     addComment: rxMethod<{
       topicId: string;
       content: string;
+      quote?: string;
     }>(
       pipe(
         switchMap((comment) => {
           return store.projectService
-            .addComment(comment.topicId, comment.content)
+            .addComment(comment.topicId, comment.content, comment.quote)
             .pipe(
               tapResponse({
                 next: (addedComment: Comment) => {

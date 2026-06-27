@@ -8,12 +8,21 @@
 
   <div class="tw:grid tw:grid-cols-1 tw:gap-4">
     @for (option of sortedOptions(); track option.id) {
-      <app-option-card
-        [option]="option"
-        [isMostVoted]="hasMostVotes(option)"
-        [projectId]="projectId()"
-        [topicId]="topicId()"
-      />
+      @if (optionType() === OptionType.Date) {
+        <app-option-card-date
+          [option]="option"
+          [isMostVoted]="hasMostVotes(option)"
+          [projectId]="projectId()"
+          [topicId]="topicId()"
+        />
+      } @else {
+        <app-option-card
+          [option]="option"
+          [isMostVoted]="hasMostVotes(option)"
+          [projectId]="projectId()"
+          [topicId]="topicId()"
+        />
+      }
     }
   </div>
 </div>

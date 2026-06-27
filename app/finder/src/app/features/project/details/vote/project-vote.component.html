@@ -73,7 +73,11 @@
         (mousedown)="onDragStart($event)"
         (touchstart)="onDragStart($event)"
       >
-        @if (option()?.previewImageUrl) {
+        @if (topic()?.optionType === OptionType.Date) {
+          <app-vote-card-date
+            [text]="option()?.text ?? ''"
+          />
+        } @else if (option()?.previewImageUrl) {
           <app-vote-card-image
             [text]="option()?.text ?? ''"
             [description]="option()?.description ?? ''"

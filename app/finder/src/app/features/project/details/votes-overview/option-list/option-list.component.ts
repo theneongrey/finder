@@ -5,19 +5,23 @@ import {
   input,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { OptionDetail } from '../../../_models/project-detail.model';
+import { OptionDetail, OptionType } from '../../../_models/project-detail.model';
 import { OptionCardComponent } from './option-card/option-card.component';
+import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 
 @Component({
   selector: 'app-option-list',
   templateUrl: './option-list.component.html',
-  imports: [TranslatePipe, OptionCardComponent],
+  imports: [TranslatePipe, OptionCardComponent, OptionCardDateComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionListComponent {
+  readonly OptionType = OptionType;
+
   options = input.required<OptionDetail[]>();
   projectId = input('');
   topicId = input('');
+  optionType = input(OptionType.YesNo);
 
   sortedOptions = computed(() =>
     [...this.options()].sort(

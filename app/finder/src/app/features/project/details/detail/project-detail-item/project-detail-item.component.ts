@@ -59,7 +59,16 @@ export class ProjectDetailItemComponent {
               'yesno',
               this.topic().id,
             ]
-          : undefined,
+          : this.topic().optionType === OptionType.Date
+            ? [
+                '/project/detail',
+                this.projectId(),
+                'topic',
+                'edit',
+                'date',
+                this.topic().id,
+              ]
+            : undefined,
     },
     {
       label: this.deleteLabel(),

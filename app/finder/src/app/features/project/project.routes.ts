@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { OptionType } from './_models/project-detail.model';
 
 export const projectRoutes: Routes = [
   {
@@ -51,11 +52,12 @@ export const projectRoutes: Routes = [
       {
         path: 'topic/add/yesno',
         loadComponent: () =>
-          import('./details/topic-input-yes-no/topic-input-yes-no.component').then(
-            (m) => m.TopicInputYesNoComponent,
+          import('./details/topic-input/topic-input.component').then(
+            (m) => m.TopicInputComponent,
           ),
         data: {
           mode: 'add',
+          optionType: OptionType.YesNo,
           backRoute: (s: ActivatedRouteSnapshot) =>
             `/project/detail/${s.parent?.params['projectId']}`,
         },
@@ -63,11 +65,38 @@ export const projectRoutes: Routes = [
       {
         path: 'topic/edit/yesno/:topicId',
         loadComponent: () =>
-          import('./details/topic-input-yes-no/topic-input-yes-no.component').then(
-            (m) => m.TopicInputYesNoComponent,
+          import('./details/topic-input/topic-input.component').then(
+            (m) => m.TopicInputComponent,
           ),
         data: {
           mode: 'edit',
+          optionType: OptionType.YesNo,
+          backRoute: (s: ActivatedRouteSnapshot) =>
+            `/project/detail/${s.parent?.params['projectId']}`,
+        },
+      },
+      {
+        path: 'topic/add/date',
+        loadComponent: () =>
+          import('./details/topic-input/topic-input.component').then(
+            (m) => m.TopicInputComponent,
+          ),
+        data: {
+          mode: 'add',
+          optionType: OptionType.Date,
+          backRoute: (s: ActivatedRouteSnapshot) =>
+            `/project/detail/${s.parent?.params['projectId']}`,
+        },
+      },
+      {
+        path: 'topic/edit/date/:topicId',
+        loadComponent: () =>
+          import('./details/topic-input/topic-input.component').then(
+            (m) => m.TopicInputComponent,
+          ),
+        data: {
+          mode: 'edit',
+          optionType: OptionType.Date,
           backRoute: (s: ActivatedRouteSnapshot) =>
             `/project/detail/${s.parent?.params['projectId']}`,
         },

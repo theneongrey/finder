@@ -121,7 +121,8 @@
     "vote": {
       "votedProgress": "{{voted}} / {{total}} abgestimmt",
       "overview": "zur Übersicht",
-      "swipeHint": "Nach rechts wischen für Ja, nach links für Nein",
+      "swipeHintPre": "Nach rechts wischen für ",
+      "swipeHintMid": ", nach links für ",
       "skip": "Überspringen"
     },
     "votesOverview": {

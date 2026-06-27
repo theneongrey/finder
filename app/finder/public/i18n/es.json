@@ -121,7 +121,8 @@
     "vote": {
       "votedProgress": "{{voted}} / {{total}} votados",
       "overview": "al Resumen",
-      "swipeHint": "Desliza a la derecha para Sí, a la izquierda para No",
+      "swipeHintPre": "Desliza a la derecha para ",
+      "swipeHintMid": ", a la izquierda para ",
       "skip": "Omitir"
     },
     "votesOverview": {

@@ -120,7 +120,7 @@
     },
     "vote": {
       "votedProgress": "{{voted}} / {{total}} votados",
-      "overview": "Resumen",
+      "overview": "al Resumen",
       "swipeHint": "Desliza a la derecha para Sí, a la izquierda para No"
     },
     "votesOverview": {

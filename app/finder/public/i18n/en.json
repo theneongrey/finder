@@ -120,7 +120,7 @@
     },
     "vote": {
       "votedProgress": "{{voted}} / {{total}} voted",
-      "overview": "Overview",
+      "overview": "to Overview",
       "swipeHint": "Swipe right for Yes, left for No"
     },
     "votesOverview": {

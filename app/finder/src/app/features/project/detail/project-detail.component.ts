@@ -59,8 +59,6 @@ export class ProjectDetailComponent {
   readonly ProjectRole = ProjectRole;
 
   constructor() {
-    this.titleService.setBackroute('/project/');
-
     effect(() => {
       this.projectStore.getProject(this.projectId());
     });

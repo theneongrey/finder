@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 export const projectRoutes: Routes = [
   {
@@ -16,6 +17,7 @@ export const projectRoutes: Routes = [
       ),
     data: {
       mode: 'add',
+      backRoute: '/project/',
     },
   },
   {
@@ -26,6 +28,7 @@ export const projectRoutes: Routes = [
       ),
     data: {
       mode: 'edit',
+      backRoute: '/project/',
     },
   },
   {
@@ -36,6 +39,7 @@ export const projectRoutes: Routes = [
       ),
     data: {
       mode: 'add',
+      backRoute: (s: ActivatedRouteSnapshot) => `/project/detail/${s.params['projectId']}`,
     },
   },
   {
@@ -46,6 +50,7 @@ export const projectRoutes: Routes = [
       ),
     data: {
       mode: 'edit',
+      backRoute: (s: ActivatedRouteSnapshot) => `/project/detail/${s.params['projectId']}`,
     },
   },
   {
@@ -54,6 +59,9 @@ export const projectRoutes: Routes = [
       import('./vote/project-vote.component').then(
         (m) => m.ProjectVoteComponent,
       ),
+    data: {
+      backRoute: (s: ActivatedRouteSnapshot) => `/project/detail/${s.params['projectId']}`,
+    },
   },
   {
     path: 'detail/:projectId/vote/:topicId',
@@ -61,6 +69,9 @@ export const projectRoutes: Routes = [
       import('./vote/project-vote.component').then(
         (m) => m.ProjectVoteComponent,
       ),
+    data: {
+      backRoute: (s: ActivatedRouteSnapshot) => `/project/detail/${s.params['projectId']}`,
+    },
   },
   {
     path: 'detail/:projectId/votes-overview/:topicId',
@@ -68,6 +79,9 @@ export const projectRoutes: Routes = [
       import('./votes-overview/votes-overview.component').then(
         (m) => m.VotesOverviewComponent,
       ),
+    data: {
+      backRoute: (s: ActivatedRouteSnapshot) => `/project/detail/${s.params['projectId']}`,
+    },
   },
   {
     path: 'detail/:projectId',
@@ -75,6 +89,9 @@ export const projectRoutes: Routes = [
       import('./detail/project-detail.component').then(
         (m) => m.ProjectDetailComponent,
       ),
+    data: {
+      backRoute: '/project/',
+    },
   },
   {
     path: '**',

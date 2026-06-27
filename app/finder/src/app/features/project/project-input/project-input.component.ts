@@ -32,7 +32,6 @@ export class ProjectInputComponent {
 
   constructor() {
     const titleService: TitleService = inject(TitleService);
-    titleService.setBackroute('/project/');
 
     const createTitle = this.translateService.translate('project.input.create');
     const updateTitle = this.translateService.translate('project.input.update');

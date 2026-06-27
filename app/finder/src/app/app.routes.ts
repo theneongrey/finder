@@ -42,5 +42,6 @@ export const routes: Routes = [
       import('./features/settings/settings.component').then(
         (m) => m.SettingsComponent,
       ),
+    data: { backRoute: '/project/overview' },
   },
 ];

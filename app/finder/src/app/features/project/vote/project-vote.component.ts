@@ -70,10 +70,8 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
       this.projectStore.getTopic(this.topicId());
     });
     effect(() => {
-      const projectId = this.projectId();
       const currentProject = this.projectStore.currentProject();
-      if (projectId && currentProject) {
-        this.titleService.setBackroute(`/project/detail/${projectId}`);
+      if (currentProject) {
         this.titleService.setTitle(currentProject.name);
       }
     });

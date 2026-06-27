@@ -13,10 +13,19 @@ import { TitleService } from '../../../services/title.service';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-title-bar',
-  imports: [Menu, UserAvatarComponent, Button, RouterLink, NgOptimizedImage],
+  imports: [
+    Menu,
+    UserAvatarComponent,
+    Button,
+    RouterLink,
+    NgOptimizedImage,
+    LoadingComponent,
+    LoadingComponent,
+  ],
   templateUrl: './title-bar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -27,6 +36,7 @@ export class TitleBarComponent {
 
   user = this.userStore.user;
   title = this.titleService.title;
+  titleDisabled = this.titleService.titleDisabled;
   backRoute = this.titleService.backRoute;
   isHidden = this.titleService.isHidden;
 

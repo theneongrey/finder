@@ -7,7 +7,6 @@ import { ProjectStore } from '../_data/project.store';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { TitleService } from '../../../common/services/title.service';
 import { ProjectItemComponent } from './project-item/project-item.component';
 import { ProjectOverview } from '../_models/project-overview.model';
 import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
@@ -37,7 +36,6 @@ export class ProjectOverviewComponent {
   projects = this.projectStore.projects;
 
   constructor() {
-    inject(TitleService).setTitle('votean');
     this.projectStore.getProjects();
   }
 

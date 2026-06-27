@@ -44,10 +44,8 @@ export class VotesOverviewComponent {
     });
 
     effect(() => {
-      const topic = this.topic();
       const project = this.project();
-      if (topic && project) {
-        titleService.setBackroute('/project/detail/' + this.projectId());
+      if (project) {
         titleService.setTitle(project.name);
       }
     });

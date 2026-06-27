@@ -13,6 +13,7 @@ export const authRoutes: Routes = [
       import('./request-email/request-email.component').then(
         (m) => m.RequestEmailComponent,
       ),
+    data: { backRoute: '/' },
   },
   {
     path: 'code-login',
@@ -20,6 +21,7 @@ export const authRoutes: Routes = [
       import('./code-login/code-login.component').then(
         (m) => m.CodeLoginComponent,
       ),
+    data: { backRoute: '/project' },
   },
   {
     path: 'token-login',

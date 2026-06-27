@@ -9,11 +9,20 @@
         [text]="true"
       />
 
-      <h1
-        class="tw:my-auto tw:text-headline-md tw:font-bold tw:text-primary-dark tw:top-[2px] tw:relative"
-      >
-        {{ title() }}
-      </h1>
+      @if (!titleDisabled()) {
+        <app-loading
+          [isLoading]="title() === undefined"
+          skeletonWidth="8rem"
+          skeletonHeight="1.5rem"
+          innercss="tw:my-auto tw:relative tw:top-[3px]"
+        >
+          <h1
+            class="tw:my-auto tw:text-headline-md tw:font-bold tw:text-primary-dark tw:relative tw:top-[2px]"
+          >
+            {{ title() }}
+          </h1>
+        </app-loading>
+      }
     } @else {
       <a href="/" class="tw:my-auto tw:ml-[5px]">
         <img

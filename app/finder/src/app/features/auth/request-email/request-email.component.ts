@@ -72,10 +72,7 @@ export class RequestEmailComponent {
 
   constructor() {
     const router = inject(Router);
-    const titleService = inject(TitleService);
-
-    titleService.setTitle('');
-    titleService.setBackroute('/');
+    inject(TitleService).disableTitle();
 
     effect(() => {
       if (

@@ -15,7 +15,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { InputGroup } from 'primeng/inputgroup';
@@ -74,16 +73,9 @@ export class SettingsComponent {
 
   constructor() {
     const titleService = inject(TitleService);
-    const router = inject(Router);
 
     const title = this.translateService.translate('settings.title');
     effect(() => titleService.setTitle(title()));
-
-    const previousUrl =
-      router.getCurrentNavigation()?.previousNavigation?.finalUrl;
-    titleService.setBackroute(
-      previousUrl ? router.serializeUrl(previousUrl) : '/project',
-    );
 
     effect(() => {
       const user = this.user();

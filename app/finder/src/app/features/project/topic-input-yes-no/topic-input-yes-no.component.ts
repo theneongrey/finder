@@ -60,13 +60,6 @@ export class TopicInputYesNoComponent {
     });
 
     effect(() => {
-      const projectId = this.projectId();
-      if (projectId) {
-        titleService.setBackroute(`/project/detail/${projectId}`);
-      }
-    });
-
-    effect(() => {
       const topicId = this.topicId();
       if (this.mode() === 'edit' && topicId) {
         this.projectStore.getTopic(topicId);

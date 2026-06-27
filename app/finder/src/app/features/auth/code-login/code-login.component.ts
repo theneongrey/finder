@@ -39,10 +39,7 @@ export class CodeLoginComponent {
   });
 
   constructor() {
-    const titleService = inject(TitleService);
-
-    titleService.setTitle('');
-    titleService.setBackroute('/project');
+    inject(TitleService).disableTitle();
 
     if (!this.userStore.loginMail.email()) {
       this.loggerService.log('redirect: no email stored');

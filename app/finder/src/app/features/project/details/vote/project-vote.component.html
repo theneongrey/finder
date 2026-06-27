@@ -15,7 +15,7 @@
   </div>
 
   <div
-    class="tw:flex-1 tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-6"
+    class="tw:flex-1 tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-12"
   >
     <!-- Topic context + overview button -->
     <div class="tw:text-center tw:flex tw:flex-col tw:items-center">
@@ -74,9 +74,7 @@
         (touchstart)="onDragStart($event)"
       >
         @if (topic()?.optionType === OptionType.Date) {
-          <app-vote-card-date
-            [text]="option()?.text ?? ''"
-          />
+          <app-vote-card-date [text]="option()?.text ?? ''" />
         } @else if (option()?.previewImageUrl) {
           <app-vote-card-image
             [text]="option()?.text ?? ''"
@@ -91,10 +89,6 @@
         }
       </div>
     </div>
-
-    <p class="label-sm tw:text-surface-400">
-      {{ "project.vote.swipeHintPre" | translate }}<span class="tw:text-primary tw:font-bold">{{ "project.votesOverview.voteLabel.yes" | translate }}</span>{{ "project.vote.swipeHintMid" | translate }}<span class="tw:text-error tw:font-bold">{{ "project.votesOverview.voteLabel.no" | translate }}</span>
-    </p>
 
     <!-- Action buttons -->
     <div class="tw:flex tw:items-center tw:gap-6">
@@ -121,3 +115,25 @@
     </div>
   </div>
 </div>
+
+@if (showHint()) {
+  <div
+    class="hint-overlay tw:fixed tw:inset-x-0 tw:bottom-34 tw:z-40 tw:pointer-events-none tw:flex tw:justify-center"
+    [class.fading]="hintFading()"
+  >
+    <div
+      class="tw:bg-black/75 tw:backdrop-blur-sm tw:text-white tw:rounded-2xl tw:px-6 tw:py-3 tw:text-center tw:shadow-xl tw:mx-6 tw:max-w-sm"
+    >
+      <p class="tw:text-sm tw:leading-relaxed">
+        {{ "project.vote.swipeHintPre" | translate
+        }}<span class="tw:text-green-400 tw:font-bold">{{
+          "project.votesOverview.voteLabel.yes" | translate
+        }}</span
+        >{{ "project.vote.swipeHintMid" | translate
+        }}<span class="tw:text-red-400 tw:font-bold">{{
+          "project.votesOverview.voteLabel.no" | translate
+        }}</span>
+      </p>
+    </div>
+  </div>
+}

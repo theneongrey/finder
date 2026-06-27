@@ -132,7 +132,8 @@
       "overview": "to Overview",
       "swipeHintPre": "Swipe right for ",
       "swipeHintMid": ", left for ",
-      "skip": "Skip"
+      "skip": "Skip",
+      "tapToDismiss": "Tap to dismiss"
     },
     "votesOverview": {
       "active": "Active",

@@ -132,7 +132,8 @@
       "overview": "al Resumen",
       "swipeHintPre": "Desliza a la derecha para ",
       "swipeHintMid": ", a la izquierda para ",
-      "skip": "Omitir"
+      "skip": "Omitir",
+      "tapToDismiss": "Toca para cerrar"
     },
     "votesOverview": {
       "active": "Activo",

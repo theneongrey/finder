@@ -1,16 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
-import { ProjectStore } from '../_data/project.store';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProjectItemComponent } from './project-item/project-item.component';
-import { ProjectOverview } from '../_models/project-overview.model';
 import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ProjectStore } from '../_data/project.store';
+import { ProjectOverview } from '../_models/project-overview.model';
+import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
+import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 
 @Component({
   selector: 'app-project-overview',
@@ -19,6 +17,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     ProjectItemComponent,
     AddCardComponent,
     TranslatePipe,
+    MaxHeightMinusHeaderDirective,
+    RouterOutlet,
+    TitleBarComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
@@ -45,11 +46,18 @@ export class ProjectOverviewComponent {
 
   deletionRequested(project: ProjectOverview) {
     this.confirmationService.confirm({
-      header: this.translateService.instant('project.overview.deleteConfirm.header'),
-      message: this.translateService.instant('project.overview.deleteConfirm.message', {
-        name: project.name,
-      }),
-      acceptLabel: this.translateService.instant('project.overview.deleteConfirm.accept'),
+      header: this.translateService.instant(
+        'project.overview.deleteConfirm.header',
+      ),
+      message: this.translateService.instant(
+        'project.overview.deleteConfirm.message',
+        {
+          name: project.name,
+        },
+      ),
+      acceptLabel: this.translateService.instant(
+        'project.overview.deleteConfirm.accept',
+      ),
       rejectLabel: this.translateService.instant('project.common.cancel'),
       accept: () => {
         this.deleteProject(project.id);

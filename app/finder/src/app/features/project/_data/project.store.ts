@@ -6,7 +6,6 @@ import {
   withState,
 } from '@ngrx/signals';
 import { inject } from '@angular/core';
-import { LoggerService } from '../../../common/services/logger.service';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
@@ -20,6 +19,7 @@ import {
   TopicDetail,
 } from '../_models/project-detail.model';
 import { PermissionService } from '../_services/permission.service';
+import { LoggerService } from '../../../common/services/logger.service';
 
 export const ProjectStore = signalStore(
   { providedIn: 'root' },

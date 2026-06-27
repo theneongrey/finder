@@ -30,7 +30,7 @@ export const routes: Routes = [
     canActivate: [userAuthentication()],
     path: 'project',
     loadComponent: () =>
-      import('./features/project/shell.component').then(
+      import('./features/project/project-shell.component').then(
         (m) => m.ProjectShellComponent,
       ),
     children: projectRoutes,

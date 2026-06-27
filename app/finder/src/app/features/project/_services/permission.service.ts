@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../common/env/environment';
-import { LoggerService } from '../../../common/services/logger.service';
 import { SharedWith } from '../_models/project-detail.model';
+import { LoggerService } from '../../../common/services/logger.service';
+import { environment } from '../../../common/env/environment';
 
 @Injectable({
   providedIn: 'root',

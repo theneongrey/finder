@@ -63,7 +63,13 @@
         <app-add-card
           [description]="'project.detail.topicTypes.appointment' | translate"
           icon="fa-calendar"
-          [disabled]="true"
+          [routerLink]="[
+            '/project/detail',
+            project.id,
+            'topic',
+            'add',
+            'date',
+          ]"
         />
         <app-add-card
           [description]="'project.detail.topicTypes.yesNo' | translate"

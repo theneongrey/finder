@@ -100,6 +100,15 @@
       "update": "Actualizar proyecto"
     },
     "topicInput": {
+      "date": {
+        "createPoll": "Crear encuesta de citas",
+        "updatePoll": "Actualizar encuesta de citas",
+        "answerOptions": "Opciones de fecha",
+        "minOptions": "Mín. 1 fecha",
+        "addOption": "Añadir fecha",
+        "startDate": "Fecha de inicio",
+        "endDate": "Fecha de fin (opcional)"
+      },
       "yesNo": {
         "question": "Tu pregunta",
         "questionPlaceholder": "p. ej. ¿A dónde vamos?",

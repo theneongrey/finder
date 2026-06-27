@@ -1,0 +1,30 @@
+<div class="tw:flex tw:flex-col tw:gap-2 tw:mt-4">
+  <div class="tw:flex tw:justify-between tw:items-center tw:px-1">
+    <span class="tw:text-sm tw:font-semibold">
+      {{ "project.topicInput.date.answerOptions" | translate }}
+    </span>
+    <span class="tw:text-xs tw:text-neutral">{{
+      "project.topicInput.date.minOptions" | translate
+    }}</span>
+  </div>
+
+  <div class="tw:flex tw:flex-col tw:gap-3">
+    @for (option of options(); track $index) {
+      <app-option-card-date
+        animate.enter="card-enter"
+        animate.leave="card-leave"
+        [option]="option"
+        [index]="$index"
+        [canRemove]="options().length > 1"
+        (remove)="onRemove($index)"
+      />
+    }
+  </div>
+
+  <app-add-card
+    [class.add-card-nudge]="addCardAnimating()"
+    [cto]="'project.topicInput.date.addOption' | translate"
+    [iconLeft]="true"
+    (action)="onAdd()"
+  />
+</div>

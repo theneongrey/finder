@@ -100,6 +100,15 @@
       "update": "Update project"
     },
     "topicInput": {
+      "date": {
+        "createPoll": "Create appointment poll",
+        "updatePoll": "Update appointment poll",
+        "answerOptions": "Date options",
+        "minOptions": "Min. 1 date",
+        "addOption": "Add date",
+        "startDate": "Start date",
+        "endDate": "End date (optional)"
+      },
       "yesNo": {
         "question": "Your question",
         "questionPlaceholder": "e.g. Where should we go?",

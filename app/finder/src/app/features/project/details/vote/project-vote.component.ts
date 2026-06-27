@@ -17,7 +17,9 @@ import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
+import { VoteCardDateComponent } from './vote-card-date/vote-card-date.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
+import { OptionType } from '../../_models/project-detail.model';
 
 @Component({
   selector: 'app-project-vote',
@@ -28,6 +30,7 @@ import { TitleBarService } from '../../../../common/services/title-bar.service';
     TranslatePipe,
     VoteCardImageComponent,
     VoteCardTextComponent,
+    VoteCardDateComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -41,6 +44,8 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   private readonly titleService = inject(TitleBarService);
   private readonly projectStore = inject(ProjectStore);
   private readonly router = inject(Router);
+
+  readonly OptionType = OptionType;
 
   voteCardRef = viewChild.required<ElementRef<HTMLElement>>('voteCard');
 

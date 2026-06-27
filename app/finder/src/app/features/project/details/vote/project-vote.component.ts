@@ -18,6 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
 import { VoteCardDateComponent } from './vote-card-date/vote-card-date.component';
+import { VoteCommentButtonComponent } from './vote-comment-button/vote-comment-button.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { OptionType } from '../../_models/project-detail.model';
 
@@ -31,6 +32,7 @@ import { OptionType } from '../../_models/project-detail.model';
     VoteCardImageComponent,
     VoteCardTextComponent,
     VoteCardDateComponent,
+    VoteCommentButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

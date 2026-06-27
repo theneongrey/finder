@@ -149,6 +149,10 @@ namespace Finder.Migrations
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Quote")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
                     b.Property<Guid>("TopicId")
                         .HasColumnType("uuid");
 

@@ -1,0 +1,37 @@
+<div style="position: relative; display: inline-block;">
+  <p-button
+    icon="fa-regular fa-comment"
+    size="small"
+    severity="secondary"
+    variant="outlined"
+    [label]="'project.vote.addComment' | translate"
+    (click)="openCommentPopover($event)"
+  />
+  <span #anchor style="position: absolute; left: 50%; bottom: 0; width: 0; height: 0; display: block;"></span>
+</div>
+
+<p-popover #commentPopover>
+  <div class="tw:flex tw:flex-col tw:gap-3 tw:min-w-64">
+    <input
+      pInputText
+      type="text"
+      [(ngModel)]="commentText"
+      [placeholder]="'project.vote.commentPlaceholder' | translate"
+      class="tw:w-full"
+    />
+    <div class="tw:flex tw:gap-2 tw:justify-end">
+      <p-button
+        [label]="'project.common.cancel' | translate"
+        severity="secondary"
+        variant="text"
+        size="small"
+        (click)="cancelComment()"
+      />
+      <p-button
+        [label]="'project.vote.submitComment' | translate"
+        size="small"
+        (click)="submitComment()"
+      />
+    </div>
+  </div>
+</p-popover>

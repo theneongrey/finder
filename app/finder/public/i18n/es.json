@@ -133,7 +133,10 @@
       "swipeHintPre": "Desliza a la derecha para ",
       "swipeHintMid": ", a la izquierda para ",
       "skip": "Omitir",
-      "tapToDismiss": "Toca para cerrar"
+      "tapToDismiss": "Toca para cerrar",
+      "addComment": "Comentar",
+      "commentPlaceholder": "Tu comentario...",
+      "submitComment": "Añadir"
     },
     "votesOverview": {
       "active": "Activo",

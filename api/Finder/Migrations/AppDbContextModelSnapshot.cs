@@ -59,7 +59,7 @@ namespace Finder.Migrations
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.ToTable("LoginTokens");
+                    b.ToTable("LoginTokens", (string)null);
                 });
 
             modelBuilder.Entity("Finder.Business.Auth.Entities.Person", b =>
@@ -102,7 +102,7 @@ namespace Finder.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Persons");
+                    b.ToTable("Persons", (string)null);
                 });
 
             modelBuilder.Entity("Finder.Business.Permission.Entities.Permission", b =>
@@ -123,7 +123,7 @@ namespace Finder.Migrations
                     b.HasIndex("PersonKey", "ProjectKey")
                         .IsUnique();
 
-                    b.ToTable("Permissions");
+                    b.ToTable("Permissions", (string)null);
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Comment", b =>
@@ -146,6 +146,10 @@ namespace Finder.Migrations
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Quote")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
                     b.Property<Guid>("TopicId")
                         .HasColumnType("uuid");
 
@@ -155,7 +159,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
@@ -197,7 +201,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Options");
+                    b.ToTable("Options", (string)null);
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
@@ -232,7 +236,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Topic", b =>
@@ -267,7 +271,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Topics");
+                    b.ToTable("Topics", (string)null);
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Vote", b =>
@@ -299,7 +303,7 @@ namespace Finder.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Votes");
+                    b.ToTable("Votes", (string)null);
                 });
 
             modelBuilder.Entity("Finder.Business.Auth.Entities.LoginToken", b =>

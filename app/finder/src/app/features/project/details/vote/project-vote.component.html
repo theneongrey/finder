@@ -15,7 +15,7 @@
   </div>
 
   <div
-    class="tw:flex-1 tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-12"
+    class="tw:flex-1 tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-4"
   >
     <!-- Topic context + overview button -->
     <div class="tw:text-center tw:flex tw:flex-col tw:items-center">
@@ -89,6 +89,11 @@
         }
       </div>
     </div>
+
+    <app-vote-comment-button
+      [topicId]="topicId()"
+      [optionText]="option()?.text"
+    />
 
     <!-- Action buttons -->
     <div class="tw:flex tw:items-center tw:gap-6">

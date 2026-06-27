@@ -1,5 +1,7 @@
 <div>
-  <h3 id="comments-section">{{ 'project.votesOverview.comments' | translate }}</h3>
+  <h3 id="comments-section">
+    {{ "project.votesOverview.comments" | translate }}
+  </h3>
   <div
     class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:border tw:border-gray-100"
   >
@@ -21,7 +23,12 @@
               <blockquote
                 class="tw:text-xs tw:text-gray-500 tw:italic tw:mb-1 tw:border-l-2 tw:border-gray-300 tw:pl-2"
               >
-                {{ comment.quote }}
+                @let tsMs = quoteAsDate(comment.quote);
+                @if (tsMs !== null) {
+                  {{ tsMs | date: "medium" }}
+                } @else {
+                  {{ comment.quote }}
+                }
               </blockquote>
             }
             <p class="tw:text-sm tw:text-gray-600">{{ comment.content }}</p>

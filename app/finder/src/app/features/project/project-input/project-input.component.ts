@@ -17,7 +17,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-project-add-project',
   templateUrl: './project-input.component.html',
-  styleUrl: './project-input.component.css',
   imports: [FormsModule, InputText, Button, AutoResizeTextareaComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

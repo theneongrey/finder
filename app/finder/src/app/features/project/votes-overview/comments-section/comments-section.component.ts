@@ -10,7 +10,6 @@ import { TimeSincePipe } from '../../overview/_pipe/time-ago.pipe';
 @Component({
   selector: 'app-comments-section',
   templateUrl: './comments-section.component.html',
-  styleUrl: './comments-section.component.css',
   imports: [InputGroup, InputText, Button, TranslatePipe, FormsModule, TimeSincePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

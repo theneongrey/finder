@@ -35,7 +35,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   ],
   providers: [MessageService],
   templateUrl: './project-item.component.html',
-  styleUrl: './project-item.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectItemComponent {
@@ -45,19 +44,21 @@ export class ProjectItemComponent {
   deletionRequested = output();
 
   private editLabel = this.translateService.translate('project.common.edit');
-  private deleteLabel = this.translateService.translate('project.common.delete');
+  private deleteLabel = this.translateService.translate(
+    'project.common.delete',
+  );
 
   menuItems = computed<MenuItem[]>(() => {
     const project = this.project();
     return [
       {
         label: this.editLabel(),
-        icon: 'pi pi-pencil',
+        icon: 'fa-solid fa-pen',
         routerLink: '/project/edit/' + project.id,
       },
       {
         label: this.deleteLabel(),
-        icon: 'pi pi-trash',
+        icon: 'fa-regular fa-trash-can',
         command: () => this.deletionRequested.emit(),
       },
     ];

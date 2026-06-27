@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { UserStore } from '../../../data/user.store';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
@@ -13,7 +18,6 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-title-bar',
   imports: [Menu, UserAvatarComponent, Button, RouterLink, NgOptimizedImage],
   templateUrl: './title-bar.component.html',
-  styleUrl: './title-bar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitleBarComponent {
@@ -32,12 +36,12 @@ export class TitleBarComponent {
   items = computed<MenuItem[]>(() => [
     {
       label: this.logoutLabel(),
-      icon: 'pi pi-sign-out',
+      icon: 'fa-solid fa-right-from-bracket',
       routerLink: ['/auth/logout'],
     },
     {
       label: this.settingsLabel(),
-      icon: 'pi pi-cog',
+      icon: 'fa-solid fa-gear',
       routerLink: ['/settings'],
     },
   ]);

@@ -15,7 +15,6 @@ import { CommentsSectionComponent } from './comments-section/comments-section.co
 @Component({
   selector: 'app-votes-overview',
   templateUrl: './votes-overview.component.html',
-  styleUrl: './votes-overview.component.css',
   imports: [
     TranslatePipe,
     VoteOverviewSummaryComponent,

@@ -19,7 +19,6 @@ import { TopicOptionsComponent, OptionEntry } from './topic-options/topic-option
 @Component({
   selector: 'app-topic-input-yes-no',
   templateUrl: './topic-input-yes-no.component.html',
-  styleUrl: './topic-input-yes-no.component.css',
   imports: [
     FormsModule,
     InputText,

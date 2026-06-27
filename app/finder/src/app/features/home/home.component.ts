@@ -8,7 +8,6 @@ import { BackgroundAnimationComponent } from '../../common/ui/components/backgro
   selector: 'app-home',
   imports: [Button, NgOptimizedImage, RouterLink, BackgroundAnimationComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {}

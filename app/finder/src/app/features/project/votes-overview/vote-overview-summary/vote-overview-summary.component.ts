@@ -13,7 +13,6 @@ import { TopicDetail } from '../../_models/project-detail.model';
 @Component({
   selector: 'app-vote-overview-summary',
   templateUrl: './vote-overview-summary.component.html',
-  styleUrl: './vote-overview-summary.component.css',
   imports: [RouterLink, ProgressBar, Button, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

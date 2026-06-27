@@ -23,7 +23,6 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-auth-code-login',
   imports: [ReactiveFormsModule, InputOtp, Panel, Button, TranslatePipe],
   templateUrl: './code-login.component.html',
-  styleUrl: './code-login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'tw:m-auto',

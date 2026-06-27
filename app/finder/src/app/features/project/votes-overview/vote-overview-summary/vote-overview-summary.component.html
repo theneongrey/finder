@@ -27,7 +27,7 @@
         fragment="comments-section"
         class="tw:inline-flex tw:items-center tw:gap-1.5 tw:bg-primary/20 tw:text-primary tw:px-3 tw:py-1.5 tw:rounded-full tw:text-sm tw:font-bold tw:no-underline"
       >
-        <i class="pi pi-comment" style="font-size: 16px"></i>
+        <i class="fa-regular fa-comment" style="font-size: 16px"></i>
         <span>{{ commentsCount() }}</span>
       </a>
       <p class="tw:text-xl tw:font-semibold tw:text-primary tw:mt-1">
@@ -48,7 +48,7 @@
     @if (hasOpenOptions()) {
       <p-button
         [label]="'project.votesOverview.continueVoting' | translate"
-        icon="pi pi-arrow-right-arrow-left"
+        icon="fa-solid fa-arrow-right-arrow-left"
         [routerLink]="['/project/detail', projectId(), 'vote', topicId()]"
         size="small"
       />

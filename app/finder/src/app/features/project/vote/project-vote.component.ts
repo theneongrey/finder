@@ -16,12 +16,14 @@ import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { TitleService } from '../../../common/services/title.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
+import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
 
 @Component({
   selector: 'app-project-vote',
   templateUrl: './project-vote.component.html',
   styleUrl: './project-vote.component.css',
-  imports: [Button, TranslatePipe],
+  imports: [Button, TranslatePipe, VoteCardImageComponent, VoteCardTextComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(window:mouseup)': 'onDragEnd()',

@@ -11,7 +11,6 @@ import { User } from '../../../models/user.model';
   selector: 'app-user-avatar',
   imports: [Avatar],
   templateUrl: './user-avatar.component.html',
-  styleUrl: './user-avatar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserAvatarComponent {

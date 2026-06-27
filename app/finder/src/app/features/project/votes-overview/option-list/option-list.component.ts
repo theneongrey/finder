@@ -11,7 +11,6 @@ import { OptionCardComponent } from './option-card/option-card.component';
 @Component({
   selector: 'app-option-list',
   templateUrl: './option-list.component.html',
-  styleUrl: './option-list.component.css',
   imports: [TranslatePipe, OptionCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

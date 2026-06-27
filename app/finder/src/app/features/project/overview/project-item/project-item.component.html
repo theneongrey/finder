@@ -8,7 +8,7 @@
   <div class="tw:flex tw:items-start tw:justify-between tw:gap-3 tw:w-full">
     <div>
       <p-tag class="tw:-ml-[2px]">{{
-        'project.overview.item.by' | translate: { name: _project.creator }
+        "project.overview.item.by" | translate: { name: _project.creator }
       }}</p-tag>
       <p class="p-card-title tw:mb-4 tw:mt-1">{{ _project.name }}</p>
       <p class="label-sm tw:mb-2">
@@ -20,7 +20,7 @@
     </div>
     <div>
       <p-button
-        icon="pi pi-ellipsis-v"
+        icon="fa-solid fa-ellipsis-vertical"
         [text]="true"
         (click)="$event.stopPropagation(); menu.toggle($event)"
       />

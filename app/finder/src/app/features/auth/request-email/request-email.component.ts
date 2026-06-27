@@ -35,7 +35,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     TranslatePipe,
   ],
   templateUrl: './request-email.component.html',
-  styleUrl: './request-email.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:

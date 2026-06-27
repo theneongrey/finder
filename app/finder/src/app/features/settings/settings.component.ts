@@ -49,7 +49,6 @@ import {
   ],
   providers: [MessageService],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {

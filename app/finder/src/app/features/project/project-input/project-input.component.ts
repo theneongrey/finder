@@ -9,15 +9,25 @@ import {
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
-import { ProjectStore } from '../_data/project.store';
 import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
-import { TitleService } from '../../../common/services/title.service';
+import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ProjectStore } from '../_data/project.store';
+import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
+import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 
 @Component({
   selector: 'app-project-add-project',
   templateUrl: './project-input.component.html',
-  imports: [FormsModule, InputText, Button, AutoResizeTextareaComponent, TranslatePipe],
+  imports: [
+    FormsModule,
+    InputText,
+    Button,
+    AutoResizeTextareaComponent,
+    TranslatePipe,
+    MaxHeightMinusHeaderDirective,
+    TitleBarComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectInputComponent {
@@ -31,8 +41,7 @@ export class ProjectInputComponent {
   projectDescription = model('');
 
   constructor() {
-    const titleService: TitleService = inject(TitleService);
-    titleService.setBackroute('/project/');
+    const titleService: TitleBarService = inject(TitleBarService);
 
     const createTitle = this.translateService.translate('project.input.create');
     const updateTitle = this.translateService.translate('project.input.update');

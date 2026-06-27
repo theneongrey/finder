@@ -9,24 +9,34 @@ import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 import { Button } from 'primeng/button';
-import { TitleService } from '../../../services/title.service';
+import { TitleBarService } from '../../../services/title-bar.service';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-title-bar',
-  imports: [Menu, UserAvatarComponent, Button, RouterLink, NgOptimizedImage],
+  imports: [
+    Menu,
+    UserAvatarComponent,
+    Button,
+    RouterLink,
+    NgOptimizedImage,
+    LoadingComponent,
+    LoadingComponent,
+  ],
   templateUrl: './title-bar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitleBarComponent {
   private userStore = inject(UserStore);
-  private titleService = inject(TitleService);
+  private titleService = inject(TitleBarService);
   private translateService = inject(TranslateService);
 
   user = this.userStore.user;
   title = this.titleService.title;
+  titleDisabled = computed(() => this.title === null);
   backRoute = this.titleService.backRoute;
   isHidden = this.titleService.isHidden;
 

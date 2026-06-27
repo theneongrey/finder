@@ -15,7 +15,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { InputGroup } from 'primeng/inputgroup';
@@ -25,7 +24,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
 import { UserAvatarComponent } from '../../common/ui/components/user-avatar/user-avatar.component';
-import { TitleService } from '../../common/services/title.service';
+import { TitleBarService } from '../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   getStoredLanguage,
@@ -73,17 +72,10 @@ export class SettingsComponent {
   });
 
   constructor() {
-    const titleService = inject(TitleService);
-    const router = inject(Router);
+    const titleService = inject(TitleBarService);
 
     const title = this.translateService.translate('settings.title');
     effect(() => titleService.setTitle(title()));
-
-    const previousUrl =
-      router.getCurrentNavigation()?.previousNavigation?.finalUrl;
-    titleService.setBackroute(
-      previousUrl ? router.serializeUrl(previousUrl) : '/project',
-    );
 
     effect(() => {
       const user = this.user();

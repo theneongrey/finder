@@ -19,7 +19,7 @@ import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
-import { TitleService } from '../../../common/services/title.service';
+import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -72,10 +72,7 @@ export class RequestEmailComponent {
 
   constructor() {
     const router = inject(Router);
-    const titleService = inject(TitleService);
-
-    titleService.setTitle('');
-    titleService.setBackroute('/');
+    inject(TitleBarService).disableTitle();
 
     effect(() => {
       if (

@@ -16,7 +16,7 @@ import { InputOtp } from 'primeng/inputotp';
 import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';
 import { LoggerService } from '../../../common/services/logger.service';
-import { TitleService } from '../../../common/services/title.service';
+import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -39,10 +39,7 @@ export class CodeLoginComponent {
   });
 
   constructor() {
-    const titleService = inject(TitleService);
-
-    titleService.setTitle('');
-    titleService.setBackroute('/project');
+    inject(TitleBarService).disableTitle();
 
     if (!this.userStore.loginMail.email()) {
       this.loggerService.log('redirect: no email stored');

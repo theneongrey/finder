@@ -1,0 +1,30 @@
+@let _projectId = projectId();
+@if (_projectId) {
+  <div class="tw:flex tw:flex-col tw:gap-6 tw:p-4 tw:pb-8">
+    @if (topic(); as topic) {
+      <app-vote-overview-summary
+        [topic]="topic"
+        [commentsCount]="topic.comments.length"
+        [projectId]="_projectId"
+        [topicId]="topicId()"
+      />
+
+      <app-option-list
+        [options]="topic.options"
+        [projectId]="_projectId"
+        [topicId]="topicId()"
+      />
+
+      <app-comments-section
+        [comments]="topic.comments"
+        (addComment)="addComment($event)"
+      />
+    } @else {
+      <div class="tw:flex tw:justify-center tw:items-center tw:h-32">
+        <p class="tw:text-gray-500">
+          {{ "project.votesOverview.loading" | translate }}
+        </p>
+      </div>
+    }
+  </div>
+}

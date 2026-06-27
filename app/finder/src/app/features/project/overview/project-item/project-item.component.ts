@@ -12,12 +12,12 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { RouterLink } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Tag } from 'primeng/tag';
-import { ProjectOverview } from '../../_models/project-overview.model';
 import { TimeSincePipe } from '../_pipe/time-ago.pipe';
 import { SideColorCardComponent } from '../../../../common/ui/components/side-color-card/side-color-card.component';
 import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ProjectOverview } from '../../_models/project-overview.model';
 
 @Component({
   selector: 'app-project-item',

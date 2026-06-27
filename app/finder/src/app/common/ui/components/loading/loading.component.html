@@ -1,0 +1,17 @@
+@if (!showContent()) {
+  <div
+    class="tw:flex"
+    [class]="innercss()"
+    [style.flex-direction]="flexDirection()"
+    [style.gap]="gap()"
+    [style.opacity]="skeletonFading() ? '0' : '1'"
+    style="transition: opacity 0.3s ease-out"
+  >
+    @for (item of skeletonArray(); track $index) {
+      <p-skeleton [width]="skeletonWidth()" [height]="skeletonHeight()" />
+    }
+  </div>
+}
+@if (showContent()) {
+  <ng-content />
+}

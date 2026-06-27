@@ -1,8 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProjectOverview } from '../_models/project-overview.model';
-import { environment } from '../../../common/env/environment';
-import { LoggerService } from '../../../common/services/logger.service';
 import {
   Comment,
   Option,
@@ -11,6 +9,8 @@ import {
   Topic,
   TopicDetail,
 } from '../_models/project-detail.model';
+import { environment } from '../../../common/env/environment';
+import { LoggerService } from '../../../common/services/logger.service';
 
 @Injectable({
   providedIn: 'root',
@@ -93,12 +93,7 @@ export class ProjectService {
     );
   }
 
-  addOption(
-    topicId: string,
-    text: string,
-    description: string,
-    url: string,
-  ) {
+  addOption(topicId: string, text: string, description: string, url: string) {
     this.loggerService.debug(`[ProjectService] adding option ${text}`);
     return this.httpClient.post<Option>(
       `${this.baseUrl}/api/project/topic/option`,
@@ -144,7 +139,9 @@ export class ProjectService {
   }
 
   addComment(topicId: string, content: string) {
-    this.loggerService.debug(`[ProjectService] adding comment to topic ${topicId}`);
+    this.loggerService.debug(
+      `[ProjectService] adding comment to topic ${topicId}`,
+    );
     return this.httpClient.post<Comment>(
       `${this.baseUrl}/api/project/topic/comment`,
       {

@@ -30,7 +30,7 @@ export const routes: Routes = [
     canActivate: [userAuthentication()],
     path: 'project',
     loadComponent: () =>
-      import('./features/project/shell.component').then(
+      import('./features/project/project-shell.component').then(
         (m) => m.ProjectShellComponent,
       ),
     children: projectRoutes,
@@ -42,5 +42,6 @@ export const routes: Routes = [
       import('./features/settings/settings.component').then(
         (m) => m.SettingsComponent,
       ),
+    data: { backRoute: '/project/overview' },
   },
 ];

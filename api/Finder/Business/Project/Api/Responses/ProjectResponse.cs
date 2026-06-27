@@ -68,6 +68,7 @@ public static class ProjectMapper
             OptionCount = topic.Options.Count,
             CommentCount = topic.Comments.Count,
             NextOpenOptionId = topic.Options
+                .OrderBy(o => o.Created)
                 .FirstOrDefault(o => o.Votes.All(v => v.Person.Id != userId))?.Id.ToString()
         };
     }
@@ -104,7 +105,7 @@ public static class ProjectMapper
             Id = project.Id.ToString(),
             Name = project.Name,
             Description = project.Description,
-            Topics = project.Topics.Select(t => t.ToProjectResponseTopic(userId)).ToArray(),
+            Topics = project.Topics.OrderBy(t => t.Created).Select(t => t.ToProjectResponseTopic(userId)).ToArray(),
             PermissionType = (int)project.VisibilityType,
             Creator = project.Creator.Name ??  project.Creator.Email,
             Role = project.GetRole(userId),

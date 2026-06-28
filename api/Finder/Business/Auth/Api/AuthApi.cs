@@ -14,7 +14,7 @@ public static class AuthApi
         {
             var result = await loginService.RequestLoginMail(request.Email, request.RedirectUrl);
             return result.IsSuccess ? Results.Ok() : Results.Forbid();
-        });
+        }).RequireRateLimiting("auth");
 
         app.MapPost("/api/auth/tokenLogin", async ([FromBody] TokenLoginRequest request, LoginService loginService) =>
         {
@@ -23,10 +23,10 @@ public static class AuthApi
             {
                 return Results.Ok(result.Payload);
             }
-            
+
             return Results.Unauthorized();
-        });
-        
+        }).RequireRateLimiting("auth");
+
         app.MapPost("/api/auth/codeLogin", async ([FromBody] CodeLoginRequest request, LoginService loginService) =>
         {
             var result = await loginService.LoginByCode(request.Email, request.LoginCode);
@@ -34,9 +34,9 @@ public static class AuthApi
             {
                 return Results.Ok(result.Payload);
             }
-            
+
             return Results.Unauthorized();
-        });
+        }).RequireRateLimiting("auth");
         
         app.MapGet("/api/auth/who", async (UserService userService) =>
         {

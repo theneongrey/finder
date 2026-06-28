@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Setup;
 using Finder.Business.Permission.Api;
@@ -33,6 +34,20 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.AddScoped<UserService>();
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("auth", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
 builder.Services.AddAuthServices(builder.Configuration);
 builder.Services.AddProjectServices();
 builder.Services.AddPermissionServices(builder.Configuration);
@@ -48,6 +63,7 @@ using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().Creat
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 app.WithAuthApi();
 app.WithProjectApi();
 app.WithPermissionApi();

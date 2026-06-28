@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
+import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionType } from '../../../_models/project-detail.model';
 import {
@@ -26,6 +27,7 @@ export type { OptionEntry, DateOptionEntry };
   imports: [
     FormsModule,
     InputText,
+    Button,
     TranslatePipe,
     AutoResizeTextareaComponent,
     TopicOptionsYesNoComponent,
@@ -36,6 +38,8 @@ export type { OptionEntry, DateOptionEntry };
 export class TopicInputFormComponent {
   readonly OptionType = OptionType;
 
+  mode = input.required<'add' | 'edit'>();
+  isValid = input.required<boolean>();
   optionType = input.required<OptionType>();
   question = input.required<string>();
   questionChange = output<string>();
@@ -45,4 +49,5 @@ export class TopicInputFormComponent {
   dateOptions = input.required<DateOptionEntry[]>();
   add = output<void>();
   remove = output<number>();
+  formSubmit = output<void>();
 }

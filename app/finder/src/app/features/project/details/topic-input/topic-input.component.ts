@@ -6,10 +6,8 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { Button } from 'primeng/button';
 import { ProjectStore } from '../../_data/project.store';
 import { OptionType } from '../../_models/project-detail.model';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
   OptionEntry,
   DateOptionEntry,
@@ -26,8 +24,6 @@ export type { OptionEntry, DateOptionEntry };
   templateUrl: './topic-input.component.html',
   host: { class: 'tw:block tw:h-full' },
   imports: [
-    Button,
-    TranslatePipe,
     TopicTypeSelectionComponent,
     TopicInputFormComponent,
   ],

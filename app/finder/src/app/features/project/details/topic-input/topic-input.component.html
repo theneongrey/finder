@@ -1,39 +1,18 @@
 @if (optionType() === undefined) {
-  <div class="tw:h-full tw:flex tw:flex-col">
-    <app-topic-type-selection (typeSelected)="optionType.set($event)" />
-  </div>
+  <app-topic-type-selection (typeSelected)="optionType.set($event)" />
 } @else {
-  <div class="tw:pb-28">
-    <app-topic-input-form
-      [optionType]="optionType()!"
-      [question]="question()"
-      (questionChange)="question.set($event)"
-      [description]="description()"
-      (descriptionChange)="description.set($event)"
-      [options]="options()"
-      [dateOptions]="dateOptions()"
-      (add)="addOption()"
-      (remove)="removeOption($event)"
-    />
-  </div>
-
-  <div
-    class="tw:fixed tw:bottom-0 tw:left-0 tw:w-full tw:z-50 tw:bg-white/80 tw:backdrop-blur-md tw:p-4 tw:flex tw:justify-center p-fluid"
-  >
-    <p-button
-      class="tw:w-full tw:max-w-md"
-      [label]="
-        mode() === 'add'
-          ? ('project.topicInput.createPoll' | translate)
-          : ('project.topicInput.updatePoll' | translate)
-      "
-      [icon]="
-        mode() === 'add'
-          ? 'fa-regular fa-paper-plane'
-          : 'fa-regular fa-floppy-disk'
-      "
-      [disabled]="!isValid()"
-      (click)="submit()"
-    />
-  </div>
+  <app-topic-input-form
+    [optionType]="optionType()!"
+    [mode]="mode()"
+    [isValid]="isValid()"
+    [question]="question()"
+    (questionChange)="question.set($event)"
+    [description]="description()"
+    (descriptionChange)="description.set($event)"
+    [options]="options()"
+    [dateOptions]="dateOptions()"
+    (add)="addOption()"
+    (remove)="removeOption($event)"
+    (formSubmit)="submit()"
+  />
 }

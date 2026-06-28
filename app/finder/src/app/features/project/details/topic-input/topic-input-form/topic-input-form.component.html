@@ -1,4 +1,4 @@
-<div class="tw:flex tw:flex-col tw:gap-3 tw:mx-4">
+<div class="tw:pb-28 tw:flex tw:flex-col tw:gap-3 tw:mx-4">
   <div class="tw:flex tw:flex-col tw:gap-1">
     <label class="tw:text-sm tw:font-semibold tw:px-1" for="question">
       {{ "project.topicInput.yesNo.question" | translate }}
@@ -50,4 +50,24 @@
       (remove)="remove.emit($event)"
     />
   }
+</div>
+
+<div
+  class="tw:fixed tw:bottom-0 tw:left-0 tw:w-full tw:z-50 tw:bg-white/80 tw:backdrop-blur-md tw:p-4 tw:flex tw:justify-center p-fluid"
+>
+  <p-button
+    class="tw:w-full tw:max-w-md"
+    [label]="
+      mode() === 'add'
+        ? ('project.topicInput.createPoll' | translate)
+        : ('project.topicInput.updatePoll' | translate)
+    "
+    [icon]="
+      mode() === 'add'
+        ? 'fa-regular fa-paper-plane'
+        : 'fa-regular fa-floppy-disk'
+    "
+    [disabled]="!isValid()"
+    (click)="formSubmit.emit()"
+  />
 </div>

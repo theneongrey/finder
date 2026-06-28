@@ -141,7 +141,6 @@
       "date": {
         "answerOptions": "Terminoptionen",
         "minOptions": "Mind. 1 Termin",
-        "addOption": "Termin hinzufügen",
         "startDate": "Startdatum",
         "endDate": "Enddatum (optional)"
       },
@@ -155,6 +154,7 @@
         "optionPlaceholder": "z. B. Italienisches Restaurant",
         "optionDescriptionPlaceholder": "Beschreibung",
         "urlPlaceholder": "Optionaler Link (URL)",
+        "urlError": "Bitte gib eine gültige URL ein (z. B. google.de oder https://google.de)",
         "previewImageUrlPlaceholder": "Optionales Vorschaubild (URL)",
         "addDescription": "Beschreibung",
         "addLink": "Link",

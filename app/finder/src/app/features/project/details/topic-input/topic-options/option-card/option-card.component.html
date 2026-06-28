@@ -60,31 +60,37 @@
         <div
           animate.enter="slide-enter"
           animate.leave="slide-leave"
-          class="tw:flex tw:items-center tw:gap-2"
+          class="tw:flex tw:flex-col tw:gap-1"
         >
-          <i class="fa-solid fa-link tw:text-primary tw:text-sm"></i>
-          <input
-            pInputText
-            class="tw:flex-1 tw:bg-transparent tw:ml-1"
-            style="
-              border: none;
-              border-bottom: 1px solid #cbd5e1;
-              border-radius: 0;
-              box-shadow: none;
-              padding-left: 0;
-              height: 26px;
-            "
-            pSize="small"
-            maxlength="2048"
-            [placeholder]="
-              'project.topicInput.yesNo.urlPlaceholder' | translate
-            "
-            #linkInput
-            [(ngModel)]="option().url"
-            [name]="'option-url-' + index()"
-            type="url"
-            (blur)="onUrlBlur()"
-          />
+          <div class="tw:flex tw:items-center tw:gap-2">
+            <i class="fa-solid fa-link tw:text-primary tw:text-sm"></i>
+            <input
+              pInputText
+              class="tw:flex-1 tw:bg-transparent tw:ml-1"
+              style="
+                border: none;
+                border-bottom: 1px solid #cbd5e1;
+                border-radius: 0;
+                box-shadow: none;
+                padding-left: 0;
+                height: 26px;
+              "
+              pSize="small"
+              maxlength="2048"
+              [placeholder]="
+                'project.topicInput.yesNo.urlPlaceholder' | translate
+              "
+              #linkInput
+              [(ngModel)]="option().url"
+              [name]="'option-url-' + index()"
+              (blur)="onUrlBlur()"
+            />
+          </div>
+          @if (urlError()) {
+            <p-message severity="error" class="tw:ml-5">{{
+              "project.topicInput.yesNo.urlError" | translate
+            }}</p-message>
+          }
         </div>
       }
 

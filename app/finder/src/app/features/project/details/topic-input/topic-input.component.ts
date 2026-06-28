@@ -12,6 +12,7 @@ import {
   OptionEntry,
   DateOptionEntry,
 } from './topic-input-form/topic-input-form.component';
+import { UrlValidationService } from '../../../../common/utils/url-validation.service';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { ActivatedRoute } from '@angular/router';
 import { TopicTypeSelectionComponent } from './topic-type-selection/topic-type-selection.component';
@@ -23,15 +24,13 @@ export type { OptionEntry, DateOptionEntry };
   selector: 'app-topic-input',
   templateUrl: './topic-input.component.html',
   host: { class: 'tw:block tw:h-full' },
-  imports: [
-    TopicTypeSelectionComponent,
-    TopicInputFormComponent,
-  ],
+  imports: [TopicTypeSelectionComponent, TopicInputFormComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopicInputComponent {
   private readonly projectStore = inject(ProjectStore);
   private readonly route = inject(ActivatedRoute);
+  private readonly urlValidation = inject(UrlValidationService);
 
   readonly OptionType = OptionType;
 
@@ -115,8 +114,11 @@ export class TopicInputComponent {
         this.dateOptions().filter((o) => !!o.startDate).length >= 1
       );
     }
+    const opts = this.options();
     return (
-      !!this.question() && this.options().filter((o) => !!o.text).length >= 1
+      !!this.question() &&
+      opts.filter((o) => !!o.text).length >= 1 &&
+      opts.every((o) => this.urlValidation.isValid(o.url))
     );
   }
 

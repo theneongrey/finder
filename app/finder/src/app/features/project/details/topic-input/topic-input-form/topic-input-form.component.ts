@@ -10,13 +10,10 @@ import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionType } from '../../../_models/project-detail.model';
 import {
-  TopicOptionsYesNoComponent,
+  TopicOptionsComponent,
   OptionEntry,
-} from '../topic-options-yes-no/topic-options-yes-no.component';
-import {
-  TopicOptionsDateComponent,
   DateOptionEntry,
-} from '../topic-options-date/topic-options-date.component';
+} from '../topic-options/topic-options.component';
 import { AutoResizeTextareaComponent } from '../../../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 
 export type { OptionEntry, DateOptionEntry };
@@ -30,8 +27,7 @@ export type { OptionEntry, DateOptionEntry };
     Button,
     TranslatePipe,
     AutoResizeTextareaComponent,
-    TopicOptionsYesNoComponent,
-    TopicOptionsDateComponent,
+    TopicOptionsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

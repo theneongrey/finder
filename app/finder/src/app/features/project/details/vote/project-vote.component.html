@@ -108,11 +108,13 @@
             [text]="option()?.text ?? ''"
             [description]="option()?.description ?? ''"
             [previewImageUrl]="option()?.previewImageUrl ?? ''"
+            [link]="option()?.url ?? ''"
           />
         } @else {
           <app-vote-card-text
             [text]="option()?.text ?? ''"
             [description]="option()?.description ?? ''"
+            [link]="option()?.url ?? ''"
           />
         }
       </div>

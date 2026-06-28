@@ -141,7 +141,6 @@
       "date": {
         "answerOptions": "Date options",
         "minOptions": "Min. 1 date",
-        "addOption": "Add date",
         "startDate": "Start date",
         "endDate": "End date (optional)"
       },
@@ -155,6 +154,7 @@
         "optionPlaceholder": "e.g. Italian restaurant",
         "optionDescriptionPlaceholder": "Description",
         "urlPlaceholder": "Optional link (URL)",
+        "urlError": "Please enter a valid URL (e.g. google.de or https://google.de)",
         "previewImageUrlPlaceholder": "Optional preview image (URL)",
         "addDescription": "Description",
         "addLink": "Link",

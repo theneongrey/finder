@@ -38,12 +38,10 @@ export class OptionListComponent {
 
   getAverageRating(option: OptionDetail): number {
     const rated = option.votes.filter(
-      (v) => v.choice && !isNaN(parseInt(v.choice)),
+      (v) => v.choice && parseInt(v.choice) > 0,
     );
     if (!rated.length) return 0;
-    return (
-      rated.reduce((sum, v) => sum + parseInt(v.choice!), 0) / rated.length
-    );
+    return rated.reduce((sum, v) => sum + parseInt(v.choice!), 0) / rated.length;
   }
 
   hasMostVotes(option: OptionDetail) {

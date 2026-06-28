@@ -61,7 +61,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     this.topic()?.options.find((o) => o.id === this.optionId()),
   );
   votedCount = computed(
-    () => this.topic()?.options.filter((o) => o.choice).length ?? 0,
+    () => this.topic()?.options.filter((o) => parseInt(o.choice ?? '0') > 0).length ?? 0,
   );
   totalCount = computed(() => this.topic()?.options.length ?? 0);
 
@@ -79,6 +79,9 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   rightCueOpacity = signal(0);
   showHint = signal(!sessionStorage.getItem('finder_voted_session'));
   hintFading = signal(false);
+
+  private readonly localSkipCounts = signal(new Map<string, number>());
+  private readonly hasVotedInSession = signal(false);
 
   constructor() {
     effect(() => {
@@ -189,7 +192,16 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   }
 
   skip(): void {
-    this.navigateToNextOption(this.optionId());
+    const optionId = this.optionId();
+    const currentChoice = parseInt(this.option()?.choice ?? '0') || 0;
+    const skipValue = Math.min(currentChoice, 0) - 1;
+    this.projectStore.vote({ optionId, choice: skipValue.toString() });
+
+    const counts = new Map(this.localSkipCounts());
+    counts.set(optionId, (counts.get(optionId) ?? 0) + 1);
+    this.localSkipCounts.set(counts);
+
+    this.navigateToNextOption(optionId);
   }
 
   navigateToOverview(): void {
@@ -245,37 +257,52 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   }
 
   private castVote(choice: string): void {
+    this.hasVotedInSession.set(true);
     this.projectStore.vote({ optionId: this.optionId(), choice });
     this.navigateToNextOption(this.optionId());
   }
 
+  // Navigation priority rules:
+  //   choice == null  → never touched; always shown first
+  //   choice  > 0     → real vote; never shown again
+  //   choice  < 0     → skipped; shown after unvoted, but only when at least one
+  //                     real vote was cast this session (otherwise go to overview)
+  //                     An option skipped twice locally is treated as done for
+  //                     this session and excluded from the queue.
   private navigateToNextOption(
     ignore: string | undefined,
     replaceUrl = false,
   ): void {
     const options = this.topic()!.options;
-    const nextOption = options.find((o) => !o.choice && o.id !== ignore);
-    if (!nextOption) {
+
+    const nextUnvoted = options.find((o) => !o.choice && o.id !== ignore);
+    if (nextUnvoted) {
       void this.router.navigate(
-        [
-          '/project/detail/',
-          this.projectId(),
-          'votes-overview',
-          this.topicId()!,
-        ],
+        ['/project/detail/', this.projectId(), 'vote', this.topicId()!, nextUnvoted.id],
         { replaceUrl },
       );
       return;
     }
 
+    if (this.hasVotedInSession()) {
+      const nextSkipped = [...options]
+        .filter((o) =>
+          o.id !== ignore &&
+          parseInt(o.choice ?? '0') < 0 &&
+          (this.localSkipCounts().get(o.id) ?? 0) < 2,
+        )
+        .sort((a, b) => parseInt(b.choice!) - parseInt(a.choice!))[0];
+      if (nextSkipped) {
+        void this.router.navigate(
+          ['/project/detail/', this.projectId(), 'vote', this.topicId()!, nextSkipped.id],
+          { replaceUrl },
+        );
+        return;
+      }
+    }
+
     void this.router.navigate(
-      [
-        '/project/detail/',
-        this.projectId(),
-        'vote',
-        this.topicId()!,
-        nextOption.id,
-      ],
+      ['/project/detail/', this.projectId(), 'votes-overview', this.topicId()!],
       { replaceUrl },
     );
   }

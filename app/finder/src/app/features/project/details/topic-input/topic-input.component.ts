@@ -6,43 +6,35 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { ProjectStore } from '../../_data/project.store';
 import { OptionType } from '../../_models/project-detail.model';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
-  TopicOptionsYesNoComponent,
   OptionEntry,
-} from './topic-options-yes-no/topic-options-yes-no.component';
-import {
-  TopicOptionsDateComponent,
   DateOptionEntry,
-} from './topic-options-date/topic-options-date.component';
+} from './topic-input-form/topic-input-form.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
-import { AutoResizeTextareaComponent } from '../../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { ActivatedRoute } from '@angular/router';
+import { TopicTypeSelectionComponent } from './topic-type-selection/topic-type-selection.component';
+import { TopicInputFormComponent } from './topic-input-form/topic-input-form.component';
 
 export type { OptionEntry, DateOptionEntry };
 
 @Component({
   selector: 'app-topic-input',
   templateUrl: './topic-input.component.html',
+  host: { class: 'tw:block tw:h-full' },
   imports: [
-    FormsModule,
-    InputText,
     Button,
-    AutoResizeTextareaComponent,
     TranslatePipe,
-    TopicOptionsYesNoComponent,
-    TopicOptionsDateComponent,
+    TopicTypeSelectionComponent,
+    TopicInputFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopicInputComponent {
   private readonly projectStore = inject(ProjectStore);
-  private readonly translateService = inject(TranslateService);
   private readonly route = inject(ActivatedRoute);
 
   readonly OptionType = OptionType;
@@ -51,8 +43,8 @@ export class TopicInputComponent {
   projectId = this.projectStore.projectId;
   topicId = input<string | undefined>(undefined);
 
-  optionType = signal<OptionType>(
-    this.route.snapshot.data['optionType'] ?? OptionType.YesNo,
+  optionType = signal<OptionType | undefined>(
+    this.route.snapshot.data['optionType'],
   );
 
   question = signal('');
@@ -64,45 +56,8 @@ export class TopicInputComponent {
   constructor() {
     const titleService = inject(TitleBarService);
 
-    const createYesNoTitle = this.translateService.translate(
-      'project.topicInput.yesNo.createPoll',
-    );
-    const updateYesNoTitle = this.translateService.translate(
-      'project.topicInput.yesNo.updatePoll',
-    );
-    const createDateTitle = this.translateService.translate(
-      'project.topicInput.date.createPoll',
-    );
-    const updateDateTitle = this.translateService.translate(
-      'project.topicInput.date.updatePoll',
-    );
-
-    const createRatingTitle = this.translateService.translate(
-      'project.topicInput.rating.createPoll',
-    );
-    const updateRatingTitle = this.translateService.translate(
-      'project.topicInput.rating.updatePoll',
-    );
-
     effect(() => {
-      const type = this.optionType();
-      if (this.mode() === 'edit') {
-        titleService.setTitle(
-          type === OptionType.Date
-            ? updateDateTitle()
-            : type === OptionType.Rating
-              ? updateRatingTitle()
-              : updateYesNoTitle(),
-        );
-      } else {
-        titleService.setTitle(
-          type === OptionType.Date
-            ? createDateTitle()
-            : type === OptionType.Rating
-              ? createRatingTitle()
-              : createYesNoTitle(),
-        );
-      }
+      titleService.setTitle(this.projectStore.currentProject()?.name ?? '');
     });
 
     effect(() => {
@@ -130,8 +85,7 @@ export class TopicInputComponent {
                   return {
                     id: o.id,
                     startDate: parts[0] ? new Date(parseInt(parts[0])) : null,
-                    endDate:
-                      parts[1] ? new Date(parseInt(parts[1])) : null,
+                    endDate: parts[1] ? new Date(parseInt(parts[1])) : null,
                   };
                 })
               : [{ startDate: null, endDate: null }],
@@ -153,7 +107,11 @@ export class TopicInputComponent {
   }
 
   isValid(): boolean {
-    if (this.optionType() === OptionType.Date) {
+    const type = this.optionType();
+    if (type === undefined) {
+      return false;
+    }
+    if (type === OptionType.Date) {
       return (
         !!this.question() &&
         this.dateOptions().filter((o) => !!o.startDate).length >= 1
@@ -165,7 +123,8 @@ export class TopicInputComponent {
   }
 
   addOption(): void {
-    if (this.optionType() === OptionType.Date) {
+    const type = this.optionType();
+    if (type === OptionType.Date) {
       this.dateOptions.update((opts) => [
         ...opts,
         { startDate: null, endDate: null },
@@ -179,7 +138,8 @@ export class TopicInputComponent {
   }
 
   removeOption(index: number): void {
-    if (this.optionType() === OptionType.Date) {
+    const type = this.optionType();
+    if (type === OptionType.Date) {
       const removed = this.dateOptions()[index];
       if (removed?.id) {
         this.removedOptionIds.update((ids) => [...ids, removed.id!]);
@@ -204,11 +164,12 @@ export class TopicInputComponent {
 
   private addTopic(): void {
     const projectId = this.projectId();
-    if (!projectId || !this.isValid()) {
+    const optionType = this.optionType();
+    if (!projectId || optionType === undefined || !this.isValid()) {
       return;
     }
 
-    if (this.optionType() === OptionType.Date) {
+    if (optionType === OptionType.Date) {
       const options = this.dateOptions()
         .filter((o) => !!o.startDate)
         .map((o) => ({
@@ -237,7 +198,7 @@ export class TopicInputComponent {
         projectId,
         name: this.question(),
         description: this.description(),
-        optionType: this.optionType(),
+        optionType,
         options,
       });
     }
@@ -246,11 +207,12 @@ export class TopicInputComponent {
   private editTopic(): void {
     const projectId = this.projectId();
     const topicId = this.topicId();
-    if (!projectId || !topicId || !this.isValid()) {
+    const optionType = this.optionType();
+    if (!projectId || !topicId || optionType === undefined || !this.isValid()) {
       return;
     }
 
-    if (this.optionType() === OptionType.Date) {
+    if (optionType === OptionType.Date) {
       const options = this.dateOptions()
         .filter((o) => !!o.startDate)
         .map((o) => ({

@@ -100,18 +100,14 @@
       "update": "Actualizar proyecto"
     },
     "topicInput": {
+      "createPoll": "Crear encuesta",
+      "updatePoll": "Actualizar encuesta",
       "date": {
-        "createPoll": "Crear encuesta de citas",
-        "updatePoll": "Actualizar encuesta de citas",
         "answerOptions": "Opciones de fecha",
         "minOptions": "Mín. 1 fecha",
         "addOption": "Añadir fecha",
         "startDate": "Fecha de inicio",
         "endDate": "Fecha de fin (opcional)"
-      },
-      "rating": {
-        "createPoll": "Crear encuesta de valoración",
-        "updatePoll": "Actualizar encuesta de valoración"
       },
       "yesNo": {
         "question": "Tu pregunta",
@@ -126,9 +122,7 @@
         "previewImageUrlPlaceholder": "Imagen de vista previa opcional (URL)",
         "addDescription": "Descripción",
         "addLink": "Enlace",
-        "addOption": "Añadir opción",
-        "createPoll": "Crear encuesta",
-        "updatePoll": "Actualizar encuesta"
+        "addOption": "Añadir opción"
       }
     },
     "vote": {

@@ -1,0 +1,53 @@
+<div class="tw:flex tw:flex-col tw:gap-3 tw:mx-4">
+  <div class="tw:flex tw:flex-col tw:gap-1">
+    <label class="tw:text-sm tw:font-semibold tw:px-1" for="question">
+      {{ "project.topicInput.yesNo.question" | translate }}
+    </label>
+    <div
+      class="tw:bg-gray-50 tw:rounded-xl tw:border tw:border-transparent tw:transition-all tw:duration-300"
+    >
+      <input
+        pInputText
+        id="question"
+        name="question"
+        class="tw:w-full tw:bg-transparent"
+        autocomplete="off"
+        [placeholder]="
+          'project.topicInput.yesNo.questionPlaceholder' | translate
+        "
+        [ngModel]="question()"
+        (ngModelChange)="questionChange.emit($event)"
+      />
+    </div>
+  </div>
+
+  <div class="tw:flex tw:flex-col tw:gap-1">
+    <label class="tw:text-sm tw:font-semibold tw:px-1" for="description">
+      {{ "project.topicInput.yesNo.description" | translate }}
+    </label>
+    <app-auto-resize-textarea
+      name="description"
+      inputId="description"
+      [maxlength]="200"
+      [placeholder]="
+        'project.topicInput.yesNo.descriptionPlaceholder' | translate
+      "
+      [ngModel]="description()"
+      (ngModelChange)="descriptionChange.emit($event)"
+    />
+  </div>
+
+  @if (optionType() === OptionType.Date) {
+    <app-topic-options-date
+      [options]="dateOptions()"
+      (add)="add.emit()"
+      (remove)="remove.emit($event)"
+    />
+  } @else {
+    <app-topic-options-yes-no
+      [options]="options()"
+      (add)="add.emit()"
+      (remove)="remove.emit($event)"
+    />
+  }
+</div>

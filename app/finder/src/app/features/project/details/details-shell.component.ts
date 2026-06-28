@@ -11,9 +11,10 @@ import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max
 import { ProjectStore } from '../_data/project.store';
 
 @Component({
-  selector: 'app-project-shell',
+  selector: 'app-project-details-shell',
   imports: [TitleBarComponent, RouterOutlet, MaxHeightMinusHeaderDirective],
   templateUrl: './details-shell.component.html',
+  host: { class: 'tw:block tw:h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailShellComponent {

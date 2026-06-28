@@ -1,81 +1,39 @@
-<div class="tw:flex tw:flex-col tw:gap-3 tw:mx-4 tw:pb-28">
-  <!-- Your question -->
-  <div class="tw:flex tw:flex-col tw:gap-1">
-    <label class="tw:text-sm tw:font-semibold tw:px-1" for="question">
-      {{ "project.topicInput.yesNo.question" | translate }}
-    </label>
-    <div
-      class="tw:bg-gray-50 tw:rounded-xl tw:border tw:border-transparent tw:transition-all tw:duration-300"
-    >
-      <input
-        pInputText
-        id="question"
-        name="question"
-        class="tw:w-full tw:bg-transparent"
-        autocomplete="off"
-        [placeholder]="
-          'project.topicInput.yesNo.questionPlaceholder' | translate
-        "
-        [ngModel]="question()"
-        (ngModelChange)="question.set($event)"
-      />
-    </div>
+@if (optionType() === undefined) {
+  <div class="tw:h-full tw:flex tw:flex-col">
+    <app-topic-type-selection (typeSelected)="optionType.set($event)" />
   </div>
-
-  <!-- Description -->
-  <div class="tw:flex tw:flex-col tw:gap-1">
-    <label class="tw:text-sm tw:font-semibold tw:px-1" for="description">
-      {{ "project.topicInput.yesNo.description" | translate }}
-    </label>
-    <app-auto-resize-textarea
-      name="description"
-      inputId="description"
-      [maxlength]="200"
-      [placeholder]="
-        'project.topicInput.yesNo.descriptionPlaceholder' | translate
-      "
-      [ngModel]="description()"
-      (ngModelChange)="description.set($event)"
-    />
-  </div>
-
-  <!-- Answer options -->
-  @if (optionType() === OptionType.Date) {
-    <app-topic-options-date
-      [options]="dateOptions()"
-      (add)="addOption()"
-      (remove)="removeOption($event)"
-    />
-  } @else {
-    <app-topic-options-yes-no
+} @else {
+  <div class="tw:pb-28">
+    <app-topic-input-form
+      [optionType]="optionType()!"
+      [question]="question()"
+      (questionChange)="question.set($event)"
+      [description]="description()"
+      (descriptionChange)="description.set($event)"
       [options]="options()"
+      [dateOptions]="dateOptions()"
       (add)="addOption()"
       (remove)="removeOption($event)"
     />
-  }
+  </div>
 
-  <!-- Bottom action bar -->
   <div
     class="tw:fixed tw:bottom-0 tw:left-0 tw:w-full tw:z-50 tw:bg-white/80 tw:backdrop-blur-md tw:p-4 tw:flex tw:justify-center p-fluid"
   >
     <p-button
       class="tw:w-full tw:max-w-md"
       [label]="
-        optionType() === OptionType.Date
-          ? (mode() === 'add'
-              ? ('project.topicInput.date.createPoll' | translate)
-              : ('project.topicInput.date.updatePoll' | translate))
-          : optionType() === OptionType.Rating
-            ? (mode() === 'add'
-                ? ('project.topicInput.rating.createPoll' | translate)
-                : ('project.topicInput.rating.updatePoll' | translate))
-            : (mode() === 'add'
-                ? ('project.topicInput.yesNo.createPoll' | translate)
-                : ('project.topicInput.yesNo.updatePoll' | translate))
+        mode() === 'add'
+          ? ('project.topicInput.createPoll' | translate)
+          : ('project.topicInput.updatePoll' | translate)
       "
-      [icon]="mode() === 'add' ? 'fa-regular fa-paper-plane' : 'fa-regular fa-floppy-disk'"
+      [icon]="
+        mode() === 'add'
+          ? 'fa-regular fa-paper-plane'
+          : 'fa-regular fa-floppy-disk'
+      "
       [disabled]="!isValid()"
       (click)="submit()"
     />
   </div>
-</div>
+}

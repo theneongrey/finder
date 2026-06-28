@@ -100,18 +100,14 @@
       "update": "Projekt aktualisieren"
     },
     "topicInput": {
+      "createPoll": "Umfrage erstellen",
+      "updatePoll": "Umfrage aktualisieren",
       "date": {
-        "createPoll": "Terminumfrage erstellen",
-        "updatePoll": "Terminumfrage aktualisieren",
         "answerOptions": "Terminoptionen",
         "minOptions": "Mind. 1 Termin",
         "addOption": "Termin hinzufügen",
         "startDate": "Startdatum",
         "endDate": "Enddatum (optional)"
-      },
-      "rating": {
-        "createPoll": "Bewertung erstellen",
-        "updatePoll": "Bewertung aktualisieren"
       },
       "yesNo": {
         "question": "Deine Frage",
@@ -126,9 +122,7 @@
         "previewImageUrlPlaceholder": "Optionales Vorschaubild (URL)",
         "addDescription": "Beschreibung",
         "addLink": "Link",
-        "addOption": "Option hinzufügen",
-        "createPoll": "Umfrage erstellen",
-        "updatePoll": "Umfrage aktualisieren"
+        "addOption": "Option hinzufügen"
       }
     },
     "vote": {

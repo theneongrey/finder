@@ -5,25 +5,26 @@ import {
   output,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Comment } from '../../../_models/project-detail.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 import { FormsModule } from '@angular/forms';
+import { AutoResizeTextareaComponent } from '../../../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
+import { UserAvatarComponent } from '../../../../../common/ui/components/user-avatar/user-avatar.component';
+import { User } from '../../../../../common/models/user.model';
 
 @Component({
   selector: 'app-comments-section',
   templateUrl: './comments-section.component.html',
   imports: [
-    InputGroup,
-    InputText,
     Button,
     TranslatePipe,
     TimeSincePipe,
     DatePipe,
     FormsModule,
+    AutoResizeTextareaComponent,
+    UserAvatarComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,6 +44,14 @@ export class CommentsSectionComponent {
     this.newCommentText = '';
   }
 
+  onEnterKey(event: Event) {
+    const kb = event as KeyboardEvent;
+    if (!kb.shiftKey) {
+      event.preventDefault();
+      this.submitComment();
+    }
+  }
+
   quoteAsDate(quote: string): number | null {
     if (!/^\d+$/.test(quote)) {
       return null;
@@ -56,12 +65,13 @@ export class CommentsSectionComponent {
     return null;
   }
 
-  initials(author: string): string {
-    return author
-      .split(' ')
-      .filter((part) => part.length > 0)
-      .slice(0, 2)
-      .map((part) => part[0].toUpperCase())
-      .join('');
+  authorAsUser(author: Comment['author']): User {
+    return {
+      name: author,
+      email: '',
+      role: 'Free',
+      isAuthenticated: true,
+      language: 'en',
+    };
   }
 }

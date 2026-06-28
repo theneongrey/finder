@@ -2,10 +2,11 @@
   #textarea
   pTextarea
   rows="1"
-  class="tw:w-full tw:overflow-hidden tw:resize-none"
+  class="tw:w-full tw:resize-none tw:overflow-y-auto"
   [placeholder]="placeholder()"
   [attr.maxlength]="maxlength() ?? null"
   [attr.id]="inputId() ?? null"
+  [style.max-height]="maxHeight()"
   [value]="textValue()"
   [disabled]="isDisabled()"
   (input)="onInput($event)"

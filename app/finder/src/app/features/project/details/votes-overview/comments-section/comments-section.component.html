@@ -8,11 +8,7 @@
     <div class="tw:flex tw:flex-col tw:gap-3 tw:mb-4">
       @for (comment of comments(); track comment.id) {
         <div class="tw:flex tw:gap-2">
-          <div
-            class="tw:w-8 tw:h-8 tw:rounded-full tw:bg-primary tw:text-white tw:flex tw:items-center tw:justify-center tw:text-sm tw:font-bold tw:shrink-0"
-          >
-            {{ initials(comment.author) }}
-          </div>
+          <app-user-avatar [user]="authorAsUser(comment.author)" />
           <div
             class="tw:bg-gray-50 tw:p-3 tw:rounded-2xl tw:rounded-tl-none tw:flex-1"
           >
@@ -21,7 +17,7 @@
             </p>
             @if (comment.quote) {
               <blockquote
-                class="tw:text-xs tw:text-gray-500 tw:italic tw:mb-1 tw:border-l-2 tw:border-gray-300 tw:pl-2"
+                class="tw:text-xs tw:text-gray-500 tw:italic tw:mb-1 tw:border-l-2 tw:border-gray-300 tw:p-1 tw:pl-2 tw:bg-black/3"
               >
                 @let tsMs = quoteAsDate(comment.quote);
                 @if (tsMs !== null) {
@@ -41,15 +37,18 @@
       }
     </div>
 
-    <p-inputgroup>
-      <input
-        pInputText
-        type="text"
+    <div class="tw:flex tw:items-end tw:gap-2">
+      <app-auto-resize-textarea
+        class="tw:flex-1"
         [(ngModel)]="newCommentText"
-        (keyup.enter)="submitComment()"
         [placeholder]="'project.votesOverview.newComment' | translate"
+        (keydown.enter)="onEnterKey($event)"
       />
-      <p-button icon="fa-regular fa-paper-plane" (click)="submitComment()" />
-    </p-inputgroup>
+      <p-button
+        icon="fa-regular fa-paper-plane"
+        class="tw:mb-[4px]"
+        (click)="submitComment()"
+      />
+    </div>
   </div>
 </div>

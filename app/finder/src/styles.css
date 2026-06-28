@@ -38,7 +38,7 @@ body {
   --p-button-border-radius: 12px;
   --p-inputgroup-addon-border-radius: 12px;
   --p-button-padding-x: 40px;
-  --p-button-padding-y: 12px;
+  --p-button-padding-y: 8px;
 
   --p-panel-border-radius: 12px;
   --p-disabled-opacity: 0.4;

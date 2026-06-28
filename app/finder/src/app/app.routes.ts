@@ -15,16 +15,19 @@ export const routes: Routes = [
       import('./features/home/home.component').then((m) => m.HomeComponent),
   },
   {
-    path: 'logged-in',
-    redirectTo: 'project',
-  },
-  {
     path: 'auth',
     loadComponent: () =>
       import('./features/auth/shell.component').then(
         (m) => m.AuthShellComponent,
       ),
     children: authRoutes,
+  },
+  {
+    path: 'logout',
+    loadComponent: () =>
+      import('./features/logout/logout.component').then(
+        (m) => m.LogoutComponent,
+      ),
   },
   {
     canActivate: [userAuthentication()],

@@ -23,7 +23,8 @@
       "email": "E-Mail-Adresse",
       "requestCode": "Code anfordern",
       "errorSending": "Fehler beim Senden der E-Mail. Bitte überprüfe deine E-Mail-Adresse und versuche es erneut.",
-      "errorForbidden": "Diese E-Mail-Adresse ist nicht zugelassen. Bitte kontaktiere den Administrator für eine Einladung."
+      "errorForbidden": "Diese E-Mail-Adresse ist nicht zugelassen. Bitte kontaktiere den Administrator für eine Einladung.",
+      "errorRateLimiter": "Zu viele Anfragen. Bitte warte einen Moment und versuche es erneut."
     },
     "codeLogin": {
       "title": "Code bestätigen",

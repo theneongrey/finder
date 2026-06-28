@@ -45,13 +45,6 @@ export class CodeLoginComponent {
       this.loggerService.log('redirect: no email stored');
       void this.router.navigate(['/']);
     }
-
-    effect(() => {
-      if (this.userStore.user()?.isAuthenticated) {
-        this.loggerService.log('redirect: user is authenticated');
-        void this.router.navigate(['/logged-in']);
-      }
-    });
   }
 
   verifyCode() {

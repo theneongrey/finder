@@ -23,7 +23,8 @@
       "email": "Email Address",
       "requestCode": "Request Code",
       "errorSending": "Error while sending the mail. Please check your email and try again.",
-      "errorForbidden": "This email is not allowed. Please contact the admin for an invitation."
+      "errorForbidden": "This email is not allowed. Please contact the admin for an invitation.",
+      "errorRateLimiter": "Too many requests. Please wait a moment and try again."
     },
     "codeLogin": {
       "title": "Verify Code",

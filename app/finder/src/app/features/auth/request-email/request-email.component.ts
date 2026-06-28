@@ -53,6 +53,9 @@ export class RequestEmailComponent {
   private errorForbiddenMessage = this.translateService.translate(
     'auth.requestEmail.errorForbidden',
   );
+  private errorRateLimiterMessage = this.translateService.translate(
+    'auth.requestEmail.errorRateLimiter',
+  );
 
   errorMessage = computed(() => {
     const state = this.userStore.loginMail.state();
@@ -61,6 +64,8 @@ export class RequestEmailComponent {
         return this.errorSendingMessage();
       case 'forbidden':
         return this.errorForbiddenMessage();
+      case 'rate-limiter':
+        return this.errorRateLimiterMessage();
       default:
         return undefined;
     }

@@ -28,7 +28,13 @@ export function withAuthFeature() {
       redirectUrl: undefined as string | undefined,
       user: undefined as User | undefined,
       loginMail: {
-        state: 'init' as 'init' | 'sent' | 'finished' | 'error' | 'forbidden',
+        state: 'init' as
+          | 'init'
+          | 'sent'
+          | 'finished'
+          | 'error'
+          | 'forbidden'
+          | 'rate-limiter',
         email: undefined as string | undefined,
       },
     }),
@@ -55,6 +61,9 @@ export function withAuthFeature() {
 
       return {
         setRedirectUrl(redirectUrl: string | undefined) {
+          if (redirectUrl?.startsWith('/auth')) {
+            redirectUrl = undefined;
+          }
           store.loggerService.debug(
             `[UserStore] updating redirect url ${redirectUrl}`,
           );
@@ -65,7 +74,6 @@ export function withAuthFeature() {
 
         requestLoginMail: rxMethod<string>(
           pipe(
-            distinctUntilChanged(),
             tap((email) =>
               patchState(store, {
                 loginMail: {
@@ -88,25 +96,36 @@ export function withAuthFeature() {
                         },
                       }),
                     error: (error: HttpErrorResponse) => {
-                      if (error.status === 401) {
-                        patchState(store, {
-                          loginMail: {
-                            ...store.loginMail(),
-                            state: 'forbidden',
-                          },
-                        });
-                      } else {
-                        patchState(store, {
-                          loginMail: {
-                            email: undefined,
-                            state: 'error',
-                          },
-                        });
-                        store.loggerService.error(
-                          '[UserStore] Error requesting login mail',
-                          error,
-                        );
+                      switch (error.status) {
+                        case 401:
+                          patchState(store, {
+                            loginMail: {
+                              ...store.loginMail(),
+                              state: 'forbidden',
+                            },
+                          });
+                          break;
+                        case 429:
+                          patchState(store, {
+                            loginMail: {
+                              ...store.loginMail(),
+                              state: 'rate-limiter',
+                            },
+                          });
+                          break;
+                        default:
+                          patchState(store, {
+                            loginMail: {
+                              email: undefined,
+                              state: 'error',
+                            },
+                          });
                       }
+
+                      store.loggerService.error(
+                        '[UserStore] Error requesting login mail',
+                        error,
+                      );
                     },
                   }),
                 );
@@ -173,16 +192,20 @@ export function withAuthFeature() {
               return store.userService.logout().pipe(
                 tapResponse({
                   next: () => {
-                    patchState(store, { user: undefined });
+                    patchState(store, {
+                      user: undefined,
+                      loginMail: {
+                        email: undefined,
+                        state: 'init',
+                      },
+                      redirectUrl: undefined,
+                    });
                   },
                   error: (error) => {
                     store.loggerService.error(
                       '[UserStore] Error while logging out',
                       error,
                     );
-                  },
-                  finalize: () => {
-                    location.reload();
                   },
                 }),
               );

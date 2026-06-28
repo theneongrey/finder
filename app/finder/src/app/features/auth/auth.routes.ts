@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { userAuthentication } from '../../common/services/auth.guard';
 
 export const authRoutes: Routes = [
   {
@@ -21,7 +20,7 @@ export const authRoutes: Routes = [
       import('./code-login/code-login.component').then(
         (m) => m.CodeLoginComponent,
       ),
-    data: { backRoute: '/project' },
+    data: { backRoute: '/logout' },
   },
   {
     path: 'token-login',
@@ -29,11 +28,5 @@ export const authRoutes: Routes = [
       import('./token-login/token-login.component').then(
         (m) => m.TokenLoginComponent,
       ),
-  },
-  {
-    canActivate: [userAuthentication()],
-    path: 'logout',
-    loadComponent: () =>
-      import('./logout/logout.component').then((m) => m.LogoutComponent),
   },
 ];

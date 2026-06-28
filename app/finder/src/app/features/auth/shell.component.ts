@@ -10,6 +10,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { BackgroundAnimationComponent } from '../../common/ui/components/background-animation/background-animation.component';
 import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
 import { MaxHeightMinusHeaderDirective } from '../../common/ui/directives/max-height-minus-header.directive';
+import { LoggerService } from '../../common/services/logger.service';
 
 @Component({
   selector: 'app-auth-shell',
@@ -24,6 +25,7 @@ import { MaxHeightMinusHeaderDirective } from '../../common/ui/directives/max-he
 })
 export class AuthShellComponent {
   private userStore = inject(UserStore);
+  private loggerService = inject(LoggerService);
 
   constructor() {
     const router = inject(Router);
@@ -35,16 +37,22 @@ export class AuthShellComponent {
       }
 
       if (user.isAuthenticated) {
+        this.loggerService.log('user is authenticated');
+
         if (!user.name) {
+          this.loggerService.log('first time user. redirect to set name');
           router.navigate(['/settings']);
         } else {
           untracked(() => {
             const redirectUrl = this.userStore.redirectUrl();
             if (redirectUrl) {
+              this.loggerService.log(`redirect to ${redirectUrl}`);
+
               this.userStore.setRedirectUrl(undefined);
               router.navigate([redirectUrl]);
             } else {
-              router.navigate(['/']);
+              this.loggerService.log(`redirect to project overview`);
+              router.navigate(['/project']);
             }
           });
         }

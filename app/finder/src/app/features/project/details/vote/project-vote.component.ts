@@ -18,6 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
 import { VoteCardDateComponent } from './vote-card-date/vote-card-date.component';
+import { VoteCardRatingComponent } from './vote-card-rating/vote-card-rating.component';
 import { VoteCommentButtonComponent } from './vote-comment-button/vote-comment-button.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { OptionType } from '../../_models/project-detail.model';
@@ -33,6 +34,7 @@ import { OptionType } from '../../_models/project-detail.model';
     VoteCardTextComponent,
     VoteCardDateComponent,
     VoteCommentButtonComponent,
+    VoteCardRatingComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -182,6 +184,10 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     this.animateAndVote(false);
   }
 
+  castRating(stars: number): void {
+    this.castVote(stars.toString());
+  }
+
   skip(): void {
     this.navigateToNextOption(this.optionId());
   }
@@ -224,7 +230,8 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => {
       this.swipeInProgress = false;
-      this.castVote(goRight ? '1' : '2');
+      const isRating = this.topic()?.optionType === OptionType.Rating;
+      this.castVote(isRating ? (goRight ? '5' : '1') : (goRight ? '1' : '2'));
     }, 500);
   }
 

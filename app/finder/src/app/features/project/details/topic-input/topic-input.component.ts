@@ -77,12 +77,31 @@ export class TopicInputComponent {
       'project.topicInput.date.updatePoll',
     );
 
+    const createRatingTitle = this.translateService.translate(
+      'project.topicInput.rating.createPoll',
+    );
+    const updateRatingTitle = this.translateService.translate(
+      'project.topicInput.rating.updatePoll',
+    );
+
     effect(() => {
-      const isDate = this.optionType() === OptionType.Date;
+      const type = this.optionType();
       if (this.mode() === 'edit') {
-        titleService.setTitle(isDate ? updateDateTitle() : updateYesNoTitle());
+        titleService.setTitle(
+          type === OptionType.Date
+            ? updateDateTitle()
+            : type === OptionType.Rating
+              ? updateRatingTitle()
+              : updateYesNoTitle(),
+        );
       } else {
-        titleService.setTitle(isDate ? createDateTitle() : createYesNoTitle());
+        titleService.setTitle(
+          type === OptionType.Date
+            ? createDateTitle()
+            : type === OptionType.Rating
+              ? createRatingTitle()
+              : createYesNoTitle(),
+        );
       }
     });
 
@@ -218,7 +237,7 @@ export class TopicInputComponent {
         projectId,
         name: this.question(),
         description: this.description(),
-        optionType: OptionType.YesNo,
+        optionType: this.optionType(),
         options,
       });
     }

@@ -85,7 +85,13 @@
         <app-add-card
           [description]="'project.detail.topicTypes.rating' | translate"
           icon="fa-star"
-          [disabled]="true"
+          [routerLink]="[
+            '/project/detail',
+            project.id,
+            'topic',
+            'add',
+            'rating',
+          ]"
         />
       </div>
     }

@@ -65,9 +65,13 @@
           ? (mode() === 'add'
               ? ('project.topicInput.date.createPoll' | translate)
               : ('project.topicInput.date.updatePoll' | translate))
-          : (mode() === 'add'
-              ? ('project.topicInput.yesNo.createPoll' | translate)
-              : ('project.topicInput.yesNo.updatePoll' | translate))
+          : optionType() === OptionType.Rating
+            ? (mode() === 'add'
+                ? ('project.topicInput.rating.createPoll' | translate)
+                : ('project.topicInput.rating.updatePoll' | translate))
+            : (mode() === 'add'
+                ? ('project.topicInput.yesNo.createPoll' | translate)
+                : ('project.topicInput.yesNo.updatePoll' | translate))
       "
       [icon]="mode() === 'add' ? 'fa-regular fa-paper-plane' : 'fa-regular fa-floppy-disk'"
       [disabled]="!isValid()"

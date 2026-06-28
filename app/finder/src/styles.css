@@ -34,6 +34,10 @@ body {
   height: 100%;
   width: 100%;
 
+  --p-tabs-tab-background: transparent;
+  --p-tabs-tablist-background: transparent;
+  --p-tabs-tabpanel-background: transparent;
+
   /* button */
   --p-button-border-radius: 12px;
   --p-inputgroup-addon-border-radius: 12px;

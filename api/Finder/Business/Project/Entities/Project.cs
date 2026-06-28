@@ -18,4 +18,5 @@ public class Project : BaseEntity
     public List<Permission.Entities.Permission> Permissions { get; set; } = [];
     public required Person Creator { get; set; }
     public required VisibilityType VisibilityType { get; set; }
+    public bool IsStandalone { get; set; } = false;
 }

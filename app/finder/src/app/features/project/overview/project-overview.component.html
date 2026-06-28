@@ -2,27 +2,45 @@
   <app-title-bar class="tw:sticky tw:top-0 tw:z-10" />
   <main
     fMaxHeightMinusHeader
-    class="tw:flex-grow tw:max-w-5xl tw:mx-auto tw:w-full tw:h-full tw:rounded-t-2xl"
+    class="tw:flex-grow tw:max-w-5xl tw:mx-auto tw:w-full tw:h-full tw:rounded-t-2xl tw:overflow-y-auto"
   >
-    <div class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:mx-4">
-      <section class="tw:mb-5">
-        <h2>{{ "project.overview.title" | translate }}</h2>
-        <p>{{ "project.overview.subtitle" | translate }}</p>
-      </section>
-      <div class="tw:grid tw:gap-4 tw:grid-cols-auto-fit tw:pb-8">
-        @for (project of projects(); track project.id) {
-          <app-project-item
-            [project]="project"
-            (deletionRequested)="deletionRequested(project)"
+    <p-tabs [(value)]="activeTabValue">
+      <p-tablist>
+        <p-tab value="overview">{{
+          "project.tabs.overview" | translate
+        }}</p-tab>
+        <p-tab value="projects"
+          >{{ "project.tabs.projects" | translate }}
+          <p-tag class="tw:ml-1" [rounded]="true">{{
+            projects().length
+          }}</p-tag></p-tab
+        >
+        <p-tab value="topics"
+          >{{ "project.tabs.topics" | translate }}
+          <p-tag class="tw:ml-1" [rounded]="true">{{
+            standaloneTopics().length
+          }}</p-tag></p-tab
+        >
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="overview">
+          <app-overview-tab
+            (projectDeletionRequested)="projectDeletionRequested($event)"
+            (topicDeletionRequested)="topicDeletionRequested($event)"
           />
-        }
-        <app-add-card
-          [cto]="'project.overview.addNew.cto' | translate"
-          [description]="'project.overview.addNew.description' | translate"
-          (action)="navigateToAdd()"
-        />
-      </div>
-    </div>
+        </p-tabpanel>
+        <p-tabpanel value="projects">
+          <app-projects-tab
+            (deletionRequested)="projectDeletionRequested($event)"
+          />
+        </p-tabpanel>
+        <p-tabpanel value="topics">
+          <app-topics-tab
+            (deletionRequested)="topicDeletionRequested($event)"
+          />
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
   </main>
 </div>
 <p-confirmdialog />

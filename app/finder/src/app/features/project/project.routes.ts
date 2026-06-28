@@ -33,6 +33,16 @@ export const projectRoutes: Routes = [
     },
   },
   {
+    path: 'add-standalone',
+    loadComponent: () =>
+      import('./standalone-topic-shell/standalone-topic-shell.component').then(
+        (m) => m.StandaloneTopicShellComponent,
+      ),
+    data: {
+      backRoute: '/project/',
+    },
+  },
+  {
     path: 'detail/:projectId',
     loadComponent: () =>
       import('./details/details-shell.component').then(

@@ -11,7 +11,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ProjectDetailItemComponent } from './project-detail-item/project-detail-item.component';
+import { TopicItemComponent } from '../../topic-item/topic-item.component';
 import { RouterLink } from '@angular/router';
 import { Avatar } from 'primeng/avatar';
 import { AvatarGroup } from 'primeng/avatargroup';
@@ -30,7 +30,7 @@ import { AddCardComponent } from '../../../../common/ui/components/add-card/add-
     Button,
     AddCardComponent,
     ReactiveFormsModule,
-    ProjectDetailItemComponent,
+    TopicItemComponent,
     RouterLink,
     Avatar,
     AvatarGroup,
@@ -52,7 +52,16 @@ export class ProjectDetailComponent {
   project = this.projectStore.currentProject;
 
   showShare = model(false);
-  topics = computed(() => this.project()?.topics);
+  topics = computed(() => {
+    const project = this.project();
+    return (
+      project?.topics.map((t) => ({
+        ...t,
+        topicId: t.id,
+        projectId: project.id,
+      })) ?? []
+    );
+  });
   role = computed(() => this.project()?.role ?? ProjectRole.Unknown);
 
   readonly ProjectRole = ProjectRole;

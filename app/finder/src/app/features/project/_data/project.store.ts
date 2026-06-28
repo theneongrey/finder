@@ -11,6 +11,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
+import { StandaloneTopicOverview } from '../_models/standalone-topic-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
 import {
@@ -26,6 +27,8 @@ export const ProjectStore = signalStore(
   { providedIn: 'root' },
   withState({
     projects: [] as ProjectOverview[],
+    standaloneTopics: [] as StandaloneTopicOverview[],
+    activeTab: 'overview' as 'overview' | 'projects' | 'topics',
     currentProject: undefined as Project | undefined,
     currentTopic: undefined as TopicDetail | undefined,
   }),
@@ -63,6 +66,83 @@ export const ProjectStore = signalStore(
               },
             }),
           );
+        }),
+      ),
+    ),
+
+    setActiveTab(tab: 'overview' | 'projects' | 'topics') {
+      patchState(store, { activeTab: tab });
+    },
+
+    getStandaloneTopics: rxMethod<void>(
+      pipe(
+        switchMap(() => {
+          return store.projectService.getStandaloneTopics().pipe(
+            tapResponse({
+              next: (topics) => {
+                patchState(store, {
+                  standaloneTopics: topics.sort(
+                    (a, b) =>
+                      new Date(b.lastUpdated).getTime() -
+                      new Date(a.lastUpdated).getTime(),
+                  ),
+                });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error while loading standalone topics',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
+    addStandaloneTopic: rxMethod<{
+      name: string;
+      description: string;
+      optionType: OptionType;
+      options?: { text: string; description: string; url: string }[];
+    }>(
+      pipe(
+        switchMap((payload) => {
+          return store.projectService
+            .addStandaloneTopic(payload.name, payload.description, payload.optionType)
+            .pipe(
+              switchMap((responseTopic) => {
+                const optionRequests = payload.options?.length
+                  ? payload.options.map((o) =>
+                      store.projectService.addOption(
+                        responseTopic.topicId,
+                        o.text,
+                        o.description,
+                        o.url,
+                      ),
+                    )
+                  : [];
+
+                return (
+                  optionRequests.length ? forkJoin(optionRequests) : of([])
+                ).pipe(map(() => responseTopic));
+              }),
+              tapResponse({
+                next: (responseTopic) => {
+                  patchState(store, {
+                    standaloneTopics: [responseTopic, ...store.standaloneTopics()],
+                    activeTab: 'topics',
+                  });
+                  store.router.navigate(['/project/overview']);
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error while adding a standalone topic',
+                    error,
+                  );
+                },
+              }),
+            );
         }),
       ),
     ),
@@ -169,6 +249,7 @@ export const ProjectStore = signalStore(
               next: () => {
                 patchState(store, {
                   projects: store.projects().filter((p) => p.id !== projectId),
+                  standaloneTopics: store.standaloneTopics().filter((t) => t.projectId !== projectId),
                 });
               },
               error: (error) => {

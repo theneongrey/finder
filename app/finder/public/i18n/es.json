@@ -47,6 +47,36 @@
       "owner": "Propietario",
       "creator": "Creador"
     },
+    "tabs": {
+      "overview": "Resumen",
+      "projects": "Proyectos",
+      "topics": "Encuestas"
+    },
+    "overviewTab": {
+      "greeting": "Hola {{name}}",
+      "subtitle": "Tus proyectos y encuestas más recientes",
+      "latestProjects": "Proyectos recientes",
+      "latestTopics": "Encuestas recientes",
+      "viewAll": "Ver todos"
+    },
+    "projectsTab": {
+      "title": "Proyectos",
+      "subtitle": "Todos tus proyectos de un vistazo"
+    },
+    "topicsTab": {
+      "title": "Encuestas",
+      "subtitle": "Todas tus encuestas independientes de un vistazo"
+    },
+    "standaloneItem": {
+      "badge": "Sin proyecto",
+      "vote": "Votar"
+    },
+    "standaloneInput": {
+      "addNew": {
+        "cto": "Nueva encuesta",
+        "description": "Crea una encuesta rápidamente"
+      }
+    },
     "overview": {
       "title": "Proyectos",
       "subtitle": "Estos son tus proyectos actuales",
@@ -61,6 +91,11 @@
         "header": "¿Eliminar proyecto?",
         "message": "¿Estás seguro de que quieres eliminar el proyecto \"{{name}}\"?",
         "accept": "Eliminar proyecto"
+      },
+      "deleteTopicConfirm": {
+        "header": "¿Eliminar encuesta?",
+        "message": "¿Estás seguro de que quieres eliminar la encuesta \"{{name}}\"?",
+        "accept": "Eliminar encuesta"
       }
     },
     "detail": {

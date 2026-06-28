@@ -41,13 +41,12 @@
       }
     </div>
 
-    @if (topics()?.length ?? 0 > 0) {
+    @if (topics().length > 0) {
       <h2 class="tw:mb-4">{{ "project.detail.currentTopics" | translate }}</h2>
 
       <div class="tw:flex tw:flex-col tw:gap-4">
         @for (topic of topics(); track topic.id) {
-          <app-project-detail-item
-            [projectId]="project.id"
+          <app-topic-item
             [topic]="topic"
             (deletionRequested)="showDeleteTopicDialog(topic.id, topic.name)"
           />

@@ -35,7 +35,7 @@ export class TopicInputComponent {
 
   readonly OptionType = OptionType;
 
-  mode = input<'add' | 'edit'>('add');
+  mode = input<'add' | 'edit' | 'standalone'>('add');
   projectId = this.projectStore.projectId;
   topicId = input<string | undefined>(undefined);
 
@@ -53,7 +53,9 @@ export class TopicInputComponent {
     const titleService = inject(TitleBarService);
 
     effect(() => {
-      titleService.setTitle(this.projectStore.currentProject()?.name ?? '');
+      if (this.mode() !== 'standalone') {
+        titleService.setTitle(this.projectStore.currentProject()?.name ?? '');
+      }
     });
 
     effect(() => {
@@ -155,6 +157,8 @@ export class TopicInputComponent {
       this.addTopic();
     } else if (this.mode() === 'edit') {
       this.editTopic();
+    } else if (this.mode() === 'standalone') {
+      this.addStandaloneTopic();
     }
   }
 
@@ -192,6 +196,45 @@ export class TopicInputComponent {
 
       this.projectStore.addTopic({
         projectId,
+        name: this.question(),
+        description: this.description(),
+        optionType,
+        options,
+      });
+    }
+  }
+
+  private addStandaloneTopic(): void {
+    const optionType = this.optionType();
+    if (optionType === undefined || !this.isValid()) {
+      return;
+    }
+
+    if (optionType === OptionType.Date) {
+      const options = this.dateOptions()
+        .filter((o) => !!o.startDate)
+        .map((o) => ({
+          text: this.dateEntryToText(o),
+          description: '',
+          url: '',
+        }));
+
+      this.projectStore.addStandaloneTopic({
+        name: this.question(),
+        description: this.description(),
+        optionType: OptionType.Date,
+        options,
+      });
+    } else {
+      const options = this.options()
+        .filter((o) => !!o.text)
+        .map((o) => ({
+          text: o.text,
+          description: o.description,
+          url: o.url,
+        }));
+
+      this.projectStore.addStandaloneTopic({
         name: this.question(),
         description: this.description(),
         optionType,

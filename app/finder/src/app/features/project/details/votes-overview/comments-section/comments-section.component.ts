@@ -67,7 +67,7 @@ export class CommentsSectionComponent {
 
   authorAsUser(author: Comment['author']): User {
     return {
-      name: author,
+      name: author.name,
       email: '',
       role: 'Free',
       isAuthenticated: true,

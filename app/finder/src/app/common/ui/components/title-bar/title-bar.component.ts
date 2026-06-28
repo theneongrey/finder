@@ -47,7 +47,7 @@ export class TitleBarComponent {
     {
       label: this.logoutLabel(),
       icon: 'fa-solid fa-right-from-bracket',
-      routerLink: ['/auth/logout'],
+      routerLink: ['/logout'],
     },
     {
       label: this.settingsLabel(),

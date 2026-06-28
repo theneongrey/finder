@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UserStore } from '../../../common/data/user.store';
 import { Router } from '@angular/router';
+import { UserStore } from '../../common/data/user.store';
 
 @Component({
   selector: 'app-auth-logout',

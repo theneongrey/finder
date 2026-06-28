@@ -18,36 +18,5 @@ import { Router } from '@angular/router';
   },
 })
 export class LoginComponent {
-  private userStore = inject(UserStore);
-
-  constructor() {
-    const router = inject(Router);
-
-    effect(() => {
-      const user = this.userStore.user();
-      if (!user) {
-        return;
-      }
-
-      if (user.isAuthenticated) {
-        if (!user.name) {
-          router.navigate(['/settings']);
-        } else {
-          untracked(() => {
-            const redirectUrl = this.userStore.redirectUrl();
-            if (redirectUrl) {
-              this.userStore.setRedirectUrl(undefined);
-              router.navigate([redirectUrl]);
-            } else {
-              router.navigate(['/logged-in']);
-            }
-          });
-        }
-      } else {
-        router.navigate(['/auth/request-email']);
-      }
-    });
-
-    this.userStore.getUser();
-  }
+  constructor() {}
 }

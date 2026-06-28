@@ -23,7 +23,8 @@
       "email": "Correo electrónico",
       "requestCode": "Solicitar código",
       "errorSending": "Error al enviar el correo. Por favor, comprueba tu correo electrónico e inténtalo de nuevo.",
-      "errorForbidden": "Este correo electrónico no está permitido. Por favor, contacta con el administrador para una invitación."
+      "errorForbidden": "Este correo electrónico no está permitido. Por favor, contacta con el administrador para una invitación.",
+      "errorRateLimiter": "Demasiadas solicitudes. Por favor, espera un momento e inténtalo de nuevo."
     },
     "codeLogin": {
       "title": "Verificar código",

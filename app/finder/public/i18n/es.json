@@ -109,6 +109,10 @@
         "startDate": "Fecha de inicio",
         "endDate": "Fecha de fin (opcional)"
       },
+      "rating": {
+        "createPoll": "Crear encuesta de valoración",
+        "updatePoll": "Actualizar encuesta de valoración"
+      },
       "yesNo": {
         "question": "Tu pregunta",
         "questionPlaceholder": "p. ej. ¿A dónde vamos?",
@@ -136,7 +140,10 @@
       "tapToDismiss": "Toca para cerrar",
       "addComment": "Comentar",
       "commentPlaceholder": "Tu comentario...",
-      "submitComment": "Añadir"
+      "submitComment": "Añadir",
+      "skip": "Omitir",
+      "ratingMax": "5 estrellas",
+      "ratingMin": "1 estrella"
     },
     "votesOverview": {
       "active": "Activo",
@@ -155,6 +162,9 @@
       "reVote": "Volver a votar",
       "votesCount": "{{yes}} de {{total}} voto",
       "votesCountPlural": "{{yes}} de {{total}} votos",
+      "averageRating": "Prom: {{avg}} ★",
+      "ratingsCount": "{{count}} valoración",
+      "ratingsCountPlural": "{{count}} valoraciones",
       "newComment": "Nuevo comentario...",
       "loading": "Cargando...",
       "comments": "Comentarios"

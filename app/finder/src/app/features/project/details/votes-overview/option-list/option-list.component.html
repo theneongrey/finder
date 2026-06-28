@@ -15,6 +15,13 @@
           [projectId]="projectId()"
           [topicId]="topicId()"
         />
+      } @else if (optionType() === OptionType.Rating) {
+        <app-option-card-rating
+          [option]="option"
+          [isMostVoted]="hasMostVotes(option)"
+          [projectId]="projectId()"
+          [topicId]="topicId()"
+        />
       } @else {
         <app-option-card
           [option]="option"

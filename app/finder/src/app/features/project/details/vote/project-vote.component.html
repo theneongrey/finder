@@ -39,28 +39,46 @@
 
     <!-- Swipe area -->
     <div class="vote-card-container tw:w-full tw:max-w-sm tw:h-72 tw:relative">
-      <!-- Left cue (No) -->
+      <!-- Left cue (No / 1 star) -->
       <div
         class="tw:absolute tw:opacity-0 tw:-left-4 tw:top-1/2 tw:-translate-y-1/2 tw:z-20 tw:pointer-events-none tw:transition-opacity tw:duration-150"
         [style.opacity]="leftCueOpacity()"
       >
-        <div
-          class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:items-center tw:justify-center tw:shadow-lg"
-        >
-          <i class="fa-regular fa-thumbs-down tw:text-2xl"></i>
-        </div>
+        @if (topic()?.optionType === OptionType.Rating) {
+          <div
+            class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center tw:shadow-lg tw:gap-0.5"
+          >
+            <i class="fa-solid fa-star tw:text-lg"></i>
+            <span class="tw:text-xs tw:font-bold tw:leading-none">1</span>
+          </div>
+        } @else {
+          <div
+            class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:items-center tw:justify-center tw:shadow-lg"
+          >
+            <i class="fa-regular fa-thumbs-down tw:text-2xl"></i>
+          </div>
+        }
       </div>
 
-      <!-- Right cue (Yes) -->
+      <!-- Right cue (Yes / 5 stars) -->
       <div
         class="tw:absolute tw:opacity-0 tw:-right-4 tw:top-1/2 tw:-translate-y-1/2 tw:z-20 tw:pointer-events-none tw:transition-opacity tw:duration-150"
         [style.opacity]="rightCueOpacity()"
       >
-        <div
-          class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-green-600 tw:text-white tw:flex tw:items-center tw:justify-center tw:shadow-lg"
-        >
-          <i class="fa-regular fa-thumbs-up tw:text-2xl"></i>
-        </div>
+        @if (topic()?.optionType === OptionType.Rating) {
+          <div
+            class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-yellow-400 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center tw:shadow-lg tw:gap-0.5"
+          >
+            <i class="fa-solid fa-star tw:text-lg"></i>
+            <span class="tw:text-xs tw:font-bold tw:leading-none">5</span>
+          </div>
+        } @else {
+          <div
+            class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-green-600 tw:text-white tw:flex tw:items-center tw:justify-center tw:shadow-lg"
+          >
+            <i class="fa-regular fa-thumbs-up tw:text-2xl"></i>
+          </div>
+        }
       </div>
 
       <!-- Main swipe card -->
@@ -73,8 +91,15 @@
         (mousedown)="onDragStart($event)"
         (touchstart)="onDragStart($event)"
       >
-        @if (topic()?.optionType === OptionType.Date) {
-          <app-vote-card-date [text]="option()?.text ?? ''" />
+        @if (topic()?.optionType === OptionType.Rating) {
+          <app-vote-card-rating
+            [text]="option()?.text ?? ''"
+            [description]="option()?.description ?? ''"
+          />
+        } @else if (topic()?.optionType === OptionType.Date) {
+          <app-vote-card-date
+            [text]="option()?.text ?? ''"
+          />
         } @else if (option()?.previewImageUrl) {
           <app-vote-card-image
             [text]="option()?.text ?? ''"
@@ -96,28 +121,50 @@
     />
 
     <!-- Action buttons -->
-    <div class="tw:flex tw:items-center tw:gap-6">
-      <button
-        class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-white tw:text-red-500 tw:border-red-300 tw:border tw:border-surface-200 tw:flex tw:items-center tw:justify-center tw:hover:bg-red-50 tw:transition-all tw:active:scale-90 tw:duration-200"
-        (click)="swipeNo()"
-      >
-        <i class="fa-solid fa-xmark tw:text-2xl"></i>
-      </button>
+    @if (topic()?.optionType === OptionType.Rating) {
+      <div class="tw:flex tw:flex-col tw:items-center tw:gap-3">
+        <div class="tw:flex tw:items-center tw:gap-2">
+          @for (star of [1, 2, 3, 4, 5]; track star) {
+            <button
+              class="tw:w-11 tw:h-11 tw:rounded-full tw:bg-white tw:border tw:border-yellow-300 tw:text-yellow-500 tw:flex tw:flex-col tw:items-center tw:justify-center tw:hover:bg-yellow-50 tw:transition-all tw:active:scale-90 tw:duration-200 tw:text-xs tw:font-bold tw:gap-0.5"
+              (click)="castRating(star)"
+            >
+              <i class="fa-solid fa-star tw:text-sm"></i>
+              <span>{{ star }}</span>
+            </button>
+          }
+        </div>
+        <p-button
+          [label]="'project.vote.skip' | translate"
+          variant="text"
+          size="small"
+          (click)="skip()"
+        />
+      </div>
+    } @else {
+      <div class="tw:flex tw:items-center tw:gap-6">
+        <button
+          class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-white tw:text-red-500 tw:border-red-300 tw:border tw:border-surface-200 tw:flex tw:items-center tw:justify-center tw:hover:bg-red-50 tw:transition-all tw:active:scale-90 tw:duration-200"
+          (click)="swipeNo()"
+        >
+          <i class="fa-solid fa-xmark tw:text-2xl"></i>
+        </button>
 
-      <p-button
-        [label]="'project.vote.skip' | translate"
-        variant="text"
-        size="small"
-        (click)="skip()"
-      />
+        <p-button
+          [label]="'project.vote.skip' | translate"
+          variant="text"
+          size="small"
+          (click)="skip()"
+        />
 
-      <button
-        class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-white tw:border-primary/60 tw:text-primary tw:border tw:border-surface-200 tw:flex tw:items-center tw:justify-center tw:hover:bg-primary-50 tw:transition-all tw:active:scale-90 tw:duration-200"
-        (click)="swipeYes()"
-      >
-        <i class="fa-regular fa-heart tw:text-2xl"></i>
-      </button>
-    </div>
+        <button
+          class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-white tw:border-primary/60 tw:text-primary tw:border tw:border-surface-200 tw:flex tw:items-center tw:justify-center tw:hover:bg-primary-50 tw:transition-all tw:active:scale-90 tw:duration-200"
+          (click)="swipeYes()"
+        >
+          <i class="fa-regular fa-heart tw:text-2xl"></i>
+        </button>
+      </div>
+    }
   </div>
 </div>
 
@@ -129,16 +176,29 @@
     <div
       class="tw:bg-black/75 tw:backdrop-blur-sm tw:text-white tw:rounded-2xl tw:px-6 tw:py-3 tw:text-center tw:shadow-xl tw:mx-6 tw:max-w-sm"
     >
-      <p class="tw:text-sm tw:leading-relaxed">
-        {{ "project.vote.swipeHintPre" | translate
-        }}<span class="tw:text-green-400 tw:font-bold">{{
-          "project.votesOverview.voteLabel.yes" | translate
-        }}</span
-        >{{ "project.vote.swipeHintMid" | translate
-        }}<span class="tw:text-red-400 tw:font-bold">{{
-          "project.votesOverview.voteLabel.no" | translate
-        }}</span>
-      </p>
+      @if (topic()?.optionType === OptionType.Rating) {
+        <p class="tw:text-sm tw:leading-relaxed">
+          {{ "project.vote.swipeHintPre" | translate
+          }}<span class="tw:text-yellow-400 tw:font-bold">{{
+            "project.vote.ratingMax" | translate
+          }}</span
+          >{{ "project.vote.swipeHintMid" | translate
+          }}<span class="tw:text-red-400 tw:font-bold">{{
+            "project.vote.ratingMin" | translate
+          }}</span>
+        </p>
+      } @else {
+        <p class="tw:text-sm tw:leading-relaxed">
+          {{ "project.vote.swipeHintPre" | translate
+          }}<span class="tw:text-green-400 tw:font-bold">{{
+            "project.votesOverview.voteLabel.yes" | translate
+          }}</span
+          >{{ "project.vote.swipeHintMid" | translate
+          }}<span class="tw:text-red-400 tw:font-bold">{{
+            "project.votesOverview.voteLabel.no" | translate
+          }}</span>
+        </p>
+      }
     </div>
   </div>
 }

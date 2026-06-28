@@ -109,6 +109,10 @@
         "startDate": "Start date",
         "endDate": "End date (optional)"
       },
+      "rating": {
+        "createPoll": "Create rating poll",
+        "updatePoll": "Update rating poll"
+      },
       "yesNo": {
         "question": "Your question",
         "questionPlaceholder": "e.g. Where should we go?",
@@ -136,7 +140,10 @@
       "tapToDismiss": "Tap to dismiss",
       "addComment": "Comment",
       "commentPlaceholder": "Your comment...",
-      "submitComment": "Add"
+      "submitComment": "Add",
+      "skip": "Skip",
+      "ratingMax": "5 stars",
+      "ratingMin": "1 star"
     },
     "votesOverview": {
       "active": "Active",
@@ -155,6 +162,9 @@
       "reVote": "Re-Vote",
       "votesCount": "{{yes}} of {{total}} vote",
       "votesCountPlural": "{{yes}} of {{total}} votes",
+      "averageRating": "Avg: {{avg}} ★",
+      "ratingsCount": "{{count}} rating",
+      "ratingsCountPlural": "{{count}} ratings",
       "newComment": "New comment...",
       "loading": "Loading...",
       "comments": "Comments"

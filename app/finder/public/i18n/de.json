@@ -109,6 +109,10 @@
         "startDate": "Startdatum",
         "endDate": "Enddatum (optional)"
       },
+      "rating": {
+        "createPoll": "Bewertung erstellen",
+        "updatePoll": "Bewertung aktualisieren"
+      },
       "yesNo": {
         "question": "Deine Frage",
         "questionPlaceholder": "z. B. Wohin sollen wir gehen?",
@@ -136,7 +140,10 @@
       "tapToDismiss": "Tippen zum Schließen",
       "addComment": "Kommentieren",
       "commentPlaceholder": "Dein Kommentar...",
-      "submitComment": "Hinzufügen"
+      "submitComment": "Hinzufügen",
+      "skip": "Überspringen",
+      "ratingMax": "5 Sterne",
+      "ratingMin": "1 Stern"
     },
     "votesOverview": {
       "active": "Aktiv",
@@ -155,6 +162,9 @@
       "reVote": "Erneut abstimmen",
       "votesCount": "{{yes}} von {{total}} Stimme",
       "votesCountPlural": "{{yes}} von {{total}} Stimmen",
+      "averageRating": "Ø: {{avg}} ★",
+      "ratingsCount": "{{count}} Bewertung",
+      "ratingsCountPlural": "{{count}} Bewertungen",
       "newComment": "Neuer Kommentar...",
       "loading": "Lädt...",
       "comments": "Kommentare"

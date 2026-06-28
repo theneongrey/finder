@@ -239,6 +239,7 @@ export const ProjectStore = signalStore(
                             optionType: responseTopic.optionType,
                             optionCount: addedOptions.length,
                             commentCount: 0,
+                            nextOpenOptionId: addedOptions[0]?.id,
                           },
                         ],
                       },

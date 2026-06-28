@@ -32,6 +32,7 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
   placeholder = input('');
   maxlength = input<number | null>(null);
   inputId = input<string | null>(null);
+  maxHeight = input<string>('300px');
 
   protected readonly textValue = signal('');
   protected readonly isDisabled = signal(false);

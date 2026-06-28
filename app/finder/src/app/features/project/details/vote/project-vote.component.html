@@ -15,10 +15,10 @@
   </div>
 
   <div
-    class="tw:flex-1 tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-4"
+    class="tw:flex-1 tw:flex tw:flex-col"
   >
-    <!-- Topic context + overview button -->
-    <div class="tw:text-center tw:flex tw:flex-col tw:items-center">
+    <!-- Topic context: always at top -->
+    <div class="tw:text-center tw:flex tw:flex-col tw:items-center tw:pt-4">
       <h2>
         {{ topic()?.name }}
       </h2>
@@ -36,6 +36,9 @@
         </p>
       }
     </div>
+
+    <!-- Swipe area: vertically centered in remaining space -->
+    <div class="tw:flex-1 tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-4">
 
     <!-- Swipe area -->
     <div class="vote-card-container tw:w-full tw:max-w-sm tw:h-72 tw:relative">
@@ -120,7 +123,10 @@
       [optionText]="option()?.text"
     />
 
-    <!-- Action buttons -->
+    </div><!-- /centered card section -->
+
+    <!-- Action buttons: always at bottom -->
+    <div class="tw:flex tw:flex-col tw:items-center tw:pb-6">
     @if (topic()?.optionType === OptionType.Rating) {
       <div class="tw:flex tw:flex-col tw:items-center tw:gap-3">
         <div class="tw:flex tw:items-center tw:gap-2">
@@ -165,6 +171,7 @@
         </button>
       </div>
     }
+    </div><!-- /action buttons -->
   </div>
 </div>
 

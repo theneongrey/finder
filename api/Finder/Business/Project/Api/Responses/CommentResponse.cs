@@ -1,10 +1,16 @@
 namespace Finder.Business.Project.Api.Responses;
 
+public class CommentAuthorResponse
+{
+    public required string Name { get; set; }
+    public required string Email { get; set; }
+}
+
 public class CommentResponse
 {
     public required string Id { get; set; }
     public required string Content { get; set; }
-    public required string Author { get; set; }
+    public required CommentAuthorResponse Author { get; set; }
     public required DateTime Created { get; set; }
     public string? Quote { get; set; }
 }
@@ -17,7 +23,11 @@ public static class CommentMapper
         {
             Id = comment.Id.ToString(),
             Content = comment.Content,
-            Author = comment.Person.Name ?? comment.Person.Email,
+            Author = new CommentAuthorResponse
+            {
+                Name = comment.Person.Name ?? comment.Person.Email,
+                Email = comment.Person.Email,
+            },
             Created = comment.Created,
             Quote = comment.Quote
         };

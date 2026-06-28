@@ -47,6 +47,36 @@
       "owner": "Besitzer",
       "creator": "Ersteller"
     },
+    "tabs": {
+      "overview": "Überblick",
+      "projects": "Projekte",
+      "topics": "Umfragen"
+    },
+    "overviewTab": {
+      "greeting": "Hallo {{name}}",
+      "subtitle": "Deine neuesten Projekte und Umfragen",
+      "latestProjects": "Neueste Projekte",
+      "latestTopics": "Neueste Umfragen",
+      "viewAll": "Alle ansehen"
+    },
+    "projectsTab": {
+      "title": "Projekte",
+      "subtitle": "Alle deine Projekte auf einen Blick"
+    },
+    "topicsTab": {
+      "title": "Umfragen",
+      "subtitle": "Alle deine eigenständigen Umfragen auf einen Blick"
+    },
+    "standaloneItem": {
+      "badge": "Ohne Projekt",
+      "vote": "Abstimmen"
+    },
+    "standaloneInput": {
+      "addNew": {
+        "cto": "Neue Umfrage",
+        "description": "Erstelle schnell eine Umfrage"
+      }
+    },
     "overview": {
       "title": "Projekte",
       "subtitle": "Das sind deine aktuellen Projekte",
@@ -61,6 +91,11 @@
         "header": "Projekt löschen?",
         "message": "Bist du sicher, dass du das Projekt \"{{name}}\" löschen möchtest?",
         "accept": "Projekt löschen"
+      },
+      "deleteTopicConfirm": {
+        "header": "Umfrage löschen?",
+        "message": "Bist du sicher, dass du die Umfrage \"{{name}}\" löschen möchtest?",
+        "accept": "Umfrage löschen"
       }
     },
     "detail": {

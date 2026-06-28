@@ -30,7 +30,23 @@ public class ProjectService
             .Include(p => p.Topics)
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
-            .Where(p => p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId))
+            .Where(p => !p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
+            .ToListAsync();
+    }
+
+    public async Task<List<Entities.Project>> GetAllStandaloneTopics()
+    {
+        return await _dbContext.Projects
+            .Include(p => p.Topics)
+            .ThenInclude(t => t.Options)
+            .ThenInclude(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Include(p => p.Topics)
+            .ThenInclude(t => t.Comments)
+            .Include(p => p.Creator)
+            .Include(p => p.Permissions)
+            .Where(p => p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
+            .Where(p => p.Topics.Any())
             .ToListAsync();
     }
 
@@ -51,6 +67,39 @@ public class ProjectService
             VisibilityType = VisibilityType.VisibleForSelectedOnly
         };
 
+        _dbContext.Projects.Add(project);
+        await _dbContext.SaveChangesAsync();
+        return Result<Entities.Project>.Success(project);
+    }
+
+    public async Task<Result<Entities.Project>> CreateStandaloneTopic(string name, string description, OptionType optionType)
+    {
+        var userRequest = await _userService.GetUser();
+        if (!userRequest.IsSuccess)
+        {
+            return Result<Entities.Project>.Fail(userRequest.Code);
+        }
+
+        var project = new Entities.Project
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Description = null,
+            IsStandalone = true,
+            Creator = userRequest.Payload!,
+            VisibilityType = VisibilityType.VisibleForSelectedOnly
+        };
+
+        var topic = new Topic
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Description = description,
+            OptionType = optionType,
+            Project = project
+        };
+
+        project.Topics.Add(topic);
         _dbContext.Projects.Add(project);
         await _dbContext.SaveChangesAsync();
         return Result<Entities.Project>.Success(project);
@@ -156,6 +205,7 @@ public class ProjectService
     public async Task<Result<Topic>> UpdateTopic(Guid topicId, string name, string description)
     {
         var topic = await _dbContext.Topics
+            .Include(t => t.Project)
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
@@ -172,6 +222,12 @@ public class ProjectService
 
         topic.Name = name;
         topic.Description = description;
+
+        if (topic.Project.IsStandalone)
+        {
+            topic.Project.Name = name;
+        }
+
         await _dbContext.SaveChangesAsync();
         return Result<Topic>.Success(topic);
     }

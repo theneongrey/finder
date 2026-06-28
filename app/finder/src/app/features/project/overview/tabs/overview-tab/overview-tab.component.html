@@ -1,0 +1,54 @@
+<h2 class="tw:mb-0">
+  {{ "project.overviewTab.greeting" | translate: { name: user()?.name } }}
+</h2>
+<p class="tw:opacity-60 tw:mt-1 tw:mb-6">
+  {{ "project.overviewTab.subtitle" | translate }}
+</p>
+
+<section class="tw:mb-6">
+  <div class="tw:flex tw:justify-between tw:items-center tw:mb-3">
+    <h3 class="tw:m-0">
+      {{ "project.overviewTab.latestProjects" | translate }}
+    </h3>
+    <p-button
+      [text]="true"
+      [label]="'project.overviewTab.viewAll' | translate"
+      icon="fa-solid fa-chevron-right"
+      iconPos="right"
+      size="small"
+      (onClick)="switchToProjects()"
+    />
+  </div>
+  <div class="tw:flex tw:flex-col tw:gap-3">
+    @for (project of recentProjects(); track project.id) {
+      <app-project-item
+        [project]="project"
+        (deletionRequested)="projectDeletionRequested.emit(project)"
+      />
+    }
+  </div>
+</section>
+
+<section>
+  <div class="tw:flex tw:justify-between tw:items-center tw:mb-3">
+    <h3 class="tw:m-0">
+      {{ "project.overviewTab.latestTopics" | translate }}
+    </h3>
+    <p-button
+      [text]="true"
+      [label]="'project.overviewTab.viewAll' | translate"
+      icon="fa-solid fa-chevron-right"
+      iconPos="right"
+      size="small"
+      (onClick)="switchToTopics()"
+    />
+  </div>
+  <div class="tw:flex tw:flex-col tw:gap-3">
+    @for (topic of recentTopics(); track topic.topicId) {
+      <app-topic-item
+        [topic]="topic"
+        (deletionRequested)="topicDeletionRequested.emit(topic)"
+      />
+    }
+  </div>
+</section>

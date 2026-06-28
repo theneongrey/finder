@@ -1,0 +1,20 @@
+<h2 class="tw:mb-0">
+  {{ "project.topicsTab.title" | translate }}
+</h2>
+<p class="tw:opacity-60 tw:mt-1 tw:mb-6">
+  {{ "project.topicsTab.subtitle" | translate }}
+</p>
+
+<div class="tw:grid tw:gap-4 tw:grid-cols-auto-fit tw:pb-8">
+  @for (topic of standaloneTopics(); track topic.topicId) {
+    <app-topic-item
+      [topic]="topic"
+      (deletionRequested)="deletionRequested.emit(topic)"
+    />
+  }
+  <app-add-card
+    [cto]="'project.standaloneInput.addNew.cto' | translate"
+    [description]="'project.standaloneInput.addNew.description' | translate"
+    (action)="navigateToAdd()"
+  />
+</div>

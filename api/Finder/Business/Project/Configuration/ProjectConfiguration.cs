@@ -22,5 +22,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Entities.Project>
         
         builder.Property(p => p.VisibilityType)
             .HasConversion<int>();
+
+        builder.Property(p => p.IsStandalone);
     }
 }

@@ -31,10 +31,15 @@ export interface OptionDetail {
   choice: string | null;
 }
 
+export interface CommentAuthor {
+  name: string;
+  picture: string;
+}
+
 export interface Comment {
   id: string;
   content: string;
-  author: string;
+  author: CommentAuthor;
   created: string;
   quote?: string;
 }

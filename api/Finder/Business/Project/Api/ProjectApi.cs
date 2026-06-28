@@ -52,6 +52,23 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
         
+        // Get standalone topics
+        app.MapGet("/api/project/standalone-topics",
+                async (ProjectService projectService, UserService userService) => Results.Ok(
+                    (await projectService.GetAllStandaloneTopics()).Select(p => p.ToStandaloneTopicOverviewResponse(userService.GetUserId()))))
+            .RequireAuthorization();
+
+        // Create standalone topic (creates backing project + topic atomically)
+        app.MapPost("/api/project/standalone-topic",
+                async ([FromBody] AddStandaloneTopicRequest request, ProjectService projectService, UserService userService) =>
+                {
+                    var result = await projectService.CreateStandaloneTopic(request.Name, request.Description, request.OptionType);
+                    return !result.IsSuccess
+                        ? Results.BadRequest()
+                        : Results.Ok(result.Payload!.ToStandaloneTopicOverviewResponse(userService.GetUserId()));
+                })
+            .RequireAuthorization();
+
         // Add topic
         app.MapPost("/api/project/topic",
                 async ([FromBody] AddTopicRequest request, ProjectService projectService, UserService userService) =>

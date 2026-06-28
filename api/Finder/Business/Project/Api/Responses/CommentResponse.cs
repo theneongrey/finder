@@ -3,7 +3,7 @@ namespace Finder.Business.Project.Api.Responses;
 public class CommentAuthorResponse
 {
     public required string Name { get; set; }
-    public required string Email { get; set; }
+    public required string Picture { get; set; }
 }
 
 public class CommentResponse
@@ -25,8 +25,8 @@ public static class CommentMapper
             Content = comment.Content,
             Author = new CommentAuthorResponse
             {
-                Name = comment.Person.Name ?? comment.Person.Email,
-                Email = comment.Person.Email,
+                Name = comment.Person.Name ?? "Unknown",
+                Picture = comment.Person.Picture,
             },
             Created = comment.Created,
             Quote = comment.Quote

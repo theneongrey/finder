@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProjectOverview } from '../_models/project-overview.model';
+import { StandaloneTopicOverview } from '../_models/standalone-topic-overview.model';
 import {
   Comment,
   Option,
@@ -24,6 +25,21 @@ export class ProjectService {
     this.loggerService.debug('[ProjectService] fetching projects');
     return this.httpClient.get<ProjectOverview[]>(
       `${this.baseUrl}/api/project`,
+    );
+  }
+
+  getStandaloneTopics() {
+    this.loggerService.debug('[ProjectService] fetching standalone topics');
+    return this.httpClient.get<StandaloneTopicOverview[]>(
+      `${this.baseUrl}/api/project/standalone-topics`,
+    );
+  }
+
+  addStandaloneTopic(name: string, description: string, optionType: OptionType) {
+    this.loggerService.debug(`[ProjectService] adding standalone topic ${name}`);
+    return this.httpClient.post<StandaloneTopicOverview>(
+      `${this.baseUrl}/api/project/standalone-topic`,
+      { name, description, optionType },
     );
   }
 

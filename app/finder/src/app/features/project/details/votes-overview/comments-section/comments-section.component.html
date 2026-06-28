@@ -3,7 +3,7 @@
     {{ "project.votesOverview.comments" | translate }}
   </h3>
   <div
-    class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:border tw:border-gray-100"
+    class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:border tw:border-gray-100 tw:mt-2"
   >
     <div class="tw:flex tw:flex-col tw:gap-3 tw:mb-4">
       @for (comment of comments(); track comment.id) {
@@ -13,7 +13,7 @@
             class="tw:bg-gray-50 tw:p-3 tw:rounded-2xl tw:rounded-tl-none tw:flex-1"
           >
             <p class="tw:text-sm tw:font-bold tw:text-gray-900">
-              {{ comment.author }}
+              {{ comment.author.name }}
             </p>
             @if (comment.quote) {
               <blockquote

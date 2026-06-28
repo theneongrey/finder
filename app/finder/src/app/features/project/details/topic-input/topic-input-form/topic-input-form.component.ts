@@ -38,7 +38,7 @@ export type { OptionEntry, DateOptionEntry };
 export class TopicInputFormComponent {
   readonly OptionType = OptionType;
 
-  mode = input.required<'add' | 'edit'>();
+  mode = input.required<'add' | 'edit' | 'standalone'>();
   isValid = input.required<boolean>();
   optionType = input.required<OptionType>();
   question = input.required<string>();

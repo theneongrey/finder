@@ -1,25 +1,35 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Router, RouterOutlet } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ProjectItemComponent } from './project-item/project-item.component';
-import { AddCardComponent } from '../../../common/ui/components/add-card/add-card.component';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectStore } from '../_data/project.store';
 import { ProjectOverview } from '../_models/project-overview.model';
-import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
+import { TopicItem } from '../topic-item/topic-item.model';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
+import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
+import { OverviewTabComponent } from './tabs/overview-tab/overview-tab.component';
+import { ProjectsTabComponent } from './tabs/projects-tab/projects-tab.component';
+import { TopicsTabComponent } from './tabs/topics-tab/topics-tab.component';
+import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'app-project-overview',
   imports: [
-    ConfirmDialogModule,
-    ProjectItemComponent,
-    AddCardComponent,
+    ConfirmDialog,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
     TranslatePipe,
-    MaxHeightMinusHeaderDirective,
     TitleBarComponent,
+    MaxHeightMinusHeaderDirective,
+    OverviewTabComponent,
+    ProjectsTabComponent,
+    TopicsTabComponent,
+    Tag,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
@@ -29,45 +39,60 @@ import { TitleBarService } from '../../../common/services/title-bar.service';
   },
 })
 export class ProjectOverviewComponent {
-  private projectStore = inject(ProjectStore);
+  private readonly projectStore = inject(ProjectStore);
   private readonly confirmationService = inject(ConfirmationService);
-  private readonly router = inject(Router);
   private readonly translateService = inject(TranslateService);
   private readonly titleBarService = inject(TitleBarService);
 
   projects = this.projectStore.projects;
+  standaloneTopics = this.projectStore.standaloneTopics;
+  activeTab = this.projectStore.activeTab;
 
   constructor() {
     this.projectStore.getProjects();
+    this.projectStore.getStandaloneTopics();
     this.titleBarService.clearTitle();
   }
 
-  navigateToAdd() {
-    this.router.navigate(['/project/add']);
+  get activeTabValue() {
+    return this.activeTab();
   }
 
-  deletionRequested(project: ProjectOverview) {
+  set activeTabValue(value: string) {
+    this.projectStore.setActiveTab(value as 'overview' | 'projects' | 'topics');
+  }
+
+  projectDeletionRequested(project: ProjectOverview) {
     this.confirmationService.confirm({
       header: this.translateService.instant(
         'project.overview.deleteConfirm.header',
       ),
       message: this.translateService.instant(
         'project.overview.deleteConfirm.message',
-        {
-          name: project.name,
-        },
+        { name: project.name },
       ),
       acceptLabel: this.translateService.instant(
         'project.overview.deleteConfirm.accept',
       ),
       rejectLabel: this.translateService.instant('project.common.cancel'),
-      accept: () => {
-        this.deleteProject(project.id);
-      },
+      accept: () => this.projectStore.deleteProject(project.id),
     });
   }
 
-  private deleteProject(projectId: string) {
-    this.projectStore.deleteProject(projectId);
+  topicDeletionRequested(topic: TopicItem) {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'project.overview.deleteTopicConfirm.header',
+      ),
+      message: this.translateService.instant(
+        'project.overview.deleteTopicConfirm.message',
+        { name: topic.name },
+      ),
+      acceptLabel: this.translateService.instant(
+        'project.overview.deleteTopicConfirm.accept',
+      ),
+      rejectLabel: this.translateService.instant('project.common.cancel'),
+      accept: () => this.projectStore.deleteProject(topic.projectId),
+    });
   }
 }

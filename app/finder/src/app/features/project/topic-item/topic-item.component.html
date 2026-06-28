@@ -37,9 +37,9 @@
           tooltipPosition="top"
           [routerLink]="[
             '/project/detail',
-            this.projectId(),
+            _topic.projectId,
             'votes-overview',
-            this.topic().id,
+            _topic.topicId,
           ]"
           fragment="comments-section"
         />
@@ -61,12 +61,17 @@
         _topic.nextOpenOptionId
           ? [
               '/project/detail',
-              projectId(),
+              _topic.projectId,
               'vote',
-              _topic.id,
+              _topic.topicId,
               _topic.nextOpenOptionId,
             ]
-          : ['/project/detail', projectId(), 'votes-overview', _topic.id]
+          : [
+              '/project/detail',
+              _topic.projectId,
+              'votes-overview',
+              _topic.topicId,
+            ]
       "
       [label]="
         _topic.nextOpenOptionId

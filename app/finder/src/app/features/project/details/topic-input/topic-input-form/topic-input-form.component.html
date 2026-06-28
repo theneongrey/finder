@@ -58,12 +58,12 @@
   <p-button
     class="tw:w-full tw:max-w-md"
     [label]="
-      mode() === 'add'
+      mode() !== 'edit'
         ? ('project.topicInput.createPoll' | translate)
         : ('project.topicInput.updatePoll' | translate)
     "
     [icon]="
-      mode() === 'add'
+      mode() !== 'edit'
         ? 'fa-regular fa-paper-plane'
         : 'fa-regular fa-floppy-disk'
     "

@@ -68,8 +68,18 @@ public static class ProjectMapper
             OptionCount = topic.Options.Count,
             CommentCount = topic.Comments.Count,
             NextOpenOptionId = topic.Options
-                .OrderBy(o => o.Created)
-                .FirstOrDefault(o => o.Votes.All(v => v.Person.Id != userId))?.Id.ToString()
+                .Select(o => new {
+                    Option = o,
+                    UserChoice = o.Votes
+                        .Where(v => v.Person.Id == userId)
+                        .Select(v => int.TryParse(v.Choice, out var cv) ? (int?)cv : null)
+                        .FirstOrDefault()
+                })
+                .Where(x => x.UserChoice == null || x.UserChoice < 0)
+                .OrderBy(x => x.UserChoice == null ? 0 : 1)
+                .ThenByDescending(x => x.UserChoice ?? 0)
+                .ThenBy(x => x.Option.Created)
+                .FirstOrDefault()?.Option.Id.ToString()
         };
     }
 

@@ -37,19 +37,23 @@
     />
   </div>
 
-  @if (optionType() === OptionType.Date) {
-    <app-topic-options-date
-      [options]="dateOptions()"
-      (add)="add.emit()"
-      (remove)="remove.emit($event)"
-    />
-  } @else {
-    <app-topic-options-yes-no
-      [options]="options()"
-      (add)="add.emit()"
-      (remove)="remove.emit($event)"
-    />
-  }
+  <app-topic-options
+    [titleKey]="
+      optionType() === OptionType.Date
+        ? 'project.topicInput.date.answerOptions'
+        : 'project.topicInput.yesNo.answerOptions'
+    "
+    [subtitleKey]="
+      optionType() === OptionType.Date
+        ? 'project.topicInput.date.minOptions'
+        : 'project.topicInput.yesNo.minOptions'
+    "
+    [optionType]="optionType()"
+    [options]="options()"
+    [dateOptions]="dateOptions()"
+    (add)="add.emit()"
+    (remove)="remove.emit($event)"
+  />
 </div>
 
 <div

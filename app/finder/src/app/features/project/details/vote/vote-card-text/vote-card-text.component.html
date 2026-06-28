@@ -10,4 +10,9 @@
       {{ description() }}
     </p>
   }
+  @if (link()) {
+    <a [href]="link()" target="_blank" rel="noopener noreferrer">
+      <p-button label="Link öffnen" icon="fa-solid fa-arrow-up-right-from-square" size="small" variant="outlined" />
+    </a>
+  }
 </div>

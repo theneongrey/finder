@@ -10,13 +10,17 @@ import {
   input,
   output,
   signal,
+  AfterViewInit,
+  effect,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
+import { Message } from 'primeng/message';
 import { TranslatePipe } from '@ngx-translate/core';
-import { OptionEntry } from '../topic-options-yes-no.component';
+import { OptionEntry } from '../topic-options.component';
 import { SideColorCardComponent } from '../../../../../../common/ui/components/side-color-card/side-color-card.component';
+import { UrlValidationService } from '../../../../../../common/utils/url-validation.service';
 
 @Component({
   selector: 'app-option-card',
@@ -26,12 +30,13 @@ import { SideColorCardComponent } from '../../../../../../common/ui/components/s
     FormsModule,
     InputText,
     Button,
+    Message,
     SideColorCardComponent,
     TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionCardComponent implements OnInit {
+export class OptionCardComponent {
   option = input.required<OptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);
@@ -39,16 +44,23 @@ export class OptionCardComponent implements OnInit {
 
   showDescription = signal(false);
   showLink = signal(false);
+  urlError = signal(false);
 
   @ViewChild('descriptionInput')
   private descriptionInput?: ElementRef<HTMLInputElement>;
   @ViewChild('linkInput') private linkInput?: ElementRef<HTMLInputElement>;
 
   private injector = inject(Injector);
+  private urlValidation = inject(UrlValidationService);
 
-  ngOnInit() {
-    this.showDescription.set(!!this.option().description);
-    this.showLink.set(!!this.option().url);
+  constructor() {
+    effect(() => {
+      const option = this.option();
+      if (option) {
+        this.showDescription.set(!!option.description);
+        this.showLink.set(!!option.url);
+      }
+    });
   }
 
   toggleDescription() {
@@ -72,8 +84,23 @@ export class OptionCardComponent implements OnInit {
   }
 
   onUrlBlur() {
-    if (!this.option().url) {
+    const url = this.option().url;
+    if (!url) {
       this.showLink.set(false);
+      this.urlError.set(false);
+      return;
+    }
+    if (!this.urlValidation.isValid(url)) {
+      this.urlError.set(true);
+      return;
+    }
+    this.urlError.set(false);
+    const normalized = this.urlValidation.normalize(url);
+    if (normalized !== url) {
+      this.option().url = normalized;
+      if (this.linkInput) {
+        this.linkInput.nativeElement.value = normalized;
+      }
     }
   }
 }

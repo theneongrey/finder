@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DateOptionEntry } from '../topic-options-date.component';
+import { DateOptionEntry } from '../topic-options.component';
 import { SideColorCardComponent } from '../../../../../../common/ui/components/side-color-card/side-color-card.component';
 
 @Component({

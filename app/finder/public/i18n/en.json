@@ -100,18 +100,14 @@
       "update": "Update project"
     },
     "topicInput": {
+      "createPoll": "Create poll",
+      "updatePoll": "Update poll",
       "date": {
-        "createPoll": "Create appointment poll",
-        "updatePoll": "Update appointment poll",
         "answerOptions": "Date options",
         "minOptions": "Min. 1 date",
         "addOption": "Add date",
         "startDate": "Start date",
         "endDate": "End date (optional)"
-      },
-      "rating": {
-        "createPoll": "Create rating poll",
-        "updatePoll": "Update rating poll"
       },
       "yesNo": {
         "question": "Your question",
@@ -126,9 +122,7 @@
         "previewImageUrlPlaceholder": "Optional preview image (URL)",
         "addDescription": "Description",
         "addLink": "Link",
-        "addOption": "Add option",
-        "createPoll": "Create poll",
-        "updatePoll": "Update poll"
+        "addOption": "Add option"
       }
     },
     "vote": {

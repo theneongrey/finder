@@ -56,42 +56,11 @@
     }
 
     @if (role() >= ProjectRole.Maintainer) {
-      <h2 class="tw:mb-4 tw:mt-8">
-        {{ "project.detail.createNewTopic" | translate }}
-      </h2>
-      <div class="tw:grid tw:grid-cols-3 tw:gap-4 tw:pb-8">
+      <div class="tw:pb-8 tw:mt-4">
         <app-add-card
-          [description]="'project.detail.topicTypes.appointment' | translate"
-          icon="fa-calendar"
-          [routerLink]="[
-            '/project/detail',
-            project.id,
-            'topic',
-            'add',
-            'date',
-          ]"
-        />
-        <app-add-card
-          [description]="'project.detail.topicTypes.yesNo' | translate"
-          icon="fa-square-check"
-          [routerLink]="[
-            '/project/detail',
-            project.id,
-            'topic',
-            'add',
-            'yesno',
-          ]"
-        />
-        <app-add-card
-          [description]="'project.detail.topicTypes.rating' | translate"
-          icon="fa-star"
-          [routerLink]="[
-            '/project/detail',
-            project.id,
-            'topic',
-            'add',
-            'rating',
-          ]"
+          [cto]="'project.detail.createNewTopic' | translate"
+          icon="fa-plus"
+          [routerLink]="['/project/detail', project.id, 'topic', 'add']"
         />
       </div>
     }

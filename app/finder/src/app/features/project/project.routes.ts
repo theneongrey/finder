@@ -50,14 +50,13 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'topic/add/yesno',
+        path: 'topic/add',
         loadComponent: () =>
           import('./details/topic-input/topic-input.component').then(
             (m) => m.TopicInputComponent,
           ),
         data: {
           mode: 'add',
-          optionType: OptionType.YesNo,
           backRoute: (s: ActivatedRouteSnapshot) =>
             `/project/detail/${s.parent?.params['projectId']}`,
         },
@@ -76,19 +75,6 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'topic/add/rating',
-        loadComponent: () =>
-          import('./details/topic-input/topic-input.component').then(
-            (m) => m.TopicInputComponent,
-          ),
-        data: {
-          mode: 'add',
-          optionType: OptionType.Rating,
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-      {
         path: 'topic/edit/rating/:topicId',
         loadComponent: () =>
           import('./details/topic-input/topic-input.component').then(
@@ -97,19 +83,6 @@ export const projectRoutes: Routes = [
         data: {
           mode: 'edit',
           optionType: OptionType.Rating,
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-      {
-        path: 'topic/add/date',
-        loadComponent: () =>
-          import('./details/topic-input/topic-input.component').then(
-            (m) => m.TopicInputComponent,
-          ),
-        data: {
-          mode: 'add',
-          optionType: OptionType.Date,
           backRoute: (s: ActivatedRouteSnapshot) =>
             `/project/detail/${s.parent?.params['projectId']}`,
         },

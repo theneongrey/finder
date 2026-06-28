@@ -34,7 +34,7 @@ public class ProjectService
             .ToListAsync();
     }
 
-    public async Task<Result<Entities.Project>> Create(string name, string description)
+    public async Task<Result<Entities.Project>> Create(string name, string? description)
     {
         var userRequest = await _userService.GetUser();
         if (!userRequest.IsSuccess)
@@ -56,7 +56,7 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> Update(Guid projectId, string projectName, string projectDescription)
+    public async Task<Result<Entities.Project>> Update(Guid projectId, string projectName, string? projectDescription)
     {
         var projectToUpdate = await _dbContext.Projects
             .Include(p => p.Permissions)

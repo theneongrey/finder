@@ -33,7 +33,7 @@ public class ProjectResponse
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
-    public required string Description { get; set; }
+    public string? Description { get; set; }
     public required ProjectResponseTopic[] Topics { get; set; }
     public required int PermissionType { get; set; }
     public required string Creator { get; set; }

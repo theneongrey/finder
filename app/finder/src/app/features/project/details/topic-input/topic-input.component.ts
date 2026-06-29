@@ -21,7 +21,7 @@ import { TopicInputFormComponent } from './topic-input-form/topic-input-form.com
 export type { OptionEntry, DateOptionEntry };
 
 @Component({
-  selector: 'app-topic-input',
+  selector: 'app-poll-input',
   templateUrl: './topic-input.component.html',
   host: { class: 'tw:block tw:h-full' },
   imports: [TopicTypeSelectionComponent, TopicInputFormComponent],
@@ -36,7 +36,7 @@ export class TopicInputComponent {
 
   mode = input<'add' | 'edit' | 'standalone'>('add');
   projectId = this.projectStore.projectId;
-  topicId = input<string | undefined>(undefined);
+  pollId = input<string | undefined>(undefined);
 
   optionType = signal<OptionType | undefined>(
     this.route.snapshot.data['optionType'],
@@ -58,26 +58,26 @@ export class TopicInputComponent {
     });
 
     effect(() => {
-      const topicId = this.topicId();
-      if (this.mode() === 'edit' && topicId) {
-        this.projectStore.getTopic(topicId);
+      const pollId = this.pollId();
+      if (this.mode() === 'edit' && pollId) {
+        this.projectStore.getPoll(pollId);
       }
     });
 
     effect(() => {
-      const currentTopic = this.projectStore.currentTopic();
+      const currentPoll = this.projectStore.currentPoll();
       if (
         this.mode() === 'edit' &&
-        currentTopic &&
-        currentTopic.id === this.topicId()
+        currentPoll &&
+        currentPoll.id === this.pollId()
       ) {
-        this.question.set(currentTopic.name);
-        this.description.set(currentTopic.description);
+        this.question.set(currentPoll.name);
+        this.description.set(currentPoll.description);
 
-        if (currentTopic.optionType === OptionType.Date) {
+        if (currentPoll.optionType === OptionType.Date) {
           this.dateOptions.set(
-            currentTopic.options.length
-              ? currentTopic.options.map((o) => {
+            currentPoll.options.length
+              ? currentPoll.options.map((o) => {
                   const parts = o.text.split(';');
                   return {
                     id: o.id,
@@ -89,8 +89,8 @@ export class TopicInputComponent {
           );
         } else {
           this.options.set(
-            currentTopic.options.length
-              ? currentTopic.options.map((o) => ({
+            currentPoll.options.length
+              ? currentPoll.options.map((o) => ({
                   id: o.id,
                   text: o.text,
                   description: o.description,
@@ -156,15 +156,15 @@ export class TopicInputComponent {
 
   submit(): void {
     if (this.mode() === 'add') {
-      this.addTopic();
+      this.addPoll();
     } else if (this.mode() === 'edit') {
-      this.editTopic();
+      this.editPoll();
     } else if (this.mode() === 'standalone') {
-      this.addStandaloneTopic();
+      this.addStandalonePoll();
     }
   }
 
-  private addTopic(): void {
+  private addPoll(): void {
     const projectId = this.projectId();
     const optionType = this.optionType();
     if (!projectId || optionType === undefined || !this.isValid()) {
@@ -180,7 +180,7 @@ export class TopicInputComponent {
           url: '',
         }));
 
-      this.projectStore.addTopic({
+      this.projectStore.addPoll({
         projectId,
         name: this.question(),
         description: this.description(),
@@ -196,7 +196,7 @@ export class TopicInputComponent {
           url: o.url,
         }));
 
-      this.projectStore.addTopic({
+      this.projectStore.addPoll({
         projectId,
         name: this.question(),
         description: this.description(),
@@ -206,7 +206,7 @@ export class TopicInputComponent {
     }
   }
 
-  private addStandaloneTopic(): void {
+  private addStandalonePoll(): void {
     const optionType = this.optionType();
     if (optionType === undefined || !this.isValid()) {
       return;
@@ -221,7 +221,7 @@ export class TopicInputComponent {
           url: '',
         }));
 
-      this.projectStore.addStandaloneTopic({
+      this.projectStore.addStandalonePoll({
         name: this.question(),
         description: this.description(),
         optionType: OptionType.Date,
@@ -236,7 +236,7 @@ export class TopicInputComponent {
           url: o.url,
         }));
 
-      this.projectStore.addStandaloneTopic({
+      this.projectStore.addStandalonePoll({
         name: this.question(),
         description: this.description(),
         optionType,
@@ -245,11 +245,11 @@ export class TopicInputComponent {
     }
   }
 
-  private editTopic(): void {
+  private editPoll(): void {
     const projectId = this.projectId();
-    const topicId = this.topicId();
+    const pollId = this.pollId();
     const optionType = this.optionType();
-    if (!projectId || !topicId || optionType === undefined || !this.isValid()) {
+    if (!projectId || !pollId || optionType === undefined || !this.isValid()) {
       return;
     }
 
@@ -263,9 +263,9 @@ export class TopicInputComponent {
           url: '',
         }));
 
-      this.projectStore.editTopic({
+      this.projectStore.editPoll({
         projectId,
-        topicId,
+        pollId,
         name: this.question(),
         description: this.description(),
         options,
@@ -281,9 +281,9 @@ export class TopicInputComponent {
           url: o.url,
         }));
 
-      this.projectStore.editTopic({
+      this.projectStore.editPoll({
         projectId,
-        topicId,
+        pollId,
         name: this.question(),
         description: this.description(),
         options,

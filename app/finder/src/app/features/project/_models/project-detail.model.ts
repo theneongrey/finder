@@ -6,7 +6,7 @@ export enum OptionType {
   Date,
 }
 
-export interface Topic {
+export interface Poll {
   id: string;
   name: string;
   description: string;
@@ -44,7 +44,7 @@ export interface Comment {
   quote?: string;
 }
 
-export interface TopicDetail {
+export interface PollDetail {
   id: string;
   name: string;
   description: string;
@@ -73,7 +73,7 @@ export interface Project {
   id: string;
   name: string;
   description: string;
-  topics: Topic[];
+  polls: Poll[];
   creator: string;
   role: ProjectRole;
   sharedWith: SharedWith[];

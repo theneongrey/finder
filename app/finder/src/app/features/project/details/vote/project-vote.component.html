@@ -17,14 +17,14 @@
   <div
     class="tw:flex-1 tw:flex tw:flex-col"
   >
-    <!-- Topic context: always at top -->
+    <!-- Poll context: always at top -->
     <div class="tw:text-center tw:flex tw:flex-col tw:items-center tw:pt-4">
       <h2>
-        {{ topic()?.name }}
+        {{ poll()?.name }}
       </h2>
-      @if (topic()?.description) {
+      @if (poll()?.description) {
         <p class="tw:text-sm tw:text-surface-500">
-          {{ topic()?.description }}
+          {{ poll()?.description }}
         </p>
       }
       @if (totalCount() > 0) {
@@ -47,7 +47,7 @@
         class="tw:absolute tw:opacity-0 tw:-left-4 tw:top-1/2 tw:-translate-y-1/2 tw:z-20 tw:pointer-events-none tw:transition-opacity tw:duration-150"
         [style.opacity]="leftCueOpacity()"
       >
-        @if (topic()?.optionType === OptionType.Rating) {
+        @if (poll()?.optionType === OptionType.Rating) {
           <div
             class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center tw:shadow-lg tw:gap-0.5"
           >
@@ -68,7 +68,7 @@
         class="tw:absolute tw:opacity-0 tw:-right-4 tw:top-1/2 tw:-translate-y-1/2 tw:z-20 tw:pointer-events-none tw:transition-opacity tw:duration-150"
         [style.opacity]="rightCueOpacity()"
       >
-        @if (topic()?.optionType === OptionType.Rating) {
+        @if (poll()?.optionType === OptionType.Rating) {
           <div
             class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-yellow-400 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center tw:shadow-lg tw:gap-0.5"
           >
@@ -94,12 +94,12 @@
         (mousedown)="onDragStart($event)"
         (touchstart)="onDragStart($event)"
       >
-        @if (topic()?.optionType === OptionType.Rating) {
+        @if (poll()?.optionType === OptionType.Rating) {
           <app-vote-card-rating
             [text]="option()?.text ?? ''"
             [description]="option()?.description ?? ''"
           />
-        } @else if (topic()?.optionType === OptionType.Date) {
+        } @else if (poll()?.optionType === OptionType.Date) {
           <app-vote-card-date
             [text]="option()?.text ?? ''"
           />
@@ -121,7 +121,7 @@
     </div>
 
     <app-vote-comment-button
-      [topicId]="topicId()"
+      [pollId]="pollId()"
       [optionText]="option()?.text"
     />
 
@@ -129,7 +129,7 @@
 
     <!-- Action buttons: always at bottom -->
     <div class="tw:flex tw:flex-col tw:items-center tw:pb-6">
-    @if (topic()?.optionType === OptionType.Rating) {
+    @if (poll()?.optionType === OptionType.Rating) {
       <div class="tw:flex tw:flex-col tw:items-center tw:gap-3">
         <div class="tw:flex tw:items-center tw:gap-2">
           @for (star of [1, 2, 3, 4, 5]; track star) {
@@ -185,7 +185,7 @@
     <div
       class="tw:bg-black/75 tw:backdrop-blur-sm tw:text-white tw:rounded-2xl tw:px-6 tw:py-3 tw:text-center tw:shadow-xl tw:mx-6 tw:max-w-sm"
     >
-      @if (topic()?.optionType === OptionType.Rating) {
+      @if (poll()?.optionType === OptionType.Rating) {
         <p class="tw:text-sm tw:leading-relaxed">
           {{ "project.vote.swipeHintPre" | translate
           }}<span class="tw:text-yellow-400 tw:font-bold">{{

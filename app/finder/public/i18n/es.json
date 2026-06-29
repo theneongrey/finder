@@ -50,20 +50,20 @@
     "tabs": {
       "overview": "Resumen",
       "projects": "Proyectos",
-      "topics": "Encuestas"
+      "polls": "Encuestas"
     },
     "overviewTab": {
       "greeting": "Hola {{name}}",
       "subtitle": "Tus proyectos y encuestas más recientes",
       "latestProjects": "Proyectos recientes",
-      "latestTopics": "Encuestas recientes",
+      "latestPolls": "Encuestas recientes",
       "viewAll": "Ver todos"
     },
     "projectsTab": {
       "title": "Proyectos",
       "subtitle": "Todos tus proyectos de un vistazo"
     },
-    "topicsTab": {
+    "pollsTab": {
       "title": "Encuestas",
       "subtitle": "Todas tus encuestas independientes de un vistazo"
     },
@@ -92,7 +92,7 @@
         "message": "¿Estás seguro de que quieres eliminar el proyecto \"{{name}}\"?",
         "accept": "Eliminar proyecto"
       },
-      "deleteTopicConfirm": {
+      "deletePollConfirm": {
         "header": "¿Eliminar encuesta?",
         "message": "¿Estás seguro de que quieres eliminar la encuesta \"{{name}}\"?",
         "accept": "Eliminar encuesta"
@@ -102,17 +102,17 @@
       "members": "Miembros",
       "invite": "Invitar",
       "noMembers": "Aún no hay otros miembros.",
-      "currentTopics": "Temas actuales",
-      "createNewTopic": "Crear nuevo tema",
-      "topicTypes": {
+      "currentPolls": "Encuestas actuales",
+      "createNewPoll": "Crear nueva encuesta",
+      "pollTypes": {
         "appointment": "Cita",
         "yesNo": "Sí/No",
         "rating": "Valoración"
       },
-      "deleteTopicConfirm": {
-        "header": "¿Eliminar tema?",
-        "message": "¿Estás seguro de que quieres eliminar el tema \"{{name}}\"?",
-        "accept": "Eliminar tema"
+      "deletePollConfirm": {
+        "header": "¿Eliminar encuesta?",
+        "message": "¿Estás seguro de que quieres eliminar la encuesta \"{{name}}\"?",
+        "accept": "Eliminar encuesta"
       },
       "item": {
         "options": "Opciones: {{count}}",
@@ -135,7 +135,7 @@
       "create": "Crear proyecto",
       "update": "Actualizar proyecto"
     },
-    "topicInput": {
+    "pollInput": {
       "createPoll": "Crear encuesta",
       "updatePoll": "Actualizar encuesta",
       "date": {

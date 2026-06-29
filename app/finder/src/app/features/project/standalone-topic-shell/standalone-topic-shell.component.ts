@@ -6,13 +6,13 @@ import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-standalone-topic-shell',
+  selector: 'app-standalone-poll-shell',
   imports: [TitleBarComponent, MaxHeightMinusHeaderDirective, TopicInputComponent],
   templateUrl: './standalone-topic-shell.component.html',
   host: { class: 'tw:block tw:h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StandaloneTopicShellComponent {
+export class StandalonePollShellComponent {
   constructor() {
     const titleBarService = inject(TitleBarService);
     const translateService = inject(TranslateService);

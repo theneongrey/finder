@@ -18,7 +18,7 @@ public class ProjectSharedWith
     public string? Picture { get; set; }
 }
 
-public class ProjectResponseTopic
+public class ProjectResponsePoll
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
@@ -34,7 +34,7 @@ public class ProjectResponse
     public required string Id { get; set; }
     public required string Name { get; set; }
     public string? Description { get; set; }
-    public required ProjectResponseTopic[] Topics { get; set; }
+    public required ProjectResponsePoll[] Polls { get; set; }
     public required int PermissionType { get; set; }
     public required string Creator { get; set; }
     public required ProjectRole Role { get; set; }
@@ -57,17 +57,17 @@ public static class ProjectMapper
         };
     }
 
-    public static ProjectResponseTopic ToProjectResponseTopic(this Entities.Topic topic, Guid? userId)
+    public static ProjectResponsePoll ToProjectResponsePoll(this Entities.Poll poll, Guid? userId)
     {
-        return new ProjectResponseTopic
+        return new ProjectResponsePoll
         {
-            Id = topic.Id.ToString(),
-            Name = topic.Name,
-            Description = topic.Description,
-            OptionType = (int)topic.OptionType,
-            OptionCount = topic.Options.Count,
-            CommentCount = topic.Comments.Count,
-            NextOpenOptionId = topic.Options
+            Id = poll.Id.ToString(),
+            Name = poll.Name,
+            Description = poll.Description,
+            OptionType = (int)poll.OptionType,
+            OptionCount = poll.Options.Count,
+            CommentCount = poll.Comments.Count,
+            NextOpenOptionId = poll.Options
                 .Select(o => new {
                     Option = o,
                     UserChoice = o.Votes
@@ -115,9 +115,9 @@ public static class ProjectMapper
             Id = project.Id.ToString(),
             Name = project.Name,
             Description = project.Description,
-            Topics = project.Topics.OrderBy(t => t.Created).Select(t => t.ToProjectResponseTopic(userId)).ToArray(),
+            Polls = project.Polls.OrderBy(t => t.Created).Select(t => t.ToProjectResponsePoll(userId)).ToArray(),
             PermissionType = (int)project.VisibilityType,
-            Creator = project.Creator.Name ??  project.Creator.Email,
+            Creator = project.Creator.Name ?? project.Creator.Email,
             Role = project.GetRole(userId),
             SharedWith = sharedWith.ToArray()
         };

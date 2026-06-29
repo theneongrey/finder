@@ -2,11 +2,11 @@ export interface ProjectOverview {
   id: string;
   name: string;
   description: string;
-  topics: {
+  polls: {
     id: string;
     name: string;
   }[];
-  topicCount: number;
+  pollCount: number;
   creator: string;
   lastUpdated: string;
 }

@@ -1,23 +1,23 @@
 @let _projectId = projectId();
 @if (_projectId) {
   <div class="tw:flex tw:flex-col tw:gap-6 tw:p-4 tw:pb-8">
-    @if (topic(); as topic) {
+    @if (poll(); as poll) {
       <app-vote-overview-summary
-        [topic]="topic"
-        [commentsCount]="topic.comments.length"
+        [poll]="poll"
+        [commentsCount]="poll.comments.length"
         [projectId]="_projectId"
-        [topicId]="topicId()"
+        [pollId]="pollId()"
       />
 
       <app-option-list
-        [options]="topic.options"
+        [options]="poll.options"
         [projectId]="_projectId"
-        [topicId]="topicId()"
-        [optionType]="topic.optionType"
+        [pollId]="pollId()"
+        [optionType]="poll.optionType"
       />
 
       <app-comments-section
-        [comments]="topic.comments"
+        [comments]="poll.comments"
         (addComment)="addComment($event)"
       />
     } @else {

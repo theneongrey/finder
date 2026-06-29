@@ -4,11 +4,11 @@
   <div class="tw:flex tw:justify-between tw:items-start tw:mb-3">
     <div>
       <h2>
-        {{ topic().name }}
+        {{ poll().name }}
       </h2>
-      @if (topic().description) {
+      @if (poll().description) {
         <p class="tw:text-sm tw:text-gray-500 tw:mt-1">
-          {{ topic().description }}
+          {{ poll().description }}
         </p>
       }
       <div class="tw:flex tw:items-center tw:gap-2 tw:mt-1">
@@ -49,7 +49,7 @@
       <p-button
         [label]="'project.votesOverview.continueVoting' | translate"
         icon="fa-solid fa-arrow-right-arrow-left"
-        [routerLink]="['/project/detail', projectId(), 'vote', topicId()]"
+        [routerLink]="['/project/detail', projectId(), 'vote', pollId()]"
         size="small"
       />
     }

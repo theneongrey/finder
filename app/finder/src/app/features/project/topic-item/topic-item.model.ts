@@ -1,7 +1,7 @@
 import { OptionType } from '../_models/project-detail.model';
 
-export interface TopicItem {
-  topicId: string;
+export interface PollItem {
+  pollId: string;
   projectId: string;
   name: string;
   description: string;

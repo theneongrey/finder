@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Finder.Business.Project.Configuration;
 
-public class TopicConfiguration : IEntityTypeConfiguration<Topic>
+public class PollConfiguration : IEntityTypeConfiguration<Poll>
 {
-    public void Configure(EntityTypeBuilder<Topic> builder)
+    public void Configure(EntityTypeBuilder<Poll> builder)
     {
         builder.HasKey(p => p.Id);
-        
+
         builder.Property(p => p.Name)
             .HasMaxLength(1024);
 
@@ -17,10 +17,10 @@ public class TopicConfiguration : IEntityTypeConfiguration<Topic>
             .HasMaxLength(200);
 
         builder.HasMany(p => p.Options)
-            .WithOne(p => p.Topic);
+            .WithOne(p => p.Poll);
 
         builder.HasMany(p => p.Comments)
-            .WithOne(p => p.Topic);
+            .WithOne(p => p.Poll);
 
         builder.Property(p => p.OptionType)
             .HasConversion<int>();

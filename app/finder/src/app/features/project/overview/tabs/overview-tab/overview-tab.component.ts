@@ -9,15 +9,15 @@ import { Button } from 'primeng/button';
 import { ProjectStore } from '../../../_data/project.store';
 import { UserStore } from '../../../../../common/data/user.store';
 import { ProjectItemComponent } from '../../project-item/project-item.component';
-import { TopicItemComponent } from '../../../topic-item/topic-item.component';
-import { TopicItem } from '../../../topic-item/topic-item.model';
+import { PollItemComponent } from '../../../topic-item/topic-item.component';
+import { PollItem } from '../../../topic-item/topic-item.model';
 import { ProjectOverview } from '../../../_models/project-overview.model';
 import { computed } from '@angular/core';
 import { OptionType } from '../../../_models/project-detail.model';
 
 @Component({
   selector: 'app-overview-tab',
-  imports: [TranslatePipe, Button, ProjectItemComponent, TopicItemComponent],
+  imports: [TranslatePipe, Button, ProjectItemComponent, PollItemComponent],
   templateUrl: './overview-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,13 +26,13 @@ export class OverviewTabComponent {
   private readonly userStore = inject(UserStore);
 
   projectDeletionRequested = output<ProjectOverview>();
-  topicDeletionRequested = output<TopicItem>();
+  pollDeletionRequested = output<PollItem>();
 
   user = this.userStore.user;
   recentProjects = computed(() => this.projectStore.projects().slice(0, 2));
-  recentTopics = computed(() =>
+  recentPolls = computed(() =>
     this.projectStore
-      .standaloneTopics()
+      .standalonePolls()
       .slice(0, 3)
       .map((t) => ({
         ...t,
@@ -44,7 +44,7 @@ export class OverviewTabComponent {
     this.projectStore.setActiveTab('projects');
   }
 
-  switchToTopics() {
-    this.projectStore.setActiveTab('topics');
+  switchToPolls() {
+    this.projectStore.setActiveTab('polls');
   }
 }

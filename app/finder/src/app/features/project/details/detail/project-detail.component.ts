@@ -11,7 +11,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TopicItemComponent } from '../../topic-item/topic-item.component';
+import { PollItemComponent } from '../../topic-item/topic-item.component';
 import { RouterLink } from '@angular/router';
 import { Avatar } from 'primeng/avatar';
 import { AvatarGroup } from 'primeng/avatargroup';
@@ -30,7 +30,7 @@ import { AddCardComponent } from '../../../../common/ui/components/add-card/add-
     Button,
     AddCardComponent,
     ReactiveFormsModule,
-    TopicItemComponent,
+    PollItemComponent,
     RouterLink,
     Avatar,
     AvatarGroup,
@@ -52,12 +52,12 @@ export class ProjectDetailComponent {
   project = this.projectStore.currentProject;
 
   showShare = model(false);
-  topics = computed(() => {
+  polls = computed(() => {
     const project = this.project();
     return (
-      project?.topics.map((t) => ({
+      project?.polls.map((t) => ({
         ...t,
-        topicId: t.id,
+        pollId: t.id,
         projectId: project.id,
       })) ?? []
     );
@@ -75,23 +75,23 @@ export class ProjectDetailComponent {
     });
   }
 
-  showDeleteTopicDialog(id: string, title: string) {
+  showDeletePollDialog(id: string, title: string) {
     this.confirmationService.confirm({
       header: this.translateService.instant(
-        'project.detail.deleteTopicConfirm.header',
+        'project.detail.deletePollConfirm.header',
       ),
       message: this.translateService.instant(
-        'project.detail.deleteTopicConfirm.message',
+        'project.detail.deletePollConfirm.message',
         {
           name: title,
         },
       ),
       acceptLabel: this.translateService.instant(
-        'project.detail.deleteTopicConfirm.accept',
+        'project.detail.deletePollConfirm.accept',
       ),
       rejectLabel: this.translateService.instant('project.common.cancel'),
       accept: () => {
-        this.projectStore.deleteTopic(id);
+        this.projectStore.deletePoll(id);
       },
     });
   }

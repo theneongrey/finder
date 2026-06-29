@@ -22,7 +22,7 @@ import { ProjectStore } from '../../../_data/project.store';
 export class VoteCommentButtonComponent {
   private readonly projectStore = inject(ProjectStore);
 
-  topicId = input('');
+  pollId = input('');
   optionText = input<string | undefined>(undefined);
 
   commentPopover = viewChild<Popover>('commentPopover');
@@ -39,7 +39,7 @@ export class VoteCommentButtonComponent {
       return;
     }
     this.projectStore.addComment({
-      topicId: this.topicId(),
+      pollId: this.pollId(),
       content,
       quote: this.optionText(),
     });

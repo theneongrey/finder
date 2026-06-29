@@ -6,7 +6,7 @@
         class="tw:flex-1 tw:bg-gray-50 tw:rounded-lg"
         maxlength="100"
         [placeholder]="
-          'project.topicInput.yesNo.optionPlaceholder'
+          'project.pollInput.yesNo.optionPlaceholder'
             | translate: { number: index() + 1 }
         "
         [(ngModel)]="option().text"
@@ -45,7 +45,7 @@
             pSize="small"
             maxlength="100"
             [placeholder]="
-              'project.topicInput.yesNo.optionDescriptionPlaceholder'
+              'project.pollInput.yesNo.optionDescriptionPlaceholder'
                 | translate
             "
             #descriptionInput
@@ -78,7 +78,7 @@
               pSize="small"
               maxlength="2048"
               [placeholder]="
-                'project.topicInput.yesNo.urlPlaceholder' | translate
+                'project.pollInput.yesNo.urlPlaceholder' | translate
               "
               #linkInput
               [(ngModel)]="option().url"
@@ -88,7 +88,7 @@
           </div>
           @if (urlError()) {
             <p-message severity="error" class="tw:ml-5">{{
-              "project.topicInput.yesNo.urlError" | translate
+              "project.pollInput.yesNo.urlError" | translate
             }}</p-message>
           }
         </div>
@@ -108,7 +108,7 @@
               (click)="toggleDescription()"
             >
               <i class="fa-solid fa-plus" style="font-size: 11px"></i>
-              {{ "project.topicInput.yesNo.addDescription" | translate }}
+              {{ "project.pollInput.yesNo.addDescription" | translate }}
             </button>
           }
           @if (!showLink()) {
@@ -118,7 +118,7 @@
               (click)="toggleLink()"
             >
               <i class="fa-solid fa-plus" style="font-size: 11px"></i>
-              {{ "project.topicInput.yesNo.addLink" | translate }}
+              {{ "project.pollInput.yesNo.addLink" | translate }}
             </button>
           }
         </div>

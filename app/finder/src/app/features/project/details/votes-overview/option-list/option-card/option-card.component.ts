@@ -23,7 +23,7 @@ export class OptionCardComponent {
   option = input.required<OptionDetail>();
   isMostVoted = input(false);
   projectId = input('');
-  topicId = input('');
+  pollId = input('');
 
   voteIcon(choice: string | null): string {
     if (choice === '1') {

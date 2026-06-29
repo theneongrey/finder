@@ -36,7 +36,7 @@ export const projectRoutes: Routes = [
     path: 'add-standalone',
     loadComponent: () =>
       import('./standalone-topic-shell/standalone-topic-shell.component').then(
-        (m) => m.StandaloneTopicShellComponent,
+        (m) => m.StandalonePollShellComponent,
       ),
     data: {
       backRoute: '/project/',
@@ -60,7 +60,7 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'topic/add',
+        path: 'poll/add',
         loadComponent: () =>
           import('./details/topic-input/topic-input.component').then(
             (m) => m.TopicInputComponent,
@@ -72,7 +72,7 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'topic/edit/yesno/:topicId',
+        path: 'poll/edit/yesno/:pollId',
         loadComponent: () =>
           import('./details/topic-input/topic-input.component').then(
             (m) => m.TopicInputComponent,
@@ -85,7 +85,7 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'topic/edit/rating/:topicId',
+        path: 'poll/edit/rating/:pollId',
         loadComponent: () =>
           import('./details/topic-input/topic-input.component').then(
             (m) => m.TopicInputComponent,
@@ -98,7 +98,7 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'topic/edit/date/:topicId',
+        path: 'poll/edit/date/:pollId',
         loadComponent: () =>
           import('./details/topic-input/topic-input.component').then(
             (m) => m.TopicInputComponent,
@@ -111,7 +111,7 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'vote/:topicId/:optionId',
+        path: 'vote/:pollId/:optionId',
         loadComponent: () =>
           import('./details/vote/project-vote.component').then(
             (m) => m.ProjectVoteComponent,
@@ -122,7 +122,7 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'vote/:topicId',
+        path: 'vote/:pollId',
         loadComponent: () =>
           import('./details/vote/project-vote.component').then(
             (m) => m.ProjectVoteComponent,
@@ -133,7 +133,7 @@ export const projectRoutes: Routes = [
         },
       },
       {
-        path: 'votes-overview/:topicId',
+        path: 'votes-overview/:pollId',
         loadComponent: () =>
           import('./details/votes-overview/votes-overview.component').then(
             (m) => m.VotesOverviewComponent,

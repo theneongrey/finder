@@ -1,6 +1,6 @@
-export interface StandaloneTopicOverview {
+export interface StandalonePollOverview {
   projectId: string;
-  topicId: string;
+  pollId: string;
   name: string;
   description: string;
   optionType: number;

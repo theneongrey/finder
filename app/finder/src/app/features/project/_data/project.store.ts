@@ -11,14 +11,14 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, map, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { ProjectOverview } from '../_models/project-overview.model';
-import { StandaloneTopicOverview } from '../_models/standalone-topic-overview.model';
+import { StandalonePollOverview } from '../_models/standalone-topic-overview.model';
 import { ProjectService } from '../_services/project.service';
 import { Router } from '@angular/router';
 import {
   Comment,
   OptionType,
   Project,
-  TopicDetail,
+  PollDetail,
 } from '../_models/project-detail.model';
 import { PermissionService } from '../_services/permission.service';
 import { LoggerService } from '../../../common/services/logger.service';
@@ -27,10 +27,10 @@ export const ProjectStore = signalStore(
   { providedIn: 'root' },
   withState({
     projects: [] as ProjectOverview[],
-    standaloneTopics: [] as StandaloneTopicOverview[],
-    activeTab: 'overview' as 'overview' | 'projects' | 'topics',
+    standalonePolls: [] as StandalonePollOverview[],
+    activeTab: 'overview' as 'overview' | 'projects' | 'polls',
     currentProject: undefined as Project | undefined,
-    currentTopic: undefined as TopicDetail | undefined,
+    currentPoll: undefined as PollDetail | undefined,
   }),
   withComputed((store) => ({
     projectId: computed(() => store.currentProject()?.id),
@@ -70,18 +70,18 @@ export const ProjectStore = signalStore(
       ),
     ),
 
-    setActiveTab(tab: 'overview' | 'projects' | 'topics') {
+    setActiveTab(tab: 'overview' | 'projects' | 'polls') {
       patchState(store, { activeTab: tab });
     },
 
-    getStandaloneTopics: rxMethod<void>(
+    getStandalonePolls: rxMethod<void>(
       pipe(
         switchMap(() => {
-          return store.projectService.getStandaloneTopics().pipe(
+          return store.projectService.getStandalonePolls().pipe(
             tapResponse({
-              next: (topics) => {
+              next: (polls) => {
                 patchState(store, {
-                  standaloneTopics: topics.sort(
+                  standalonePolls: polls.sort(
                     (a, b) =>
                       new Date(b.lastUpdated).getTime() -
                       new Date(a.lastUpdated).getTime(),
@@ -90,7 +90,7 @@ export const ProjectStore = signalStore(
               },
               error: (error) => {
                 store.loggerService.log(
-                  '[ProjectStore] Error while loading standalone topics',
+                  '[ProjectStore] Error while loading standalone polls',
                   error,
                 );
               },
@@ -100,7 +100,7 @@ export const ProjectStore = signalStore(
       ),
     ),
 
-    addStandaloneTopic: rxMethod<{
+    addStandalonePoll: rxMethod<{
       name: string;
       description: string;
       optionType: OptionType;
@@ -109,13 +109,13 @@ export const ProjectStore = signalStore(
       pipe(
         switchMap((payload) => {
           return store.projectService
-            .addStandaloneTopic(payload.name, payload.description, payload.optionType)
+            .addStandalonePoll(payload.name, payload.description, payload.optionType)
             .pipe(
-              switchMap((responseTopic) => {
+              switchMap((responsePoll) => {
                 const optionRequests = payload.options?.length
                   ? payload.options.map((o) =>
                       store.projectService.addOption(
-                        responseTopic.topicId,
+                        responsePoll.pollId,
                         o.text,
                         o.description,
                         o.url,
@@ -125,19 +125,19 @@ export const ProjectStore = signalStore(
 
                 return (
                   optionRequests.length ? forkJoin(optionRequests) : of([])
-                ).pipe(map(() => responseTopic));
+                ).pipe(map(() => responsePoll));
               }),
               tapResponse({
-                next: (responseTopic) => {
+                next: (responsePoll) => {
                   patchState(store, {
-                    standaloneTopics: [responseTopic, ...store.standaloneTopics()],
-                    activeTab: 'topics',
+                    standalonePolls: [responsePoll, ...store.standalonePolls()],
+                    activeTab: 'polls',
                   });
                   store.router.navigate(['/project/overview']);
                 },
                 error: (error) => {
                   store.loggerService.log(
-                    '[ProjectStore] Error while adding a standalone topic',
+                    '[ProjectStore] Error while adding a standalone poll',
                     error,
                   );
                 },
@@ -168,18 +168,18 @@ export const ProjectStore = signalStore(
       ),
     ),
 
-    getTopic: rxMethod<string>(
+    getPoll: rxMethod<string>(
       pipe(
-        tap(() => patchState(store, { currentTopic: undefined })),
+        tap(() => patchState(store, { currentPoll: undefined })),
         switchMap((id) => {
-          return store.projectService.getTopic(id).pipe(
+          return store.projectService.getPoll(id).pipe(
             tapResponse({
-              next: (topic) => {
-                patchState(store, { currentTopic: topic });
+              next: (poll) => {
+                patchState(store, { currentPoll: poll });
               },
               error: (error) => {
                 store.loggerService.log(
-                  '[ProjectStore] Error while loading topic',
+                  '[ProjectStore] Error while loading poll',
                   error,
                 );
               },
@@ -249,7 +249,7 @@ export const ProjectStore = signalStore(
               next: () => {
                 patchState(store, {
                   projects: store.projects().filter((p) => p.id !== projectId),
-                  standaloneTopics: store.standaloneTopics().filter((t) => t.projectId !== projectId),
+                  standalonePolls: store.standalonePolls().filter((t) => t.projectId !== projectId),
                 });
               },
               error: (error) => {
@@ -264,7 +264,7 @@ export const ProjectStore = signalStore(
       ),
     ),
 
-    addTopic: rxMethod<{
+    addPoll: rxMethod<{
       projectId: string;
       name: string;
       description: string;
@@ -272,20 +272,20 @@ export const ProjectStore = signalStore(
       options?: { text: string; description: string; url: string }[];
     }>(
       pipe(
-        switchMap((topic) => {
+        switchMap((poll) => {
           return store.projectService
-            .addTopic(
-              topic.projectId,
-              topic.name,
-              topic.optionType,
-              topic.description,
+            .addPoll(
+              poll.projectId,
+              poll.name,
+              poll.optionType,
+              poll.description,
             )
             .pipe(
-              switchMap((responseTopic) => {
-                const optionRequests = topic.options?.length
-                  ? topic.options.map((o) =>
+              switchMap((responsePoll) => {
+                const optionRequests = poll.options?.length
+                  ? poll.options.map((o) =>
                       store.projectService.addOption(
-                        responseTopic.id,
+                        responsePoll.id,
                         o.text,
                         o.description,
                         o.url,
@@ -296,14 +296,14 @@ export const ProjectStore = signalStore(
                 return (
                   optionRequests.length ? forkJoin(optionRequests) : of([])
                 ).pipe(
-                  map((addedOptions) => ({ responseTopic, addedOptions })),
+                  map((addedOptions) => ({ responsePoll, addedOptions })),
                 );
               }),
               tapResponse({
-                next: ({ responseTopic, addedOptions }) => {
+                next: ({ responsePoll, addedOptions }) => {
                   store.loggerService.debug(
-                    `[ProjectStore] Added topic`,
-                    responseTopic,
+                    `[ProjectStore] Added poll`,
+                    responsePoll,
                   );
 
                   const currentProject = store.currentProject();
@@ -311,13 +311,13 @@ export const ProjectStore = signalStore(
                     patchState(store, {
                       currentProject: {
                         ...currentProject,
-                        topics: [
-                          ...currentProject.topics,
+                        polls: [
+                          ...currentProject.polls,
                           {
-                            id: responseTopic.id,
-                            name: responseTopic.name,
-                            description: responseTopic.description,
-                            optionType: responseTopic.optionType,
+                            id: responsePoll.id,
+                            name: responsePoll.name,
+                            description: responsePoll.description,
+                            optionType: responsePoll.optionType,
                             optionCount: addedOptions.length,
                             commentCount: 0,
                             nextOpenOptionId: addedOptions[0]?.id,
@@ -327,11 +327,11 @@ export const ProjectStore = signalStore(
                     });
                   }
 
-                  store.router.navigate([`/project/detail/${topic.projectId}`]);
+                  store.router.navigate([`/project/detail/${poll.projectId}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(
-                    '[ProjectStore] Error while adding a topic',
+                    '[ProjectStore] Error while adding a poll',
                     error,
                   );
                 },
@@ -341,9 +341,9 @@ export const ProjectStore = signalStore(
       ),
     ),
 
-    editTopic: rxMethod<{
+    editPoll: rxMethod<{
       projectId: string;
-      topicId: string;
+      pollId: string;
       name: string;
       description: string;
       options: {
@@ -355,13 +355,13 @@ export const ProjectStore = signalStore(
       removedOptionIds: string[];
     }>(
       pipe(
-        switchMap((topic) => {
+        switchMap((poll) => {
           return store.projectService
-            .updateTopic(topic.topicId, topic.name, topic.description)
+            .updatePoll(poll.pollId, poll.name, poll.description)
             .pipe(
               switchMap(() => {
                 const optionRequests = [
-                  ...topic.options.map((o) =>
+                  ...poll.options.map((o) =>
                     o.id
                       ? store.projectService.updateOption(
                           o.id,
@@ -370,13 +370,13 @@ export const ProjectStore = signalStore(
                           o.url,
                         )
                       : store.projectService.addOption(
-                          topic.topicId,
+                          poll.pollId,
                           o.text,
                           o.description,
                           o.url,
                         ),
                   ),
-                  ...topic.removedOptionIds.map((id) =>
+                  ...poll.removedOptionIds.map((id) =>
                     store.projectService.deleteOption(id),
                   ),
                 ];
@@ -388,14 +388,14 @@ export const ProjectStore = signalStore(
               tapResponse({
                 next: () => {
                   store.loggerService.debug(
-                    `[ProjectStore] Updated topic`,
-                    topic.topicId,
+                    `[ProjectStore] Updated poll`,
+                    poll.pollId,
                   );
-                  store.router.navigate([`/project/detail/${topic.projectId}`]);
+                  store.router.navigate([`/project/detail/${poll.projectId}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(
-                    '[ProjectStore] Error while editing a topic',
+                    '[ProjectStore] Error while editing a poll',
                     error,
                   );
                 },
@@ -405,26 +405,26 @@ export const ProjectStore = signalStore(
       ),
     ),
 
-    deleteTopic: rxMethod<string>(
+    deletePoll: rxMethod<string>(
       pipe(
-        switchMap((topicId) => {
-          return store.projectService.deleteTopic(topicId).pipe(
+        switchMap((pollId) => {
+          return store.projectService.deletePoll(pollId).pipe(
             tapResponse({
               next: () => {
                 patchState(store, {
                   currentProject: {
                     ...store.currentProject()!,
-                    topics: [
+                    polls: [
                       ...store
                         .currentProject()!
-                        .topics.filter((t) => t.id !== topicId),
+                        .polls.filter((t) => t.id !== pollId),
                     ],
                   },
                 });
               },
               error: (error) => {
                 store.loggerService.log(
-                  '[ProjectStore] Error deleting topic',
+                  '[ProjectStore] Error deleting poll',
                   error,
                 );
               },
@@ -435,7 +435,7 @@ export const ProjectStore = signalStore(
     ),
 
     addOption: rxMethod<{
-      topicId: string;
+      pollId: string;
       text: string;
       description: string;
       url: string;
@@ -444,7 +444,7 @@ export const ProjectStore = signalStore(
         switchMap((option) => {
           return store.projectService
             .addOption(
-              option.topicId,
+              option.pollId,
               option.text,
               option.description,
               option.url,
@@ -452,13 +452,13 @@ export const ProjectStore = signalStore(
             .pipe(
               tapResponse({
                 next: (responseOption) => {
-                  const currentTopic = store.currentTopic();
-                  if (currentTopic?.id === option.topicId) {
+                  const currentPoll = store.currentPoll();
+                  if (currentPoll?.id === option.pollId) {
                     patchState(store, {
-                      currentTopic: {
-                        ...currentTopic,
+                      currentPoll: {
+                        ...currentPoll,
                         options: [
-                          ...currentTopic.options,
+                          ...currentPoll.options,
                           {
                             id: responseOption.id,
                             text: responseOption.text,
@@ -491,12 +491,12 @@ export const ProjectStore = signalStore(
           return store.projectService.deleteOption(optionId).pipe(
             tapResponse({
               next: () => {
-                const currentTopic = store.currentTopic();
-                if (currentTopic) {
+                const currentPoll = store.currentPoll();
+                if (currentPoll) {
                   patchState(store, {
-                    currentTopic: {
-                      ...currentTopic,
-                      options: currentTopic.options.filter(
+                    currentPoll: {
+                      ...currentPoll,
+                      options: currentPoll.options.filter(
                         (o) => o.id !== optionId,
                       ),
                     },
@@ -555,12 +555,12 @@ export const ProjectStore = signalStore(
           return store.projectService.vote(vote.optionId, vote.choice).pipe(
             tapResponse({
               next: () => {
-                const currentTopic = store.currentTopic();
-                if (currentTopic) {
+                const currentPoll = store.currentPoll();
+                if (currentPoll) {
                   patchState(store, {
-                    currentTopic: {
-                      ...currentTopic,
-                      options: currentTopic.options.map((o) =>
+                    currentPoll: {
+                      ...currentPoll,
+                      options: currentPoll.options.map((o) =>
                         o.id !== vote.optionId
                           ? o
                           : { ...o, choice: vote.choice },
@@ -582,23 +582,23 @@ export const ProjectStore = signalStore(
     ),
 
     addComment: rxMethod<{
-      topicId: string;
+      pollId: string;
       content: string;
       quote?: string;
     }>(
       pipe(
         switchMap((comment) => {
           return store.projectService
-            .addComment(comment.topicId, comment.content, comment.quote)
+            .addComment(comment.pollId, comment.content, comment.quote)
             .pipe(
               tapResponse({
                 next: (addedComment: Comment) => {
-                  const currentTopic = store.currentTopic();
-                  if (currentTopic?.id === comment.topicId) {
+                  const currentPoll = store.currentPoll();
+                  if (currentPoll?.id === comment.pollId) {
                     patchState(store, {
-                      currentTopic: {
-                        ...currentTopic,
-                        comments: [...currentTopic.comments, addedComment],
+                      currentPoll: {
+                        ...currentPoll,
+                        comments: [...currentPoll.comments, addedComment],
                       },
                     });
                   }

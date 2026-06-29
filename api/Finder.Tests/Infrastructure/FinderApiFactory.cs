@@ -110,14 +110,14 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         return project;
     }
 
-    public async Task<Topic> SeedTopic(Guid projectId, string name = "Test Topic",
+    public async Task<Poll> SeedPoll(Guid projectId, string name = "Test Poll",
         OptionType optionType = OptionType.YesNo, string description = "")
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var project = await db.Projects.FindAsync(projectId)
                       ?? throw new InvalidOperationException($"Project {projectId} not found. Call SeedProject first.");
-        var topic = new Topic
+        var poll = new Poll
         {
             Id = Guid.NewGuid(),
             Name = name,
@@ -125,18 +125,18 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             OptionType = optionType,
             Project = project,
         };
-        db.Topics.Add(topic);
+        db.Polls.Add(poll);
         await db.SaveChangesAsync();
-        return topic;
+        return poll;
     }
 
-    public async Task<Option> SeedOption(Guid topicId, string text = "Test Option", string description = "",
+    public async Task<Option> SeedOption(Guid pollId, string text = "Test Option", string description = "",
         string url = "", string previewImageUrl = "")
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var topic = await db.Topics.FindAsync(topicId)
-                    ?? throw new InvalidOperationException($"Topic {topicId} not found. Call SeedTopic first.");
+        var poll = await db.Polls.FindAsync(pollId)
+                    ?? throw new InvalidOperationException($"Poll {pollId} not found. Call SeedPoll first.");
         var option = new Option
         {
             Id = Guid.NewGuid(),
@@ -144,7 +144,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             Description = description,
             Url = url,
             PreviewImageUrl = previewImageUrl,
-            Topic = topic
+            Poll = poll
         };
         db.Options.Add(option);
         await db.SaveChangesAsync();

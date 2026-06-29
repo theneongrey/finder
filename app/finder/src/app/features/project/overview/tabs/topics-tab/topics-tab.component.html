@@ -1,15 +1,15 @@
 <h2 class="tw:mb-0">
-  {{ "project.topicsTab.title" | translate }}
+  {{ "project.pollsTab.title" | translate }}
 </h2>
 <p class="tw:opacity-60 tw:mt-1 tw:mb-6">
-  {{ "project.topicsTab.subtitle" | translate }}
+  {{ "project.pollsTab.subtitle" | translate }}
 </p>
 
 <div class="tw:grid tw:gap-4 tw:grid-cols-auto-fit tw:pb-8">
-  @for (topic of standaloneTopics(); track topic.topicId) {
-    <app-topic-item
-      [topic]="topic"
-      (deletionRequested)="deletionRequested.emit(topic)"
+  @for (poll of standalonePolls(); track poll.pollId) {
+    <app-poll-item
+      [poll]="poll"
+      (deletionRequested)="deletionRequested.emit(poll)"
     />
   }
   <app-add-card

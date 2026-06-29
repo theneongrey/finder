@@ -41,14 +41,14 @@
       }
     </div>
 
-    @if (topics().length > 0) {
-      <h2 class="tw:mb-4">{{ "project.detail.currentTopics" | translate }}</h2>
+    @if (polls().length > 0) {
+      <h2 class="tw:mb-4">{{ "project.detail.currentPolls" | translate }}</h2>
 
       <div class="tw:flex tw:flex-col tw:gap-4">
-        @for (topic of topics(); track topic.id) {
-          <app-topic-item
-            [topic]="topic"
-            (deletionRequested)="showDeleteTopicDialog(topic.id, topic.name)"
+        @for (poll of polls(); track poll.id) {
+          <app-poll-item
+            [poll]="poll"
+            (deletionRequested)="showDeletePollDialog(poll.id, poll.name)"
           />
         }
       </div>
@@ -57,9 +57,9 @@
     @if (role() >= ProjectRole.Maintainer) {
       <div class="tw:pb-8 tw:mt-4">
         <app-add-card
-          [cto]="'project.detail.createNewTopic' | translate"
+          [cto]="'project.detail.createNewPoll' | translate"
           icon="fa-plus"
-          [routerLink]="['/project/detail', project.id, 'topic', 'add']"
+          [routerLink]="['/project/detail', project.id, 'poll', 'add']"
         />
       </div>
     }

@@ -10,6 +10,6 @@ public class Option : BaseEntity
     public required string Url { get; set; }
     public required string PreviewImageUrl { get; set; }
 
-    public required Topic Topic { get; set; }
+    public required Poll Poll { get; set; }
     public List<Vote> Votes { get; set; } = [];
 }

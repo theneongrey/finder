@@ -9,7 +9,7 @@ namespace Finder.Database;
 public class AppDbContext : DbContext
 {
     public DbSet<Project> Projects { get; set; }
-    public DbSet<Topic> Topics { get; set; }
+    public DbSet<Poll> Polls { get; set; }
     public DbSet<Option> Options { get; set; }
     public DbSet<Vote> Votes { get; set; }
     public DbSet<Comment> Comments { get; set; }

@@ -32,7 +32,7 @@
 <section>
   <div class="tw:flex tw:justify-between tw:items-center tw:mb-3">
     <h3 class="tw:m-0">
-      {{ "project.overviewTab.latestTopics" | translate }}
+      {{ "project.overviewTab.latestPolls" | translate }}
     </h3>
     <p-button
       [text]="true"
@@ -40,14 +40,14 @@
       icon="fa-solid fa-chevron-right"
       iconPos="right"
       size="small"
-      (onClick)="switchToTopics()"
+      (onClick)="switchToPolls()"
     />
   </div>
   <div class="tw:flex tw:flex-col tw:gap-3">
-    @for (topic of recentTopics(); track topic.topicId) {
-      <app-topic-item
-        [topic]="topic"
-        (deletionRequested)="topicDeletionRequested.emit(topic)"
+    @for (poll of recentPolls(); track poll.pollId) {
+      <app-poll-item
+        [poll]="poll"
+        (deletionRequested)="pollDeletionRequested.emit(poll)"
       />
     }
   </div>

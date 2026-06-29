@@ -25,8 +25,8 @@ public class VoteService
             .Include(option => option.Votes)
             .ThenInclude(vote => vote.Person)
             .FirstOrDefaultAsync(o =>
-                o.Id == optionId && (o.Topic.Project.Creator.Id == UserId ||
-                                     o.Topic.Project.Permissions.Any(p => p.PersonKey == UserId)));
+                o.Id == optionId && (o.Poll.Project.Creator.Id == UserId ||
+                                     o.Poll.Project.Permissions.Any(p => p.PersonKey == UserId)));
 
         if (option is null)
         {

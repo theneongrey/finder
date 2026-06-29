@@ -27,26 +27,26 @@ public class ProjectService
     public async Task<List<Entities.Project>> GetAll()
     {
         return await _dbContext.Projects
-            .Include(p => p.Topics)
+            .Include(p => p.Polls)
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .Where(p => !p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
             .ToListAsync();
     }
 
-    public async Task<List<Entities.Project>> GetAllStandaloneTopics()
+    public async Task<List<Entities.Project>> GetAllStandalonePolls()
     {
         return await _dbContext.Projects
-            .Include(p => p.Topics)
+            .Include(p => p.Polls)
             .ThenInclude(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
-            .Include(p => p.Topics)
+            .Include(p => p.Polls)
             .ThenInclude(t => t.Comments)
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .Where(p => p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
-            .Where(p => p.Topics.Any())
+            .Where(p => p.Polls.Any())
             .ToListAsync();
     }
 
@@ -72,7 +72,7 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> CreateStandaloneTopic(string name, string description, OptionType optionType)
+    public async Task<Result<Entities.Project>> CreateStandalonePoll(string name, string description, OptionType optionType)
     {
         var userRequest = await _userService.GetUser();
         if (!userRequest.IsSuccess)
@@ -90,7 +90,7 @@ public class ProjectService
             VisibilityType = VisibilityType.VisibleForSelectedOnly
         };
 
-        var topic = new Topic
+        var poll = new Poll
         {
             Id = Guid.NewGuid(),
             Name = name,
@@ -99,7 +99,7 @@ public class ProjectService
             Project = project
         };
 
-        project.Topics.Add(topic);
+        project.Polls.Add(poll);
         _dbContext.Projects.Add(project);
         await _dbContext.SaveChangesAsync();
         return Result<Entities.Project>.Success(project);
@@ -148,10 +148,10 @@ public class ProjectService
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
-            .Include(p => p.Topics)
+            .Include(p => p.Polls)
             .ThenInclude(t => t.Options)
             .ThenInclude(o => o.Votes)
-            .Include(p => p.Topics)
+            .Include(p => p.Polls)
             .ThenInclude(t => t.Comments)
             .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
                                               p.Permissions.Any(permission => permission.PersonKey == UserId)))
@@ -172,11 +172,11 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Topic>> AddTopic(AddTopicRequest topicRequest)
+    public async Task<Result<Poll>> AddPoll(AddPollRequest pollRequest)
     {
         var projectResult = await _dbContext.Projects
-            .Include(p => p.Topics)
-            .Where(p => p.Id == topicRequest.ProjectId && (p.Creator.Id == UserId ||
+            .Include(p => p.Polls)
+            .Where(p => p.Id == pollRequest.ProjectId && (p.Creator.Id == UserId ||
                                                            p.Permissions.Any(permission =>
                                                                permission.Person.Id == UserId &&
                                                                permission.PermissionType >= PermissionType.Maintainer)))
@@ -184,64 +184,64 @@ public class ProjectService
 
         if (projectResult == null)
         {
-            return Result<Topic>.Fail(404);
+            return Result<Poll>.Fail(404);
         }
 
-        var topic = new Topic
+        var poll = new Poll
         {
             Id = Guid.NewGuid(),
-            OptionType = topicRequest.OptionType,
-            Name = topicRequest.Name,
-            Description = topicRequest.Description,
+            OptionType = pollRequest.OptionType,
+            Name = pollRequest.Name,
+            Description = pollRequest.Description,
             Project = projectResult
         };
 
-        _dbContext.Topics.Add(topic);
+        _dbContext.Polls.Add(poll);
 
         await _dbContext.SaveChangesAsync();
-        return Result<Topic>.Success(topic);
+        return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result<Topic>> UpdateTopic(Guid topicId, string name, string description)
+    public async Task<Result<Poll>> UpdatePoll(Guid pollId, string name, string description)
     {
-        var topic = await _dbContext.Topics
+        var poll = await _dbContext.Polls
             .Include(t => t.Project)
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
-            .Where(t => t.Id == topicId && (t.Project.Creator.Id == UserId ||
+            .Where(t => t.Id == pollId && (t.Project.Creator.Id == UserId ||
                                             t.Project.Permissions.Any(permission =>
                                                 permission.Person.Id == UserId &&
                                                 permission.PermissionType >= PermissionType.Maintainer)))
             .SingleOrDefaultAsync();
 
-        if (topic is null)
+        if (poll is null)
         {
-            return Result<Topic>.Fail(404);
+            return Result<Poll>.Fail(404);
         }
 
-        topic.Name = name;
-        topic.Description = description;
+        poll.Name = name;
+        poll.Description = description;
 
-        if (topic.Project.IsStandalone)
+        if (poll.Project.IsStandalone)
         {
-            topic.Project.Name = name;
+            poll.Project.Name = name;
         }
 
         await _dbContext.SaveChangesAsync();
-        return Result<Topic>.Success(topic);
+        return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result> DeleteTopic(Guid topicId)
+    public async Task<Result> DeletePoll(Guid pollId)
     {
-        var deletedTopics = await _dbContext.Topics
-            .Where(t => t.Id == topicId && (t.Project.Creator.Id == UserId ||
+        var deletedPolls = await _dbContext.Polls
+            .Where(t => t.Id == pollId && (t.Project.Creator.Id == UserId ||
                                             t.Project.Permissions.Any(permission =>
                                                 permission.Person.Id == UserId &&
                                                 permission.PermissionType >= PermissionType.Maintainer)))
             .ExecuteDeleteAsync();
 
-        if (deletedTopics == 0)
+        if (deletedPolls == 0)
         {
             return Result.Fail(404);
         }
@@ -250,38 +250,38 @@ public class ProjectService
         return Result.Success();
     }
 
-    public async Task<Result<Topic>> GetTopic(Guid topicId)
+    public async Task<Result<Poll>> GetPoll(Guid pollId)
     {
-        var topic = await _dbContext.Topics
+        var poll = await _dbContext.Polls
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
             .Include(t => t.Comments)
             .ThenInclude(c => c.Person)
-            .Where(t => t.Id == topicId && (
+            .Where(t => t.Id == pollId && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
                 t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
             .SingleOrDefaultAsync();
 
-        if (topic is null)
+        if (poll is null)
         {
-            return Result<Topic>.Fail(404);
+            return Result<Poll>.Fail(404);
         }
 
-        return Result<Topic>.Success(topic);
+        return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result<Option>> AddOptionToTopic(AddOptionToTopicRequest topicRequest)
+    public async Task<Result<Option>> AddOptionToPoll(AddOptionToPollRequest pollRequest)
     {
-        var topic = await _dbContext.Topics
-            .Where(t => t.Id == topicRequest.TopicId && (t.Project.Creator.Id == UserId ||
+        var poll = await _dbContext.Polls
+            .Where(t => t.Id == pollRequest.PollId && (t.Project.Creator.Id == UserId ||
                                                          t.Project.Permissions.Any(permission =>
                                                              permission.Person.Id == UserId &&
                                                              permission.PermissionType >= PermissionType.Maintainer)))
             .FirstOrDefaultAsync();
 
-        if (topic is null)
+        if (poll is null)
         {
             return Result<Option>.Fail(404);
         }
@@ -289,13 +289,13 @@ public class ProjectService
         var option = new Option
         {
             Id = Guid.NewGuid(),
-            Text = topicRequest.Text,
-            Description = topicRequest.Description,
-            Url = topicRequest.Url,
+            Text = pollRequest.Text,
+            Description = pollRequest.Description,
+            Url = pollRequest.Url,
             PreviewImageUrl = "",
-            Topic = topic
+            Poll = poll
         };
-        topic.Options.Add(option);
+        poll.Options.Add(option);
 
         _dbContext.Options.Add(option);
 
@@ -308,8 +308,8 @@ public class ProjectService
         var option = await _dbContext.Options
             .Include(o => o.Votes)
             .ThenInclude(v => v.Person)
-            .Where(o => o.Id == optionId && (o.Topic.Project.Creator.Id == UserId ||
-                                             o.Topic.Project.Permissions.Any(permission =>
+            .Where(o => o.Id == optionId && (o.Poll.Project.Creator.Id == UserId ||
+                                             o.Poll.Project.Permissions.Any(permission =>
                                                  permission.Person.Id == UserId &&
                                                  permission.PermissionType >= PermissionType.Maintainer)))
             .FirstOrDefaultAsync();
@@ -329,8 +329,8 @@ public class ProjectService
     public async Task<Result> DeleteOption(Guid optionId)
     {
         var deletedOption = await _dbContext.Options
-            .Where(o => o.Id == optionId && (o.Topic.Project.Creator.Id == UserId ||
-                                             o.Topic.Project.Permissions.Any(permission =>
+            .Where(o => o.Id == optionId && (o.Poll.Project.Creator.Id == UserId ||
+                                             o.Poll.Project.Permissions.Any(permission =>
                                                  permission.Person.Id == UserId &&
                                                  permission.PermissionType >= PermissionType.Maintainer)))
             .ExecuteDeleteAsync();
@@ -346,14 +346,14 @@ public class ProjectService
 
     public async Task<Result<Comment>> AddComment(AddCommentRequest request)
     {
-        var topic = await _dbContext.Topics
-            .Where(t => t.Id == request.TopicId && (
+        var poll = await _dbContext.Polls
+            .Where(t => t.Id == request.PollId && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
                 t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
             .FirstOrDefaultAsync();
 
-        if (topic is null)
+        if (poll is null)
         {
             return Result<Comment>.Fail(404);
         }
@@ -365,10 +365,10 @@ public class ProjectService
             Id = Guid.NewGuid(),
             Content = request.Content,
             Quote = request.Quote,
-            Topic = topic,
+            Poll = poll,
             Person = user
         };
-        topic.Comments.Add(comment);
+        poll.Comments.Add(comment);
 
         _dbContext.Comments.Add(comment);
 

@@ -1,9 +1,9 @@
 namespace Finder.Business.Project.Api.Responses;
 
-public class StandaloneTopicOverviewResponse
+public class StandalonePollOverviewResponse
 {
     public required string ProjectId { get; init; }
-    public required string TopicId { get; init; }
+    public required string PollId { get; init; }
     public required string Name { get; init; }
     public required string Description { get; init; }
     public required int OptionType { get; init; }
@@ -13,24 +13,24 @@ public class StandaloneTopicOverviewResponse
     public string? NextOpenOptionId { get; init; }
 }
 
-public static class StandaloneTopicOverviewMapper
+public static class StandalonePollOverviewMapper
 {
-    public static StandaloneTopicOverviewResponse ToStandaloneTopicOverviewResponse(this Entities.Project project, Guid? userId)
+    public static StandalonePollOverviewResponse ToStandalonePollOverviewResponse(this Entities.Project project, Guid? userId)
     {
-        var topic = project.Topics.First();
-        var newestDate = topic.Edited > project.Edited ? topic.Edited : project.Edited;
+        var poll = project.Polls.First();
+        var newestDate = poll.Edited > project.Edited ? poll.Edited : project.Edited;
 
-        return new StandaloneTopicOverviewResponse
+        return new StandalonePollOverviewResponse
         {
             ProjectId = project.Id.ToString(),
-            TopicId = topic.Id.ToString(),
-            Name = topic.Name,
-            Description = topic.Description,
-            OptionType = (int)topic.OptionType,
-            OptionCount = topic.Options.Count,
-            CommentCount = topic.Comments.Count,
+            PollId = poll.Id.ToString(),
+            Name = poll.Name,
+            Description = poll.Description,
+            OptionType = (int)poll.OptionType,
+            OptionCount = poll.Options.Count,
+            CommentCount = poll.Comments.Count,
             LastUpdated = DateTime.SpecifyKind(newestDate, DateTimeKind.Utc),
-            NextOpenOptionId = topic.Options
+            NextOpenOptionId = poll.Options
                 .Select(o => new {
                     Option = o,
                     UserChoice = o.Votes

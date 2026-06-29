@@ -26,17 +26,17 @@ import { TitleBarService } from '../../../../common/services/title-bar.service';
 export class VotesOverviewComponent {
   private readonly projectStore = inject(ProjectStore);
 
-  topicId = input('');
+  pollId = input('');
   projectId = this.projectStore.projectId;
 
-  topic = this.projectStore.currentTopic;
+  poll = this.projectStore.currentPoll;
   project = this.projectStore.currentProject;
 
   constructor() {
     const titleService = inject(TitleBarService);
 
     effect(() => {
-      this.projectStore.getTopic(this.topicId());
+      this.projectStore.getPoll(this.pollId());
     });
 
     effect(() => {
@@ -48,6 +48,6 @@ export class VotesOverviewComponent {
   }
 
   addComment(content: string) {
-    this.projectStore.addComment({ topicId: this.topicId(), content });
+    this.projectStore.addComment({ pollId: this.pollId(), content });
   }
 }

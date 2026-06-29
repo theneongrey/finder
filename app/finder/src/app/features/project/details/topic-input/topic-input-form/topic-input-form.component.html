@@ -1,7 +1,7 @@
 <div class="tw:pb-28 tw:flex tw:flex-col tw:gap-3 tw:mx-4">
   <div class="tw:flex tw:flex-col tw:gap-1">
     <label class="tw:text-sm tw:font-semibold tw:px-1" for="question">
-      {{ "project.topicInput.yesNo.question" | translate }}
+      {{ "project.pollInput.yesNo.question" | translate }}
     </label>
     <div
       class="tw:bg-gray-50 tw:rounded-xl tw:border tw:border-transparent tw:transition-all tw:duration-300"
@@ -13,7 +13,7 @@
         class="tw:w-full tw:bg-transparent"
         autocomplete="off"
         [placeholder]="
-          'project.topicInput.yesNo.questionPlaceholder' | translate
+          'project.pollInput.yesNo.questionPlaceholder' | translate
         "
         [ngModel]="question()"
         (ngModelChange)="questionChange.emit($event)"
@@ -23,14 +23,14 @@
 
   <div class="tw:flex tw:flex-col tw:gap-1">
     <label class="tw:text-sm tw:font-semibold tw:px-1" for="description">
-      {{ "project.topicInput.yesNo.description" | translate }}
+      {{ "project.pollInput.yesNo.description" | translate }}
     </label>
     <app-auto-resize-textarea
       name="description"
       inputId="description"
       [maxlength]="200"
       [placeholder]="
-        'project.topicInput.yesNo.descriptionPlaceholder' | translate
+        'project.pollInput.yesNo.descriptionPlaceholder' | translate
       "
       [ngModel]="description()"
       (ngModelChange)="descriptionChange.emit($event)"
@@ -40,13 +40,13 @@
   <app-topic-options
     [titleKey]="
       optionType() === OptionType.Date
-        ? 'project.topicInput.date.answerOptions'
-        : 'project.topicInput.yesNo.answerOptions'
+        ? 'project.pollInput.date.answerOptions'
+        : 'project.pollInput.yesNo.answerOptions'
     "
     [subtitleKey]="
       optionType() === OptionType.Date
-        ? 'project.topicInput.date.minOptions'
-        : 'project.topicInput.yesNo.minOptions'
+        ? 'project.pollInput.date.minOptions'
+        : 'project.pollInput.yesNo.minOptions'
     "
     [optionType]="optionType()"
     [options]="options()"
@@ -63,8 +63,8 @@
     class="tw:w-full tw:max-w-md"
     [label]="
       mode() !== 'edit'
-        ? ('project.topicInput.createPoll' | translate)
-        : ('project.topicInput.updatePoll' | translate)
+        ? ('project.pollInput.createPoll' | translate)
+        : ('project.pollInput.updatePoll' | translate)
     "
     [icon]="
       mode() !== 'edit'

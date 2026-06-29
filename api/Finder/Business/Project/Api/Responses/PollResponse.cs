@@ -1,67 +1,67 @@
 namespace Finder.Business.Project.Api.Responses;
 
-public class TopicResponseVote
+public class PollResponseVote
 {
     public required string Person { get; set; }
     public required string Choice { get; set; }
 }
 
-public class TopicResponseOption
+public class PollResponseOption
 {
     public required string Id { get; set; }
     public required string Text { get; set; }
     public required string Description { get; set; }
     public required string Url { get; set; }
     public required string PreviewImageUrl { get; set; }
-    public required TopicResponseVote[] Votes { get; set; }
+    public required PollResponseVote[] Votes { get; set; }
     public required string? Choice { get; set; }
 }
 
-public class TopicResponse
+public class PollResponse
 {
     public required string Id { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
     public required int OptionType { get; set; }
-    public required TopicResponseOption[] Options { get; set; }
+    public required PollResponseOption[] Options { get; set; }
     public required CommentResponse[] Comments { get; set; }
 }
 
-public static class TopicMapper
+public static class PollMapper
 {
-    public static TopicResponseVote ToTopicResponseVote(this Entities.Vote vote)
+    public static PollResponseVote ToPollResponseVote(this Entities.Vote vote)
     {
-        return new TopicResponseVote
+        return new PollResponseVote
         {
             Person = vote.Person.Name ?? vote.Person.Email,
             Choice = vote.Choice
         };
     }
 
-    public static TopicResponseOption ToTopicResponseOption(this Entities.Option option, Guid? userId)
+    public static PollResponseOption ToPollResponseOption(this Entities.Option option, Guid? userId)
     {
-        return new TopicResponseOption
+        return new PollResponseOption
         {
             Id = option.Id.ToString(),
             Text = option.Text,
             Description = option.Description,
             Url = option.Url,
             PreviewImageUrl = option.PreviewImageUrl,
-            Votes = option.Votes.Select(v => v.ToTopicResponseVote()).ToArray(),
+            Votes = option.Votes.Select(v => v.ToPollResponseVote()).ToArray(),
             Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice
         };
     }
 
-    public static TopicResponse ToTopicResponse(this Entities.Topic topic, Guid? userId)
+    public static PollResponse ToPollResponse(this Entities.Poll poll, Guid? userId)
     {
-        return new TopicResponse
+        return new PollResponse
         {
-            Id = topic.Id.ToString(),
-            Name = topic.Name,
-            Description = topic.Description,
-            OptionType = (int)topic.OptionType,
-            Options = topic.Options.OrderBy(o => o.Created).Select(o => o.ToTopicResponseOption(userId)).ToArray(),
-            Comments = topic.Comments
+            Id = poll.Id.ToString(),
+            Name = poll.Name,
+            Description = poll.Description,
+            OptionType = (int)poll.OptionType,
+            Options = poll.Options.OrderBy(o => o.Created).Select(o => o.ToPollResponseOption(userId)).ToArray(),
+            Comments = poll.Comments
                 .OrderBy(c => c.Created)
                 .Select(c => c.ToCommentResponse())
                 .ToArray()

@@ -21,7 +21,7 @@ export class OptionListComponent {
 
   options = input.required<OptionDetail[]>();
   projectId = input('');
-  topicId = input('');
+  pollId = input('');
   optionType = input(OptionType.YesNo);
 
   sortedOptions = computed(() =>

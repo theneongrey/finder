@@ -54,16 +54,16 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
   voteCardRef = viewChild.required<ElementRef<HTMLElement>>('voteCard');
 
   projectId = this.projectStore.projectId;
-  topicId = input('');
+  pollId = input('');
   optionId = input('');
-  topic = this.projectStore.currentTopic;
+  poll = this.projectStore.currentPoll;
   option = computed(() =>
-    this.topic()?.options.find((o) => o.id === this.optionId()),
+    this.poll()?.options.find((o) => o.id === this.optionId()),
   );
   votedCount = computed(
-    () => this.topic()?.options.filter((o) => parseInt(o.choice ?? '0') > 0).length ?? 0,
+    () => this.poll()?.options.filter((o) => parseInt(o.choice ?? '0') > 0).length ?? 0,
   );
-  totalCount = computed(() => this.topic()?.options.length ?? 0);
+  totalCount = computed(() => this.poll()?.options.length ?? 0);
 
   private readonly SWIPE_THRESHOLD = 75;
 
@@ -85,7 +85,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
   constructor() {
     effect(() => {
-      this.projectStore.getTopic(this.topicId());
+      this.projectStore.getPoll(this.pollId());
     });
     effect(() => {
       const currentProject = this.projectStore.currentProject();
@@ -101,7 +101,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (!this.optionId()) {
-      if (this.projectId() && this.topic()) {
+      if (this.projectId() && this.poll()) {
         this.navigateToNextOption(undefined, true);
       } else {
         void this.router.navigate(['/project']);
@@ -209,7 +209,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
       '/project/detail/',
       this.projectId(),
       'votes-overview',
-      this.topicId(),
+      this.pollId(),
     ]);
   }
 
@@ -242,7 +242,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => {
       this.swipeInProgress = false;
-      const isRating = this.topic()?.optionType === OptionType.Rating;
+      const isRating = this.poll()?.optionType === OptionType.Rating;
       this.castVote(isRating ? (goRight ? '5' : '1') : (goRight ? '1' : '2'));
     }, 500);
   }
@@ -273,12 +273,12 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     ignore: string | undefined,
     replaceUrl = false,
   ): void {
-    const options = this.topic()!.options;
+    const options = this.poll()!.options;
 
     const nextUnvoted = options.find((o) => !o.choice && o.id !== ignore);
     if (nextUnvoted) {
       void this.router.navigate(
-        ['/project/detail/', this.projectId(), 'vote', this.topicId()!, nextUnvoted.id],
+        ['/project/detail/', this.projectId(), 'vote', this.pollId()!, nextUnvoted.id],
         { replaceUrl },
       );
       return;
@@ -294,7 +294,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
         .sort((a, b) => parseInt(b.choice!) - parseInt(a.choice!))[0];
       if (nextSkipped) {
         void this.router.navigate(
-          ['/project/detail/', this.projectId(), 'vote', this.topicId()!, nextSkipped.id],
+          ['/project/detail/', this.projectId(), 'vote', this.pollId()!, nextSkipped.id],
           { replaceUrl },
         );
         return;
@@ -302,7 +302,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     }
 
     void this.router.navigate(
-      ['/project/detail/', this.projectId(), 'votes-overview', this.topicId()!],
+      ['/project/detail/', this.projectId(), 'votes-overview', this.pollId()!],
       { replaceUrl },
     );
   }

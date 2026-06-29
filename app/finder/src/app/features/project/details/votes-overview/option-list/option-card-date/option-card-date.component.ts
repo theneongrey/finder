@@ -23,7 +23,7 @@ export class OptionCardDateComponent {
   option = input.required<OptionDetail>();
   isMostVoted = input(false);
   projectId = input('');
-  topicId = input('');
+  pollId = input('');
 
   parsedDates = (): { start: Date | null; end: Date | null } => {
     const parts = this.option().text.split(';');

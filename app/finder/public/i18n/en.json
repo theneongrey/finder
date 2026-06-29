@@ -50,20 +50,20 @@
     "tabs": {
       "overview": "Overview",
       "projects": "Projects",
-      "topics": "Polls"
+      "polls": "Polls"
     },
     "overviewTab": {
       "greeting": "Hello {{name}}",
       "subtitle": "Your latest projects and polls",
       "latestProjects": "Latest Projects",
-      "latestTopics": "Latest Polls",
+      "latestPolls": "Latest Polls",
       "viewAll": "View all"
     },
     "projectsTab": {
       "title": "Projects",
       "subtitle": "All your projects at a glance"
     },
-    "topicsTab": {
+    "pollsTab": {
       "title": "Polls",
       "subtitle": "All your standalone polls at a glance"
     },
@@ -92,7 +92,7 @@
         "message": "Are you sure that you want to delete project \"{{name}}\"?",
         "accept": "Delete project"
       },
-      "deleteTopicConfirm": {
+      "deletePollConfirm": {
         "header": "Delete poll?",
         "message": "Are you sure that you want to delete poll \"{{name}}\"?",
         "accept": "Delete poll"
@@ -102,17 +102,17 @@
       "members": "Members",
       "invite": "Invite",
       "noMembers": "No other members yet.",
-      "currentTopics": "Current topics",
-      "createNewTopic": "Create new topic",
-      "topicTypes": {
+      "currentPolls": "Current polls",
+      "createNewPoll": "Create new poll",
+      "pollTypes": {
         "appointment": "Appointment",
         "yesNo": "Yes/No",
         "rating": "Rating"
       },
-      "deleteTopicConfirm": {
-        "header": "Delete topic?",
-        "message": "Are you sure that you want to delete topic \"{{name}}\"?",
-        "accept": "Delete topic"
+      "deletePollConfirm": {
+        "header": "Delete poll?",
+        "message": "Are you sure that you want to delete poll \"{{name}}\"?",
+        "accept": "Delete poll"
       },
       "item": {
         "options": "Options: {{count}}",
@@ -135,7 +135,7 @@
       "create": "Create project",
       "update": "Update project"
     },
-    "topicInput": {
+    "pollInput": {
       "createPoll": "Create poll",
       "updatePoll": "Update poll",
       "date": {

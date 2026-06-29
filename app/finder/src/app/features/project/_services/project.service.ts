@@ -1,14 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProjectOverview } from '../_models/project-overview.model';
-import { StandaloneTopicOverview } from '../_models/standalone-topic-overview.model';
+import { StandalonePollOverview } from '../_models/standalone-topic-overview.model';
 import {
   Comment,
   Option,
   OptionType,
+  Poll,
+  PollDetail,
   Project,
-  Topic,
-  TopicDetail,
 } from '../_models/project-detail.model';
 import { environment } from '../../../common/env/environment';
 import { LoggerService } from '../../../common/services/logger.service';
@@ -28,17 +28,17 @@ export class ProjectService {
     );
   }
 
-  getStandaloneTopics() {
-    this.loggerService.debug('[ProjectService] fetching standalone topics');
-    return this.httpClient.get<StandaloneTopicOverview[]>(
-      `${this.baseUrl}/api/project/standalone-topics`,
+  getStandalonePolls() {
+    this.loggerService.debug('[ProjectService] fetching standalone polls');
+    return this.httpClient.get<StandalonePollOverview[]>(
+      `${this.baseUrl}/api/project/standalone-polls`,
     );
   }
 
-  addStandaloneTopic(name: string, description: string, optionType: OptionType) {
-    this.loggerService.debug(`[ProjectService] adding standalone topic ${name}`);
-    return this.httpClient.post<StandaloneTopicOverview>(
-      `${this.baseUrl}/api/project/standalone-topic`,
+  addStandalonePoll(name: string, description: string, optionType: OptionType) {
+    this.loggerService.debug(`[ProjectService] adding standalone poll ${name}`);
+    return this.httpClient.post<StandalonePollOverview>(
+      `${this.baseUrl}/api/project/standalone-poll`,
       { name, description, optionType },
     );
   }
@@ -72,21 +72,21 @@ export class ProjectService {
     return this.httpClient.delete(`${this.baseUrl}/api/project/${id}`);
   }
 
-  getTopic(id: string) {
-    this.loggerService.debug('[ProjectService] fetching topic');
-    return this.httpClient.get<TopicDetail>(
-      `${this.baseUrl}/api/project/topic/${id}`,
+  getPoll(id: string) {
+    this.loggerService.debug('[ProjectService] fetching poll');
+    return this.httpClient.get<PollDetail>(
+      `${this.baseUrl}/api/project/poll/${id}`,
     );
   }
 
-  addTopic(
+  addPoll(
     projectId: string,
     name: string,
     optionType: OptionType,
     description: string,
   ) {
-    this.loggerService.debug(`[ProjectService] adding topic ${name}`);
-    return this.httpClient.post<Topic>(`${this.baseUrl}/api/project/topic`, {
+    this.loggerService.debug(`[ProjectService] adding poll ${name}`);
+    return this.httpClient.post<Poll>(`${this.baseUrl}/api/project/poll`, {
       name: name,
       projectId: projectId,
       optionType: optionType,
@@ -94,30 +94,30 @@ export class ProjectService {
     });
   }
 
-  updateTopic(topicId: string, name: string, description: string) {
-    this.loggerService.debug(`[ProjectService] updating topic ${topicId}`);
-    return this.httpClient.put<TopicDetail>(
-      `${this.baseUrl}/api/project/topic/${topicId}`,
+  updatePoll(pollId: string, name: string, description: string) {
+    this.loggerService.debug(`[ProjectService] updating poll ${pollId}`);
+    return this.httpClient.put<PollDetail>(
+      `${this.baseUrl}/api/project/poll/${pollId}`,
       { name, description },
     );
   }
 
-  deleteTopic(topicId: string) {
-    this.loggerService.debug(`[ProjectService] deleting topic ${topicId}`);
+  deletePoll(pollId: string) {
+    this.loggerService.debug(`[ProjectService] deleting poll ${pollId}`);
     return this.httpClient.delete(
-      `${this.baseUrl}/api/project/topic/${topicId}`,
+      `${this.baseUrl}/api/project/poll/${pollId}`,
     );
   }
 
-  addOption(topicId: string, text: string, description: string, url: string) {
+  addOption(pollId: string, text: string, description: string, url: string) {
     this.loggerService.debug(`[ProjectService] adding option ${text}`);
     return this.httpClient.post<Option>(
-      `${this.baseUrl}/api/project/topic/option`,
+      `${this.baseUrl}/api/project/poll/option`,
       {
         text: text,
         description: description,
         url: url,
-        topicId: topicId,
+        pollId: pollId,
       },
     );
   }
@@ -130,7 +130,7 @@ export class ProjectService {
   ) {
     this.loggerService.debug(`[ProjectService] updating option ${optionId}`);
     return this.httpClient.put<Option>(
-      `${this.baseUrl}/api/project/topic/option/${optionId}`,
+      `${this.baseUrl}/api/project/poll/option/${optionId}`,
       { text, description, url },
     );
   }
@@ -138,7 +138,7 @@ export class ProjectService {
   deleteOption(optionId: string) {
     this.loggerService.debug(`[ProjectService] deleting option ${optionId}`);
     return this.httpClient.delete(
-      `${this.baseUrl}/api/project/topic/option/${optionId}`,
+      `${this.baseUrl}/api/project/poll/option/${optionId}`,
     );
   }
 
@@ -147,21 +147,21 @@ export class ProjectService {
       `[ProjectService] voted for ${optionId} with ${choice}`,
     );
     return this.httpClient.put(
-      `${this.baseUrl}/api/project/topic/vote/${optionId}`,
+      `${this.baseUrl}/api/project/poll/vote/${optionId}`,
       {
         choice,
       },
     );
   }
 
-  addComment(topicId: string, content: string, quote?: string) {
+  addComment(pollId: string, content: string, quote?: string) {
     this.loggerService.debug(
-      `[ProjectService] adding comment to topic ${topicId}`,
+      `[ProjectService] adding comment to poll ${pollId}`,
     );
     return this.httpClient.post<Comment>(
-      `${this.baseUrl}/api/project/topic/comment`,
+      `${this.baseUrl}/api/project/poll/comment`,
       {
-        topicId,
+        pollId,
         content,
         quote,
       },

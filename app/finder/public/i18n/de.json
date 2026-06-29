@@ -50,20 +50,20 @@
     "tabs": {
       "overview": "Überblick",
       "projects": "Projekte",
-      "topics": "Umfragen"
+      "polls": "Umfragen"
     },
     "overviewTab": {
       "greeting": "Hallo {{name}}",
       "subtitle": "Deine neuesten Projekte und Umfragen",
       "latestProjects": "Neueste Projekte",
-      "latestTopics": "Neueste Umfragen",
+      "latestPolls": "Neueste Umfragen",
       "viewAll": "Alle ansehen"
     },
     "projectsTab": {
       "title": "Projekte",
       "subtitle": "Alle deine Projekte auf einen Blick"
     },
-    "topicsTab": {
+    "pollsTab": {
       "title": "Umfragen",
       "subtitle": "Alle deine eigenständigen Umfragen auf einen Blick"
     },
@@ -92,7 +92,7 @@
         "message": "Bist du sicher, dass du das Projekt \"{{name}}\" löschen möchtest?",
         "accept": "Projekt löschen"
       },
-      "deleteTopicConfirm": {
+      "deletePollConfirm": {
         "header": "Umfrage löschen?",
         "message": "Bist du sicher, dass du die Umfrage \"{{name}}\" löschen möchtest?",
         "accept": "Umfrage löschen"
@@ -102,14 +102,14 @@
       "members": "Mitglieder",
       "invite": "Einladen",
       "noMembers": "Noch keine weiteren Mitglieder.",
-      "currentTopics": "Aktuelle Umfragen",
-      "createNewTopic": "Neue Umfrage erstellen",
-      "topicTypes": {
+      "currentPolls": "Aktuelle Umfragen",
+      "createNewPoll": "Neue Umfrage erstellen",
+      "pollTypes": {
         "appointment": "Termin",
         "yesNo": "Ja/Nein",
         "rating": "Bewertung"
       },
-      "deleteTopicConfirm": {
+      "deletePollConfirm": {
         "header": "Umfrage löschen?",
         "message": "Bist du sicher, dass du die Umfrage \"{{name}}\" löschen möchtest?",
         "accept": "Umfrage löschen"
@@ -135,7 +135,7 @@
       "create": "Projekt erstellen",
       "update": "Projekt aktualisieren"
     },
-    "topicInput": {
+    "pollInput": {
       "createPoll": "Umfrage erstellen",
       "updatePoll": "Umfrage aktualisieren",
       "date": {

@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
 import { ProgressBar } from 'primeng/progressbar';
 import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TopicDetail } from '../../../_models/project-detail.model';
+import { PollDetail } from '../../../_models/project-detail.model';
 
 @Component({
   selector: 'app-vote-overview-summary',
@@ -17,18 +17,18 @@ import { TopicDetail } from '../../../_models/project-detail.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteOverviewSummaryComponent {
-  topic = input.required<TopicDetail>();
+  poll = input.required<PollDetail>();
   commentsCount = input(0);
   projectId = input('');
-  topicId = input('');
+  pollId = input('');
 
   votedCount = computed(
-    () => this.topic().options.filter((o) => o.choice).length,
+    () => this.poll().options.filter((o) => o.choice).length,
   );
 
-  totalCount = computed(() => this.topic().options.length);
+  totalCount = computed(() => this.poll().options.length);
 
-  hasOpenOptions = computed(() => this.topic().options.some((o) => !o.choice));
+  hasOpenOptions = computed(() => this.poll().options.some((o) => !o.choice));
 
   progressPercent = computed(() => {
     const total = this.totalCount();

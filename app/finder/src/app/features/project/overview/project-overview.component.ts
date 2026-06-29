@@ -5,7 +5,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectStore } from '../_data/project.store';
 import { ProjectOverview } from '../_models/project-overview.model';
-import { TopicItem } from '../topic-item/topic-item.model';
+import { PollItem } from '../topic-item/topic-item.model';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
@@ -45,12 +45,12 @@ export class ProjectOverviewComponent {
   private readonly titleBarService = inject(TitleBarService);
 
   projects = this.projectStore.projects;
-  standaloneTopics = this.projectStore.standaloneTopics;
+  standalonePolls = this.projectStore.standalonePolls;
   activeTab = this.projectStore.activeTab;
 
   constructor() {
     this.projectStore.getProjects();
-    this.projectStore.getStandaloneTopics();
+    this.projectStore.getStandalonePolls();
     this.titleBarService.clearTitle();
   }
 
@@ -59,7 +59,7 @@ export class ProjectOverviewComponent {
   }
 
   set activeTabValue(value: string) {
-    this.projectStore.setActiveTab(value as 'overview' | 'projects' | 'topics');
+    this.projectStore.setActiveTab(value as 'overview' | 'projects' | 'polls');
   }
 
   projectDeletionRequested(project: ProjectOverview) {
@@ -79,20 +79,20 @@ export class ProjectOverviewComponent {
     });
   }
 
-  topicDeletionRequested(topic: TopicItem) {
+  pollDeletionRequested(poll: PollItem) {
     this.confirmationService.confirm({
       header: this.translateService.instant(
-        'project.overview.deleteTopicConfirm.header',
+        'project.overview.deletePollConfirm.header',
       ),
       message: this.translateService.instant(
-        'project.overview.deleteTopicConfirm.message',
-        { name: topic.name },
+        'project.overview.deletePollConfirm.message',
+        { name: poll.name },
       ),
       acceptLabel: this.translateService.instant(
-        'project.overview.deleteTopicConfirm.accept',
+        'project.overview.deletePollConfirm.accept',
       ),
       rejectLabel: this.translateService.instant('project.common.cancel'),
-      accept: () => this.projectStore.deleteProject(topic.projectId),
+      accept: () => this.projectStore.deleteProject(poll.projectId),
     });
   }
 }

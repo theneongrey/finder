@@ -13,21 +13,21 @@
           [option]="option"
           [isMostVoted]="hasMostVotes(option)"
           [projectId]="projectId()"
-          [topicId]="topicId()"
+          [pollId]="pollId()"
         />
       } @else if (optionType() === OptionType.Rating) {
         <app-option-card-rating
           [option]="option"
           [isMostVoted]="hasMostVotes(option)"
           [projectId]="projectId()"
-          [topicId]="topicId()"
+          [pollId]="pollId()"
         />
       } @else {
         <app-option-card
           [option]="option"
           [isMostVoted]="hasMostVotes(option)"
           [projectId]="projectId()"
-          [topicId]="topicId()"
+          [pollId]="pollId()"
         />
       }
     }

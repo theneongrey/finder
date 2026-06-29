@@ -15,10 +15,10 @@
             projects().length
           }}</p-tag></p-tab
         >
-        <p-tab value="topics"
-          >{{ "project.tabs.topics" | translate }}
+        <p-tab value="polls"
+          >{{ "project.tabs.polls" | translate }}
           <p-tag class="tw:ml-1" [rounded]="true">{{
-            standaloneTopics().length
+            standalonePolls().length
           }}</p-tag></p-tab
         >
       </p-tablist>
@@ -26,7 +26,7 @@
         <p-tabpanel value="overview">
           <app-overview-tab
             (projectDeletionRequested)="projectDeletionRequested($event)"
-            (topicDeletionRequested)="topicDeletionRequested($event)"
+            (pollDeletionRequested)="pollDeletionRequested($event)"
           />
         </p-tabpanel>
         <p-tabpanel value="projects">
@@ -34,9 +34,9 @@
             (deletionRequested)="projectDeletionRequested($event)"
           />
         </p-tabpanel>
-        <p-tabpanel value="topics">
+        <p-tabpanel value="polls">
           <app-topics-tab
-            (deletionRequested)="topicDeletionRequested($event)"
+            (deletionRequested)="pollDeletionRequested($event)"
           />
         </p-tabpanel>
       </p-tabpanels>

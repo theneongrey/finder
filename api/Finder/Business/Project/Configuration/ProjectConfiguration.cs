@@ -15,7 +15,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Entities.Project>
         builder.Property(p => p.Description)
             .HasMaxLength(200);
 
-        builder.HasMany(p => p.Topics)
+        builder.HasMany(p => p.Polls)
             .WithOne(p => p.Project);
         
         builder.HasOne(p => p.Creator);

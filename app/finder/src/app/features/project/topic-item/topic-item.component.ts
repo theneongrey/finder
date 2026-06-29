@@ -16,10 +16,10 @@ import { SideColorCardComponent } from '../../../common/ui/components/side-color
 import { HierarchyByTypePipe } from '../details/detail/_pipe/hierarchy-by-type.pipe';
 import { TypeIconComponent } from '../details/detail/type-icon/type-icon.component';
 import { OptionType } from '../_models/project-detail.model';
-import { TopicItem } from './topic-item.model';
+import { PollItem } from './topic-item.model';
 
 @Component({
-  selector: 'app-topic-item',
+  selector: 'app-poll-item',
   imports: [
     Button,
     Tooltip,
@@ -33,10 +33,10 @@ import { TopicItem } from './topic-item.model';
   templateUrl: './topic-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopicItemComponent {
+export class PollItemComponent {
   private readonly translateService = inject(TranslateService);
 
-  topic = input.required<TopicItem>();
+  poll = input.required<PollItem>();
   deletionRequested = output();
 
   private editLabel = this.translateService.translate('project.common.edit');
@@ -45,29 +45,29 @@ export class TopicItemComponent {
   );
 
   menuItems = computed<MenuItem[]>(() => {
-    const topic = this.topic();
+    const poll = this.poll();
     return [
       {
         label: this.editLabel(),
         icon: 'fa-solid fa-pen',
         routerLink:
-          topic.optionType === OptionType.YesNo
+          poll.optionType === OptionType.YesNo
             ? [
                 '/project/detail',
-                topic.projectId,
-                'topic',
+                poll.projectId,
+                'poll',
                 'edit',
                 'yesno',
-                topic.topicId,
+                poll.pollId,
               ]
-            : topic.optionType === OptionType.Date
+            : poll.optionType === OptionType.Date
               ? [
                   '/project/detail',
-                  topic.projectId,
-                  'topic',
+                  poll.projectId,
+                  'poll',
                   'edit',
                   'date',
-                  topic.topicId,
+                  poll.pollId,
                 ]
               : undefined,
       },

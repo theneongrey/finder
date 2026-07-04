@@ -16,12 +16,6 @@ public class OptionConfiguration : IEntityTypeConfiguration<Option>
         builder.Property(p => p.Description)
             .HasMaxLength(100);
 
-        builder.Property(p => p.Url)
-            .HasMaxLength(2048);
-
-        builder.Property(p => p.PreviewImageUrl)
-            .HasMaxLength(2048);
-
         builder.HasMany(p => p.Votes)
             .WithOne(p => p.Option);
     }

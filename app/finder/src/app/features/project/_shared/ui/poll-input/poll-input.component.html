@@ -1,0 +1,18 @@
+@if (optionType() === undefined) {
+  <app-poll-type-selection (typeSelected)="optionType.set($event)" />
+} @else {
+  <app-poll-input-form
+    [optionType]="optionType()!"
+    [mode]="mode()"
+    [isValid]="isValid()"
+    [question]="question()"
+    (questionChange)="question.set($event)"
+    [description]="description()"
+    (descriptionChange)="description.set($event)"
+    [options]="options()"
+    [dateOptions]="dateOptions()"
+    (add)="addOption()"
+    (remove)="removeOption($event)"
+    (formSubmit)="submit()"
+  />
+}

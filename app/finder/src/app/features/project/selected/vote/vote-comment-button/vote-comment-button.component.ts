@@ -1,0 +1,54 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { Popover } from 'primeng/popover';
+import { ProjectStore } from '../../../_shared/data/project.store';
+
+@Component({
+  selector: 'app-vote-comment-button',
+  templateUrl: './vote-comment-button.component.html',
+  imports: [Button, Popover, InputText, FormsModule, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class VoteCommentButtonComponent {
+  private readonly projectStore = inject(ProjectStore);
+
+  pollId = input('');
+  optionText = input<string | undefined>(undefined);
+
+  commentPopover = viewChild<Popover>('commentPopover');
+  anchor = viewChild<ElementRef<HTMLElement>>('anchor');
+  commentText = '';
+
+  openCommentPopover(event: Event): void {
+    this.commentPopover()?.toggle(event, this.anchor()?.nativeElement);
+  }
+
+  submitComment(): void {
+    const content = this.commentText.trim();
+    if (!content) {
+      return;
+    }
+    this.projectStore.addComment({
+      pollId: this.pollId(),
+      content,
+      quote: this.optionText(),
+    });
+    this.commentText = '';
+    this.commentPopover()?.hide();
+  }
+
+  cancelComment(): void {
+    this.commentText = '';
+    this.commentPopover()?.hide();
+  }
+}

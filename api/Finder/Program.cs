@@ -1,10 +1,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using Scalar.AspNetCore;
 using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Setup;
 using Finder.Business.Permission.Api;
 using Finder.Business.Permission.Setup;
+using Finder.Business.Preview.Api;
+using Finder.Business.Preview.Setup;
 using Finder.Business.Project.Api;
 using Finder.Business.Project.Setup;
 using Finder.Business.Shared.Services;
@@ -34,24 +37,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.AddScoped<UserService>();
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddPolicy("auth", httpContext =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-            factory: _ => new FixedWindowRateLimiterOptions
-            {
-                PermitLimit = 5,
-                Window = TimeSpan.FromMinutes(1),
-                QueueLimit = 0
-            }));
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-});
-
 builder.Services.AddAuthServices(builder.Configuration);
 builder.Services.AddProjectServices();
 builder.Services.AddPermissionServices(builder.Configuration);
 builder.Services.AddUserServices();
+builder.Services.AddPreviewServices();
 
 var app = builder.Build();
 
@@ -68,6 +58,7 @@ app.WithAuthApi();
 app.WithProjectApi();
 app.WithPermissionApi();
 app.WithUserApi();
+app.WithUrlPreviewApi();
 
 if (app.Environment.IsDevelopment())
 {
@@ -83,6 +74,7 @@ if (app.Environment.IsDevelopment())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 //app.UseHttpsRedirection();

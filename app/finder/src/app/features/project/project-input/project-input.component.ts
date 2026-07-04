@@ -12,7 +12,7 @@ import { Button } from 'primeng/button';
 import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ProjectStore } from '../_data/project.store';
+import { ProjectStore } from '../_shared/data/project.store';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 

@@ -5,8 +5,7 @@ public class ProjectResponseOption
     public required string Id { get; set; }
     public required string Text { get; set; }
     public required string Description { get; set; }
-    public required string Url { get; set; }
-    public required string PreviewImageUrl { get; set; }
+    public PollResponseOptionMeta? Meta { get; set; }
     public required int Votes { get; set; }
     public required string? Choice { get; set; }
 }
@@ -50,8 +49,14 @@ public static class ProjectMapper
             Id = option.Id.ToString(),
             Text = option.Text,
             Description = option.Description,
-            Url = option.Url,
-            PreviewImageUrl = option.PreviewImageUrl,
+            Meta = option.Meta is null ? null : new PollResponseOptionMeta
+            {
+                Url = option.Meta.Url,
+                Title = option.Meta.Title,
+                Description = option.Meta.Description,
+                ImageUrl = option.Meta.ImageUrl,
+                SiteName = option.Meta.SiteName
+            },
             Votes = option.Votes.Count,
             Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice,
         };

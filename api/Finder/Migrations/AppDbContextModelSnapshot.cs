@@ -182,15 +182,48 @@ namespace Finder.Migrations
                     b.Property<Guid>("PollId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("PreviewImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PollId");
+
+                    b.ToTable("Options");
+                });
+
+            modelBuilder.Entity("Finder.Business.Project.Entities.OptionMeta", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTime>("Edited")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<string>("SiteName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -199,9 +232,7 @@ namespace Finder.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PollId");
-
-                    b.ToTable("Options");
+                    b.ToTable("OptionMetas");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Poll", b =>
@@ -368,6 +399,17 @@ namespace Finder.Migrations
                     b.Navigation("Poll");
                 });
 
+            modelBuilder.Entity("Finder.Business.Project.Entities.OptionMeta", b =>
+                {
+                    b.HasOne("Finder.Business.Project.Entities.Option", "Option")
+                        .WithOne("Meta")
+                        .HasForeignKey("Finder.Business.Project.Entities.OptionMeta", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Option");
+                });
+
             modelBuilder.Entity("Finder.Business.Project.Entities.Poll", b =>
                 {
                     b.HasOne("Finder.Business.Project.Entities.Project", "Project")
@@ -416,6 +458,8 @@ namespace Finder.Migrations
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
                 {
+                    b.Navigation("Meta");
+
                     b.Navigation("Votes");
                 });
 

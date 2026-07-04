@@ -3,16 +3,16 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ProjectStore } from '../_data/project.store';
-import { ProjectOverview } from '../_models/project-overview.model';
-import { PollItem } from '../topic-item/topic-item.model';
+import { ProjectStore } from '../_shared/data/project.store';
+import { ProjectOverview } from '../_shared/models/project-overview.model';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { OverviewTabComponent } from './tabs/overview-tab/overview-tab.component';
 import { ProjectsTabComponent } from './tabs/projects-tab/projects-tab.component';
-import { TopicsTabComponent } from './tabs/topics-tab/topics-tab.component';
+import { StandalonePollTabComponent } from './tabs/standalone-poll-tab/standalone-poll-tab.component';
 import { Tag } from 'primeng/tag';
+import { PollItem } from '../_shared/models/poll-item.model';
 
 @Component({
   selector: 'app-project-overview',
@@ -28,7 +28,7 @@ import { Tag } from 'primeng/tag';
     MaxHeightMinusHeaderDirective,
     OverviewTabComponent,
     ProjectsTabComponent,
-    TopicsTabComponent,
+    StandalonePollTabComponent,
     Tag,
   ],
   providers: [MessageService, ConfirmationService],

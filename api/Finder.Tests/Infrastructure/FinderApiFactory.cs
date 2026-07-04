@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Threading.RateLimiting;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
@@ -6,12 +7,16 @@ using Finder.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.RateLimiting;
+
 
 namespace Finder.Tests.Infrastructure;
 
@@ -46,6 +51,22 @@ public class FinderApiFactory : WebApplicationFactory<Program>
 
             services.AddAuthentication(TestAuthHandler.SchemeName)
                 .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { });
+
+            // Disable rate limiting in tests
+            var rateLimiterConfigDescriptors = services
+                .Where(d => d.ServiceType == typeof(IConfigureOptions<RateLimiterOptions>))
+                .ToList();
+            
+            foreach (var d in rateLimiterConfigDescriptors)
+            {
+                services.Remove(d);
+            }
+
+            services.AddRateLimiter(options =>
+            {
+                options.AddPolicy("auth", _ => RateLimitPartition.GetNoLimiter("auth"));
+                options.AddPolicy("preview", _ => RateLimitPartition.GetNoLimiter("preview"));
+            });
 
             services.PostConfigure<AuthenticationOptions>(options =>
             {
@@ -131,7 +152,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
     }
 
     public async Task<Option> SeedOption(Guid pollId, string text = "Test Option", string description = "",
-        string url = "", string previewImageUrl = "")
+        string? url = null)
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -142,10 +163,21 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             Id = Guid.NewGuid(),
             Text = text,
             Description = description,
-            Url = url,
-            PreviewImageUrl = previewImageUrl,
             Poll = poll
         };
+        if (url is not null)
+        {
+            option.Meta = new OptionMeta
+            {
+                Id = option.Id,
+                Url = url,
+                Title = "",
+                Description = "",
+                ImageUrl = "",
+                SiteName = "",
+                Option = option
+            };
+        }
         db.Options.Add(option);
         await db.SaveChangesAsync();
         return option;

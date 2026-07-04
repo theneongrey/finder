@@ -39,6 +39,9 @@ public class ProjectService
         return await _dbContext.Projects
             .Include(p => p.Polls)
             .ThenInclude(t => t.Options)
+            .ThenInclude(o => o.Meta)
+            .Include(p => p.Polls)
+            .ThenInclude(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
             .Include(p => p.Polls)
@@ -150,6 +153,9 @@ public class ProjectService
             .ThenInclude(p => p.Person)
             .Include(p => p.Polls)
             .ThenInclude(t => t.Options)
+            .ThenInclude(o => o.Meta)
+            .Include(p => p.Polls)
+            .ThenInclude(t => t.Options)
             .ThenInclude(o => o.Votes)
             .Include(p => p.Polls)
             .ThenInclude(t => t.Comments)
@@ -254,6 +260,8 @@ public class ProjectService
     {
         var poll = await _dbContext.Polls
             .Include(t => t.Options)
+            .ThenInclude(o => o.Meta)
+            .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
             .Include(t => t.Comments)
@@ -291,10 +299,22 @@ public class ProjectService
             Id = Guid.NewGuid(),
             Text = pollRequest.Text,
             Description = pollRequest.Description,
-            Url = pollRequest.Url,
-            PreviewImageUrl = "",
             Poll = poll
         };
+
+        if (pollRequest.Meta is not null)
+        {
+            option.Meta = new Entities.OptionMeta
+            {
+                Id = option.Id,
+                Url = pollRequest.Meta.Url,
+                Title = pollRequest.Meta.Title,
+                Description = pollRequest.Meta.Description,
+                ImageUrl = pollRequest.Meta.ImageUrl,
+                SiteName = pollRequest.Meta.SiteName,
+                Option = option
+            };
+        }
         poll.Options.Add(option);
 
         _dbContext.Options.Add(option);
@@ -303,9 +323,10 @@ public class ProjectService
         return Result<Option>.Success(option);
     }
 
-    public async Task<Result<Option>> UpdateOption(Guid optionId, string text, string description, string url)
+    public async Task<Result<Option>> UpdateOption(Guid optionId, UpdateOptionRequest request)
     {
         var option = await _dbContext.Options
+            .Include(o => o.Meta)
             .Include(o => o.Votes)
             .ThenInclude(v => v.Person)
             .Where(o => o.Id == optionId && (o.Poll.Project.Creator.Id == UserId ||
@@ -319,9 +340,39 @@ public class ProjectService
             return Result<Option>.Fail(404);
         }
 
-        option.Text = text;
-        option.Description = description;
-        option.Url = url;
+        option.Text = request.Text;
+        option.Description = request.Description;
+
+        if (request.Meta is not null)
+        {
+            if (option.Meta is not null)
+            {
+                option.Meta.Url = request.Meta.Url;
+                option.Meta.Title = request.Meta.Title;
+                option.Meta.Description = request.Meta.Description;
+                option.Meta.ImageUrl = request.Meta.ImageUrl;
+                option.Meta.SiteName = request.Meta.SiteName;
+            }
+            else
+            {
+                option.Meta = new Entities.OptionMeta
+                {
+                    Id = option.Id,
+                    Url = request.Meta.Url,
+                    Title = request.Meta.Title,
+                    Description = request.Meta.Description,
+                    ImageUrl = request.Meta.ImageUrl,
+                    SiteName = request.Meta.SiteName,
+                    Option = option
+                };
+            }
+        }
+        else if (option.Meta is not null)
+        {
+            _dbContext.OptionMetas.Remove(option.Meta);
+            option.Meta = null;
+        }
+
         await _dbContext.SaveChangesAsync();
         return Result<Option>.Success(option);
     }

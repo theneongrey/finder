@@ -12,25 +12,23 @@ import { Menu } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { SideColorCardComponent } from '../../../common/ui/components/side-color-card/side-color-card.component';
-import { HierarchyByTypePipe } from '../details/detail/_pipe/hierarchy-by-type.pipe';
 import { TypeIconComponent } from '../details/detail/type-icon/type-icon.component';
 import { OptionType } from '../_models/project-detail.model';
-import { PollItem } from './topic-item.model';
+import { PollItem } from './poll-item.model';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-poll-item',
   imports: [
     Button,
     Tooltip,
-    HierarchyByTypePipe,
     Menu,
-    SideColorCardComponent,
     TypeIconComponent,
     RouterLink,
     TranslatePipe,
+    Card,
   ],
-  templateUrl: './topic-item.component.html',
+  templateUrl: './poll-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollItemComponent {

@@ -1,7 +1,6 @@
 @let _project = project();
 
-<app-side-color-card
-  color="primary"
+<p-card
   class="tw:cursor-pointer"
   [routerLink]="['/project/detail', _project.id]"
 >
@@ -27,4 +26,4 @@
       <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
     </div>
   </div>
-</app-side-color-card>
+</p-card>

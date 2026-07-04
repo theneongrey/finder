@@ -3,14 +3,12 @@ import {
   Component,
   ElementRef,
   Injector,
-  OnInit,
   ViewChild,
   afterNextRender,
   inject,
   input,
   output,
   signal,
-  AfterViewInit,
   effect,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -19,21 +17,14 @@ import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionEntry } from '../topic-options.component';
-import { SideColorCardComponent } from '../../../../../../common/ui/components/side-color-card/side-color-card.component';
 import { UrlValidationService } from '../../../../../../common/utils/url-validation.service';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
   styleUrl: './option-card.component.css',
-  imports: [
-    FormsModule,
-    InputText,
-    Button,
-    Message,
-    SideColorCardComponent,
-    TranslatePipe,
-  ],
+  imports: [FormsModule, InputText, Button, Message, TranslatePipe, Card],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {

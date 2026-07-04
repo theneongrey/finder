@@ -8,8 +8,8 @@ import {
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProjectStore } from '../../../_data/project.store';
-import { PollItemComponent } from '../../../topic-item/topic-item.component';
-import { PollItem } from '../../../topic-item/topic-item.model';
+import { PollItemComponent } from '../../../poll-item/poll-item.component';
+import { PollItem } from '../../../poll-item/poll-item.model';
 import { AddCardComponent } from '../../../../../common/ui/components/add-card/add-card.component';
 import { OptionType } from '../../../_models/project-detail.model';
 

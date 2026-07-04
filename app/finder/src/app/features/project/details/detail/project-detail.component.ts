@@ -11,7 +11,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PollItemComponent } from '../../topic-item/topic-item.component';
+import { PollItemComponent } from '../../poll-item/poll-item.component';
 import { RouterLink } from '@angular/router';
 import { Avatar } from 'primeng/avatar';
 import { AvatarGroup } from 'primeng/avatargroup';

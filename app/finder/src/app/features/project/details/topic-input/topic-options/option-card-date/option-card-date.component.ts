@@ -9,18 +9,12 @@ import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DateOptionEntry } from '../topic-options.component';
-import { SideColorCardComponent } from '../../../../../../common/ui/components/side-color-card/side-color-card.component';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-option-card-date',
   templateUrl: './option-card-date.component.html',
-  imports: [
-    FormsModule,
-    Button,
-    DatePicker,
-    SideColorCardComponent,
-    TranslatePipe,
-  ],
+  imports: [FormsModule, Button, DatePicker, TranslatePipe, Card],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {

@@ -1,9 +1,6 @@
 @let _poll = poll();
 
-<app-side-color-card
-  [color]="_poll.optionType | hierarchyByType"
-  class="tw:cursor-pointer"
->
+<p-card>
   <div class="tw:flex tw:items-start tw:justify-between tw:mb-4 tw:gap-3">
     <div>
       <app-topic-type-icon [type]="_poll.optionType" />
@@ -66,12 +63,7 @@
               _poll.pollId,
               _poll.nextOpenOptionId,
             ]
-          : [
-              '/project/detail',
-              _poll.projectId,
-              'votes-overview',
-              _poll.pollId,
-            ]
+          : ['/project/detail', _poll.projectId, 'votes-overview', _poll.pollId]
       "
       [label]="
         _poll.nextOpenOptionId
@@ -80,4 +72,4 @@
       "
     />
   </div>
-</app-side-color-card>
+</p-card>

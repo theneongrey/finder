@@ -13,11 +13,11 @@ import { RouterLink } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Tag } from 'primeng/tag';
 import { TimeSincePipe } from '../_pipe/time-ago.pipe';
-import { SideColorCardComponent } from '../../../../common/ui/components/side-color-card/side-color-card.component';
 import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectOverview } from '../../_models/project-overview.model';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-project-item',
@@ -28,10 +28,10 @@ import { ProjectOverview } from '../../_models/project-overview.model';
     FormsModule,
     Tag,
     TimeSincePipe,
-    SideColorCardComponent,
     Button,
     Menu,
     TranslatePipe,
+    Card,
   ],
   providers: [MessageService],
   templateUrl: './project-item.component.html',

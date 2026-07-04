@@ -58,7 +58,6 @@ app.WithAuthApi();
 app.WithProjectApi();
 app.WithPermissionApi();
 app.WithUserApi();
-app.WithUserApi();
 app.WithUrlPreviewApi();
 
 if (app.Environment.IsDevelopment())

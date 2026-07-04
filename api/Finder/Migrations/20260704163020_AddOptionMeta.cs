@@ -37,7 +37,7 @@ namespace Finder.Migrations
 
             migrationBuilder.Sql(@"
                 INSERT INTO ""OptionMetas"" (""Id"", ""Url"", ""Title"", ""Description"", ""ImageUrl"", ""SiteName"", ""Created"", ""Edited"")
-                SELECT ""Id"", ""Url"", '', '', '', '', NOW(), NOW()
+                SELECT ""Id"", ""Url"", '', '', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
                 FROM ""Options""
                 WHERE ""Url"" IS NOT NULL AND ""Url"" <> ''
             ");

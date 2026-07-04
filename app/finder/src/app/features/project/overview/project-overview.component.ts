@@ -5,7 +5,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectStore } from '../_data/project.store';
 import { ProjectOverview } from '../_models/project-overview.model';
-import { PollItem } from '../topic-item/topic-item.model';
+import { PollItem } from '../poll-item/poll-item.model';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';

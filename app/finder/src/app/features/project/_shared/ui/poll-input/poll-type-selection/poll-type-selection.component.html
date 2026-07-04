@@ -1,0 +1,20 @@
+<h2 class="tw:mb-4 tw:mx-4">
+  {{ "project.detail.createNewPoll" | translate }}
+</h2>
+<div class="tw:flex tw:flex-col tw:gap-4 tw:mx-4">
+  <app-add-card
+    [description]="'project.detail.pollTypes.appointment' | translate"
+    icon="fa-calendar"
+    (action)="typeSelected.emit(OptionType.Date)"
+  />
+  <app-add-card
+    [description]="'project.detail.pollTypes.yesNo' | translate"
+    icon="fa-square-check"
+    (action)="typeSelected.emit(OptionType.YesNo)"
+  />
+  <app-add-card
+    [description]="'project.detail.pollTypes.rating' | translate"
+    icon="fa-star"
+    (action)="typeSelected.emit(OptionType.Rating)"
+  />
+</div>

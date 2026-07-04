@@ -1,0 +1,39 @@
+<div class="tw:flex tw:flex-col tw:gap-2 tw:mt-4">
+  <div class="tw:flex tw:justify-between tw:items-center tw:px-1">
+    <span class="tw:text-sm tw:font-semibold">
+      {{ titleKey() | translate }}
+    </span>
+    <span class="tw:text-xs tw:text-neutral">{{
+      subtitleKey() | translate
+    }}</span>
+  </div>
+
+  <div class="tw:flex tw:flex-col tw:gap-3">
+    @if (optionType() === OptionType.Date) {
+      @for (option of dateOptions(); track $index) {
+        <app-option-card-date
+          [option]="option"
+          [index]="$index"
+          [canRemove]="dateOptions().length > 1"
+          (remove)="remove.emit($index)"
+        />
+      }
+    } @else {
+      @for (option of options(); track $index) {
+        <app-option-card
+          [option]="option"
+          [index]="$index"
+          [canRemove]="options().length > 1"
+          (remove)="remove.emit($index)"
+        />
+      }
+    }
+  </div>
+
+  <app-add-card
+    [class.add-card-nudge]="addCardAnimating()"
+    [cto]="'project.pollInput.yesNo.addOption' | translate"
+    [iconLeft]="true"
+    (action)="onAdd()"
+  />
+</div>

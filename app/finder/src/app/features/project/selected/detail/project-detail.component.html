@@ -1,0 +1,73 @@
+<div class="tw:flex tw:h-full tw:max-h-full tw:flex-col tw:mx-4">
+  @if (project(); as project) {
+    @if (project.description) {
+      <p class="tw:mb-8">
+        {{ project.description }}
+      </p>
+    }
+
+    <div class="tw:mb-8">
+      <div class="tw:flex tw:items-center tw:justify-between tw:mb-4">
+        <h2>{{ "project.detail.members" | translate }}</h2>
+        @if (role() >= ProjectRole.Owner) {
+          <p-button
+            icon="fa-solid fa-user-plus"
+            [label]="'project.detail.invite' | translate"
+            severity="secondary"
+            size="small"
+            (click)="showShare.set(true)"
+          />
+        }
+      </div>
+      @if (project.sharedWith.length > 0) {
+        <p-avatar-group>
+          @for (member of project.sharedWith; track member.name) {
+            <p-avatar
+              [image]="member.picture ?? undefined"
+              [label]="
+                member.picture ? undefined : member.name[0].toUpperCase()
+              "
+              shape="circle"
+              size="large"
+              [pTooltip]="member.name"
+              tooltipPosition="bottom"
+            />
+          }
+        </p-avatar-group>
+      } @else {
+        <p class="tw:text-sm tw:text-gray-500">
+          {{ "project.detail.noMembers" | translate }}
+        </p>
+      }
+    </div>
+
+    @if (polls().length > 0) {
+      <h2 class="tw:mb-4">{{ "project.detail.currentPolls" | translate }}</h2>
+
+      <div class="tw:flex tw:flex-col tw:gap-4">
+        @for (poll of polls(); track poll.id) {
+          <app-poll-item
+            [poll]="poll"
+            (deletionRequested)="showDeletePollDialog(poll.id, poll.name)"
+          />
+        }
+      </div>
+    }
+
+    @if (role() >= ProjectRole.Maintainer) {
+      <div class="tw:pb-8 tw:mt-4">
+        <app-add-card
+          [cto]="'project.detail.createNewPoll' | translate"
+          icon="fa-plus"
+          [routerLink]="['/project/detail', project.id, 'poll', 'add']"
+        />
+      </div>
+    }
+  }
+</div>
+
+<p-confirmdialog />
+
+@if (project(); as project) {
+  <app-share-dialog [projectId]="project.id" [(visible)]="showShare" />
+}

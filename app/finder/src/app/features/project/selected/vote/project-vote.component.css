@@ -1,0 +1,11 @@
+.vote-card:active {
+  cursor: grabbing;
+}
+
+.hint-overlay {
+  transition: opacity 0.3s ease-out;
+}
+
+.hint-overlay.fading {
+  opacity: 0;
+}

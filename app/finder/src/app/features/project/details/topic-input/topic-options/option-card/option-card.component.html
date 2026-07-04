@@ -81,7 +81,7 @@
                 'project.pollInput.yesNo.urlPlaceholder' | translate
               "
               #linkInput
-              [(ngModel)]="option().url"
+              [(ngModel)]="option().meta!.url"
               [name]="'option-url-' + index()"
               (blur)="onUrlBlur()"
             />

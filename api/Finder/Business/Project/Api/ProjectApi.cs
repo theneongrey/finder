@@ -122,7 +122,7 @@ public static class ProjectApi
         app.MapPut("/api/project/poll/option/{id:guid}",
                 async (Guid id, [FromBody] UpdateOptionRequest request, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.UpdateOption(id, request.Text, request.Description, request.Url);
+                    var result = await projectService.UpdateOption(id, request);
                     return !result.IsSuccess
                         ? Results.NotFound()
                         : Results.Ok(result.Payload!.ToPollResponseOption(userService.GetUserId()));

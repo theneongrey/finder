@@ -15,7 +15,7 @@ export interface OptionEntry {
   id?: string;
   text: string;
   description: string;
-  url: string;
+  meta?: { url: string };
 }
 
 export interface DateOptionEntry {

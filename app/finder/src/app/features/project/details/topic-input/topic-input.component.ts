@@ -44,7 +44,7 @@ export class TopicInputComponent {
 
   question = signal('');
   description = signal('');
-  options = signal<OptionEntry[]>([{ text: '', description: '', url: '' }]);
+  options = signal<OptionEntry[]>([{ text: '', description: '' }]);
   dateOptions = signal<DateOptionEntry[]>([{ startDate: null, endDate: null }]);
   removedOptionIds = signal<string[]>([]);
 
@@ -94,9 +94,9 @@ export class TopicInputComponent {
                   id: o.id,
                   text: o.text,
                   description: o.description,
-                  url: o.url,
+                  meta: o.meta ? { url: o.meta.url } : undefined,
                 }))
-              : [{ text: '', description: '', url: '' }],
+              : [{ text: '', description: '' }],
           );
         }
       }
@@ -118,7 +118,7 @@ export class TopicInputComponent {
     return (
       !!this.question() &&
       opts.filter((o) => !!o.text).length >= 1 &&
-      opts.every((o) => this.urlValidation.isValid(o.url))
+      opts.every((o) => !o.meta?.url || this.urlValidation.isValid(o.meta.url))
     );
   }
 
@@ -132,7 +132,7 @@ export class TopicInputComponent {
     } else {
       this.options.update((opts) => [
         ...opts,
-        { text: '', description: '', url: '' },
+        { text: '', description: '' },
       ]);
     }
   }
@@ -177,7 +177,6 @@ export class TopicInputComponent {
         .map((o) => ({
           text: this.dateEntryToText(o),
           description: '',
-          url: '',
         }));
 
       this.projectStore.addPoll({
@@ -193,7 +192,7 @@ export class TopicInputComponent {
         .map((o) => ({
           text: o.text,
           description: o.description,
-          url: o.url,
+          meta: o.meta,
         }));
 
       this.projectStore.addPoll({
@@ -218,7 +217,6 @@ export class TopicInputComponent {
         .map((o) => ({
           text: this.dateEntryToText(o),
           description: '',
-          url: '',
         }));
 
       this.projectStore.addStandalonePoll({
@@ -233,7 +231,7 @@ export class TopicInputComponent {
         .map((o) => ({
           text: o.text,
           description: o.description,
-          url: o.url,
+          meta: o.meta,
         }));
 
       this.projectStore.addStandalonePoll({
@@ -260,7 +258,6 @@ export class TopicInputComponent {
           id: o.id,
           text: this.dateEntryToText(o),
           description: '',
-          url: '',
         }));
 
       this.projectStore.editPoll({
@@ -278,7 +275,7 @@ export class TopicInputComponent {
           id: o.id,
           text: o.text,
           description: o.description,
-          url: o.url,
+          meta: o.meta,
         }));
 
       this.projectStore.editPoll({

@@ -1,3 +1,4 @@
+using System.Threading.RateLimiting;
 using Finder.Business.Auth.Services;
 
 namespace Finder.Business.Auth.Setup;
@@ -21,6 +22,20 @@ public static class SetupExtensions
                     c.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     return Task.FromResult<object?>(null);
                 };
+        });
+        
+        services.AddRateLimiter(options =>
+        {
+            options.AddPolicy("auth", httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0
+                    }));
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
         });
         
         return services;

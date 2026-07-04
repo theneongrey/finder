@@ -5,6 +5,7 @@ import { StandalonePollOverview } from '../_models/standalone-topic-overview.mod
 import {
   Comment,
   Option,
+  OptionMeta,
   OptionType,
   Poll,
   PollDetail,
@@ -109,29 +110,19 @@ export class ProjectService {
     );
   }
 
-  addOption(pollId: string, text: string, description: string, url: string) {
+  addOption(pollId: string, text: string, description: string, meta?: OptionMeta) {
     this.loggerService.debug(`[ProjectService] adding option ${text}`);
     return this.httpClient.post<Option>(
       `${this.baseUrl}/api/project/poll/option`,
-      {
-        text: text,
-        description: description,
-        url: url,
-        pollId: pollId,
-      },
+      { text, description, pollId, meta },
     );
   }
 
-  updateOption(
-    optionId: string,
-    text: string,
-    description: string,
-    url: string,
-  ) {
+  updateOption(optionId: string, text: string, description: string, meta?: OptionMeta) {
     this.loggerService.debug(`[ProjectService] updating option ${optionId}`);
     return this.httpClient.put<Option>(
       `${this.baseUrl}/api/project/poll/option/${optionId}`,
-      { text, description, url },
+      { text, description, meta },
     );
   }
 

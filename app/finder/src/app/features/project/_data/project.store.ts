@@ -104,7 +104,7 @@ export const ProjectStore = signalStore(
       name: string;
       description: string;
       optionType: OptionType;
-      options?: { text: string; description: string; url: string }[];
+      options?: { text: string; description: string; meta?: { url: string } }[];
     }>(
       pipe(
         switchMap((payload) => {
@@ -118,7 +118,7 @@ export const ProjectStore = signalStore(
                         responsePoll.pollId,
                         o.text,
                         o.description,
-                        o.url,
+                        o.meta ? { url: o.meta.url, title: '', description: '', imageUrl: '', siteName: '' } : undefined,
                       ),
                     )
                   : [];
@@ -269,7 +269,7 @@ export const ProjectStore = signalStore(
       name: string;
       description: string;
       optionType: OptionType;
-      options?: { text: string; description: string; url: string }[];
+      options?: { text: string; description: string; meta?: { url: string } }[];
     }>(
       pipe(
         switchMap((poll) => {
@@ -288,7 +288,7 @@ export const ProjectStore = signalStore(
                         responsePoll.id,
                         o.text,
                         o.description,
-                        o.url,
+                        o.meta ? { url: o.meta.url, title: '', description: '', imageUrl: '', siteName: '' } : undefined,
                       ),
                     )
                   : [];
@@ -350,7 +350,7 @@ export const ProjectStore = signalStore(
         id?: string;
         text: string;
         description: string;
-        url: string;
+        meta?: { url: string };
       }[];
       removedOptionIds: string[];
     }>(
@@ -361,21 +361,12 @@ export const ProjectStore = signalStore(
             .pipe(
               switchMap(() => {
                 const optionRequests = [
-                  ...poll.options.map((o) =>
-                    o.id
-                      ? store.projectService.updateOption(
-                          o.id,
-                          o.text,
-                          o.description,
-                          o.url,
-                        )
-                      : store.projectService.addOption(
-                          poll.pollId,
-                          o.text,
-                          o.description,
-                          o.url,
-                        ),
-                  ),
+                  ...poll.options.map((o) => {
+                    const meta = o.meta ? { url: o.meta.url, title: '', description: '', imageUrl: '', siteName: '' } : undefined;
+                    return o.id
+                      ? store.projectService.updateOption(o.id, o.text, o.description, meta)
+                      : store.projectService.addOption(poll.pollId, o.text, o.description, meta);
+                  }),
                   ...poll.removedOptionIds.map((id) =>
                     store.projectService.deleteOption(id),
                   ),
@@ -438,7 +429,7 @@ export const ProjectStore = signalStore(
       pollId: string;
       text: string;
       description: string;
-      url: string;
+      meta?: { url: string };
     }>(
       pipe(
         switchMap((option) => {
@@ -447,7 +438,7 @@ export const ProjectStore = signalStore(
               option.pollId,
               option.text,
               option.description,
-              option.url,
+              option.meta ? { url: option.meta.url, title: '', description: '', imageUrl: '', siteName: '' } : undefined,
             )
             .pipe(
               tapResponse({
@@ -463,8 +454,7 @@ export const ProjectStore = signalStore(
                             id: responseOption.id,
                             text: responseOption.text,
                             description: responseOption.description,
-                            url: responseOption.url,
-                            previewImageUrl: responseOption.previewImageUrl,
+                            meta: responseOption.meta,
                             votes: [],
                             choice: null,
                           },

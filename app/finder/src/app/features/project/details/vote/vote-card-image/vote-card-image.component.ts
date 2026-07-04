@@ -10,6 +10,6 @@ import { ButtonModule } from 'primeng/button';
 export class VoteCardImageComponent {
   text = input('');
   description = input('');
-  previewImageUrl = input('');
+  imageUrl = input('');
   link = input('');
 }

@@ -21,12 +21,19 @@ export interface Vote {
   choice: string;
 }
 
+export interface OptionMeta {
+  url: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  siteName: string;
+}
+
 export interface OptionDetail {
   id: string;
   text: string;
   description: string;
-  url: string;
-  previewImageUrl: string;
+  meta?: OptionMeta;
   votes: Vote[];
   choice: string | null;
 }
@@ -57,8 +64,7 @@ export interface Option {
   id: string;
   text: string;
   description: string;
-  url: string;
-  previewImageUrl: string;
+  meta?: OptionMeta;
   votes: number;
   choice: string | null;
 }

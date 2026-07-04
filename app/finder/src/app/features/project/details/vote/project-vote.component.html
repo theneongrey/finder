@@ -103,18 +103,18 @@
           <app-vote-card-date
             [text]="option()?.text ?? ''"
           />
-        } @else if (option()?.previewImageUrl) {
+        } @else if (option()?.meta?.imageUrl) {
           <app-vote-card-image
             [text]="option()?.text ?? ''"
             [description]="option()?.description ?? ''"
-            [previewImageUrl]="option()?.previewImageUrl ?? ''"
-            [link]="option()?.url ?? ''"
+            [imageUrl]="option()?.meta?.imageUrl ?? ''"
+            [link]="option()?.meta?.url ?? ''"
           />
         } @else {
           <app-vote-card-text
             [text]="option()?.text ?? ''"
             [description]="option()?.description ?? ''"
-            [link]="option()?.url ?? ''"
+            [link]="option()?.meta?.url ?? ''"
           />
         }
       </div>

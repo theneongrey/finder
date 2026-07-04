@@ -58,7 +58,7 @@ export class OptionCardComponent {
       const option = this.option();
       if (option) {
         this.showDescription.set(!!option.description);
-        this.showLink.set(!!option.url);
+        this.showLink.set(!!option.meta?.url);
       }
     });
   }
@@ -71,6 +71,9 @@ export class OptionCardComponent {
   }
 
   toggleLink() {
+    if (!this.option().meta) {
+      this.option().meta = { url: '' };
+    }
     this.showLink.set(true);
     afterNextRender(() => this.linkInput?.nativeElement.focus(), {
       injector: this.injector,
@@ -84,7 +87,7 @@ export class OptionCardComponent {
   }
 
   onUrlBlur() {
-    const url = this.option().url;
+    const url = this.option().meta?.url;
     if (!url) {
       this.showLink.set(false);
       this.urlError.set(false);
@@ -97,7 +100,7 @@ export class OptionCardComponent {
     this.urlError.set(false);
     const normalized = this.urlValidation.normalize(url);
     if (normalized !== url) {
-      this.option().url = normalized;
+      this.option().meta!.url = normalized;
       if (this.linkInput) {
         this.linkInput.nativeElement.value = normalized;
       }

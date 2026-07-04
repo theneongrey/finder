@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<Project> Projects { get; set; }
     public DbSet<Poll> Polls { get; set; }
     public DbSet<Option> Options { get; set; }
+    public DbSet<OptionMeta> OptionMetas { get; set; }
     public DbSet<Vote> Votes { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Person> Persons { get; set; }

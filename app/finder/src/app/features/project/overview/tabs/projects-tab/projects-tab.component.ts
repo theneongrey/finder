@@ -1,10 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  output,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ProjectStore } from '../../../_data/project.store';
+import { ProjectStore } from '../../../_shared/data/project.store';
 import { ProjectItemComponent } from '../../project-item/project-item.component';
 import { AddCardComponent } from '../../../../../common/ui/components/add-card/add-card.component';
-import { ProjectOverview } from '../../../_models/project-overview.model';
+import { ProjectOverview } from '../../../_shared/models/project-overview.model';
 
 @Component({
   selector: 'app-projects-tab',

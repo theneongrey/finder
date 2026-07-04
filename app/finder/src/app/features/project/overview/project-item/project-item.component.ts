@@ -16,7 +16,7 @@ import { TimeSincePipe } from '../_pipe/time-ago.pipe';
 import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ProjectOverview } from '../../_models/project-overview.model';
+import { ProjectOverview } from '../../_shared/models/project-overview.model';
 import { Card } from 'primeng/card';
 
 @Component({

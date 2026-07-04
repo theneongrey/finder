@@ -6,14 +6,14 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
-import { ProjectStore } from '../../../_data/project.store';
+import { ProjectStore } from '../../../_shared/data/project.store';
 import { UserStore } from '../../../../../common/data/user.store';
 import { ProjectItemComponent } from '../../project-item/project-item.component';
-import { PollItemComponent } from '../../../poll-item/poll-item.component';
-import { PollItem } from '../../../poll-item/poll-item.model';
-import { ProjectOverview } from '../../../_models/project-overview.model';
+import { ProjectOverview } from '../../../_shared/models/project-overview.model';
 import { computed } from '@angular/core';
-import { OptionType } from '../../../_models/project-detail.model';
+import { OptionType } from '../../../_shared/models/project-detail.model';
+import { PollItemComponent } from '../../../_shared/ui/poll-item/poll-item.component';
+import { PollItem } from '../../../_shared/models/poll-item.model';
 
 @Component({
   selector: 'app-overview-tab',

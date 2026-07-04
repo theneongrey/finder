@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
-import { ActivatedRouteSnapshot } from '@angular/router';
-import { OptionType } from './_models/project-detail.model';
+import { selectedRoutes } from './selected/selected.routes';
 
 export const projectRoutes: Routes = [
   {
@@ -35,8 +34,8 @@ export const projectRoutes: Routes = [
   {
     path: 'add-standalone',
     loadComponent: () =>
-      import('./standalone-topic-shell/standalone-topic-shell.component').then(
-        (m) => m.StandalonePollShellComponent,
+      import('./standalone-poll-input-wrapper/standalone-poll-input-wrapper.component').then(
+        (m) => m.StandalonePollInputWrapperComponent,
       ),
     data: {
       backRoute: '/project/',
@@ -45,105 +44,10 @@ export const projectRoutes: Routes = [
   {
     path: 'detail/:projectId',
     loadComponent: () =>
-      import('./details/details-shell.component').then(
-        (m) => m.ProjectDetailShellComponent,
+      import('./selected/selected-shell.component').then(
+        (m) => m.ProjectSelectedShellComponent,
       ),
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./details/detail/project-detail.component').then(
-            (m) => m.ProjectDetailComponent,
-          ),
-        data: {
-          backRoute: '/project/',
-        },
-      },
-      {
-        path: 'poll/add',
-        loadComponent: () =>
-          import('./details/topic-input/topic-input.component').then(
-            (m) => m.TopicInputComponent,
-          ),
-        data: {
-          mode: 'add',
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-      {
-        path: 'poll/edit/yesno/:pollId',
-        loadComponent: () =>
-          import('./details/topic-input/topic-input.component').then(
-            (m) => m.TopicInputComponent,
-          ),
-        data: {
-          mode: 'edit',
-          optionType: OptionType.YesNo,
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-      {
-        path: 'poll/edit/rating/:pollId',
-        loadComponent: () =>
-          import('./details/topic-input/topic-input.component').then(
-            (m) => m.TopicInputComponent,
-          ),
-        data: {
-          mode: 'edit',
-          optionType: OptionType.Rating,
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-      {
-        path: 'poll/edit/date/:pollId',
-        loadComponent: () =>
-          import('./details/topic-input/topic-input.component').then(
-            (m) => m.TopicInputComponent,
-          ),
-        data: {
-          mode: 'edit',
-          optionType: OptionType.Date,
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-      {
-        path: 'vote/:pollId/:optionId',
-        loadComponent: () =>
-          import('./details/vote/project-vote.component').then(
-            (m) => m.ProjectVoteComponent,
-          ),
-        data: {
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-      {
-        path: 'vote/:pollId',
-        loadComponent: () =>
-          import('./details/vote/project-vote.component').then(
-            (m) => m.ProjectVoteComponent,
-          ),
-        data: {
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-      {
-        path: 'votes-overview/:pollId',
-        loadComponent: () =>
-          import('./details/votes-overview/votes-overview.component').then(
-            (m) => m.VotesOverviewComponent,
-          ),
-        data: {
-          backRoute: (s: ActivatedRouteSnapshot) =>
-            `/project/detail/${s.parent?.params['projectId']}`,
-        },
-      },
-    ],
+    children: selectedRoutes,
   },
   {
     path: '**',

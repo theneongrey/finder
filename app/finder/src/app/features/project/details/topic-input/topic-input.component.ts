@@ -94,7 +94,7 @@ export class TopicInputComponent {
                   id: o.id,
                   text: o.text,
                   description: o.description,
-                  meta: o.meta ? { url: o.meta.url } : undefined,
+                  meta: o.meta ? { url: o.meta.url, title: o.meta.title, description: o.meta.description, imageUrl: o.meta.imageUrl, siteName: o.meta.siteName } : undefined,
                 }))
               : [{ text: '', description: '' }],
           );

@@ -1,16 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
-  ViewChild,
   afterNextRender,
   inject,
   input,
   output,
   signal,
   effect,
+  viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
@@ -19,6 +21,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { OptionEntry } from '../topic-options.component';
 import { UrlValidationService } from '../../../../../../common/utils/url-validation.service';
 import { Card } from 'primeng/card';
+import {
+  PreviewData,
+  PreviewService,
+} from '../../../../_services/preview.service';
 
 @Component({
   selector: 'app-option-card',
@@ -36,13 +42,19 @@ export class OptionCardComponent {
   showDescription = signal(false);
   showLink = signal(false);
   urlError = signal(false);
+  previewLoading = signal(false);
+  previewData = signal<PreviewData | undefined>(undefined);
 
-  @ViewChild('descriptionInput')
-  private descriptionInput?: ElementRef<HTMLInputElement>;
-  @ViewChild('linkInput') private linkInput?: ElementRef<HTMLInputElement>;
+  private descriptionInput =
+    viewChild.required<ElementRef<HTMLInputElement>>('descriptionInput');
+  private linkInput =
+    viewChild.required<ElementRef<HTMLInputElement>>('linkInput');
+  private initialUrl?: string = undefined;
 
   private injector = inject(Injector);
   private urlValidation = inject(UrlValidationService);
+  private previewService = inject(PreviewService);
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     effect(() => {
@@ -50,13 +62,22 @@ export class OptionCardComponent {
       if (option) {
         this.showDescription.set(!!option.description);
         this.showLink.set(!!option.meta?.url);
+        if (option.meta?.title) {
+          this.previewData.set({
+            title: option.meta.title,
+            description: option.meta.description ?? '',
+            imageUrl: option.meta.imageUrl ?? '',
+            siteName: option.meta.siteName ?? '',
+          });
+          this.initialUrl = option.meta.url;
+        }
       }
     });
   }
 
   toggleDescription() {
     this.showDescription.set(true);
-    afterNextRender(() => this.descriptionInput?.nativeElement.focus(), {
+    afterNextRender(() => this.descriptionInput().nativeElement.focus(), {
       injector: this.injector,
     });
   }
@@ -66,7 +87,7 @@ export class OptionCardComponent {
       this.option().meta = { url: '' };
     }
     this.showLink.set(true);
-    afterNextRender(() => this.linkInput?.nativeElement.focus(), {
+    afterNextRender(() => this.linkInput().nativeElement.focus(), {
       injector: this.injector,
     });
   }
@@ -82,19 +103,46 @@ export class OptionCardComponent {
     if (!url) {
       this.showLink.set(false);
       this.urlError.set(false);
+      this.previewData.set(undefined);
       return;
     }
     if (!this.urlValidation.isValid(url)) {
       this.urlError.set(true);
       return;
     }
+
     this.urlError.set(false);
     const normalized = this.urlValidation.normalize(url);
     if (normalized !== url) {
       this.option().meta!.url = normalized;
-      if (this.linkInput) {
-        this.linkInput.nativeElement.value = normalized;
-      }
+      this.linkInput().nativeElement.value = normalized;
     }
+
+    if (normalized === this.initialUrl) {
+      return;
+    }
+
+    this.previewLoading.set(true);
+    this.previewService
+      .getPreview(normalized)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (preview) => {
+          if (preview.imageUrl) {
+            const entry = this.option();
+            entry.meta = { url: entry.meta!.url, ...preview };
+            this.previewData.set(preview);
+            this.previewLoading.set(false);
+
+            if (!this.option().text) {
+              this.option().text = preview.title ?? '';
+            }
+            this.initialUrl = normalized;
+          }
+        },
+        error: () => {
+          this.previewLoading.set(false);
+        },
+      });
   }
 }

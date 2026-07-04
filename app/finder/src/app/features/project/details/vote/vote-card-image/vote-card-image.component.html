@@ -1,10 +1,14 @@
 <div
-  class="tw:flex-1 tw:bg-surface-100 tw:flex tw:items-center tw:justify-center tw:overflow-hidden"
+  class="tw:flex-1 tw:bg-surface-100 tw:flex tw:flex-1 tw:items-center tw:justify-center tw:overflow-hidden"
 >
-  <img [src]="imageUrl()" alt="" class="tw:w-full tw:h-full tw:object-cover" />
+  <img
+    [src]="imageUrl()"
+    alt="preview-image"
+    class="tw:w-full tw:h-full tw:object-cover"
+  />
 </div>
 
-<div class="tw:p-6 tw:flex-shrink-0 tw:flex tw:flex-col tw:gap-1">
+<div class="tw:p-6 tw:flex tw:flex-col tw:gap-1">
   <p class="tw:text-base tw:font-semibold tw:text-surface-900 tw:leading-snug">
     {{ text() }}
   </p>
@@ -14,8 +18,13 @@
     </p>
   }
   @if (link()) {
-    <a [href]="link()" target="_blank" rel="noopener noreferrer">
-      <p-button label="Link öffnen" icon="fa-solid fa-arrow-up-right-from-square" size="small" variant="outlined" />
-    </a>
+    <p-button
+      class="tw:mx-auto"
+      label="Link öffnen"
+      icon="fa-solid fa-arrow-up-right-from-square"
+      size="small"
+      variant="outlined"
+      (click)="openLink(link())"
+    />
   }
 </div>

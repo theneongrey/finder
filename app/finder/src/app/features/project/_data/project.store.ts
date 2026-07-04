@@ -104,7 +104,7 @@ export const ProjectStore = signalStore(
       name: string;
       description: string;
       optionType: OptionType;
-      options?: { text: string; description: string; meta?: { url: string } }[];
+      options?: { text: string; description: string; meta?: { url: string; title?: string; description?: string; imageUrl?: string; siteName?: string } }[];
     }>(
       pipe(
         switchMap((payload) => {
@@ -118,7 +118,7 @@ export const ProjectStore = signalStore(
                         responsePoll.pollId,
                         o.text,
                         o.description,
-                        o.meta ? { url: o.meta.url, title: '', description: '', imageUrl: '', siteName: '' } : undefined,
+                        o.meta ? { url: o.meta.url, title: o.meta.title ?? '', description: o.meta.description ?? '', imageUrl: o.meta.imageUrl ?? '', siteName: o.meta.siteName ?? '' } : undefined,
                       ),
                     )
                   : [];
@@ -269,7 +269,7 @@ export const ProjectStore = signalStore(
       name: string;
       description: string;
       optionType: OptionType;
-      options?: { text: string; description: string; meta?: { url: string } }[];
+      options?: { text: string; description: string; meta?: { url: string; title?: string; description?: string; imageUrl?: string; siteName?: string } }[];
     }>(
       pipe(
         switchMap((poll) => {
@@ -288,7 +288,7 @@ export const ProjectStore = signalStore(
                         responsePoll.id,
                         o.text,
                         o.description,
-                        o.meta ? { url: o.meta.url, title: '', description: '', imageUrl: '', siteName: '' } : undefined,
+                        o.meta ? { url: o.meta.url, title: o.meta.title ?? '', description: o.meta.description ?? '', imageUrl: o.meta.imageUrl ?? '', siteName: o.meta.siteName ?? '' } : undefined,
                       ),
                     )
                   : [];
@@ -350,7 +350,7 @@ export const ProjectStore = signalStore(
         id?: string;
         text: string;
         description: string;
-        meta?: { url: string };
+        meta?: { url: string; title?: string; description?: string; imageUrl?: string; siteName?: string };
       }[];
       removedOptionIds: string[];
     }>(
@@ -362,7 +362,7 @@ export const ProjectStore = signalStore(
               switchMap(() => {
                 const optionRequests = [
                   ...poll.options.map((o) => {
-                    const meta = o.meta ? { url: o.meta.url, title: '', description: '', imageUrl: '', siteName: '' } : undefined;
+                    const meta = o.meta ? { url: o.meta.url, title: o.meta.title ?? '', description: o.meta.description ?? '', imageUrl: o.meta.imageUrl ?? '', siteName: o.meta.siteName ?? '' } : undefined;
                     return o.id
                       ? store.projectService.updateOption(o.id, o.text, o.description, meta)
                       : store.projectService.addOption(poll.pollId, o.text, o.description, meta);
@@ -429,7 +429,7 @@ export const ProjectStore = signalStore(
       pollId: string;
       text: string;
       description: string;
-      meta?: { url: string };
+      meta?: { url: string; title?: string; description?: string; imageUrl?: string; siteName?: string };
     }>(
       pipe(
         switchMap((option) => {
@@ -438,7 +438,7 @@ export const ProjectStore = signalStore(
               option.pollId,
               option.text,
               option.description,
-              option.meta ? { url: option.meta.url, title: '', description: '', imageUrl: '', siteName: '' } : undefined,
+              option.meta ? { url: option.meta.url, title: option.meta.title ?? '', description: option.meta.description ?? '', imageUrl: option.meta.imageUrl ?? '', siteName: option.meta.siteName ?? '' } : undefined,
             )
             .pipe(
               tapResponse({

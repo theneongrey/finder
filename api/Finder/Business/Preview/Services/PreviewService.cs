@@ -80,11 +80,16 @@ public class PreviewService
         foreach(var key in propertyOrNames)
         {
             var node = doc.DocumentNode.SelectSingleNode($"//meta[@property='{key}'] | //meta[@name='{key}']");
-                
-            var content = node.GetAttributeValue("content", string.Empty);
-            if(content.Trim().Length > 0)
+
+            // node CAN be null
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            if (node != null)
             {
-                return System.Web.HttpUtility.HtmlDecode(content);
+                var content = node.GetAttributeValue("content", string.Empty);
+                if (content.Trim().Length > 0)
+                {
+                    return System.Web.HttpUtility.HtmlDecode(content);
+                }
             }
         }
         return string.Empty;

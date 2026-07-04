@@ -90,6 +90,43 @@
               "project.pollInput.yesNo.urlError" | translate
             }}</p-message>
           }
+          @if (previewLoading()) {
+            <div class="tw:flex tw:items-center tw:justify-center tw:py-2">
+              <i class="fa-solid fa-spinner fa-spin tw:text-primary"></i>
+            </div>
+          }
+          @if (previewData() && !previewLoading()) {
+            <div
+              class="tw:flex tw:gap-3 tw:mt-1 tw:p-2 tw:bg-gray-50 tw:rounded-lg tw:border tw:border-gray-200"
+            >
+              @if (previewData()!.imageUrl) {
+                <img
+                  [src]="previewData()!.imageUrl"
+                  [alt]="previewData()!.title"
+                  class="tw:w-14 tw:h-14 tw:object-cover tw:rounded tw:flex-shrink-0"
+                />
+              }
+              <div
+                class="tw:flex tw:flex-col tw:gap-0.5 tw:min-w-0 tw:justify-center"
+              >
+                @if (previewData()!.title) {
+                  <span class="tw:text-sm tw:font-medium tw:truncate">{{
+                    previewData()!.title
+                  }}</span>
+                }
+                @if (previewData()!.description) {
+                  <span class="tw:text-xs tw:text-gray-500 tw:line-clamp-2">{{
+                    previewData()!.description
+                  }}</span>
+                }
+                @if (previewData()!.siteName) {
+                  <span class="tw:text-xs tw:text-gray-400">{{
+                    previewData()!.siteName
+                  }}</span>
+                }
+              </div>
+            </div>
+          }
         </div>
       }
 

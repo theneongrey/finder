@@ -16,6 +16,8 @@ public static class SetupExtensions
         services.AddAuthentication().AddCookie(o =>
         {
             o.Cookie.Name = "login";
+            o.ExpireTimeSpan = TimeSpan.FromDays(30);
+            o.SlidingExpiration = true;
             o.Events.OnRedirectToAccessDenied =
                 o.Events.OnRedirectToLogin = c =>
                 {

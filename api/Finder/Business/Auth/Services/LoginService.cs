@@ -87,7 +87,8 @@ public class LoginService
             new ClaimsIdentity([
                 new Claim(ClaimTypes.NameIdentifier, loginToken.Person.Id.ToString()),
                 new Claim(ClaimTypes.Role, ((int)loginToken.Person.Role).ToString())
-            ], CookieAuthenticationDefaults.AuthenticationScheme)));
+            ], CookieAuthenticationDefaults.AuthenticationScheme)),
+            new AuthenticationProperties { IsPersistent = true });
 
         var redirectUrl = loginToken.RedirectUrl;
         

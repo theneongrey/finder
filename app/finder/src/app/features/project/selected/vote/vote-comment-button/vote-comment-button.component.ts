@@ -11,7 +11,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Popover } from 'primeng/popover';
-import { ProjectStore } from '../../../_shared/data/project.store';
+import { ProjectDetailStore } from '../../../_shared/data/project-detail.store';
 
 @Component({
   selector: 'app-vote-comment-button',
@@ -20,7 +20,7 @@ import { ProjectStore } from '../../../_shared/data/project.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteCommentButtonComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectDetailStore = inject(ProjectDetailStore);
 
   pollId = input('');
   optionText = input<string | undefined>(undefined);
@@ -38,7 +38,7 @@ export class VoteCommentButtonComponent {
     if (!content) {
       return;
     }
-    this.projectStore.addComment({
+    this.projectDetailStore.addComment({
       pollId: this.pollId(),
       content,
       quote: this.optionText(),

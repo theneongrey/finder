@@ -33,7 +33,7 @@ export const ProjectStore = signalStore(
     activeTab: 'overview' as 'overview' | 'projects' | 'polls',
     currentProject: undefined as Project | undefined,
     currentPoll: undefined as PollDetail | undefined,
-    sharingContacts: [] as SharingContact[],
+    sharingContactsSuggestion: [] as SharingContact[],
     sharingInProgress: false,
   }),
   withComputed((store) => ({
@@ -635,7 +635,9 @@ export const ProjectStore = signalStore(
           return store.permissionService.getContacts(projectId).pipe(
             tapResponse({
               next: (sharingContacts) => {
-                patchState(store, { sharingContacts });
+                patchState(store, {
+                  sharingContactsSuggestion: sharingContacts,
+                });
               },
               error: (error) => {
                 store.loggerService.log(
@@ -673,8 +675,8 @@ export const ProjectStore = signalStore(
 
                   patchState(store, {
                     sharingInProgress: false,
-                    sharingContacts: store
-                      .sharingContacts()
+                    sharingContactsSuggestion: store
+                      .sharingContactsSuggestion()
                       .filter((c) => c.email !== share.email),
                     projects: store
                       .projects()

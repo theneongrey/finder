@@ -19,7 +19,7 @@ import { ShareDrawerComponent } from '../../../../common/ui/components/share-dra
 import { ProjectRole } from '../../_shared/models/project-role.enum';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
-import { ProjectStore } from '../../_shared/data/project.store';
+import { ProjectDetailStore } from '../../_shared/data/project-detail.store';
 import { AddCardComponent } from '../../../../common/ui/components/add-card/add-card.component';
 import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.component';
 
@@ -44,12 +44,12 @@ import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.componen
 })
 export class ProjectDetailComponent {
   private readonly titleService = inject(TitleBarService);
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectDetailStore = inject(ProjectDetailStore);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly translateService = inject(TranslateService);
 
   action = input('');
-  project = this.projectStore.currentProject;
+  project = this.projectDetailStore.currentProject;
 
   showShare = model(false);
   polls = computed(() => {
@@ -91,7 +91,7 @@ export class ProjectDetailComponent {
       ),
       rejectLabel: this.translateService.instant('project.common.cancel'),
       accept: () => {
-        this.projectStore.deletePoll(id);
+        this.projectDetailStore.deletePoll(id);
       },
     });
   }

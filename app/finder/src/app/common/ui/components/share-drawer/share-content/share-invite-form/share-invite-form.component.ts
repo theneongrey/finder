@@ -14,7 +14,7 @@ import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
-import { ProjectStore } from '../../../../../../features/project/_shared/data/project.store';
+import { SharingStore } from '../../../../../../features/project/_shared/data/sharing.store';
 import { SharingContact } from '../../../../../../features/project/_shared/models/project-detail.model';
 
 @Component({
@@ -32,7 +32,7 @@ import { SharingContact } from '../../../../../../features/project/_shared/model
   ],
 })
 export class ShareInviteFormComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly sharingStore = inject(SharingStore);
   private readonly translateService = inject(TranslateService);
 
   projectId = input.required<string>();
@@ -89,7 +89,7 @@ export class ShareInviteFormComponent {
     if (!email || this.sharingInProgress()) {
       return;
     }
-    this.projectStore.share({
+    this.sharingStore.share({
       email,
       permissionType: this.selectedRole(),
       projectId: this.projectId(),

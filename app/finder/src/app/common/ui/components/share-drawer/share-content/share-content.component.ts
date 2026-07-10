@@ -18,7 +18,7 @@ import {
   SharedWith,
   VisibilityType,
 } from '../../../../../features/project/_shared/models/project-detail.model';
-import { ProjectStore } from '../../../../../features/project/_shared/data/project.store';
+import { SharingStore } from '../../../../../features/project/_shared/data/sharing.store';
 import { environment } from '../../../../env/environment';
 
 @Component({
@@ -40,7 +40,7 @@ import { environment } from '../../../../env/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareContentComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly sharingStore = inject(SharingStore);
   private readonly translateService = inject(TranslateService);
 
   projectId = input.required<string>();
@@ -52,8 +52,8 @@ export class ShareContentComponent {
   );
   activeTab = signal('access');
 
-  sharingContacts = this.projectStore.sharingContacts;
-  sharingInProgress = this.projectStore.sharingInProgress;
+  sharingContacts = this.sharingStore.sharingContactsSuggestion;
+  sharingInProgress = this.sharingStore.sharingInProgress;
 
   isPublic = computed(
     () => this.selectedVisibility() === VisibilityType.VisibleForEverybody,
@@ -87,7 +87,7 @@ export class ShareContentComponent {
 
   onVisibilityChange(value: VisibilityType) {
     this.selectedVisibility.set(value);
-    this.projectStore.updateVisibilityType({
+    this.sharingStore.updateVisibilityType({
       projectId: this.projectId(),
       type: value,
     });

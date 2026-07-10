@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
-import { ProjectStore } from '../../../_shared/data/project.store';
+import { ProjectListStore } from '../../../_shared/data/project-list.store';
 import { UserStore } from '../../../../../common/data/user.store';
 import { ProjectItemComponent } from '../../project-item/project-item.component';
 import { ProjectOverview } from '../../../_shared/models/project-overview.model';
@@ -22,7 +22,7 @@ import { PollItem } from '../../../_shared/models/poll-item.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewTabComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectListStore = inject(ProjectListStore);
   private readonly userStore = inject(UserStore);
 
   projectDeletionRequested = output<ProjectOverview>();
@@ -30,9 +30,9 @@ export class OverviewTabComponent {
   shareRequested = output<string>();
 
   user = this.userStore.user;
-  recentProjects = computed(() => this.projectStore.projects().slice(0, 2));
+  recentProjects = computed(() => this.projectListStore.projects().slice(0, 2));
   recentPolls = computed(() =>
-    this.projectStore
+    this.projectListStore
       .standalonePolls()
       .slice(0, 3)
       .map((t) => ({
@@ -42,10 +42,10 @@ export class OverviewTabComponent {
   );
 
   switchToProjects() {
-    this.projectStore.setActiveTab('projects');
+    this.projectListStore.setActiveTab('projects');
   }
 
   switchToPolls() {
-    this.projectStore.setActiveTab('polls');
+    this.projectListStore.setActiveTab('polls');
   }
 }

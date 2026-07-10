@@ -11,7 +11,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { ProjectStore } from '../../_shared/data/project.store';
+import { ProjectDetailStore } from '../../_shared/data/project-detail.store';
 import { Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -46,17 +46,17 @@ import { OptionType } from '../../_shared/models/project-detail.model';
 })
 export class ProjectVoteComponent implements OnInit, AfterViewInit {
   private readonly titleService = inject(TitleBarService);
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectDetailStore = inject(ProjectDetailStore);
   private readonly router = inject(Router);
 
   readonly OptionType = OptionType;
 
   voteCardRef = viewChild.required<ElementRef<HTMLElement>>('voteCard');
 
-  projectId = this.projectStore.projectId;
+  projectId = this.projectDetailStore.projectId;
   pollId = input('');
   optionId = input('');
-  poll = this.projectStore.currentPoll;
+  poll = this.projectDetailStore.currentPoll;
   option = computed(() =>
     this.poll()?.options.find((o) => o.id === this.optionId()),
   );
@@ -87,10 +87,10 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
   constructor() {
     effect(() => {
-      this.projectStore.getPoll(this.pollId());
+      this.projectDetailStore.getPoll(this.pollId());
     });
     effect(() => {
-      const currentProject = this.projectStore.currentProject();
+      const currentProject = this.projectDetailStore.currentProject();
       if (currentProject) {
         this.titleService.setTitle(currentProject.name);
       }
@@ -197,7 +197,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
     const optionId = this.optionId();
     const currentChoice = parseInt(this.option()?.choice ?? '0') || 0;
     const skipValue = Math.min(currentChoice, 0) - 1;
-    this.projectStore.vote({ optionId, choice: skipValue.toString() });
+    this.projectDetailStore.vote({ optionId, choice: skipValue.toString() });
 
     const counts = new Map(this.localSkipCounts());
     counts.set(optionId, (counts.get(optionId) ?? 0) + 1);
@@ -260,7 +260,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
 
   private castVote(choice: string): void {
     this.hasVotedInSession.set(true);
-    this.projectStore.vote({ optionId: this.optionId(), choice });
+    this.projectDetailStore.vote({ optionId: this.optionId(), choice });
     this.navigateToNextOption(this.optionId());
   }
 

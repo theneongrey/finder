@@ -13,7 +13,7 @@ import {
   SharedWith,
   VisibilityType,
 } from '../../../../features/project/_shared/models/project-detail.model';
-import { ProjectStore } from '../../../../features/project/_shared/data/project.store';
+import { SharingStore } from '../../../../features/project/_shared/data/sharing.store';
 
 @Component({
   selector: 'app-share-drawer',
@@ -22,7 +22,7 @@ import { ProjectStore } from '../../../../features/project/_shared/data/project.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareDrawerComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly sharingStore = inject(SharingStore);
 
   projectId = input.required<string>();
   projectName = input.required<string>();
@@ -33,7 +33,7 @@ export class ShareDrawerComponent {
   constructor() {
     effect(() => {
       if (this.visible()) {
-        this.projectStore.loadContacts(this.projectId());
+        this.sharingStore.loadContacts(this.projectId());
       }
     });
   }

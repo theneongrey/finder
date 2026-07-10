@@ -13,7 +13,7 @@ import { Avatar } from 'primeng/avatar';
 import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
 import { SharedWith } from '../../../../../../features/project/_shared/models/project-detail.model';
-import { ProjectStore } from '../../../../../../features/project/_shared/data/project.store';
+import { SharingStore } from '../../../../../../features/project/_shared/data/sharing.store';
 import { ProjectRole } from '../../../../../../features/project/_shared/models/project-role.enum';
 
 @Component({
@@ -23,7 +23,7 @@ import { ProjectRole } from '../../../../../../features/project/_shared/models/p
   imports: [Avatar, Button, Menu, TranslatePipe],
 })
 export class ShareMembersListComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly sharingStore = inject(SharingStore);
   private readonly translateService = inject(TranslateService);
 
   @ViewChild('roleMenu') roleMenu!: Menu;
@@ -102,7 +102,7 @@ export class ShareMembersListComponent {
   }
 
   changeRole(email: string, permissionType: number) {
-    this.projectStore.share({
+    this.sharingStore.share({
       email,
       permissionType,
       projectId: this.projectId(),
@@ -116,7 +116,7 @@ export class ShareMembersListComponent {
   }
 
   confirmRemove(email: string) {
-    this.projectStore.removePermission({
+    this.sharingStore.removePermission({
       projectId: this.projectId(),
       email,
     });

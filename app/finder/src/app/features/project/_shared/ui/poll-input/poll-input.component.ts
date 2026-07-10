@@ -6,7 +6,8 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { ProjectStore } from '../../data/project.store';
+import { ProjectDetailStore } from '../../data/project-detail.store';
+import { ProjectListStore } from '../../data/project-list.store';
 import { OptionType } from '../../models/project-detail.model';
 import {
   OptionEntry,
@@ -28,14 +29,15 @@ export type { OptionEntry, DateOptionEntry };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollInputComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectDetailStore = inject(ProjectDetailStore);
+  private readonly projectListStore = inject(ProjectListStore);
   private readonly route = inject(ActivatedRoute);
   private readonly urlValidation = inject(UrlValidationService);
 
   readonly OptionType = OptionType;
 
   mode = input<'add' | 'edit' | 'standalone'>('add');
-  projectId = this.projectStore.projectId;
+  projectId = this.projectDetailStore.projectId;
   pollId = input<string | undefined>(undefined);
 
   optionType = signal<OptionType | undefined>(
@@ -53,19 +55,19 @@ export class PollInputComponent {
 
     effect(() => {
       if (this.mode() !== 'standalone') {
-        titleService.setTitle(this.projectStore.currentProject()?.name ?? '');
+        titleService.setTitle(this.projectDetailStore.currentProject()?.name ?? '');
       }
     });
 
     effect(() => {
       const pollId = this.pollId();
       if (this.mode() === 'edit' && pollId) {
-        this.projectStore.getPoll(pollId);
+        this.projectDetailStore.getPoll(pollId);
       }
     });
 
     effect(() => {
-      const currentPoll = this.projectStore.currentPoll();
+      const currentPoll = this.projectDetailStore.currentPoll();
       if (
         this.mode() === 'edit' &&
         currentPoll &&
@@ -184,7 +186,7 @@ export class PollInputComponent {
           description: '',
         }));
 
-      this.projectStore.addPoll({
+      this.projectDetailStore.addPoll({
         projectId,
         name: this.question(),
         description: this.description(),
@@ -200,7 +202,7 @@ export class PollInputComponent {
           meta: o.meta,
         }));
 
-      this.projectStore.addPoll({
+      this.projectDetailStore.addPoll({
         projectId,
         name: this.question(),
         description: this.description(),
@@ -224,7 +226,7 @@ export class PollInputComponent {
           description: '',
         }));
 
-      this.projectStore.addStandalonePoll({
+      this.projectListStore.addStandalonePoll({
         name: this.question(),
         description: this.description(),
         optionType: OptionType.Date,
@@ -239,7 +241,7 @@ export class PollInputComponent {
           meta: o.meta,
         }));
 
-      this.projectStore.addStandalonePoll({
+      this.projectListStore.addStandalonePoll({
         name: this.question(),
         description: this.description(),
         optionType,
@@ -265,7 +267,7 @@ export class PollInputComponent {
           description: '',
         }));
 
-      this.projectStore.editPoll({
+      this.projectDetailStore.editPoll({
         projectId,
         pollId,
         name: this.question(),
@@ -283,7 +285,7 @@ export class PollInputComponent {
           meta: o.meta,
         }));
 
-      this.projectStore.editPoll({
+      this.projectDetailStore.editPoll({
         projectId,
         pollId,
         name: this.question(),

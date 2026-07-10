@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { UserService } from '../../../common/services/user.service';
 import { UserStore } from '../../../common/data/user.store';
-import { ProjectStore } from '../_shared/data/project.store';
+import { SharingStore } from '../_shared/data/sharing.store';
 
 @Component({
   selector: 'app-public-project',
@@ -26,14 +26,14 @@ export class PublicProjectComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
   private readonly userStore = inject(UserStore);
-  private readonly projectStore = inject(ProjectStore);
+  private readonly sharingStore = inject(SharingStore);
 
   ngOnInit() {
     const projectId = this.route.snapshot.paramMap.get('projectId')!;
 
     this.userService.getUser().subscribe((user) => {
       if (user?.isAuthenticated) {
-        this.projectStore.navigateToSharedProject(projectId);
+        this.sharingStore.navigateToSharedProject(projectId);
       } else {
         this.userStore.setRedirectUrl(`/p/${projectId}`);
         this.router.navigate(['/auth/login']);

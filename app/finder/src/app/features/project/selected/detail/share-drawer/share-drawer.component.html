@@ -1,0 +1,12 @@
+<p-drawer
+  [header]="('project.share.title' | translate) + ' – ' + projectName()"
+  position="bottom"
+  [(visible)]="visible"
+  styleClass="tw:!h-auto tw:rounded-t-2xl"
+>
+  <app-share-content
+    [projectId]="projectId()"
+    [sharedWith]="sharedWith()"
+    [visibilityType]="visibilityType()"
+  />
+</p-drawer>

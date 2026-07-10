@@ -5,58 +5,52 @@ import {
   effect,
   inject,
   input,
-  model,
   signal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Drawer } from 'primeng/drawer';
-import { SelectButton } from 'primeng/selectbutton';
+import { Divider } from 'primeng/divider';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { ProjectStore } from '../../../_shared/data/project.store';
+import { ProjectStore } from '../../../../_shared/data/project.store';
 import {
   SharedWith,
   VisibilityType,
-} from '../../../_shared/models/project-detail.model';
-import { environment } from '../../../../../common/env/environment';
-import { ShareLinkTabComponent } from './share-link-tab/share-link-tab.component';
-import { SharePeopleTabComponent } from './share-people-tab/share-people-tab.component';
+} from '../../../../_shared/models/project-detail.model';
+import { environment } from '../../../../../../common/env/environment';
+import { ShareAccessFormComponent } from './share-access-form/share-access-form.component';
+import { ShareInviteFormComponent } from './share-invite-form/share-invite-form.component';
+import { ShareMembersListComponent } from './share-members-list/share-members-list.component';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'app-share-dialog',
+  selector: 'app-share-content',
   imports: [
-    Drawer,
-    SelectButton,
+    Divider,
     Tabs,
     TabList,
     Tab,
     TabPanels,
     TabPanel,
-    FormsModule,
     TranslatePipe,
-    SharePeopleTabComponent,
-    ShareLinkTabComponent,
+    ShareAccessFormComponent,
+    ShareInviteFormComponent,
+    ShareMembersListComponent,
+    NgTemplateOutlet,
   ],
-  templateUrl: './share-dialog.component.html',
+  templateUrl: './share-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShareDialogComponent {
+export class ShareContentComponent {
   private readonly projectStore = inject(ProjectStore);
   private readonly translateService = inject(TranslateService);
 
-  readonly VisibilityType = VisibilityType;
-
   projectId = input.required<string>();
-  projectName = input.required<string>();
   sharedWith = input.required<SharedWith[]>();
   visibilityType = input.required<VisibilityType>();
-  visible = model(false);
 
   selectedVisibility = signal<VisibilityType>(
     VisibilityType.VisibleForSelectedOnly,
   );
-
-  activeTab = signal('people');
+  activeTab = signal('access');
 
   sharingContacts = this.projectStore.sharingContacts;
   sharingInProgress = this.projectStore.sharingInProgress;
@@ -64,17 +58,7 @@ export class ShareDialogComponent {
   isPublic = computed(
     () => this.selectedVisibility() === VisibilityType.VisibleForEverybody,
   );
-
-  constructor() {
-    effect(() => {
-      this.selectedVisibility.set(this.visibilityType());
-    });
-    effect(() => {
-      if (this.visible()) {
-        this.projectStore.loadContacts(this.projectId());
-      }
-    });
-  }
+  shareLink = computed(() => `${environment.baseUrl}/p/${this.projectId()}`);
 
   private inviteOnlyLabel = this.translateService.translate(
     'project.share.inviteOnly',
@@ -89,7 +73,11 @@ export class ShareDialogComponent {
     { label: this.openLabel(), value: VisibilityType.VisibleForEverybody },
   ]);
 
-  shareLink = computed(() => `${environment.baseUrl}/p/${this.projectId()}`);
+  constructor() {
+    effect(() => {
+      this.selectedVisibility.set(this.visibilityType());
+    });
+  }
 
   setActiveTab(value: string | number | undefined) {
     if (value !== undefined) {
@@ -99,9 +87,6 @@ export class ShareDialogComponent {
 
   onVisibilityChange(value: VisibilityType) {
     this.selectedVisibility.set(value);
-    if (value === VisibilityType.VisibleForEverybody) {
-      this.activeTab.set('link');
-    }
     this.projectStore.updateVisibilityType({
       projectId: this.projectId(),
       type: value,

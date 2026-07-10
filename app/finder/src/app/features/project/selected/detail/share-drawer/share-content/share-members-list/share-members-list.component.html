@@ -1,0 +1,77 @@
+<p-menu
+  #roleMenu
+  [model]="menuItems()"
+  [popup]="true"
+  appendTo="body"
+/>
+
+@if (members().length > 0) {
+  <p
+    class="tw:text-xs tw:font-semibold tw:uppercase tw:tracking-wide tw:text-gray-500 tw:mt-6 tw:mb-2"
+  >
+    {{ members().length }} {{ "project.share.persons" | translate }}
+  </p>
+
+  <div class="tw:overflow-y-auto tw:max-h-[250px]">
+    @for (member of sortedMembers(); track member.email) {
+      <div class="tw:relative">
+        <div class="tw:flex tw:items-center tw:gap-3 tw:py-2">
+          <p-avatar
+            [image]="member.picture ?? undefined"
+            [label]="
+              member.picture ? undefined : member.name[0].toUpperCase()
+            "
+            shape="circle"
+          />
+          <div class="tw:flex-1 tw:min-w-0">
+            <p class="tw:font-medium tw:truncate tw:text-sm">
+              {{ member.name }}
+            </p>
+            <p class="tw:text-xs tw:text-gray-400 tw:truncate">
+              {{ member.email }}
+            </p>
+          </div>
+
+          @if (member.role !== ProjectRole.Creator) {
+            <button
+              class="tw:text-xs tw:px-2 tw:py-1 tw:rounded tw:bg-gray-100 tw:text-gray-700 tw:cursor-pointer tw:hover:bg-gray-200 tw:transition-colors"
+              (click)="openRoleMenu($event, member)"
+            >
+              {{ "project.roles." + getRoleKey(member.role) | translate }}
+            </button>
+          } @else {
+            <span
+              class="tw:text-xs tw:px-2 tw:py-1 tw:rounded tw:bg-blue-100 tw:text-blue-700"
+            >
+              {{ "project.roles.creator" | translate }}
+            </span>
+          }
+
+          @if (!isPublic() && member.role !== ProjectRole.Creator) {
+            <p-button
+              icon="pi pi-times"
+              [text]="true"
+              severity="secondary"
+              size="small"
+              (click)="onRemoveClick(member.email)"
+            />
+          }
+        </div>
+
+        @if (pendingRemoveEmail() === member.email) {
+          <div
+            class="tw:absolute tw:inset-0 tw:bg-white/80 tw:flex tw:items-center tw:justify-end tw:gap-2 tw:px-3 tw:rounded"
+            (click)="pendingRemoveEmail.set(undefined)"
+          >
+            <p-button
+              [label]="'project.share.remove' | translate"
+              severity="danger"
+              size="small"
+              (click)="$event.stopPropagation(); confirmRemove(member.email)"
+            />
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

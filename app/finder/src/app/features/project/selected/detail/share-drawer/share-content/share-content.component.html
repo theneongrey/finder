@@ -1,0 +1,42 @@
+@if (sharedWith().length > 0) {
+  <p-tabs [value]="activeTab()" (valueChange)="setActiveTab($event)">
+    <p-tablist>
+      <p-tab value="access">{{ "project.share.tabAccess" | translate }}</p-tab>
+      <p-tab value="members">{{
+        "project.share.tabMembers" | translate
+      }}</p-tab>
+    </p-tablist>
+    <p-tabpanels class="tw:px-0!">
+      <p-tabpanel value="access">
+        <ng-container *ngTemplateOutlet="share" />
+      </p-tabpanel>
+      <p-tabpanel value="members">
+        <app-share-members-list
+          [projectId]="projectId()"
+          [members]="sharedWith()"
+          [isPublic]="isPublic()"
+        />
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+} @else {
+  <ng-container *ngTemplateOutlet="share" />
+}
+
+<ng-template #share>
+  <app-share-access-tab
+    [visibilityOptions]="visibilityOptions()"
+    [selectedVisibility]="selectedVisibility()"
+    [isPublic]="isPublic()"
+    [shareLink]="shareLink()"
+    (visibilityChange)="onVisibilityChange($event)"
+  />
+  <p-divider class="tw:my:2" />
+  <div class="tw:mb-4">
+    <app-share-invite-form
+      [projectId]="projectId()"
+      [contacts]="sharingContacts()"
+      [sharingInProgress]="sharingInProgress()"
+    />
+  </div>
+</ng-template>

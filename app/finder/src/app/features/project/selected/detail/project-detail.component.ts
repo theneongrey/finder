@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
 import { Avatar } from 'primeng/avatar';
 import { AvatarGroup } from 'primeng/avatargroup';
 import { Tooltip } from 'primeng/tooltip';
-import { ShareDialogComponent } from './share-dialog/share-dialog.component';
+import { ShareDrawerComponent } from './share-drawer/share-drawer.component';
 import { ProjectRole } from '../../_shared/models/project-role.enum';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
@@ -35,7 +35,7 @@ import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.componen
     Avatar,
     AvatarGroup,
     Tooltip,
-    ShareDialogComponent,
+    ShareDrawerComponent,
     TranslatePipe,
   ],
   providers: [ConfirmationService, MessageService],

@@ -25,6 +25,15 @@ public static class PermissionApi
                 })
             .RequireAuthorization();
 
+        // Get frequent sharing contacts for a project (excluding existing members)
+        app.MapGet("/api/permission/contacts/{projectId:guid}",
+                async (Guid projectId, PermissionService permissionService) =>
+                {
+                    var contacts = await permissionService.GetSharingContacts(projectId);
+                    return Results.Ok(contacts);
+                })
+            .RequireAuthorization();
+
         // Update project visibility
         app.MapPut("/api/permission/type/{projectId:guid}",
                 async (Guid projectId, [FromBody] UpdatePermissionTypeRequest typeRequest,
@@ -32,6 +41,41 @@ public static class PermissionApi
                 {
                     await permissionService.UpdateVisibilityType(projectId, typeRequest.Type);
                     return Results.Ok();
+                })
+            .RequireAuthorization();
+
+        // Remove user permission
+        app.MapDelete("/api/permission/{projectId:guid}/{email}",
+                async (Guid projectId, string email, PermissionService permissionService, UserService userService) =>
+                {
+                    var result = await permissionService.RemovePermissionForUser(email, projectId);
+                    if (!result.IsSuccess)
+                    {
+                        return result.Code switch
+                        {
+                            403 => Results.Forbid(),
+                            _ => Results.NotFound()
+                        };
+                    }
+
+                    var project = result.Payload!;
+                    var userId = userService.GetUserId();
+
+                    var sharedWith = project.Permissions.Where(p => p.PersonKey != userId)
+                        .Select(p => p.ToProjectSharedWith());
+
+                    if (userId != project.Creator.Id)
+                    {
+                        sharedWith = sharedWith.Prepend(
+                            new ProjectSharedWith
+                            {
+                                Name = project.Creator.Name ?? project.Creator.Email,
+                                Email = project.Creator.Email,
+                                Role = ProjectRole.Creator
+                            });
+                    }
+
+                    return Results.Ok(sharedWith);
                 })
             .RequireAuthorization();
 
@@ -55,7 +99,8 @@ public static class PermissionApi
                             sharedWith = sharedWith.Prepend(
                                 new ProjectSharedWith
                                 {
-                                    Name = project.Creator.Name ?? "",
+                                    Name = project.Creator.Name ?? project.Creator.Email,
+                                    Email = project.Creator.Email,
                                     Role = ProjectRole.Creator
                                 });
                         }

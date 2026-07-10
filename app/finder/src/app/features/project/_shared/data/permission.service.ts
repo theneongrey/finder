@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SharedWith } from '../models/project-detail.model';
+import { SharedWith, SharingContact, VisibilityType } from '../models/project-detail.model';
 import { LoggerService } from '../../../../common/services/logger.service';
 import { environment } from '../../../../common/env/environment';
 
@@ -21,6 +21,25 @@ export class PermissionService {
         email,
         permissionType,
       },
+    );
+  }
+
+  updateVisibilityType(projectId: string, type: VisibilityType) {
+    return this.httpClient.put<void>(
+      `${this.baseUrl}/api/permission/type/${projectId}`,
+      { type },
+    );
+  }
+
+  getContacts(projectId: string) {
+    return this.httpClient.get<SharingContact[]>(
+      `${this.baseUrl}/api/permission/contacts/${projectId}`,
+    );
+  }
+
+  removePermission(projectId: string, email: string) {
+    return this.httpClient.delete<SharedWith[]>(
+      `${this.baseUrl}/api/permission/${projectId}/${encodeURIComponent(email)}`,
     );
   }
 }

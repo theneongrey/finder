@@ -38,6 +38,7 @@
       "cancel": "Cancelar",
       "edit": "Editar",
       "delete": "Eliminar",
+      "share": "Compartir",
       "vote": "Votar"
     },
     "roles": {
@@ -122,9 +123,21 @@
     },
     "share": {
       "title": "Compartir",
-      "email": "Correo electrónico",
-      "permission": "Permiso",
-      "share": "Compartir"
+      "invite": "Invitar",
+      "open": "Abierto",
+      "inviteOnly": "Solo invitados",
+      "openDescription": "Cualquier persona con el enlace puede votar.",
+      "inviteOnlyDescription": "Solo las personas invitadas pueden unirse.",
+      "tabAccess": "Acceso",
+      "tabMembers": "Miembros",
+      "copy": "Copiar",
+      "linkCopied": "Enlace copiado al portapapeles.",
+      "nameOrEmail": "Nombre o correo electrónico",
+      "voterDescription": "Puede ver el proyecto y sus encuestas y votar.",
+      "maintainerDescription": "Puede gestionar temas y opciones y participar en votos.",
+      "ownerDescription": "Puede gestionar la configuración del proyecto y los permisos de usuario.",
+      "remove": "Eliminar",
+      "persons": "Personas"
     },
     "input": {
       "description": "Un proyecto es una colección de cosas que decidir, como una \"fiesta de cumpleaños\"",

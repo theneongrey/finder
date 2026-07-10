@@ -38,14 +38,15 @@
       "cancel": "Abbrechen",
       "edit": "Bearbeiten",
       "delete": "Löschen",
+      "share": "Teilen",
       "vote": "Abstimmen"
     },
     "roles": {
       "unknown": "Unbekannt",
-      "voter": "Abstimmender",
-      "maintainer": "Verwalter",
-      "owner": "Besitzer",
-      "creator": "Ersteller"
+      "voter": "Abstimmen",
+      "maintainer": "Erstellen",
+      "owner": "Verwalten",
+      "creator": "Gründer"
     },
     "tabs": {
       "overview": "Überblick",
@@ -122,9 +123,21 @@
     },
     "share": {
       "title": "Teilen",
-      "email": "E-Mail",
-      "permission": "Berechtigung",
-      "share": "Teilen"
+      "invite": "Einladen",
+      "open": "Offen",
+      "inviteOnly": "Nur Eingeladene",
+      "openDescription": "Jede Person mit dem Link kann abstimmen.",
+      "inviteOnlyDescription": "Nur eingeladene Personen können beitreten.",
+      "tabAccess": "Zugriff",
+      "tabMembers": "Mitglieder",
+      "copy": "Kopieren",
+      "linkCopied": "Link wurde in die Zwischenablage kopiert.",
+      "nameOrEmail": "Name oder E-Mail",
+      "voterDescription": "Kann das Projekt und seine Umfragen ansehen und abstimmen.",
+      "maintainerDescription": "Kann Abstimmungen erstellen und bearbeiten sowie selbst abstimmen.",
+      "ownerDescription": "Kann alles was Abstimmende und Ersteller können, und zusätzlich Benutzer einladen und verwalten.",
+      "remove": "Entfernen",
+      "persons": "Personen"
     },
     "input": {
       "description": "Ein Projekt ist eine Sammlung von Dingen, über die entschieden werden soll, wie z. B. eine \"Geburtstagsparty\"",

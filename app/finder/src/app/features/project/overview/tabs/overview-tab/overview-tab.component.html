@@ -24,6 +24,7 @@
       <app-project-item
         [project]="project"
         (deletionRequested)="projectDeletionRequested.emit(project)"
+        (shareRequested)="shareRequested.emit(project.id)"
       />
     }
   </div>

@@ -69,5 +69,11 @@
 <p-confirmdialog />
 
 @if (project(); as project) {
-  <app-share-dialog [projectId]="project.id" [(visible)]="showShare" />
+  <app-share-drawer
+    [projectId]="project.id"
+    [projectName]="project.name"
+    [sharedWith]="project.sharedWith"
+    [visibilityType]="project.visibilityType"
+    [(visible)]="showShare"
+  />
 }

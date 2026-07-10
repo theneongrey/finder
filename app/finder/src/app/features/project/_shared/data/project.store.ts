@@ -19,6 +19,8 @@ import {
   OptionType,
   Project,
   PollDetail,
+  SharingContact,
+  VisibilityType,
 } from '../models/project-detail.model';
 import { PermissionService } from '../../_shared/data/permission.service';
 import { LoggerService } from '../../../../common/services/logger.service';
@@ -31,6 +33,8 @@ export const ProjectStore = signalStore(
     activeTab: 'overview' as 'overview' | 'projects' | 'polls',
     currentProject: undefined as Project | undefined,
     currentPoll: undefined as PollDetail | undefined,
+    sharingContactsSuggestion: [] as SharingContact[],
+    sharingInProgress: false,
   }),
   withComputed((store) => ({
     projectId: computed(() => store.currentProject()?.id),
@@ -583,28 +587,145 @@ export const ProjectStore = signalStore(
       ),
     ),
 
+    updateVisibilityType: rxMethod<{
+      projectId: string;
+      type: VisibilityType;
+    }>(
+      pipe(
+        switchMap((payload) => {
+          return store.permissionService
+            .updateVisibilityType(payload.projectId, payload.type)
+            .pipe(
+              tapResponse({
+                next: () => {
+                  if (store.currentProject()?.id === payload.projectId) {
+                    patchState(store, {
+                      currentProject: {
+                        ...store.currentProject()!,
+                        visibilityType: payload.type,
+                      },
+                    });
+                  }
+
+                  patchState(store, {
+                    projects: store
+                      .projects()
+                      .map((p) =>
+                        p.id === payload.projectId
+                          ? { ...p, visibilityType: payload.type }
+                          : p,
+                      ),
+                  });
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error updating visibility type',
+                    error,
+                  );
+                },
+              }),
+            );
+        }),
+      ),
+    ),
+
+    loadContacts: rxMethod<string>(
+      pipe(
+        switchMap((projectId) => {
+          return store.permissionService.getContacts(projectId).pipe(
+            tapResponse({
+              next: (sharingContacts) => {
+                patchState(store, {
+                  sharingContactsSuggestion: sharingContacts,
+                });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error loading contacts',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
     share: rxMethod<{
       email: string;
       permissionType: number;
       projectId: string;
     }>(
       pipe(
+        tap(() => patchState(store, { sharingInProgress: true })),
         switchMap((share) => {
           return store.permissionService
             .share(share.projectId, share.email, share.permissionType)
             .pipe(
               tapResponse({
                 next: (sharedWith) => {
+                  if (store.currentProject()?.id === share.projectId) {
+                    patchState(store, {
+                      currentProject: {
+                        ...store.currentProject()!,
+                        sharedWith,
+                      },
+                    });
+                  }
+
                   patchState(store, {
-                    currentProject: {
-                      ...store.currentProject()!,
-                      sharedWith: sharedWith,
-                    },
+                    sharingInProgress: false,
+                    sharingContactsSuggestion: store
+                      .sharingContactsSuggestion()
+                      .filter((c) => c.email !== share.email),
+                    projects: store
+                      .projects()
+                      .map((p) =>
+                        p.id === share.projectId ? { ...p, sharedWith } : p,
+                      ),
+                  });
+                },
+                error: (error) => {
+                  patchState(store, { sharingInProgress: false });
+                  store.loggerService.log(
+                    '[ProjectStore] Error while sharing',
+                    error,
+                  );
+                },
+              }),
+            );
+        }),
+      ),
+    ),
+
+    removePermission: rxMethod<{ projectId: string; email: string }>(
+      pipe(
+        switchMap((payload) => {
+          return store.permissionService
+            .removePermission(payload.projectId, payload.email)
+            .pipe(
+              tapResponse({
+                next: (sharedWith) => {
+                  if (store.currentProject()?.id === payload.projectId) {
+                    patchState(store, {
+                      currentProject: {
+                        ...store.currentProject()!,
+                        sharedWith,
+                      },
+                    });
+                  }
+
+                  patchState(store, {
+                    projects: store
+                      .projects()
+                      .map((p) =>
+                        p.id === payload.projectId ? { ...p, sharedWith } : p,
+                      ),
                   });
                 },
                 error: (error) => {
                   store.loggerService.log(
-                    '[ProjectStore] Error while sharing',
+                    '[ProjectStore] Error removing permission',
                     error,
                   );
                 },
@@ -640,6 +761,35 @@ export const ProjectStore = signalStore(
               error: (error) => {
                 store.loggerService.log(
                   '[ProjectStore] Error while voting',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
+    navigateToSharedProject: rxMethod<string>(
+      pipe(
+        switchMap((projectId) => {
+          return store.projectService.getPublicProjectInfo(projectId).pipe(
+            tapResponse({
+              next: (info) => {
+                if (info.isStandalone && info.pollId) {
+                  store.router.navigate([
+                    '/project/detail',
+                    info.projectId,
+                    'vote',
+                    info.pollId,
+                  ]);
+                } else {
+                  store.router.navigate(['/project/detail', info.projectId]);
+                }
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error navigating to shared project',
                   error,
                 );
               },

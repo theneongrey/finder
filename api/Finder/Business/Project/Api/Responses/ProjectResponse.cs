@@ -1,5 +1,12 @@
 namespace Finder.Business.Project.Api.Responses;
 
+public class PublicProjectResponse
+{
+    public required string ProjectId { get; set; }
+    public required bool IsStandalone { get; set; }
+    public string? PollId { get; set; }
+}
+
 public class ProjectResponseOption
 {
     public required string Id { get; set; }
@@ -13,6 +20,7 @@ public class ProjectResponseOption
 public class ProjectSharedWith
 {
     public required string Name { get; set; }
+    public required string Email { get; set; }
     public required ProjectRole Role { get; set; }
     public string? Picture { get; set; }
 }
@@ -34,7 +42,7 @@ public class ProjectResponse
     public required string Name { get; set; }
     public string? Description { get; set; }
     public required ProjectResponsePoll[] Polls { get; set; }
-    public required int PermissionType { get; set; }
+    public required int VisibilityType { get; set; }
     public required string Creator { get; set; }
     public required ProjectRole Role { get; set; }
     public required ProjectSharedWith[] SharedWith { get; set; }
@@ -42,6 +50,16 @@ public class ProjectResponse
 
 public static class ProjectMapper
 {
+    public static PublicProjectResponse ToPublicProjectResponse(this Entities.Project project)
+    {
+        return new PublicProjectResponse
+        {
+            ProjectId = project.Id.ToString(),
+            IsStandalone = project.IsStandalone,
+            PollId = project.IsStandalone ? project.Polls.FirstOrDefault()?.Id.ToString() : null
+        };
+    }
+
     public static ProjectResponseOption ToProjectResponseOption(this Entities.Option option, Guid? userId)
     {
         return new ProjectResponseOption
@@ -93,6 +111,7 @@ public static class ProjectMapper
         return new ProjectSharedWith
         {
             Name = permission.Person.Name ?? permission.Person.Email,
+            Email = permission.Person.Email,
             Role = permission.PermissionType.ToProjectRole(),
             Picture = permission.Person.Picture
         };
@@ -110,6 +129,7 @@ public static class ProjectMapper
                 new ProjectSharedWith
                 {
                     Name = project.Creator.Name ?? project.Creator.Email,
+                    Email = project.Creator.Email,
                     Role = ProjectRole.Creator,
                     Picture = project.Creator.Picture
                 });
@@ -121,7 +141,7 @@ public static class ProjectMapper
             Name = project.Name,
             Description = project.Description,
             Polls = project.Polls.OrderBy(t => t.Created).Select(t => t.ToProjectResponsePoll(userId)).ToArray(),
-            PermissionType = (int)project.VisibilityType,
+            VisibilityType = (int)project.VisibilityType,
             Creator = project.Creator.Name ?? project.Creator.Email,
             Role = project.GetRole(userId),
             SharedWith = sharedWith.ToArray()

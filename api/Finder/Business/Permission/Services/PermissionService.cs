@@ -43,6 +43,49 @@ public class PermissionService
         return Result<List<Person>>.Success(invitedPersons);
     }
 
+    public async Task<List<Api.Responses.SharingContactResponse>> GetSharingContacts(Guid projectId)
+    {
+        if (!UserId.HasValue)
+        {
+            return [];
+        }
+
+        var currentProject = await _dbContext.Projects
+            .Include(p => p.Creator)
+            .Include(p => p.Permissions)
+            .Where(p => p.Id == projectId)
+            .FirstOrDefaultAsync();
+
+        if (currentProject == null)
+        {
+            return [];
+        }
+
+        var excludedIds = currentProject.Permissions.Select(p => p.PersonKey)
+            .Append(currentProject.Creator.Id)
+            .Append(UserId.Value)
+            .ToHashSet();
+
+        var contacts = await _dbContext.Permissions
+            .Where(p =>
+                !excludedIds.Contains(p.PersonKey) &&
+                (p.Project.Creator.Id == UserId ||
+                 p.Project.Permissions.Any(pp => pp.PersonKey == UserId)))
+            .GroupBy(p => new { p.Person.Id, p.Person.Email, p.Person.Name, p.Person.Picture })
+            .Select(g => new Api.Responses.SharingContactResponse
+            {
+                Name = g.Key.Name ?? g.Key.Email,
+                Email = g.Key.Email,
+                Picture = g.Key.Picture,
+                ShareCount = g.Count()
+            })
+            .OrderByDescending(c => c.ShareCount)
+            .Take(5)
+            .ToListAsync();
+
+        return contacts;
+    }
+
     public async Task<Result> UpdateVisibilityType(Guid projectId, VisibilityType visibilityType)
     {
         var project = await _dbContext.Projects
@@ -59,6 +102,42 @@ public class PermissionService
         project.VisibilityType = visibilityType;
         await _dbContext.SaveChangesAsync();
         return Result.Success();
+    }
+
+    public async Task<Result<Project.Entities.Project>> RemovePermissionForUser(string email, Guid projectId)
+    {
+        var cleanEmail = email.Trim().ToLower();
+
+        var project = await _dbContext.Projects
+            .Include(p => p.Creator)
+            .Include(p => p.Permissions)
+            .ThenInclude(p => p.Person)
+            .Where(p => p.Id == projectId &&
+                        (p.Creator.Id == UserId ||
+                         p.Permissions.Any(pm => pm.PersonKey == UserId && pm.PermissionType == PermissionType.Owner)))
+            .FirstOrDefaultAsync();
+
+        if (project == null)
+        {
+            return Result<Project.Entities.Project>.Fail(404);
+        }
+
+        var permission = project.Permissions.Find(p => p.Person.Email == cleanEmail);
+        if (permission == null)
+        {
+            return Result<Project.Entities.Project>.Fail(404);
+        }
+
+        if (permission.PersonKey == project.Creator.Id)
+        {
+            return Result<Project.Entities.Project>.Fail(403);
+        }
+
+        project.Permissions.Remove(permission);
+        _dbContext.Permissions.Remove(permission);
+        await _dbContext.SaveChangesAsync();
+
+        return Result<Project.Entities.Project>.Success(project);
     }
 
     public async Task<Result<Project.Entities.Project>> AddOrUpdatePermissionForUser(string email, Guid projectId, PermissionType permissionType)
@@ -79,9 +158,10 @@ public class PermissionService
         }
         
         var project = await _dbContext.Projects
+            .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
-            .Where(p => p.Id == projectId && 
+            .Where(p => p.Id == projectId &&
                         p.Creator.Id != user.Id && // can't edit rights for creator
                         (p.Creator.Id == UserId || // only creator or owner can update rights
                          p.Permissions.Any(permission => permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))

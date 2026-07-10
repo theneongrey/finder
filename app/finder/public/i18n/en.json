@@ -38,6 +38,7 @@
       "cancel": "Cancel",
       "edit": "Edit",
       "delete": "Delete",
+      "share": "Share",
       "vote": "Vote"
     },
     "roles": {
@@ -122,9 +123,21 @@
     },
     "share": {
       "title": "Share",
-      "email": "Email",
-      "permission": "Permission",
-      "share": "Share"
+      "invite": "Invite",
+      "open": "Open",
+      "inviteOnly": "Invite only",
+      "openDescription": "Anyone with the link can vote.",
+      "inviteOnlyDescription": "Only invited people can join.",
+      "tabAccess": "Access",
+      "tabMembers": "Members",
+      "copy": "Copy",
+      "linkCopied": "Link copied to clipboard.",
+      "nameOrEmail": "Name or email",
+      "voterDescription": "Can view the project and its polls and cast votes.",
+      "maintainerDescription": "Can manage topics and options and participate in votes.",
+      "ownerDescription": "Can manage project settings and user permissions.",
+      "remove": "Remove",
+      "persons": "People"
     },
     "input": {
       "description": "A project is a collection of things to decide, like a \"Birthday party\"",

@@ -1,4 +1,4 @@
 export const environment = {
   environment: 'production',
-  baseUrl: '',
+  baseUrl: 'https://pixel-fusion.de',
 };

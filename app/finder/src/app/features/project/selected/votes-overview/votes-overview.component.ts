@@ -5,7 +5,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { ProjectStore } from '../../_shared/data/project.store';
+import { ProjectDetailStore } from '../../_shared/data/project-detail.store';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overview-summary.component';
 import { OptionListComponent } from './option-list/option-list.component';
@@ -24,19 +24,19 @@ import { TitleBarService } from '../../../../common/services/title-bar.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VotesOverviewComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectDetailStore = inject(ProjectDetailStore);
 
   pollId = input('');
-  projectId = this.projectStore.projectId;
+  projectId = this.projectDetailStore.projectId;
 
-  poll = this.projectStore.currentPoll;
-  project = this.projectStore.currentProject;
+  poll = this.projectDetailStore.currentPoll;
+  project = this.projectDetailStore.currentProject;
 
   constructor() {
     const titleService = inject(TitleBarService);
 
     effect(() => {
-      this.projectStore.getPoll(this.pollId());
+      this.projectDetailStore.getPoll(this.pollId());
     });
 
     effect(() => {
@@ -48,6 +48,6 @@ export class VotesOverviewComponent {
   }
 
   addComment(content: string) {
-    this.projectStore.addComment({ pollId: this.pollId(), content });
+    this.projectDetailStore.addComment({ pollId: this.pollId(), content });
   }
 }

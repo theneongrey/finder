@@ -30,6 +30,7 @@ public class ProjectService
             .Include(p => p.Polls)
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
+            .ThenInclude(p => p.Person)
             .Where(p => !p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
             .ToListAsync();
     }
@@ -112,6 +113,7 @@ public class ProjectService
     {
         var projectToUpdate = await _dbContext.Projects
             .Include(p => p.Permissions)
+            .ThenInclude(p => p.Person)
             .Include(p => p.Creator)
             .Where(p => p.Id == projectId &&
                         (p.Creator.Id == UserId || p.Permissions.Any(permission =>
@@ -143,6 +145,21 @@ public class ProjectService
 
         await _dbContext.SaveChangesAsync();
         return Result.Success();
+    }
+
+    public async Task<Result<Entities.Project>> GetPublicInfo(Guid projectId)
+    {
+        var project = await _dbContext.Projects
+            .Include(p => p.Polls)
+            .Where(p => p.Id == projectId)
+            .SingleOrDefaultAsync();
+
+        if (project == null)
+        {
+            return Result<Entities.Project>.Fail(404);
+        }
+
+        return Result<Entities.Project>.Success(project);
     }
 
     public async Task<Result<Entities.Project>> Get(Guid projectId)
@@ -304,7 +321,7 @@ public class ProjectService
 
         if (pollRequest.Meta is not null)
         {
-            option.Meta = new Entities.OptionMeta
+            option.Meta = new OptionMeta
             {
                 Id = option.Id,
                 Url = pollRequest.Meta.Url,
@@ -355,7 +372,7 @@ public class ProjectService
             }
             else
             {
-                option.Meta = new Entities.OptionMeta
+                option.Meta = new OptionMeta
                 {
                     Id = option.Id,
                     Url = request.Meta.Url,

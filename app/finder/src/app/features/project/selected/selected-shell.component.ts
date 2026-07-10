@@ -8,7 +8,7 @@ import {
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 import { RouterOutlet } from '@angular/router';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
-import { ProjectStore } from '../_shared/data/project.store';
+import { ProjectDetailStore } from '../_shared/data/project-detail.store';
 
 @Component({
   selector: 'app-project-selected-shell',
@@ -18,14 +18,14 @@ import { ProjectStore } from '../_shared/data/project.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectSelectedShellComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectDetailStore = inject(ProjectDetailStore);
   projectId = input<string>();
 
   constructor() {
     effect(() => {
       const projectId = this.projectId();
       if (projectId) {
-        this.projectStore.getProject(projectId);
+        this.projectDetailStore.getProject(projectId);
       }
     });
   }

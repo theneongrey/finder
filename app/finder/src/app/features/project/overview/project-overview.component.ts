@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ProjectStore } from '../_shared/data/project.store';
+import { ProjectListStore } from '../_shared/data/project-list.store';
 import { ProjectOverview } from '../_shared/models/project-overview.model';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
@@ -13,6 +19,7 @@ import { ProjectsTabComponent } from './tabs/projects-tab/projects-tab.component
 import { StandalonePollTabComponent } from './tabs/standalone-poll-tab/standalone-poll-tab.component';
 import { Tag } from 'primeng/tag';
 import { PollItem } from '../_shared/models/poll-item.model';
+import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer/share-drawer.component';
 
 @Component({
   selector: 'app-project-overview',
@@ -30,6 +37,7 @@ import { PollItem } from '../_shared/models/poll-item.model';
     ProjectsTabComponent,
     StandalonePollTabComponent,
     Tag,
+    ShareDrawerComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
@@ -39,18 +47,22 @@ import { PollItem } from '../_shared/models/poll-item.model';
   },
 })
 export class ProjectOverviewComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectListStore = inject(ProjectListStore);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly translateService = inject(TranslateService);
   private readonly titleBarService = inject(TitleBarService);
 
-  projects = this.projectStore.projects;
-  standalonePolls = this.projectStore.standalonePolls;
-  activeTab = this.projectStore.activeTab;
+  projects = this.projectListStore.projects;
+  standalonePolls = this.projectListStore.standalonePolls;
+  activeTab = this.projectListStore.activeTab;
+  sharingProjectId = signal<string | undefined>(undefined);
+  sharingProject = computed(() =>
+    this.projects().find((p) => p.id === this.sharingProjectId()),
+  );
 
   constructor() {
-    this.projectStore.getProjects();
-    this.projectStore.getStandalonePolls();
+    this.projectListStore.getProjects();
+    this.projectListStore.getStandalonePolls();
     this.titleBarService.clearTitle();
   }
 
@@ -59,7 +71,11 @@ export class ProjectOverviewComponent {
   }
 
   set activeTabValue(value: string) {
-    this.projectStore.setActiveTab(value as 'overview' | 'projects' | 'polls');
+    this.projectListStore.setActiveTab(value as 'overview' | 'projects' | 'polls');
+  }
+
+  shareRequested(project: string) {
+    this.sharingProjectId.set(project);
   }
 
   projectDeletionRequested(project: ProjectOverview) {
@@ -75,7 +91,7 @@ export class ProjectOverviewComponent {
         'project.overview.deleteConfirm.accept',
       ),
       rejectLabel: this.translateService.instant('project.common.cancel'),
-      accept: () => this.projectStore.deleteProject(project.id),
+      accept: () => this.projectListStore.deleteProject(project.id),
     });
   }
 
@@ -92,7 +108,7 @@ export class ProjectOverviewComponent {
         'project.overview.deletePollConfirm.accept',
       ),
       rejectLabel: this.translateService.instant('project.common.cancel'),
-      accept: () => this.projectStore.deleteProject(poll.projectId),
+      accept: () => this.projectListStore.deleteProject(poll.projectId),
     });
   }
 }

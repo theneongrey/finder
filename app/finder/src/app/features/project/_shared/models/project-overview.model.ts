@@ -1,3 +1,5 @@
+import { SharedWith, VisibilityType } from './project-detail.model';
+
 export interface ProjectOverview {
   id: string;
   name: string;
@@ -9,4 +11,6 @@ export interface ProjectOverview {
   pollCount: number;
   creator: string;
   lastUpdated: string;
+  visibilityType: VisibilityType;
+  sharedWith: SharedWith[];
 }

@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ProjectStore } from '../../../_shared/data/project.store';
+import { ProjectListStore } from '../../../_shared/data/project-list.store';
 import { ProjectItemComponent } from '../../project-item/project-item.component';
 import { AddCardComponent } from '../../../../../common/ui/components/add-card/add-card.component';
 import { ProjectOverview } from '../../../_shared/models/project-overview.model';
@@ -18,12 +18,13 @@ import { ProjectOverview } from '../../../_shared/models/project-overview.model'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsTabComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectListStore = inject(ProjectListStore);
   private readonly router = inject(Router);
 
   deletionRequested = output<ProjectOverview>();
+  shareRequested = output<string>();
 
-  projects = this.projectStore.projects;
+  projects = this.projectListStore.projects;
 
   navigateToAdd() {
     this.router.navigate(['/project/add']);

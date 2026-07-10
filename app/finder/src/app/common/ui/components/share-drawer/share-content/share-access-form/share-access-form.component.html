@@ -1,0 +1,42 @@
+<p-toast position="top-center" />
+
+<p
+  class="tw:text-xs tw:font-semibold tw:uppercase tw:tracking-wide tw:text-gray-500 tw:mt-4 tw:mb-2"
+>
+  {{ "project.share.tabAccess" | translate }}
+</p>
+
+<p-select-button
+  fluid
+  [allowEmpty]="false"
+  [options]="visibilityOptions()"
+  [ngModel]="selectedVisibility()"
+  (ngModelChange)="onVisibilityChange($event)"
+  optionLabel="label"
+  optionValue="value"
+  class="tw:w-full"
+/>
+<p class="tw:text-sm tw:text-gray-500 tw:mt-2 tw:mb-2">
+  @if (isPublic()) {
+    {{ "project.share.openDescription" | translate }}
+  } @else {
+    {{ "project.share.inviteOnlyDescription" | translate }}
+  }
+</p>
+
+@if (isPublic()) {
+  <div
+    class="tw:flex tw:items-center tw:gap-2 tw:bg-primary/8 tw:p-2 tw:rounded-md"
+  >
+    <span
+      class="tw:flex-1 tw:text-sm tw:text-gray-700 tw:break-all tw:select-all tw:cursor-text"
+      >{{ shareLink() }}</span
+    >
+    <p-button
+      icon="pi pi-copy"
+      [label]="'project.share.copy' | translate"
+      size="small"
+      (click)="copyLink()"
+    />
+  </div>
+}

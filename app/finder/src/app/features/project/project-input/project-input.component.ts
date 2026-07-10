@@ -12,7 +12,8 @@ import { Button } from 'primeng/button';
 import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ProjectStore } from '../_shared/data/project.store';
+import { ProjectListStore } from '../_shared/data/project-list.store';
+import { ProjectDetailStore } from '../_shared/data/project-detail.store';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
 
@@ -31,7 +32,8 @@ import { TitleBarComponent } from '../../../common/ui/components/title-bar/title
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectInputComponent {
-  private readonly projectStore = inject(ProjectStore);
+  private readonly projectListStore = inject(ProjectListStore);
+  private readonly projectDetailStore = inject(ProjectDetailStore);
   private readonly translateService = inject(TranslateService);
 
   mode = input<'add' | 'edit'>('add');
@@ -55,12 +57,12 @@ export class ProjectInputComponent {
     effect(() => {
       const projectId = this.projectId();
       if (this.mode() === 'edit' && projectId) {
-        this.projectStore.getProject(projectId);
+        this.projectDetailStore.getProject(projectId);
       }
     });
 
     effect(() => {
-      const currentProject = this.projectStore.currentProject();
+      const currentProject = this.projectDetailStore.currentProject();
       if (
         this.mode() === 'edit' &&
         currentProject &&
@@ -81,7 +83,7 @@ export class ProjectInputComponent {
 
   private addProject() {
     if (this.projectName()) {
-      this.projectStore.addProject({
+      this.projectListStore.addProject({
         name: this.projectName(),
         description: this.projectDescription(),
       });
@@ -91,7 +93,7 @@ export class ProjectInputComponent {
   private editProject() {
     const projectId = this.projectId();
     if (projectId && this.projectName()) {
-      this.projectStore.editProject({
+      this.projectListStore.editProject({
         id: projectId,
         name: this.projectName(),
         description: this.projectDescription(),

@@ -10,6 +10,7 @@
     <app-project-item
       [project]="project"
       (deletionRequested)="deletionRequested.emit(project)"
+      (shareRequested)="shareRequested.emit(project.id)"
     />
   }
   <app-add-card

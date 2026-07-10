@@ -11,7 +11,7 @@ import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { SelectButton } from 'primeng/selectbutton';
 import { Toast } from 'primeng/toast';
-import { VisibilityType } from '../../../../../_shared/models/project-detail.model';
+import { VisibilityType } from '../../../../../../features/project/_shared/models/project-detail.model';
 
 @Component({
   selector: 'app-share-access-tab',

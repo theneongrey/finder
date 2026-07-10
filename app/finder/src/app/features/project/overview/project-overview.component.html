@@ -27,11 +27,13 @@
           <app-overview-tab
             (projectDeletionRequested)="projectDeletionRequested($event)"
             (pollDeletionRequested)="pollDeletionRequested($event)"
+            (shareRequested)="shareRequested($event)"
           />
         </p-tabpanel>
         <p-tabpanel value="projects">
           <app-projects-tab
             (deletionRequested)="projectDeletionRequested($event)"
+            (shareRequested)="shareRequested($event)"
           />
         </p-tabpanel>
         <p-tabpanel value="polls">
@@ -44,3 +46,14 @@
   </main>
 </div>
 <p-confirmdialog />
+
+@if (sharingProject(); as project) {
+  <app-share-drawer
+    [projectId]="project.id"
+    [projectName]="project.name"
+    [sharedWith]="project.sharedWith"
+    [visibilityType]="project.visibilityType"
+    [visible]="!!sharingProjectId()"
+    (visibleChange)="sharingProjectId.set($event ? project.id : undefined)"
+  />
+}

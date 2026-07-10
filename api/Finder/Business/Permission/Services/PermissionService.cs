@@ -46,7 +46,9 @@ public class PermissionService
     public async Task<List<Api.Responses.SharingContactResponse>> GetSharingContacts(Guid projectId)
     {
         if (!UserId.HasValue)
+        {
             return [];
+        }
 
         var currentProject = await _dbContext.Projects
             .Include(p => p.Creator)
@@ -55,7 +57,9 @@ public class PermissionService
             .FirstOrDefaultAsync();
 
         if (currentProject == null)
+        {
             return [];
+        }
 
         var excludedIds = currentProject.Permissions.Select(p => p.PersonKey)
             .Append(currentProject.Creator.Id)
@@ -114,14 +118,20 @@ public class PermissionService
             .FirstOrDefaultAsync();
 
         if (project == null)
+        {
             return Result<Project.Entities.Project>.Fail(404);
+        }
 
         var permission = project.Permissions.Find(p => p.Person.Email == cleanEmail);
         if (permission == null)
+        {
             return Result<Project.Entities.Project>.Fail(404);
+        }
 
         if (permission.PersonKey == project.Creator.Id)
+        {
             return Result<Project.Entities.Project>.Fail(403);
+        }
 
         project.Permissions.Remove(permission);
         _dbContext.Permissions.Remove(permission);

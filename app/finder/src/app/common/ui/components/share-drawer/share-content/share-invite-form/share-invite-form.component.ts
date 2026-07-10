@@ -14,14 +14,22 @@ import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
-import { ProjectStore } from '../../../../../_shared/data/project.store';
-import { SharingContact } from '../../../../../_shared/models/project-detail.model';
+import { ProjectStore } from '../../../../../../features/project/_shared/data/project.store';
+import { SharingContact } from '../../../../../../features/project/_shared/models/project-detail.model';
 
 @Component({
   selector: 'app-share-invite-form',
   templateUrl: './share-invite-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SelectButton, Select, InputText, Button, Avatar, FormsModule, TranslatePipe],
+  imports: [
+    SelectButton,
+    Select,
+    InputText,
+    Button,
+    Avatar,
+    FormsModule,
+    TranslatePipe,
+  ],
 })
 export class ShareInviteFormComponent {
   private readonly projectStore = inject(ProjectStore);

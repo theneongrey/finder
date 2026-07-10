@@ -22,6 +22,7 @@ export class ProjectsTabComponent {
   private readonly router = inject(Router);
 
   deletionRequested = output<ProjectOverview>();
+  shareRequested = output<string>();
 
   projects = this.projectStore.projects;
 

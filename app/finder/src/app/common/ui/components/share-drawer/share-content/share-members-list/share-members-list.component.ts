@@ -12,9 +12,9 @@ import { MenuItem } from 'primeng/api';
 import { Avatar } from 'primeng/avatar';
 import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
-import { ProjectStore } from '../../../../../_shared/data/project.store';
-import { SharedWith } from '../../../../../_shared/models/project-detail.model';
-import { ProjectRole } from '../../../../../_shared/models/project-role.enum';
+import { SharedWith } from '../../../../../../features/project/_shared/models/project-detail.model';
+import { ProjectStore } from '../../../../../../features/project/_shared/data/project.store';
+import { ProjectRole } from '../../../../../../features/project/_shared/models/project-role.enum';
 
 @Component({
   selector: 'app-share-members-list',
@@ -39,7 +39,9 @@ export class ShareMembersListComponent {
 
   sortedMembers = computed(() =>
     [...this.members()].sort((a, b) => {
-      if (b.role !== a.role) { return b.role - a.role; }
+      if (b.role !== a.role) {
+        return b.role - a.role;
+      }
       return a.name.localeCompare(b.name);
     }),
   );

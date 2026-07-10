@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Drawer } from 'primeng/drawer';
-import { ProjectStore } from '../../../_shared/data/project.store';
+import { ShareContentComponent } from './share-content/share-content.component';
 import {
   SharedWith,
   VisibilityType,
-} from '../../../_shared/models/project-detail.model';
-import { ShareContentComponent } from './share-content/share-content.component';
+} from '../../../../features/project/_shared/models/project-detail.model';
+import { ProjectStore } from '../../../../features/project/_shared/data/project.store';
 
 @Component({
   selector: 'app-share-drawer',

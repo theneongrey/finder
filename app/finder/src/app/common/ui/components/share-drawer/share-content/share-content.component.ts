@@ -10,16 +10,16 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Divider } from 'primeng/divider';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { ProjectStore } from '../../../../_shared/data/project.store';
-import {
-  SharedWith,
-  VisibilityType,
-} from '../../../../_shared/models/project-detail.model';
-import { environment } from '../../../../../../common/env/environment';
 import { ShareAccessFormComponent } from './share-access-form/share-access-form.component';
 import { ShareInviteFormComponent } from './share-invite-form/share-invite-form.component';
 import { ShareMembersListComponent } from './share-members-list/share-members-list.component';
 import { NgTemplateOutlet } from '@angular/common';
+import {
+  SharedWith,
+  VisibilityType,
+} from '../../../../../features/project/_shared/models/project-detail.model';
+import { ProjectStore } from '../../../../../features/project/_shared/data/project.store';
+import { environment } from '../../../../env/environment';
 
 @Component({
   selector: 'app-share-content',

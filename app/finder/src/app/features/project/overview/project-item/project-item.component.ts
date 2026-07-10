@@ -42,11 +42,13 @@ export class ProjectItemComponent {
 
   project = input.required<ProjectOverview>();
   deletionRequested = output();
+  shareRequested = output();
 
   private editLabel = this.translateService.translate('project.common.edit');
   private deleteLabel = this.translateService.translate(
     'project.common.delete',
   );
+  private shareLabel = this.translateService.translate('project.common.share');
 
   menuItems = computed<MenuItem[]>(() => {
     const project = this.project();
@@ -55,6 +57,11 @@ export class ProjectItemComponent {
         label: this.editLabel(),
         icon: 'fa-solid fa-pen',
         routerLink: '/project/edit/' + project.id,
+      },
+      {
+        label: this.shareLabel(),
+        icon: 'fa-solid fa-share-nodes',
+        command: () => this.shareRequested.emit(),
       },
       {
         label: this.deleteLabel(),

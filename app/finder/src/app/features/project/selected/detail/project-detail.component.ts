@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
 import { Avatar } from 'primeng/avatar';
 import { AvatarGroup } from 'primeng/avatargroup';
 import { Tooltip } from 'primeng/tooltip';
-import { ShareDrawerComponent } from './share-drawer/share-drawer.component';
+import { ShareDrawerComponent } from '../../../../common/ui/components/share-drawer/share-drawer.component';
 import { ProjectRole } from '../../_shared/models/project-role.enum';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TitleBarService } from '../../../../common/services/title-bar.service';

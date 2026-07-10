@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
@@ -13,6 +19,7 @@ import { ProjectsTabComponent } from './tabs/projects-tab/projects-tab.component
 import { StandalonePollTabComponent } from './tabs/standalone-poll-tab/standalone-poll-tab.component';
 import { Tag } from 'primeng/tag';
 import { PollItem } from '../_shared/models/poll-item.model';
+import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer/share-drawer.component';
 
 @Component({
   selector: 'app-project-overview',
@@ -30,6 +37,7 @@ import { PollItem } from '../_shared/models/poll-item.model';
     ProjectsTabComponent,
     StandalonePollTabComponent,
     Tag,
+    ShareDrawerComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
@@ -47,6 +55,10 @@ export class ProjectOverviewComponent {
   projects = this.projectStore.projects;
   standalonePolls = this.projectStore.standalonePolls;
   activeTab = this.projectStore.activeTab;
+  sharingProjectId = signal<string | undefined>(undefined);
+  sharingProject = computed(() =>
+    this.projects().find((p) => p.id === this.sharingProjectId()),
+  );
 
   constructor() {
     this.projectStore.getProjects();
@@ -60,6 +72,10 @@ export class ProjectOverviewComponent {
 
   set activeTabValue(value: string) {
     this.projectStore.setActiveTab(value as 'overview' | 'projects' | 'polls');
+  }
+
+  shareRequested(project: string) {
+    this.sharingProjectId.set(project);
   }
 
   projectDeletionRequested(project: ProjectOverview) {

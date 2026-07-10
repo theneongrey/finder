@@ -598,11 +598,23 @@ export const ProjectStore = signalStore(
             .pipe(
               tapResponse({
                 next: () => {
+                  if (store.currentProject()?.id === payload.projectId) {
+                    patchState(store, {
+                      currentProject: {
+                        ...store.currentProject()!,
+                        visibilityType: payload.type,
+                      },
+                    });
+                  }
+
                   patchState(store, {
-                    currentProject: {
-                      ...store.currentProject()!,
-                      visibilityType: payload.type,
-                    },
+                    projects: store
+                      .projects()
+                      .map((p) =>
+                        p.id === payload.projectId
+                          ? { ...p, visibilityType: payload.type }
+                          : p,
+                      ),
                   });
                 },
                 error: (error) => {
@@ -650,15 +662,25 @@ export const ProjectStore = signalStore(
             .pipe(
               tapResponse({
                 next: (sharedWith) => {
+                  if (store.currentProject()?.id === share.projectId) {
+                    patchState(store, {
+                      currentProject: {
+                        ...store.currentProject()!,
+                        sharedWith,
+                      },
+                    });
+                  }
+
                   patchState(store, {
                     sharingInProgress: false,
-                    currentProject: {
-                      ...store.currentProject()!,
-                      sharedWith,
-                    },
                     sharingContacts: store
                       .sharingContacts()
                       .filter((c) => c.email !== share.email),
+                    projects: store
+                      .projects()
+                      .map((p) =>
+                        p.id === share.projectId ? { ...p, sharedWith } : p,
+                      ),
                   });
                 },
                 error: (error) => {
@@ -682,11 +704,21 @@ export const ProjectStore = signalStore(
             .pipe(
               tapResponse({
                 next: (sharedWith) => {
+                  if (store.currentProject()?.id === payload.projectId) {
+                    patchState(store, {
+                      currentProject: {
+                        ...store.currentProject()!,
+                        sharedWith,
+                      },
+                    });
+                  }
+
                   patchState(store, {
-                    currentProject: {
-                      ...store.currentProject()!,
-                      sharedWith,
-                    },
+                    projects: store
+                      .projects()
+                      .map((p) =>
+                        p.id === payload.projectId ? { ...p, sharedWith } : p,
+                      ),
                   });
                 },
                 error: (error) => {

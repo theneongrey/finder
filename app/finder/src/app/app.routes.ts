@@ -30,6 +30,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'p/:projectId',
+    loadComponent: () =>
+      import('./features/project/public/public-project.component').then(
+        (m) => m.PublicProjectComponent,
+      ),
+  },
+  {
     canActivate: [userAuthentication()],
     path: 'project',
     loadComponent: () =>

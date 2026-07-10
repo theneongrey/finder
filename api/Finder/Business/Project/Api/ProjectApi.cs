@@ -52,6 +52,13 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
 
+        // Get public project info (no auth required, used for share link routing)
+        app.MapGet("/api/project/public/{id:guid}", async (Guid id, ProjectService projectService) =>
+        {
+            var result = await projectService.GetPublicInfo(id);
+            return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToPublicProjectResponse());
+        });
+
         // Get standalone polls
         app.MapGet("/api/project/standalone-polls",
                 async (ProjectService projectService, UserService userService) => Results.Ok(

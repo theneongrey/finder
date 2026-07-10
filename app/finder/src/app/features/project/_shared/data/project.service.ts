@@ -10,6 +10,7 @@ import {
   Poll,
   PollDetail,
   Project,
+  PublicProjectInfo,
 } from '../models/project-detail.model';
 import { environment } from '../../../../common/env/environment';
 import { LoggerService } from '../../../../common/services/logger.service';
@@ -41,6 +42,13 @@ export class ProjectService {
     return this.httpClient.post<StandalonePollOverview>(
       `${this.baseUrl}/api/project/standalone-poll`,
       { name, description, optionType },
+    );
+  }
+
+  getPublicProjectInfo(projectId: string) {
+    this.loggerService.debug('[ProjectService] fetching public project info');
+    return this.httpClient.get<PublicProjectInfo>(
+      `${this.baseUrl}/api/project/public/${projectId}`,
     );
   }
 

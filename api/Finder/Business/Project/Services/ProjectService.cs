@@ -145,6 +145,19 @@ public class ProjectService
         return Result.Success();
     }
 
+    public async Task<Result<Entities.Project>> GetPublicInfo(Guid projectId)
+    {
+        var project = await _dbContext.Projects
+            .Include(p => p.Polls)
+            .Where(p => p.Id == projectId)
+            .SingleOrDefaultAsync();
+
+        if (project == null)
+            return Result<Entities.Project>.Fail(404);
+
+        return Result<Entities.Project>.Success(project);
+    }
+
     public async Task<Result<Entities.Project>> Get(Guid projectId)
     {
         var project = await _dbContext.Projects

@@ -736,6 +736,35 @@ export const ProjectStore = signalStore(
       ),
     ),
 
+    navigateToSharedProject: rxMethod<string>(
+      pipe(
+        switchMap((projectId) => {
+          return store.projectService.getPublicProjectInfo(projectId).pipe(
+            tapResponse({
+              next: (info) => {
+                if (info.isStandalone && info.pollId) {
+                  store.router.navigate([
+                    '/project/detail',
+                    info.projectId,
+                    'vote',
+                    info.pollId,
+                  ]);
+                } else {
+                  store.router.navigate(['/project/detail', info.projectId]);
+                }
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error navigating to shared project',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
     addComment: rxMethod<{
       pollId: string;
       content: string;

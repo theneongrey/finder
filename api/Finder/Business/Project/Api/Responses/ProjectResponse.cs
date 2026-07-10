@@ -1,5 +1,12 @@
 namespace Finder.Business.Project.Api.Responses;
 
+public class PublicProjectResponse
+{
+    public required string ProjectId { get; set; }
+    public required bool IsStandalone { get; set; }
+    public string? PollId { get; set; }
+}
+
 public class ProjectResponseOption
 {
     public required string Id { get; set; }
@@ -43,6 +50,16 @@ public class ProjectResponse
 
 public static class ProjectMapper
 {
+    public static PublicProjectResponse ToPublicProjectResponse(this Entities.Project project)
+    {
+        return new PublicProjectResponse
+        {
+            ProjectId = project.Id.ToString(),
+            IsStandalone = project.IsStandalone,
+            PollId = project.IsStandalone ? project.Polls.FirstOrDefault()?.Id.ToString() : null
+        };
+    }
+
     public static ProjectResponseOption ToProjectResponseOption(this Entities.Option option, Guid? userId)
     {
         return new ProjectResponseOption

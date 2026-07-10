@@ -88,6 +88,12 @@ export interface SharingContact {
   shareCount: number;
 }
 
+export interface PublicProjectInfo {
+  projectId: string;
+  isStandalone: boolean;
+  pollId?: string;
+}
+
 export interface Project {
   id: string;
   name: string;

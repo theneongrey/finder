@@ -124,7 +124,21 @@
       "title": "Compartir",
       "email": "Correo electrónico",
       "permission": "Permiso",
-      "share": "Compartir"
+      "share": "Compartir",
+      "visibleForEverybody": "Visible para todos",
+      "visibleForSelectedOnly": "Solo por invitación",
+      "currentMembers": "Miembros actuales",
+      "access": "ACCESO",
+      "open": "Abierto",
+      "inviteOnly": "Solo invitados",
+      "openDescription": "Cualquier persona con el enlace puede unirse.",
+      "inviteOnlyDescription": "Solo las personas invitadas pueden unirse.",
+      "tabPeople": "Personas",
+      "tabLink": "Enlace",
+      "copy": "Copiar",
+      "linkSharingUnavailable": "El acceso por enlace solo está disponible cuando el accesso está configurado como 'Abierto'.",
+      "linkDescription": "Cualquier persona con este enlace puede unirse al proyecto.",
+      "linkCopied": "Enlace copiado al portapapeles."
     },
     "input": {
       "description": "Un proyecto es una colección de cosas que decidir, como una \"fiesta de cumpleaños\"",

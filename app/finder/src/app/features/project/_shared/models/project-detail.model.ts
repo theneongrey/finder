@@ -1,5 +1,10 @@
 import { ProjectRole } from './project-role.enum';
 
+export enum VisibilityType {
+  VisibleForSelectedOnly = 0,
+  VisibleForEverybody = 1,
+}
+
 export enum OptionType {
   YesNo,
   Rating,
@@ -83,4 +88,5 @@ export interface Project {
   creator: string;
   role: ProjectRole;
   sharedWith: SharedWith[];
+  visibilityType: VisibilityType;
 }

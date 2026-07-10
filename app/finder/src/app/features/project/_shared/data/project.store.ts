@@ -19,6 +19,7 @@ import {
   OptionType,
   Project,
   PollDetail,
+  VisibilityType,
 } from '../models/project-detail.model';
 import { PermissionService } from '../../_shared/data/permission.service';
 import { LoggerService } from '../../../../common/services/logger.service';
@@ -579,6 +580,36 @@ export const ProjectStore = signalStore(
               },
             }),
           );
+        }),
+      ),
+    ),
+
+    updateVisibilityType: rxMethod<{
+      projectId: string;
+      type: VisibilityType;
+    }>(
+      pipe(
+        switchMap((payload) => {
+          return store.permissionService
+            .updateVisibilityType(payload.projectId, payload.type)
+            .pipe(
+              tapResponse({
+                next: () => {
+                  patchState(store, {
+                    currentProject: {
+                      ...store.currentProject()!,
+                      visibilityType: payload.type,
+                    },
+                  });
+                },
+                error: (error) => {
+                  store.loggerService.log(
+                    '[ProjectStore] Error updating visibility type',
+                    error,
+                  );
+                },
+              }),
+            );
         }),
       ),
     ),

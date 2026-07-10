@@ -124,7 +124,21 @@
       "title": "Teilen",
       "email": "E-Mail",
       "permission": "Berechtigung",
-      "share": "Teilen"
+      "share": "Teilen",
+      "visibleForEverybody": "Für alle sichtbar",
+      "visibleForSelectedOnly": "Nur auf Einladung",
+      "currentMembers": "Aktuelle Mitglieder",
+      "access": "ZUGRIFF",
+      "open": "Offen",
+      "inviteOnly": "Nur Eingeladene",
+      "openDescription": "Jede Person mit dem Link kann beitreten.",
+      "inviteOnlyDescription": "Nur eingeladene Personen können beitreten.",
+      "tabPeople": "Personen",
+      "tabLink": "Link",
+      "copy": "Kopieren",
+      "linkSharingUnavailable": "Link-Beitritt ist nur möglich, wenn der Zugriff auf 'Offen' gestellt ist.",
+      "linkDescription": "Jede Person mit diesem Link kann dem Projekt beitreten.",
+      "linkCopied": "Link wurde in die Zwischenablage kopiert."
     },
     "input": {
       "description": "Ein Projekt ist eine Sammlung von Dingen, über die entschieden werden soll, wie z. B. eine \"Geburtstagsparty\"",

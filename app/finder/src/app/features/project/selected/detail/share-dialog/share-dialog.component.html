@@ -1,43 +1,126 @@
-<p-dialog
+<p-toast position="top-center" />
+<p-drawer
   [header]="'project.share.title' | translate"
-  [modal]="true"
+  position="bottom"
   [(visible)]="visible"
-  [style]="{ width: '25rem' }"
+  styleClass="tw:!h-auto tw:rounded-t-2xl"
 >
-  <div class="tw:flex tw:items-center tw:gap-4 tw:mb-4">
-    <label for="email" class="tw:font-semibold tw:w-24">{{
-      'project.share.email' | translate
-    }}</label>
-    <input
-      pInputText
-      id="email"
-      type="email"
-      class="tw:flex-auto"
-      autocomplete="off"
-      [(ngModel)]="email"
-    />
-  </div>
+  <h2 class="tw:text-base tw:font-medium tw:text-gray-600 tw:mb-4">
+    {{ projectName() }}
+  </h2>
 
-  <p-select
-    appendTo="body"
-    [options]="availablePermissions()"
-    [(ngModel)]="selectedPermission"
-    optionLabel="name"
-    optionValue="id"
-    [placeholder]="'project.share.permission' | translate"
-    class="tw:w-full tw:mb-2"
+  <p
+    class="tw:text-xs tw:font-semibold tw:uppercase tw:tracking-wide tw:text-gray-500 tw:mb-2"
+  >
+    {{ "project.share.access" | translate }}
+  </p>
+  <p-select-button
+    fluid
+    [options]="visibilityOptions()"
+    [ngModel]="selectedVisibility()"
+    (ngModelChange)="onVisibilityChange($event)"
+    optionLabel="label"
+    optionValue="value"
+    class="tw:w-full"
   />
+  <p class="tw:text-sm tw:text-gray-500 tw:mt-2 tw:mb-4">
+    @if (selectedVisibility() === VisibilityType.VisibleForEverybody) {
+      {{ "project.share.openDescription" | translate }}
+    } @else {
+      {{ "project.share.inviteOnlyDescription" | translate }}
+    }
+  </p>
 
-  <div class="tw:flex tw:justify-end tw:gap-2">
-    <p-button
-      [label]="'project.common.cancel' | translate"
-      severity="secondary"
-      (click)="visible.set(false)"
-    />
-    <p-button
-      [label]="'project.share.share' | translate"
-      (click)="share()"
-      [disabled]="!email()"
-    />
-  </div>
-</p-dialog>
+  <p-tabs [value]="activeTab()" (valueChange)="setActiveTab($event)">
+    <p-tablist>
+      <p-tab value="people">{{ "project.share.tabPeople" | translate }}</p-tab>
+      <p-tab value="link">{{ "project.share.tabLink" | translate }}</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="people">
+        @if (sharedWith().length > 0) {
+          <div class="tw:mb-4 tw:mt-4">
+            <p class="tw:text-sm tw:text-gray-500 tw:mb-2">
+              {{ "project.share.currentMembers" | translate }}
+            </p>
+            <p-avatar-group>
+              @for (member of sharedWith(); track member.name) {
+                <p-avatar
+                  [image]="member.picture ?? undefined"
+                  [label]="
+                    member.picture ? undefined : member.name[0].toUpperCase()
+                  "
+                  shape="circle"
+                  size="normal"
+                  [pTooltip]="member.name"
+                  tooltipPosition="top"
+                />
+              }
+            </p-avatar-group>
+          </div>
+        }
+
+        <div class="tw:flex tw:items-center tw:gap-4 tw:mb-4 tw:mt-4">
+          <label for="email" class="tw:font-semibold tw:w-24">{{
+            "project.share.email" | translate
+          }}</label>
+          <input
+            pInputText
+            id="email"
+            type="email"
+            class="tw:flex-auto"
+            autocomplete="off"
+            [(ngModel)]="email"
+          />
+        </div>
+
+        <p-select
+          appendTo="body"
+          [options]="availablePermissions()"
+          [(ngModel)]="selectedPermission"
+          optionLabel="name"
+          optionValue="id"
+          [placeholder]="'project.share.permission' | translate"
+          class="tw:w-full tw:mb-2"
+        />
+
+        <div class="tw:flex tw:justify-end tw:gap-2">
+          <p-button
+            [label]="'project.common.cancel' | translate"
+            severity="secondary"
+            (click)="visible.set(false)"
+          />
+          <p-button
+            [label]="'project.share.share' | translate"
+            (click)="share()"
+            [disabled]="!email()"
+          />
+        </div>
+      </p-tabpanel>
+
+      <p-tabpanel value="link">
+        @if (selectedVisibility() === VisibilityType.VisibleForEverybody) {
+          <p class="tw:text-sm tw:text-gray-500 tw:mt-4 tw:mb-3">
+            {{ "project.share.linkDescription" | translate }}
+          </p>
+          <div class="tw:flex tw:gap-2">
+            <input
+              pInputText
+              [value]="shareLink()"
+              readonly
+              class="tw:flex-auto"
+            />
+            <p-button
+              [label]="'project.share.copy' | translate"
+              (click)="copyLink()"
+            />
+          </div>
+        } @else {
+          <p class="tw:text-sm tw:text-gray-500 tw:mt-4">
+            {{ "project.share.linkSharingUnavailable" | translate }}
+          </p>
+        }
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</p-drawer>

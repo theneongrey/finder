@@ -34,7 +34,7 @@ public class ProjectResponse
     public required string Name { get; set; }
     public string? Description { get; set; }
     public required ProjectResponsePoll[] Polls { get; set; }
-    public required int PermissionType { get; set; }
+    public required int VisibilityType { get; set; }
     public required string Creator { get; set; }
     public required ProjectRole Role { get; set; }
     public required ProjectSharedWith[] SharedWith { get; set; }
@@ -121,7 +121,7 @@ public static class ProjectMapper
             Name = project.Name,
             Description = project.Description,
             Polls = project.Polls.OrderBy(t => t.Created).Select(t => t.ToProjectResponsePoll(userId)).ToArray(),
-            PermissionType = (int)project.VisibilityType,
+            VisibilityType = (int)project.VisibilityType,
             Creator = project.Creator.Name ?? project.Creator.Email,
             Role = project.GetRole(userId),
             SharedWith = sharedWith.ToArray()

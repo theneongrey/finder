@@ -124,7 +124,21 @@
       "title": "Share",
       "email": "Email",
       "permission": "Permission",
-      "share": "Share"
+      "share": "Share",
+      "visibleForEverybody": "Visible to everyone",
+      "visibleForSelectedOnly": "Invite only",
+      "currentMembers": "Current members",
+      "access": "ACCESS",
+      "open": "Open",
+      "inviteOnly": "Invite only",
+      "openDescription": "Anyone with the link can join.",
+      "inviteOnlyDescription": "Only invited people can join.",
+      "tabPeople": "People",
+      "tabLink": "Link",
+      "copy": "Copy",
+      "linkSharingUnavailable": "Link sharing is only available when the access is set to 'Open'.",
+      "linkDescription": "Anyone with this link can join the project.",
+      "linkCopied": "Link copied to clipboard."
     },
     "input": {
       "description": "A project is a collection of things to decide, like a \"Birthday party\"",

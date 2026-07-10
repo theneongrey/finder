@@ -125,6 +125,7 @@
       "email": "Email",
       "permission": "Permission",
       "share": "Share",
+      "invite": "Invite",
       "visibleForEverybody": "Visible to everyone",
       "visibleForSelectedOnly": "Invite only",
       "currentMembers": "Current members",
@@ -138,7 +139,15 @@
       "copy": "Copy",
       "linkSharingUnavailable": "Link sharing is only available when the access is set to 'Open'.",
       "linkDescription": "Anyone with this link can join the project.",
-      "linkCopied": "Link copied to clipboard."
+      "linkCopied": "Link copied to clipboard.",
+      "roleForNewInvitations": "ROLE FOR NEW INVITATIONS",
+      "nameOrEmail": "Name or email",
+      "voterDescription": "Can view the project and its polls and cast votes.",
+      "maintainerDescription": "Can manage topics and options and participate in votes.",
+      "ownerDescription": "Can manage project settings and user permissions.",
+      "remove": "Remove",
+      "persons": "People",
+      "changeRole": "Change role"
     },
     "input": {
       "description": "A project is a collection of things to decide, like a \"Birthday party\"",

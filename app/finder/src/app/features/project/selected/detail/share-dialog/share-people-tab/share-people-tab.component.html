@@ -1,0 +1,10 @@
+<app-share-invite-form
+  [projectId]="projectId()"
+  [contacts]="contacts()"
+  [sharingInProgress]="sharingInProgress()"
+/>
+<app-share-members-list
+  [projectId]="projectId()"
+  [members]="sharedWith()"
+  [isPublic]="isPublic()"
+/>

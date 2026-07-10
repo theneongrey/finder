@@ -76,8 +76,16 @@ export interface Option {
 
 export interface SharedWith {
   name: string;
+  email: string;
   role: ProjectRole;
   picture?: string;
+}
+
+export interface SharingContact {
+  name: string;
+  email: string;
+  picture?: string;
+  shareCount: number;
 }
 
 export interface Project {

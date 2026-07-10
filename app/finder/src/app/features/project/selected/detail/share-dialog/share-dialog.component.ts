@@ -9,32 +9,23 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
-import { Drawer } from 'primeng/drawer';
-import { InputText } from 'primeng/inputtext';
-import { Select } from 'primeng/select';
-import { SelectButton } from 'primeng/selectbutton';
-import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
-import { ProjectStore } from '../../../_shared/data/project.store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Drawer } from 'primeng/drawer';
+import { SelectButton } from 'primeng/selectbutton';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { ProjectStore } from '../../../_shared/data/project.store';
 import {
   SharedWith,
   VisibilityType,
 } from '../../../_shared/models/project-detail.model';
-import { Avatar } from 'primeng/avatar';
-import { AvatarGroup } from 'primeng/avatargroup';
-import { Tooltip } from 'primeng/tooltip';
-import { Toast } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { environment } from '../../../../../common/env/environment';
+import { ShareLinkTabComponent } from './share-link-tab/share-link-tab.component';
+import { SharePeopleTabComponent } from './share-people-tab/share-people-tab.component';
 
 @Component({
   selector: 'app-share-dialog',
   imports: [
     Drawer,
-    Button,
-    InputText,
-    Select,
     SelectButton,
     Tabs,
     TabList,
@@ -43,19 +34,15 @@ import { environment } from '../../../../../common/env/environment';
     TabPanel,
     FormsModule,
     TranslatePipe,
-    Avatar,
-    AvatarGroup,
-    Tooltip,
-    Toast,
+    SharePeopleTabComponent,
+    ShareLinkTabComponent,
   ],
-  providers: [MessageService],
   templateUrl: './share-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareDialogComponent {
   private readonly projectStore = inject(ProjectStore);
   private readonly translateService = inject(TranslateService);
-  private readonly messageService = inject(MessageService);
 
   readonly VisibilityType = VisibilityType;
 
@@ -71,9 +58,21 @@ export class ShareDialogComponent {
 
   activeTab = signal('people');
 
+  sharingContacts = this.projectStore.sharingContacts;
+  sharingInProgress = this.projectStore.sharingInProgress;
+
+  isPublic = computed(
+    () => this.selectedVisibility() === VisibilityType.VisibleForEverybody,
+  );
+
   constructor() {
     effect(() => {
       this.selectedVisibility.set(this.visibilityType());
+    });
+    effect(() => {
+      if (this.visible()) {
+        this.projectStore.loadContacts(this.projectId());
+      }
     });
   }
 
@@ -92,21 +91,6 @@ export class ShareDialogComponent {
 
   shareLink = computed(() => `${environment.baseUrl}/p/${this.projectId()}`);
 
-  private voterLabel = this.translateService.translate('project.roles.voter');
-  private maintainerLabel = this.translateService.translate(
-    'project.roles.maintainer',
-  );
-  private ownerLabel = this.translateService.translate('project.roles.owner');
-
-  availablePermissions = computed(() => [
-    { id: 0, name: this.voterLabel() },
-    { id: 1, name: this.maintainerLabel() },
-    { id: 2, name: this.ownerLabel() },
-  ]);
-
-  email = model('');
-  selectedPermission = model(0);
-
   setActiveTab(value: string | number | undefined) {
     if (value !== undefined) {
       this.activeTab.set(String(value));
@@ -122,26 +106,5 @@ export class ShareDialogComponent {
       projectId: this.projectId(),
       type: value,
     });
-  }
-
-  copyLink() {
-    navigator.clipboard.writeText(this.shareLink()).then(() => {
-      this.messageService.add({
-        severity: 'success',
-        detail: this.translateService.instant('project.share.linkCopied'),
-        life: 3000,
-      });
-    });
-  }
-
-  share() {
-    if (this.email()) {
-      this.projectStore.share({
-        email: this.email(),
-        permissionType: this.selectedPermission(),
-        projectId: this.projectId(),
-      });
-      this.visible.set(false);
-    }
   }
 }

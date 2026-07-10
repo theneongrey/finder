@@ -1,0 +1,23 @@
+<p-toast position="top-center" />
+
+@if (isPublic()) {
+  <p class="tw:text-sm tw:text-gray-500 tw:mt-4 tw:mb-3">
+    {{ "project.share.linkDescription" | translate }}
+  </p>
+  <div class="tw:flex tw:gap-2">
+    <input
+      pInputText
+      [value]="shareLink()"
+      readonly
+      class="tw:flex-auto"
+    />
+    <p-button
+      [label]="'project.share.copy' | translate"
+      (click)="copyLink()"
+    />
+  </div>
+} @else {
+  <p class="tw:text-sm tw:text-gray-500 tw:mt-4">
+    {{ "project.share.linkSharingUnavailable" | translate }}
+  </p>
+}

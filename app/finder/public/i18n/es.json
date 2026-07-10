@@ -125,6 +125,7 @@
       "email": "Correo electrónico",
       "permission": "Permiso",
       "share": "Compartir",
+      "invite": "Invitar",
       "visibleForEverybody": "Visible para todos",
       "visibleForSelectedOnly": "Solo por invitación",
       "currentMembers": "Miembros actuales",
@@ -138,7 +139,15 @@
       "copy": "Copiar",
       "linkSharingUnavailable": "El acceso por enlace solo está disponible cuando el accesso está configurado como 'Abierto'.",
       "linkDescription": "Cualquier persona con este enlace puede unirse al proyecto.",
-      "linkCopied": "Enlace copiado al portapapeles."
+      "linkCopied": "Enlace copiado al portapapeles.",
+      "roleForNewInvitations": "ROL PARA NUEVAS INVITACIONES",
+      "nameOrEmail": "Nombre o correo electrónico",
+      "voterDescription": "Puede ver el proyecto y sus encuestas y votar.",
+      "maintainerDescription": "Puede gestionar temas y opciones y participar en votos.",
+      "ownerDescription": "Puede gestionar la configuración del proyecto y los permisos de usuario.",
+      "remove": "Eliminar",
+      "persons": "Personas",
+      "changeRole": "Cambiar rol"
     },
     "input": {
       "description": "Un proyecto es una colección de cosas que decidir, como una \"fiesta de cumpleaños\"",

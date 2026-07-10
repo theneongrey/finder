@@ -19,6 +19,7 @@ import {
   OptionType,
   Project,
   PollDetail,
+  SharingContact,
   VisibilityType,
 } from '../models/project-detail.model';
 import { PermissionService } from '../../_shared/data/permission.service';
@@ -32,6 +33,8 @@ export const ProjectStore = signalStore(
     activeTab: 'overview' as 'overview' | 'projects' | 'polls',
     currentProject: undefined as Project | undefined,
     currentPoll: undefined as PollDetail | undefined,
+    sharingContacts: [] as SharingContact[],
+    sharingInProgress: false,
   }),
   withComputed((store) => ({
     projectId: computed(() => store.currentProject()?.id),
@@ -614,12 +617,33 @@ export const ProjectStore = signalStore(
       ),
     ),
 
+    loadContacts: rxMethod<string>(
+      pipe(
+        switchMap((projectId) => {
+          return store.permissionService.getContacts(projectId).pipe(
+            tapResponse({
+              next: (sharingContacts) => {
+                patchState(store, { sharingContacts });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[ProjectStore] Error loading contacts',
+                  error,
+                );
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+
     share: rxMethod<{
       email: string;
       permissionType: number;
       projectId: string;
     }>(
       pipe(
+        tap(() => patchState(store, { sharingInProgress: true })),
         switchMap((share) => {
           return store.permissionService
             .share(share.projectId, share.email, share.permissionType)
@@ -627,15 +651,47 @@ export const ProjectStore = signalStore(
               tapResponse({
                 next: (sharedWith) => {
                   patchState(store, {
+                    sharingInProgress: false,
                     currentProject: {
                       ...store.currentProject()!,
-                      sharedWith: sharedWith,
+                      sharedWith,
+                    },
+                    sharingContacts: store
+                      .sharingContacts()
+                      .filter((c) => c.email !== share.email),
+                  });
+                },
+                error: (error) => {
+                  patchState(store, { sharingInProgress: false });
+                  store.loggerService.log(
+                    '[ProjectStore] Error while sharing',
+                    error,
+                  );
+                },
+              }),
+            );
+        }),
+      ),
+    ),
+
+    removePermission: rxMethod<{ projectId: string; email: string }>(
+      pipe(
+        switchMap((payload) => {
+          return store.permissionService
+            .removePermission(payload.projectId, payload.email)
+            .pipe(
+              tapResponse({
+                next: (sharedWith) => {
+                  patchState(store, {
+                    currentProject: {
+                      ...store.currentProject()!,
+                      sharedWith,
                     },
                   });
                 },
                 error: (error) => {
                   store.loggerService.log(
-                    '[ProjectStore] Error while sharing',
+                    '[ProjectStore] Error removing permission',
                     error,
                   );
                 },

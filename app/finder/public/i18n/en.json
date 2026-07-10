@@ -173,7 +173,8 @@
       "submitComment": "Add",
       "skip": "Skip",
       "ratingMax": "5 stars",
-      "ratingMin": "1 star"
+      "ratingMin": "1 star",
+      "openLink": "Open link"
     },
     "votesOverview": {
       "active": "Active",

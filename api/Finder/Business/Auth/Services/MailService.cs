@@ -19,6 +19,11 @@ public class MailService
 
     public async Task SendLoginMail(Person person, LoginToken token)
     {
+        if (person.Role == Role.TestUser)
+        {
+            return;
+        }
+
         try
         {
             var loginLink = _loginOptions.LoginLink.Replace("{{token}}", token.Token)

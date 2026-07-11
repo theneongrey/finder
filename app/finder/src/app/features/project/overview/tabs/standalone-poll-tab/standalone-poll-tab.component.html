@@ -10,6 +10,7 @@
     <app-poll-item
       [poll]="poll"
       [standalone]="true"
+      [canEdit]="true"
       (deletionRequested)="deletionRequested.emit(poll)"
       (shareRequested)="shareRequested.emit(poll.projectId)"
     />

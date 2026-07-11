@@ -36,6 +36,7 @@ export class PollItemComponent {
 
   poll = input.required<PollItem>();
   standalone = input(false);
+  canEdit = input(false);
   deletionRequested = output();
   shareRequested = output();
 

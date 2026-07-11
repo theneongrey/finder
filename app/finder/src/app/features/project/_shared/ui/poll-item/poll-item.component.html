@@ -42,12 +42,15 @@
         />
       </div>
     </div>
-    <p-button
-      icon="fa-solid fa-ellipsis-vertical"
-      [text]="true"
-      (click)="menu.toggle($event)"
-    />
-    <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
+    @if (canEdit()) {
+      <p-button
+        icon="fa-solid fa-ellipsis-vertical"
+        [text]="true"
+        (click)="menu.toggle($event)"
+        data-testid="poll-menu-btn"
+      />
+      <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
+    }
   </div>
 
   <div class="p-fluid">

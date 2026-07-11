@@ -17,13 +17,16 @@
         {{ _project.lastUpdated | timeSince }}
       </p>
     </div>
-    <div>
-      <p-button
-        icon="fa-solid fa-ellipsis-vertical"
-        [text]="true"
-        (click)="$event.stopPropagation(); menu.toggle($event)"
-      />
-      <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
-    </div>
+    @if (canEdit()) {
+      <div>
+        <p-button
+          icon="fa-solid fa-ellipsis-vertical"
+          [text]="true"
+          data-testid="project-menu-btn"
+          (click)="$event.stopPropagation(); menu.toggle($event)"
+        />
+        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
+      </div>
+    }
   </div>
 </p-card>

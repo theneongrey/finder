@@ -75,3 +75,6 @@ _services/  — HttpClient services
 Use primngllms.txt for help to primeng components.
 
 **Auth flow:** email → code → token. The `AuthGuard` (`userAuthentication`) protects routes; the backend issues tokens validated on each request.
+
+## Testing
+When testing locally, use testuser1@neongrey.de or testuser2@neongrey.de to log in. Enter the email address, then when asked for the code, navigate to http://localhost:4200/auth/token-login?token=1234 to log in. If you are already logged in when starting the session. Log out first.

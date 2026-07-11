@@ -1,4 +1,5 @@
 import { SharedWith, VisibilityType } from './project-detail.model';
+import { ProjectRole } from './project-role.enum';
 
 export interface ProjectOverview {
   id: string;
@@ -13,4 +14,5 @@ export interface ProjectOverview {
   lastUpdated: string;
   visibilityType: VisibilityType;
   sharedWith: SharedWith[];
+  role: ProjectRole;
 }

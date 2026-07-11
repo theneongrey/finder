@@ -18,6 +18,7 @@ import { Menu } from 'primeng/menu';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectOverview } from '../../_shared/models/project-overview.model';
 import { Card } from 'primeng/card';
+import { ProjectRole } from '../../_shared/models/project-role.enum';
 
 @Component({
   selector: 'app-project-item',
@@ -41,6 +42,7 @@ export class ProjectItemComponent {
   private readonly translateService = inject(TranslateService);
 
   project = input.required<ProjectOverview>();
+  canEdit = computed(() => this.project().role >= ProjectRole.Owner);
   deletionRequested = output();
   shareRequested = output();
 

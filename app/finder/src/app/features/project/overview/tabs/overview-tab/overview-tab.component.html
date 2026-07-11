@@ -49,6 +49,7 @@
       <app-poll-item
         [poll]="poll"
         (deletionRequested)="pollDeletionRequested.emit(poll)"
+        (shareRequested)="pollShareRequested.emit(poll.projectId)"
       />
     }
   </div>

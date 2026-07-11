@@ -256,5 +256,9 @@
       "monthAgo": "hace {{count}} mes",
       "monthsAgo": "hace {{count}} meses"
     }
+  },
+  "primeng": {
+    "monthNames": ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+    "monthNamesShort": ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
   }
 }

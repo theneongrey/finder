@@ -21,11 +21,9 @@
     </div>
   </div>
 
-  <div class="tw:flex tw:flex-col tw:gap-1">
-    <label class="tw:text-sm tw:font-semibold tw:px-1" for="description">
-      {{ "project.pollInput.yesNo.description" | translate }}
-    </label>
+  @if (showDescription()) {
     <app-auto-resize-textarea
+      #descriptionTextarea
       name="description"
       inputId="description"
       [maxlength]="200"
@@ -34,8 +32,19 @@
       "
       [ngModel]="description()"
       (ngModelChange)="descriptionChange.emit($event)"
+      (blur)="onDescriptionBlur()"
     />
-  </div>
+  }
+  @if (!showDescription()) {
+    <button
+      type="button"
+      class="tw:flex tw:items-center tw:gap-1 tw:text-sm tw:text-gray-400 tw:cursor-pointer hover:tw:text-primary tw:transition-colors tw:bg-transparent tw:border-0 tw:p-0"
+      (click)="toggleDescription()"
+    >
+      <i class="fa-solid fa-plus" style="font-size: 11px"></i>
+      {{ "project.pollInput.yesNo.addDescription" | translate }}
+    </button>
+  }
 
   <app-poll-options
     [titleKey]="

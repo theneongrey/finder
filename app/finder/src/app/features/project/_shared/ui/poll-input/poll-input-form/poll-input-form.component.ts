@@ -1,8 +1,14 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  effect,
+  Injector,
+  inject,
   input,
   output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
@@ -50,4 +56,31 @@ export class PollInputFormComponent {
   remove = output<number>();
   weekdayToggle = output<number>();
   formSubmit = output<void>();
+
+  showDescription = signal(false);
+
+  private injector = inject(Injector);
+  private descriptionTextarea =
+    viewChild<AutoResizeTextareaComponent>('descriptionTextarea');
+
+  constructor() {
+    effect(() => {
+      if (this.description()) {
+        this.showDescription.set(true);
+      }
+    });
+  }
+
+  toggleDescription(): void {
+    this.showDescription.set(true);
+    afterNextRender(() => this.descriptionTextarea()?.focus(), {
+      injector: this.injector,
+    });
+  }
+
+  onDescriptionBlur(): void {
+    if (!this.description()) {
+      this.showDescription.set(false);
+    }
+  }
 }

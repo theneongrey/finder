@@ -14,12 +14,12 @@ import { Card } from 'primeng/card';
 import { DateOptionEntry } from '../../../../utils/date-option.utils';
 
 @Component({
-  selector: 'app-option-card-date',
-  templateUrl: './option-card-date.component.html',
+  selector: 'app-option-card-date-range',
+  templateUrl: './option-card-date-range.component.html',
   imports: [FormsModule, Button, DatePicker, TranslatePipe, Card],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionCardDateComponent {
+export class OptionCardDateRangeComponent {
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);
@@ -31,7 +31,7 @@ export class OptionCardDateComponent {
 
   constructor() {
     effect(() => {
-      if (this.option().startTime || this.initialShowTime()) {
+      if (this.option().startTime || this.option().endTime || this.initialShowTime()) {
         this.showTime.set(true);
       }
     });
@@ -44,6 +44,7 @@ export class OptionCardDateComponent {
 
   removeTime(): void {
     this.option().startTime = undefined;
+    this.option().endTime = undefined;
     this.showTime.set(false);
     this.showTimeChange.emit(false);
   }

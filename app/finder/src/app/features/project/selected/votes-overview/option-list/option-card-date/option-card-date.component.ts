@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
 } from '@angular/core';
@@ -10,6 +11,10 @@ import { Tag } from 'primeng/tag';
 import { Button } from 'primeng/button';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionDetail } from '../../../../_shared/models/project-detail.model';
+import {
+  parseDateOptionText,
+  DateOptionEntry,
+} from '../../../../_shared/utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-date',
@@ -25,15 +30,9 @@ export class OptionCardDateComponent {
   projectId = input('');
   pollId = input('');
 
-  parsedDates = (): { start: Date | null; end: Date | null } => {
-    const parts = this.option().text.split(';');
-    const startTs = parseInt(parts[0]);
-    const endTs = parts[1] ? parseInt(parts[1]) : NaN;
-    return {
-      start: isNaN(startTs) ? null : new Date(startTs),
-      end: isNaN(endTs) ? null : new Date(endTs),
-    };
-  };
+  parsed = computed<DateOptionEntry>(() =>
+    parseDateOptionText(this.option().text),
+  );
 
   formatDate(date: Date): string {
     return date.toLocaleDateString(
@@ -43,10 +42,48 @@ export class OptionCardDateComponent {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
       },
     );
+  }
+
+  formatTime(date: Date): string {
+    return date.toLocaleTimeString(
+      this.translateService.currentLang() ?? undefined,
+      { hour: '2-digit', minute: '2-digit' },
+    );
+  }
+
+  weekdayName(day: number): string {
+    return this.translateService.instant(
+      `project.pollInput.date.weekdays.${day}`,
+    );
+  }
+
+  label(): string {
+    const p = this.parsed();
+    switch (p.type) {
+      case 'weekday':
+        return this.weekdayName(p.weekday!);
+      case 'date':
+        return this.formatDate(p.date!);
+      case 'date-range':
+        return `${this.formatDate(p.date!)} → ${this.formatDate(p.endDate!)}`;
+      case 'time':
+        return this.formatTime(p.startTime!);
+      case 'time-range':
+        return `${this.formatTime(p.startTime!)} → ${this.formatTime(p.endTime!)}`;
+    }
+  }
+
+  subLabel(): string | null {
+    const p = this.parsed();
+    if (
+      (p.type === 'weekday' || p.type === 'date' || p.type === 'date-range') &&
+      p.startTime
+    ) {
+      return this.formatTime(p.startTime);
+    }
+    return null;
   }
 
   voteIcon(choice: string | null): string {

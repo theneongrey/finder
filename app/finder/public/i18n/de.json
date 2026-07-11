@@ -154,8 +154,39 @@
       "date": {
         "answerOptions": "Terminoptionen",
         "minOptions": "Mind. 1 Termin",
-        "startDate": "Startdatum",
-        "endDate": "Enddatum (optional)"
+        "startDate": "Datum",
+        "endDate": "Enddatum",
+        "startTime": "Uhrzeit",
+        "endTime": "Endzeit",
+        "addTime": "Uhrzeit hinzufügen",
+        "addOption": "Termin hinzufügen",
+        "appointmentTypeLabel": "Art der Terminoptionen",
+        "changeType": "Ändern",
+        "types": {
+          "weekday": "Wochentag",
+          "date": "Kalendertag",
+          "dateRange": "Datumsbereich",
+          "time": "Uhrzeit",
+          "timeRange": "Zeitspanne"
+        },
+        "weekdays": {
+          "0": "Sonntag",
+          "1": "Montag",
+          "2": "Dienstag",
+          "3": "Mittwoch",
+          "4": "Donnerstag",
+          "5": "Freitag",
+          "6": "Samstag"
+        },
+        "weekdaysShort": {
+          "0": "So",
+          "1": "Mo",
+          "2": "Di",
+          "3": "Mi",
+          "4": "Do",
+          "5": "Fr",
+          "6": "Sa"
+        }
       },
       "yesNo": {
         "question": "Deine Frage",

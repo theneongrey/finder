@@ -1,0 +1,46 @@
+<p-card>
+  <div class="tw:flex tw:items-start tw:gap-2">
+    <div class="tw:flex tw:flex-col tw:gap-2 tw:flex-1">
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
+          {{ "project.pollInput.date.startTime" | translate }}
+        </label>
+        <p-datepicker
+          [timeOnly]="true"
+          hourFormat="24"
+          [showIcon]="true"
+          appendTo="body"
+          styleClass="tw:w-full"
+          [(ngModel)]="option().startTime"
+          [name]="'time-range-start-' + index()"
+          (ngModelChange)="onStartTimeChange()"
+        />
+      </div>
+
+      <div class="tw:flex tw:flex-col tw:gap-1">
+        <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
+          {{ "project.pollInput.date.endTime" | translate }}
+        </label>
+        <p-datepicker
+          [timeOnly]="true"
+          hourFormat="24"
+          [showIcon]="true"
+          appendTo="body"
+          styleClass="tw:w-full"
+          [(ngModel)]="option().endTime"
+          [name]="'time-range-end-' + index()"
+        />
+      </div>
+    </div>
+
+    @if (canRemove()) {
+      <p-button
+        type="button"
+        icon="fa-solid fa-xmark"
+        [text]="true"
+        severity="secondary"
+        (click)="remove.emit()"
+      />
+    }
+  </div>
+</p-card>

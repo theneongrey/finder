@@ -6,6 +6,10 @@ import {
   input,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import {
+  parseDateOptionText,
+  DateOptionEntry,
+} from '../../../_shared/utils/date-option.utils';
 
 @Component({
   selector: 'app-vote-card-date',
@@ -18,18 +22,7 @@ export class VoteCardDateComponent {
 
   text = input('');
 
-  startDate = computed(() => {
-    const parts = this.text().split(';');
-    const ts = parseInt(parts[0]);
-    return isNaN(ts) ? null : new Date(ts);
-  });
-
-  endDate = computed(() => {
-    const parts = this.text().split(';');
-    if (parts.length < 2) return null;
-    const ts = parseInt(parts[1]);
-    return isNaN(ts) ? null : new Date(ts);
-  });
+  parsed = computed<DateOptionEntry>(() => parseDateOptionText(this.text()));
 
   formatDate(date: Date): string {
     return date.toLocaleDateString(this.translate.currentLang() ?? undefined, {
@@ -37,8 +30,24 @@ export class VoteCardDateComponent {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
+    });
+  }
+
+  formatTime(date: Date): string {
+    return date.toLocaleTimeString(this.translate.currentLang() ?? undefined, {
       hour: '2-digit',
       minute: '2-digit',
     });
+  }
+
+  formatTimeOnly(date: Date): string {
+    return date.toLocaleTimeString(this.translate.currentLang() ?? undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  weekdayName(day: number): string {
+    return this.translate.instant(`project.pollInput.date.weekdays.${day}`);
   }
 }

@@ -2,6 +2,7 @@
   <div class="tw:flex tw:flex-col tw:gap-3">
     <div class="tw:flex tw:items-start tw:gap-2">
       <div class="tw:flex tw:flex-col tw:gap-2 tw:flex-1">
+
         <div class="tw:flex tw:gap-2">
           <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
             <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
@@ -14,7 +15,7 @@
               appendTo="body"
               styleClass="tw:w-full"
               [(ngModel)]="option().date"
-              [name]="'date-' + index()"
+              [name]="'date-range-start-' + index()"
             />
           </div>
 
@@ -39,7 +40,41 @@
                 appendTo="body"
                 styleClass="tw:w-full"
                 [(ngModel)]="option().startTime"
-                [name]="'date-time-' + index()"
+                [name]="'date-range-start-time-' + index()"
+              />
+            </div>
+          }
+        </div>
+
+        <div class="tw:flex tw:gap-2">
+          <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
+            <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
+              {{ "project.pollInput.date.endDate" | translate }}
+            </label>
+            <p-datepicker
+              [showTime]="false"
+              [showIcon]="true"
+              [firstDayOfWeek]="1"
+              appendTo="body"
+              styleClass="tw:w-full"
+              [(ngModel)]="option().endDate"
+              [name]="'date-range-end-' + index()"
+            />
+          </div>
+
+          @if (showTime()) {
+            <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
+              <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
+                {{ "project.pollInput.date.endTime" | translate }}
+              </label>
+              <p-datepicker
+                [timeOnly]="true"
+                hourFormat="24"
+                [showIcon]="true"
+                appendTo="body"
+                styleClass="tw:w-full"
+                [(ngModel)]="option().endTime"
+                [name]="'date-range-end-time-' + index()"
               />
             </div>
           }
@@ -55,6 +90,7 @@
             {{ "project.pollInput.date.addTime" | translate }}
           </button>
         }
+
       </div>
 
       @if (canRemove()) {

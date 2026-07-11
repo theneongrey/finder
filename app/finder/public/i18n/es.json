@@ -159,6 +159,7 @@
         "startTime": "Hora",
         "endTime": "Hora de fin",
         "addTime": "Añadir hora",
+        "endBeforeStart": "La fecha de fin debe ser posterior al {{date}}.",
         "addOption": "Añadir fecha",
         "appointmentTypeLabel": "Tipo de opciones de fecha",
         "changeType": "Cambiar",

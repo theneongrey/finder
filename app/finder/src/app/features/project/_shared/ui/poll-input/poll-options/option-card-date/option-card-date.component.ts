@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  inject,
   input,
   output,
   signal,
@@ -12,6 +13,7 @@ import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
 import { DateOptionEntry } from '../../../../utils/date-option.utils';
+import { UserStore } from '../../../../../../../common/data/user.store';
 
 @Component({
   selector: 'app-option-card-date',
@@ -20,6 +22,8 @@ import { DateOptionEntry } from '../../../../utils/date-option.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {
+  protected readonly userStore = inject(UserStore);
+
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);

@@ -1,17 +1,21 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
+  inject,
   input,
   output,
   signal,
 } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
 import { DateOptionEntry } from '../../../../utils/date-option.utils';
+import { UserStore } from '../../../../../../../common/data/user.store';
 
 @Component({
   selector: 'app-option-card-date-range',
@@ -20,6 +24,8 @@ import { DateOptionEntry } from '../../../../utils/date-option.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateRangeComponent {
+  protected readonly userStore = inject(UserStore);
+
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);
@@ -28,13 +34,39 @@ export class OptionCardDateRangeComponent {
   showTimeChange = output<boolean>();
 
   showTime = signal(false);
+  startDate = signal<Date | undefined>(undefined);
+  endDate = signal<Date | undefined>(undefined);
+
+  readonly endBeforeStart = computed(() => {
+    const start = this.startDate();
+    const end = this.endDate();
+    return start !== undefined && end !== undefined && end < start;
+  });
+
+  readonly formattedStartDate = computed(() => {
+    const date = this.startDate();
+    return date ? formatDate(date, this.userStore.dateFormat(), 'en') : '';
+  });
 
   constructor() {
     effect(() => {
-      if (this.option().startTime || this.option().endTime || this.initialShowTime()) {
+      const opt = this.option();
+      this.startDate.set(opt.date);
+      this.endDate.set(opt.endDate);
+      if (opt.startTime || opt.endTime || this.initialShowTime()) {
         this.showTime.set(true);
       }
     });
+  }
+
+  onStartDateChange(date: Date | undefined): void {
+    this.startDate.set(date);
+    this.option().date = date;
+  }
+
+  onEndDateChange(date: Date | undefined): void {
+    this.endDate.set(date);
+    this.option().endDate = date;
   }
 
   addTime(): void {

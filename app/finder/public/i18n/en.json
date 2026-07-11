@@ -159,6 +159,7 @@
         "startTime": "Time",
         "endTime": "End time",
         "addTime": "Add time",
+        "endBeforeStart": "End date must be after {{date}}.",
         "addOption": "Add date",
         "appointmentTypeLabel": "Type of date options",
         "changeType": "Change",

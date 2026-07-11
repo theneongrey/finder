@@ -11,6 +11,7 @@
               [showTime]="false"
               [showIcon]="true"
               [firstDayOfWeek]="1"
+              [dateFormat]="userStore.primengDateFormat()"
               appendTo="body"
               styleClass="tw:w-full"
               [(ngModel)]="option().date"

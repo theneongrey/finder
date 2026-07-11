@@ -76,7 +76,7 @@ export function isDateOptionEntryValid(entry: DateOptionEntry): boolean {
     case 'date':
       return entry.date !== undefined;
     case 'date-range':
-      return entry.date !== undefined && entry.endDate !== undefined;
+      return entry.date !== undefined && entry.endDate !== undefined && entry.endDate >= entry.date;
     case 'time':
       return entry.startTime !== undefined;
     case 'time-range':

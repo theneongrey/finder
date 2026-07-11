@@ -159,6 +159,7 @@
         "startTime": "Uhrzeit",
         "endTime": "Endzeit",
         "addTime": "Uhrzeit hinzufügen",
+        "endBeforeStart": "Das Enddatum muss nach dem {{date}} liegen.",
         "addOption": "Termin hinzufügen",
         "appointmentTypeLabel": "Art der Terminoptionen",
         "changeType": "Ändern",

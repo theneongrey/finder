@@ -35,6 +35,7 @@ export class PollItemComponent {
   private readonly translateService = inject(TranslateService);
 
   poll = input.required<PollItem>();
+  standalone = input(false);
   deletionRequested = output();
   shareRequested = output();
 
@@ -46,7 +47,7 @@ export class PollItemComponent {
 
   menuItems = computed<MenuItem[]>(() => {
     const poll = this.poll();
-    return [
+    const items: MenuItem[] = [
       {
         label: this.editLabel(),
         icon: 'fa-solid fa-pen',
@@ -71,16 +72,19 @@ export class PollItemComponent {
                 ]
               : undefined,
       },
-      {
+    ];
+    if (this.standalone()) {
+      items.push({
         label: this.shareLabel(),
         icon: 'fa-solid fa-share-nodes',
         command: () => this.shareRequested.emit(),
-      },
-      {
-        label: this.deleteLabel(),
-        icon: 'fa-regular fa-trash-can',
-        command: () => this.deletionRequested.emit(),
-      },
-    ];
+      });
+    }
+    items.push({
+      label: this.deleteLabel(),
+      icon: 'fa-regular fa-trash-can',
+      command: () => this.deletionRequested.emit(),
+    });
+    return items;
   });
 }

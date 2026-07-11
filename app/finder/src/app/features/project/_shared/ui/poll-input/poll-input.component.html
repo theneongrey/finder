@@ -11,8 +11,11 @@
     (descriptionChange)="description.set($event)"
     [options]="options()"
     [dateOptions]="dateOptions()"
+    [appointmentDateType]="appointmentDateType()"
+    (appointmentDateTypeChange)="onAppointmentDateTypeChange($event)"
     (add)="addOption()"
     (remove)="removeOption($event)"
+    (weekdayToggle)="toggleWeekday($event)"
     (formSubmit)="submit()"
   />
 }

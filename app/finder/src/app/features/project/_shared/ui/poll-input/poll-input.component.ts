@@ -12,14 +12,22 @@ import { OptionType } from '../../models/project-detail.model';
 import {
   OptionEntry,
   DateOptionEntry,
+  DateOptionType,
 } from './poll-input-form/poll-input-form.component';
+import {
+  parseDateOptionText,
+  serializeDateOption,
+  isDateOptionEntryValid,
+  nextFullHour,
+} from '../../utils/date-option.utils';
 import { UrlValidationService } from '../../../../../common/utils/url-validation.service';
 import { TitleBarService } from '../../../../../common/services/title-bar.service';
+import { AppointmentTypeConversionService } from '../../utils/appointment-type-conversion.service';
 import { ActivatedRoute } from '@angular/router';
 import { PollTypeSelectionComponent } from './poll-type-selection/poll-type-selection.component';
 import { PollInputFormComponent } from './poll-input-form/poll-input-form.component';
 
-export type { OptionEntry, DateOptionEntry };
+export type { OptionEntry, DateOptionEntry, DateOptionType };
 
 @Component({
   selector: 'app-poll-input',
@@ -33,6 +41,7 @@ export class PollInputComponent {
   private readonly projectListStore = inject(ProjectListStore);
   private readonly route = inject(ActivatedRoute);
   private readonly urlValidation = inject(UrlValidationService);
+  private readonly conversionService = inject(AppointmentTypeConversionService);
 
   readonly OptionType = OptionType;
 
@@ -47,7 +56,8 @@ export class PollInputComponent {
   question = signal('');
   description = signal('');
   options = signal<OptionEntry[]>([{ text: '', description: '' }]);
-  dateOptions = signal<DateOptionEntry[]>([{ startDate: null, endDate: null }]);
+  dateOptions = signal<DateOptionEntry[]>([]);
+  appointmentDateType = signal<DateOptionType | undefined>(undefined);
   removedOptionIds = signal<string[]>([]);
 
   constructor() {
@@ -77,18 +87,14 @@ export class PollInputComponent {
         this.description.set(currentPoll.description);
 
         if (currentPoll.optionType === OptionType.Date) {
-          this.dateOptions.set(
-            currentPoll.options.length
-              ? currentPoll.options.map((o) => {
-                  const parts = o.text.split(';');
-                  return {
-                    id: o.id,
-                    startDate: parts[0] ? new Date(parseInt(parts[0])) : null,
-                    endDate: parts[1] ? new Date(parseInt(parts[1])) : null,
-                  };
-                })
-              : [{ startDate: null, endDate: null }],
-          );
+          const entries = currentPoll.options.length
+            ? currentPoll.options.map((o) => parseDateOptionText(o.text, o.id))
+            : [];
+
+          if (entries.length > 0) {
+            this.appointmentDateType.set(entries[0].type);
+            this.dateOptions.set(entries);
+          }
         } else {
           this.options.set(
             currentPoll.options.length
@@ -119,9 +125,11 @@ export class PollInputComponent {
       return false;
     }
     if (type === OptionType.Date) {
+      const dateType = this.appointmentDateType();
+      if (!dateType) { return false; }
       return (
         !!this.question() &&
-        this.dateOptions().filter((o) => !!o.startDate).length >= 1
+        this.dateOptions().some((o) => isDateOptionEntryValid(o))
       );
     }
     const opts = this.options();
@@ -132,13 +140,50 @@ export class PollInputComponent {
     );
   }
 
+  onAppointmentDateTypeChange(newType: DateOptionType): void {
+    const oldType = this.appointmentDateType();
+    if (oldType === newType) {
+      return;
+    }
+    if (oldType) {
+      const converted = this.conversionService.convert(this.dateOptions(), oldType, newType);
+      const fallback = newType === 'weekday' ? [] : [{ type: newType }];
+      this.dateOptions.set(converted.length > 0 ? converted : fallback);
+    } else {
+      this.dateOptions.set(newType === 'weekday' ? [] : [{ type: newType }]);
+    }
+    this.appointmentDateType.set(newType);
+  }
+
+  toggleWeekday(weekday: number): void {
+    const opts = this.dateOptions();
+    const existingIndex = opts.findIndex((o) => o.weekday === weekday);
+    if (existingIndex !== -1) {
+      const removed = opts[existingIndex];
+      if (removed.id) {
+        this.removedOptionIds.update((ids) => [...ids, removed.id!]);
+      }
+      this.dateOptions.update((opts) => opts.filter((_, i) => i !== existingIndex));
+    } else {
+      this.dateOptions.update((opts) => [...opts, { type: 'weekday', weekday }]);
+    }
+  }
+
   addOption(): void {
     const type = this.optionType();
     if (type === OptionType.Date) {
-      this.dateOptions.update((opts) => [
-        ...opts,
-        { startDate: null, endDate: null },
-      ]);
+      const dateType = this.appointmentDateType();
+      if (!dateType) { return; }
+      if (dateType === 'time') {
+        this.dateOptions.update((opts) => [...opts, { type: 'time', startTime: nextFullHour() }]);
+      } else if (dateType === 'time-range') {
+        const start = nextFullHour();
+        const end = new Date(start);
+        end.setHours(end.getHours() + 1);
+        this.dateOptions.update((opts) => [...opts, { type: 'time-range', startTime: start, endTime: end }]);
+      } else {
+        this.dateOptions.update((opts) => [...opts, { type: dateType }]);
+      }
     } else {
       this.options.update((opts) => [...opts, { text: '', description: '' }]);
     }
@@ -180,9 +225,9 @@ export class PollInputComponent {
 
     if (optionType === OptionType.Date) {
       const options = this.dateOptions()
-        .filter((o) => !!o.startDate)
+        .filter((o) => isDateOptionEntryValid(o))
         .map((o) => ({
-          text: this.dateEntryToText(o),
+          text: serializeDateOption(o),
           description: '',
         }));
 
@@ -220,9 +265,9 @@ export class PollInputComponent {
 
     if (optionType === OptionType.Date) {
       const options = this.dateOptions()
-        .filter((o) => !!o.startDate)
+        .filter((o) => isDateOptionEntryValid(o))
         .map((o) => ({
-          text: this.dateEntryToText(o),
+          text: serializeDateOption(o),
           description: '',
         }));
 
@@ -260,10 +305,10 @@ export class PollInputComponent {
 
     if (optionType === OptionType.Date) {
       const options = this.dateOptions()
-        .filter((o) => !!o.startDate)
+        .filter((o) => isDateOptionEntryValid(o))
         .map((o) => ({
           id: o.id,
-          text: this.dateEntryToText(o),
+          text: serializeDateOption(o),
           description: '',
         }));
 
@@ -294,11 +339,5 @@ export class PollInputComponent {
         removedOptionIds: this.removedOptionIds(),
       });
     }
-  }
-
-  private dateEntryToText(entry: DateOptionEntry): string {
-    const start = entry.startDate!.getTime().toString();
-    const end = entry.endDate ? entry.endDate.getTime().toString() : '';
-    return end ? `${start};${end}` : start;
   }
 }

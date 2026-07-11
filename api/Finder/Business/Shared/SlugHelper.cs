@@ -15,4 +15,7 @@ public static class SlugHelper
         if (string.IsNullOrEmpty(nameSlug)) nameSlug = "item";
         return $"{nameSlug}-{id}";
     }
+
+    public static string OptionSlugName(string text) =>
+        text.Contains(';') ? text.Split(';')[0] : text;
 }

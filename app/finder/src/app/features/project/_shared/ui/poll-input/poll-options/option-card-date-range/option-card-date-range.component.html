@@ -14,8 +14,9 @@
               [dateFormat]="userStore.primengDateFormat()"
               appendTo="body"
               styleClass="tw:w-full"
-              [(ngModel)]="option().date"
-              [name]="'date-' + index()"
+              [ngModel]="startDate()"
+              (ngModelChange)="onStartDateChange($event)"
+              [name]="'date-range-start-' + index()"
             />
           </div>
 
@@ -41,7 +42,44 @@
                 appendTo="body"
                 styleClass="tw:w-full"
                 [(ngModel)]="option().startTime"
-                [name]="'date-time-' + index()"
+                [name]="'date-range-start-time-' + index()"
+              />
+            </div>
+          }
+        </div>
+
+        <div class="tw:flex tw:gap-2">
+          <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
+            <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
+              {{ "project.pollInput.date.endDate" | translate }}
+            </label>
+            <p-datepicker
+              [showTime]="false"
+              [showIcon]="true"
+              [firstDayOfWeek]="1"
+              [dateFormat]="userStore.primengDateFormat()"
+              appendTo="body"
+              styleClass="tw:w-full"
+              [ngModel]="endDate()"
+              (ngModelChange)="onEndDateChange($event)"
+              [name]="'date-range-end-' + index()"
+            />
+          </div>
+
+          @if (showTime()) {
+            <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
+              <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
+                {{ "project.pollInput.date.endTime" | translate }}
+              </label>
+              <p-datepicker
+                [timeOnly]="true"
+                hourFormat="24"
+                [showIcon]="true"
+                [stepMinute]="15"
+                appendTo="body"
+                styleClass="tw:w-full"
+                [(ngModel)]="option().endTime"
+                [name]="'date-range-end-time-' + index()"
               />
             </div>
           }
@@ -56,6 +94,16 @@
             <i class="fa-solid fa-plus" style="font-size: 11px"></i>
             {{ "project.pollInput.date.addTime" | translate }}
           </button>
+        }
+
+        @if (endBeforeStart()) {
+          <p class="tw:text-xs tw:text-red-500 tw:m-0">
+            <i class="fa-solid fa-triangle-exclamation tw:mr-1"></i>
+            {{
+              "project.pollInput.date.endBeforeStart"
+                | translate: { date: formattedStartDate() }
+            }}
+          </p>
         }
       </div>
 

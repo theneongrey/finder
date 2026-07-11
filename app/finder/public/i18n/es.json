@@ -154,8 +154,40 @@
       "date": {
         "answerOptions": "Opciones de fecha",
         "minOptions": "Mín. 1 fecha",
-        "startDate": "Fecha de inicio",
-        "endDate": "Fecha de fin (opcional)"
+        "startDate": "Fecha",
+        "endDate": "Fecha de fin",
+        "startTime": "Hora",
+        "endTime": "Hora de fin",
+        "addTime": "Añadir hora",
+        "endBeforeStart": "La fecha de fin debe ser posterior al {{date}}.",
+        "addOption": "Añadir fecha",
+        "appointmentTypeLabel": "Tipo de opciones de fecha",
+        "changeType": "Cambiar",
+        "types": {
+          "weekday": "Día de la semana",
+          "date": "Día del calendario",
+          "dateRange": "Rango de fechas",
+          "time": "Hora",
+          "timeRange": "Rango de horas"
+        },
+        "weekdays": {
+          "0": "Domingo",
+          "1": "Lunes",
+          "2": "Martes",
+          "3": "Miércoles",
+          "4": "Jueves",
+          "5": "Viernes",
+          "6": "Sábado"
+        },
+        "weekdaysShort": {
+          "0": "Dom",
+          "1": "Lun",
+          "2": "Mar",
+          "3": "Mié",
+          "4": "Jue",
+          "5": "Vie",
+          "6": "Sáb"
+        }
       },
       "yesNo": {
         "question": "Tu pregunta",
@@ -224,5 +256,9 @@
       "monthAgo": "hace {{count}} mes",
       "monthsAgo": "hace {{count}} meses"
     }
+  },
+  "primeng": {
+    "monthNames": ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+    "monthNamesShort": ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
   }
 }

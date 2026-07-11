@@ -66,6 +66,7 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
         .length ?? 0,
   );
   totalCount = computed(() => this.poll()?.options.length ?? 0);
+  allOptionTexts = computed(() => this.poll()?.options.map((o) => o.text) ?? []);
 
   private readonly SWIPE_THRESHOLD = 75;
 

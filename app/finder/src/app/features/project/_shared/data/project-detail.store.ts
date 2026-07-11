@@ -380,16 +380,33 @@ export const ProjectDetailStore = signalStore(
               next: () => {
                 const currentPoll = store.currentPoll();
                 if (currentPoll) {
+                  const updatedOptions = currentPoll.options.map((o) =>
+                    o.id !== vote.optionId
+                      ? o
+                      : { ...o, choice: vote.choice },
+                  );
                   patchState(store, {
-                    currentPoll: {
-                      ...currentPoll,
-                      options: currentPoll.options.map((o) =>
-                        o.id !== vote.optionId
-                          ? o
-                          : { ...o, choice: vote.choice },
-                      ),
-                    },
+                    currentPoll: { ...currentPoll, options: updatedOptions },
                   });
+
+                  const currentProject = store.currentProject();
+                  if (currentProject) {
+                    const nextUnvoted = updatedOptions.find((o) => !o.choice);
+                    const nextSkipped = updatedOptions
+                      .filter((o) => o.choice && parseInt(o.choice) < 0)
+                      .sort((a, b) => parseInt(b.choice!) - parseInt(a.choice!))[0];
+                    const nextOpenOptionId = (nextUnvoted ?? nextSkipped)?.id;
+                    patchState(store, {
+                      currentProject: {
+                        ...currentProject,
+                        polls: currentProject.polls.map((p) =>
+                          p.id !== currentPoll.id
+                            ? p
+                            : { ...p, nextOpenOptionId },
+                        ),
+                      },
+                    });
+                  }
                 }
               },
               error: (error) => {

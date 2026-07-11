@@ -101,7 +101,7 @@
               [description]="option()?.description ?? ''"
             />
           } @else if (poll()?.optionType === OptionType.Date) {
-            <app-vote-card-date [text]="option()?.text ?? ''" />
+            <app-vote-card-date [text]="option()?.text ?? ''" [allOptionTexts]="allOptionTexts()" />
           } @else if (option()?.meta?.imageUrl) {
             <app-vote-card-image
               [text]="option()?.text ?? ''"

@@ -1,22 +1,31 @@
 <div
-  class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-4 tw:flex-1 tw:p-6"
+  class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-4 tw:flex-1"
+  [class.tw:p-6]="parsed().type !== 'date'"
+  [class.tw:p-2]="parsed().type === 'date'"
 >
-  <i class="fa-regular fa-calendar tw:text-3xl tw:text-primary"></i>
-
-  @if (startDate(); as start) {
-    <div class="tw:flex tw:flex-col tw:items-center tw:gap-2 tw:text-center">
-      <p class="tw:text-2xl tw:font-semibold tw:text-surface-900 tw:leading-snug">
-        {{ formatDate(start) }}
-      </p>
-
-      @if (endDate(); as end) {
-        <div class="tw:flex tw:items-center tw:gap-2 tw:text-surface-500">
-          <i class="fa-solid fa-arrow-right tw:text-sm"></i>
-          <p class="tw:text-lg tw:font-medium">
-            {{ formatDate(end) }}
-          </p>
-        </div>
+  <div class="tw:flex tw:flex-col tw:items-center tw:gap-2 tw:text-center">
+    @switch (parsed().type) {
+      @case ("weekday") {
+        <app-vote-card-date-weekday
+          [entry]="parsed()"
+          [otherWeekdays]="otherWeekdays()"
+        />
       }
-    </div>
-  }
+      @case ("date") {
+        <app-vote-card-date-date
+          [entry]="parsed()"
+          [otherDates]="otherDates()"
+        />
+      }
+      @case ("date-range") {
+        <app-vote-card-date-date-range [entry]="parsed()" />
+      }
+      @case ("time") {
+        <app-vote-card-date-time [entry]="parsed()" />
+      }
+      @case ("time-range") {
+        <app-vote-card-date-time-range [entry]="parsed()" />
+      }
+    }
+  </div>
 </div>

@@ -154,8 +154,40 @@
       "date": {
         "answerOptions": "Date options",
         "minOptions": "Min. 1 date",
-        "startDate": "Start date",
-        "endDate": "End date (optional)"
+        "startDate": "Date",
+        "endDate": "End date",
+        "startTime": "Time",
+        "endTime": "End time",
+        "addTime": "Add time",
+        "endBeforeStart": "End date must be after {{date}}.",
+        "addOption": "Add date",
+        "appointmentTypeLabel": "Type of date options",
+        "changeType": "Change",
+        "types": {
+          "weekday": "Weekday",
+          "date": "Calendar day",
+          "dateRange": "Date range",
+          "time": "Time",
+          "timeRange": "Time range"
+        },
+        "weekdays": {
+          "0": "Sunday",
+          "1": "Monday",
+          "2": "Tuesday",
+          "3": "Wednesday",
+          "4": "Thursday",
+          "5": "Friday",
+          "6": "Saturday"
+        },
+        "weekdaysShort": {
+          "0": "Sun",
+          "1": "Mon",
+          "2": "Tue",
+          "3": "Wed",
+          "4": "Thu",
+          "5": "Fri",
+          "6": "Sat"
+        }
       },
       "yesNo": {
         "question": "Your question",
@@ -224,5 +256,9 @@
       "monthAgo": "{{count}} month ago",
       "monthsAgo": "{{count}} months ago"
     }
+  },
+  "primeng": {
+    "monthNames": ["January","February","March","April","May","June","July","August","September","October","November","December"],
+    "monthNamesShort": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
   }
 }

@@ -1,0 +1,15 @@
+<div class="tw:flex tw:items-center tw:gap-6">
+  <div class="tw:flex tw:flex-col tw:items-center tw:gap-1">
+    <app-analog-clock [time]="entry().startTime!" [size]="90" />
+    <p class="tw:text-[32px] tw:font-semibold">
+      {{ formatTimeOnly(entry().startTime!) }}
+    </p>
+  </div>
+  <span class="tw:text-[32px] tw:font-light">–</span>
+  <div class="tw:flex tw:flex-col tw:items-center tw:gap-1">
+    <app-analog-clock [time]="entry().endTime!" [size]="90" />
+    <p class="tw:text-[32px] tw:font-semibold">
+      {{ formatTimeOnly(entry().endTime!) }}
+    </p>
+  </div>
+</div>

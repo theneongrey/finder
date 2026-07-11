@@ -67,7 +67,7 @@ public static class ProjectMapper
     {
         return new ProjectResponseOption
         {
-            Id = SlugHelper.ToSlug(option.Text, option.Id),
+            Id = SlugHelper.ToSlug(SlugHelper.OptionSlugName(option.Text), option.Id),
             Text = option.Text,
             Description = option.Description,
             Meta = option.Meta is null ? null : new PollResponseOptionMeta
@@ -107,7 +107,7 @@ public static class ProjectMapper
             OptionType = (int)poll.OptionType,
             OptionCount = poll.Options.Count,
             CommentCount = poll.Comments.Count,
-            NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(nextOption.Text, nextOption.Id)
+            NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(SlugHelper.OptionSlugName(nextOption.Text), nextOption.Id)
         };
     }
 

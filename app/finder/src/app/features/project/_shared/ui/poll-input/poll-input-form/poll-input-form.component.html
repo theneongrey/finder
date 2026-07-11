@@ -60,8 +60,11 @@
     [optionType]="optionType()"
     [options]="options()"
     [dateOptions]="dateOptions()"
+    [appointmentDateType]="appointmentDateType()"
+    (appointmentDateTypeSelected)="appointmentDateTypeChange.emit($event)"
     (add)="add.emit()"
     (remove)="remove.emit($event)"
+    (weekdayToggle)="weekdayToggle.emit($event)"
   />
 </div>
 

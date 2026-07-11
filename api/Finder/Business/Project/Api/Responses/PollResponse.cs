@@ -52,7 +52,7 @@ public static class PollMapper
     {
         return new PollResponseOption
         {
-            Id = SlugHelper.ToSlug(option.Text, option.Id),
+            Id = SlugHelper.ToSlug(SlugHelper.OptionSlugName(option.Text), option.Id),
             Text = option.Text,
             Description = option.Description,
             Meta = option.Meta is null ? null : new PollResponseOptionMeta

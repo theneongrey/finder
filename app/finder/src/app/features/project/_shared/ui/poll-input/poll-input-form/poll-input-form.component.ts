@@ -19,10 +19,11 @@ import {
   PollOptionsComponent,
   OptionEntry,
   DateOptionEntry,
+  DateOptionType,
 } from '../poll-options/poll-options.component';
 import { AutoResizeTextareaComponent } from '../../../../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 
-export type { OptionEntry, DateOptionEntry };
+export type { OptionEntry, DateOptionEntry, DateOptionType };
 
 @Component({
   selector: 'app-poll-input-form',
@@ -49,8 +50,11 @@ export class PollInputFormComponent {
   descriptionChange = output<string>();
   options = input.required<OptionEntry[]>();
   dateOptions = input.required<DateOptionEntry[]>();
+  appointmentDateType = input<DateOptionType | undefined>(undefined);
+  appointmentDateTypeChange = output<DateOptionType>();
   add = output<void>();
   remove = output<number>();
+  weekdayToggle = output<number>();
   formSubmit = output<void>();
 
   showDescription = signal(false);

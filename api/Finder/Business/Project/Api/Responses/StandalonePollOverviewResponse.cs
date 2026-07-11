@@ -63,7 +63,7 @@ public static class StandalonePollOverviewMapper
             OptionCount = poll.Options.Count,
             CommentCount = poll.Comments.Count,
             LastUpdated = DateTime.SpecifyKind(newestDate, DateTimeKind.Utc),
-            NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(nextOption.Text, nextOption.Id),
+            NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(SlugHelper.OptionSlugName(nextOption.Text), nextOption.Id),
             VisibilityType = (int)project.VisibilityType,
             SharedWith = sharedWith.ToArray()
         };

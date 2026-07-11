@@ -3,18 +3,13 @@
 >
   <div class="tw:flex tw:justify-between tw:items-start tw:mb-3">
     <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
-      @if (parsedDates().start; as start) {
-        <h4
-          class="tw:text-base tw:font-semibold tw:text-gray-900 tw:leading-tight"
-        >
-          {{ formatDate(start) }}
-        </h4>
-        @if (parsedDates().end; as end) {
-          <p class="tw:text-sm tw:text-gray-500 tw:flex tw:items-center tw:gap-1">
-            <i class="fa-solid fa-arrow-right tw:text-xs"></i>
-            {{ formatDate(end) }}
-          </p>
-        }
+      <h4
+        class="tw:text-base tw:font-semibold tw:text-gray-900 tw:leading-tight"
+      >
+        {{ label() }}
+      </h4>
+      @if (subLabel(); as sub) {
+        <p class="tw:text-sm tw:text-gray-500">{{ sub }}</p>
       }
       @if (isMostVoted()) {
         <p-tag

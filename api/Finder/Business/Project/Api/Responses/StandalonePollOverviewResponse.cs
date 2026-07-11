@@ -1,3 +1,5 @@
+using Finder.Business.Shared;
+
 namespace Finder.Business.Project.Api.Responses;
 
 public class StandalonePollOverviewResponse
@@ -37,29 +39,31 @@ public static class StandalonePollOverviewMapper
             });
         }
 
+        var nextOption = poll.Options
+            .Select(o => new {
+                Option = o,
+                UserChoice = o.Votes
+                    .Where(v => v.Person.Id == userId)
+                    .Select(v => int.TryParse(v.Choice, out var cv) ? (int?)cv : null)
+                    .FirstOrDefault()
+            })
+            .Where(x => x.UserChoice == null || x.UserChoice < 0)
+            .OrderBy(x => x.UserChoice == null ? 0 : 1)
+            .ThenByDescending(x => x.UserChoice ?? 0)
+            .ThenBy(x => x.Option.Created)
+            .FirstOrDefault()?.Option;
+
         return new StandalonePollOverviewResponse
         {
-            ProjectId = project.Id.ToString(),
-            PollId = poll.Id.ToString(),
+            ProjectId = SlugHelper.ToSlug(project.Name, project.Id),
+            PollId = SlugHelper.ToSlug(poll.Name, poll.Id),
             Name = poll.Name,
             Description = poll.Description,
             OptionType = (int)poll.OptionType,
             OptionCount = poll.Options.Count,
             CommentCount = poll.Comments.Count,
             LastUpdated = DateTime.SpecifyKind(newestDate, DateTimeKind.Utc),
-            NextOpenOptionId = poll.Options
-                .Select(o => new {
-                    Option = o,
-                    UserChoice = o.Votes
-                        .Where(v => v.Person.Id == userId)
-                        .Select(v => int.TryParse(v.Choice, out var cv) ? (int?)cv : null)
-                        .FirstOrDefault()
-                })
-                .Where(x => x.UserChoice == null || x.UserChoice < 0)
-                .OrderBy(x => x.UserChoice == null ? 0 : 1)
-                .ThenByDescending(x => x.UserChoice ?? 0)
-                .ThenBy(x => x.Option.Created)
-                .FirstOrDefault()?.Option.Id.ToString(),
+            NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(nextOption.Text, nextOption.Id),
             VisibilityType = (int)project.VisibilityType,
             SharedWith = sharedWith.ToArray()
         };

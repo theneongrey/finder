@@ -1,3 +1,5 @@
+using Finder.Business.Shared;
+
 namespace Finder.Business.Project.Api.Responses;
 
 public class PublicProjectResponse
@@ -52,11 +54,12 @@ public static class ProjectMapper
 {
     public static PublicProjectResponse ToPublicProjectResponse(this Entities.Project project)
     {
+        var firstPoll = project.IsStandalone ? project.Polls.FirstOrDefault() : null;
         return new PublicProjectResponse
         {
-            ProjectId = project.Id.ToString(),
+            ProjectId = SlugHelper.ToSlug(project.Name, project.Id),
             IsStandalone = project.IsStandalone,
-            PollId = project.IsStandalone ? project.Polls.FirstOrDefault()?.Id.ToString() : null
+            PollId = firstPoll is null ? null : SlugHelper.ToSlug(firstPoll.Name, firstPoll.Id)
         };
     }
 
@@ -64,7 +67,7 @@ public static class ProjectMapper
     {
         return new ProjectResponseOption
         {
-            Id = option.Id.ToString(),
+            Id = SlugHelper.ToSlug(option.Text, option.Id),
             Text = option.Text,
             Description = option.Description,
             Meta = option.Meta is null ? null : new PollResponseOptionMeta
@@ -82,27 +85,29 @@ public static class ProjectMapper
 
     public static ProjectResponsePoll ToProjectResponsePoll(this Entities.Poll poll, Guid? userId)
     {
+        var nextOption = poll.Options
+            .Select(o => new {
+                Option = o,
+                UserChoice = o.Votes
+                    .Where(v => v.Person.Id == userId)
+                    .Select(v => int.TryParse(v.Choice, out var cv) ? (int?)cv : null)
+                    .FirstOrDefault()
+            })
+            .Where(x => x.UserChoice == null || x.UserChoice < 0)
+            .OrderBy(x => x.UserChoice == null ? 0 : 1)
+            .ThenByDescending(x => x.UserChoice ?? 0)
+            .ThenBy(x => x.Option.Created)
+            .FirstOrDefault()?.Option;
+
         return new ProjectResponsePoll
         {
-            Id = poll.Id.ToString(),
+            Id = SlugHelper.ToSlug(poll.Name, poll.Id),
             Name = poll.Name,
             Description = poll.Description,
             OptionType = (int)poll.OptionType,
             OptionCount = poll.Options.Count,
             CommentCount = poll.Comments.Count,
-            NextOpenOptionId = poll.Options
-                .Select(o => new {
-                    Option = o,
-                    UserChoice = o.Votes
-                        .Where(v => v.Person.Id == userId)
-                        .Select(v => int.TryParse(v.Choice, out var cv) ? (int?)cv : null)
-                        .FirstOrDefault()
-                })
-                .Where(x => x.UserChoice == null || x.UserChoice < 0)
-                .OrderBy(x => x.UserChoice == null ? 0 : 1)
-                .ThenByDescending(x => x.UserChoice ?? 0)
-                .ThenBy(x => x.Option.Created)
-                .FirstOrDefault()?.Option.Id.ToString()
+            NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(nextOption.Text, nextOption.Id)
         };
     }
 
@@ -137,7 +142,7 @@ public static class ProjectMapper
 
         return new ProjectResponse
         {
-            Id = project.Id.ToString(),
+            Id = SlugHelper.ToSlug(project.Name, project.Id),
             Name = project.Name,
             Description = project.Description,
             Polls = project.Polls.OrderBy(t => t.Created).Select(t => t.ToProjectResponsePoll(userId)).ToArray(),

@@ -17,9 +17,9 @@ public static class ProjectApi
             .RequireAuthorization();
 
         // Get single project
-        app.MapGet("/api/project/{id:guid}", async (Guid id, ProjectService projectService, UserService userService) =>
+        app.MapGet("/api/project/{slug}", async (string slug, ProjectService projectService, UserService userService) =>
         {
-            var result = await projectService.Get(id);
+            var result = await projectService.Get(slug);
             return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectResponse(userService.GetUserId()));
         }).RequireAuthorization();
 
@@ -35,27 +35,27 @@ public static class ProjectApi
             .RequireAuthorization();
 
         // Update project
-        app.MapPut("/api/project/{id:guid}",
-                async (Guid id, [FromBody] AddProjectRequest request, ProjectService projectService, UserService userService) =>
+        app.MapPut("/api/project/{slug}",
+                async (string slug, [FromBody] AddProjectRequest request, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.Update(id, request.Name, request.Description);
+                    var result = await projectService.Update(slug, request.Name, request.Description);
                     return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
 
         // Delete project
-        app.MapDelete("/api/project/{id:guid}",
-                async (Guid id, ProjectService projectService) =>
+        app.MapDelete("/api/project/{slug}",
+                async (string slug, ProjectService projectService) =>
                 {
-                    var result = await projectService.Delete(id);
+                    var result = await projectService.Delete(slug);
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();
 
         // Get public project info (no auth required, used for share link routing)
-        app.MapGet("/api/project/public/{id:guid}", async (Guid id, ProjectService projectService) =>
+        app.MapGet("/api/project/public/{slug}", async (string slug, ProjectService projectService) =>
         {
-            var result = await projectService.GetPublicInfo(id);
+            var result = await projectService.GetPublicInfo(slug);
             return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToPublicProjectResponse());
         });
 
@@ -88,28 +88,28 @@ public static class ProjectApi
             .RequireAuthorization();
 
         // Get poll
-        app.MapGet("/api/project/poll/{id:guid}",
-                async (Guid id, ProjectService projectService, UserService userService) =>
+        app.MapGet("/api/project/poll/{slug}",
+                async (string slug, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.GetPoll(id);
+                    var result = await projectService.GetPoll(slug);
                     return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
 
         // Update poll
-        app.MapPut("/api/project/poll/{id:guid}",
-                async (Guid id, [FromBody] UpdatePollRequest request, ProjectService projectService, UserService userService) =>
+        app.MapPut("/api/project/poll/{slug}",
+                async (string slug, [FromBody] UpdatePollRequest request, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.UpdatePoll(id, request.Name, request.Description);
+                    var result = await projectService.UpdatePoll(slug, request.Name, request.Description);
                     return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
 
         // Delete poll
-        app.MapDelete("/api/project/poll/{id:guid}",
-                async (Guid id, ProjectService projectService) =>
+        app.MapDelete("/api/project/poll/{slug}",
+                async (string slug, ProjectService projectService) =>
                 {
-                    var result = await projectService.DeletePoll(id);
+                    var result = await projectService.DeletePoll(slug);
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();
@@ -126,10 +126,10 @@ public static class ProjectApi
             .RequireAuthorization();
 
         // Update option
-        app.MapPut("/api/project/poll/option/{id:guid}",
-                async (Guid id, [FromBody] UpdateOptionRequest request, ProjectService projectService, UserService userService) =>
+        app.MapPut("/api/project/poll/option/{slug}",
+                async (string slug, [FromBody] UpdateOptionRequest request, ProjectService projectService, UserService userService) =>
                 {
-                    var result = await projectService.UpdateOption(id, request);
+                    var result = await projectService.UpdateOption(slug, request);
                     return !result.IsSuccess
                         ? Results.NotFound()
                         : Results.Ok(result.Payload!.ToPollResponseOption(userService.GetUserId()));
@@ -137,19 +137,19 @@ public static class ProjectApi
             .RequireAuthorization();
 
         // Delete option
-        app.MapDelete("/api/project/poll/option/{id:guid}",
-                async (Guid id, ProjectService projectService) =>
+        app.MapDelete("/api/project/poll/option/{slug}",
+                async (string slug, ProjectService projectService) =>
                 {
-                    var result = await projectService.DeleteOption(id);
+                    var result = await projectService.DeleteOption(slug);
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();
 
         // Vote
-        app.MapPut("/api/project/poll/vote/{optionId:guid}",
-                async (Guid optionId, VoteService voteService, [FromBody] VoteRequest request) =>
+        app.MapPut("/api/project/poll/vote/{optionSlug}",
+                async (string optionSlug, VoteService voteService, [FromBody] VoteRequest request) =>
                 {
-                    var result = await voteService.Vote(optionId, request.Choice);
+                    var result = await voteService.Vote(optionSlug, request.Choice);
                     return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();

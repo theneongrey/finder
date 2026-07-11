@@ -65,7 +65,7 @@ public class ProjectService
 
         var project = new Entities.Project
         {
-            Id = Guid.NewGuid(),
+            Id = SlugHelper.GenerateId(),
             Name = name,
             Description = description,
             Creator = userRequest.Payload!,
@@ -87,7 +87,7 @@ public class ProjectService
 
         var project = new Entities.Project
         {
-            Id = Guid.NewGuid(),
+            Id = SlugHelper.GenerateId(),
             Name = name,
             Description = null,
             IsStandalone = true,
@@ -97,7 +97,7 @@ public class ProjectService
 
         var poll = new Poll
         {
-            Id = Guid.NewGuid(),
+            Id = SlugHelper.GenerateId(),
             Name = name,
             Description = description,
             OptionType = optionType,
@@ -110,13 +110,13 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> Update(Guid projectId, string projectName, string? projectDescription)
+    public async Task<Result<Entities.Project>> Update(string slug, string projectName, string? projectDescription)
     {
         var projectToUpdate = await _dbContext.Projects
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
             .Include(p => p.Creator)
-            .Where(p => p.Id == projectId &&
+            .Where(p => p.Id == SlugHelper.ExtractId(slug) &&
                         (p.Creator.Id == UserId || p.Permissions.Any(permission =>
                             permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
             .SingleOrDefaultAsync();
@@ -132,10 +132,10 @@ public class ProjectService
         return Result<Entities.Project>.Success(projectToUpdate);
     }
 
-    public async Task<Result> Delete(Guid projectId)
+    public async Task<Result> Delete(string slug)
     {
         var deletedProjects = await _dbContext.Projects
-            .Where(p => p.Id == projectId && (p.Creator.Id == UserId || p.Permissions.Any(permission =>
+            .Where(p => p.Id == SlugHelper.ExtractId(slug) && (p.Creator.Id == UserId || p.Permissions.Any(permission =>
                 permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
             .ExecuteDeleteAsync();
 
@@ -148,11 +148,11 @@ public class ProjectService
         return Result.Success();
     }
 
-    public async Task<Result<Entities.Project>> GetPublicInfo(Guid projectId)
+    public async Task<Result<Entities.Project>> GetPublicInfo(string slug)
     {
         var project = await _dbContext.Projects
             .Include(p => p.Polls)
-            .Where(p => p.Id == projectId)
+            .Where(p => p.Id == SlugHelper.ExtractId(slug))
             .SingleOrDefaultAsync();
 
         if (project == null)
@@ -163,7 +163,7 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> Get(Guid projectId)
+    public async Task<Result<Entities.Project>> Get(string slug)
     {
         var project = await _dbContext.Projects
             .Include(p => p.Creator)
@@ -177,9 +177,10 @@ public class ProjectService
             .ThenInclude(o => o.Votes)
             .Include(p => p.Polls)
             .ThenInclude(t => t.Comments)
-            .Where(p => p.Id == projectId && (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
-                                              p.Permissions.Any(permission => permission.PersonKey == UserId)))
+            .Where(p => p.Id == SlugHelper.ExtractId(slug) && (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
+                                          p.Permissions.Any(permission => permission.PersonKey == UserId)))
             .SingleOrDefaultAsync();
+
         if (project == null)
         {
             return Result<Entities.Project>.Fail(404);
@@ -200,7 +201,7 @@ public class ProjectService
     {
         var projectResult = await _dbContext.Projects
             .Include(p => p.Polls)
-            .Where(p => p.Id == pollRequest.ProjectId && (p.Creator.Id == UserId ||
+            .Where(p => p.Id == SlugHelper.ExtractId(pollRequest.ProjectId) && (p.Creator.Id == UserId ||
                                                            p.Permissions.Any(permission =>
                                                                permission.Person.Id == UserId &&
                                                                permission.PermissionType >= PermissionType.Maintainer)))
@@ -213,7 +214,7 @@ public class ProjectService
 
         var poll = new Poll
         {
-            Id = Guid.NewGuid(),
+            Id = SlugHelper.GenerateId(),
             OptionType = pollRequest.OptionType,
             Name = pollRequest.Name,
             Description = pollRequest.Description,
@@ -226,14 +227,14 @@ public class ProjectService
         return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result<Poll>> UpdatePoll(Guid pollId, string name, string description)
+    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description)
     {
         var poll = await _dbContext.Polls
             .Include(t => t.Project)
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
-            .Where(t => t.Id == pollId && (t.Project.Creator.Id == UserId ||
+            .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
                                             t.Project.Permissions.Any(permission =>
                                                 permission.Person.Id == UserId &&
                                                 permission.PermissionType >= PermissionType.Maintainer)))
@@ -256,10 +257,10 @@ public class ProjectService
         return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result> DeletePoll(Guid pollId)
+    public async Task<Result> DeletePoll(string slug)
     {
         var deletedPolls = await _dbContext.Polls
-            .Where(t => t.Id == pollId && (t.Project.Creator.Id == UserId ||
+            .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
                                             t.Project.Permissions.Any(permission =>
                                                 permission.Person.Id == UserId &&
                                                 permission.PermissionType >= PermissionType.Maintainer)))
@@ -274,7 +275,7 @@ public class ProjectService
         return Result.Success();
     }
 
-    public async Task<Result<Poll>> GetPoll(Guid pollId)
+    public async Task<Result<Poll>> GetPoll(string slug)
     {
         var poll = await _dbContext.Polls
             .Include(t => t.Options)
@@ -284,7 +285,7 @@ public class ProjectService
             .ThenInclude(v => v.Person)
             .Include(t => t.Comments)
             .ThenInclude(c => c.Person)
-            .Where(t => t.Id == pollId && (
+            .Where(t => t.Id == SlugHelper.ExtractId(slug) && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
                 t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
@@ -301,7 +302,7 @@ public class ProjectService
     public async Task<Result<Option>> AddOptionToPoll(AddOptionToPollRequest pollRequest)
     {
         var poll = await _dbContext.Polls
-            .Where(t => t.Id == pollRequest.PollId && (t.Project.Creator.Id == UserId ||
+            .Where(t => t.Id == SlugHelper.ExtractId(pollRequest.PollId) && (t.Project.Creator.Id == UserId ||
                                                          t.Project.Permissions.Any(permission =>
                                                              permission.Person.Id == UserId &&
                                                              permission.PermissionType >= PermissionType.Maintainer)))
@@ -314,7 +315,7 @@ public class ProjectService
 
         var option = new Option
         {
-            Id = Guid.NewGuid(),
+            Id = SlugHelper.GenerateId(),
             Text = pollRequest.Text,
             Description = pollRequest.Description,
             Poll = poll
@@ -341,13 +342,13 @@ public class ProjectService
         return Result<Option>.Success(option);
     }
 
-    public async Task<Result<Option>> UpdateOption(Guid optionId, UpdateOptionRequest request)
+    public async Task<Result<Option>> UpdateOption(string slug, UpdateOptionRequest request)
     {
         var option = await _dbContext.Options
             .Include(o => o.Meta)
             .Include(o => o.Votes)
             .ThenInclude(v => v.Person)
-            .Where(o => o.Id == optionId && (o.Poll.Project.Creator.Id == UserId ||
+            .Where(o => o.Id == SlugHelper.ExtractId(slug) && (o.Poll.Project.Creator.Id == UserId ||
                                              o.Poll.Project.Permissions.Any(permission =>
                                                  permission.Person.Id == UserId &&
                                                  permission.PermissionType >= PermissionType.Maintainer)))
@@ -395,10 +396,10 @@ public class ProjectService
         return Result<Option>.Success(option);
     }
 
-    public async Task<Result> DeleteOption(Guid optionId)
+    public async Task<Result> DeleteOption(string slug)
     {
         var deletedOption = await _dbContext.Options
-            .Where(o => o.Id == optionId && (o.Poll.Project.Creator.Id == UserId ||
+            .Where(o => o.Id == SlugHelper.ExtractId(slug) && (o.Poll.Project.Creator.Id == UserId ||
                                              o.Poll.Project.Permissions.Any(permission =>
                                                  permission.Person.Id == UserId &&
                                                  permission.PermissionType >= PermissionType.Maintainer)))
@@ -416,7 +417,7 @@ public class ProjectService
     public async Task<Result<Comment>> AddComment(AddCommentRequest request)
     {
         var poll = await _dbContext.Polls
-            .Where(t => t.Id == request.PollId && (
+            .Where(t => t.Id == SlugHelper.ExtractId(request.PollId) && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
                 t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))

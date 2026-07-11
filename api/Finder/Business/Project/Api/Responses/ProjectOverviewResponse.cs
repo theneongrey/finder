@@ -1,3 +1,5 @@
+using Finder.Business.Shared;
+
 namespace Finder.Business.Project.Api.Responses;
 
 public class ProjectOverviewResponse
@@ -15,7 +17,7 @@ public class ProjectOverviewResponse
 
 public class ProjectOverviewPollResponse
 {
-    public required Guid Id { get; init; }
+    public required string Id { get; init; }
     public required string Name { get; init; }
 }
 
@@ -45,13 +47,13 @@ public static class ProjectOverviewMapper
 
         return new ProjectOverviewResponse
         {
-            Id = project.Id.ToString(),
+            Id = SlugHelper.ToSlug(project.Name, project.Id),
             Name = project.Name,
             Description = project.Description,
             Creator = project.Creator.Name ?? "",
             Polls = project.Polls.Take(3).Select(t => new ProjectOverviewPollResponse
             {
-                Id = t.Id,
+                Id = SlugHelper.ToSlug(t.Name, t.Id),
                 Name = t.Name
             }).ToArray(),
             PollCount = project.Polls.Count,

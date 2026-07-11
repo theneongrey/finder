@@ -43,7 +43,7 @@ public class PermissionService
         return Result<List<Person>>.Success(invitedPersons);
     }
 
-    public async Task<List<Api.Responses.SharingContactResponse>> GetSharingContacts(Guid projectId)
+    public async Task<List<Api.Responses.SharingContactResponse>> GetSharingContacts(string projectSlug)
     {
         if (!UserId.HasValue)
         {
@@ -53,7 +53,7 @@ public class PermissionService
         var currentProject = await _dbContext.Projects
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
-            .Where(p => p.Id == projectId)
+            .Where(p => p.Id == SlugHelper.ExtractId(projectSlug))
             .FirstOrDefaultAsync();
 
         if (currentProject == null)
@@ -86,10 +86,10 @@ public class PermissionService
         return contacts;
     }
 
-    public async Task<Result> UpdateVisibilityType(Guid projectId, VisibilityType visibilityType)
+    public async Task<Result> UpdateVisibilityType(string projectSlug, VisibilityType visibilityType)
     {
         var project = await _dbContext.Projects
-            .Where(p => p.Id == projectId &&
+            .Where(p => p.Id == SlugHelper.ExtractId(projectSlug) &&
                         (p.Creator.Id == UserId || p.Permissions.Any(permission =>
                             permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
             .FirstOrDefaultAsync();
@@ -104,7 +104,7 @@ public class PermissionService
         return Result.Success();
     }
 
-    public async Task<Result<Project.Entities.Project>> RemovePermissionForUser(string email, Guid projectId)
+    public async Task<Result<Project.Entities.Project>> RemovePermissionForUser(string email, string projectSlug)
     {
         var cleanEmail = email.Trim().ToLower();
 
@@ -112,7 +112,7 @@ public class PermissionService
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
-            .Where(p => p.Id == projectId &&
+            .Where(p => p.Id == SlugHelper.ExtractId(projectSlug) &&
                         (p.Creator.Id == UserId ||
                          p.Permissions.Any(pm => pm.PersonKey == UserId && pm.PermissionType == PermissionType.Owner)))
             .FirstOrDefaultAsync();
@@ -140,28 +140,28 @@ public class PermissionService
         return Result<Project.Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Project.Entities.Project>> AddOrUpdatePermissionForUser(string email, Guid projectId, PermissionType permissionType)
+    public async Task<Result<Project.Entities.Project>> AddOrUpdatePermissionForUser(string email, string projectSlug, PermissionType permissionType)
     {
         var cleanEmail = email.Trim().ToLower();
-        
+
         var isNewUser = false;
         var userRequest = await _userService.GetOrCreatePersonByEmail(cleanEmail, true);
         var user = userRequest.Payload;
         if (!userRequest.IsSuccess || user!.Id == UserId)
         {
-            return Result<Project.Entities.Project>.Fail(403); 
+            return Result<Project.Entities.Project>.Fail(403);
         }
-        
+
         if (!user.HasLoggedIn)
         {
             isNewUser = true;
         }
-        
+
         var project = await _dbContext.Projects
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
-            .Where(p => p.Id == projectId &&
+            .Where(p => p.Id == SlugHelper.ExtractId(projectSlug) &&
                         p.Creator.Id != user.Id && // can't edit rights for creator
                         (p.Creator.Id == UserId || // only creator or owner can update rights
                          p.Permissions.Any(permission => permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))

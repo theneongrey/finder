@@ -26,29 +26,29 @@ public static class PermissionApi
             .RequireAuthorization();
 
         // Get frequent sharing contacts for a project (excluding existing members)
-        app.MapGet("/api/permission/contacts/{projectId:guid}",
-                async (Guid projectId, PermissionService permissionService) =>
+        app.MapGet("/api/permission/contacts/{projectSlug}",
+                async (string projectSlug, PermissionService permissionService) =>
                 {
-                    var contacts = await permissionService.GetSharingContacts(projectId);
+                    var contacts = await permissionService.GetSharingContacts(projectSlug);
                     return Results.Ok(contacts);
                 })
             .RequireAuthorization();
 
         // Update project visibility
-        app.MapPut("/api/permission/type/{projectId:guid}",
-                async (Guid projectId, [FromBody] UpdatePermissionTypeRequest typeRequest,
+        app.MapPut("/api/permission/type/{projectSlug}",
+                async (string projectSlug, [FromBody] UpdatePermissionTypeRequest typeRequest,
                     PermissionService permissionService) =>
                 {
-                    await permissionService.UpdateVisibilityType(projectId, typeRequest.Type);
+                    await permissionService.UpdateVisibilityType(projectSlug, typeRequest.Type);
                     return Results.Ok();
                 })
             .RequireAuthorization();
 
         // Remove user permission
-        app.MapDelete("/api/permission/{projectId:guid}/{email}",
-                async (Guid projectId, string email, PermissionService permissionService, UserService userService) =>
+        app.MapDelete("/api/permission/{projectSlug}/{email}",
+                async (string projectSlug, string email, PermissionService permissionService, UserService userService) =>
                 {
-                    var result = await permissionService.RemovePermissionForUser(email, projectId);
+                    var result = await permissionService.RemovePermissionForUser(email, projectSlug);
                     if (!result.IsSuccess)
                     {
                         return result.Code switch
@@ -80,17 +80,17 @@ public static class PermissionApi
             .RequireAuthorization();
 
         // Update user permission
-        app.MapPut("/api/permission/{projectId:guid}",
-                async (Guid projectId, [FromBody] UpdatePermissionRequest request, PermissionService permissionService,
+        app.MapPut("/api/permission/{projectSlug}",
+                async (string projectSlug, [FromBody] UpdatePermissionRequest request, PermissionService permissionService,
                     UserService userService) =>
                 {
-                    var result = await permissionService.AddOrUpdatePermissionForUser(request.Email, projectId,
+                    var result = await permissionService.AddOrUpdatePermissionForUser(request.Email, projectSlug,
                         request.PermissionType);
                     if (result.IsSuccess)
                     {
                         var project = result.Payload!;
                         var userId = userService.GetUserId();
-                        
+
                         var sharedWith = project.Permissions.Where(p => p.PersonKey != userId)
                             .Select(p => p.ToProjectSharedWith());
 
@@ -104,7 +104,7 @@ public static class PermissionApi
                                     Role = ProjectRole.Creator
                                 });
                         }
-                        
+
                         return Results.Ok(sharedWith);
                     }
 

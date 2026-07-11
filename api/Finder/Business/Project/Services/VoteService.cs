@@ -19,13 +19,13 @@ public class VoteService
         _userService = userService;
     }
 
-    public async Task<Result> Vote(Guid optionId, string choice)
+    public async Task<Result> Vote(string optionSlug, string choice)
     {
         var option = await _dbContext.Options
             .Include(option => option.Votes)
             .ThenInclude(vote => vote.Person)
             .FirstOrDefaultAsync(o =>
-                o.Id == optionId && (o.Poll.Project.Creator.Id == UserId ||
+                o.Id == SlugHelper.ExtractId(optionSlug) && (o.Poll.Project.Creator.Id == UserId ||
                                      o.Poll.Project.Permissions.Any(p => p.PersonKey == UserId)));
 
         if (option is null)

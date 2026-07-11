@@ -9,6 +9,7 @@ public class OptionMetaConfiguration : IEntityTypeConfiguration<OptionMeta>
     public void Configure(EntityTypeBuilder<OptionMeta> builder)
     {
         builder.HasKey(m => m.Id);
+        builder.Property(m => m.Id).HasMaxLength(8);
 
         builder.Property(m => m.Url)
             .HasMaxLength(2048);

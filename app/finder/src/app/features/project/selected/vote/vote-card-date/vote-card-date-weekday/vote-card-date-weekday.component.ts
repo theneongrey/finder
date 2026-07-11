@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateOptionEntry } from '../../../_shared/utils/date-option.utils';
+import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
 
 @Component({
   selector: 'app-vote-card-date-weekday',

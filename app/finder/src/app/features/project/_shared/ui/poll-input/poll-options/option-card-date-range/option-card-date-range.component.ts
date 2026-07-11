@@ -14,7 +14,7 @@ import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
-import { DateOptionEntry } from '../../../../utils/date-option.utils';
+import { DateOptionEntry, nextFullHour } from '../../../../utils/date-option.utils';
 import { UserStore } from '../../../../../../../common/data/user.store';
 
 @Component({
@@ -54,6 +54,13 @@ export class OptionCardDateRangeComponent {
       this.startDate.set(opt.date);
       this.endDate.set(opt.endDate);
       if (opt.startTime || opt.endTime || this.initialShowTime()) {
+        if (this.initialShowTime() && !opt.startTime) {
+          const start = nextFullHour();
+          const end = new Date(start);
+          end.setHours(end.getHours() + 1);
+          opt.startTime = start;
+          opt.endTime = end;
+        }
         this.showTime.set(true);
       }
     });
@@ -70,6 +77,13 @@ export class OptionCardDateRangeComponent {
   }
 
   addTime(): void {
+    if (!this.option().startTime) {
+      const start = nextFullHour();
+      const end = new Date(start);
+      end.setHours(end.getHours() + 1);
+      this.option().startTime = start;
+      this.option().endTime = end;
+    }
     this.showTime.set(true);
     this.showTimeChange.emit(true);
   }

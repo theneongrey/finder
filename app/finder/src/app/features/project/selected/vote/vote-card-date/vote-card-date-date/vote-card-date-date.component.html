@@ -20,13 +20,11 @@
     </ng-template>
   </p-datepicker>
   @if (entry().date; as d) {
-    <p class="tw:text-sm tw:font-semibold tw:text-surface-700 tw:text-center">
+    <p class="tw:font-semibold tw:text-center">
       {{ formatDate(d) }}
-    </p>
-  }
-  @if (entry().startTime; as t) {
-    <p class="tw:text-sm tw:font-medium tw:text-surface-500">
-      {{ formatTimeOnly(t) }}
+      @if (entry().startTime; as t) {
+        <span class="tw:mx-1">–</span>{{ formatTimeOnly(t) }}
+      }
     </p>
   }
 </div>

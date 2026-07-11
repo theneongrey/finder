@@ -12,7 +12,7 @@ import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
-import { DateOptionEntry } from '../../../../utils/date-option.utils';
+import { DateOptionEntry, nextFullHour } from '../../../../utils/date-option.utils';
 import { UserStore } from '../../../../../../../common/data/user.store';
 
 @Component({
@@ -36,12 +36,18 @@ export class OptionCardDateComponent {
   constructor() {
     effect(() => {
       if (this.option().startTime || this.initialShowTime()) {
+        if (this.initialShowTime() && !this.option().startTime) {
+          this.option().startTime = nextFullHour();
+        }
         this.showTime.set(true);
       }
     });
   }
 
   addTime(): void {
+    if (!this.option().startTime) {
+      this.option().startTime = nextFullHour();
+    }
     this.showTime.set(true);
     this.showTimeChange.emit(true);
   }

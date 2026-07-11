@@ -3,11 +3,11 @@ import {
   parseDateOptionText,
   DateOptionEntry,
 } from '../../../_shared/utils/date-option.utils';
-import { VoteCardDateWeekdayComponent } from './vote-card-date-weekday.component';
-import { VoteCardDateDateComponent } from './vote-card-date-date.component';
-import { VoteCardDateDateRangeComponent } from './vote-card-date-date-range.component';
-import { VoteCardDateTimeComponent } from './vote-card-date-time.component';
-import { VoteCardDateTimeRangeComponent } from './vote-card-date-time-range.component';
+import { VoteCardDateWeekdayComponent } from './vote-card-date-weekday/vote-card-date-weekday.component';
+import { VoteCardDateDateComponent } from './vote-card-date-date/vote-card-date-date.component';
+import { VoteCardDateDateRangeComponent } from './vote-card-date-date-range/vote-card-date-date-range.component';
+import { VoteCardDateTimeComponent } from './vote-card-date-time/vote-card-date-time.component';
+import { VoteCardDateTimeRangeComponent } from './vote-card-date-time-range/vote-card-date-time-range.component';
 
 @Component({
   selector: 'app-vote-card-date',

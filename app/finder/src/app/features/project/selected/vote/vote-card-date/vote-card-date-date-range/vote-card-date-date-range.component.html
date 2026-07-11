@@ -1,0 +1,74 @@
+<div
+  class="tw:pointer-events-none tw:flex tw:flex-col tw:items-center tw:w-full"
+>
+  @if (isSameMonth()) {
+    <!-- Single calendar — PrimeNG handles range highlighting natively -->
+    <p-datepicker
+      [ngModel]="rangeValue()"
+      selectionMode="range"
+      [inline]="true"
+      [readonlyInput]="true"
+      [firstDayOfWeek]="1"
+    />
+  } @else {
+    <!-- Two calendars at 50% zoom, each showing the respective month -->
+    <div class="tw:flex tw:justify-center tw:w-full tw:scale-55">
+      <p-datepicker
+        [ngModel]="entry().date"
+        [inline]="true"
+        [readonlyInput]="true"
+        [firstDayOfWeek]="1"
+      >
+        <ng-template #date let-date>
+          @if (isInRange(date)) {
+            <span
+              class="tw:flex tw:w-full tw:h-full tw:rounded-full tw:bg-primary/20 tw:items-center tw:justify-center tw:text-primary/60"
+            >
+              {{ date.day }}
+            </span>
+          } @else {
+            {{ date.day }}
+          }
+        </ng-template>
+      </p-datepicker>
+      <p-datepicker
+        [ngModel]="entry().endDate"
+        [inline]="true"
+        [readonlyInput]="true"
+        [firstDayOfWeek]="1"
+      >
+        <ng-template #date let-date>
+          @if (isInRange(date)) {
+            <span
+              class="tw:flex tw:w-full tw:h-full tw:rounded-full tw:bg-primary/20 tw:items-center tw:justify-center tw:text-primary/60"
+            >
+              {{ date.day }}
+            </span>
+          } @else {
+            {{ date.day }}
+          }
+        </ng-template>
+      </p-datepicker>
+    </div>
+  }
+
+  @if (entry().date && entry().endDate) {
+    <div class="tw:flex tw:flex-col tw:items-center tw:gap-1 tw:text-center">
+      <p class="tw:font-semibold">
+        {{ formatDate(entry().date!) }}
+        @if (entry().startTime; as t) {
+          <span class="tw:mx-1">–</span>{{ formatTimeOnly(t) }}
+        }
+      </p>
+      <div class="tw:flex tw:items-center">
+        <i class="fa-solid fa-arrow-down"></i>
+      </div>
+      <p class="tw:font-semibold">
+        {{ formatDate(entry().endDate!) }}
+        @if (entry().endTime; as e) {
+          <span class="tw:mx-1">–</span>{{ formatTimeOnly(e) }}
+        }
+      </p>
+    </div>
+  }
+</div>

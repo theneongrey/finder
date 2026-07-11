@@ -1,26 +1,19 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateOptionEntry } from '../../../_shared/utils/date-option.utils';
+import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
+import { AnalogClockComponent } from '../analog-clock/analog-clock.component';
 
 @Component({
-  selector: 'app-vote-card-date-date-range',
-  templateUrl: './vote-card-date-date-range.component.html',
+  selector: 'app-vote-card-date-time-range',
+  templateUrl: './vote-card-date-time-range.component.html',
+  imports: [AnalogClockComponent],
   styles: [':host { display: contents; }'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VoteCardDateDateRangeComponent {
+export class VoteCardDateTimeRangeComponent {
   private readonly translate = inject(TranslateService);
 
   entry = input.required<DateOptionEntry>();
-
-  formatDate(date: Date): string {
-    return date.toLocaleDateString(this.translate.currentLang() ?? undefined, {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  }
 
   formatTimeOnly(date: Date): string {
     return date.toLocaleTimeString(this.translate.currentLang() ?? undefined, {

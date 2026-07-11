@@ -18,6 +18,7 @@ import {
   parseDateOptionText,
   serializeDateOption,
   isDateOptionEntryValid,
+  nextFullHour,
 } from '../../utils/date-option.utils';
 import { UrlValidationService } from '../../../../../common/utils/url-validation.service';
 import { TitleBarService } from '../../../../../common/services/title-bar.service';
@@ -173,7 +174,16 @@ export class PollInputComponent {
     if (type === OptionType.Date) {
       const dateType = this.appointmentDateType();
       if (!dateType) { return; }
-      this.dateOptions.update((opts) => [...opts, { type: dateType }]);
+      if (dateType === 'time') {
+        this.dateOptions.update((opts) => [...opts, { type: 'time', startTime: nextFullHour() }]);
+      } else if (dateType === 'time-range') {
+        const start = nextFullHour();
+        const end = new Date(start);
+        end.setHours(end.getHours() + 1);
+        this.dateOptions.update((opts) => [...opts, { type: 'time-range', startTime: start, endTime: end }]);
+      } else {
+        this.dateOptions.update((opts) => [...opts, { type: dateType }]);
+      }
     } else {
       this.options.update((opts) => [...opts, { text: '', description: '' }]);
     }

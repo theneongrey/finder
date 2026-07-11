@@ -12,7 +12,7 @@ import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
-import { DateOptionEntry } from '../../../../utils/date-option.utils';
+import { DateOptionEntry, nextFullHour } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-weekday',
@@ -42,6 +42,9 @@ export class OptionCardWeekdayComponent {
   constructor() {
     effect(() => {
       if (this.option().startTime || this.initialShowTime()) {
+        if (this.initialShowTime() && !this.option().startTime) {
+          this.option().startTime = nextFullHour();
+        }
         this.showTime.set(true);
       }
     });
@@ -52,6 +55,9 @@ export class OptionCardWeekdayComponent {
   }
 
   addTime(): void {
+    if (!this.option().startTime) {
+      this.option().startTime = nextFullHour();
+    }
     this.showTime.set(true);
     this.showTimeChange.emit(true);
   }

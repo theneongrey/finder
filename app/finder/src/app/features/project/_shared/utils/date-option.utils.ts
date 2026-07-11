@@ -1,4 +1,9 @@
-export type DateOptionType = 'weekday' | 'date' | 'date-range' | 'time' | 'time-range';
+export type DateOptionType =
+  | 'weekday'
+  | 'date'
+  | 'date-range'
+  | 'time'
+  | 'time-range';
 
 export interface DateOptionEntry {
   id?: string;
@@ -10,7 +15,10 @@ export interface DateOptionEntry {
   endTime?: Date;
 }
 
-export function parseDateOptionText(text: string, id?: string): DateOptionEntry {
+export function parseDateOptionText(
+  text: string,
+  id?: string,
+): DateOptionEntry {
   const parts = text.split(';');
   const type = parts[0] as DateOptionType;
 
@@ -36,6 +44,7 @@ export function parseDateOptionText(text: string, id?: string): DateOptionEntry 
         date: new Date(parseInt(parts[1])),
         endDate: new Date(parseInt(parts[2])),
         startTime: parts[3] ? parseTimeString(parts[3]) : undefined,
+        endTime: parts[4] ? parseTimeString(parts[4]) : undefined,
       };
     case 'time':
       return { id, type: 'time', startTime: parseTimeString(parts[1]) };
@@ -60,8 +69,10 @@ export function serializeDateOption(entry: DateOptionEntry): string {
       return `weekday;${entry.weekday}${time}`;
     case 'date':
       return `date;${entry.date!.getTime()}${time}`;
-    case 'date-range':
-      return `date-range;${entry.date!.getTime()};${entry.endDate!.getTime()}${time}`;
+    case 'date-range': {
+      const endTime = entry.endTime ? ';' + formatTime(entry.endTime) : '';
+      return `date-range;${entry.date!.getTime()};${entry.endDate!.getTime()}${time}${endTime}`;
+    }
     case 'time':
       return `time;${formatTime(entry.startTime!)}`;
     case 'time-range':
@@ -72,16 +83,28 @@ export function serializeDateOption(entry: DateOptionEntry): string {
 export function isDateOptionEntryValid(entry: DateOptionEntry): boolean {
   switch (entry.type) {
     case 'weekday':
-      return entry.weekday !== undefined && entry.weekday >= 0 && entry.weekday <= 6;
+      return (
+        entry.weekday !== undefined && entry.weekday >= 0 && entry.weekday <= 6
+      );
     case 'date':
       return entry.date !== undefined;
     case 'date-range':
-      return entry.date !== undefined && entry.endDate !== undefined && entry.endDate >= entry.date;
+      return (
+        entry.date !== undefined &&
+        entry.endDate !== undefined &&
+        entry.endDate >= entry.date
+      );
     case 'time':
       return entry.startTime !== undefined;
     case 'time-range':
       return entry.startTime !== undefined && entry.endTime !== undefined;
   }
+}
+
+export function nextFullHour(): Date {
+  const d = new Date();
+  d.setHours(d.getHours() + 1, 0, 0, 0);
+  return d;
 }
 
 export function parseTimeString(timeStr: string): Date {

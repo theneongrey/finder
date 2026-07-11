@@ -12,7 +12,10 @@
         />
       }
       @case ("date") {
-        <app-vote-card-date-date [entry]="parsed()" [otherDates]="otherDates()" />
+        <app-vote-card-date-date
+          [entry]="parsed()"
+          [otherDates]="otherDates()"
+        />
       }
       @case ("date-range") {
         <app-vote-card-date-date-range [entry]="parsed()" />

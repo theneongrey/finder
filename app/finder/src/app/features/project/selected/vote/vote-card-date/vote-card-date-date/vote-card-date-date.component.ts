@@ -1,16 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePicker } from 'primeng/datepicker';
-import { DateOptionEntry } from '../../../_shared/utils/date-option.utils';
+import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
 
 @Component({
   selector: 'app-vote-card-date-date',
   templateUrl: './vote-card-date-date.component.html',
   styles: [
     ':host { display: contents; }',
-    `:host ::ng-deep .p-datepicker-prev-button,
-     :host ::ng-deep .p-datepicker-next-button { display: none !important; }`,
+    `
+      :host ::ng-deep .p-datepicker-prev-button,
+      :host ::ng-deep .p-datepicker-next-button {
+        display: none !important;
+      }
+    `,
   ],
   imports: [DatePicker, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,12 +33,16 @@ export class VoteCardDateDateComponent {
 
   readonly selectedDate = computed(() => {
     const d = this.entry().date;
-    if (!d) return undefined;
+    if (!d) {
+      return undefined;
+    }
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   });
 
   isOtherDate(date: { year: number; month: number; day: number }): boolean {
-    return this.otherDates().has(new Date(date.year, date.month, date.day).getTime());
+    return this.otherDates().has(
+      new Date(date.year, date.month, date.day).getTime(),
+    );
   }
 
   formatDate(date: Date): string {

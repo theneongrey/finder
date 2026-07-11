@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateOptionEntry } from '../../../_shared/utils/date-option.utils';
+import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
+import { AnalogClockComponent } from '../analog-clock/analog-clock.component';
 
 @Component({
   selector: 'app-vote-card-date-time',
   templateUrl: './vote-card-date-time.component.html',
+  imports: [AnalogClockComponent],
   styles: [':host { display: contents; }'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

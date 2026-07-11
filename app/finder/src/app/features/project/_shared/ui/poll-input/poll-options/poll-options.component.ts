@@ -22,6 +22,7 @@ import { OptionType } from '../../../models/project-detail.model';
 import {
   DateOptionEntry,
   DateOptionType,
+  nextFullHour,
 } from '../../../utils/date-option.utils';
 
 export interface OptionEntry {
@@ -110,6 +111,8 @@ export class PollOptionsComponent {
 
   onGroupedAddTime(): void {
     if (this.dateOptions().length === 0) { return; }
+    const start = nextFullHour();
+    this.dateOptions().forEach((o) => { if (!o.startTime) { o.startTime = start; } });
     this.firstEntryShowsTime.set(true);
   }
 

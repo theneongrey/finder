@@ -24,6 +24,7 @@ export class StandalonePollTabComponent {
   private readonly router = inject(Router);
 
   deletionRequested = output<PollItem>();
+  shareRequested = output<string>();
 
   standalonePolls = computed(() =>
     this.projectListStore.standalonePolls().map((t) => ({

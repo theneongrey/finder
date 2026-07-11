@@ -11,6 +11,8 @@ public class StandalonePollOverviewResponse
     public required int CommentCount { get; init; }
     public required DateTime LastUpdated { get; init; }
     public string? NextOpenOptionId { get; init; }
+    public required int VisibilityType { get; init; }
+    public required ICollection<ProjectSharedWith> SharedWith { get; init; }
 }
 
 public static class StandalonePollOverviewMapper
@@ -19,6 +21,21 @@ public static class StandalonePollOverviewMapper
     {
         var poll = project.Polls.First();
         var newestDate = poll.Edited > project.Edited ? poll.Edited : project.Edited;
+
+        var sharedWith = project.Permissions
+            .Where(p => p.PersonKey != userId && p.PersonKey != project.Creator.Id)
+            .Select(ProjectMapper.ToProjectSharedWith);
+
+        if (userId != project.Creator.Id)
+        {
+            sharedWith = sharedWith.Prepend(new ProjectSharedWith
+            {
+                Name = project.Creator.Name ?? project.Creator.Email,
+                Email = project.Creator.Email,
+                Role = ProjectRole.Creator,
+                Picture = project.Creator.Picture
+            });
+        }
 
         return new StandalonePollOverviewResponse
         {
@@ -42,7 +59,9 @@ public static class StandalonePollOverviewMapper
                 .OrderBy(x => x.UserChoice == null ? 0 : 1)
                 .ThenByDescending(x => x.UserChoice ?? 0)
                 .ThenBy(x => x.Option.Created)
-                .FirstOrDefault()?.Option.Id.ToString()
+                .FirstOrDefault()?.Option.Id.ToString(),
+            VisibilityType = (int)project.VisibilityType,
+            SharedWith = sharedWith.ToArray()
         };
     }
 }

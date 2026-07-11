@@ -55,10 +55,10 @@ export class ProjectOverviewComponent {
   projects = this.projectListStore.projects;
   standalonePolls = this.projectListStore.standalonePolls;
   activeTab = this.projectListStore.activeTab;
-  sharingProjectId = signal<string | undefined>(undefined);
-  sharingProject = computed(() =>
-    this.projects().find((p) => p.id === this.sharingProjectId()),
-  );
+  sharingProjectId = signal<
+    { type: 'poll' | 'project'; projectId: string } | undefined
+  >(undefined);
+  sharingProject = computed(() => this.getSharingProject());
 
   constructor() {
     this.projectListStore.getProjects();
@@ -71,11 +71,17 @@ export class ProjectOverviewComponent {
   }
 
   set activeTabValue(value: string) {
-    this.projectListStore.setActiveTab(value as 'overview' | 'projects' | 'polls');
+    this.projectListStore.setActiveTab(
+      value as 'overview' | 'projects' | 'polls',
+    );
   }
 
-  shareRequested(project: string) {
-    this.sharingProjectId.set(project);
+  shareRequested(projectId: string) {
+    this.sharingProjectId.set({ type: 'project', projectId });
+  }
+
+  pollShareRequested(projectId: string) {
+    this.sharingProjectId.set({ type: 'poll', projectId });
   }
 
   projectDeletionRequested(project: ProjectOverview) {
@@ -110,5 +116,45 @@ export class ProjectOverviewComponent {
       rejectLabel: this.translateService.instant('project.common.cancel'),
       accept: () => this.projectListStore.deleteProject(poll.projectId),
     });
+  }
+
+  protected shareDrawerVisibilityChanged(value: boolean) {
+    if (!value) {
+      this.sharingProjectId.set(undefined);
+    }
+  }
+
+  private getSharingProject() {
+    const sharingProjectId = this.sharingProjectId();
+
+    if (sharingProjectId?.type === 'project') {
+      const project = this.projects().find(
+        (p) => p.id === sharingProjectId.projectId,
+      );
+
+      return project
+        ? {
+            projectId: project.id,
+            projectName: project.name,
+            sharedWith: project.sharedWith,
+            visibilityType: project.visibilityType,
+          }
+        : undefined;
+    } else if (sharingProjectId?.type === 'poll') {
+      const poll = this.standalonePolls().find(
+        (p) => p.projectId === sharingProjectId.projectId,
+      );
+
+      return poll
+        ? {
+            projectId: poll.projectId,
+            projectName: poll.name,
+            sharedWith: poll.sharedWith,
+            visibilityType: poll.visibilityType,
+          }
+        : undefined;
+    }
+
+    return undefined;
   }
 }

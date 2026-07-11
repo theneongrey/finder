@@ -28,6 +28,7 @@ export class OverviewTabComponent {
   projectDeletionRequested = output<ProjectOverview>();
   pollDeletionRequested = output<PollItem>();
   shareRequested = output<string>();
+  pollShareRequested = output<string>();
 
   user = this.userStore.user;
   recentProjects = computed(() => this.projectListStore.projects().slice(0, 2));

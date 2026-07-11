@@ -28,6 +28,7 @@
             (projectDeletionRequested)="projectDeletionRequested($event)"
             (pollDeletionRequested)="pollDeletionRequested($event)"
             (shareRequested)="shareRequested($event)"
+            (pollShareRequested)="pollShareRequested($event)"
           />
         </p-tabpanel>
         <p-tabpanel value="projects">
@@ -39,6 +40,7 @@
         <p-tabpanel value="polls">
           <app-standalone-poll-tab
             (deletionRequested)="pollDeletionRequested($event)"
+            (shareRequested)="pollShareRequested($event)"
           />
         </p-tabpanel>
       </p-tabpanels>
@@ -49,11 +51,11 @@
 
 @if (sharingProject(); as project) {
   <app-share-drawer
-    [projectId]="project.id"
-    [projectName]="project.name"
+    [projectId]="project.projectId"
+    [projectName]="project.projectName"
     [sharedWith]="project.sharedWith"
     [visibilityType]="project.visibilityType"
     [visible]="!!sharingProjectId()"
-    (visibleChange)="sharingProjectId.set($event ? project.id : undefined)"
+    (visibleChange)="shareDrawerVisibilityChanged($event)"
   />
 }

@@ -49,6 +49,7 @@ public class ProjectService
             .ThenInclude(t => t.Comments)
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
+            .ThenInclude(p => p.Person)
             .Where(p => p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
             .Where(p => p.Polls.Any())
             .ToListAsync();

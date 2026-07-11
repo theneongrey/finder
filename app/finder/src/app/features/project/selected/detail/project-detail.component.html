@@ -48,7 +48,6 @@
         @for (poll of polls(); track poll.id) {
           <app-poll-item
             [poll]="poll"
-            [canEdit]="role() >= ProjectRole.Maintainer"
             (deletionRequested)="showDeletePollDialog(poll.id, poll.name)"
           />
         }

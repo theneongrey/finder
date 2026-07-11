@@ -16,6 +16,7 @@ import { OptionType } from '../../models/project-detail.model';
 import { Card } from 'primeng/card';
 import { OptionTypeIconComponent } from './option-type-icon/option-type-icon.component';
 import { PollItem } from '../../models/poll-item.model';
+import { ProjectRole } from '../../models/project-role.enum';
 
 @Component({
   selector: 'app-poll-item',
@@ -36,7 +37,6 @@ export class PollItemComponent {
 
   poll = input.required<PollItem>();
   standalone = input(false);
-  canEdit = input(false);
   deletionRequested = output();
   shareRequested = output();
 
@@ -45,6 +45,13 @@ export class PollItemComponent {
     'project.common.delete',
   );
   private shareLabel = this.translateService.translate('project.common.share');
+
+  showMenu = computed(() => {
+    const role = this.poll().role;
+    return this.standalone()
+      ? role >= ProjectRole.Owner
+      : role >= ProjectRole.Maintainer;
+  });
 
   menuItems = computed<MenuItem[]>(() => {
     const poll = this.poll();
@@ -74,7 +81,7 @@ export class PollItemComponent {
               : undefined,
       },
     ];
-    if (this.standalone()) {
+    if (this.standalone() && this.poll().role >= ProjectRole.Owner) {
       items.push({
         label: this.shareLabel(),
         icon: 'fa-solid fa-share-nodes',

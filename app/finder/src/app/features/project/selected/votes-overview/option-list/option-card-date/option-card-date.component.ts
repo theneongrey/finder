@@ -67,6 +67,9 @@ export class OptionCardDateComponent {
       case 'date':
         return this.formatDate(p.date!);
       case 'date-range':
+        if (p.startTime) {
+          return `${this.formatDate(p.date!)} – ${this.formatTime(p.startTime)}`;
+        }
         return `${this.formatDate(p.date!)} → ${this.formatDate(p.endDate!)}`;
       case 'time':
         return this.formatTime(p.startTime!);
@@ -77,11 +80,12 @@ export class OptionCardDateComponent {
 
   subLabel(): string | null {
     const p = this.parsed();
-    if (
-      (p.type === 'weekday' || p.type === 'date' || p.type === 'date-range') &&
-      p.startTime
-    ) {
+    if ((p.type === 'weekday' || p.type === 'date') && p.startTime) {
       return this.formatTime(p.startTime);
+    }
+    if (p.type === 'date-range' && p.startTime) {
+      const endDateStr = this.formatDate(p.endDate!);
+      return p.endTime ? `${endDateStr} – ${this.formatTime(p.endTime)}` : endDateStr;
     }
     return null;
   }

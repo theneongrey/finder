@@ -3,6 +3,7 @@ using System;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Finder.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260711083819_AddSlugIds")]
+    partial class AddSlugIds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,8 +113,8 @@ namespace Finder.Migrations
                     b.Property<Guid>("PersonKey")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ProjectKey")
-                        .HasColumnType("character varying(8)");
+                    b.Property<Guid>("ProjectKey")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("PermissionType")
                         .HasColumnType("integer");
@@ -146,9 +149,8 @@ namespace Finder.Migrations
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("PollId")
-                        .IsRequired()
-                        .HasColumnType("character varying(8)");
+                    b.Property<Guid>("PollId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Quote")
                         .HasMaxLength(1024)
@@ -165,9 +167,9 @@ namespace Finder.Migrations
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Option", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
@@ -180,9 +182,13 @@ namespace Finder.Migrations
                     b.Property<DateTime>("Edited")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("PollId")
+                    b.Property<Guid>("PollId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Slug")
                         .IsRequired()
-                        .HasColumnType("character varying(8)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -193,14 +199,16 @@ namespace Finder.Migrations
 
                     b.HasIndex("PollId");
 
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
                     b.ToTable("Options");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.OptionMeta", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
@@ -240,9 +248,9 @@ namespace Finder.Migrations
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Poll", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
@@ -263,22 +271,29 @@ namespace Finder.Migrations
                     b.Property<int>("OptionType")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ProjectId")
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Slug")
                         .IsRequired()
-                        .HasColumnType("character varying(8)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.ToTable("Polls");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
@@ -301,12 +316,20 @@ namespace Finder.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<int>("VisibilityType")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.ToTable("Projects");
                 });
@@ -328,9 +351,8 @@ namespace Finder.Migrations
                     b.Property<DateTime>("Edited")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OptionId")
-                        .IsRequired()
-                        .HasColumnType("character varying(8)");
+                    b.Property<Guid>("OptionId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uuid");

@@ -16,7 +16,7 @@ public class Permission
     
     public Guid PersonKey { get; set; }
     
-    public Guid ProjectKey { get; set; }
+    public string ProjectKey { get; set; } = string.Empty;
     
     public PermissionType PermissionType { get; set; }
 }

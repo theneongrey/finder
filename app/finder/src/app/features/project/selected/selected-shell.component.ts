@@ -6,7 +6,7 @@ import {
   input,
 } from '@angular/core';
 import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { ProjectDetailStore } from '../_shared/data/project-detail.store';
 
@@ -19,6 +19,7 @@ import { ProjectDetailStore } from '../_shared/data/project-detail.store';
 })
 export class ProjectSelectedShellComponent {
   private readonly projectDetailStore = inject(ProjectDetailStore);
+  private readonly router = inject(Router);
   projectId = input<string>();
 
   constructor() {
@@ -26,6 +27,13 @@ export class ProjectSelectedShellComponent {
       const projectId = this.projectId();
       if (projectId) {
         this.projectDetailStore.getProject(projectId);
+      }
+    });
+
+    effect(() => {
+      const project = this.projectDetailStore.currentProject();
+      if (project && this.projectId() !== project.id) {
+        this.router.navigate(['/project/detail', project.id], { replaceUrl: true });
       }
     });
   }

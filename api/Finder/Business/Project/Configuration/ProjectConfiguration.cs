@@ -8,7 +8,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Entities.Project>
     public void Configure(EntityTypeBuilder<Entities.Project> builder)
     {
         builder.HasKey(p => p.Id);
-        
+        builder.Property(p => p.Id).HasMaxLength(8);
+
         builder.Property(p => p.Name)
             .HasMaxLength(128);
 

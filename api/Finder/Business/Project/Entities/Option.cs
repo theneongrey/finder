@@ -4,7 +4,7 @@ namespace Finder.Business.Project.Entities;
 
 public class Option : BaseEntity
 {
-    public required Guid Id { get; set; }
+    public required string Id { get; set; }
     public required string Text { get; set; }
     public required string Description { get; set; }
 

@@ -11,7 +11,7 @@ public enum VisibilityType
 
 public class Project : BaseEntity
 {
-    public required Guid Id { get; set; }
+    public required string Id { get; set; }
     public required string Name { get; set; }
     public string? Description { get; set; }
     public List<Poll> Polls { get; set; } = [];

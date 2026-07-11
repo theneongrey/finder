@@ -1,3 +1,5 @@
+using Finder.Business.Shared;
+
 namespace Finder.Business.Project.Api.Responses;
 
 public class PollResponseVote
@@ -50,7 +52,7 @@ public static class PollMapper
     {
         return new PollResponseOption
         {
-            Id = option.Id.ToString(),
+            Id = SlugHelper.ToSlug(option.Text, option.Id),
             Text = option.Text,
             Description = option.Description,
             Meta = option.Meta is null ? null : new PollResponseOptionMeta
@@ -70,7 +72,7 @@ public static class PollMapper
     {
         return new PollResponse
         {
-            Id = poll.Id.ToString(),
+            Id = SlugHelper.ToSlug(poll.Name, poll.Id),
             Name = poll.Name,
             Description = poll.Description,
             OptionType = (int)poll.OptionType,

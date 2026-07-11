@@ -5,6 +5,7 @@ import {
   ElementRef,
   forwardRef,
   input,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -33,6 +34,7 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
   maxlength = input<number | null>(null);
   inputId = input<string | null>(null);
   maxHeight = input<string>('300px');
+  blur = output<void>();
 
   protected readonly textValue = signal('');
   protected readonly isDisabled = signal(false);
@@ -43,6 +45,15 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
   protected onTouched: () => void = () => {
     /* do nothing */
   };
+
+  focus(): void {
+    this.textareaRef()?.nativeElement.focus();
+  }
+
+  protected onBlur(): void {
+    this.onTouched();
+    this.blur.emit();
+  }
 
   private minHeight = 40;
   private viewReady = false;

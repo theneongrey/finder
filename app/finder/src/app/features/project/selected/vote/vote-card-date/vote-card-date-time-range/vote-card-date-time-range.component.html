@@ -1,8 +1,15 @@
-<app-analog-clock [time]="entry().startTime!" />
-<p class="tw:text-2xl tw:font-semibold tw:text-surface-900 tw:leading-snug">
-  {{ formatTimeOnly(entry().startTime!) }}
-</p>
-<div class="tw:flex tw:items-center tw:gap-2 tw:text-surface-500">
-  <i class="fa-solid fa-arrow-right tw:text-sm"></i>
-  <p class="tw:text-lg tw:font-medium">{{ formatTimeOnly(entry().endTime!) }}</p>
+<div class="tw:flex tw:items-center tw:gap-6">
+  <div class="tw:flex tw:flex-col tw:items-center tw:gap-1">
+    <app-analog-clock [time]="entry().startTime!" [size]="90" />
+    <p class="tw:text-[32px] tw:font-semibold">
+      {{ formatTimeOnly(entry().startTime!) }}
+    </p>
+  </div>
+  <span class="tw:text-[32px] tw:font-light">–</span>
+  <div class="tw:flex tw:flex-col tw:items-center tw:gap-1">
+    <app-analog-clock [time]="entry().endTime!" [size]="90" />
+    <p class="tw:text-[32px] tw:font-semibold">
+      {{ formatTimeOnly(entry().endTime!) }}
+    </p>
+  </div>
 </div>

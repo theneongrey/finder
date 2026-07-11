@@ -1,0 +1,11 @@
+<i class="fa-regular fa-calendar tw:text-3xl tw:text-primary"></i>
+<p class="tw:text-2xl tw:font-semibold tw:text-surface-900 tw:leading-snug">
+  {{ formatDate(entry().date!) }}
+</p>
+<div class="tw:flex tw:items-center tw:gap-2 tw:text-surface-500">
+  <i class="fa-solid fa-arrow-right tw:text-sm"></i>
+  <p class="tw:text-lg tw:font-medium">{{ formatDate(entry().endDate!) }}</p>
+</div>
+@if (entry().startTime; as t) {
+  <p class="tw:text-lg tw:font-medium tw:text-surface-500">{{ formatTimeOnly(t) }}</p>
+}

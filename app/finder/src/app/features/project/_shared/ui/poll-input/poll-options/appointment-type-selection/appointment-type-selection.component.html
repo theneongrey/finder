@@ -1,17 +1,23 @@
-<div class="tw:flex tw:flex-col tw:gap-3 tw:mt-4">
+<div class="tw:flex tw:flex-col tw:gap-3">
   <span class="tw:text-sm tw:font-semibold tw:px-1">
     {{ "project.pollInput.date.appointmentTypeLabel" | translate }}
   </span>
 
   @if (selectedType() && !isEditing()) {
-    <div class="tw:flex tw:items-center tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:border tw:border-gray-200 tw:bg-white">
-      <i class="{{ selectedTypeInfo()!.icon }} tw:text-primary tw:text-lg tw:w-5 tw:text-center"></i>
+    <div
+      class="tw:flex tw:items-center tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:border tw:border-gray-200 tw:bg-white"
+    >
+      <i
+        class="{{
+          selectedTypeInfo()!.icon
+        }} tw:text-primary tw:text-lg tw:w-5 tw:text-center"
+      ></i>
       <span class="tw:text-sm tw:font-medium tw:text-gray-700 tw:flex-1">
         {{ selectedTypeInfo()!.labelKey | translate }}
       </span>
       <button
         type="button"
-        class="tw:text-sm tw:text-primary tw:cursor-pointer tw:bg-transparent tw:border-0 tw:p-0 hover:tw:underline"
+        class="tw:text-sm tw:text-white tw:bg-primary tw:cursor-pointer tw:border-0 tw:px-3 tw:py-1 tw:rounded-lg hover:tw:opacity-80 tw:transition-opacity"
         (click)="isEditing.set(true)"
       >
         {{ "project.pollInput.date.changeType" | translate }}
@@ -22,8 +28,12 @@
       @for (t of types; track t.type) {
         <button
           type="button"
-          class="tw:flex tw:flex-col tw:items-center tw:gap-2 tw:p-4 tw:rounded-xl tw:border tw:border-gray-200 tw:bg-white tw:cursor-pointer hover:tw:border-primary hover:tw:text-primary tw:transition-colors tw:text-gray-600 tw:text-sm tw:font-medium"
-          (click)="typeSelected.emit(t.type)"
+          [class]="
+            t.type === selectedType()
+              ? 'tw:flex tw:flex-col tw:items-center tw:gap-2 tw:p-4 tw:rounded-xl tw:border tw:border-primary tw:bg-primary/5 tw:cursor-pointer tw:transition-colors tw:text-primary tw:text-sm tw:font-medium'
+              : 'tw:flex tw:flex-col tw:items-center tw:gap-2 tw:p-4 tw:rounded-xl tw:border tw:border-gray-200 tw:bg-white tw:cursor-pointer hover:tw:border-primary hover:tw:text-primary tw:transition-colors tw:text-gray-600 tw:text-sm tw:font-medium'
+          "
+          (click)="onTypeClick(t.type)"
         >
           <i class="{{ t.icon }} tw:text-xl"></i>
           {{ t.labelKey | translate }}

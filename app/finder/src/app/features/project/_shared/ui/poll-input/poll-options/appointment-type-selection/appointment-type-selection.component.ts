@@ -24,6 +24,14 @@ export class AppointmentTypeSelectionComponent {
     });
   }
 
+  onTypeClick(type: DateOptionType): void {
+    if (type === this.selectedType()) {
+      this.isEditing.set(false);
+      return;
+    }
+    this.typeSelected.emit(type);
+  }
+
   readonly types: { type: DateOptionType; labelKey: string; icon: string }[] = [
     {
       type: 'weekday',

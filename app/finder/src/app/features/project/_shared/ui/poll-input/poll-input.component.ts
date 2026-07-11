@@ -141,7 +141,10 @@ export class PollInputComponent {
 
   onAppointmentDateTypeChange(newType: DateOptionType): void {
     const oldType = this.appointmentDateType();
-    if (oldType && oldType !== newType) {
+    if (oldType === newType) {
+      return;
+    }
+    if (oldType) {
       const converted = this.conversionService.convert(this.dateOptions(), oldType, newType);
       const fallback = newType === 'weekday' ? [] : [{ type: newType }];
       this.dateOptions.set(converted.length > 0 ? converted : fallback);

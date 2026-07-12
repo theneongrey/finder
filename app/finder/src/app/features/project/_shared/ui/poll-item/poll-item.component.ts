@@ -47,10 +47,7 @@ export class PollItemComponent {
   private shareLabel = this.translateService.translate('project.common.share');
 
   showMenu = computed(() => {
-    const role = this.poll().role;
-    return this.standalone()
-      ? role >= ProjectRole.Owner
-      : role >= ProjectRole.Maintainer;
+    return this.poll().role >= ProjectRole.Maintainer;
   });
 
   menuItems = computed<MenuItem[]>(() => {

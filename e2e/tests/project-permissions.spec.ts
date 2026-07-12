@@ -24,7 +24,7 @@ test.describe('Project permission checks', () => {
       .first();
 
     if (await existingCard.count() > 0) {
-      await existingCard.click();
+      await existingCard.click({force: true});
       await page.waitForURL('**/project/detail/**');
     } else {
       await page.getByText('New project').click();

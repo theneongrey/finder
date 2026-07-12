@@ -1,4 +1,5 @@
 import { SharedWith, VisibilityType } from './project-detail.model';
+import { ProjectRole } from './project-role.enum';
 
 export interface StandalonePollOverview {
   projectId: string;
@@ -12,4 +13,5 @@ export interface StandalonePollOverview {
   nextOpenOptionId?: string;
   visibilityType: VisibilityType;
   sharedWith: SharedWith[];
+  role: ProjectRole;
 }

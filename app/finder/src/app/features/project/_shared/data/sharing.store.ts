@@ -62,15 +62,18 @@ export const SharingStore = signalStore(
             .pipe(
               tapResponse({
                 next: (sharedWith) => {
-                  store.dispatcher.dispatch(
-                    sharingEvents.shared({ projectId: share.projectId, sharedWith }),
-                  );
                   patchState(store, {
                     sharingInProgress: false,
                     sharingContactsSuggestion: store
                       .sharingContactsSuggestion()
                       .filter((c) => c.email !== share.email),
                   });
+                  store.dispatcher.dispatch(
+                    sharingEvents.shared({
+                      projectId: share.projectId,
+                      sharedWith,
+                    }),
+                  );
                 },
                 error: (error) => {
                   patchState(store, { sharingInProgress: false });

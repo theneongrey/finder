@@ -6,7 +6,8 @@ public enum Role
 {
     Admin,
     Upgraded,
-    Free
+    Free,
+    TestUser
 }
 
 public class Person : BaseEntity

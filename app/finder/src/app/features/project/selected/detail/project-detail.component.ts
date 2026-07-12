@@ -59,6 +59,7 @@ export class ProjectDetailComponent {
         ...t,
         pollId: t.id,
         projectId: project.id,
+        role: project.role,
       })) ?? []
     );
   });

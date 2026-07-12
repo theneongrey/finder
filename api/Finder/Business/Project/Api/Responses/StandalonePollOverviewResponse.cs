@@ -15,6 +15,7 @@ public class StandalonePollOverviewResponse
     public string? NextOpenOptionId { get; init; }
     public required int VisibilityType { get; init; }
     public required ICollection<ProjectSharedWith> SharedWith { get; init; }
+    public required ProjectRole Role { get; init; }
 }
 
 public static class StandalonePollOverviewMapper
@@ -65,7 +66,8 @@ public static class StandalonePollOverviewMapper
             LastUpdated = DateTime.SpecifyKind(newestDate, DateTimeKind.Utc),
             NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(SlugHelper.OptionSlugName(nextOption.Text), nextOption.Id),
             VisibilityType = (int)project.VisibilityType,
-            SharedWith = sharedWith.ToArray()
+            SharedWith = sharedWith.ToArray(),
+            Role = project.GetRole(userId)
         };
     }
 }

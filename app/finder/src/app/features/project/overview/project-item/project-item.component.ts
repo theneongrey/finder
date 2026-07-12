@@ -18,6 +18,7 @@ import { Menu } from 'primeng/menu';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectOverview } from '../../_shared/models/project-overview.model';
 import { Card } from 'primeng/card';
+import { ProjectRole } from '../../_shared/models/project-role.enum';
 
 @Component({
   selector: 'app-project-item',
@@ -41,6 +42,8 @@ export class ProjectItemComponent {
   private readonly translateService = inject(TranslateService);
 
   project = input.required<ProjectOverview>();
+  canEdit = computed(() => this.project().role >= ProjectRole.Maintainer);
+  canShare = computed(() => this.project().role >= ProjectRole.Owner);
   deletionRequested = output();
   shareRequested = output();
 
@@ -52,22 +55,26 @@ export class ProjectItemComponent {
 
   menuItems = computed<MenuItem[]>(() => {
     const project = this.project();
-    return [
+    const items: MenuItem[] = [
       {
         label: this.editLabel(),
         icon: 'fa-solid fa-pen',
         routerLink: '/project/edit/' + project.id,
       },
-      {
+    ];
+    if (this.canShare()) {
+      items.push({
         label: this.shareLabel(),
         icon: 'fa-solid fa-share-nodes',
         command: () => this.shareRequested.emit(),
-      },
-      {
-        label: this.deleteLabel(),
-        icon: 'fa-regular fa-trash-can',
-        command: () => this.deletionRequested.emit(),
-      },
-    ];
+      });
+    }
+    items.push({
+      label: this.deleteLabel(),
+      icon: 'fa-regular fa-trash-can',
+      command: () => this.deletionRequested.emit(),
+    });
+
+    return items;
   });
 }

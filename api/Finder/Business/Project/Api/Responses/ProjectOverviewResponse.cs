@@ -13,6 +13,7 @@ public class ProjectOverviewResponse
     public required DateTime LastUpdated { get; init; }
     public required int VisibilityType { get; init; }
     public required ICollection<ProjectSharedWith> SharedWith { get; init; }
+    public required ProjectRole Role { get; init; }
 }
 
 public class ProjectOverviewPollResponse
@@ -59,7 +60,8 @@ public static class ProjectOverviewMapper
             PollCount = project.Polls.Count,
             LastUpdated = DateTime.SpecifyKind(lastUpdated, DateTimeKind.Utc),
             VisibilityType = (int)project.VisibilityType,
-            SharedWith = sharedWith.ToArray()
+            SharedWith = sharedWith.ToArray(),
+            Role = project.GetRole(userId)
         };
     }
 }

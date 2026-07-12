@@ -30,7 +30,6 @@ public static class ProjectRoleExtensions
 
     public static ProjectRole GetRole(this Entities.Project project, Guid? userId)
     {
-        ProjectRole result;
         if (project.Creator.Id == userId)
         {
             return ProjectRole.Creator;

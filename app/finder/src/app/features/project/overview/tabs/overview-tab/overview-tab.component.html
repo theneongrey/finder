@@ -48,6 +48,7 @@
     @for (poll of recentPolls(); track poll.pollId) {
       <app-poll-item
         [poll]="poll"
+        [standalone]="true"
         (deletionRequested)="pollDeletionRequested.emit(poll)"
         (shareRequested)="pollShareRequested.emit(poll.projectId)"
       />

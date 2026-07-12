@@ -18,6 +18,11 @@ public class MailService
 
     public async Task SendMail(Person recipient, string userName, string project, string permission, MailTemplate mailTemplate)
     {
+        if (recipient.Role == Role.TestUser)
+        {
+            return;
+        }
+
         try
         {
             var message = new MimeMessage();

@@ -216,10 +216,7 @@ export const ProjectListStore = signalStore(
               tapResponse({
                 next: (responsePoll) => {
                   patchState(store, {
-                    standalonePolls: [
-                      responsePoll,
-                      ...store.standalonePolls(),
-                    ],
+                    standalonePolls: [responsePoll, ...store.standalonePolls()],
                     activeTab: 'polls',
                   });
                   store.router.navigate(['/project/overview']);
@@ -237,21 +234,44 @@ export const ProjectListStore = signalStore(
     ),
   })),
   withReducer(
-    on(sharingEvents.shared, sharingEvents.permissionRemoved, ({ payload }) =>
-      (state: { projects: ProjectOverview[] }) => ({
-        projects: state.projects.map((p) =>
-          p.id === payload.projectId ? { ...p, sharedWith: payload.sharedWith } : p,
-        ),
-      }),
+    on(
+      sharingEvents.shared,
+      sharingEvents.permissionRemoved,
+      ({ payload }) =>
+        (state: {
+          projects: ProjectOverview[];
+          standalonePolls: StandalonePollOverview[];
+        }) => ({
+          projects: state.projects.map((p) =>
+            p.id === payload.projectId
+              ? { ...p, sharedWith: payload.sharedWith }
+              : p,
+          ),
+          standalonePolls: state.standalonePolls.map((p) =>
+            p.projectId === payload.projectId
+              ? { ...p, sharedWith: payload.sharedWith }
+              : p,
+          ),
+        }),
     ),
-    on(sharingEvents.visibilityTypeUpdated, ({ payload }) =>
-      (state: { projects: ProjectOverview[] }) => ({
-        projects: state.projects.map((p) =>
-          p.id === payload.projectId
-            ? { ...p, visibilityType: payload.visibilityType }
-            : p,
-        ),
-      }),
+    on(
+      sharingEvents.visibilityTypeUpdated,
+      ({ payload }) =>
+        (state: {
+          projects: ProjectOverview[];
+          standalonePolls: StandalonePollOverview[];
+        }) => ({
+          projects: state.projects.map((p) =>
+            p.id === payload.projectId
+              ? { ...p, visibilityType: payload.visibilityType }
+              : p,
+          ),
+          standalonePolls: state.standalonePolls.map((p) =>
+            p.projectId === payload.projectId
+              ? { ...p, visibilityType: payload.visibilityType }
+              : p,
+          ),
+        }),
     ),
   ),
 );

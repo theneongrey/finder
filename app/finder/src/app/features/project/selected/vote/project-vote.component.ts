@@ -44,7 +44,7 @@ import { OptionType } from '../../_shared/models/project-detail.model';
     '(window:touchmove)': 'onDragMove($event)',
   },
 })
-export class ProjectVoteComponent implements OnInit, AfterViewInit {
+export class ProjectVoteComponent implements AfterViewInit {
   private readonly titleService = inject(TitleBarService);
   private readonly projectDetailStore = inject(ProjectDetailStore);
   private readonly router = inject(Router);
@@ -66,7 +66,9 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
         .length ?? 0,
   );
   totalCount = computed(() => this.poll()?.options.length ?? 0);
-  allOptionTexts = computed(() => this.poll()?.options.map((o) => o.text) ?? []);
+  allOptionTexts = computed(
+    () => this.poll()?.options.map((o) => o.text) ?? [],
+  );
 
   private readonly SWIPE_THRESHOLD = 75;
 
@@ -100,16 +102,13 @@ export class ProjectVoteComponent implements OnInit, AfterViewInit {
       this.optionId();
       this.resetCardState();
     });
-  }
-
-  ngOnInit(): void {
-    if (!this.optionId()) {
-      if (this.projectId() && this.poll()) {
-        this.navigateToNextOption(undefined, true);
-      } else {
-        void this.router.navigate(['/project']);
+    effect(() => {
+      if (this.projectId()) {
+        if (!this.optionId()) {
+          this.navigateToNextOption(undefined, true);
+        }
       }
-    }
+    });
   }
 
   ngAfterViewInit(): void {

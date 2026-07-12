@@ -40,7 +40,6 @@ public class ProjectService
         return await _dbContext.Projects
             .Include(p => p.Polls)
             .ThenInclude(t => t.Options)
-            .ThenInclude(o => o.Meta)
             .Include(p => p.Polls)
             .ThenInclude(t => t.Options)
             .ThenInclude(o => o.Votes)

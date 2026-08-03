@@ -7,12 +7,11 @@ import {
   ElementRef,
   inject,
   input,
-  OnInit,
   signal,
   viewChild,
 } from '@angular/core';
 import { ProjectDetailStore } from '../../_shared/data/project-detail.store';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
@@ -48,6 +47,7 @@ export class ProjectVoteComponent implements AfterViewInit {
   private readonly titleService = inject(TitleBarService);
   private readonly projectDetailStore = inject(ProjectDetailStore);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly OptionType = OptionType;
 
@@ -87,8 +87,13 @@ export class ProjectVoteComponent implements AfterViewInit {
 
   private readonly localSkipCounts = signal(new Map<string, number>());
   private readonly hasVotedInSession = signal(false);
+  private readonly revoteMode = signal(false);
+  private readonly visitedInRevote = signal(new Set<string>());
 
   constructor() {
+    if (this.route.snapshot.queryParamMap.get('revote')) {
+      this.revoteMode.set(true);
+    }
     effect(() => {
       this.projectDetailStore.getPoll(this.pollId());
     });
@@ -199,9 +204,13 @@ export class ProjectVoteComponent implements AfterViewInit {
     const skipValue = Math.min(currentChoice, 0) - 1;
     this.projectDetailStore.vote({ optionId, choice: skipValue.toString() });
 
-    const counts = new Map(this.localSkipCounts());
-    counts.set(optionId, (counts.get(optionId) ?? 0) + 1);
-    this.localSkipCounts.set(counts);
+    if (this.revoteMode()) {
+      this.visitedInRevote.update((s) => new Set([...s, optionId]));
+    } else {
+      const counts = new Map(this.localSkipCounts());
+      counts.set(optionId, (counts.get(optionId) ?? 0) + 1);
+      this.localSkipCounts.set(counts);
+    }
 
     this.navigateToNextOption(optionId);
   }
@@ -210,7 +219,7 @@ export class ProjectVoteComponent implements AfterViewInit {
     void this.router.navigate([
       '/project/detail/',
       this.projectId(),
-      'votes-overview',
+      'poll-overview',
       this.pollId(),
     ]);
   }
@@ -260,6 +269,9 @@ export class ProjectVoteComponent implements AfterViewInit {
 
   private castVote(choice: string): void {
     this.hasVotedInSession.set(true);
+    if (this.revoteMode()) {
+      this.visitedInRevote.update((s) => new Set([...s, this.optionId()]));
+    }
     this.projectDetailStore.vote({ optionId: this.optionId(), choice });
     this.navigateToNextOption(this.optionId());
   }
@@ -271,11 +283,31 @@ export class ProjectVoteComponent implements AfterViewInit {
   //                     real vote was cast this session (otherwise go to overview)
   //                     An option skipped twice locally is treated as done for
   //                     this session and excluded from the queue.
+  // In revote mode (entered via "erneut abstimmen"): all options are cycled
+  //   through once regardless of prior choice, tracked via visitedInRevote.
   private navigateToNextOption(
     ignore: string | undefined,
     replaceUrl = false,
   ): void {
     const options = this.poll()!.options;
+
+    if (this.revoteMode()) {
+      const next = options.find(
+        (o) => o.id !== ignore && !this.visitedInRevote().has(o.id),
+      );
+      if (next) {
+        void this.router.navigate(
+          ['/project/detail/', this.projectId(), 'vote', this.pollId()!, next.id],
+          { replaceUrl, queryParamsHandling: 'preserve' },
+        );
+        return;
+      }
+      void this.router.navigate(
+        ['/project/detail/', this.projectId(), 'results', this.pollId()!],
+        { replaceUrl },
+      );
+      return;
+    }
 
     const nextUnvoted = options.find((o) => !o.choice && o.id !== ignore);
     if (nextUnvoted) {
@@ -292,32 +324,32 @@ export class ProjectVoteComponent implements AfterViewInit {
       return;
     }
 
-    if (this.hasVotedInSession()) {
-      const nextSkipped = [...options]
-        .filter(
-          (o) =>
-            o.id !== ignore &&
-            parseInt(o.choice ?? '0') < 0 &&
-            (this.localSkipCounts().get(o.id) ?? 0) < 2,
-        )
-        .sort((a, b) => parseInt(b.choice!) - parseInt(a.choice!))[0];
-      if (nextSkipped) {
-        void this.router.navigate(
-          [
-            '/project/detail/',
-            this.projectId(),
-            'vote',
-            this.pollId()!,
-            nextSkipped.id,
-          ],
-          { replaceUrl },
-        );
-        return;
-      }
+    // No unvoted options remain — show skipped ones regardless of session state,
+    // since the user has clearly engaged with the poll before (all options touched).
+    const nextSkipped = [...options]
+      .filter(
+        (o) =>
+          o.id !== ignore &&
+          parseInt(o.choice ?? '0') < 0 &&
+          (this.localSkipCounts().get(o.id) ?? 0) < 2,
+      )
+      .sort((a, b) => parseInt(b.choice!) - parseInt(a.choice!))[0];
+    if (nextSkipped) {
+      void this.router.navigate(
+        [
+          '/project/detail/',
+          this.projectId(),
+          'vote',
+          this.pollId()!,
+          nextSkipped.id,
+        ],
+        { replaceUrl },
+      );
+      return;
     }
 
     void this.router.navigate(
-      ['/project/detail/', this.projectId(), 'votes-overview', this.pollId()!],
+      ['/project/detail/', this.projectId(), 'results', this.pollId()!],
       { replaceUrl },
     );
   }

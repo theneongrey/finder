@@ -28,7 +28,9 @@ export class VoteOverviewSummaryComponent {
 
   totalCount = computed(() => this.poll().options.length);
 
-  hasOpenOptions = computed(() => this.poll().options.some((o) => !o.choice));
+  hasOpenOptions = computed(() =>
+    this.poll().options.some((o) => parseInt(o.choice ?? '0') <= 0),
+  );
 
   progressPercent = computed(() => {
     const total = this.totalCount();

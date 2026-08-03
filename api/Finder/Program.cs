@@ -45,8 +45,9 @@ builder.Services.AddPreviewServices();
 
 var app = builder.Build();
 
-using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+if (!app.Environment.IsEnvironment("Testing"))
 {
+    using var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
     var db = scope.ServiceProvider.GetService<AppDbContext>()!;
     db.Database.Migrate();
 }

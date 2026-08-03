@@ -25,6 +25,7 @@ export class OptionCardRatingComponent {
   isMostVoted = input(false);
   projectId = input('');
   pollId = input('');
+  hideResults = input(false);
 
   averageRating = computed(() => {
     const rated = this.option().votes.filter(

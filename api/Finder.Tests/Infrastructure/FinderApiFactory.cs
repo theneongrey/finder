@@ -3,6 +3,7 @@ using System.Threading.RateLimiting;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
+using Finder.Business.Shared;
 using Finder.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +27,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Testing");
         builder.ConfigureServices(services =>
         {
             var dbContextDescriptor =
@@ -120,7 +122,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
                       ?? throw new InvalidOperationException($"User {creatorId} not found. Call SeedUser first.");
         var project = new Project
         {
-            Id = Guid.NewGuid(),
+            Id = SlugHelper.GenerateId(),
             Name = name,
             Description = description,
             Creator = creator,
@@ -131,7 +133,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         return project;
     }
 
-    public async Task<Poll> SeedPoll(Guid projectId, string name = "Test Poll",
+    public async Task<Poll> SeedPoll(string projectId, string name = "Test Poll",
         OptionType optionType = OptionType.YesNo, string description = "")
     {
         using var scope = Services.CreateScope();
@@ -140,7 +142,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
                       ?? throw new InvalidOperationException($"Project {projectId} not found. Call SeedProject first.");
         var poll = new Poll
         {
-            Id = Guid.NewGuid(),
+            Id = SlugHelper.GenerateId(),
             Name = name,
             Description = description,
             OptionType = optionType,
@@ -151,7 +153,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         return poll;
     }
 
-    public async Task<Option> SeedOption(Guid pollId, string text = "Test Option", string description = "",
+    public async Task<Option> SeedOption(string pollId, string text = "Test Option", string description = "",
         string? url = null)
     {
         using var scope = Services.CreateScope();
@@ -160,7 +162,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
                     ?? throw new InvalidOperationException($"Poll {pollId} not found. Call SeedPoll first.");
         var option = new Option
         {
-            Id = Guid.NewGuid(),
+            Id = SlugHelper.GenerateId(),
             Text = text,
             Description = description,
             Poll = poll
@@ -183,7 +185,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         return option;
     }
 
-    public async Task SeedPermission(Guid projectId, Guid userId, PermissionType permissionType)
+    public async Task SeedPermission(string projectId, Guid userId, PermissionType permissionType)
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

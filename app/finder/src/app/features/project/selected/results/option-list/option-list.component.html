@@ -1,10 +1,12 @@
 <div>
-  <div class="tw:flex tw:justify-between tw:items-end tw:mb-3">
-    <h3>{{ "project.votesOverview.candidates" | translate }}</h3>
-    <p class="label-sm">
-      {{ "project.votesOverview.sortedByPopularity" | translate }}
-    </p>
-  </div>
+  @if (!hideResults()) {
+    <div class="tw:flex tw:justify-between tw:items-end tw:mb-3">
+      <h3>{{ "project.votesOverview.candidates" | translate }}</h3>
+      <p class="label-sm">
+        {{ "project.votesOverview.sortedByPopularity" | translate }}
+      </p>
+    </div>
+  }
 
   <div class="tw:grid tw:grid-cols-1 tw:gap-4">
     @for (option of sortedOptions(); track option.id) {
@@ -14,6 +16,7 @@
           [isMostVoted]="hasMostVotes(option)"
           [projectId]="projectId()"
           [pollId]="pollId()"
+          [hideResults]="hideResults()"
         />
       } @else if (optionType() === OptionType.Rating) {
         <app-option-card-rating
@@ -21,6 +24,7 @@
           [isMostVoted]="hasMostVotes(option)"
           [projectId]="projectId()"
           [pollId]="pollId()"
+          [hideResults]="hideResults()"
         />
       } @else {
         <app-option-card
@@ -28,6 +32,7 @@
           [isMostVoted]="hasMostVotes(option)"
           [projectId]="projectId()"
           [pollId]="pollId()"
+          [hideResults]="hideResults()"
         />
       }
     }

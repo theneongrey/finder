@@ -24,6 +24,7 @@ export class OptionCardComponent {
   isMostVoted = input(false);
   projectId = input('');
   pollId = input('');
+  hideResults = input(false);
 
   voteIcon(choice: string | null): string {
     if (choice === '1') {

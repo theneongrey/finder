@@ -29,6 +29,7 @@ export class OptionCardDateComponent {
   isMostVoted = input(false);
   projectId = input('');
   pollId = input('');
+  hideResults = input(false);
 
   parsed = computed<DateOptionEntry>(() =>
     parseDateOptionText(this.option().text),

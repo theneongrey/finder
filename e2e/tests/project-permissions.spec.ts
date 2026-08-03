@@ -19,12 +19,11 @@ test.describe('Project permission checks', () => {
     // Navigate to or create the test project
     await page.getByRole('tab', { name: 'Projects' }).click();
     const existingCard = page
-      .locator('app-project-item')
-      .filter({ hasText: 'Permission Test Project' })
+      .locator('[data-testid="project-item-card"]')
       .first();
 
     if (await existingCard.count() > 0) {
-      await existingCard.click({force: true});
+      await existingCard.click();
       await page.waitForURL('**/project/detail/**');
     } else {
       await page.getByText('New project').click();

@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
+using Finder.Business.Shared;
 using Finder.Tests.Infrastructure;
 using Xunit;
 
@@ -69,7 +70,7 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
-        Assert.Equal(poll.Id.ToString(), json["id"]!.GetValue<string>());
+        Assert.Equal(SlugHelper.ToSlug("Visible Poll", poll.Id), json["id"]!.GetValue<string>());
         Assert.Equal("Visible Poll", json["name"]!.GetValue<string>());
     }
 
@@ -122,7 +123,7 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
-        Assert.Equal(poll.Id.ToString(), json["id"]!.GetValue<string>());
+        Assert.Equal(SlugHelper.ToSlug("Updated Name", poll.Id), json["id"]!.GetValue<string>());
         Assert.Equal("Updated Name", json["name"]!.GetValue<string>());
     }
 
@@ -269,7 +270,7 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
-        Assert.Equal(option.Id.ToString(), json["id"]!.GetValue<string>());
+        Assert.Equal(SlugHelper.ToSlug("Updated Text", option.Id), json["id"]!.GetValue<string>());
         Assert.Equal("Updated Text", json["text"]!.GetValue<string>());
     }
 

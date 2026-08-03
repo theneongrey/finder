@@ -35,7 +35,7 @@
           [routerLink]="[
             '/project/detail',
             _poll.projectId,
-            'votes-overview',
+            _poll.nextOpenOptionId ? 'poll-overview' : 'results',
             _poll.pollId,
           ]"
           fragment="comments-section"
@@ -43,36 +43,71 @@
       </div>
     </div>
     @if (showMenu()) {
-      <p-button
-        icon="fa-solid fa-ellipsis-vertical"
-        [text]="true"
-        (click)="menu.toggle($event)"
-        data-testid="poll-menu-btn"
-      />
-      <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
+      <div>
+        <p-button
+          icon="fa-solid fa-ellipsis-vertical"
+          [text]="true"
+          (click)="menu.toggle($event)"
+          data-testid="poll-menu-btn"
+        />
+        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
+      </div>
     }
   </div>
 
-  <div class="p-fluid">
-    <p-button
-      [severity]="_poll.nextOpenOptionId ? 'primary' : 'secondary'"
-      class="tw:flex tw:w-full"
-      [routerLink]="
-        _poll.nextOpenOptionId
-          ? [
-              '/project/detail',
-              _poll.projectId,
-              'vote',
-              _poll.pollId,
-              _poll.nextOpenOptionId,
-            ]
-          : ['/project/detail', _poll.projectId, 'votes-overview', _poll.pollId]
-      "
-      [label]="
-        _poll.nextOpenOptionId
-          ? ('project.common.vote' | translate)
-          : ('project.detail.item.pollOverview' | translate)
-      "
-    />
+  <div class="tw:flex tw:flex-col tw:gap-1">
+    @if (_poll.nextOpenOptionId) {
+      <p-button
+        fluid
+        severity="primary"
+        [routerLink]="[
+          '/project/detail',
+          _poll.projectId,
+          'vote',
+          _poll.pollId,
+          _poll.nextOpenOptionId,
+        ]"
+        [label]="'project.common.vote' | translate"
+      />
+      <p-button
+        fluid
+        severity="secondary"
+        size="small"
+        [text]="true"
+        [routerLink]="[
+          '/project/detail',
+          _poll.projectId,
+          'poll-overview',
+          _poll.pollId,
+        ]"
+        [label]="'project.detail.item.voteOverview' | translate"
+      />
+    } @else {
+      <p-button
+        fluid
+        severity="primary"
+        [routerLink]="[
+          '/project/detail',
+          _poll.projectId,
+          'results',
+          _poll.pollId,
+        ]"
+        [label]="'project.detail.item.pollOverview' | translate"
+      />
+      <p-button
+        fluid
+        severity="secondary"
+        size="small"
+        [text]="true"
+        [routerLink]="[
+          '/project/detail',
+          _poll.projectId,
+          'vote',
+          _poll.pollId,
+        ]"
+        [queryParams]="{ revote: '1' }"
+        [label]="'project.votesOverview.reVote' | translate"
+      />
+    }
   </div>
 </p-card>

@@ -53,7 +53,11 @@ export const SharingStore = signalStore(
       ),
     ),
 
-    share: rxMethod<{ email: string; permissionType: number; projectId: string }>(
+    share: rxMethod<{
+      email: string;
+      permissionType: number;
+      projectId: string;
+    }>(
       pipe(
         tap(() => patchState(store, { sharingInProgress: true })),
         switchMap((share) =>
@@ -97,7 +101,10 @@ export const SharingStore = signalStore(
               tapResponse({
                 next: (sharedWith) => {
                   store.dispatcher.dispatch(
-                    sharingEvents.permissionRemoved({ projectId: payload.projectId, sharedWith }),
+                    sharingEvents.permissionRemoved({
+                      projectId: payload.projectId,
+                      sharedWith,
+                    }),
                   );
                 },
                 error: (error) => {
@@ -152,7 +159,7 @@ export const SharingStore = signalStore(
                   store.router.navigate([
                     '/project/detail',
                     info.projectId,
-                    'vote',
+                    'poll-overview',
                     info.pollId,
                   ]);
                 } else {

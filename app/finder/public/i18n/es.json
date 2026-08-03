@@ -118,7 +118,8 @@
       "item": {
         "options": "Opciones: {{count}}",
         "comments": "Comentarios: {{count}}",
-        "pollOverview": "Resumen de la encuesta"
+        "pollOverview": "Los resultados",
+        "voteOverview": "Al Resumen"
       }
     },
     "share": {

@@ -1,6 +1,7 @@
 @let _project = project();
 
 <p-card
+  data-testid="project-item-card"
   class="tw:cursor-pointer"
   [routerLink]="['/project/detail', _project.id]"
 >

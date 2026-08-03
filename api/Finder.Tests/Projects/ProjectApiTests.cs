@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using Finder.Business.Shared;
 using Finder.Tests.Infrastructure;
 using Xunit;
 
@@ -25,7 +26,7 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var projects = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
-        Assert.Contains(projects, p => p!["id"]!.GetValue<string>() == project.Id.ToString());
+        Assert.Contains(projects, p => p!["id"]!.GetValue<string>() == SlugHelper.ToSlug("My Project", project.Id));
     }
 
     [Fact]
@@ -49,7 +50,7 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
         var response = await client.GetAsync("/api/project");
 
         var projects = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
-        Assert.DoesNotContain(projects, p => p!["id"]!.GetValue<string>() == otherProject.Id.ToString());
+        Assert.DoesNotContain(projects, p => p!["id"]!.GetValue<string>() == SlugHelper.ToSlug("Other User's Project", otherProject.Id));
     }
 
     // --- GET /api/project/{id} ---
@@ -65,7 +66,7 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
-        Assert.Equal(project.Id.ToString(), json["id"]!.GetValue<string>());
+        Assert.Equal(SlugHelper.ToSlug("Specific Project", project.Id), json["id"]!.GetValue<string>());
         Assert.Equal("Specific Project", json["name"]!.GetValue<string>());
     }
 

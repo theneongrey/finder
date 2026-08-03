@@ -9,16 +9,16 @@
         <p-tab value="overview">{{
           "project.tabs.overview" | translate
         }}</p-tab>
-        <p-tab value="projects"
-          >{{ "project.tabs.projects" | translate }}
-          <p-tag class="tw:ml-1" [rounded]="true">{{
-            projects().length
-          }}</p-tag></p-tab
-        >
         <p-tab value="polls"
           >{{ "project.tabs.polls" | translate }}
           <p-tag class="tw:ml-1" [rounded]="true">{{
             standalonePolls().length
+          }}</p-tag></p-tab
+        >
+        <p-tab value="projects"
+          >{{ "project.tabs.projects" | translate }}
+          <p-tag class="tw:ml-1" [rounded]="true">{{
+            projects().length
           }}</p-tag></p-tab
         >
       </p-tablist>

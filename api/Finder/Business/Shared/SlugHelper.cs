@@ -12,7 +12,11 @@ public static class SlugHelper
     {
         var clean = Regex.Replace(name.ToLowerInvariant(), @"[^a-z0-9\s]", "");
         var nameSlug = Regex.Replace(clean.Trim(), @"\s+", "-");
-        if (string.IsNullOrEmpty(nameSlug)) nameSlug = "item";
+        if (string.IsNullOrEmpty(nameSlug))
+        {
+            nameSlug = "item";
+        }
+
         return $"{nameSlug}-{id}";
     }
 

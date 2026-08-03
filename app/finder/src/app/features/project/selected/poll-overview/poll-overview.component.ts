@@ -7,14 +7,15 @@ import {
 } from '@angular/core';
 import { ProjectDetailStore } from '../../_shared/data/project-detail.store';
 import { TranslatePipe } from '@ngx-translate/core';
-import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overview-summary.component';
-import { OptionListComponent } from './option-list/option-list.component';
-import { CommentsSectionComponent } from './comments-section/comments-section.component';
+import { VoteOverviewSummaryComponent } from '../results/vote-overview-summary/vote-overview-summary.component';
+import { OptionListComponent } from '../results/option-list/option-list.component';
+import { CommentsSectionComponent } from '../results/comments-section/comments-section.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
+import { ProjectListStore } from '../../_shared/data/project-list.store';
 
 @Component({
-  selector: 'app-votes-overview',
-  templateUrl: './votes-overview.component.html',
+  selector: 'app-poll-overview',
+  templateUrl: './poll-overview.component.html',
   imports: [
     TranslatePipe,
     VoteOverviewSummaryComponent,
@@ -23,8 +24,9 @@ import { TitleBarService } from '../../../../common/services/title-bar.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VotesOverviewComponent {
+export class PollOverviewComponent {
   private readonly projectDetailStore = inject(ProjectDetailStore);
+  private readonly projectListStore = inject(ProjectListStore);
 
   pollId = input('');
   projectId = this.projectDetailStore.projectId;
@@ -35,6 +37,8 @@ export class VotesOverviewComponent {
   constructor() {
     const titleService = inject(TitleBarService);
 
+    this.projectListStore.getStandalonePolls();
+
     effect(() => {
       this.projectDetailStore.getPoll(this.pollId());
     });
@@ -43,6 +47,12 @@ export class VotesOverviewComponent {
       const project = this.project();
       if (project) {
         titleService.setTitle(project.name);
+        const isStandalone = this.projectListStore
+          .standalonePolls()
+          .some((p) => p.projectId === project.id);
+        titleService.setBackRoute(
+          isStandalone ? '/project/overview' : `/project/detail/${project.id}`,
+        );
       }
     });
   }

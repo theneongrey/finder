@@ -14,11 +14,7 @@ import { SharingStore } from '../_shared/data/sharing.store';
   selector: 'app-public-project',
   standalone: true,
   imports: [ProgressSpinner],
-  template: `
-    <div class="flex items-center justify-center h-screen">
-      <p-progress-spinner />
-    </div>
-  `,
+  templateUrl: 'public-project.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PublicProjectComponent implements OnInit {

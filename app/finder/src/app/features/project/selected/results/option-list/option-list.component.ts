@@ -31,14 +31,18 @@ export class OptionListComponent {
   projectId = input('');
   pollId = input('');
   optionType = input(OptionType.YesNo);
+  hideResults = input(false);
 
-  sortedOptions = computed(() =>
-    [...this.options()].sort((a, b) =>
+  sortedOptions = computed(() => {
+    if (this.hideResults()) {
+      return [...this.options()];
+    }
+    return [...this.options()].sort((a, b) =>
       this.optionType() === OptionType.Rating
         ? this.getAverageRating(b) - this.getAverageRating(a)
         : this.getYesVotes(b).length - this.getYesVotes(a).length,
-    ),
-  );
+    );
+  });
 
   getYesVotes(option: OptionDetail) {
     return option.votes.filter((vote) => vote.choice === '1');

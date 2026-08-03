@@ -2,25 +2,21 @@
   class="tw:bg-white tw:rounded-2xl tw:p-4 tw:shadow-sm tw:flex tw:flex-col tw:border tw:border-gray-100"
 >
   <div class="tw:flex tw:justify-between tw:items-start tw:mb-3">
-    <div class="tw:flex tw:gap-3">
-      <div class="tw:flex tw:flex-col tw:gap-1">
-        <h4
-          class="tw:text-base tw:font-semibold tw:text-gray-900 tw:leading-tight"
-        >
-          {{ option().text }}
-        </h4>
-        @if (option().description) {
-          <p class="tw:text-sm tw:text-gray-500">
-            {{ option().description }}
-          </p>
-        }
-        @if (isMostVoted()) {
-          <p-tag
-            [value]="'project.votesOverview.mostVotes' | translate"
-            icon="fa-solid fa-trophy"
-          />
-        }
-      </div>
+    <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
+      <h4
+        class="tw:text-base tw:font-semibold tw:text-gray-900 tw:leading-tight"
+      >
+        {{ label() }}
+      </h4>
+      @if (subLabel(); as sub) {
+        <p class="tw:text-sm tw:text-gray-500">{{ sub }}</p>
+      }
+      @if (isMostVoted() && !hideResults()) {
+        <p-tag
+          [value]="'project.votesOverview.mostVotes' | translate"
+          icon="fa-solid fa-trophy"
+        />
+      }
     </div>
     <div class="tw:flex tw:flex-col tw:items-center tw:shrink-0 tw:ml-3">
       <i
@@ -36,15 +32,17 @@
     </div>
   </div>
 
-  <div class="tw:flex tw:items-center tw:gap-2 tw:mb-3">
-    <i
-      class="fa-solid fa-users tw:text-gray-400 tw:text"
-      style="font-size: 13px"
-    ></i>
-    <span class="tw:text-xs tw:text-gray-500">
-      {{ votesCountLabel() }}
-    </span>
-  </div>
+  @if (!hideResults()) {
+    <div class="tw:flex tw:items-center tw:gap-2 tw:mb-3">
+      <i
+        class="fa-solid fa-users tw:text-gray-400"
+        style="font-size: 13px"
+      ></i>
+      <span class="tw:text-xs tw:text-gray-500">
+        {{ votesCountLabel() }}
+      </span>
+    </div>
+  }
 
   @if (option().choice) {
     <div class="tw:flex tw:justify-end">

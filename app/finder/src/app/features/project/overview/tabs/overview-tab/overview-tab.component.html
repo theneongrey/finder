@@ -8,31 +8,6 @@
 <section class="tw:mb-6">
   <div class="tw:flex tw:justify-between tw:items-center tw:mb-3">
     <h3 class="tw:m-0">
-      {{ "project.overviewTab.latestProjects" | translate }}
-    </h3>
-    <p-button
-      [text]="true"
-      [label]="'project.overviewTab.viewAll' | translate"
-      icon="fa-solid fa-chevron-right"
-      iconPos="right"
-      size="small"
-      (onClick)="switchToProjects()"
-    />
-  </div>
-  <div class="tw:flex tw:flex-col tw:gap-3">
-    @for (project of recentProjects(); track project.id) {
-      <app-project-item
-        [project]="project"
-        (deletionRequested)="projectDeletionRequested.emit(project)"
-        (shareRequested)="shareRequested.emit(project.id)"
-      />
-    }
-  </div>
-</section>
-
-<section>
-  <div class="tw:flex tw:justify-between tw:items-center tw:mb-3">
-    <h3 class="tw:m-0">
       {{ "project.overviewTab.latestPolls" | translate }}
     </h3>
     <p-button
@@ -51,6 +26,31 @@
         [standalone]="true"
         (deletionRequested)="pollDeletionRequested.emit(poll)"
         (shareRequested)="pollShareRequested.emit(poll.projectId)"
+      />
+    }
+  </div>
+</section>
+
+<section>
+  <div class="tw:flex tw:justify-between tw:items-center tw:mb-3">
+    <h3 class="tw:m-0">
+      {{ "project.overviewTab.latestProjects" | translate }}
+    </h3>
+    <p-button
+      [text]="true"
+      [label]="'project.overviewTab.viewAll' | translate"
+      icon="fa-solid fa-chevron-right"
+      iconPos="right"
+      size="small"
+      (onClick)="switchToProjects()"
+    />
+  </div>
+  <div class="tw:flex tw:flex-col tw:gap-3">
+    @for (project of recentProjects(); track project.id) {
+      <app-project-item
+        [project]="project"
+        (deletionRequested)="projectDeletionRequested.emit(project)"
+        (shareRequested)="shareRequested.emit(project.id)"
       />
     }
   </div>

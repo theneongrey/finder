@@ -41,6 +41,10 @@ export class TitleBarService {
     this.#title.set(title);
   }
 
+  setBackRoute(route: string): void {
+    this.#backRoute.set(route);
+  }
+
   clearTitle(): void {
     this.#title.set(undefined);
   }

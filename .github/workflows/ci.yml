@@ -1,4 +1,4 @@
-name: CI
+name: CI-Test
 
 on:
   push:
@@ -43,23 +43,8 @@ jobs:
         working-directory: ./app/finder
         run: |
           npm install
-          npm run build
-
-      - name: Copy dist to dotnet api
-        shell: bash
-        run: |
-          mv ./app/finder/dist/finder/browser/* ./api/Finder/App/
+          npm run build:production
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
         working-directory: ./api
-
-      - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
-        working-directory: ./api
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp

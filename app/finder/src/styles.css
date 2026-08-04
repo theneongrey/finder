@@ -84,9 +84,39 @@ h3 {
   font-weight: 700;
 }
 
-p.label-sm {
+/* ── Typography scale ────────────────────────────────────────── */
+
+.ds-body {
   font-size: 14px;
   line-height: 1.2;
+}
+
+.ds-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.ds-small {
+  font-size: 11px;
+  color: #999;
+}
+
+.ds-mono {
+  font-size: 11px;
+  color: #999;
+  font-family: monospace;
+  margin: 0;
+}
+
+.ds-mono-xs {
+  font-size: 10px;
+  color: #aaa;
+  font-family: monospace;
+  margin: 0;
 }
 
 .p-fluid button {
@@ -99,4 +129,25 @@ p.label-sm {
 
 input.invalid {
   border-color: red;
+}
+
+.bg-app-gradient {
+  background: linear-gradient(135deg, #faf5ed 10%, #e4f2ee 90%);
+}
+
+/* ── Elevation / Shadow tokens ───────────────────────────────── */
+
+/* Subtle resting shadow for content cards */
+.ds-shadow-card {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Medium shadow for raised interactive elements */
+.ds-shadow-raised {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Prominent shadow for floating overlays and popovers */
+.ds-shadow-floating {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }

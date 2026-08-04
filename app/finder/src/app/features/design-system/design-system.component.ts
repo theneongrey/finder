@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Avatar } from 'primeng/avatar';
 import { AvatarGroup } from 'primeng/avatargroup';
@@ -7,6 +8,7 @@ import { Card } from 'primeng/card';
 import { Divider } from 'primeng/divider';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { InputOtp } from 'primeng/inputotp';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
 import { Panel } from 'primeng/panel';
@@ -40,9 +42,11 @@ const mockSharingStore = {
 @Component({
   selector: 'app-design-system',
   imports: [
+    NgClass,
     FormsModule,
     Button,
     Card,
+    InputOtp,
     InputText,
     Textarea,
     InputGroup,
@@ -137,6 +141,7 @@ export class DesignSystemComponent {
   inputText = '';
   textareaValue = '';
   autoResizeValue = '';
+  otpValue = '';
 
   faIcons = [
     'fa-solid fa-house',
@@ -174,10 +179,6 @@ export class DesignSystemComponent {
     {
       title: 'Transition duration tokens',
       body: '150ms / 200ms / 250ms / 300ms are used in multiple places without a shared source of truth. Define --duration-fast, --duration-normal, --duration-slow.',
-    },
-    {
-      title: 'Elevation & shadow tokens',
-      body: 'shadow-md, shadow-lg, and shadow-xl are applied ad-hoc. Define 3–4 semantic elevation levels (e.g. card, dropdown, modal).',
     },
     {
       title: 'Text color tokens',

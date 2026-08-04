@@ -30,7 +30,7 @@
           type="button"
           [class]="
             t.type === selectedType()
-              ? 'tw:flex tw:flex-col tw:items-center tw:gap-2 tw:p-4 tw:rounded-xl tw:border tw:border-primary tw:bg-primary/5 tw:cursor-pointer tw:transition-colors tw:text-primary tw:text-sm tw:font-medium'
+              ? 'tw:flex tw:flex-col tw:items-center tw:gap-2 tw:p-4 tw:rounded-xl tw:border tw:border-primary bg-app-gradient tw:cursor-pointer tw:transition-colors tw:text-primary tw:text-sm tw:font-medium'
               : 'tw:flex tw:flex-col tw:items-center tw:gap-2 tw:p-4 tw:rounded-xl tw:border tw:border-gray-200 tw:bg-white tw:cursor-pointer hover:tw:border-primary hover:tw:text-primary tw:transition-colors tw:text-gray-600 tw:text-sm tw:font-medium'
           "
           (click)="onTypeClick(t.type)"

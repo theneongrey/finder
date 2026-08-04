@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { userAuthentication } from './common/services/auth.guard';
+import { devOnly } from './common/services/dev-only.guard';
 import { authRoutes } from './features/auth/auth.routes';
 import { projectRoutes } from './features/project/project.routes';
 
@@ -34,6 +35,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/project/public/public-project.component').then(
         (m) => m.PublicProjectComponent,
+      ),
+  },
+  {
+    canActivate: [devOnly],
+    path: 'ux',
+    loadComponent: () =>
+      import('./features/design-system/design-system.component').then(
+        (m) => m.DesignSystemComponent,
       ),
   },
   {

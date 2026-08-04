@@ -1,5 +1,5 @@
 <div
-  class="tw:bg-white tw:rounded-2xl tw:p-6 tw:shadow-sm tw:border-l-4 tw:border-primary"
+  class="tw:bg-white tw:rounded-2xl tw:p-6 ds-shadow-card tw:border-l-4 tw:border-primary"
 >
   <div class="tw:flex tw:justify-between tw:items-start tw:mb-3">
     <div>
@@ -36,7 +36,7 @@
           "project.votesOverview.of" | translate: { total: totalCount() }
         }}</span>
       </p>
-      <p class="label-sm">{{ "project.votesOverview.rated" | translate }}</p>
+      <p class="ds-body">{{ "project.votesOverview.rated" | translate }}</p>
     </div>
   </div>
 
@@ -44,7 +44,7 @@
   <p-progressBar [value]="progressPercent()" />
 
   <div class="tw:mt-4 tw:flex tw:justify-between tw:items-center">
-    <p class="label-sm">{{ "project.votesOverview.closesIn" | translate }}</p>
+    <p class="ds-body">{{ "project.votesOverview.closesIn" | translate }}</p>
     @if (hasOpenOptions()) {
       <p-button
         [label]="'project.votesOverview.continueVoting' | translate"

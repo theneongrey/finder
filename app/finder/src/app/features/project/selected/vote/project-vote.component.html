@@ -26,7 +26,7 @@
         </p>
       }
       @if (totalCount() > 0) {
-        <p class="label-sm tw:text-gray-500 tw:mt-1">
+        <p class="ds-body tw:text-gray-500 tw:mt-1">
           {{
             "project.vote.votedProgress"
               | translate: { voted: votedCount(), total: totalCount() }
@@ -50,14 +50,14 @@
         >
           @if (poll()?.optionType === OptionType.Rating) {
             <div
-              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center tw:shadow-lg tw:gap-0.5"
+              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center ds-shadow-floating tw:gap-0.5"
             >
               <i class="fa-solid fa-star tw:text-lg"></i>
               <span class="tw:text-xs tw:font-bold tw:leading-none">1</span>
             </div>
           } @else {
             <div
-              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:items-center tw:justify-center tw:shadow-lg"
+              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:items-center tw:justify-center ds-shadow-floating"
             >
               <i class="fa-regular fa-thumbs-down tw:text-2xl"></i>
             </div>
@@ -71,14 +71,14 @@
         >
           @if (poll()?.optionType === OptionType.Rating) {
             <div
-              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-yellow-400 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center tw:shadow-lg tw:gap-0.5"
+              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-yellow-400 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center ds-shadow-floating tw:gap-0.5"
             >
               <i class="fa-solid fa-star tw:text-lg"></i>
               <span class="tw:text-xs tw:font-bold tw:leading-none">5</span>
             </div>
           } @else {
             <div
-              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-green-600 tw:text-white tw:flex tw:items-center tw:justify-center tw:shadow-lg"
+              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-green-600 tw:text-white tw:flex tw:items-center tw:justify-center ds-shadow-floating"
             >
               <i class="fa-regular fa-thumbs-up tw:text-2xl"></i>
             </div>
@@ -88,7 +88,7 @@
         <!-- Main swipe card -->
         <div
           #voteCard
-          class="vote-card tw:w-full tw:h-full tw:bg-white tw:rounded-2xl tw:shadow-md tw:flex tw:flex-col tw:overflow-hidden tw:border tw:border-black/10 tw:cursor-grab tw:select-none"
+          class="vote-card tw:w-full tw:h-full tw:bg-white tw:rounded-2xl ds-shadow-raised tw:flex tw:flex-col tw:overflow-hidden tw:border tw:border-black/10 tw:cursor-grab tw:select-none"
           [style.transform]="cardTransform()"
           [style.transition]="cardTransition()"
           [style.opacity]="cardOpacity()"
@@ -183,7 +183,7 @@
     [class.fading]="hintFading()"
   >
     <div
-      class="tw:bg-black/75 tw:backdrop-blur-sm tw:text-white tw:rounded-2xl tw:px-6 tw:py-3 tw:text-center tw:shadow-xl tw:mx-6 tw:max-w-sm"
+      class="tw:bg-black/75 tw:backdrop-blur-sm tw:text-white tw:rounded-2xl tw:px-6 tw:py-3 tw:text-center ds-shadow-floating tw:mx-6 tw:max-w-sm"
     >
       @if (poll()?.optionType === OptionType.Rating) {
         <p class="tw:text-sm tw:leading-relaxed">

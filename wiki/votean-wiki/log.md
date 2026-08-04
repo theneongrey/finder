@@ -3,6 +3,9 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-08-04 — ingest: design system route
+Pages touched: guides/design-system.md (created), index.md
+
 ---
 
 ## 2026-08-03 — lint: stub pages populated

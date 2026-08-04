@@ -61,3 +61,4 @@ Developer how-to pages.
 - [Local Setup](guides/local-setup.md) — running backend and frontend locally
 - [Testing](guides/testing.md) — unit tests, integration tests, e2e tests
 - [Adding a Feature](guides/adding-a-feature.md) — step-by-step walkthrough
+- [Design System](guides/design-system.md) — live component and token reference at /ux (dev only)

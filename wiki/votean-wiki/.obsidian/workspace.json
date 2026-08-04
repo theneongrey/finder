@@ -11,26 +11,14 @@
             "id": "ce31a12e828a9e57",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "features/polling.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "Neuer Tab"
-            }
-          }
-        ]
-      },
-      {
-        "id": "39c7dc1d628c4c22",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "d989706c3502926f",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph-Ansicht"
+              "title": "polling"
             }
           }
         ]
@@ -198,8 +186,43 @@
       "bases:Neue Base erstellen": false
     }
   },
-  "active": "c5b90a488f3e6ffd",
+  "active": "ce31a12e828a9e57",
   "lastOpenFiles": [
-    "Willkommen.md"
+    "SCHEMA.md.tmp.12064.29fca3fbf323",
+    "api/index.md.tmp.12064.52777e517913",
+    "guides/adding-a-feature.md.tmp.12064.12ef6283998f",
+    "guides/testing.md.tmp.12064.62a1ff0a9200",
+    "guides/local-setup.md.tmp.12064.67decc696d44",
+    "architecture/ci-cd.md.tmp.12064.9ec55d50403e",
+    "architecture/database.md.tmp.12064.c9c48b7658f9",
+    "architecture/frontend.md.tmp.12064.74ac6214f319",
+    "architecture/backend.md.tmp.12064.96810d0a4095",
+    "concepts/permission.md.tmp.12064.79977ed0609d",
+    "concepts/login-token.md.tmp.12064.b9b1aaeb9b20",
+    "features/appointment-polls.md",
+    "features/polling.md",
+    "Appointment Polls.md",
+    "features/public-sharing.md",
+    "guides/adding-a-feature.md",
+    "guides/index.md",
+    "guides/local-setup.md",
+    "guides/testing.md",
+    "index.md",
+    "log.md",
+    "concepts/permission.md",
+    "concepts/login-token.md",
+    "features/index.md",
+    "features/auth.md",
+    "concepts/poll.md",
+    "api/index.md",
+    "architecture/ci-cd.md",
+    "SCHEMA.md",
+    "architecture/database.md",
+    "architecture/frontend.md",
+    "architecture/backend.md",
+    "architecture/index.md",
+    "features/permissions.md",
+    "concepts/user.md",
+    "concepts/project.md"
   ]
 }

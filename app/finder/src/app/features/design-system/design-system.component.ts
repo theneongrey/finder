@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Avatar } from 'primeng/avatar';
-import { AvatarGroup } from 'primeng/avatargroup';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { Divider } from 'primeng/divider';
+import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
+import { HlmBadge } from '@spartan-ng/helm/badge';
+import { HlmSeparator } from '@spartan-ng/helm/separator';
 import { InputOtp } from 'primeng/inputotp';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
@@ -17,7 +17,6 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { Tag } from 'primeng/tag';
 import { Textarea } from 'primeng/textarea';
 import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
 import { AutoResizeTextareaComponent } from '../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
@@ -52,15 +51,14 @@ const mockSharingStore = {
     Tab,
     TabPanels,
     TabPanel,
-    Tag,
-    Avatar,
-    AvatarGroup,
+    HlmBadge,
+    ...HlmAvatarImports,
     Message,
     ProgressBar,
     ...HlmSpinnerImports,
     ...HlmSkeletonImports,
     Panel,
-    Divider,
+    HlmSeparator,
     Popover,
     AddCardComponent,
     AutoResizeTextareaComponent,

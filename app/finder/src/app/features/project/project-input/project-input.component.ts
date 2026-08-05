@@ -7,7 +7,7 @@ import {
   model,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { InputText } from 'primeng/inputtext';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { Button } from 'primeng/button';
 import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
@@ -22,7 +22,7 @@ import { TitleBarComponent } from '../../../common/ui/components/title-bar/title
   templateUrl: './project-input.component.html',
   imports: [
     FormsModule,
-    InputText,
+    HlmInput,
     Button,
     AutoResizeTextareaComponent,
     TranslatePipe,

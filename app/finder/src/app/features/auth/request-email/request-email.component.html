@@ -25,19 +25,14 @@
         >
           {{ 'auth.requestEmail.email' | translate }}
         </label>
-        <p-inputgroup>
-          <p-inputgroup-addon>
-            <i class="fa-regular fa-envelope"></i>
-          </p-inputgroup-addon>
-          <input
-            pInputText
-            id="email"
-            type="email"
-            formControlName="email"
-            placeholder="name@example.com"
-            autofocus
-          />
-        </p-inputgroup>
+        <input
+          hlmInput
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="name@example.com"
+          autofocus
+        />
         @if (errorMessage()) {
           <p-message severity="error">{{ errorMessage() }}</p-message>
         }

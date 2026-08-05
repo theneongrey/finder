@@ -9,14 +9,14 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { Popover } from 'primeng/popover';
 import { ProjectDetailStore } from '../../../_shared/data/project-detail.store';
 
 @Component({
   selector: 'app-vote-comment-button',
   templateUrl: './vote-comment-button.component.html',
-  imports: [Button, Popover, InputText, FormsModule, TranslatePipe],
+  imports: [Button, Popover, HlmInput, FormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteCommentButtonComponent {

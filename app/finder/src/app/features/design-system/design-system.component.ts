@@ -7,7 +7,7 @@ import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { HlmBadge } from '@spartan-ng/helm/badge';
 import { HlmSeparator } from '@spartan-ng/helm/separator';
 import { InputOtp } from 'primeng/inputotp';
-import { InputText } from 'primeng/inputtext';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { Message } from 'primeng/message';
 import { Panel } from 'primeng/panel';
 import { Popover } from 'primeng/popover';
@@ -42,7 +42,7 @@ const mockSharingStore = {
     Button,
     Card,
     InputOtp,
-    InputText,
+    HlmInput,
     HlmTextarea,
     Select,
     SelectButton,

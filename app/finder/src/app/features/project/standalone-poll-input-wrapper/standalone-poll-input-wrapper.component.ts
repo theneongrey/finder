@@ -13,7 +13,7 @@ import { PollInputComponent } from '../_shared/ui/poll-input/poll-input.componen
     PollInputComponent,
   ],
   templateUrl: './standalone-poll-input-wrapper.component.html',
-  host: { class: 'tw:block tw:h-full' },
+  host: { class: 'block h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StandalonePollInputWrapperComponent {

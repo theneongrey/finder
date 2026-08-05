@@ -1,6 +1,6 @@
 @if (!isHidden()) {
   <header
-    class="tw:mx-auto tw:w-full tw:flex tw:h-15 tw:p-2 tw:gap-2 tw:bg-gradient-to-b tw:from-white tw:from-75% tw:to-[#86bba1]/0"
+    class="mx-auto w-full flex h-15 p-2 gap-2 bg-gradient-to-b from-white from-75% to-[#86bba1]/0"
   >
     @if (this.backRoute()) {
       <p-button
@@ -14,30 +14,30 @@
           [isLoading]="title() === undefined"
           skeletonWidth="8rem"
           skeletonHeight="1.5rem"
-          innercss="tw:my-auto"
+          innercss="my-auto"
         >
           <h1
-            class="tw:my-auto tw:text-headline-md tw:font-bold tw:text-primary-dark tw:relative tw:-top-[2px]"
+            class="my-auto text-headline-md font-bold text-primary-dark relative -top-[2px]"
           >
             {{ title() }}
           </h1>
         </app-loading>
       }
     } @else {
-      <a href="/" class="tw:my-auto tw:ml-[5px]">
+      <a href="/" class="my-auto ml-[5px]">
         <img
           alt="logo"
           ngSrc="logo-primary.svg"
           width="98"
           height="26"
-          class="tw:mx-auto tw:mt-auto icon"
+          class="mx-auto mt-auto icon"
         />
       </a>
     }
 
     @if (user()?.isAuthenticated) {
       <app-user-avatar
-        class="tw:my-auto tw:mr-0 tw:ml-auto"
+        class="my-auto mr-0 ml-auto"
         [user]="user()!"
         (click)="menu.toggle($event)"
       />

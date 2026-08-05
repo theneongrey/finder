@@ -1,25 +1,25 @@
 <div
-  class="tw:flex-1 tw:bg-surface-100 tw:flex tw:flex-1 tw:items-center tw:justify-center tw:overflow-hidden"
+  class="flex-1 bg-surface-100 flex flex-1 items-center justify-center overflow-hidden"
 >
   <img
     [src]="imageUrl()"
     alt="preview-image"
-    class="tw:w-full tw:h-full tw:object-cover"
+    class="w-full h-full object-cover"
   />
 </div>
 
-<div class="tw:p-6 tw:flex tw:flex-col tw:gap-1">
-  <p class="tw:text-base tw:font-semibold tw:text-surface-900 tw:leading-snug">
+<div class="p-6 flex flex-col gap-1">
+  <p class="text-base font-semibold text-surface-900 leading-snug">
     {{ text() }}
   </p>
   @if (description()) {
-    <p class="tw:text-sm tw:text-surface-500">
+    <p class="text-sm text-surface-500">
       {{ description() }}
     </p>
   }
   @if (link()) {
     <p-button
-      class="tw:mx-auto"
+      class="mx-auto"
       [label]="'project.vote.openLink' | translate"
       icon="fa-solid fa-arrow-up-right-from-square"
       size="small"

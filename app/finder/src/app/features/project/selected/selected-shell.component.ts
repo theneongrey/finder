@@ -14,7 +14,7 @@ import { ProjectDetailStore } from '../_shared/data/project-detail.store';
   selector: 'app-project-selected-shell',
   imports: [TitleBarComponent, RouterOutlet, MaxHeightMinusHeaderDirective],
   templateUrl: './selected-shell.component.html',
-  host: { class: 'tw:block tw:h-full' },
+  host: { class: 'block h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectSelectedShellComponent {

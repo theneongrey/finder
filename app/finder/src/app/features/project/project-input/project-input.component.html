@@ -1,26 +1,26 @@
-<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
-  <app-title-bar class="tw:sticky tw:top-0 tw:z-10" />
+<div class="flex flex-col h-full w-full">
+  <app-title-bar class="sticky top-0 z-10" />
   <main
     fMaxHeightMinusHeader
-    class="tw:flex-grow tw:max-w-5xl tw:mx-auto tw:w-full tw:h-full tw:rounded-t-2xl"
+    class="flex-grow max-w-5xl mx-auto w-full h-full rounded-t-2xl"
   >
-    <form class="tw:mx-4 tw:flex tw:flex-col tw:gap-2 tw:h-full">
-      <p class="tw:block tw:mb-2">
+    <form class="mx-4 flex flex-col gap-2 h-full">
+      <p class="block mb-2">
         {{ "project.input.description" | translate }}
       </p>
-      <div class="tw:mb-5 tw:mt-5">
+      <div class="mb-5 mt-5">
         <label for="name">{{ "project.input.name" | translate }}</label>
         <input
           pInputText
           id="name"
           name="name"
-          class="tw:w-full"
+          class="w-full"
           autocomplete="off"
           [placeholder]="'project.input.namePlaceholder' | translate"
           [(ngModel)]="projectName"
         />
       </div>
-      <div class="tw:mb-5 tw:mt-5">
+      <div class="mb-5 mt-5">
         <label for="description">{{
           "project.input.descriptionLabel" | translate
         }}</label>
@@ -32,9 +32,9 @@
           [(ngModel)]="projectDescription"
         />
       </div>
-      <div class="tw:flex tw:gap-1 tw:mt-auto tw:mb-4 p-fluid">
+      <div class="flex gap-1 mt-auto mb-4 p-fluid">
         <p-button
-          class="tw:flex-1"
+          class="flex-1"
           [label]="
             mode() === 'add'
               ? ('project.input.create' | translate)

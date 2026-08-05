@@ -119,12 +119,12 @@ export class OptionCardDateComponent {
 
   voteColorClass(choice: string | null): string {
     if (choice === '1') {
-      return 'tw:text-green-600';
+      return 'text-green-600';
     }
     if (choice === '2') {
-      return 'tw:text-red-600';
+      return 'text-red-600';
     }
-    return 'tw:text-gray-400';
+    return 'text-gray-400';
   }
 
   votesCountLabel(): string {

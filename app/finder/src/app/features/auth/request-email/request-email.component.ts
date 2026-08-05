@@ -38,7 +38,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
-      'tw:flex tw:items-center tw:justify-center tw:flex-1 tw:w-full tw:px-4 tw:py-8',
+      'flex items-center justify-center flex-1 w-full px-4 py-8',
   },
 })
 export class RequestEmailComponent {

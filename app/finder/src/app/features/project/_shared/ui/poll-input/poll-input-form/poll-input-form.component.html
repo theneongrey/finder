@@ -1,16 +1,16 @@
-<div class="tw:pb-28 tw:flex tw:flex-col tw:gap-3 tw:mx-4">
-  <div class="tw:flex tw:flex-col tw:gap-1">
-    <label class="tw:text-sm tw:font-semibold tw:px-1" for="question">
+<div class="pb-28 flex flex-col gap-3 mx-4">
+  <div class="flex flex-col gap-1">
+    <label class="text-sm font-semibold px-1" for="question">
       {{ "project.pollInput.yesNo.question" | translate }}
     </label>
     <div
-      class="tw:bg-gray-50 tw:rounded-xl tw:border tw:border-transparent tw:transition-all tw:duration-300"
+      class="bg-gray-50 rounded-xl border border-transparent transition-all duration-300"
     >
       <input
         pInputText
         id="question"
         name="question"
-        class="tw:w-full tw:bg-transparent"
+        class="w-full bg-transparent"
         autocomplete="off"
         [placeholder]="
           'project.pollInput.yesNo.questionPlaceholder' | translate
@@ -38,7 +38,7 @@
   @if (!showDescription()) {
     <button
       type="button"
-      class="tw:flex tw:items-center tw:gap-1 tw:text-sm tw:text-gray-400 tw:cursor-pointer hover:tw:text-primary tw:transition-colors tw:bg-transparent tw:border-0 tw:p-0"
+      class="flex items-center gap-1 text-sm text-gray-400 cursor-pointer hover:text-primary transition-colors bg-transparent border-0 p-0"
       (click)="toggleDescription()"
     >
       <i class="fa-solid fa-plus" style="font-size: 11px"></i>
@@ -69,10 +69,10 @@
 </div>
 
 <div
-  class="tw:fixed tw:bottom-0 tw:left-0 tw:w-full tw:z-50 tw:bg-white/80 tw:backdrop-blur-md tw:p-4 tw:flex tw:justify-center p-fluid"
+  class="fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md p-4 flex justify-center p-fluid"
 >
   <p-button
-    class="tw:w-full tw:max-w-md"
+    class="w-full max-w-md"
     [label]="
       mode() !== 'edit'
         ? ('project.pollInput.createPoll' | translate)

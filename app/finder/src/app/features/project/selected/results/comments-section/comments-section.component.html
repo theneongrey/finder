@@ -3,21 +3,21 @@
     {{ "project.votesOverview.comments" | translate }}
   </h3>
   <div
-    class="tw:bg-white tw:rounded-2xl tw:p-4 ds-shadow-card tw:border tw:border-gray-100 tw:mt-2"
+    class="bg-white rounded-2xl p-4 ds-shadow-card border border-gray-100 mt-2"
   >
-    <div class="tw:flex tw:flex-col tw:gap-3 tw:mb-4">
+    <div class="flex flex-col gap-3 mb-4">
       @for (comment of comments(); track comment.id) {
-        <div class="tw:flex tw:gap-2">
+        <div class="flex gap-2">
           <app-user-avatar [user]="authorAsUser(comment.author)" />
           <div
-            class="tw:bg-gray-50 tw:p-3 tw:rounded-2xl tw:rounded-tl-none tw:flex-1"
+            class="bg-gray-50 p-3 rounded-2xl rounded-tl-none flex-1"
           >
-            <p class="tw:text-sm tw:font-bold tw:text-gray-900">
+            <p class="text-sm font-bold text-gray-900">
               {{ comment.author.name }}
             </p>
             @if (comment.quote) {
               <blockquote
-                class="tw:text-xs tw:text-gray-500 tw:italic tw:mb-1 tw:border-l-2 tw:border-gray-300 tw:p-1 tw:pl-2 tw:bg-black/3"
+                class="text-xs text-gray-500 italic mb-1 border-l-2 border-gray-300 p-1 pl-2 bg-black/3"
               >
                 @let tsMs = quoteAsDate(comment.quote);
                 @if (tsMs !== null) {
@@ -27,9 +27,9 @@
                 }
               </blockquote>
             }
-            <p class="tw:text-sm tw:text-gray-600">{{ comment.content }}</p>
+            <p class="text-sm text-gray-600">{{ comment.content }}</p>
             <span
-              class="tw:text-[10px] tw:text-gray-400 tw:mt-1 tw:uppercase tw:tracking-wider tw:font-semibold tw:block"
+              class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-semibold block"
               >{{ comment.created | timeSince }}</span
             >
           </div>
@@ -37,16 +37,16 @@
       }
     </div>
 
-    <div class="tw:flex tw:items-end tw:gap-2">
+    <div class="flex items-end gap-2">
       <app-auto-resize-textarea
-        class="tw:flex-1"
+        class="flex-1"
         [(ngModel)]="newCommentText"
         [placeholder]="'project.votesOverview.newComment' | translate"
         (keydown.enter)="onEnterKey($event)"
       />
       <p-button
         icon="fa-regular fa-paper-plane"
-        class="tw:mb-[4px]"
+        class="mb-[4px]"
         (click)="submitComment()"
       />
     </div>

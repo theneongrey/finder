@@ -1,10 +1,10 @@
 <p-card>
-  <div class="tw:flex tw:flex-col tw:gap-3">
-    <div class="tw:flex tw:items-start tw:gap-2">
-      <div class="tw:flex tw:flex-col tw:gap-2 tw:flex-1">
-        <div class="tw:flex tw:gap-2">
-          <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
-            <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
+  <div class="flex flex-col gap-3">
+    <div class="flex items-start gap-2">
+      <div class="flex flex-col gap-2 flex-1">
+        <div class="flex gap-2">
+          <div class="flex flex-col gap-1 flex-1">
+            <label class="text-xs font-semibold text-gray-600">
               {{ "project.pollInput.date.startDate" | translate }}
             </label>
             <p-datepicker
@@ -13,21 +13,21 @@
               [firstDayOfWeek]="1"
               [dateFormat]="userStore.primengDateFormat()"
               appendTo="body"
-              styleClass="tw:w-full"
+              styleClass="w-full"
               [(ngModel)]="option().date"
               [name]="'date-' + index()"
             />
           </div>
 
           @if (showTime()) {
-            <div class="tw:flex tw:flex-col tw:gap-1 tw:flex-1">
-              <div class="tw:flex tw:items-center tw:justify-between">
-                <label class="tw:text-xs tw:font-semibold tw:text-gray-600">
+            <div class="flex flex-col gap-1 flex-1">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-semibold text-gray-600">
                   {{ "project.pollInput.date.startTime" | translate }}
                 </label>
                 <button
                   type="button"
-                  class="tw:text-xs tw:text-gray-400 hover:tw:text-red-500 tw:transition-colors tw:bg-transparent tw:border-0 tw:cursor-pointer tw:p-0"
+                  class="text-xs text-gray-400 hover:text-red-500 transition-colors bg-transparent border-0 cursor-pointer p-0"
                   (click)="removeTime()"
                 >
                   <i class="fa-solid fa-xmark"></i>
@@ -39,7 +39,7 @@
                 [showIcon]="true"
                 [stepMinute]="15"
                 appendTo="body"
-                styleClass="tw:w-full"
+                styleClass="w-full"
                 [(ngModel)]="option().startTime"
                 [name]="'date-time-' + index()"
               />
@@ -50,7 +50,7 @@
         @if (!showTime()) {
           <button
             type="button"
-            class="tw:flex tw:items-center tw:gap-1 tw:text-sm tw:text-gray-400 tw:cursor-pointer hover:tw:text-primary tw:transition-colors tw:bg-transparent tw:border-0 tw:p-0 tw:self-start"
+            class="flex items-center gap-1 text-sm text-gray-400 cursor-pointer hover:text-primary transition-colors bg-transparent border-0 p-0 self-start"
             (click)="addTime()"
           >
             <i class="fa-solid fa-plus" style="font-size: 11px"></i>

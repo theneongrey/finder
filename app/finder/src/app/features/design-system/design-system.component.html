@@ -1,13 +1,13 @@
-<div class="tw:min-h-screen bg-app-gradient">
+<div class="min-h-screen bg-app-gradient">
   <!-- Header -->
   <header
-    class="tw:sticky tw:top-0 tw:z-10 tw:bg-white tw:border-b tw:border-gray-200 tw:px-8 tw:py-3 tw:flex tw:items-center tw:gap-8 tw:flex-wrap"
+    class="sticky top-0 z-10 bg-white border-b border-gray-200 px-8 py-3 flex items-center gap-8 flex-wrap"
   >
-    <div class="tw:flex tw:items-baseline tw:gap-3">
+    <div class="flex items-baseline gap-3">
       <h2 style="margin: 0; color: var(--color-primary)">Design System</h2>
       <span class="ds-label">Votean App</span>
     </div>
-    <nav class="tw:flex tw:gap-4 tw:flex-wrap">
+    <nav class="flex gap-4 flex-wrap">
       @for (
         link of [
           ["colors", "Colors"],
@@ -30,7 +30,7 @@
         <a
           [href]="'#' + link[0]"
           style="color: var(--color-secondary); text-decoration: none"
-          class="tw:hover:text-primary tw:transition-colors"
+          class="hover:text-primary transition-colors"
           >{{ link[1] }}</a
         >
       }
@@ -39,28 +39,28 @@
 
   <!-- Main content -->
   <main
-    class="tw:max-w-5xl tw:mx-auto tw:px-8 tw:py-12 tw:flex tw:flex-col tw:gap-16"
+    class="max-w-5xl mx-auto px-8 py-12 flex flex-col gap-16"
   >
     <!-- ── COLORS ────────────────────────────────────────────── -->
     <section id="colors">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Colors</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           CSS custom properties defined in styles.css @theme block.
         </p>
       </div>
 
-      <div class="tw:mb-8">
-        <p class="ds-label tw:mb-3">Brand Tokens</p>
-        <div class="tw:flex tw:flex-wrap tw:gap-3">
+      <div class="mb-8">
+        <p class="ds-label mb-3">Brand Tokens</p>
+        <div class="flex flex-wrap gap-3">
           @for (color of colors; track color.token) {
-            <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+            <div class="flex flex-col items-center gap-2">
               <div
-                class="tw:w-16 tw:h-16 tw:rounded-xl ds-shadow-raised tw:border tw:border-white/30"
+                class="w-16 h-16 rounded-xl ds-shadow-raised border border-white/30"
                 [style.background]="color.hex"
               ></div>
-              <div class="tw:text-center">
-                <p class="ds-label tw:normal-case tw:tracking-normal">
+              <div class="text-center">
+                <p class="ds-label normal-case tracking-normal">
                   {{ color.label }}
                 </p>
                 <p class="ds-mono">{{ color.hex }}</p>
@@ -72,14 +72,14 @@
       </div>
 
       <div>
-        <p class="ds-label tw:mb-3">
+        <p class="ds-label mb-3">
           PrimeNG Semantic Primary Scale (Aura preset)
         </p>
-        <div class="tw:flex tw:flex-wrap tw:gap-2">
+        <div class="flex flex-wrap gap-2">
           @for (step of semanticScale; track step.step) {
-            <div class="tw:flex tw:flex-col tw:items-center tw:gap-1">
+            <div class="flex flex-col items-center gap-1">
               <div
-                class="tw:w-10 tw:h-10 tw:rounded-lg ds-shadow-card"
+                class="w-10 h-10 rounded-lg ds-shadow-card"
                 [style.background]="step.hex"
                 [style.border]="step.step === '950' ? '1px solid #ddd' : 'none'"
               ></div>
@@ -94,67 +94,67 @@
 
     <!-- ── TYPOGRAPHY ─────────────────────────────────────────── -->
     <section id="typography">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Typography</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           Font: <strong>Plus Jakarta Sans</strong> — weights 300, 400, 500, 700.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-6">
+      <div class="flex flex-col gap-6">
         <div
-          class="tw:flex tw:items-baseline tw:gap-6 tw:border-b tw:border-gray-100 tw:pb-4"
+          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
         >
-          <span class="ds-label tw:w-32 tw:shrink-0">h1</span>
+          <span class="ds-label w-32 shrink-0">h1</span>
           <h1 style="margin: 0">Page Title</h1>
           <span class="ds-mono">20px / lh 1.4</span>
         </div>
         <div
-          class="tw:flex tw:items-baseline tw:gap-6 tw:border-b tw:border-gray-100 tw:pb-4"
+          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
         >
-          <span class="ds-label tw:w-32 tw:shrink-0">h2</span>
+          <span class="ds-label w-32 shrink-0">h2</span>
           <h2 style="margin: 0">Section Heading</h2>
           <span class="ds-mono">24px / lh 1.3 / bold</span>
         </div>
         <div
-          class="tw:flex tw:items-baseline tw:gap-6 tw:border-b tw:border-gray-100 tw:pb-4"
+          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
         >
-          <span class="ds-label tw:w-32 tw:shrink-0">h3</span>
+          <span class="ds-label w-32 shrink-0">h3</span>
           <h3 style="margin: 0">Sub-heading</h3>
           <span class="ds-mono">16px / lh 20px / bold</span>
         </div>
         <div
-          class="tw:flex tw:items-baseline tw:gap-6 tw:border-b tw:border-gray-100 tw:pb-4"
+          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
         >
-          <span class="ds-label tw:w-32 tw:shrink-0">.ds-body</span>
+          <span class="ds-label w-32 shrink-0">.ds-body</span>
           <span class="ds-body"
             >The quick brown fox jumps over the lazy dog.</span
           >
           <span class="ds-mono">14px / lh 1.2</span>
         </div>
         <div
-          class="tw:flex tw:items-baseline tw:gap-6 tw:border-b tw:border-gray-100 tw:pb-4"
+          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
         >
-          <span class="ds-label tw:w-32 tw:shrink-0">.ds-label</span>
+          <span class="ds-label w-32 shrink-0">.ds-label</span>
           <span class="ds-label">Section Label</span>
           <span class="ds-mono">12px / semibold / uppercase / tracking</span>
         </div>
         <div
-          class="tw:flex tw:items-baseline tw:gap-6 tw:border-b tw:border-gray-100 tw:pb-4"
+          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
         >
-          <span class="ds-label tw:w-32 tw:shrink-0">.ds-small</span>
+          <span class="ds-label w-32 shrink-0">.ds-small</span>
           <span class="ds-small">Normal · Large · XLarge · or</span>
           <span class="ds-mono">11px / #999</span>
         </div>
         <div
-          class="tw:flex tw:items-baseline tw:gap-6 tw:border-b tw:border-gray-100 tw:pb-4"
+          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
         >
-          <span class="ds-label tw:w-32 tw:shrink-0">.ds-mono</span>
+          <span class="ds-label w-32 shrink-0">.ds-mono</span>
           <span class="ds-mono">#4797bf · 40px / 8px · 20px / lh 1.4</span>
           <span class="ds-mono">11px / mono / #999</span>
         </div>
-        <div class="tw:flex tw:items-baseline tw:gap-6 tw:pb-4">
-          <span class="ds-label tw:w-32 tw:shrink-0">.ds-mono-xs</span>
+        <div class="flex items-baseline gap-6 pb-4">
+          <span class="ds-label w-32 shrink-0">.ds-mono-xs</span>
           <span class="ds-mono-xs">--color-primary · 950</span>
           <span class="ds-mono">10px / mono / #aaa</span>
         </div>
@@ -165,28 +165,28 @@
 
     <!-- ── SPACING & TOKENS ───────────────────────────────────── -->
     <section id="spacing">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Spacing &amp; Tokens</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           Key sizing constants derived from styles.css and component patterns.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-8">
+      <div class="flex flex-col gap-8">
         <div>
-          <p class="ds-label tw:mb-3">Border Radius — 12px</p>
-          <div class="tw:flex tw:gap-4 tw:flex-wrap tw:items-end">
+          <p class="ds-label mb-3">Border Radius — 12px</p>
+          <div class="flex gap-4 flex-wrap items-end">
             @for (
               item of [
                 { label: "Buttons / Inputs / Panels", radius: "12px" },
-                { label: "tw:rounded-lg (~8px)", radius: "8px" },
-                { label: "tw:rounded-full", radius: "999px" },
+                { label: "rounded-lg (~8px)", radius: "8px" },
+                { label: "rounded-full", radius: "999px" },
               ];
               track item.label
             ) {
-              <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+              <div class="flex flex-col items-center gap-2">
                 <div
-                  class="tw:w-16 tw:h-10 tw:bg-primary/20"
+                  class="w-16 h-10 bg-primary/20"
                   [style.border-radius]="item.radius"
                   style="border: 2px solid var(--color-primary)"
                 ></div>
@@ -197,25 +197,25 @@
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Gap Scale (×4px base)</p>
-          <div class="tw:flex tw:items-end tw:gap-6 tw:flex-wrap">
+          <p class="ds-label mb-3">Gap Scale (×4px base)</p>
+          <div class="flex items-end gap-6 flex-wrap">
             @for (
               item of [
-                { label: "gap-2", px: "8px", tw: 8 },
-                { label: "gap-3", px: "12px", tw: 12 },
-                { label: "gap-4", px: "16px", tw: 16 },
-                { label: "gap-6", px: "24px", tw: 24 },
+                { label: "gap-2", px: "8px", size: 8 },
+                { label: "gap-3", px: "12px", size: 12 },
+                { label: "gap-4", px: "16px", size: 16 },
+                { label: "gap-6", px: "24px", size: 24 },
               ];
               track item.label
             ) {
-              <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+              <div class="flex flex-col items-center gap-2">
                 <div
-                  class="tw:bg-primary/30 tw:rounded"
-                  [style.width.px]="item.tw"
-                  [style.height.px]="item.tw"
+                  class="bg-primary/30 rounded"
+                  [style.width.px]="item.size"
+                  [style.height.px]="item.size"
                 ></div>
-                <div class="tw:text-center">
-                  <p class="ds-mono tw:font-semibold">{{ item.px }}</p>
+                <div class="text-center">
+                  <p class="ds-mono font-semibold">{{ item.px }}</p>
                   <p class="ds-mono-xs">{{ item.label }}</p>
                 </div>
               </div>
@@ -224,29 +224,29 @@
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Button Padding</p>
-          <div class="tw:flex tw:flex-wrap tw:gap-4">
-            <div class="tw:flex tw:flex-col tw:gap-1">
+          <p class="ds-label mb-3">Button Padding</p>
+          <div class="flex flex-wrap gap-4">
+            <div class="flex flex-col gap-1">
               <p-button label="Default" />
-              <span class="ds-mono tw:text-center">40px / 8px</span>
+              <span class="ds-mono text-center">40px / 8px</span>
             </div>
-            <div class="tw:flex tw:flex-col tw:gap-1">
+            <div class="flex flex-col gap-1">
               <p-button label="Small" class="small" />
-              <span class="ds-mono tw:text-center">12px / 2px</span>
+              <span class="ds-mono text-center">12px / 2px</span>
             </div>
-            <div class="p-condensed tw:flex tw:flex-col tw:gap-1">
+            <div class="p-condensed flex flex-col gap-1">
               <p-button label="Condensed" />
-              <span class="ds-mono tw:text-center">4px</span>
+              <span class="ds-mono text-center">4px</span>
             </div>
           </div>
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Disabled Opacity — 0.4</p>
-          <div class="tw:flex tw:gap-4 tw:items-center">
+          <p class="ds-label mb-3">Disabled Opacity — 0.4</p>
+          <div class="flex gap-4 items-center">
             <p-button label="Enabled" />
             <p-button label="Disabled" [disabled]="true" />
-            <span class="ds-body tw:text-gray-500"
+            <span class="ds-body text-gray-500"
               >--p-disabled-opacity: 0.4</span
             >
           </div>
@@ -258,25 +258,25 @@
 
     <!-- ── BUTTONS ────────────────────────────────────────────── -->
     <section id="buttons">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Buttons</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           PrimeNG Button — border-radius 12px, padding 40/8px.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-6">
+      <div class="flex flex-col gap-6">
         <div>
-          <p class="ds-label tw:mb-3">Filled</p>
-          <div class="tw:flex tw:flex-wrap tw:gap-3">
+          <p class="ds-label mb-3">Filled</p>
+          <div class="flex flex-wrap gap-3">
             @for (s of buttonSeverities; track s.severity) {
               <p-button [label]="s.label" [severity]="s.severity" />
             }
           </div>
         </div>
         <div>
-          <p class="ds-label tw:mb-3">Outlined</p>
-          <div class="tw:flex tw:flex-wrap tw:gap-3">
+          <p class="ds-label mb-3">Outlined</p>
+          <div class="flex flex-wrap gap-3">
             @for (s of buttonSeverities; track s.severity) {
               <p-button
                 [label]="s.label"
@@ -287,8 +287,8 @@
           </div>
         </div>
         <div>
-          <p class="ds-label tw:mb-3">Text</p>
-          <div class="tw:flex tw:flex-wrap tw:gap-3">
+          <p class="ds-label mb-3">Text</p>
+          <div class="flex flex-wrap gap-3">
             @for (s of buttonSeverities; track s.severity) {
               <p-button
                 [label]="s.label"
@@ -299,8 +299,8 @@
           </div>
         </div>
         <div>
-          <p class="ds-label tw:mb-3">With Icons</p>
-          <div class="tw:flex tw:flex-wrap tw:gap-3">
+          <p class="ds-label mb-3">With Icons</p>
+          <div class="flex flex-wrap gap-3">
             <p-button label="Add item" icon="pi pi-plus" />
             <p-button label="Delete" icon="pi pi-trash" severity="danger" />
             <p-button icon="pi pi-search" [rounded]="true" variant="outlined" />
@@ -308,8 +308,8 @@
           </div>
         </div>
         <div>
-          <p class="ds-label tw:mb-3">Sizes</p>
-          <div class="tw:flex tw:items-center tw:flex-wrap tw:gap-3">
+          <p class="ds-label mb-3">Sizes</p>
+          <div class="flex items-center flex-wrap gap-3">
             <p-button label="Default" />
             <p-button label="Small" class="small" />
             <div class="p-condensed"><p-button label="Condensed" /></div>
@@ -318,8 +318,8 @@
           </div>
         </div>
         <div>
-          <p class="ds-label tw:mb-3">Full Width (p-fluid)</p>
-          <div class="p-fluid tw:max-w-xs">
+          <p class="ds-label mb-3">Full Width (p-fluid)</p>
+          <div class="p-fluid max-w-xs">
             <p-button label="Full Width Button" />
           </div>
         </div>
@@ -330,14 +330,14 @@
 
     <!-- ── TAGS ──────────────────────────────────────────────── -->
     <section id="tags">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Tags</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           PrimeNG Tag — default background #86bba133 (mint, semi-transparent).
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-wrap tw:gap-3 tw:items-center">
+      <div class="flex flex-wrap gap-3 items-center">
         <p-tag value="Default" />
         <p-tag value="Secondary" severity="secondary" />
         <p-tag value="Success" severity="success" />
@@ -354,42 +354,42 @@
 
     <!-- ── FORMS ─────────────────────────────────────────────── -->
     <section id="forms">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Forms</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           All inputs use border-radius 12px (--p-form-field-border-radius).
         </p>
       </div>
 
-      <div class="tw:grid tw:gap-8" style="grid-template-columns: 1fr 1fr">
-        <div class="tw:flex tw:flex-col tw:gap-4">
+      <div class="grid gap-8" style="grid-template-columns: 1fr 1fr">
+        <div class="flex flex-col gap-4">
           <div>
-            <p class="ds-label tw:mb-2">InputText</p>
+            <p class="ds-label mb-2">InputText</p>
             <input
               pInputText
               [(ngModel)]="inputText"
               placeholder="Type something…"
-              class="tw:w-full"
+              class="w-full"
             />
           </div>
 
           <div>
-            <p class="ds-label tw:mb-2">InputText — invalid state</p>
-            <input pInputText value="wrong value" class="invalid tw:w-full" />
+            <p class="ds-label mb-2">InputText — invalid state</p>
+            <input pInputText value="wrong value" class="invalid w-full" />
           </div>
 
           <div>
-            <p class="ds-label tw:mb-2">InputText — disabled</p>
+            <p class="ds-label mb-2">InputText — disabled</p>
             <input
               pInputText
               value="Readonly value"
               [disabled]="true"
-              class="tw:w-full"
+              class="w-full"
             />
           </div>
 
           <div>
-            <p class="ds-label tw:mb-2">InputOtp</p>
+            <p class="ds-label mb-2">InputOtp</p>
             <p-inputOtp
               [(ngModel)]="otpValue"
               [length]="6"
@@ -398,21 +398,21 @@
           </div>
         </div>
 
-        <div class="tw:flex tw:flex-col tw:gap-4">
+        <div class="flex flex-col gap-4">
           <div>
-            <p class="ds-label tw:mb-2">Select (Dropdown)</p>
+            <p class="ds-label mb-2">Select (Dropdown)</p>
             <p-select
               [options]="dropdownOptions"
               [(ngModel)]="selectedDropdown"
               optionLabel="label"
               optionValue="value"
               placeholder="Choose an option"
-              class="tw:w-full"
+              class="w-full"
             />
           </div>
 
           <div>
-            <p class="ds-label tw:mb-2">SelectButton (Toggle Group)</p>
+            <p class="ds-label mb-2">SelectButton (Toggle Group)</p>
             <p-selectbutton
               [options]="selectOptions"
               [(ngModel)]="selectButtonValue"
@@ -422,24 +422,24 @@
           </div>
 
           <div>
-            <p class="ds-label tw:mb-2">Textarea</p>
+            <p class="ds-label mb-2">Textarea</p>
             <textarea
               pTextarea
               [(ngModel)]="textareaValue"
               placeholder="Write something…"
               rows="3"
-              class="tw:w-full tw:resize-none"
+              class="w-full resize-none"
             ></textarea>
           </div>
 
           <div>
-            <p class="ds-label tw:mb-2">Auto-resize Textarea</p>
+            <p class="ds-label mb-2">Auto-resize Textarea</p>
             <app-auto-resize-textarea
               [(ngModel)]="autoResizeValue"
               placeholder="Type to see it grow…"
-              class="tw:w-full"
+              class="w-full"
             />
-            <p class="ds-body tw:text-gray-400 tw:mt-1">
+            <p class="ds-body text-gray-400 mt-1">
               Grows with content, animated. Max-height: 300px (configurable).
             </p>
           </div>
@@ -451,26 +451,26 @@
 
     <!-- ── CARDS ──────────────────────────────────────────────── -->
     <section id="cards">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Cards</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           PrimeNG Card and the custom AddCard component.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-wrap tw:gap-4 tw:items-start">
-        <p-card class="tw:w-64">
+      <div class="flex flex-wrap gap-4 items-start">
+        <p-card class="w-64">
           <ng-template #header>
-            <div class="tw:px-4 tw:pt-4">
+            <div class="px-4 pt-4">
               <h3>Card Title</h3>
             </div>
           </ng-template>
-          <p class="ds-body tw:text-gray-500">
+          <p class="ds-body text-gray-500">
             Card body content. Used throughout the app as a container for
             grouped information.
           </p>
           <ng-template #footer>
-            <div class="tw:flex tw:gap-2">
+            <div class="flex gap-2">
               <p-button label="Action" class="small" />
               <p-button
                 label="Cancel"
@@ -486,7 +486,7 @@
           cto="Add New Item"
           description="Create a new entry in the project"
           icon="fa-plus"
-          class="tw:w-64"
+          class="w-64"
         />
       </div>
     </section>
@@ -495,9 +495,9 @@
 
     <!-- ── NAVIGATION ─────────────────────────────────────────── -->
     <section id="navigation">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Navigation</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           PrimeNG Tabs — transparent background, composable structure.
         </p>
       </div>
@@ -510,17 +510,17 @@
         </p-tablist>
         <p-tabpanels>
           <p-tabpanel value="overview">
-            <p class="ds-body tw:text-gray-500">
+            <p class="ds-body text-gray-500">
               Overview tab content — the default visible panel.
             </p>
           </p-tabpanel>
           <p-tabpanel value="details">
-            <p class="ds-body tw:text-gray-500">
+            <p class="ds-body text-gray-500">
               Details tab content — shown when Details is selected.
             </p>
           </p-tabpanel>
           <p-tabpanel value="settings">
-            <p class="ds-body tw:text-gray-500">
+            <p class="ds-body text-gray-500">
               Settings tab content — shown when Settings is selected.
             </p>
           </p-tabpanel>
@@ -532,17 +532,17 @@
 
     <!-- ── FEEDBACK ───────────────────────────────────────────── -->
     <section id="feedback">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Feedback</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           Messages, progress indicators, and loading states.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-6">
+      <div class="flex flex-col gap-6">
         <div>
-          <p class="ds-label tw:mb-3">Messages</p>
-          <div class="tw:flex tw:flex-col tw:gap-2">
+          <p class="ds-label mb-3">Messages</p>
+          <div class="flex flex-col gap-2">
             <p-message severity="success"
               >Operation completed successfully.</p-message
             >
@@ -559,8 +559,8 @@
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Progress Bar</p>
-          <div class="tw:flex tw:flex-col tw:gap-2 tw:max-w-sm">
+          <p class="ds-label mb-3">Progress Bar</p>
+          <div class="flex flex-col gap-2 max-w-sm">
             <p-progressbar [value]="30" />
             <p-progressbar [value]="65" />
             <p-progressbar mode="indeterminate" style="height: 6px" />
@@ -568,17 +568,17 @@
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Progress Spinner</p>
-          <hlm-spinner class="tw:text-[50px]" />
+          <p class="ds-label mb-3">Progress Spinner</p>
+          <hlm-spinner class="text-[50px]" />
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Skeleton Loader</p>
-          <div class="tw:flex tw:flex-col tw:gap-2 tw:max-w-sm">
-            <hlm-skeleton style="width: 100%; height: 16px" class="tw:rounded-lg" />
-            <hlm-skeleton style="width: 80%; height: 16px" class="tw:rounded-lg" />
-            <hlm-skeleton style="width: 60%; height: 16px" class="tw:rounded-lg" />
-            <hlm-skeleton style="width: 100%; height: 64px" class="tw:rounded-xl" />
+          <p class="ds-label mb-3">Skeleton Loader</p>
+          <div class="flex flex-col gap-2 max-w-sm">
+            <hlm-skeleton style="width: 100%; height: 16px" class="rounded-lg" />
+            <hlm-skeleton style="width: 80%; height: 16px" class="rounded-lg" />
+            <hlm-skeleton style="width: 60%; height: 16px" class="rounded-lg" />
+            <hlm-skeleton style="width: 100%; height: 64px" class="rounded-xl" />
           </div>
         </div>
       </div>
@@ -588,17 +588,17 @@
 
     <!-- ── OVERLAYS ───────────────────────────────────────────── -->
     <section id="overlays">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Overlays</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           ShareDrawer (the only Drawer use case), Panel (expandable), and
           Popover.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-6">
+      <div class="flex flex-col gap-6">
         <div>
-          <p class="ds-label tw:mb-3">ShareDrawer</p>
+          <p class="ds-label mb-3">ShareDrawer</p>
           <p-button
             label="Open Share Drawer"
             icon="fa-solid fa-share-nodes"
@@ -614,10 +614,10 @@
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Panel (expandable)</p>
-          <div class="tw:max-w-md">
+          <p class="ds-label mb-3">Panel (expandable)</p>
+          <div class="max-w-md">
             <p-panel header="Expandable Panel" [toggleable]="true">
-              <p class="ds-body tw:text-gray-500">
+              <p class="ds-body text-gray-500">
                 Collapsible content area. Used for optional sections and grouped
                 controls.
               </p>
@@ -626,7 +626,7 @@
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Popover</p>
+          <p class="ds-label mb-3">Popover</p>
           <p-button
             label="Show Popover"
             icon="pi pi-info-circle"
@@ -634,9 +634,9 @@
             (click)="op.toggle($event)"
           />
           <p-popover #op>
-            <div class="tw:p-3 tw:flex tw:flex-col tw:gap-2 tw:max-w-xs">
+            <div class="p-3 flex flex-col gap-2 max-w-xs">
               <h3 style="margin: 0">Popover Title</h3>
-              <p class="ds-body tw:text-gray-500">
+              <p class="ds-body text-gray-500">
                 Contextual overlay anchored to its trigger. Used for inline help
                 and extra actions.
               </p>
@@ -650,30 +650,30 @@
 
     <!-- ── DATA DISPLAY ───────────────────────────────────────── -->
     <section id="data-display">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Data Display</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           Avatar, AvatarGroup, and Divider.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-6">
+      <div class="flex flex-col gap-6">
         <div>
-          <p class="ds-label tw:mb-3">Avatar — Sizes</p>
-          <div class="tw:flex tw:items-end tw:gap-4">
-            <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+          <p class="ds-label mb-3">Avatar — Sizes</p>
+          <div class="flex items-end gap-4">
+            <div class="flex flex-col items-center gap-2">
               <p-avatar label="JD" shape="circle" />
               <span class="ds-small">Normal</span>
             </div>
-            <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+            <div class="flex flex-col items-center gap-2">
               <p-avatar label="AB" shape="circle" size="large" />
               <span class="ds-small">Large</span>
             </div>
-            <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+            <div class="flex flex-col items-center gap-2">
               <p-avatar label="CK" shape="circle" size="xlarge" />
               <span class="ds-small">XLarge</span>
             </div>
-            <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+            <div class="flex flex-col items-center gap-2">
               <p-avatar icon="pi pi-user" shape="circle" />
               <span class="ds-small">Icon</span>
             </div>
@@ -681,7 +681,7 @@
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">AvatarGroup</p>
+          <p class="ds-label mb-3">AvatarGroup</p>
           <p-avatargroup>
             <p-avatar label="JD" shape="circle" />
             <p-avatar label="AB" shape="circle" />
@@ -691,15 +691,15 @@
         </div>
 
         <div>
-          <p class="ds-label tw:mb-3">Divider</p>
-          <div class="tw:max-w-md tw:flex tw:flex-col tw:gap-2">
-            <p class="ds-body tw:text-gray-500">Content above</p>
+          <p class="ds-label mb-3">Divider</p>
+          <div class="max-w-md flex flex-col gap-2">
+            <p class="ds-body text-gray-500">Content above</p>
             <p-divider />
-            <p class="ds-body tw:text-gray-500">Content below</p>
+            <p class="ds-body text-gray-500">Content below</p>
             <p-divider align="center"
               ><span class="ds-small">or</span></p-divider
             >
-            <p class="ds-body tw:text-gray-500">Content below with label</p>
+            <p class="ds-body text-gray-500">Content below with label</p>
           </div>
         </div>
       </div>
@@ -709,26 +709,26 @@
 
     <!-- ── ICONS ─────────────────────────────────────────────── -->
     <section id="icons">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Icons</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           Font Awesome Free 7 is the app's icon library. PrimeIcons is installed
           as a PrimeNG dependency but not used directly in app code.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-8">
+      <div class="flex flex-col gap-8">
         <div>
-          <p class="ds-label tw:mb-3">Font Awesome</p>
-          <div class="tw:flex tw:flex-wrap tw:gap-4">
+          <p class="ds-label mb-3">Font Awesome</p>
+          <div class="flex flex-wrap gap-4">
             @for (icon of faIcons; track icon) {
-              <div class="tw:flex tw:flex-col tw:items-center tw:gap-1 tw:w-14">
+              <div class="flex flex-col items-center gap-1 w-14">
                 <i
                   class="{{ icon }}"
                   style="font-size: 20px; color: var(--color-secondary)"
                 ></i>
                 <span
-                  class="ds-mono-xs tw:text-center"
+                  class="ds-mono-xs text-center"
                   style="word-break: break-all"
                 >
                   {{ icon.split(" ")[1] }}
@@ -744,14 +744,14 @@
 
     <!-- ── ELEVATION ────────────────────────────────────────────── -->
     <section id="elevation">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Elevation</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           Three semantic shadow levels defined as CSS classes in styles.css.
         </p>
       </div>
 
-      <div class="tw:flex tw:flex-wrap tw:gap-8 tw:items-end">
+      <div class="flex flex-wrap gap-8 items-end">
         @for (
           level of [
             { class: 'ds-shadow-card', label: 'Card', usage: 'Content cards at rest' },
@@ -760,13 +760,13 @@
           ];
           track level.class
         ) {
-          <div class="tw:flex tw:flex-col tw:items-center tw:gap-3">
+          <div class="flex flex-col items-center gap-3">
             <div
-              class="tw:w-24 tw:h-24 tw:rounded-2xl tw:bg-white"
+              class="w-24 h-24 rounded-2xl bg-white"
               [ngClass]="level.class"
             ></div>
-            <div class="tw:text-center">
-              <p class="ds-label tw:normal-case tw:tracking-normal">{{ level.label }}</p>
+            <div class="text-center">
+              <p class="ds-label normal-case tracking-normal">{{ level.label }}</p>
               <p class="ds-mono">{{ level.class }}</p>
               <p class="ds-mono-xs">{{ level.usage }}</p>
             </div>
@@ -779,24 +779,24 @@
 
     <!-- ── SUGGESTIONS ────────────────────────────────────────── -->
     <section id="suggestions">
-      <div class="tw:mb-6">
+      <div class="mb-6">
         <h2>Suggestions</h2>
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           Things that make sense to define in a design system but are currently
           missing.
         </p>
       </div>
 
       <div
-        class="tw:grid tw:gap-3"
+        class="grid gap-3"
         style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))"
       >
         @for (s of suggestions; track s.title) {
           <div
-            class="tw:rounded-xl tw:p-4 tw:flex tw:flex-col tw:gap-2"
+            class="rounded-xl p-4 flex flex-col gap-2"
             style="background: #fff8ed; border: 1px solid #f5d68a"
           >
-            <div class="tw:flex tw:items-center tw:gap-2">
+            <div class="flex items-center gap-2">
               <i class="pi pi-exclamation-triangle" style="color: #d97706"></i>
               <h3 class="ds-body" style="margin: 0; color: #92400e">
                 {{ s.title }}
@@ -810,6 +810,6 @@
       </div>
     </section>
 
-    <div class="tw:h-12"></div>
+    <div class="h-12"></div>
   </main>
 </div>

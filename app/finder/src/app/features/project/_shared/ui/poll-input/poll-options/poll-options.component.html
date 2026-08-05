@@ -1,4 +1,4 @@
-<div class="tw:flex tw:flex-col tw:gap-2 tw:mt-4">
+<div class="flex flex-col gap-2 mt-4">
   @if (optionType() === OptionType.Date) {
     <app-appointment-type-selection
       [selectedType]="appointmentDateType()"
@@ -6,30 +6,30 @@
     />
 
     @if (appointmentDateType()) {
-      <div class="tw:flex tw:justify-between tw:items-center tw:px-1 tw:mt-4">
-        <span class="tw:text-sm tw:font-semibold">
+      <div class="flex justify-between items-center px-1 mt-4">
+        <span class="text-sm font-semibold">
           {{ titleKey() | translate }}
         </span>
-        <span class="tw:text-xs tw:text-neutral">{{
+        <span class="text-xs text-neutral">{{
           subtitleKey() | translate
         }}</span>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-3">
+      <div class="flex flex-col gap-3">
         @switch (appointmentDateType()) {
           @case ("weekday") {
             @if (!weekdayShowsTime()) {
               <p-card>
-                <div class="tw:flex tw:flex-col tw:gap-2">
-                  <div class="tw:flex tw:gap-1">
+                <div class="flex flex-col gap-2">
+                  <div class="flex gap-1">
                     @for (day of weekdayButtons; track day.value) {
                       <button
                         type="button"
-                        class="tw:flex-1 tw:py-1.5 tw:rounded tw:text-xs tw:font-medium tw:transition-colors tw:border-0 tw:cursor-pointer"
+                        class="flex-1 py-1.5 rounded text-xs font-medium transition-colors border-0 cursor-pointer"
                         [class]="
                           selectedWeekdays().includes(day.value)
-                            ? 'tw:bg-primary tw:text-white'
-                            : 'tw:bg-gray-100 tw:text-gray-600 hover:tw:bg-gray-200'
+                            ? 'bg-primary text-white'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         "
                         (click)="weekdayToggle.emit(day.value)"
                         [attr.aria-label]="day.ariaLabel"
@@ -43,11 +43,11 @@
                   </div>
                   <button
                     type="button"
-                    class="tw:flex tw:items-center tw:gap-1 tw:text-sm tw:transition-colors tw:bg-transparent tw:border-0 tw:p-0 tw:self-start"
+                    class="flex items-center gap-1 text-sm transition-colors bg-transparent border-0 p-0 self-start"
                     [class]="
                       selectedWeekdays().length > 0
-                        ? 'tw:text-gray-400 hover:tw:text-primary tw:cursor-pointer'
-                        : 'tw:text-gray-200 tw:cursor-default'
+                        ? 'text-gray-400 hover:text-primary cursor-pointer'
+                        : 'text-gray-200 cursor-default'
                     "
                     [disabled]="selectedWeekdays().length === 0"
                     (click)="onGroupedAddTime()"
@@ -132,16 +132,16 @@
       }
     }
   } @else {
-    <div class="tw:flex tw:justify-between tw:items-center tw:px-1">
-      <span class="tw:text-sm tw:font-semibold">
+    <div class="flex justify-between items-center px-1">
+      <span class="text-sm font-semibold">
         {{ titleKey() | translate }}
       </span>
-      <span class="tw:text-xs tw:text-neutral">{{
+      <span class="text-xs text-neutral">{{
         subtitleKey() | translate
       }}</span>
     </div>
 
-    <div class="tw:flex tw:flex-col tw:gap-3">
+    <div class="flex flex-col gap-3">
       @for (option of options(); track $index) {
         <app-option-card
           [option]="option"

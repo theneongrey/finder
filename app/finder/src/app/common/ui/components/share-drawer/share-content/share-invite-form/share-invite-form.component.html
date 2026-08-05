@@ -1,10 +1,10 @@
 <p
-  class="tw:text-xs tw:font-semibold tw:uppercase tw:tracking-wide tw:text-gray-500 tw:mt-4 tw:mb-2"
+  class="text-xs font-semibold uppercase tracking-wide text-gray-500 mt-4 mb-2"
 >
   {{ "project.share.invite" | translate }}
 </p>
 
-<div class="tw:flex tw:gap-2">
+<div class="flex gap-2">
   @if (contacts().length > 0) {
     <p-select
       fluid
@@ -16,10 +16,10 @@
       optionValue="email"
       [placeholder]="'project.share.nameOrEmail' | translate"
       [disabled]="sharingInProgress()"
-      class="tw:flex-1"
+      class="flex-1"
     >
       <ng-template #item let-contact>
-        <div class="tw:flex tw:items-center tw:gap-2">
+        <div class="flex items-center gap-2">
           <p-avatar
             [image]="contact.picture ?? undefined"
             [label]="
@@ -28,8 +28,8 @@
             shape="circle"
           />
           <div>
-            <div class="tw:font-medium tw:text-sm">{{ contact.name }}</div>
-            <div class="tw:text-xs tw:text-gray-500">{{ contact.email }}</div>
+            <div class="font-medium text-sm">{{ contact.name }}</div>
+            <div class="text-xs text-gray-500">{{ contact.email }}</div>
           </div>
         </div>
       </ng-template>
@@ -44,7 +44,7 @@
       (ngModelChange)="contactEmail.set($event)"
       [placeholder]="'project.share.nameOrEmail' | translate"
       [disabled]="sharingInProgress()"
-      class="tw:flex-1"
+      class="flex-1"
     />
   }
   <p-button
@@ -63,9 +63,9 @@
   (ngModelChange)="selectedRole.set($event)"
   optionLabel="label"
   optionValue="id"
-  class="tw:mt-4"
+  class="mt-4"
 />
 
-<p class="tw:text-sm tw:text-gray-500 tw:mt-2">
+<p class="text-sm text-gray-500 mt-2">
   {{ selectedRoleDescription() }}
 </p>

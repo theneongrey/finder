@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ButtonModule, TranslatePipe],
   host: {
-    class: 'tw:h-full tw:flex tw:flex-col',
+    class: 'h-full flex flex-col',
   },
 })
 export class VoteCardImageComponent {

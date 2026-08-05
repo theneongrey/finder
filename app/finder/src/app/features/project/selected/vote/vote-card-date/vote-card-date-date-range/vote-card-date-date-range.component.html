@@ -1,5 +1,5 @@
 <div
-  class="tw:pointer-events-none tw:flex tw:flex-col tw:items-center tw:w-full"
+  class="pointer-events-none flex flex-col items-center w-full"
 >
   @if (isSameMonth()) {
     <!-- Single calendar — PrimeNG handles range highlighting natively -->
@@ -12,7 +12,7 @@
     />
   } @else {
     <!-- Two calendars at 50% zoom, each showing the respective month -->
-    <div class="tw:flex tw:justify-center tw:w-full tw:scale-55">
+    <div class="flex justify-center w-full scale-55">
       <p-datepicker
         [ngModel]="entry().date"
         [inline]="true"
@@ -22,7 +22,7 @@
         <ng-template #date let-date>
           @if (isInRange(date)) {
             <span
-              class="tw:flex tw:w-full tw:h-full tw:rounded-full tw:bg-primary/20 tw:items-center tw:justify-center tw:text-primary/60"
+              class="flex w-full h-full rounded-full bg-primary/20 items-center justify-center text-primary/60"
             >
               {{ date.day }}
             </span>
@@ -40,7 +40,7 @@
         <ng-template #date let-date>
           @if (isInRange(date)) {
             <span
-              class="tw:flex tw:w-full tw:h-full tw:rounded-full tw:bg-primary/20 tw:items-center tw:justify-center tw:text-primary/60"
+              class="flex w-full h-full rounded-full bg-primary/20 items-center justify-center text-primary/60"
             >
               {{ date.day }}
             </span>
@@ -53,20 +53,20 @@
   }
 
   @if (entry().date && entry().endDate) {
-    <div class="tw:flex tw:flex-col tw:items-center tw:gap-1 tw:text-center">
-      <p class="tw:font-semibold">
+    <div class="flex flex-col items-center gap-1 text-center">
+      <p class="font-semibold">
         {{ formatDate(entry().date!) }}
         @if (entry().startTime; as t) {
-          <span class="tw:mx-1">–</span>{{ formatTimeOnly(t) }}
+          <span class="mx-1">–</span>{{ formatTimeOnly(t) }}
         }
       </p>
-      <div class="tw:flex tw:items-center">
+      <div class="flex items-center">
         <i class="fa-solid fa-arrow-down"></i>
       </div>
-      <p class="tw:font-semibold">
+      <p class="font-semibold">
         {{ formatDate(entry().endDate!) }}
         @if (entry().endTime; as e) {
-          <span class="tw:mx-1">–</span>{{ formatTimeOnly(e) }}
+          <span class="mx-1">–</span>{{ formatTimeOnly(e) }}
         }
       </p>
     </div>

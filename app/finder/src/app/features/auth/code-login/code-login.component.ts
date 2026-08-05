@@ -25,7 +25,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './code-login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'tw:m-auto',
+    class: 'm-auto',
   },
 })
 export class CodeLoginComponent {

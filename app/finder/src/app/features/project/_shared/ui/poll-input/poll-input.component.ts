@@ -32,7 +32,7 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
 @Component({
   selector: 'app-poll-input',
   templateUrl: './poll-input.component.html',
-  host: { class: 'tw:block tw:h-full' },
+  host: { class: 'block h-full' },
   imports: [PollTypeSelectionComponent, PollInputFormComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

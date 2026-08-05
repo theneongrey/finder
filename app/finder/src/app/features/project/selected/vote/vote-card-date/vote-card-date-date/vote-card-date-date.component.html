@@ -1,5 +1,5 @@
 <div
-  class="tw:pointer-events-none tw:flex tw:flex-col tw:items-center tw:gap-2"
+  class="pointer-events-none flex flex-col items-center gap-2"
 >
   <p-datepicker
     [ngModel]="selectedDate()"
@@ -10,7 +10,7 @@
     <ng-template #date let-date>
       @if (isOtherDate(date)) {
         <span
-          class="tw:flex tw:w-full tw:h-full tw:rounded-full tw:bg-primary/20 tw:items-center tw:justify-center tw:text-primary/60"
+          class="flex w-full h-full rounded-full bg-primary/20 items-center justify-center text-primary/60"
         >
           {{ date.day }}
         </span>
@@ -20,10 +20,10 @@
     </ng-template>
   </p-datepicker>
   @if (entry().date; as d) {
-    <p class="tw:font-semibold tw:text-center">
+    <p class="font-semibold text-center">
       {{ formatDate(d) }}
       @if (entry().startTime; as t) {
-        <span class="tw:mx-1">–</span>{{ formatTimeOnly(t) }}
+        <span class="mx-1">–</span>{{ formatTimeOnly(t) }}
       }
     </p>
   }

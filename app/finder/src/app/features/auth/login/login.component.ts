@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   styles: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'tw:m-auto',
+    class: 'm-auto',
   },
 })
 export class LoginComponent {

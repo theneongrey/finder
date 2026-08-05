@@ -43,7 +43,7 @@ import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer
   templateUrl: './project-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'tw:h-full tw:max-h-full',
+    class: 'h-full max-h-full',
   },
 })
 export class ProjectOverviewComponent {

@@ -353,7 +353,7 @@
       <div class="mb-6">
         <h2>Forms</h2>
         <p class="ds-body text-gray-500 mt-1">
-          All inputs use border-radius 12px (--p-form-field-border-radius).
+          Spartan UI input and textarea primitives with Tailwind styling.
         </p>
       </div>
 
@@ -362,7 +362,7 @@
           <div>
             <p class="ds-label mb-2">InputText</p>
             <input
-              pInputText
+              hlmInput
               [(ngModel)]="inputText"
               placeholder="Type something…"
               class="w-full"
@@ -371,13 +371,13 @@
 
           <div>
             <p class="ds-label mb-2">InputText — invalid state</p>
-            <input pInputText value="wrong value" class="invalid w-full" />
+            <input hlmInput value="wrong value" class="invalid w-full" />
           </div>
 
           <div>
             <p class="ds-label mb-2">InputText — disabled</p>
             <input
-              pInputText
+              hlmInput
               value="Readonly value"
               [disabled]="true"
               class="w-full"
@@ -420,7 +420,7 @@
           <div>
             <p class="ds-label mb-2">Textarea</p>
             <textarea
-              pTextarea
+              hlmTextarea
               [(ngModel)]="textareaValue"
               placeholder="Write something…"
               rows="3"

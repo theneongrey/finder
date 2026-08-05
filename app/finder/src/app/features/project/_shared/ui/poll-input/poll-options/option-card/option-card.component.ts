@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { InputText } from 'primeng/inputtext';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -27,7 +27,7 @@ import { PreviewData, PreviewService } from '../../../../data/preview.service';
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
   styleUrl: './option-card.component.css',
-  imports: [FormsModule, InputText, Button, Message, TranslatePipe, Card],
+  imports: [FormsModule, HlmInput, Button, Message, TranslatePipe, Card],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {

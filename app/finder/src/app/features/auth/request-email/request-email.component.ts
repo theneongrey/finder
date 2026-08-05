@@ -16,9 +16,7 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/message';
 import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -29,9 +27,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     Message,
     Panel,
     Button,
-    InputText,
-    InputGroup,
-    InputGroupAddon,
+    HlmInput,
     TranslatePipe,
   ],
   templateUrl: './request-email.component.html',

@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-2">
     <div class="flex items-center gap-2">
       <input
-        pInputText
+        hlmInput
         class="flex-1 bg-gray-50 rounded-lg"
         maxlength="100"
         [placeholder]="
@@ -32,17 +32,15 @@
         >
           <i class="fa-solid fa-align-left text-primary text-sm"></i>
           <input
-            pInputText
-            class="flex-1 bg-transparent ml-1"
+            hlmInput
+            class="flex-1 bg-transparent ml-1 h-6 text-sm"
             style="
               border: none;
               border-bottom: 1px solid #cbd5e1;
               border-radius: 0;
               box-shadow: none;
               padding-left: 0;
-              height: 26px;
             "
-            pSize="small"
             maxlength="100"
             [placeholder]="
               'project.pollInput.yesNo.optionDescriptionPlaceholder' | translate
@@ -64,17 +62,15 @@
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-link text-primary text-sm"></i>
             <input
-              pInputText
-              class="flex-1 bg-transparent ml-1"
+              hlmInput
+              class="flex-1 bg-transparent ml-1 h-6 text-sm"
               style="
                 border: none;
                 border-bottom: 1px solid #cbd5e1;
                 border-radius: 0;
                 box-shadow: none;
                 padding-left: 0;
-                height: 26px;
               "
-              pSize="small"
               maxlength="2048"
               [placeholder]="
                 'project.pollInput.yesNo.urlPlaceholder' | translate

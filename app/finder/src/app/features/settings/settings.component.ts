@@ -16,9 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { Select } from 'primeng/select';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -37,9 +35,7 @@ import {
   imports: [
     ReactiveFormsModule,
     Button,
-    InputText,
-    InputGroup,
-    InputGroupAddon,
+    HlmInput,
     Select,
     Toast,
     TitleBarComponent,

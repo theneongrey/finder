@@ -28,19 +28,14 @@
         >
           {{ "settings.name" | translate }}
         </label>
-        <p-inputgroup>
-          <p-inputgroup-addon>
-            <i class="fa-solid fa-user"></i>
-          </p-inputgroup-addon>
-          <input
-            pInputText
-            id="name"
-            type="text"
-            formControlName="name"
-            [placeholder]="'settings.namePlaceholder' | translate"
-            autocomplete="name"
-          />
-        </p-inputgroup>
+        <input
+          hlmInput
+          id="name"
+          type="text"
+          formControlName="name"
+          [placeholder]="'settings.namePlaceholder' | translate"
+          autocomplete="name"
+        />
       </div>
 
       <div class="flex flex-col gap-1">
@@ -50,15 +45,12 @@
         >
           {{ "settings.email" | translate }}
         </label>
-        <p-inputgroup>
-          <p-inputgroup-addon>
-            <i class="fa-solid fa-envelope"></i>
-          </p-inputgroup-addon>
-          <input pInputText id="email" type="email" formControlName="email" />
-          <p-inputgroup-addon>
-            <i class="fa-solid fa-lock"></i>
-          </p-inputgroup-addon>
-        </p-inputgroup>
+        <input
+          hlmInput
+          id="email"
+          type="email"
+          formControlName="email"
+        />
       </div>
 
       <div class="flex flex-col gap-1">

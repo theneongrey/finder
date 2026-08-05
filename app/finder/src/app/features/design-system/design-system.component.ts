@@ -7,17 +7,17 @@ import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { HlmBadge } from '@spartan-ng/helm/badge';
 import { HlmSeparator } from '@spartan-ng/helm/separator';
 import { InputOtp } from 'primeng/inputotp';
-import { InputText } from 'primeng/inputtext';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { Message } from 'primeng/message';
 import { Panel } from 'primeng/panel';
 import { Popover } from 'primeng/popover';
 import { ProgressBar } from 'primeng/progressbar';
 import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { Textarea } from 'primeng/textarea';
 import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
 import { AutoResizeTextareaComponent } from '../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { ShareDrawerComponent } from '../../common/ui/components/share-drawer/share-drawer.component';
@@ -42,8 +42,8 @@ const mockSharingStore = {
     Button,
     Card,
     InputOtp,
-    InputText,
-    Textarea,
+    HlmInput,
+    HlmTextarea,
     Select,
     SelectButton,
     Tabs,

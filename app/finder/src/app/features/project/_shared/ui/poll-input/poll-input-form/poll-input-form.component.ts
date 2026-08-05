@@ -11,7 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { InputText } from 'primeng/inputtext';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionType } from '../../../models/project-detail.model';
@@ -30,7 +30,7 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
   templateUrl: './poll-input-form.component.html',
   imports: [
     FormsModule,
-    InputText,
+    HlmInput,
     Button,
     TranslatePipe,
     AutoResizeTextareaComponent,

@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Avatar } from 'primeng/avatar';
 import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 import { SharingStore } from '../../../../../../features/project/_shared/data/sharing.store';
@@ -24,7 +24,7 @@ import { SharingContact } from '../../../../../../features/project/_shared/model
   imports: [
     SelectButton,
     Select,
-    InputText,
+    HlmInput,
     Button,
     Avatar,
     FormsModule,

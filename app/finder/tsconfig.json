@@ -26,19 +26,19 @@
         "./src/lib/ui/spinner/src/index.ts"
       ],
       "@spartan-ng/helm/separator": [
-        "./libs/ui/separator/src/index.ts"
+        "./src/lib/ui/separator/src/index.ts"
       ],
       "@spartan-ng/helm/badge": [
-        "./libs/ui/badge/src/index.ts"
+        "./src/lib/ui/badge/src/index.ts"
       ],
       "@spartan-ng/helm/avatar": [
-        "./libs/ui/avatar/src/index.ts"
+        "./src/lib/ui/avatar/src/index.ts"
       ],
       "@spartan-ng/helm/textarea": [
-        "./libs/ui/textarea/src/index.ts"
+        "./src/lib/ui/textarea/src/index.ts"
       ],
       "@spartan-ng/helm/input": [
-        "./libs/ui/input/src/index.ts"
+        "./src/lib/ui/input/src/index.ts"
       ]
     }
   },

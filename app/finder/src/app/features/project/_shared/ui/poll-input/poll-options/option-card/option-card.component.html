@@ -83,9 +83,9 @@
           </div>
           @if (urlError()) {
             <hlm-alert variant="destructive" class="ml-5">
-              <hlm-alert-description>{{
+              <p hlmAlertDescription>{{
                 "project.pollInput.yesNo.urlError" | translate
-              }}</hlm-alert-description>
+              }}</p>
             </hlm-alert>
           }
           @if (previewLoading()) {

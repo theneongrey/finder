@@ -1,16 +1,16 @@
-<div class="tw:flex tw:flex-col tw:h-full tw:w-full">
+<div class="flex flex-col h-full w-full">
   <p-toast
     [breakpoints]="{ '920px': { width: '250px' } }"
     position="top-center"
   />
-  <app-title-bar class="tw:sticky tw:top-0 tw:z-10" />
+  <app-title-bar class="sticky top-0 z-10" />
 
   <main
-    class="tw:flex-grow tw:w-full tw:max-w-md tw:mx-auto tw:px-4 tw:py-6 tw:flex tw:flex-col tw:gap-8"
+    class="flex-grow w-full max-w-md mx-auto px-4 py-6 flex flex-col gap-8"
   >
-    <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+    <div class="flex flex-col items-center gap-2">
       @if (user(); as currentUser) {
-        <div class="tw:rounded-full tw:border-4 tw:border-white ds-shadow-raised">
+        <div class="rounded-full border-4 border-white ds-shadow-raised">
           <app-user-avatar [user]="currentUser" size="xlarge" />
         </div>
       }
@@ -19,11 +19,11 @@
     <form
       [formGroup]="form"
       (ngSubmit)="save()"
-      class="tw:flex tw:flex-col tw:gap-6"
+      class="flex flex-col gap-6"
     >
-      <div class="tw:flex tw:flex-col tw:gap-1">
+      <div class="flex flex-col gap-1">
         <label
-          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          class="text-sm font-semibold text-on-surface-variant"
           for="name"
         >
           {{ "settings.name" | translate }}
@@ -43,9 +43,9 @@
         </p-inputgroup>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-1">
+      <div class="flex flex-col gap-1">
         <label
-          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          class="text-sm font-semibold text-on-surface-variant"
           for="email"
         >
           {{ "settings.email" | translate }}
@@ -61,9 +61,9 @@
         </p-inputgroup>
       </div>
 
-      <div class="tw:flex tw:flex-col tw:gap-1">
+      <div class="flex flex-col gap-1">
         <label
-          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          class="text-sm font-semibold text-on-surface-variant"
           for="language"
         >
           {{ "settings.language" | translate }}
@@ -74,12 +74,12 @@
           [options]="languages"
           optionLabel="label"
           optionValue="value"
-          class="tw:w-full"
+          class="w-full"
         />
       </div>
 
       <p-button
-        class="tw:mt-2"
+        class="mt-2"
         type="submit"
         [label]="'settings.save' | translate"
         icon="fa-solid fa-check"

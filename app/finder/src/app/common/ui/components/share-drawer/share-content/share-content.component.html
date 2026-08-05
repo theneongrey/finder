@@ -6,7 +6,7 @@
         "project.share.tabMembers" | translate
       }}</p-tab>
     </p-tablist>
-    <p-tabpanels class="tw:px-0!">
+    <p-tabpanels class="px-0!">
       <p-tabpanel value="access">
         <ng-container *ngTemplateOutlet="share" />
       </p-tabpanel>
@@ -31,8 +31,8 @@
     [shareLink]="shareLink()"
     (visibilityChange)="onVisibilityChange($event)"
   />
-  <p-divider class="tw:my:2" />
-  <div class="tw:mb-4">
+  <p-divider class="my:2" />
+  <div class="mb-4">
     <app-share-invite-form
       [projectId]="projectId()"
       [contacts]="sharingContacts()"

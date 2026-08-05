@@ -1,6 +1,6 @@
 <div>
   @if (!hideResults()) {
-    <div class="tw:flex tw:justify-between tw:items-end tw:mb-3">
+    <div class="flex justify-between items-end mb-3">
       <h3>{{ "project.votesOverview.candidates" | translate }}</h3>
       <p class="ds-body">
         {{ "project.votesOverview.sortedByPopularity" | translate }}
@@ -8,7 +8,7 @@
     </div>
   }
 
-  <div class="tw:grid tw:grid-cols-1 tw:gap-4">
+  <div class="grid grid-cols-1 gap-4">
     @for (option of sortedOptions(); track option.id) {
       @if (optionType() === OptionType.Date) {
         <app-option-card-date

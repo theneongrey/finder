@@ -1,8 +1,8 @@
 <div
-  class="tw:flex tw:flex-col tw:h-full tw:w-full tw:relative tw:overflow-hidden tw:px-4"
+  class="flex flex-col h-full w-full relative overflow-hidden px-4"
 >
   <div
-    class="tw:h-16 tw:flex tw:items-start tw:justify-center tw:gap-4 tw:pt-4"
+    class="h-16 flex items-start justify-center gap-4 pt-4"
   >
     <p-button
       [label]="'project.vote.overview' | translate"
@@ -14,19 +14,19 @@
     />
   </div>
 
-  <div class="tw:flex-1 tw:flex tw:flex-col">
+  <div class="flex-1 flex flex-col">
     <!-- Poll context: always at top -->
-    <div class="tw:text-center tw:flex tw:flex-col tw:items-center tw:pt-4">
+    <div class="text-center flex flex-col items-center pt-4">
       <h2>
         {{ poll()?.name }}
       </h2>
       @if (poll()?.description) {
-        <p class="tw:text-sm tw:text-surface-500">
+        <p class="text-sm text-surface-500">
           {{ poll()?.description }}
         </p>
       }
       @if (totalCount() > 0) {
-        <p class="ds-body tw:text-gray-500 tw:mt-1">
+        <p class="ds-body text-gray-500 mt-1">
           {{
             "project.vote.votedProgress"
               | translate: { voted: votedCount(), total: totalCount() }
@@ -37,50 +37,50 @@
 
     <!-- Swipe area: vertically centered in remaining space -->
     <div
-      class="tw:flex-1 tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-4 tw:mt-4"
+      class="flex-1 flex flex-col items-center justify-center gap-4 mt-4"
     >
       <!-- Swipe area -->
       <div
-        class="vote-card-container tw:w-full tw:h-full tw:max-w-sm tw:h-72 tw:relative"
+        class="vote-card-container w-full h-full max-w-sm h-72 relative"
       >
         <!-- Left cue (No / 1 star) -->
         <div
-          class="tw:absolute tw:opacity-0 tw:-left-4 tw:top-1/2 tw:-translate-y-1/2 tw:z-20 tw:pointer-events-none tw:transition-opacity tw:duration-150"
+          class="absolute opacity-0 -left-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none transition-opacity duration-150"
           [style.opacity]="leftCueOpacity()"
         >
           @if (poll()?.optionType === OptionType.Rating) {
             <div
-              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center ds-shadow-floating tw:gap-0.5"
+              class="w-16 h-16 rounded-full bg-red-500 text-white flex flex-col items-center justify-center ds-shadow-floating gap-0.5"
             >
-              <i class="fa-solid fa-star tw:text-lg"></i>
-              <span class="tw:text-xs tw:font-bold tw:leading-none">1</span>
+              <i class="fa-solid fa-star text-lg"></i>
+              <span class="text-xs font-bold leading-none">1</span>
             </div>
           } @else {
             <div
-              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-red-500 tw:text-white tw:flex tw:items-center tw:justify-center ds-shadow-floating"
+              class="w-16 h-16 rounded-full bg-red-500 text-white flex items-center justify-center ds-shadow-floating"
             >
-              <i class="fa-regular fa-thumbs-down tw:text-2xl"></i>
+              <i class="fa-regular fa-thumbs-down text-2xl"></i>
             </div>
           }
         </div>
 
         <!-- Right cue (Yes / 5 stars) -->
         <div
-          class="tw:absolute tw:opacity-0 tw:-right-4 tw:top-1/2 tw:-translate-y-1/2 tw:z-20 tw:pointer-events-none tw:transition-opacity tw:duration-150"
+          class="absolute opacity-0 -right-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none transition-opacity duration-150"
           [style.opacity]="rightCueOpacity()"
         >
           @if (poll()?.optionType === OptionType.Rating) {
             <div
-              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-yellow-400 tw:text-white tw:flex tw:flex-col tw:items-center tw:justify-center ds-shadow-floating tw:gap-0.5"
+              class="w-16 h-16 rounded-full bg-yellow-400 text-white flex flex-col items-center justify-center ds-shadow-floating gap-0.5"
             >
-              <i class="fa-solid fa-star tw:text-lg"></i>
-              <span class="tw:text-xs tw:font-bold tw:leading-none">5</span>
+              <i class="fa-solid fa-star text-lg"></i>
+              <span class="text-xs font-bold leading-none">5</span>
             </div>
           } @else {
             <div
-              class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-green-600 tw:text-white tw:flex tw:items-center tw:justify-center ds-shadow-floating"
+              class="w-16 h-16 rounded-full bg-green-600 text-white flex items-center justify-center ds-shadow-floating"
             >
-              <i class="fa-regular fa-thumbs-up tw:text-2xl"></i>
+              <i class="fa-regular fa-thumbs-up text-2xl"></i>
             </div>
           }
         </div>
@@ -88,7 +88,7 @@
         <!-- Main swipe card -->
         <div
           #voteCard
-          class="vote-card tw:w-full tw:h-full tw:bg-white tw:rounded-2xl ds-shadow-raised tw:flex tw:flex-col tw:overflow-hidden tw:border tw:border-black/10 tw:cursor-grab tw:select-none"
+          class="vote-card w-full h-full bg-white rounded-2xl ds-shadow-raised flex flex-col overflow-hidden border border-black/10 cursor-grab select-none"
           [style.transform]="cardTransform()"
           [style.transition]="cardTransition()"
           [style.opacity]="cardOpacity()"
@@ -127,16 +127,16 @@
     <!-- /centered card section -->
 
     <!-- Action buttons: always at bottom -->
-    <div class="tw:flex tw:flex-col tw:items-center tw:pb-6">
+    <div class="flex flex-col items-center pb-6">
       @if (poll()?.optionType === OptionType.Rating) {
-        <div class="tw:flex tw:flex-col tw:items-center tw:gap-3">
-          <div class="tw:flex tw:items-center tw:gap-2">
+        <div class="flex flex-col items-center gap-3">
+          <div class="flex items-center gap-2">
             @for (star of [1, 2, 3, 4, 5]; track star) {
               <button
-                class="tw:w-11 tw:h-11 tw:rounded-full tw:bg-white tw:border tw:border-yellow-300 tw:text-yellow-500 tw:flex tw:flex-col tw:items-center tw:justify-center tw:hover:bg-yellow-50 tw:transition-all tw:active:scale-90 tw:duration-200 tw:text-xs tw:font-bold tw:gap-0.5"
+                class="w-11 h-11 rounded-full bg-white border border-yellow-300 text-yellow-500 flex flex-col items-center justify-center hover:bg-yellow-50 transition-all active:scale-90 duration-200 text-xs font-bold gap-0.5"
                 (click)="castRating(star)"
               >
-                <i class="fa-solid fa-star tw:text-sm"></i>
+                <i class="fa-solid fa-star text-sm"></i>
                 <span>{{ star }}</span>
               </button>
             }
@@ -149,12 +149,12 @@
           />
         </div>
       } @else {
-        <div class="tw:flex tw:items-center tw:gap-6">
+        <div class="flex items-center gap-6">
           <button
-            class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-white tw:text-red-500 tw:border-red-300 tw:border tw:border-surface-200 tw:flex tw:items-center tw:justify-center tw:hover:bg-red-50 tw:transition-all tw:active:scale-90 tw:duration-200"
+            class="w-16 h-16 rounded-full bg-white text-red-500 border-red-300 border border-surface-200 flex items-center justify-center hover:bg-red-50 transition-all active:scale-90 duration-200"
             (click)="swipeNo()"
           >
-            <i class="fa-solid fa-xmark tw:text-2xl"></i>
+            <i class="fa-solid fa-xmark text-2xl"></i>
           </button>
 
           <p-button
@@ -165,10 +165,10 @@
           />
 
           <button
-            class="tw:w-16 tw:h-16 tw:rounded-full tw:bg-white tw:border-primary/60 tw:text-primary tw:border tw:border-surface-200 tw:flex tw:items-center tw:justify-center tw:hover:bg-primary-50 tw:transition-all tw:active:scale-90 tw:duration-200"
+            class="w-16 h-16 rounded-full bg-white border-primary/60 text-primary border border-surface-200 flex items-center justify-center hover:bg-primary-50 transition-all active:scale-90 duration-200"
             (click)="swipeYes()"
           >
-            <i class="fa-regular fa-heart tw:text-2xl"></i>
+            <i class="fa-regular fa-heart text-2xl"></i>
           </button>
         </div>
       }
@@ -179,31 +179,31 @@
 
 @if (showHint()) {
   <div
-    class="hint-overlay tw:fixed tw:inset-x-0 tw:bottom-34 tw:z-40 tw:pointer-events-none tw:flex tw:justify-center"
+    class="hint-overlay fixed inset-x-0 bottom-34 z-40 pointer-events-none flex justify-center"
     [class.fading]="hintFading()"
   >
     <div
-      class="tw:bg-black/75 tw:backdrop-blur-sm tw:text-white tw:rounded-2xl tw:px-6 tw:py-3 tw:text-center ds-shadow-floating tw:mx-6 tw:max-w-sm"
+      class="bg-black/75 backdrop-blur-sm text-white rounded-2xl px-6 py-3 text-center ds-shadow-floating mx-6 max-w-sm"
     >
       @if (poll()?.optionType === OptionType.Rating) {
-        <p class="tw:text-sm tw:leading-relaxed">
+        <p class="text-sm leading-relaxed">
           {{ "project.vote.swipeHintPre" | translate
-          }}<span class="tw:text-yellow-400 tw:font-bold">{{
+          }}<span class="text-yellow-400 font-bold">{{
             "project.vote.ratingMax" | translate
           }}</span
           >{{ "project.vote.swipeHintMid" | translate
-          }}<span class="tw:text-red-400 tw:font-bold">{{
+          }}<span class="text-red-400 font-bold">{{
             "project.vote.ratingMin" | translate
           }}</span>
         </p>
       } @else {
-        <p class="tw:text-sm tw:leading-relaxed">
+        <p class="text-sm leading-relaxed">
           {{ "project.vote.swipeHintPre" | translate
-          }}<span class="tw:text-green-400 tw:font-bold">{{
+          }}<span class="text-green-400 font-bold">{{
             "project.votesOverview.voteLabel.yes" | translate
           }}</span
           >{{ "project.vote.swipeHintMid" | translate
-          }}<span class="tw:text-red-400 tw:font-bold">{{
+          }}<span class="text-red-400 font-bold">{{
             "project.votesOverview.voteLabel.no" | translate
           }}</span>
         </p>

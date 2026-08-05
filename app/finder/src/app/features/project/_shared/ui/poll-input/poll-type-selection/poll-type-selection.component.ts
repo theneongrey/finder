@@ -6,7 +6,7 @@ import { OptionType } from '../../../models/project-detail.model';
 @Component({
   selector: 'app-poll-type-selection',
   templateUrl: './poll-type-selection.component.html',
-  host: { class: 'tw:h-full tw:flex tw:flex-col' },
+  host: { class: 'h-full flex flex-col' },
   imports: [AddCardComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

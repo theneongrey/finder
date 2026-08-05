@@ -2,33 +2,33 @@
   [formGroup]="form"
   (ngSubmit)="verifyCode()"
   (keydown.enter)="verifyCode()"
-  class="tw:w-full tw:max-w-md"
+  class="w-full max-w-md"
 >
   <p-panel>
     <ng-template #header>
-      <div class="tw:flex tw:flex-col tw:gap-1">
-        <span class="tw:text-2xl tw:font-bold tw:text-on-surface tw:mx-auto"
+      <div class="flex flex-col gap-1">
+        <span class="text-2xl font-bold text-on-surface mx-auto"
           >{{ 'auth.codeLogin.title' | translate }}</span
         >
         <span
-          class="tw:text-sm tw:text-on-surface-variant tw:mx-auto tw:text-center tw:mt-2"
+          class="text-sm text-on-surface-variant mx-auto text-center mt-2"
         >
           {{ 'auth.codeLogin.subtitle' | translate }}
         </span>
       </div>
     </ng-template>
 
-    <div class="tw:flex tw:flex-col tw:gap-4 tw:mt-6">
-      <div class="tw:flex tw:flex-col tw:gap-1">
+    <div class="flex flex-col gap-4 mt-6">
+      <div class="flex flex-col gap-1">
         <label
-          class="tw:text-sm tw:font-semibold tw:text-on-surface-variant"
+          class="text-sm font-semibold text-on-surface-variant"
           for="code"
         >
           {{ 'auth.codeLogin.code' | translate }}
         </label>
         <p-inputOtp
           id="code"
-          class="tw:mx-auto"
+          class="mx-auto"
           aria-label="code"
           formControlName="code"
           autofocus
@@ -38,7 +38,7 @@
       </div>
 
       <p-button
-        class="tw:mt-2"
+        class="mt-2"
         type="submit"
         [label]="'auth.codeLogin.verify' | translate"
         icon="fa-solid fa-check"

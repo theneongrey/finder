@@ -20,20 +20,21 @@
         }
       </div>
       @if (project.sharedWith.length > 0) {
-        <p-avatar-group>
+        <div hlmAvatarGroup>
           @for (member of project.sharedWith; track member.name) {
-            <p-avatar
-              [image]="member.picture ?? undefined"
-              [label]="
-                member.picture ? undefined : member.name[0].toUpperCase()
-              "
-              shape="circle"
-              size="large"
+            <hlm-avatar
+              size="lg"
               [pTooltip]="member.name"
               tooltipPosition="bottom"
-            />
+            >
+              @if (member.picture) {
+                <img [src]="member.picture" hlmAvatarImage alt="{{ member.name }}" />
+              } @else {
+                <span hlmAvatarFallback>{{ member.name[0].toUpperCase() }}</span>
+              }
+            </hlm-avatar>
           }
-        </p-avatar-group>
+        </div>
       } @else {
         <p class="text-sm text-gray-500">
           {{ "project.detail.noMembers" | translate }}

@@ -14,7 +14,7 @@
           ["typography", "Typography"],
           ["spacing", "Spacing"],
           ["buttons", "Buttons"],
-          ["tags", "Tags"],
+          ["tags", "Badges"],
           ["forms", "Forms"],
           ["cards", "Cards"],
           ["navigation", "Navigation"],
@@ -90,7 +90,7 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── TYPOGRAPHY ─────────────────────────────────────────── -->
     <section id="typography">
@@ -161,7 +161,7 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── SPACING & TOKENS ───────────────────────────────────── -->
     <section id="spacing">
@@ -254,7 +254,7 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── BUTTONS ────────────────────────────────────────────── -->
     <section id="buttons">
@@ -326,31 +326,27 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
-    <!-- ── TAGS ──────────────────────────────────────────────── -->
+    <!-- ── BADGES ─────────────────────────────────────────────── -->
     <section id="tags">
       <div class="mb-6">
-        <h2>Tags</h2>
+        <h2>Badges</h2>
         <p class="ds-body text-gray-500 mt-1">
-          PrimeNG Tag — default background #86bba133 (mint, semi-transparent).
+          Spartan hlm-badge — variants: default, secondary, destructive, outline.
         </p>
       </div>
 
       <div class="flex flex-wrap gap-3 items-center">
-        <p-tag value="Default" />
-        <p-tag value="Secondary" severity="secondary" />
-        <p-tag value="Success" severity="success" />
-        <p-tag value="Warning" severity="warn" />
-        <p-tag value="Danger" severity="danger" />
-        <p-tag value="Info" severity="info" />
-        <p-tag value="Contrast" severity="contrast" />
-        <p-tag value="With icon" icon="pi pi-check" severity="success" />
-        <p-tag value="Rounded" [rounded]="true" />
+        <span hlmBadge>Default</span>
+        <span hlmBadge variant="secondary">Secondary</span>
+        <span hlmBadge variant="destructive">Destructive</span>
+        <span hlmBadge variant="outline">Outline</span>
+        <span hlmBadge><i class="fa-solid fa-check mr-1"></i>With icon</span>
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── FORMS ─────────────────────────────────────────────── -->
     <section id="forms">
@@ -447,7 +443,7 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── CARDS ──────────────────────────────────────────────── -->
     <section id="cards">
@@ -491,7 +487,7 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── NAVIGATION ─────────────────────────────────────────── -->
     <section id="navigation">
@@ -528,7 +524,7 @@
       </p-tabs>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── FEEDBACK ───────────────────────────────────────────── -->
     <section id="feedback">
@@ -584,7 +580,7 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── OVERLAYS ───────────────────────────────────────────── -->
     <section id="overlays">
@@ -646,14 +642,14 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── DATA DISPLAY ───────────────────────────────────────── -->
     <section id="data-display">
       <div class="mb-6">
         <h2>Data Display</h2>
         <p class="ds-body text-gray-500 mt-1">
-          Avatar, AvatarGroup, and Divider.
+          Avatar, AvatarGroup, and Separator.
         </p>
       </div>
 
@@ -662,50 +658,54 @@
           <p class="ds-label mb-3">Avatar — Sizes</p>
           <div class="flex items-end gap-4">
             <div class="flex flex-col items-center gap-2">
-              <p-avatar label="JD" shape="circle" />
-              <span class="ds-small">Normal</span>
+              <hlm-avatar>
+                <span hlmAvatarFallback>JD</span>
+              </hlm-avatar>
+              <span class="ds-small">Default</span>
             </div>
             <div class="flex flex-col items-center gap-2">
-              <p-avatar label="AB" shape="circle" size="large" />
+              <hlm-avatar size="lg">
+                <span hlmAvatarFallback>AB</span>
+              </hlm-avatar>
               <span class="ds-small">Large</span>
             </div>
             <div class="flex flex-col items-center gap-2">
-              <p-avatar label="CK" shape="circle" size="xlarge" />
+              <hlm-avatar class="!size-16">
+                <span hlmAvatarFallback>CK</span>
+              </hlm-avatar>
               <span class="ds-small">XLarge</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-              <p-avatar icon="pi pi-user" shape="circle" />
-              <span class="ds-small">Icon</span>
             </div>
           </div>
         </div>
 
         <div>
           <p class="ds-label mb-3">AvatarGroup</p>
-          <p-avatargroup>
-            <p-avatar label="JD" shape="circle" />
-            <p-avatar label="AB" shape="circle" />
-            <p-avatar label="CK" shape="circle" />
-            <p-avatar label="+4" shape="circle" />
-          </p-avatargroup>
+          <div hlmAvatarGroup>
+            <hlm-avatar><span hlmAvatarFallback>JD</span></hlm-avatar>
+            <hlm-avatar><span hlmAvatarFallback>AB</span></hlm-avatar>
+            <hlm-avatar><span hlmAvatarFallback>CK</span></hlm-avatar>
+            <hlm-avatar><span hlmAvatarFallback>+4</span></hlm-avatar>
+          </div>
         </div>
 
         <div>
-          <p class="ds-label mb-3">Divider</p>
+          <p class="ds-label mb-3">Separator</p>
           <div class="max-w-md flex flex-col gap-2">
             <p class="ds-body text-gray-500">Content above</p>
-            <p-divider />
+            <hlm-separator />
             <p class="ds-body text-gray-500">Content below</p>
-            <p-divider align="center"
-              ><span class="ds-small">or</span></p-divider
-            >
+            <div class="flex items-center gap-2">
+              <hlm-separator class="flex-1" />
+              <span class="ds-small">or</span>
+              <hlm-separator class="flex-1" />
+            </div>
             <p class="ds-body text-gray-500">Content below with label</p>
           </div>
         </div>
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── ICONS ─────────────────────────────────────────────── -->
     <section id="icons">
@@ -740,7 +740,7 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── ELEVATION ────────────────────────────────────────────── -->
     <section id="elevation">
@@ -775,7 +775,7 @@
       </div>
     </section>
 
-    <p-divider />
+    <hlm-separator />
 
     <!-- ── SUGGESTIONS ────────────────────────────────────────── -->
     <section id="suggestions">

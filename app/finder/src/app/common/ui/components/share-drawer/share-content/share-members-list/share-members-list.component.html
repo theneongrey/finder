@@ -16,13 +16,13 @@
     @for (member of sortedMembers(); track member.email) {
       <div class="relative">
         <div class="flex items-center gap-3 py-2">
-          <p-avatar
-            [image]="member.picture ?? undefined"
-            [label]="
-              member.picture ? undefined : member.name[0].toUpperCase()
-            "
-            shape="circle"
-          />
+          <hlm-avatar>
+            @if (member.picture) {
+              <img [src]="member.picture" hlmAvatarImage alt="{{ member.name }}" />
+            } @else {
+              <span hlmAvatarFallback>{{ member.name[0].toUpperCase() }}</span>
+            }
+          </hlm-avatar>
           <div class="flex-1 min-w-0">
             <p class="font-medium truncate text-sm">
               {{ member.name }}

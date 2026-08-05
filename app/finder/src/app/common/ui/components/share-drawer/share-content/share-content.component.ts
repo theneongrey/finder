@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Divider } from 'primeng/divider';
+import { HlmSeparator } from '@spartan-ng/helm/separator';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { ShareAccessFormComponent } from './share-access-form/share-access-form.component';
 import { ShareInviteFormComponent } from './share-invite-form/share-invite-form.component';
@@ -24,7 +24,7 @@ import { environment } from '../../../../env/environment';
 @Component({
   selector: 'app-share-content',
   imports: [
-    Divider,
+    HlmSeparator,
     Tabs,
     TabList,
     Tab,

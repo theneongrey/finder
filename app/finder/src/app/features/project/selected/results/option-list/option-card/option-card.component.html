@@ -15,10 +15,9 @@
           </p>
         }
         @if (isMostVoted() && !hideResults()) {
-          <p-tag
-            [value]="'project.votesOverview.mostVotes' | translate"
-            icon="fa-solid fa-trophy"
-          />
+          <span hlmBadge>
+            <i class="fa-solid fa-trophy mr-1"></i>{{ 'project.votesOverview.mostVotes' | translate }}
+          </span>
         }
       </div>
     </div>

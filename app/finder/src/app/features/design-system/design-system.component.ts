@@ -6,8 +6,6 @@ import { AvatarGroup } from 'primeng/avatargroup';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Divider } from 'primeng/divider';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputOtp } from 'primeng/inputotp';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
@@ -25,9 +23,7 @@ import { AddCardComponent } from '../../common/ui/components/add-card/add-card.c
 import { AutoResizeTextareaComponent } from '../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { ShareDrawerComponent } from '../../common/ui/components/share-drawer/share-drawer.component';
 import { SharingStore } from '../project/_shared/data/sharing.store';
-import {
-  VisibilityType,
-} from '../project/_shared/models/project-detail.model';
+import { VisibilityType } from '../project/_shared/models/project-detail.model';
 
 const mockSharingStore = {
   sharingContactsSuggestion: signal([]),
@@ -49,8 +45,6 @@ const mockSharingStore = {
     InputOtp,
     InputText,
     Textarea,
-    InputGroup,
-    InputGroupAddon,
     Select,
     SelectButton,
     Tabs,
@@ -72,9 +66,7 @@ const mockSharingStore = {
     AutoResizeTextareaComponent,
     ShareDrawerComponent,
   ],
-  providers: [
-    { provide: SharingStore, useValue: mockSharingStore },
-  ],
+  providers: [{ provide: SharingStore, useValue: mockSharingStore }],
   templateUrl: './design-system.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -89,7 +81,11 @@ export class DesignSystemComponent {
     { token: '--color-tertiary', hex: '#e8af63', label: 'Tertiary' },
     { token: '--color-error', hex: '#ad3448', label: 'Error' },
     { token: '--color-neutral', hex: '#1a1c1e', label: 'Neutral' },
-    { token: '--color-on-surface-variant', hex: '#404944', label: 'On Surface Variant' },
+    {
+      token: '--color-on-surface-variant',
+      hex: '#404944',
+      label: 'On Surface Variant',
+    },
   ];
 
   semanticScale = [
@@ -106,7 +102,7 @@ export class DesignSystemComponent {
     { step: '950', hex: '#000000' },
   ];
 
-  buttonSeverities: Array<{
+  buttonSeverities: {
     severity:
       | 'primary'
       | 'secondary'
@@ -115,7 +111,7 @@ export class DesignSystemComponent {
       | 'info'
       | 'contrast';
     label: string;
-  }> = [
+  }[] = [
     { severity: 'primary', label: 'Primary' },
     { severity: 'secondary', label: 'Secondary' },
     { severity: 'success', label: 'Success' },

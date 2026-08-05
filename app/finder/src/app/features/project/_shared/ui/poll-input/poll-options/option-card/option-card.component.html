@@ -82,9 +82,11 @@
             />
           </div>
           @if (urlError()) {
-            <p-message severity="error" class="ml-5">{{
-              "project.pollInput.yesNo.urlError" | translate
-            }}</p-message>
+            <hlm-alert variant="destructive" class="ml-5">
+              <hlm-alert-description>{{
+                "project.pollInput.yesNo.urlError" | translate
+              }}</hlm-alert-description>
+            </hlm-alert>
           }
           @if (previewLoading()) {
             <div class="flex items-center justify-center py-2">

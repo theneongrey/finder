@@ -520,29 +520,43 @@
 
       <div class="flex flex-col gap-6">
         <div>
-          <p class="ds-label mb-3">Messages</p>
+          <p class="ds-label mb-3">Alert</p>
           <div class="flex flex-col gap-2">
-            <p-message severity="success"
-              >Operation completed successfully.</p-message
-            >
-            <p-message severity="info"
-              >Here is some useful information.</p-message
-            >
-            <p-message severity="warn"
-              >Please review before continuing.</p-message
-            >
-            <p-message severity="error"
-              >Something went wrong. Please try again.</p-message
-            >
+            <hlm-alert class="border-l-4 border-green-500">
+              <hlm-alert-description
+                >Operation completed successfully.</hlm-alert-description
+              >
+            </hlm-alert>
+            <hlm-alert class="border-l-4 border-blue-500">
+              <hlm-alert-description
+                >Here is some useful information.</hlm-alert-description
+              >
+            </hlm-alert>
+            <hlm-alert class="border-l-4 border-yellow-500">
+              <hlm-alert-description
+                >Please review before continuing.</hlm-alert-description
+              >
+            </hlm-alert>
+            <hlm-alert variant="destructive">
+              <hlm-alert-description
+                >Something went wrong. Please try again.</hlm-alert-description
+              >
+            </hlm-alert>
           </div>
         </div>
 
         <div>
           <p class="ds-label mb-3">Progress Bar</p>
           <div class="flex max-w-sm flex-col gap-2">
-            <p-progressbar [value]="30" />
-            <p-progressbar [value]="65" />
-            <p-progressbar mode="indeterminate" style="height: 6px" />
+            <hlm-progress [value]="30">
+              <hlm-progress-indicator />
+            </hlm-progress>
+            <hlm-progress [value]="65">
+              <hlm-progress-indicator />
+            </hlm-progress>
+            <hlm-progress>
+              <hlm-progress-indicator />
+            </hlm-progress>
           </div>
         </div>
 

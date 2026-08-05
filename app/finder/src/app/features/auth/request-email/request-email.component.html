@@ -34,7 +34,9 @@
           autofocus
         />
         @if (errorMessage()) {
-          <p-message severity="error">{{ errorMessage() }}</p-message>
+          <hlm-alert variant="destructive">
+            <hlm-alert-description>{{ errorMessage() }}</hlm-alert-description>
+          </hlm-alert>
         }
       </div>
 

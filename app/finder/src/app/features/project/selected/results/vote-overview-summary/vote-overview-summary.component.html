@@ -41,7 +41,9 @@
   </div>
 
   <!-- Progress Bar -->
-  <p-progressBar [value]="progressPercent()" />
+  <hlm-progress [value]="progressPercent()">
+    <hlm-progress-indicator />
+  </hlm-progress>
 
   <div class="mt-4 flex justify-between items-center">
     <p class="ds-body">{{ "project.votesOverview.closesIn" | translate }}</p>

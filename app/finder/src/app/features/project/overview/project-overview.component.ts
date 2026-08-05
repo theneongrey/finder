@@ -17,7 +17,7 @@ import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max
 import { OverviewTabComponent } from './tabs/overview-tab/overview-tab.component';
 import { ProjectsTabComponent } from './tabs/projects-tab/projects-tab.component';
 import { StandalonePollTabComponent } from './tabs/standalone-poll-tab/standalone-poll-tab.component';
-import { Tag } from 'primeng/tag';
+import { HlmBadge } from '@spartan-ng/helm/badge';
 import { PollItem } from '../_shared/models/poll-item.model';
 import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer/share-drawer.component';
 
@@ -36,7 +36,7 @@ import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer
     OverviewTabComponent,
     ProjectsTabComponent,
     StandalonePollTabComponent,
-    Tag,
+    HlmBadge,
     ShareDrawerComponent,
   ],
   providers: [MessageService, ConfirmationService],

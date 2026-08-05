@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { RouterLink } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
-import { Tag } from 'primeng/tag';
+import { HlmBadge } from '@spartan-ng/helm/badge';
 import { TimeSincePipe } from '../_pipe/time-ago.pipe';
 import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
@@ -27,7 +27,7 @@ import { ProjectRole } from '../../_shared/models/project-role.enum';
     RouterLink,
     ScrollPanelModule,
     FormsModule,
-    Tag,
+    HlmBadge,
     TimeSincePipe,
     Button,
     Menu,

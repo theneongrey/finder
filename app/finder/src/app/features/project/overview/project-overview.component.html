@@ -11,15 +11,15 @@
         }}</p-tab>
         <p-tab value="polls"
           >{{ "project.tabs.polls" | translate }}
-          <p-tag class="ml-1" [rounded]="true">{{
+          <span hlmBadge variant="secondary" class="ml-1">{{
             standalonePolls().length
-          }}</p-tag></p-tab
+          }}</span></p-tab
         >
         <p-tab value="projects"
           >{{ "project.tabs.projects" | translate }}
-          <p-tag class="ml-1" [rounded]="true">{{
+          <span hlmBadge variant="secondary" class="ml-1">{{
             projects().length
-          }}</p-tag></p-tab
+          }}</span></p-tab
         >
       </p-tablist>
       <p-tabpanels>

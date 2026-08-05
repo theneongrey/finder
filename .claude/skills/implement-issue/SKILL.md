@@ -145,11 +145,12 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 ---
 
-## Step 5 — Create the Pull Request
+## Step 5 — Push and Create the Pull Request
 
-After the final commit, create a PR against `main`:
+After the final commit, push the branch then create a PR against `main`:
 
 ```bash
+git push -u origin <branch-name>
 gh pr create --base main --title "<issue title>" --body "..."
 ```
 

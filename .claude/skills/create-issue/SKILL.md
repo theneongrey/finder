@@ -174,13 +174,21 @@ If the issue captures a non-obvious architectural decision, introduces a new pat
 4. Determine the final sub-issue split (including automatic sub-issues from the rules above)
 5. Create all sub-issues first (so their numbers are available)
 6. Create the main issue last, referencing the sub-issue numbers in the checklist
-7. Report all created issue URLs to the user
+7. **Register each sub-issue as a proper GitHub sub-issue** (not just a markdown link):
+   ```bash
+   REPO=$(git remote get-url origin | sed 's/.*github.com[:/]//' | sed 's/\.git$//')
+   # For each sub-issue number $SUB, get its internal ID then link it:
+   SUB_ID=$(gh api repos/$REPO/issues/$SUB --jq '.id')
+   gh api repos/$REPO/issues/$PARENT/sub_issues -X POST -F sub_issue_id=$SUB_ID
+   ```
+   Do this for every sub-issue after the main issue is created.
+8. Report all created issue URLs to the user
 
 ### Updating existing issues
 1. Fetch the current issue: `gh issue view <number> --json title,body,state`
 2. Fetch any existing sub-issues linked in the body
 3. Apply the user's changes — add, correct, or restructure; do not delete unrelated content
-4. If the update introduces new sub-issues (e.g. a newly discovered backend change triggers an API test sub-issue), create them first then edit the main issue to add them to the checklist
+4. If the update introduces new sub-issues (e.g. a newly discovered backend change triggers an API test sub-issue), create them first, edit the main issue to add them to the checklist, then register them as proper GitHub sub-issues (see step 7 above)
 5. Use `gh issue edit <number> --body "..."` to update; use `--body-file` for long bodies
 6. Report the updated issue URL
 

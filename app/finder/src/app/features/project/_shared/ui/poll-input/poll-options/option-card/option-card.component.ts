@@ -15,8 +15,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { Button } from 'primeng/button';
-import { Message } from 'primeng/message';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionEntry } from '../poll-options.component';
 import { UrlValidationService } from '../../../../../../../common/utils/url-validation.service';
@@ -27,7 +27,7 @@ import { PreviewData, PreviewService } from '../../../../data/preview.service';
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
   styleUrl: './option-card.component.css',
-  imports: [FormsModule, HlmInput, Button, Message, TranslatePipe, Card],
+  imports: [FormsModule, HlmInput, ...HlmAlertImports, Button, TranslatePipe, Card],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {

@@ -44,7 +44,7 @@
       <div class="mb-6">
         <h2>Colors</h2>
         <p class="ds-body mt-1 text-gray-500">
-          CSS custom properties defined in styles.css @theme block.
+          CSS custom properties defined in styles.css &#x40;theme block.
         </p>
       </div>
 
@@ -520,29 +520,32 @@
 
       <div class="flex flex-col gap-6">
         <div>
-          <p class="ds-label mb-3">Messages</p>
+          <p class="ds-label mb-3">Alert</p>
           <div class="flex flex-col gap-2">
-            <p-message severity="success"
-              >Operation completed successfully.</p-message
-            >
-            <p-message severity="info"
-              >Here is some useful information.</p-message
-            >
-            <p-message severity="warn"
-              >Please review before continuing.</p-message
-            >
-            <p-message severity="error"
-              >Something went wrong. Please try again.</p-message
-            >
+            <hlm-alert class="border-l-4 border-green-500">
+              <p hlmAlertDescription>Operation completed successfully.</p>
+            </hlm-alert>
+            <hlm-alert class="border-l-4 border-blue-500">
+              <p hlmAlertDescription>Here is some useful information.</p>
+            </hlm-alert>
+            <hlm-alert class="border-l-4 border-yellow-500">
+              <p hlmAlertDescription>Please review before continuing.</p>
+            </hlm-alert>
+            <hlm-alert variant="destructive">
+              <p hlmAlertDescription>Something went wrong. Please try again.</p>
+            </hlm-alert>
           </div>
         </div>
 
         <div>
           <p class="ds-label mb-3">Progress Bar</p>
           <div class="flex max-w-sm flex-col gap-2">
-            <p-progressbar [value]="30" />
-            <p-progressbar [value]="65" />
-            <p-progressbar mode="indeterminate" style="height: 6px" />
+            <hlm-progress [value]="30">
+              <hlm-progress-indicator />
+            </hlm-progress>
+            <hlm-progress>
+              <hlm-progress-indicator />
+            </hlm-progress>
           </div>
         </div>
 

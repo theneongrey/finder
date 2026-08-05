@@ -13,10 +13,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Message } from 'primeng/message';
 import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';
 import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -24,7 +24,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   selector: 'app-request-email',
   imports: [
     ReactiveFormsModule,
-    Message,
+    ...HlmAlertImports,
     Panel,
     Button,
     HlmInput,

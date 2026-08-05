@@ -5,7 +5,7 @@ import {
   input,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ProgressBar } from 'primeng/progressbar';
+import { HlmProgressImports } from '@spartan-ng/helm/progress';
 import { Button } from 'primeng/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PollDetail } from '../../../_shared/models/project-detail.model';
@@ -13,7 +13,7 @@ import { PollDetail } from '../../../_shared/models/project-detail.model';
 @Component({
   selector: 'app-vote-overview-summary',
   templateUrl: './vote-overview-summary.component.html',
-  imports: [RouterLink, ProgressBar, Button, TranslatePipe],
+  imports: [RouterLink, ...HlmProgressImports, Button, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteOverviewSummaryComponent {

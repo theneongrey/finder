@@ -7,6 +7,7 @@ import {
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { provideSpartanHlm } from '@spartan-ng/helm/utils';
 import { providePrimeNG } from 'primeng/config';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AppTheme } from './common/theme/ngpime.preset';
@@ -27,6 +28,7 @@ export const appConfig: ApplicationConfig = {
     ConfirmationService,
     MessageService,
     provideHttpClient(),
+    provideSpartanHlm(),
     providePrimeNG({
       theme: {
         preset: AppTheme,

@@ -1,6 +1,7 @@
 @import "primeicons/primeicons.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
-@import "tailwindcss" prefix(tw);
+@import "tailwindcss";
+@import "@spartan-ng/brain/hlm-tailwind-preset.css";
 @import "@fontsource/plus-jakarta-sans/300.css";
 @import "@fontsource/plus-jakarta-sans/400.css";
 @import "@fontsource/plus-jakarta-sans/500.css";
@@ -15,7 +16,6 @@
   --color-tertiary: #e8af63;
   --color-neutral: #1a1c1e;
   --color-on-surface-variant: #404944;
-  --color-muted: oklch(0.97 0 0);
 }
 
 html,

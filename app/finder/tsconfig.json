@@ -16,30 +16,17 @@
     "target": "ES2022",
     "module": "ES2022",
     "paths": {
-      "@spartan-ng/helm/skeleton": [
-        "./src/lib/ui/skeleton/src/index.ts"
-      ],
-      "@spartan-ng/helm/utils": [
-        "./src/lib/ui/utils/src/index.ts"
-      ],
-      "@spartan-ng/helm/spinner": [
-        "./src/lib/ui/spinner/src/index.ts"
-      ],
-      "@spartan-ng/helm/separator": [
-        "./src/lib/ui/separator/src/index.ts"
-      ],
-      "@spartan-ng/helm/badge": [
-        "./src/lib/ui/badge/src/index.ts"
-      ],
-      "@spartan-ng/helm/avatar": [
-        "./src/lib/ui/avatar/src/index.ts"
-      ],
-      "@spartan-ng/helm/textarea": [
-        "./src/lib/ui/textarea/src/index.ts"
-      ],
-      "@spartan-ng/helm/input": [
-        "./src/lib/ui/input/src/index.ts"
-      ]
+      "@spartan-ng/helm/skeleton": ["./src/lib/ui/skeleton/src/index.ts"],
+      "@spartan-ng/helm/utils": ["./src/lib/ui/utils/src/index.ts"],
+      "@spartan-ng/helm/spinner": ["./src/lib/ui/spinner/src/index.ts"],
+      "@spartan-ng/helm/separator": ["./src/lib/ui/separator/src/index.ts"],
+      "@spartan-ng/helm/badge": ["./src/lib/ui/badge/src/index.ts"],
+      "@spartan-ng/helm/avatar": ["./src/lib/ui/avatar/src/index.ts"],
+      "@spartan-ng/helm/textarea": ["./src/lib/ui/textarea/src/index.ts"],
+      "@spartan-ng/helm/input": ["./src/lib/ui/input/src/index.ts"],
+      "@spartan-ng/helm/alert": ["./libs/ui/alert/src/index.ts"],
+      "@spartan-ng/helm/sonner": ["./libs/ui/sonner/src/index.ts"],
+      "@spartan-ng/helm/progress": ["./libs/ui/progress/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

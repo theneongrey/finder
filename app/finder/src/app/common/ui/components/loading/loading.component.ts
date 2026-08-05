@@ -7,13 +7,13 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { Skeleton } from 'primeng/skeleton';
+import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 
 const FADE_DURATION = 300;
 
 @Component({
   selector: 'app-loading',
-  imports: [Skeleton],
+  imports: [...HlmSkeletonImports],
   templateUrl: './loading.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: contents' },

@@ -86,13 +86,40 @@ Follow the plan. Adhere to all conventions in `CLAUDE.md` and the project's exis
 
 ### When you hit a problem
 
-If implementation runs into an unexpected obstacle (a missing API, a type error that reveals a design conflict, a test that cannot be made to pass):
+#### Complete blockers (no solution known)
+
+If implementation hits an obstacle with no clear path forward:
 
 1. Stop immediately — do not keep trying variations silently
-2. Describe the problem clearly to the user: what you tried, what failed, what the blocker is
+2. Describe the problem clearly: what you tried, what failed, what the blocker is
 3. Ask for direction
 
-**Retry limit:** if you attempt the same fix three times without success, stop and notify the user even if you have more ideas. Three failed attempts signals a decision the user needs to make, not more trial and error.
+**Retry limit:** if you attempt the same fix three times without success, stop and notify the user even if you have more ideas.
+
+#### Non-obvious decisions (solution known, but non-trivial trade-off)
+
+If you find a problem AND already know a fix, but the fix involves an unexpected constraint or trade-off — stop and present it for approval before applying it. Do not silently implement clever workarounds, even if you are confident they work.
+
+A decision is non-obvious when it involves any of the following:
+- A version or API incompatibility (e.g., library A requires framework version N+1)
+- A third-party preset or plugin that is incompatible with a project-level config (e.g., Tailwind prefix mode conflict with a library's CSS)
+- Modifying a shared infrastructure file beyond what the plan described (`styles.css`, `tsconfig.json`, `package.json`, etc.)
+- Choosing between two approaches because one doesn't work for a constraint the issue didn't anticipate
+- Deviating from a pattern described in `CLAUDE.md` or the issue body
+
+**Format for presenting the decision:**
+
+> **Decision needed:** [One sentence naming the conflict]
+>
+> **Problem:** [What you found — the incompatibility or constraint]
+>
+> **Proposed solution:** [What you would do — the specific change, why it works, and what it gives up]
+>
+> **Alternative:** [At least one other option, even if you think it's worse]
+>
+> OK to proceed with the proposed solution?
+
+Wait for explicit approval before writing any code related to the decision.
 
 ### Commit cadence
 
@@ -163,8 +190,9 @@ After creating the PR, add inline review comments (`gh api`) on any code that ne
 
 Stop and notify the user whenever:
 - `git pull` results in conflicts or unexpected local state
-- A blocker is hit during implementation that requires a design decision
+- A complete blocker is hit with no clear path forward
 - The same fix has been attempted three times without success
 - The issue body lacks enough detail to proceed safely
+- A non-obvious technical decision arises — even when a fix is known (see "Non-obvious decisions" above)
 
 In every case: describe the situation clearly, state what you need, and wait. Do not take destructive actions (force push, reset, stash) without explicit user approval.

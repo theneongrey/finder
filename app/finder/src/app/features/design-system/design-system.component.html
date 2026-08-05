@@ -201,18 +201,18 @@
           <div class="flex items-end gap-6 flex-wrap">
             @for (
               item of [
-                { label: "gap-2", px: "8px",  8 },
-                { label: "gap-3", px: "12px",  12 },
-                { label: "gap-4", px: "16px",  16 },
-                { label: "gap-6", px: "24px",  24 },
+                { label: "gap-2", px: "8px", size: 8 },
+                { label: "gap-3", px: "12px", size: 12 },
+                { label: "gap-4", px: "16px", size: 16 },
+                { label: "gap-6", px: "24px", size: 24 },
               ];
               track item.label
             ) {
               <div class="flex flex-col items-center gap-2">
                 <div
                   class="bg-primary/30 rounded"
-                  [style.width.px]="item.tw"
-                  [style.height.px]="item.tw"
+                  [style.width.px]="item.size"
+                  [style.height.px]="item.size"
                 ></div>
                 <div class="text-center">
                   <p class="ds-mono font-semibold">{{ item.px }}</p>

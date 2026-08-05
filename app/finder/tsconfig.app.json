@@ -9,7 +9,6 @@
   ],
   "include": [
     "src/**/*.d.ts",
-    "src/lib/ui/**/src/**/*.ts",
-    "libs/ui/**/src/**/*.ts"
+    "src/lib/ui/**/src/**/*.ts"
   ]
 }

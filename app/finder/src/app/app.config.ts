@@ -8,6 +8,7 @@ import {
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { AppTheme } from './common/theme/ngpime.preset';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -23,6 +24,8 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'enabled',
       }),
     ), //, withDebugTracing()),
+    ConfirmationService,
+    MessageService,
     provideHttpClient(),
     providePrimeNG({
       theme: {

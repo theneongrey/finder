@@ -6,9 +6,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FormsModule } from '@angular/forms';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { RouterLink } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { HlmBadge } from '@spartan-ng/helm/badge';
@@ -23,9 +21,7 @@ import { ProjectRole } from '../../_shared/models/project-role.enum';
 @Component({
   selector: 'app-project-item',
   imports: [
-    ConfirmDialogModule,
     RouterLink,
-    ScrollPanelModule,
     FormsModule,
     HlmBadge,
     TimeSincePipe,

@@ -33,7 +33,7 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
   placeholder = input('');
   maxlength = input<number | null>(null);
   inputId = input<string | null>(null);
-  maxHeight = input<string>('300px');
+  maxHeight = input<string>('200px');
   blur = output<void>();
 
   protected readonly textValue = signal('');
@@ -65,7 +65,9 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
         return;
       }
       this.viewReady = true;
-      this.minHeight = el.offsetHeight;
+      el.style.setProperty('field-sizing', 'fixed');
+      el.style.minHeight = '0';
+      this.minHeight = el.scrollHeight;
       this.resizeInstant(el);
     });
   }
@@ -104,7 +106,9 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
   private resizeInstant(el: HTMLTextAreaElement): void {
     el.style.transition = 'none';
     el.style.height = `${this.minHeight}px`;
-    el.style.height = `${Math.max(el.scrollHeight, this.minHeight)}px`;
+    const targetHeight = Math.max(el.scrollHeight, this.minHeight);
+    el.style.height = `${targetHeight}px`;
+    el.classList.toggle('scrollable', this.exceedsMaxHeight(targetHeight));
     el.offsetHeight; // flush transition:none before re-enabling
     el.style.transition = '';
   }
@@ -125,5 +129,11 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
 
     el.style.transition = '';
     el.style.height = `${targetHeight}px`;
+    el.classList.toggle('scrollable', this.exceedsMaxHeight(targetHeight));
+  }
+
+  private exceedsMaxHeight(targetHeight: number): boolean {
+    const maxPx = parseFloat(this.maxHeight());
+    return !isNaN(maxPx) && targetHeight >= maxPx;
   }
 }

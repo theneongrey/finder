@@ -14,10 +14,10 @@ import { Popover } from 'primeng/popover';
 import { ProgressBar } from 'primeng/progressbar';
 import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { Textarea } from 'primeng/textarea';
 import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
 import { AutoResizeTextareaComponent } from '../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { ShareDrawerComponent } from '../../common/ui/components/share-drawer/share-drawer.component';
@@ -43,7 +43,7 @@ const mockSharingStore = {
     Card,
     InputOtp,
     InputText,
-    Textarea,
+    HlmTextarea,
     Select,
     SelectButton,
     Tabs,

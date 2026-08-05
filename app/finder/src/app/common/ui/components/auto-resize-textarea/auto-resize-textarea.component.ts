@@ -10,11 +10,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Textarea } from 'primeng/textarea';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
 
 @Component({
   selector: 'app-auto-resize-textarea',
-  imports: [Textarea],
+  imports: [HlmTextarea],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

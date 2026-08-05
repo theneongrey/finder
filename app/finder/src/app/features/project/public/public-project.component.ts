@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProgressSpinner } from 'primeng/progressspinner';
+import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { UserService } from '../../../common/services/user.service';
 import { UserStore } from '../../../common/data/user.store';
 import { SharingStore } from '../_shared/data/sharing.store';
@@ -13,7 +13,7 @@ import { SharingStore } from '../_shared/data/sharing.store';
 @Component({
   selector: 'app-public-project',
   standalone: true,
-  imports: [ProgressSpinner],
+  imports: [...HlmSpinnerImports],
   templateUrl: 'public-project.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

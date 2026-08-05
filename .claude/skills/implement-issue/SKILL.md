@@ -22,6 +22,17 @@ gh issue view <sub-number> --json number,title,body,state
 
 If the issue is already closed, tell the user and stop.
 
+### Fetch comments — do this for every issue and sub-issue
+
+After fetching the body, always fetch comments for both the sub-issue and its parent issue. Comments often contain AI implementation plans, corrected instructions, or decisions made after the issue was written:
+
+```bash
+gh issue view <sub-number> --json comments --jq '.comments[] | "---\n" + .author.login + ": " + .body'
+gh issue view <parent-number> --json comments --jq '.comments[] | "---\n" + .author.login + ": " + .body'
+```
+
+**Comments take precedence over the issue body** when they contain corrections, implementation plans, or notes marked for AI implementers. Read them before building your plan.
+
 ---
 
 ## Step 2 — Build an Implementation Plan

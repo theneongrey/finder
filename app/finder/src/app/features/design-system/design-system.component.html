@@ -1,13 +1,13 @@
-<div class="min-h-screen bg-app-gradient">
+<div class="bg-app-gradient min-h-screen">
   <!-- Header -->
   <header
-    class="sticky top-0 z-10 bg-white border-b border-gray-200 px-8 py-3 flex items-center gap-8 flex-wrap"
+    class="sticky top-0 z-10 flex flex-wrap items-center gap-8 border-b border-gray-200 bg-white px-8 py-3"
   >
     <div class="flex items-baseline gap-3">
       <h2 style="margin: 0; color: var(--color-primary)">Design System</h2>
       <span class="ds-label">Votean App</span>
     </div>
-    <nav class="flex gap-4 flex-wrap">
+    <nav class="flex flex-wrap gap-4">
       @for (
         link of [
           ["colors", "Colors"],
@@ -38,14 +38,12 @@
   </header>
 
   <!-- Main content -->
-  <main
-    class="max-w-5xl mx-auto px-8 py-12 flex flex-col gap-16"
-  >
+  <main class="mx-auto flex max-w-5xl flex-col gap-16 px-8 py-12">
     <!-- ── COLORS ────────────────────────────────────────────── -->
     <section id="colors">
       <div class="mb-6">
         <h2>Colors</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           CSS custom properties defined in styles.css @theme block.
         </p>
       </div>
@@ -56,11 +54,11 @@
           @for (color of colors; track color.token) {
             <div class="flex flex-col items-center gap-2">
               <div
-                class="w-16 h-16 rounded-xl ds-shadow-raised border border-white/30"
+                class="ds-shadow-raised h-16 w-16 rounded-xl border border-white/30"
                 [style.background]="color.hex"
               ></div>
               <div class="text-center">
-                <p class="ds-label normal-case tracking-normal">
+                <p class="ds-label tracking-normal normal-case">
                   {{ color.label }}
                 </p>
                 <p class="ds-mono">{{ color.hex }}</p>
@@ -79,7 +77,7 @@
           @for (step of semanticScale; track step.step) {
             <div class="flex flex-col items-center gap-1">
               <div
-                class="w-10 h-10 rounded-lg ds-shadow-card"
+                class="ds-shadow-card h-10 w-10 rounded-lg"
                 [style.background]="step.hex"
                 [style.border]="step.step === '950' ? '1px solid #ddd' : 'none'"
               ></div>
@@ -96,59 +94,45 @@
     <section id="typography">
       <div class="mb-6">
         <h2>Typography</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           Font: <strong>Plus Jakarta Sans</strong> — weights 300, 400, 500, 700.
         </p>
       </div>
 
       <div class="flex flex-col gap-6">
-        <div
-          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
-        >
+        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
           <span class="ds-label w-32 shrink-0">h1</span>
           <h1 style="margin: 0">Page Title</h1>
           <span class="ds-mono">20px / lh 1.4</span>
         </div>
-        <div
-          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
-        >
+        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
           <span class="ds-label w-32 shrink-0">h2</span>
           <h2 style="margin: 0">Section Heading</h2>
           <span class="ds-mono">24px / lh 1.3 / bold</span>
         </div>
-        <div
-          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
-        >
+        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
           <span class="ds-label w-32 shrink-0">h3</span>
           <h3 style="margin: 0">Sub-heading</h3>
           <span class="ds-mono">16px / lh 20px / bold</span>
         </div>
-        <div
-          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
-        >
+        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
           <span class="ds-label w-32 shrink-0">.ds-body</span>
           <span class="ds-body"
             >The quick brown fox jumps over the lazy dog.</span
           >
           <span class="ds-mono">14px / lh 1.2</span>
         </div>
-        <div
-          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
-        >
+        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
           <span class="ds-label w-32 shrink-0">.ds-label</span>
           <span class="ds-label">Section Label</span>
           <span class="ds-mono">12px / semibold / uppercase / tracking</span>
         </div>
-        <div
-          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
-        >
+        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
           <span class="ds-label w-32 shrink-0">.ds-small</span>
           <span class="ds-small">Normal · Large · XLarge · or</span>
           <span class="ds-mono">11px / #999</span>
         </div>
-        <div
-          class="flex items-baseline gap-6 border-b border-gray-100 pb-4"
-        >
+        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
           <span class="ds-label w-32 shrink-0">.ds-mono</span>
           <span class="ds-mono">#4797bf · 40px / 8px · 20px / lh 1.4</span>
           <span class="ds-mono">11px / mono / #999</span>
@@ -167,7 +151,7 @@
     <section id="spacing">
       <div class="mb-6">
         <h2>Spacing &amp; Tokens</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           Key sizing constants derived from styles.css and component patterns.
         </p>
       </div>
@@ -175,7 +159,7 @@
       <div class="flex flex-col gap-8">
         <div>
           <p class="ds-label mb-3">Border Radius — 12px</p>
-          <div class="flex gap-4 flex-wrap items-end">
+          <div class="flex flex-wrap items-end gap-4">
             @for (
               item of [
                 { label: "Buttons / Inputs / Panels", radius: "12px" },
@@ -186,7 +170,7 @@
             ) {
               <div class="flex flex-col items-center gap-2">
                 <div
-                  class="w-16 h-10 bg-primary/20"
+                  class="bg-primary/20 h-10 w-16"
                   [style.border-radius]="item.radius"
                   style="border: 2px solid var(--color-primary)"
                 ></div>
@@ -198,7 +182,7 @@
 
         <div>
           <p class="ds-label mb-3">Gap Scale (×4px base)</p>
-          <div class="flex items-end gap-6 flex-wrap">
+          <div class="flex flex-wrap items-end gap-6">
             @for (
               item of [
                 { label: "gap-2", px: "8px", size: 8 },
@@ -243,12 +227,10 @@
 
         <div>
           <p class="ds-label mb-3">Disabled Opacity — 0.4</p>
-          <div class="flex gap-4 items-center">
+          <div class="flex items-center gap-4">
             <p-button label="Enabled" />
             <p-button label="Disabled" [disabled]="true" />
-            <span class="ds-body text-gray-500"
-              >--p-disabled-opacity: 0.4</span
-            >
+            <span class="ds-body text-gray-500">--p-disabled-opacity: 0.4</span>
           </div>
         </div>
       </div>
@@ -260,7 +242,7 @@
     <section id="buttons">
       <div class="mb-6">
         <h2>Buttons</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           PrimeNG Button — border-radius 12px, padding 40/8px.
         </p>
       </div>
@@ -309,7 +291,7 @@
         </div>
         <div>
           <p class="ds-label mb-3">Sizes</p>
-          <div class="flex items-center flex-wrap gap-3">
+          <div class="flex flex-wrap items-center gap-3">
             <p-button label="Default" />
             <p-button label="Small" class="small" />
             <div class="p-condensed"><p-button label="Condensed" /></div>
@@ -332,12 +314,13 @@
     <section id="tags">
       <div class="mb-6">
         <h2>Badges</h2>
-        <p class="ds-body text-gray-500 mt-1">
-          Spartan hlm-badge — variants: default, secondary, destructive, outline.
+        <p class="ds-body mt-1 text-gray-500">
+          Spartan hlm-badge — variants: default, secondary, destructive,
+          outline.
         </p>
       </div>
 
-      <div class="flex flex-wrap gap-3 items-center">
+      <div class="flex flex-wrap items-center gap-3">
         <span hlmBadge>Default</span>
         <span hlmBadge variant="secondary">Secondary</span>
         <span hlmBadge variant="destructive">Destructive</span>
@@ -352,7 +335,7 @@
     <section id="forms">
       <div class="mb-6">
         <h2>Forms</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           Spartan UI input and textarea primitives with Tailwind styling.
         </p>
       </div>
@@ -435,8 +418,8 @@
               placeholder="Type to see it grow…"
               class="w-full"
             />
-            <p class="ds-body text-gray-400 mt-1">
-              Grows with content, animated. Max-height: 300px (configurable).
+            <p class="ds-body mt-1 text-gray-400">
+              Grows with content, animated. Max-height: 200px (configurable).
             </p>
           </div>
         </div>
@@ -449,12 +432,12 @@
     <section id="cards">
       <div class="mb-6">
         <h2>Cards</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           PrimeNG Card and the custom AddCard component.
         </p>
       </div>
 
-      <div class="flex flex-wrap gap-4 items-start">
+      <div class="flex flex-wrap items-start gap-4">
         <p-card class="w-64">
           <ng-template #header>
             <div class="px-4 pt-4">
@@ -493,7 +476,7 @@
     <section id="navigation">
       <div class="mb-6">
         <h2>Navigation</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           PrimeNG Tabs — transparent background, composable structure.
         </p>
       </div>
@@ -530,7 +513,7 @@
     <section id="feedback">
       <div class="mb-6">
         <h2>Feedback</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           Messages, progress indicators, and loading states.
         </p>
       </div>
@@ -556,7 +539,7 @@
 
         <div>
           <p class="ds-label mb-3">Progress Bar</p>
-          <div class="flex flex-col gap-2 max-w-sm">
+          <div class="flex max-w-sm flex-col gap-2">
             <p-progressbar [value]="30" />
             <p-progressbar [value]="65" />
             <p-progressbar mode="indeterminate" style="height: 6px" />
@@ -570,11 +553,17 @@
 
         <div>
           <p class="ds-label mb-3">Skeleton Loader</p>
-          <div class="flex flex-col gap-2 max-w-sm">
-            <hlm-skeleton style="width: 100%; height: 16px" class="rounded-lg" />
+          <div class="flex max-w-sm flex-col gap-2">
+            <hlm-skeleton
+              style="width: 100%; height: 16px"
+              class="rounded-lg"
+            />
             <hlm-skeleton style="width: 80%; height: 16px" class="rounded-lg" />
             <hlm-skeleton style="width: 60%; height: 16px" class="rounded-lg" />
-            <hlm-skeleton style="width: 100%; height: 64px" class="rounded-xl" />
+            <hlm-skeleton
+              style="width: 100%; height: 64px"
+              class="rounded-xl"
+            />
           </div>
         </div>
       </div>
@@ -586,7 +575,7 @@
     <section id="overlays">
       <div class="mb-6">
         <h2>Overlays</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           ShareDrawer (the only Drawer use case), Panel (expandable), and
           Popover.
         </p>
@@ -630,7 +619,7 @@
             (click)="op.toggle($event)"
           />
           <p-popover #op>
-            <div class="p-3 flex flex-col gap-2 max-w-xs">
+            <div class="flex max-w-xs flex-col gap-2 p-3">
               <h3 style="margin: 0">Popover Title</h3>
               <p class="ds-body text-gray-500">
                 Contextual overlay anchored to its trigger. Used for inline help
@@ -648,7 +637,7 @@
     <section id="data-display">
       <div class="mb-6">
         <h2>Data Display</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           Avatar, AvatarGroup, and Separator.
         </p>
       </div>
@@ -690,7 +679,7 @@
 
         <div>
           <p class="ds-label mb-3">Separator</p>
-          <div class="max-w-md flex flex-col gap-2">
+          <div class="flex max-w-md flex-col gap-2">
             <p class="ds-body text-gray-500">Content above</p>
             <hlm-separator />
             <p class="ds-body text-gray-500">Content below</p>
@@ -711,7 +700,7 @@
     <section id="icons">
       <div class="mb-6">
         <h2>Icons</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           Font Awesome Free 7 is the app's icon library. PrimeIcons is installed
           as a PrimeNG dependency but not used directly in app code.
         </p>
@@ -722,7 +711,7 @@
           <p class="ds-label mb-3">Font Awesome</p>
           <div class="flex flex-wrap gap-4">
             @for (icon of faIcons; track icon) {
-              <div class="flex flex-col items-center gap-1 w-14">
+              <div class="flex w-14 flex-col items-center gap-1">
                 <i
                   class="{{ icon }}"
                   style="font-size: 20px; color: var(--color-secondary)"
@@ -746,27 +735,41 @@
     <section id="elevation">
       <div class="mb-6">
         <h2>Elevation</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           Three semantic shadow levels defined as CSS classes in styles.css.
         </p>
       </div>
 
-      <div class="flex flex-wrap gap-8 items-end">
+      <div class="flex flex-wrap items-end gap-8">
         @for (
           level of [
-            { class: 'ds-shadow-card', label: 'Card', usage: 'Content cards at rest' },
-            { class: 'ds-shadow-raised', label: 'Raised', usage: 'Raised interactive elements' },
-            { class: 'ds-shadow-floating', label: 'Floating', usage: 'Overlays and floating elements' },
+            {
+              class: "ds-shadow-card",
+              label: "Card",
+              usage: "Content cards at rest",
+            },
+            {
+              class: "ds-shadow-raised",
+              label: "Raised",
+              usage: "Raised interactive elements",
+            },
+            {
+              class: "ds-shadow-floating",
+              label: "Floating",
+              usage: "Overlays and floating elements",
+            },
           ];
           track level.class
         ) {
           <div class="flex flex-col items-center gap-3">
             <div
-              class="w-24 h-24 rounded-2xl bg-white"
+              class="h-24 w-24 rounded-2xl bg-white"
               [ngClass]="level.class"
             ></div>
             <div class="text-center">
-              <p class="ds-label normal-case tracking-normal">{{ level.label }}</p>
+              <p class="ds-label tracking-normal normal-case">
+                {{ level.label }}
+              </p>
               <p class="ds-mono">{{ level.class }}</p>
               <p class="ds-mono-xs">{{ level.usage }}</p>
             </div>
@@ -781,7 +784,7 @@
     <section id="suggestions">
       <div class="mb-6">
         <h2>Suggestions</h2>
-        <p class="ds-body text-gray-500 mt-1">
+        <p class="ds-body mt-1 text-gray-500">
           Things that make sense to define in a design system but are currently
           missing.
         </p>
@@ -793,7 +796,7 @@
       >
         @for (s of suggestions; track s.title) {
           <div
-            class="rounded-xl p-4 flex flex-col gap-2"
+            class="flex flex-col gap-2 rounded-xl p-4"
             style="background: #fff8ed; border: 1px solid #f5d68a"
           >
             <div class="flex items-center gap-2">

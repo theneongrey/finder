@@ -15,11 +15,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { toast } from '@spartan-ng/brain/sonner';
 import { Button } from 'primeng/button';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { Select } from 'primeng/select';
-import { Toast } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
 import { UserAvatarComponent } from '../../common/ui/components/user-avatar/user-avatar.component';
 import { TitleBarService } from '../../common/services/title-bar.service';
@@ -37,12 +36,10 @@ import {
     Button,
     HlmInput,
     Select,
-    Toast,
     TitleBarComponent,
     UserAvatarComponent,
     TranslatePipe,
   ],
-  providers: [MessageService],
   templateUrl: './settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,7 +47,6 @@ export class SettingsComponent {
   private userStore = inject(UserStore);
   private translateService = inject(TranslateService);
   private events = inject(Events);
-  private messageService = inject(MessageService);
 
   user = this.userStore.user;
   isSaving = signal(false);
@@ -98,12 +94,14 @@ export class SettingsComponent {
       .pipe(takeUntilDestroyed())
       .subscribe(({ payload }) => {
         this.isSaving.set(false);
-        this.messageService.add({
-          severity: payload.success ? 'success' : 'error',
-          detail: this.translateService.instant(
-            payload.success ? 'settings.saveSuccess' : 'settings.saveError',
-          ),
-        });
+        const message = this.translateService.instant(
+          payload.success ? 'settings.saveSuccess' : 'settings.saveError',
+        );
+        if (payload.success) {
+          toast.success(message);
+        } else {
+          toast.error(message);
+        }
       });
   }
 

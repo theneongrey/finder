@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { HlmToasterImports } from '@spartan-ng/helm/sonner';
 import { UserStore } from './common/data/user.store';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
@@ -7,7 +8,7 @@ import { SUPPORTED_LANGUAGES } from './common/i18n/languages';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ...HlmToasterImports],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

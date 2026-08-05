@@ -12,8 +12,12 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Avatar } from 'primeng/avatar';
-import { AvatarGroup } from 'primeng/avatargroup';
+import {
+  HlmAvatar,
+  HlmAvatarFallback,
+  HlmAvatarGroup,
+  HlmAvatarImage,
+} from '@spartan-ng/helm/avatar';
 import { Tooltip } from 'primeng/tooltip';
 import { ShareDrawerComponent } from '../../../../common/ui/components/share-drawer/share-drawer.component';
 import { ProjectRole } from '../../_shared/models/project-role.enum';
@@ -32,8 +36,10 @@ import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.componen
     ReactiveFormsModule,
     PollItemComponent,
     RouterLink,
-    Avatar,
-    AvatarGroup,
+    HlmAvatar,
+    HlmAvatarFallback,
+    HlmAvatarGroup,
+    HlmAvatarImage,
     Tooltip,
     ShareDrawerComponent,
     TranslatePipe,

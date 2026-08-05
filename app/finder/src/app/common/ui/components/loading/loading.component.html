@@ -8,7 +8,7 @@
     style="transition: opacity 0.3s ease-out"
   >
     @for (item of skeletonArray(); track $index) {
-      <p-skeleton [width]="skeletonWidth()" [height]="skeletonHeight()" />
+      <hlm-skeleton [style.width]="skeletonWidth()" [style.height]="skeletonHeight()" />
     }
   </div>
 }

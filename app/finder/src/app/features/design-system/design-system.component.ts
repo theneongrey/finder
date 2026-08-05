@@ -14,10 +14,10 @@ import { Message } from 'primeng/message';
 import { Panel } from 'primeng/panel';
 import { Popover } from 'primeng/popover';
 import { ProgressBar } from 'primeng/progressbar';
-import { ProgressSpinner } from 'primeng/progressspinner';
+import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
+import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
-import { Skeleton } from 'primeng/skeleton';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { Tag } from 'primeng/tag';
 import { Textarea } from 'primeng/textarea';
@@ -63,8 +63,8 @@ const mockSharingStore = {
     AvatarGroup,
     Message,
     ProgressBar,
-    ProgressSpinner,
-    Skeleton,
+    ...HlmSpinnerImports,
+    ...HlmSkeletonImports,
     Panel,
     Divider,
     Popover,

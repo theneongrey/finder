@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Card } from 'primeng/card';
+import { HlmCard } from '@spartan-ng/helm/card';
 import { AddCardComponent } from '../../../../../../common/ui/components/add-card/add-card.component';
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
@@ -47,7 +47,7 @@ export type { DateOptionEntry, DateOptionType };
   imports: [
     AddCardComponent,
     TranslatePipe,
-    Card,
+    HlmCard,
     OptionCardComponent,
     OptionCardDateComponent,
     OptionCardWeekdayComponent,

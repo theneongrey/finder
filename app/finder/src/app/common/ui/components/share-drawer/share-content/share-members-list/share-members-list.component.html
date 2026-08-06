@@ -60,7 +60,7 @@
           }
 
           @if (!isPublic() && member.role !== ProjectRole.Creator) {
-            <button hlmBtn variant="ghost" size="sm" icon="pi pi-times" (click)="onRemoveClick(member.email)">
+            <button hlmBtn variant="ghost" size="sm" icon="fa-solid fa-xmark" (click)="onRemoveClick(member.email)">
             </button>
           }
         </div>

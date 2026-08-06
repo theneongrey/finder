@@ -1,4 +1,3 @@
-@import "primeicons/primeicons.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 @import "tailwindcss";
 @import "@spartan-ng/brain/hlm-tailwind-preset.css";
@@ -32,37 +31,6 @@ body {
   height: 100%;
   width: 100%;
 
-  --p-tabs-tab-background: transparent;
-  --p-tabs-tablist-background: transparent;
-  --p-tabs-tabpanel-background: transparent;
-
-  /* button */
-  --p-button-border-radius: 12px;
-  --p-inputgroup-addon-border-radius: 12px;
-  --p-button-padding-x: 40px;
-  --p-button-padding-y: 8px;
-
-  --p-panel-border-radius: 12px;
-  --p-disabled-opacity: 0.4;
-
-  --p-form-field-border-radius: 12px;
-
-  p-button.small {
-    --p-button-padding-x: 12px;
-    --p-button-padding-y: 2px;
-  }
-
-  p-tag.p-tag {
-    background-color: #86bba133;
-    font-weight: normal;
-    font-size: 80%;
-  }
-}
-
-.p-inputgroup:has(> p-button:last-child) .p-button {
-  border-radius: 0px;
-  border-start-end-radius: var(--p-inputgroup-addon-border-radius);
-  border-end-end-radius: var(--p-inputgroup-addon-border-radius);
 }
 
 h1 {
@@ -115,14 +83,6 @@ h3 {
   color: #aaa;
   font-family: monospace;
   margin: 0;
-}
-
-.p-fluid button {
-  width: 100%;
-}
-
-.p-condensed button {
-  padding: 4px;
 }
 
 input.invalid {

@@ -24,6 +24,8 @@ export class HlmTabsTrigger {
       'group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent',
       'data-active:bg-background dark:data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 data-active:text-foreground',
       'after:bg-foreground after:absolute after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100',
+      // Line variant: underline style with bottom-border instead of after pseudo-element
+      'group-data-[variant=line]/tabs-list:!rounded-none group-data-[variant=line]/tabs-list:!px-0 group-data-[variant=line]/tabs-list:!pt-0 group-data-[variant=line]/tabs-list:!pb-3 group-data-[variant=line]/tabs-list:!h-auto group-data-[variant=line]/tabs-list:!flex-none group-data-[variant=line]/tabs-list:after:!hidden group-data-[variant=line]/tabs-list:data-active:!bg-transparent group-data-[variant=line]/tabs-list:!-mb-px group-data-[variant=line]/tabs-list:!border-b-2 group-data-[variant=line]/tabs-list:!border-b-transparent group-data-[variant=line]/tabs-list:data-active:!border-b-primary group-data-[variant=line]/tabs-list:data-active:!font-bold',
     ]);
   }
 }

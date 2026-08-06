@@ -4,8 +4,8 @@
     fMaxHeightMinusHeader
     class="flex-grow max-w-5xl mx-auto w-full h-full rounded-t-2xl overflow-y-auto"
   >
-    <hlm-tabs [tab]="activeTabValue" (tabActivated)="activeTabValue = $event">
-      <hlm-tabs-list>
+    <hlm-tabs [tab]="activeTabValue" (tabActivated)="activeTabValue = $event" class="px-[22px] pt-5">
+      <hlm-tabs-list variant="line">
         <button hlmTabsTrigger="overview">{{
           "project.tabs.overview" | translate
         }}</button>
@@ -18,7 +18,7 @@
           <span hlmBadge class="ml-1">{{ projects().length }}</span>
         </button>
       </hlm-tabs-list>
-      <div hlmTabsContent="overview">
+      <div hlmTabsContent="overview" class="pt-[22px]">
         <app-overview-tab
           (projectDeletionRequested)="projectDeletionRequested($event)"
           (pollDeletionRequested)="pollDeletionRequested($event)"
@@ -26,13 +26,13 @@
           (pollShareRequested)="pollShareRequested($event)"
         />
       </div>
-      <div hlmTabsContent="projects">
+      <div hlmTabsContent="projects" class="pt-[22px]">
         <app-projects-tab
           (deletionRequested)="projectDeletionRequested($event)"
           (shareRequested)="shareRequested($event)"
         />
       </div>
-      <div hlmTabsContent="polls">
+      <div hlmTabsContent="polls" class="pt-[22px]">
         <app-standalone-poll-tab
           (deletionRequested)="pollDeletionRequested($event)"
           (shareRequested)="pollShareRequested($event)"

@@ -66,7 +66,8 @@
     },
     "pollsTab": {
       "title": "Encuestas",
-      "subtitle": "Todas tus encuestas independientes de un vistazo"
+      "subtitle": "Todas tus encuestas independientes de un vistazo",
+      "empty": "Todavía no tienes encuestas. ¡Crea una!"
     },
     "standaloneItem": {
       "badge": "Sin proyecto",

@@ -66,7 +66,8 @@
     },
     "pollsTab": {
       "title": "Polls",
-      "subtitle": "All your standalone polls at a glance"
+      "subtitle": "All your standalone polls at a glance",
+      "empty": "You don't have any polls yet. Create one!"
     },
     "standaloneItem": {
       "badge": "No project",

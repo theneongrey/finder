@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { HlmToasterImports } from '@spartan-ng/helm/sonner';
 import { UserStore } from './common/data/user.store';
 import { TranslateService } from '@ngx-translate/core';
-import { PrimeNG } from 'primeng/config';
 import { SUPPORTED_LANGUAGES } from './common/i18n/languages';
 
 @Component({
@@ -15,14 +14,9 @@ import { SUPPORTED_LANGUAGES } from './common/i18n/languages';
 export class AppComponent {
   constructor() {
     const userStore = inject(UserStore);
-    const primeNGConfig = inject(PrimeNG);
     const translateService = inject(TranslateService);
 
     userStore.getUser();
     translateService.addLangs([...SUPPORTED_LANGUAGES]);
-
-    translateService
-      .get('primeng')
-      .subscribe((res) => primeNGConfig.setTranslation(res));
   }
 }

@@ -33,6 +33,7 @@ export class AppComponent {
     const syncCalendarLocale = (lang: string) =>
       calendarI18n.use({ months: () => monthNamesForLocale(lang) });
 
+    syncCalendarLocale(getStoredLanguage());
     translateService.onLangChange.subscribe(({ lang }) => syncCalendarLocale(lang));
   }
 }

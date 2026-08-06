@@ -6,16 +6,13 @@
         <label class="text-xs font-semibold text-gray-600">
           {{ "project.pollInput.date.startTime" | translate }}
         </label>
-        <p-datepicker
-          [timeOnly]="true"
-          hourFormat="24"
-          [showIcon]="true"
-          [stepMinute]="15"
-          appendTo="body"
-          styleClass="w-full"
-          [(ngModel)]="option().startTime"
+        <input
+          hlmInput
+          type="time"
+          step="900"
+          [value]="getTimeValue(option().startTime)"
+          (change)="onStartTimeChange($event)"
           [name]="'time-range-start-' + index()"
-          (ngModelChange)="onStartTimeChange()"
         />
       </div>
 
@@ -23,14 +20,12 @@
         <label class="text-xs font-semibold text-gray-600">
           {{ "project.pollInput.date.endTime" | translate }}
         </label>
-        <p-datepicker
-          [timeOnly]="true"
-          hourFormat="24"
-          [showIcon]="true"
-          [stepMinute]="15"
-          appendTo="body"
-          styleClass="w-full"
-          [(ngModel)]="option().endTime"
+        <input
+          hlmInput
+          type="time"
+          step="900"
+          [value]="getTimeValue(option().endTime)"
+          (change)="setEndTime($event)"
           [name]="'time-range-end-' + index()"
         />
       </div>

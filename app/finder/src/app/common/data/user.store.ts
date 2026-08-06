@@ -10,12 +10,6 @@ const dateFormatByLanguage: Record<SupportedLanguage, string> = {
   es: 'dd/MM/yyyy',
 };
 
-const primengDateFormatByLanguage: Record<SupportedLanguage, string> = {
-  en: 'm/d/yy',
-  de: 'dd.mm.yy',
-  es: 'dd/mm/yy',
-};
-
 export const UserStore = signalStore(
   { providedIn: 'root' },
   withAuthFeature(),
@@ -24,10 +18,6 @@ export const UserStore = signalStore(
     dateFormat: computed(() => {
       const lang = (store.user()?.language ?? 'en') as SupportedLanguage;
       return dateFormatByLanguage[lang] ?? dateFormatByLanguage['en'];
-    }),
-    primengDateFormat: computed(() => {
-      const lang = (store.user()?.language ?? 'en') as SupportedLanguage;
-      return primengDateFormatByLanguage[lang] ?? primengDateFormatByLanguage['en'];
     }),
   })),
 );

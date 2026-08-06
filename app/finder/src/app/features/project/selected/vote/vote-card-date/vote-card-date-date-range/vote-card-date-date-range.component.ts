@@ -5,24 +5,15 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { DatePicker } from 'primeng/datepicker';
+import { HlmCalendarRange } from '@spartan-ng/helm/calendar';
 import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
 
 @Component({
   selector: 'app-vote-card-date-date-range',
   templateUrl: './vote-card-date-date-range.component.html',
-  styles: [
-    ':host { display: contents; }',
-    `
-      :host ::ng-deep .p-datepicker-prev-button,
-      :host ::ng-deep .p-datepicker-next-button {
-        display: none !important;
-      }
-    `,
-  ],
-  imports: [DatePicker, FormsModule],
+  styles: [':host { display: contents; }'],
+  imports: [HlmCalendarRange],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteCardDateDateRangeComponent {
@@ -30,43 +21,15 @@ export class VoteCardDateDateRangeComponent {
 
   entry = input.required<DateOptionEntry>();
 
-  private readonly startDate = computed(() => {
+  readonly startDate = computed(() => {
     const d = this.entry().date;
     return d ? new Date(d.getFullYear(), d.getMonth(), d.getDate()) : undefined;
   });
 
-  private readonly endDate = computed(() => {
+  readonly endDate = computed(() => {
     const d = this.entry().endDate;
     return d ? new Date(d.getFullYear(), d.getMonth(), d.getDate()) : undefined;
   });
-
-  readonly isSameMonth = computed(() => {
-    const s = this.startDate();
-    const e = this.endDate();
-
-    return !!(
-      s &&
-      e &&
-      s.getFullYear() === e.getFullYear() &&
-      s.getMonth() === e.getMonth()
-    );
-  });
-
-  readonly rangeValue = computed(() => {
-    const s = this.startDate();
-    const e = this.endDate();
-    return s && e ? [s, e] : undefined;
-  });
-
-  isInRange(date: { year: number; month: number; day: number }): boolean {
-    const d = new Date(date.year, date.month, date.day).getTime();
-    const start = this.startDate()?.getTime();
-    const end = this.endDate()?.getTime();
-    if (start === undefined || end === undefined) {
-      return false;
-    }
-    return d > start && d < end;
-  }
 
   formatDate(date: Date): string {
     return date.toLocaleDateString(this.translate.currentLang() ?? undefined, {

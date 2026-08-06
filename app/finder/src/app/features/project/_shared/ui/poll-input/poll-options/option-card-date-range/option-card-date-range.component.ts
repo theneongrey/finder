@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   effect,
-  inject,
   input,
   output,
   signal,
@@ -11,20 +10,19 @@ import {
 import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmButton } from '@spartan-ng/helm/button';
-import { DatePicker } from 'primeng/datepicker';
+import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { TranslatePipe } from '@ngx-translate/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
-import { DateOptionEntry, nextFullHour } from '../../../../utils/date-option.utils';
-import { UserStore } from '../../../../../../../common/data/user.store';
+import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-date-range',
   templateUrl: './option-card-date-range.component.html',
-  imports: [FormsModule, HlmButton, DatePicker, TranslatePipe, ...HlmCardImports],
+  imports: [FormsModule, HlmButton, HlmInput, ...HlmDatePickerImports, TranslatePipe, ...HlmCardImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateRangeComponent {
-  protected readonly userStore = inject(UserStore);
 
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
@@ -45,7 +43,7 @@ export class OptionCardDateRangeComponent {
 
   readonly formattedStartDate = computed(() => {
     const date = this.startDate();
-    return date ? formatDate(date, this.userStore.dateFormat(), 'en') : '';
+    return date ? formatDate(date, 'mediumDate', 'en') : '';
   });
 
   constructor() {
@@ -66,14 +64,16 @@ export class OptionCardDateRangeComponent {
     });
   }
 
-  onStartDateChange(date: Date | undefined): void {
-    this.startDate.set(date);
-    this.option().date = date;
+  onStartDateChange(date: Date | null): void {
+    const d = date ?? undefined;
+    this.startDate.set(d);
+    this.option().date = d;
   }
 
-  onEndDateChange(date: Date | undefined): void {
-    this.endDate.set(date);
-    this.option().endDate = date;
+  onEndDateChange(date: Date | null): void {
+    const d = date ?? undefined;
+    this.endDate.set(d);
+    this.option().endDate = d;
   }
 
   addTime(): void {
@@ -93,5 +93,17 @@ export class OptionCardDateRangeComponent {
     this.option().endTime = undefined;
     this.showTime.set(false);
     this.showTimeChange.emit(false);
+  }
+
+  protected getTimeValue(date: Date | undefined): string {
+    return date ? formatTime(date) : '';
+  }
+
+  setStartTime(event: Event): void {
+    this.option().startTime = parseTimeInput((event.target as HTMLInputElement).value);
+  }
+
+  setEndTime(event: Event): void {
+    this.option().endTime = parseTimeInput((event.target as HTMLInputElement).value);
   }
 }

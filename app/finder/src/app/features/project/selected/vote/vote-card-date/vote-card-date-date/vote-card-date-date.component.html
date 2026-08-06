@@ -1,24 +1,11 @@
 <div
   class="pointer-events-none flex flex-col items-center gap-2"
 >
-  <p-datepicker
-    [ngModel]="selectedDate()"
-    [inline]="true"
-    [readonlyInput]="true"
-    [firstDayOfWeek]="1"
-  >
-    <ng-template #date let-date>
-      @if (isOtherDate(date)) {
-        <span
-          class="flex w-full h-full rounded-full bg-primary/20 items-center justify-center text-primary/60"
-        >
-          {{ date.day }}
-        </span>
-      } @else {
-        {{ date.day }}
-      }
-    </ng-template>
-  </p-datepicker>
+  <hlm-calendar
+    [date]="selectedDate()"
+    [highlightDays]="otherDatesArray()"
+    [weekStartsOn]="1"
+  />
   @if (entry().date; as d) {
     <p class="font-semibold text-center">
       {{ formatDate(d) }}

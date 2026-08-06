@@ -5,14 +5,12 @@
       <label class="text-xs font-semibold text-gray-600">
         {{ "project.pollInput.date.startTime" | translate }}
       </label>
-      <p-datepicker
-        [timeOnly]="true"
-        hourFormat="24"
-        [showIcon]="true"
-        [stepMinute]="15"
-        appendTo="body"
-        styleClass="w-full"
-        [(ngModel)]="option().startTime"
+      <input
+        hlmInput
+        type="time"
+        step="900"
+        [value]="getTimeValue(option().startTime)"
+        (change)="setStartTime($event)"
         [name]="'time-' + index()"
       />
     </div>

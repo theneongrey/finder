@@ -159,6 +159,7 @@
         "endDate": "End date",
         "startTime": "Time",
         "endTime": "End time",
+        "selectDate": "Select date",
         "addTime": "Add time",
         "endBeforeStart": "End date must be after {{date}}.",
         "addOption": "Add date",

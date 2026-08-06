@@ -114,6 +114,14 @@ export function parseTimeString(timeStr: string): Date {
   return d;
 }
 
-function formatTime(d: Date): string {
+export function formatTime(d: Date): string {
   return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+}
+
+export function parseTimeInput(value: string): Date | undefined {
+  if (!value) return undefined;
+  const [h, m] = value.split(':').map(Number);
+  const d = new Date(0);
+  d.setHours(h, m, 0, 0);
+  return d;
 }

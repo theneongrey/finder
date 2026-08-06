@@ -2,27 +2,25 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
-  inject,
   input,
   output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HlmButton } from '@spartan-ng/helm/button';
-import { DatePicker } from 'primeng/datepicker';
+import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { TranslatePipe } from '@ngx-translate/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
-import { DateOptionEntry, nextFullHour } from '../../../../utils/date-option.utils';
-import { UserStore } from '../../../../../../../common/data/user.store';
+import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-date',
   templateUrl: './option-card-date.component.html',
-  imports: [FormsModule, HlmButton, DatePicker, TranslatePipe, ...HlmCardImports],
+  imports: [FormsModule, HlmButton, HlmInput, ...HlmDatePickerImports, TranslatePipe, ...HlmCardImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {
-  protected readonly userStore = inject(UserStore);
 
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
@@ -56,5 +54,13 @@ export class OptionCardDateComponent {
     this.option().startTime = undefined;
     this.showTime.set(false);
     this.showTimeChange.emit(false);
+  }
+
+  protected getTimeValue(date: Date | undefined): string {
+    return date ? formatTime(date) : '';
+  }
+
+  setStartTime(event: Event): void {
+    this.option().startTime = parseTimeInput((event.target as HTMLInputElement).value);
   }
 }

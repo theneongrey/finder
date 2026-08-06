@@ -8,16 +8,12 @@
             <label class="text-xs font-semibold text-gray-600">
               {{ "project.pollInput.date.startDate" | translate }}
             </label>
-            <p-datepicker
-              [showTime]="false"
-              [showIcon]="true"
-              [firstDayOfWeek]="1"
-              [dateFormat]="userStore.primengDateFormat()"
-              appendTo="body"
-              styleClass="w-full"
+            <hlm-date-picker
               [(ngModel)]="option().date"
-              [name]="'date-' + index()"
-            />
+              autoCloseOnSelect
+            >
+              <hlm-date-picker-input [placeholder]="'project.pollInput.date.selectDate' | translate" />
+            </hlm-date-picker>
           </div>
 
           @if (showTime()) {
@@ -34,14 +30,12 @@
                   <i class="fa-solid fa-xmark"></i>
                 </button>
               </div>
-              <p-datepicker
-                [timeOnly]="true"
-                hourFormat="24"
-                [showIcon]="true"
-                [stepMinute]="15"
-                appendTo="body"
-                styleClass="w-full"
-                [(ngModel)]="option().startTime"
+              <input
+                hlmInput
+                type="time"
+                step="900"
+                [value]="getTimeValue(option().startTime)"
+                (change)="setStartTime($event)"
                 [name]="'date-time-' + index()"
               />
             </div>

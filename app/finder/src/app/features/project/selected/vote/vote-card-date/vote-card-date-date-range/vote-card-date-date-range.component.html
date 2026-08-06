@@ -1,56 +1,11 @@
 <div
   class="pointer-events-none flex flex-col items-center w-full"
 >
-  @if (isSameMonth()) {
-    <!-- Single calendar — PrimeNG handles range highlighting natively -->
-    <p-datepicker
-      [ngModel]="rangeValue()"
-      selectionMode="range"
-      [inline]="true"
-      [readonlyInput]="true"
-      [firstDayOfWeek]="1"
-    />
-  } @else {
-    <!-- Two calendars at 50% zoom, each showing the respective month -->
-    <div class="flex justify-center w-full scale-55">
-      <p-datepicker
-        [ngModel]="entry().date"
-        [inline]="true"
-        [readonlyInput]="true"
-        [firstDayOfWeek]="1"
-      >
-        <ng-template #date let-date>
-          @if (isInRange(date)) {
-            <span
-              class="flex w-full h-full rounded-full bg-primary/20 items-center justify-center text-primary/60"
-            >
-              {{ date.day }}
-            </span>
-          } @else {
-            {{ date.day }}
-          }
-        </ng-template>
-      </p-datepicker>
-      <p-datepicker
-        [ngModel]="entry().endDate"
-        [inline]="true"
-        [readonlyInput]="true"
-        [firstDayOfWeek]="1"
-      >
-        <ng-template #date let-date>
-          @if (isInRange(date)) {
-            <span
-              class="flex w-full h-full rounded-full bg-primary/20 items-center justify-center text-primary/60"
-            >
-              {{ date.day }}
-            </span>
-          } @else {
-            {{ date.day }}
-          }
-        </ng-template>
-      </p-datepicker>
-    </div>
-  }
+  <hlm-calendar-range
+    [startDate]="startDate()"
+    [endDate]="endDate()"
+    [weekStartsOn]="1"
+  />
 
   @if (entry().date && entry().endDate) {
     <div class="flex flex-col items-center gap-1 text-center">

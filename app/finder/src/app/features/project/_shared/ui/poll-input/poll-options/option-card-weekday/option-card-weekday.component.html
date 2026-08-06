@@ -36,14 +36,12 @@
                 </button>
               }
             </div>
-            <p-datepicker
-              [timeOnly]="true"
-              hourFormat="24"
-              [showIcon]="true"
-              [stepMinute]="15"
-              appendTo="body"
-              styleClass="w-full"
-              [(ngModel)]="option().startTime"
+            <input
+              hlmInput
+              type="time"
+              step="900"
+              [value]="getTimeValue(option().startTime)"
+              (change)="setStartTime($event)"
               [name]="'weekday-time-' + index()"
             />
           </div>

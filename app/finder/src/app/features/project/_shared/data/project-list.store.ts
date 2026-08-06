@@ -10,7 +10,6 @@ import { inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, map, of, pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { ProjectOverview } from '../models/project-overview.model';
 import { StandalonePollOverview } from '../models/standalone-poll-overview.model';
 import { ProjectService } from '../../_shared/data/project.service';
 import { Router } from '@angular/router';
@@ -21,9 +20,7 @@ import { sharingEvents } from './sharing.events';
 export const ProjectListStore = signalStore(
   { providedIn: 'root' },
   withState({
-    projects: [] as ProjectOverview[],
     standalonePolls: [] as StandalonePollOverview[],
-    activeTab: 'overview' as 'overview' | 'projects' | 'polls',
   }),
   withProps(() => ({
     loggerService: inject(LoggerService),
@@ -31,36 +28,6 @@ export const ProjectListStore = signalStore(
     router: inject(Router),
   })),
   withMethods((store) => ({
-    setActiveTab(tab: 'overview' | 'projects' | 'polls') {
-      patchState(store, { activeTab: tab });
-    },
-
-    getProjects: rxMethod<void>(
-      pipe(
-        switchMap(() =>
-          store.projectService.getProjects().pipe(
-            tapResponse({
-              next: (projects) => {
-                patchState(store, {
-                  projects: projects.sort(
-                    (a, b) =>
-                      new Date(b.lastUpdated).getTime() -
-                      new Date(a.lastUpdated).getTime(),
-                  ),
-                });
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[ProjectListStore] Error while loading projects',
-                  error,
-                );
-              },
-            }),
-          ),
-        ),
-      ),
-    ),
-
     getStandalonePolls: rxMethod<void>(
       pipe(
         switchMap(() =>
@@ -87,58 +54,6 @@ export const ProjectListStore = signalStore(
       ),
     ),
 
-    addProject: rxMethod<{ name: string; description: string }>(
-      pipe(
-        switchMap((project) =>
-          store.projectService
-            .addProject(project.name, project.description)
-            .pipe(
-              tapResponse({
-                next: (project) => {
-                  patchState(store, {
-                    projects: [...store.projects(), project],
-                  });
-                  store.router.navigate([`/project/detail/${project.id}`]);
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[ProjectListStore] Error adding a project',
-                    error,
-                  );
-                },
-              }),
-            ),
-        ),
-      ),
-    ),
-
-    editProject: rxMethod<{ id: string; name: string; description: string }>(
-      pipe(
-        switchMap((project) =>
-          store.projectService
-            .updateProject(project.id, project.name, project.description)
-            .pipe(
-              tapResponse({
-                next: (updated) => {
-                  patchState(store, {
-                    projects: store
-                      .projects()
-                      .map((p) => (p.id === updated.id ? updated : p)),
-                  });
-                  store.router.navigate([`/project/detail/${updated.id}`]);
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[ProjectListStore] Error updating project',
-                    error,
-                  );
-                },
-              }),
-            ),
-        ),
-      ),
-    ),
-
     deleteProject: rxMethod<string>(
       pipe(
         switchMap((projectId) =>
@@ -146,7 +61,6 @@ export const ProjectListStore = signalStore(
             tapResponse({
               next: () => {
                 patchState(store, {
-                  projects: store.projects().filter((p) => p.id !== projectId),
                   standalonePolls: store
                     .standalonePolls()
                     .filter((t) => t.projectId !== projectId),
@@ -217,7 +131,6 @@ export const ProjectListStore = signalStore(
                 next: (responsePoll) => {
                   patchState(store, {
                     standalonePolls: [responsePoll, ...store.standalonePolls()],
-                    activeTab: 'polls',
                   });
                   store.router.navigate(['/project/overview']);
                 },
@@ -238,15 +151,7 @@ export const ProjectListStore = signalStore(
       sharingEvents.shared,
       sharingEvents.permissionRemoved,
       ({ payload }) =>
-        (state: {
-          projects: ProjectOverview[];
-          standalonePolls: StandalonePollOverview[];
-        }) => ({
-          projects: state.projects.map((p) =>
-            p.id === payload.projectId
-              ? { ...p, sharedWith: payload.sharedWith }
-              : p,
-          ),
+        (state: { standalonePolls: StandalonePollOverview[] }) => ({
           standalonePolls: state.standalonePolls.map((p) =>
             p.projectId === payload.projectId
               ? { ...p, sharedWith: payload.sharedWith }
@@ -257,15 +162,7 @@ export const ProjectListStore = signalStore(
     on(
       sharingEvents.visibilityTypeUpdated,
       ({ payload }) =>
-        (state: {
-          projects: ProjectOverview[];
-          standalonePolls: StandalonePollOverview[];
-        }) => ({
-          projects: state.projects.map((p) =>
-            p.id === payload.projectId
-              ? { ...p, visibilityType: payload.visibilityType }
-              : p,
-          ),
+        (state: { standalonePolls: StandalonePollOverview[] }) => ({
           standalonePolls: state.standalonePolls.map((p) =>
             p.projectId === payload.projectId
               ? { ...p, visibilityType: payload.visibilityType }

@@ -11,7 +11,6 @@ import { HlmSeparator } from '@spartan-ng/helm/separator';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
 import { BrnInputOtp } from '@spartan-ng/brain/input-otp';
-import { Panel } from 'primeng/panel';
 import { HlmPopoverImports } from '@spartan-ng/helm/popover';
 import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
@@ -57,7 +56,6 @@ const mockSharingStore = {
     ...HlmProgressImports,
     ...HlmSpinnerImports,
     ...HlmSkeletonImports,
-    Panel,
     HlmSeparator,
     ...HlmPopoverImports,
     AddCardComponent,
@@ -178,7 +176,7 @@ export class DesignSystemComponent {
     },
     {
       title: 'Semantic status colors',
-      body: 'Success and warning colors exist only as PrimeNG severity aliases. No CSS tokens (--color-success, --color-warning) are defined alongside --color-error.',
+      body: 'Success and warning colors are not defined as CSS tokens. No --color-success or --color-warning exists alongside --color-error.',
     },
   ];
 }

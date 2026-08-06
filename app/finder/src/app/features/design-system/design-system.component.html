@@ -71,7 +71,7 @@
 
       <div>
         <p class="ds-label mb-3">
-          PrimeNG Semantic Primary Scale (Aura preset)
+          Semantic Primary Scale
         </p>
         <div class="flex flex-wrap gap-2">
           @for (step of semanticScale; track step.step) {
@@ -587,8 +587,8 @@
       <div class="mb-6">
         <h2>Overlays</h2>
         <p class="ds-body mt-1 text-gray-500">
-          ShareDrawer (the only Drawer use case), Panel (expandable), and
-          Popover.
+          ShareDrawer (the only Drawer use case), expandable panel (native
+          details/summary), and Popover.
         </p>
       </div>
 
@@ -610,12 +610,18 @@
         <div>
           <p class="ds-label mb-3">Panel (expandable)</p>
           <div class="max-w-md">
-            <p-panel header="Expandable Panel" [toggleable]="true">
-              <p class="ds-body text-gray-500">
-                Collapsible content area. Used for optional sections and grouped
-                controls.
-              </p>
-            </p-panel>
+            <details class="overflow-hidden rounded-xl border border-gray-200">
+              <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3 font-semibold text-gray-800 hover:bg-gray-50">
+                Expandable Panel
+                <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
+              </summary>
+              <div class="border-t border-gray-200 px-4 py-3">
+                <p class="ds-body text-gray-500">
+                  Collapsible content area. Used for optional sections and
+                  grouped controls.
+                </p>
+              </div>
+            </details>
           </div>
         </div>
 
@@ -712,8 +718,7 @@
       <div class="mb-6">
         <h2>Icons</h2>
         <p class="ds-body mt-1 text-gray-500">
-          Font Awesome Free 7 is the app's icon library. PrimeIcons is installed
-          as a PrimeNG dependency but not used directly in app code.
+          Font Awesome Free 7 is the app's icon library.
         </p>
       </div>
 
@@ -811,7 +816,7 @@
             style="background: #fff8ed; border: 1px solid #f5d68a"
           >
             <div class="flex items-center gap-2">
-              <i class="pi pi-exclamation-triangle" style="color: #d97706"></i>
+              <i class="fa-solid fa-triangle-exclamation" style="color: #d97706"></i>
               <h3 class="ds-body" style="margin: 0; color: #92400e">
                 {{ s.title }}
               </h3>

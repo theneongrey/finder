@@ -7,7 +7,7 @@ import {
   model,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Drawer } from 'primeng/drawer';
+import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { ShareContentComponent } from './share-content/share-content.component';
 import {
   SharedWith,
@@ -17,7 +17,7 @@ import { SharingStore } from '../../../../features/project/_shared/data/sharing.
 
 @Component({
   selector: 'app-share-drawer',
-  imports: [Drawer, TranslatePipe, ShareContentComponent],
+  imports: [...HlmSheetImports, TranslatePipe, ShareContentComponent],
   templateUrl: './share-drawer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

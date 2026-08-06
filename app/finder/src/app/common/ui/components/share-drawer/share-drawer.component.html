@@ -1,12 +1,12 @@
-<p-drawer
-  [header]="('project.share.title' | translate) + ' – ' + projectName()"
-  position="bottom"
-  [(visible)]="visible"
-  styleClass="!h-auto rounded-t-2xl"
->
-  <app-share-content
-    [projectId]="projectId()"
-    [sharedWith]="sharedWith()"
-    [visibilityType]="visibilityType()"
-  />
-</p-drawer>
+<hlm-sheet [state]="visible() ? 'open' : 'closed'" side="bottom" (stateChanged)="visible.set($event === 'open')">
+  <hlm-sheet-content class="!h-auto rounded-t-2xl" *hlmSheetPortal>
+    <div hlmSheetHeader>
+      <h3 hlmSheetTitle>{{ ('project.share.title' | translate) + ' – ' + projectName() }}</h3>
+    </div>
+    <app-share-content
+      [projectId]="projectId()"
+      [sharedWith]="sharedWith()"
+      [visibilityType]="visibilityType()"
+    />
+  </hlm-sheet-content>
+</hlm-sheet>

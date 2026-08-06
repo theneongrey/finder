@@ -262,10 +262,10 @@
         <div>
           <p class="ds-label mb-3">With Icons</p>
           <div class="flex flex-wrap gap-3">
-            <button hlmBtn><i class="fa-solid fa-plus mr-1.5"></i>Add item</button>
-            <button hlmBtn variant="destructive"><i class="fa-solid fa-trash mr-1.5"></i>Delete</button>
-            <button hlmBtn variant="outline" size="icon"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button hlmBtn variant="ghost" size="icon"><i class="fa-solid fa-gear"></i></button>
+            <button hlmBtn icon="fa-solid fa-plus">Add item</button>
+            <button hlmBtn variant="destructive" icon="fa-solid fa-trash">Delete</button>
+            <button hlmBtn variant="outline" icon="fa-solid fa-magnifying-glass"></button>
+            <button hlmBtn variant="ghost" icon="fa-solid fa-gear"></button>
           </div>
         </div>
         <div>
@@ -275,7 +275,11 @@
             <button hlmBtn size="sm">Small</button>
             <button hlmBtn size="xs">XSmall</button>
             <button hlmBtn [disabled]="true">Disabled</button>
-            <button hlmBtn [disabled]="true"><hlm-spinner class="mr-2" />Loading</button>
+            <button hlmBtn icon="fa-solid fa-paper-plane" [loading]="loadingButtonDemo()" (click)="loadingButtonDemo.set(!loadingButtonDemo())">
+              Submit
+            </button>
+            <button hlmBtn variant="outline" icon="fa-solid fa-arrows-rotate" [loading]="loadingIconButtonDemo()" (click)="loadingIconButtonDemo.set(!loadingIconButtonDemo())">
+            </button>
           </div>
         </div>
         <div>

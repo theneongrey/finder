@@ -120,6 +120,8 @@ export class DesignSystemComponent {
   otpValue = '';
   datePickerValue: Date | undefined = undefined;
   timeInputValue = '';
+  loadingButtonDemo = signal(false);
+  loadingIconButtonDemo = signal(false);
 
   faIcons = [
     'fa-solid fa-house',

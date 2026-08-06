@@ -47,6 +47,7 @@ System design and technical decisions.
 - [Frontend](architecture/frontend.md) — Angular 21, standalone components, NgRx Signals
 - [Database](architecture/database.md) — PostgreSQL, EF Core 9, migration strategy
 - [CI/CD](architecture/ci-cd.md) — GitHub Actions pipeline
+- [PrimeNG → Spartan UI Migration](architecture/primeng-to-spartan-migration.md) — why PrimeNG was replaced, migration scope, and Spartan UI approach
 
 ## API
 

@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-08-06 — ingest: PrimeNG → Spartan UI migration decision record (issue #141)
+Pages touched: architecture/primeng-to-spartan-migration.md (created), architecture/frontend.md, index.md
+
+---
+
 ## 2026-08-06 — ingest: PrimeNG → Spartan UI migration (issue #141, phase 9)
 Pages touched: architecture/frontend.md, guides/design-system.md, guides/adding-spartan-components.md (created), index.md
 

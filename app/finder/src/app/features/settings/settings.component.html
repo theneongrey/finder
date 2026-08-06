@@ -56,7 +56,7 @@
         >
           {{ "settings.language" | translate }}
         </label>
-        <hlm-select formControlName="language" class="w-full">
+        <hlm-select formControlName="language" class="w-full" [itemToString]="languageToString">
           <hlm-select-trigger class="w-full">
             <hlm-select-value />
           </hlm-select-trigger>

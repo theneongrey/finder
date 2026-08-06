@@ -12,10 +12,10 @@
         <p class="text-sm text-gray-500">{{ sub }}</p>
       }
       @if (isMostVoted() && !hideResults()) {
-        <p-tag
-          [value]="'project.votesOverview.mostVotes' | translate"
-          icon="fa-solid fa-trophy"
-        />
+        <span hlmBadge>
+          <i class="fa-solid fa-trophy"></i>
+          {{ 'project.votesOverview.mostVotes' | translate }}
+        </span>
       }
     </div>
     <div class="flex flex-col items-center shrink-0 ml-3">

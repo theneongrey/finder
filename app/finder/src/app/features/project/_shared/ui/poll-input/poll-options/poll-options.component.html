@@ -19,7 +19,7 @@
         @switch (appointmentDateType()) {
           @case ("weekday") {
             @if (!weekdayShowsTime()) {
-              <p-card>
+              <div hlmCard class="p-4">
                 <div class="flex flex-col gap-2">
                   <div class="flex gap-1">
                     @for (day of weekdayButtons; track day.value) {
@@ -56,7 +56,7 @@
                     {{ "project.pollInput.date.addTime" | translate }}
                   </button>
                 </div>
-              </p-card>
+            </div>
             } @else {
               @for (option of dateOptions(); track $index) {
                 <app-option-card-weekday

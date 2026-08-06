@@ -2,7 +2,7 @@
 type: Architecture
 title: Frontend
 description: Angular 21 — standalone components, NgRx Signals store-first state, lazy-loaded routes, event-driven sharing sync
-tags: [frontend, angular, ngrx, signals, standalone]
+tags: [frontend, angular, ngrx, signals, standalone, spartan-ui, tailwind]
 status: stable
 generated:
   actor: claude-sonnet-4-6
@@ -89,15 +89,15 @@ Sharing/permission changes are broadcast via `sharingEvents`. Both `ProjectListS
 
 `@ngx-translate` with JSON translation files. The user's language is stored on the `Person` entity (backend) and read into `UserStore` on login. Computed signals in `UserStore` derive locale-specific date formats:
 
-| Language | Date format | PrimeNG format |
-|----------|------------|----------------|
-| en | `M/d/yyyy` | `m/d/yy` |
-| de | `dd.MM.yyyy` | `dd.mm.yy` |
-| es | `dd/MM/yyyy` | `dd/mm/yy` |
+| Language | Date format |
+|----------|------------|
+| en | `M/d/yyyy` |
+| de | `dd.MM.yyyy` |
+| es | `dd/MM/yyyy` |
 
 ## UI Library
 
-PrimeNG 21 + Tailwind CSS 4. PrimeNG components are imported individually per component. A custom theme preset lives at `common/theme/ngprime.preset.ts`.
+**Spartan UI + Tailwind CSS 4.** Spartan components (`@spartan-ng/brain` + project-local `@spartan-ng/helm/*` aliases) are imported individually per component. PrimeNG was removed in 2026 after it changed its licensing model and became no longer open source or usable for commercial projects. See [Adding Spartan Components](../guides/adding-spartan-components.md) for how to install new component primitives.
 
 ## Related
 

@@ -2,7 +2,7 @@
 type: Guide
 title: Design System
 description: Live component and token reference available at /ux in development builds
-tags: [frontend, ui, design, angular, primeng, tailwind]
+tags: [frontend, ui, design, angular, spartan-ui, tailwind]
 status: stable
 generated:
   actor: claude-sonnet-4-6
@@ -12,8 +12,6 @@ sources:
     resource: app/finder/src/app/features/design-system/design-system.component.ts
   - title: global styles
     resource: app/finder/src/styles.css
-  - title: PrimeNG theme preset
-    resource: app/finder/src/app/common/theme/ngpime.preset.ts
 ---
 
 # Design System
@@ -34,17 +32,17 @@ The route is guarded by `devOnly` (`common/services/dev-only.guard.ts`), which c
 
 | Section | Contents |
 |---|---|
-| **Colors** | Brand token swatches (`--color-primary`, etc.) and PrimeNG semantic scale (50–950) |
+| **Colors** | Brand token swatches (`--color-primary`, etc.) and Spartan semantic scale |
 | **Typography** | Live h1/h2/h3/body/label samples with size and weight annotations |
-| **Spacing & Tokens** | Border radius (12px), gap scale, button padding variants, disabled opacity |
-| **Buttons** | All severities × filled / outlined / text styles; sizes; icon variants |
-| **Tags** | All valid `p-tag` severity variants |
-| **Forms** | InputText, InputGroup, Select, SelectButton, Textarea, AutoResizeTextarea |
-| **Cards** | `p-card` and the custom `AddCardComponent` |
-| **Navigation** | Interactive `p-tabs` demo |
-| **Feedback** | `p-message` (all severities), `p-progressbar`, `p-progressspinner`, `p-skeleton` |
-| **Overlays** | ShareDrawer (with mocked `SharingStore`), `p-panel`, `p-popover` |
-| **Data Display** | `p-avatar` (sizes), `p-avatargroup`, `p-divider` |
+| **Spacing & Tokens** | Border radius, gap scale, button padding variants |
+| **Buttons** | All variants × filled / outlined / ghost / destructive / link; sizes; icon variants |
+| **Badge** | `hlmBadge` severity variants |
+| **Forms** | Input, InputGroup, Select, ToggleGroup, Textarea, AutoResizeTextarea, OTP |
+| **Cards** | `hlmCard` and the custom `AddCardComponent` |
+| **Navigation** | Interactive tabs demo |
+| **Feedback** | Alert (all severities), ProgressBar, Spinner, Skeleton, Sonner toast |
+| **Overlays** | ShareDrawer (Sheet), AlertDialog, Popover |
+| **Data Display** | Avatar (sizes), AvatarGroup, Separator |
 | **Icons** | Font Awesome Free 7 sample grid |
 | **Suggestions** | Documented gaps in the current design system |
 
@@ -75,7 +73,7 @@ Font: **Plus Jakarta Sans** (weights 300, 400, 500, 700), loaded via `@fontsourc
 
 ## Icon Library
 
-[Font Awesome Free 7](https://fontawesome.com) is the app's icon library. PrimeIcons is installed as a PrimeNG peer dependency but is not used directly in application code.
+[Font Awesome Free 7](https://fontawesome.com) is the app's icon library. Use `fa-solid`, `fa-regular`, and `fa-brands` prefixes with icon names from the Font Awesome catalog.
 
 ## Known Gaps
 

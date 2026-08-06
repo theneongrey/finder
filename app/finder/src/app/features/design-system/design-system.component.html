@@ -371,7 +371,7 @@
         <div class="flex flex-col gap-4">
           <div>
             <p class="ds-label mb-2">Select (Dropdown)</p>
-            <hlm-select [(ngModel)]="selectedDropdown" class="w-full">
+            <hlm-select [(ngModel)]="selectedDropdown" class="w-full" [itemToString]="dropdownOptionToString">
               <hlm-select-trigger class="w-full">
                 <hlm-select-value placeholder="Choose an option" />
               </hlm-select-trigger>

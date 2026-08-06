@@ -4,8 +4,8 @@
   (keydown.enter)="verifyCode()"
   class="w-full max-w-md"
 >
-  <p-panel>
-    <ng-template #header>
+  <div hlmCard>
+    <div hlmCardHeader>
       <div class="flex flex-col gap-1">
         <span class="text-2xl font-bold text-on-surface mx-auto"
           >{{ 'auth.codeLogin.title' | translate }}</span
@@ -16,48 +16,50 @@
           {{ 'auth.codeLogin.subtitle' | translate }}
         </span>
       </div>
-    </ng-template>
-
-    <div class="flex flex-col gap-4 mt-6">
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-sm font-semibold text-on-surface-variant"
-          for="code"
-        >
-          {{ 'auth.codeLogin.code' | translate }}
-        </label>
-        <brn-input-otp
-          hlmInputOtp
-          id="code"
-          class="mx-auto"
-          formControlName="code"
-          [length]="6"
-          inputMode="numeric"
-          [autofocus]="true"
-        >
-          <hlm-input-otp-group>
-            <hlm-input-otp-slot [index]="0" />
-            <hlm-input-otp-slot [index]="1" />
-            <hlm-input-otp-slot [index]="2" />
-          </hlm-input-otp-group>
-          <hlm-input-otp-separator />
-          <hlm-input-otp-group>
-            <hlm-input-otp-slot [index]="3" />
-            <hlm-input-otp-slot [index]="4" />
-            <hlm-input-otp-slot [index]="5" />
-          </hlm-input-otp-group>
-        </brn-input-otp>
-      </div>
-
-      <p-button
-        class="mt-2"
-        type="submit"
-        [label]="'auth.codeLogin.verify' | translate"
-        icon="fa-solid fa-check"
-        iconPos="right"
-        [disabled]="form.invalid"
-        [fluid]="true"
-      />
     </div>
-  </p-panel>
+
+    <div hlmCardContent>
+      <div class="flex flex-col gap-4 mt-6">
+        <div class="flex flex-col gap-1">
+          <label
+            class="text-sm font-semibold text-on-surface-variant"
+            for="code"
+          >
+            {{ 'auth.codeLogin.code' | translate }}
+          </label>
+          <brn-input-otp
+            hlmInputOtp
+            id="code"
+            class="mx-auto"
+            formControlName="code"
+            [length]="6"
+            inputMode="numeric"
+            [autofocus]="true"
+          >
+            <hlm-input-otp-group>
+              <hlm-input-otp-slot [index]="0" />
+              <hlm-input-otp-slot [index]="1" />
+              <hlm-input-otp-slot [index]="2" />
+            </hlm-input-otp-group>
+            <hlm-input-otp-separator />
+            <hlm-input-otp-group>
+              <hlm-input-otp-slot [index]="3" />
+              <hlm-input-otp-slot [index]="4" />
+              <hlm-input-otp-slot [index]="5" />
+            </hlm-input-otp-group>
+          </brn-input-otp>
+        </div>
+
+        <p-button
+          class="mt-2"
+          type="submit"
+          [label]="'auth.codeLogin.verify' | translate"
+          icon="fa-solid fa-check"
+          iconPos="right"
+          [disabled]="form.invalid"
+          [fluid]="true"
+        />
+      </div>
+    </div>
+  </div>
 </form>

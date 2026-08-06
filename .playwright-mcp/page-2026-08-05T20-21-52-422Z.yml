@@ -1,0 +1,92 @@
+- generic [ref=f20e6]:
+  - banner [ref=f20e8]:
+    - button [ref=f20e10] [cursor=pointer]
+    - heading "Permission Test Project" [level=1] [ref=f20e13]
+    - generic [ref=f20e14]: T
+  - main [ref=f20e17]:
+    - generic [ref=f20e19]:
+      - generic [ref=f20e21]:
+        - generic [ref=f20e22]:
+          - generic [ref=f20e23]:
+            - heading "Should we proceed?" [level=2] [ref=f20e24]
+            - generic [ref=f20e25]: Active
+          - generic [ref=f20e28]:
+            - link "9" [ref=f20e138] [cursor=pointer]:
+              - /url: /project/detail/permission-test-project-0b1d703c/results/should-we-proceed-2ed78fc2#comments-section
+            - paragraph [ref=f20e32]: 0 of 1
+            - paragraph [ref=f20e33]: rated
+        - progressbar [ref=f20e34]
+        - generic [ref=f20e35]:
+          - paragraph [ref=f20e36]: Closes in 2 days
+          - button "Continue voting" [ref=f20e38] [cursor=pointer]
+      - generic [ref=f20e42]:
+        - generic [ref=f20e43]:
+          - heading "Candidates" [level=3] [ref=f20e44]
+          - paragraph [ref=f20e45]: Sorted by popularity
+        - generic [ref=f20e48]:
+          - generic [ref=f20e49]:
+            - heading "Yes" [level=4] [ref=f20e52]
+            - generic [ref=f20e53]: Open
+          - generic [ref=f20e56]: 0 of 0 votes
+          - button "Vote" [ref=f20e60] [cursor=pointer]
+      - generic [ref=f20e64]:
+        - heading "Comments" [level=3] [ref=f20e65]
+        - generic [ref=f20e66]:
+          - generic [ref=f20e67]:
+            - generic [ref=f20e68]:
+              - generic [ref=f20e69]: T
+              - generic [ref=f20e72]:
+                - paragraph [ref=f20e73]: Test User 1
+                - paragraph [ref=f20e74]: Line 5Line 6Line 7Line 8Line 9Line 10Line 11Line 12Line 13
+                - generic [ref=f20e75]: 7 minutes ago
+            - generic [ref=f20e76]:
+              - generic [ref=f20e77]: T
+              - generic [ref=f20e80]:
+                - paragraph [ref=f20e81]: Test User 1
+                - paragraph [ref=f20e82]: Line 3Line 4
+                - generic [ref=f20e83]: 7 minutes ago
+            - generic [ref=f20e84]:
+              - generic [ref=f20e85]: T
+              - generic [ref=f20e88]:
+                - paragraph [ref=f20e89]: Test User 1
+                - paragraph [ref=f20e90]: Line 1Line 2
+                - generic [ref=f20e91]: 7 minutes ago
+            - generic [ref=f20e92]:
+              - generic [ref=f20e93]: T
+              - generic [ref=f20e96]:
+                - paragraph [ref=f20e97]: Test User 1
+                - paragraph [ref=f20e98]: Line 1
+                - generic [ref=f20e99]: 7 minutes ago
+            - generic [ref=f20e100]:
+              - generic [ref=f20e101]: T
+              - generic [ref=f20e104]:
+                - paragraph [ref=f20e105]: Test User 1
+                - paragraph [ref=f20e106]: Line 5
+                - generic [ref=f20e107]: 7 minutes ago
+            - generic [ref=f20e108]:
+              - generic [ref=f20e109]: T
+              - generic [ref=f20e112]:
+                - paragraph [ref=f20e113]: Test User 1
+                - paragraph [ref=f20e114]: Line 5Line 6Line 7Line 8Line 9Line 10Line 11Line 12
+                - generic [ref=f20e115]: 7 minutes ago
+            - generic [ref=f20e116]:
+              - generic [ref=f20e117]: T
+              - generic [ref=f20e120]:
+                - paragraph [ref=f20e121]: Test User 1
+                - paragraph [ref=f20e122]: Line 5Line 6Line 7Line 8Line 9Line 10Line 11Line 12Line 13Line 14
+                - generic [ref=f20e123]: 7 minutes ago
+            - generic [ref=f20e124]:
+              - generic [ref=f20e125]: T
+              - generic [ref=f20e128]:
+                - paragraph [ref=f20e129]: Test User 1
+                - paragraph [ref=f20e130]: Line 5Line 6Line 7
+                - generic [ref=f20e131]: 7 minutes ago
+            - generic [ref=f20e139]:
+              - generic [ref=f20e140]: T
+              - generic [ref=f20e143]:
+                - paragraph [ref=f20e144]: Test User 1
+                - paragraph [ref=f20e145]: This is line fourThis is line fiveThis is line sixThis is line sevenThis is line eightThis is line nineThis is line ten
+                - generic [ref=f20e146]: just now
+          - generic [ref=f20e132]:
+            - textbox "New comment..." [active] [ref=f20e134]: This is line eleven
+            - button [ref=f20e136] [cursor=pointer]

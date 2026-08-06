@@ -1,0 +1,60 @@
+[     141ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     142ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=a6452371:279
+[     166ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=a6452371:11243
+[     169ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     171ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     364ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     439ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     586ms] [LOG] [ProjectService] fetching projects @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     588ms] [LOG] [ProjectService] fetching standalone polls @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  326578ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  326580ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=a6452371:279
+[  326615ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=a6452371:11243
+[  326619ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  326621ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  326932ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  327028ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  327322ms] [LOG] [ProjectService] fetching projects @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  327323ms] [LOG] [ProjectService] fetching standalone polls @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  852904ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  852906ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=a6452371:279
+[  852934ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=a6452371:11243
+[  852937ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  852938ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  853145ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  853183ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  853235ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/chunk-NERHDYXR.js:0
+[  853237ms] [ERROR] ERROR TypeError: Failed to fetch dynamically imported module: http://localhost:4200/chunk-NERHDYXR.js @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-RBEGZ7DM.js?v=a6452371:3171
+[  859729ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  859730ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=a6452371:279
+[  859754ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=a6452371:11243
+[  859888ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  865617ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[  865627ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=d37f2f9e:279
+[  865693ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=d37f2f9e:11243
+[  865783ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1938292ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:4200/@vite/client:864
+[ 2044679ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 2044681ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=503b12df:279
+[ 2044741ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=503b12df:11243
+[ 2044995ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 2059747ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:4200/@vite/client:864
+[ 2079187ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 2079190ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=66172cfa:279
+[ 2079256ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=66172cfa:11243
+[ 2079273ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 2561951ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:4200/@vite/client:864
+[31043569ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[31043570ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=66172cfa:279
+[31043607ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=66172cfa:11243
+[31050466ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/auth/who:0
+[31050470ms] [LOG] [UserStore] Error while loading user HttpErrorResponse @ http://localhost:4200/chunk-SGYI7ULT.js:11
+[31689928ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[31689929ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=66172cfa:279
+[31689969ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=66172cfa:11243
+[31690368ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[32701056ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:4200/@vite/client:864
+[33057942ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[33057945ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=d15d9b87:279
+[33058033ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=d15d9b87:11243
+[33058560ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5

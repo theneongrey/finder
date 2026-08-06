@@ -1,0 +1,9 @@
+[      90ms] [LOG] [User service] fetching user @ http://localhost:4201/chunk-SGYI7ULT.js:5
+[      91ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4201/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=dcf3720a:279
+[     116ms] [LOG] Angular is running in development mode. @ http://localhost:4201/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=dcf3720a:11243
+[     129ms] [LOG] [UserStore] patching user {isAuthenticated: false, name: null, email: null, role: null, language: null} @ http://localhost:4201/chunk-SGYI7ULT.js:5
+[     202ms] [LOG] Login by token with redirectUrl @ http://localhost:4201/chunk-SGYI7ULT.js:8
+[     203ms] [LOG] [User service] login by token @ http://localhost:4201/chunk-SGYI7ULT.js:5
+[     218ms] [LOG] [UserStore] patching user {isAuthenticated: false, name: null, email: null, role: null, language: null} @ http://localhost:4201/chunk-SGYI7ULT.js:5
+[     311ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/auth/tokenLogin:0
+[     312ms] [LOG] [UserStore] Error while logging in with token HttpErrorResponse @ http://localhost:4201/chunk-SGYI7ULT.js:8

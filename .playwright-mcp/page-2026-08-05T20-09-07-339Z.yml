@@ -1,0 +1,22 @@
+- generic [ref=f10e4]:
+  - banner [ref=f10e9]:
+    - button [ref=f10e11] [cursor=pointer]
+    - generic:
+      - heading [level=1]
+  - main [ref=f10e7]:
+    - generic [ref=f10e33]:
+      - generic [ref=f10e35]:
+        - generic [ref=f10e36]: Verify Code
+        - generic [ref=f10e37]: Enter the login code sent to your email address.
+      - region [ref=f10e38]:
+        - generic [ref=f10e41]:
+          - generic [ref=f10e42]:
+            - generic [ref=f10e43]: Login Code
+            - generic "code" [ref=f10e44]:
+              - textbox [active] [ref=f10e45]
+              - textbox [ref=f10e46]
+              - textbox [ref=f10e47]
+              - textbox [ref=f10e48]
+              - textbox [ref=f10e49]
+              - textbox [ref=f10e50]
+          - button "Verify Code" [disabled] [ref=f10e52]

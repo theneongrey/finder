@@ -1,0 +1,66 @@
+[     190ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     191ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=d15d9b87:279
+[     222ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=d15d9b87:11243
+[     267ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     340ms] [LOG] user is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:8
+[     341ms] [LOG] redirect to project overview @ http://localhost:4200/chunk-SGYI7ULT.js:8
+[     343ms] [LOG] Login by token with redirectUrl @ http://localhost:4200/chunk-SGYI7ULT.js:8
+[     343ms] [LOG] [User service] login by token @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     355ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     356ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     387ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     388ms] [LOG] user is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:8
+[     389ms] [LOG] redirect to project overview @ http://localhost:4200/chunk-SGYI7ULT.js:8
+[     392ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     394ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     439ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/auth/tokenLogin:0
+[     440ms] [LOG] [UserStore] Error while logging in with token HttpErrorResponse @ http://localhost:4200/chunk-SGYI7ULT.js:8
+[     480ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     611ms] [LOG] [ProjectService] fetching projects @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     615ms] [LOG] [ProjectService] fetching standalone polls @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1368587ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1368589ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=d15d9b87:279
+[ 1368642ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=d15d9b87:11243
+[ 1368648ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1368651ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1368883ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1368920ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1378642ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1378643ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=d15d9b87:279
+[ 1378684ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=d15d9b87:11243
+[ 1378687ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1378688ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1378724ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1378771ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1379012ms] [LOG] [ProjectService] fetching projects @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1379014ms] [LOG] [ProjectService] fetching standalone polls @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1381883ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1381887ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=356e8628:279
+[ 1381971ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=356e8628:11243
+[ 1381994ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1381995ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1382139ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1382389ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1382960ms] [LOG] [ProjectService] fetching projects @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 1382963ms] [LOG] [ProjectService] fetching standalone polls @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3028794ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:4200/@vite/client:864
+[ 3049856ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3049859ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=0f7f854e:279
+[ 3049925ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=0f7f854e:11243
+[ 3049932ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3049933ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3050198ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3050244ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3050562ms] [LOG] [ProjectService] fetching projects @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3050566ms] [LOG] [ProjectService] fetching standalone polls @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3128229ms] [LOG] [ProjectService] fetching projects @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3128231ms] [LOG] [ProjectService] fetching standalone polls @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3133529ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3133531ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=0f7f854e:279
+[ 3133570ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=0f7f854e:11243
+[ 3133666ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3135245ms] [LOG] [UserAuthentication] Trying to access /project/overview @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3135246ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3135282ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3135360ms] [LOG] [ProjectService] fetching projects @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[ 3135362ms] [LOG] [ProjectService] fetching standalone polls @ http://localhost:4200/chunk-SGYI7ULT.js:5

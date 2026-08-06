@@ -11,14 +11,14 @@ import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Card } from 'primeng/card';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { DateOptionEntry, nextFullHour } from '../../../../utils/date-option.utils';
 import { UserStore } from '../../../../../../../common/data/user.store';
 
 @Component({
   selector: 'app-option-card-date',
   templateUrl: './option-card-date.component.html',
-  imports: [FormsModule, Button, DatePicker, TranslatePipe, Card],
+  imports: [FormsModule, Button, DatePicker, TranslatePipe, ...HlmCardImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {

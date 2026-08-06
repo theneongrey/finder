@@ -12,7 +12,7 @@ import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionType } from '../../models/project-detail.model';
-import { Card } from 'primeng/card';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { OptionTypeIconComponent } from './option-type-icon/option-type-icon.component';
 import { PollItem } from '../../models/poll-item.model';
 import { ProjectRole } from '../../models/project-role.enum';
@@ -26,7 +26,7 @@ import { ProjectRole } from '../../models/project-role.enum';
     OptionTypeIconComponent,
     RouterLink,
     TranslatePipe,
-    Card,
+    ...HlmCardImports,
   ],
   templateUrl: './poll-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

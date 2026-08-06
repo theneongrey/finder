@@ -11,13 +11,13 @@ import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Card } from 'primeng/card';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { DateOptionEntry, nextFullHour } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-weekday',
   templateUrl: './option-card-weekday.component.html',
-  imports: [FormsModule, Button, DatePicker, TranslatePipe, Card],
+  imports: [FormsModule, Button, DatePicker, TranslatePipe, ...HlmCardImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardWeekdayComponent {

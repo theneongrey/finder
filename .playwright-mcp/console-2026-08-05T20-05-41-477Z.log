@@ -1,0 +1,8 @@
+[     257ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     260ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=08b66c19:279
+[     304ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=08b66c19:11243
+[     330ms] [LOG] [UserStore] patching user {isAuthenticated: false, name: null, email: null, role: null, language: null} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     788ms] [LOG] [UserStore] patching user {isAuthenticated: false, name: null, email: null, role: null, language: null} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[    4441ms] [LOG] [User service] request login email for testuser1@neongrey.de and undefined @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[    5244ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/auth/requestLoginMail:0
+[    5245ms] [LOG] [UserStore] Error requesting login mail HttpErrorResponse @ http://localhost:4200/chunk-SGYI7ULT.js:11

@@ -3,8 +3,8 @@
   (ngSubmit)="sendLoginMail()"
   class="w-full max-w-md"
 >
-  <p-panel>
-    <ng-template #header>
+  <div hlmCard>
+    <div hlmCardHeader>
       <div class="flex flex-col gap-1">
         <span class="text-2xl font-bold text-on-surface mx-auto"
           >{{ 'auth.requestEmail.title' | translate }}</span
@@ -15,41 +15,43 @@
           {{ 'auth.requestEmail.subtitle' | translate }}
         </span>
       </div>
-    </ng-template>
-
-    <div class="flex flex-col gap-4 mt-6">
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-sm font-semibold text-on-surface-variant"
-          for="email"
-        >
-          {{ 'auth.requestEmail.email' | translate }}
-        </label>
-        <input
-          hlmInput
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="name@example.com"
-          autofocus
-        />
-        @if (errorMessage()) {
-          <hlm-alert variant="destructive">
-            <p hlmAlertDescription>{{ errorMessage() }}</p>
-          </hlm-alert>
-        }
-      </div>
-
-      <p-button
-        class="mt-2"
-        type="submit"
-        [label]="'auth.requestEmail.requestCode' | translate"
-        icon="fa-solid fa-arrow-right"
-        iconPos="right"
-        [loading]="isLoading()"
-        [disabled]="form.invalid || isLoading()"
-        [fluid]="true"
-      />
     </div>
-  </p-panel>
+
+    <div hlmCardContent>
+      <div class="flex flex-col gap-4 mt-6">
+        <div class="flex flex-col gap-1">
+          <label
+            class="text-sm font-semibold text-on-surface-variant"
+            for="email"
+          >
+            {{ 'auth.requestEmail.email' | translate }}
+          </label>
+          <input
+            hlmInput
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="name@example.com"
+            autofocus
+          />
+          @if (errorMessage()) {
+            <hlm-alert variant="destructive">
+              <p hlmAlertDescription>{{ errorMessage() }}</p>
+            </hlm-alert>
+          }
+        </div>
+
+        <p-button
+          class="mt-2"
+          type="submit"
+          [label]="'auth.requestEmail.requestCode' | translate"
+          icon="fa-solid fa-arrow-right"
+          iconPos="right"
+          [loading]="isLoading()"
+          [disabled]="form.invalid || isLoading()"
+          [fluid]="true"
+        />
+      </div>
+    </div>
+  </div>
 </form>

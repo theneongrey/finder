@@ -1,0 +1,22 @@
+[     146ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     147ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=08b66c19:279
+[     169ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=08b66c19:11243
+[     173ms] [LOG] [UserAuthentication] Trying to access /project/detail/permission-test-project-0b1d703c/results/should-we-proceed-2ed78fc2 @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     174ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     405ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     428ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     528ms] [WARNING] NG0912: Component ID generation collision detected. Components '_Header' and '_Header' with selector 'p-header' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v21.angular.dev/errors/NG0912 @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=08b66c19:10212
+[     529ms] [WARNING] NG0912: Component ID generation collision detected. Components '_Footer' and '_Footer' with selector 'p-footer' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v21.angular.dev/errors/NG0912 @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=08b66c19:10212
+[     541ms] [LOG] [ProjectService] fetching project @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[     544ms] [LOG] [ProjectService] fetching poll @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[   68665ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[   68666ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=08b66c19:279
+[   68706ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=08b66c19:11243
+[   68709ms] [LOG] [UserAuthentication] Trying to access /project/detail/permission-test-project-0b1d703c/results/should-we-proceed-2ed78fc2 @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[   68710ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[   69135ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[   69369ms] [LOG] [UserAuthentication] User is authenticated @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[   69477ms] [WARNING] NG0912: Component ID generation collision detected. Components '_Header' and '_Header' with selector 'p-header' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v21.angular.dev/errors/NG0912 @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=08b66c19:10212
+[   69478ms] [WARNING] NG0912: Component ID generation collision detected. Components '_Footer' and '_Footer' with selector 'p-footer' generated the same component ID. To fix this, you can change the selector of one of those components or add an extra host attribute to force a different ID. Find more at https://v21.angular.dev/errors/NG0912 @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=08b66c19:10212
+[   69529ms] [LOG] [ProjectService] fetching project @ http://localhost:4200/chunk-SGYI7ULT.js:5
+[   69539ms] [LOG] [ProjectService] fetching poll @ http://localhost:4200/chunk-SGYI7ULT.js:5

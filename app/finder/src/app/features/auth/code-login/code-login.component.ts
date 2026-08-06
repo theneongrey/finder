@@ -12,7 +12,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Panel } from 'primeng/panel';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { Button } from 'primeng/button';
 import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
 import { BrnInputOtp } from '@spartan-ng/brain/input-otp';
@@ -22,7 +22,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule, BrnInputOtp, ...HlmInputOtpImports, Panel, Button, TranslatePipe],
+  imports: [ReactiveFormsModule, BrnInputOtp, ...HlmInputOtpImports, ...HlmCardImports, Button, TranslatePipe],
   templateUrl: './code-login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

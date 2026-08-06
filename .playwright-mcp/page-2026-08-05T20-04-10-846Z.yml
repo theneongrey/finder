@@ -1,0 +1,6 @@
+- generic [ref=f6e4]:
+  - banner [ref=f6e8]:
+    - link [ref=f6e9] [cursor=pointer]:
+      - /url: /
+      - img "logo" [ref=f6e10]
+  - main [ref=f6e11]

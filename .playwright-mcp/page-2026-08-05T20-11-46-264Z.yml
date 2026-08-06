@@ -1,0 +1,36 @@
+- generic [ref=f16e6]:
+  - banner [ref=f16e8]:
+    - button [ref=f16e10] [cursor=pointer]
+    - heading "Permission Test Project" [level=1] [ref=f16e13]
+    - generic [ref=f16e14]: T
+  - main [ref=f16e17]:
+    - generic [ref=f16e19]:
+      - generic [ref=f16e21]:
+        - generic [ref=f16e22]:
+          - generic [ref=f16e23]:
+            - heading "Should we proceed?" [level=2] [ref=f16e24]
+            - generic [ref=f16e25]: Active
+          - generic [ref=f16e28]:
+            - link "0" [ref=f16e29] [cursor=pointer]:
+              - /url: /project/detail/permission-test-project-0b1d703c/results/should-we-proceed-2ed78fc2#comments-section
+            - paragraph [ref=f16e32]: 0 of 1
+            - paragraph [ref=f16e33]: rated
+        - progressbar [ref=f16e34]
+        - generic [ref=f16e35]:
+          - paragraph [ref=f16e36]: Closes in 2 days
+          - button "Continue voting" [ref=f16e38] [cursor=pointer]
+      - generic [ref=f16e42]:
+        - generic [ref=f16e43]:
+          - heading "Candidates" [level=3] [ref=f16e44]
+          - paragraph [ref=f16e45]: Sorted by popularity
+        - generic [ref=f16e48]:
+          - generic [ref=f16e49]:
+            - heading "Yes" [level=4] [ref=f16e52]
+            - generic [ref=f16e53]: Open
+          - generic [ref=f16e56]: 0 of 0 votes
+          - button "Vote" [ref=f16e60] [cursor=pointer]
+      - generic [ref=f16e64]:
+        - heading "Comments" [level=3] [ref=f16e65]
+        - generic [ref=f16e67]:
+          - textbox "New comment..." [active] [ref=f16e69]: this is a very long comment that should wrap to the next line and cause the textarea to grow in height automaticallyHello this is a very long comment that should wrap to the next line and cause the textarea to grow
+          - button [ref=f16e71] [cursor=pointer]

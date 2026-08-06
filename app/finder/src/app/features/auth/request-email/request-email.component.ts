@@ -13,7 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Panel } from 'primeng/panel';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { Button } from 'primeng/button';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
@@ -25,7 +25,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   imports: [
     ReactiveFormsModule,
     ...HlmAlertImports,
-    Panel,
+    ...HlmCardImports,
     Button,
     HlmInput,
     TranslatePipe,

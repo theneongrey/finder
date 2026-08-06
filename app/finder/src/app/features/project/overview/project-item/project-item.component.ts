@@ -14,7 +14,7 @@ import { TimeSincePipe } from '../_pipe/time-ago.pipe';
 import { Button } from 'primeng/button';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectOverview } from '../../_shared/models/project-overview.model';
-import { Card } from 'primeng/card';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { ProjectRole } from '../../_shared/models/project-role.enum';
 
 @Component({
@@ -27,7 +27,7 @@ import { ProjectRole } from '../../_shared/models/project-role.enum';
     TimeSincePipe,
     Button,
     TranslatePipe,
-    Card,
+    ...HlmCardImports,
   ],
   templateUrl: './project-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

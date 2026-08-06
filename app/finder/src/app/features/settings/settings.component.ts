@@ -51,6 +51,11 @@ export class SettingsComponent {
   user = this.userStore.user;
   isSaving = signal(false);
 
+  languageToString = (code: string): string => {
+    const labels: Record<string, string> = { en: 'English', de: 'Deutsch', es: 'Español' };
+    return labels[code] ?? code;
+  };
+
   form = new FormGroup({
     name: new FormControl('', [Validators.required]),
     email: new FormControl({ value: '', disabled: true }),

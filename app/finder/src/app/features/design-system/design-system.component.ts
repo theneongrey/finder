@@ -111,6 +111,8 @@ export class DesignSystemComponent {
     { label: 'Option C', value: 'c' },
   ];
   selectedDropdown: string | undefined;
+  dropdownOptionToString = (value: string): string =>
+    this.dropdownOptions.find((o) => o.value === value)?.label ?? value;
 
   inputText = '';
   textareaValue = '';

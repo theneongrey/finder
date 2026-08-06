@@ -32,22 +32,11 @@
           [(ngModel)]="projectDescription"
         />
       </div>
-      <div class="flex gap-1 mt-auto mb-4 p-fluid">
-        <p-button
-          class="flex-1"
-          [label]="
-            mode() === 'add'
-              ? ('project.input.create' | translate)
-              : ('project.input.update' | translate)
-          "
-          [icon]="
-            mode() === 'add'
-              ? 'fa-solid fa-circle-plus'
-              : 'fa-regular fa-floppy-disk'
-          "
-          (click)="submit()"
-          [disabled]="!projectName()"
-        />
+      <div class="flex gap-1 mt-auto mb-4">
+        <button hlmBtn class="flex-1" (click)="submit()" [disabled]="!projectName()">
+          <i [class]="mode() === 'add' ? 'fa-solid fa-circle-plus' : 'fa-regular fa-floppy-disk'"></i>
+          {{ mode() === 'add' ? ('project.input.create' | translate) : ('project.input.update' | translate) }}
+        </button>
       </div>
     </form>
   </main>

@@ -8,7 +8,7 @@ import {
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Tag } from 'primeng/tag';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionDetail } from '../../../../_shared/models/project-detail.model';
 import {
@@ -19,7 +19,7 @@ import {
 @Component({
   selector: 'app-option-card-date',
   templateUrl: './option-card-date.component.html',
-  imports: [NgClass, RouterLink, Tag, Button, TranslatePipe],
+  imports: [NgClass, RouterLink, Tag, HlmButton, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {

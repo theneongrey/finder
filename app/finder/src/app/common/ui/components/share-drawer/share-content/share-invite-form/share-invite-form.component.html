@@ -21,12 +21,9 @@
       <option [value]="c.email">{{ c.name }}</option>
     }
   </datalist>
-  <p-button
-    icon="pi pi-send"
-    [loading]="sharingInProgress()"
-    [disabled]="!contactEmail()"
-    (click)="invite()"
-  />
+  <button hlmBtn size="icon" [disabled]="!contactEmail() || sharingInProgress()" (click)="invite()">
+    @if (sharingInProgress()) { <hlm-spinner /> } @else { <i class="pi pi-send"></i> }
+  </button>
 </div>
 
 <hlm-toggle-group

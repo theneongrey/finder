@@ -159,6 +159,7 @@
         "endDate": "Fecha de fin",
         "startTime": "Hora",
         "endTime": "Hora de fin",
+        "selectDate": "Seleccionar fecha",
         "addTime": "Añadir hora",
         "endBeforeStart": "La fecha de fin debe ser posterior al {{date}}.",
         "addOption": "Añadir fecha",

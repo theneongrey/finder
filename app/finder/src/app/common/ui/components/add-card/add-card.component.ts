@@ -4,11 +4,11 @@ import {
   input,
   output,
 } from '@angular/core';
-import { Card } from 'primeng/card';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 
 @Component({
   selector: 'app-add-card',
-  imports: [Card],
+  imports: [...HlmCardImports],
   templateUrl: './add-card.component.html',
   styleUrl: './add-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

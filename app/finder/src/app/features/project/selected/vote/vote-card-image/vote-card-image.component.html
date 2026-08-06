@@ -18,13 +18,8 @@
     </p>
   }
   @if (link()) {
-    <p-button
-      class="mx-auto"
-      [label]="'project.vote.openLink' | translate"
-      icon="fa-solid fa-arrow-up-right-from-square"
-      size="small"
-      variant="outlined"
-      (click)="openLink(link())"
-    />
+    <button hlmBtn class="mx-auto" variant="outline" size="sm" (click)="openLink(link())">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i>{{ 'project.vote.openLink' | translate }}
+    </button>
   }
 </div>

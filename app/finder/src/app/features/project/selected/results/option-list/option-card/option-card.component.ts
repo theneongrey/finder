@@ -7,14 +7,14 @@ import {
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HlmBadge } from '@spartan-ng/helm/badge';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionDetail } from '../../../../_shared/models/project-detail.model';
 
 @Component({
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
-  imports: [NgClass, RouterLink, HlmBadge, Button, TranslatePipe],
+  imports: [NgClass, RouterLink, HlmBadge, HlmButton, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {

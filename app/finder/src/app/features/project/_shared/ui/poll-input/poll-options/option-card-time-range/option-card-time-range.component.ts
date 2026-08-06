@@ -4,17 +4,16 @@ import {
   input,
   output,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
-import { DatePicker } from 'primeng/datepicker';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmInput } from '@spartan-ng/helm/input';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Card } from 'primeng/card';
-import { DateOptionEntry } from '../../../../utils/date-option.utils';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { DateOptionEntry, formatTime, parseTimeInput } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-time-range',
   templateUrl: './option-card-time-range.component.html',
-  imports: [FormsModule, Button, DatePicker, TranslatePipe, Card],
+  imports: [HlmButton, HlmInput, TranslatePipe, ...HlmCardImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardTimeRangeComponent {
@@ -23,12 +22,21 @@ export class OptionCardTimeRangeComponent {
   canRemove = input<boolean>(false);
   remove = output<void>();
 
-  onStartTimeChange(): void {
+  protected getTimeValue(date: Date | undefined): string {
+    return date ? formatTime(date) : '';
+  }
+
+  onStartTimeChange(event: Event): void {
     const entry = this.option();
+    entry.startTime = parseTimeInput((event.target as HTMLInputElement).value);
     if (entry.startTime && !entry.endTime) {
       const endTime = new Date(entry.startTime);
       endTime.setHours(endTime.getHours() + 1);
       entry.endTime = endTime;
     }
+  }
+
+  setEndTime(event: Event): void {
+    this.option().endTime = parseTimeInput((event.target as HTMLInputElement).value);
   }
 }

@@ -60,13 +60,9 @@
           }
 
           @if (!isPublic() && member.role !== ProjectRole.Creator) {
-            <p-button
-              icon="pi pi-times"
-              [text]="true"
-              severity="secondary"
-              size="small"
-              (click)="onRemoveClick(member.email)"
-            />
+            <button hlmBtn variant="ghost" size="icon-sm" (click)="onRemoveClick(member.email)">
+              <i class="pi pi-times"></i>
+            </button>
           }
         </div>
 
@@ -75,12 +71,9 @@
             class="absolute inset-0 bg-white/80 flex items-center justify-end gap-2 px-3 rounded"
             (click)="pendingRemoveEmail.set(undefined)"
           >
-            <p-button
-              [label]="'project.share.remove' | translate"
-              severity="danger"
-              size="small"
-              (click)="$event.stopPropagation(); confirmRemove(member.email)"
-            />
+            <button hlmBtn variant="destructive" size="sm" (click)="$event.stopPropagation(); confirmRemove(member.email)">
+              {{ 'project.share.remove' | translate }}
+            </button>
           </div>
         }
       </div>

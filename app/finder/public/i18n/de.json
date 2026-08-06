@@ -159,6 +159,7 @@
         "endDate": "Enddatum",
         "startTime": "Uhrzeit",
         "endTime": "Endzeit",
+        "selectDate": "Datum auswählen",
         "addTime": "Uhrzeit hinzufügen",
         "endBeforeStart": "Das Enddatum muss nach dem {{date}} liegen.",
         "addOption": "Termin hinzufügen",

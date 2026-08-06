@@ -3,7 +3,7 @@ import { USER1, USER2, login, logout } from './helpers';
 
 async function closeShareDrawer(page: Page) {
   await page.keyboard.press('Escape');
-  await page.locator('[data-pc-name="drawer"]').waitFor({ state: 'hidden' });
+  await page.locator('[data-slot="sheet-content"]').waitFor({ state: 'hidden' });
 }
 
 test.describe('Project permission checks', () => {

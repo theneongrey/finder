@@ -6,14 +6,14 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HlmProgressImports } from '@spartan-ng/helm/progress';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PollDetail } from '../../../_shared/models/project-detail.model';
 
 @Component({
   selector: 'app-vote-overview-summary',
   templateUrl: './vote-overview-summary.component.html',
-  imports: [RouterLink, ...HlmProgressImports, Button, TranslatePipe],
+  imports: [RouterLink, ...HlmProgressImports, HlmButton, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteOverviewSummaryComponent {

@@ -69,21 +69,10 @@
 </div>
 
 <div
-  class="fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md p-4 flex justify-center p-fluid"
+  class="fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md p-4 flex justify-center"
 >
-  <p-button
-    class="w-full max-w-md"
-    [label]="
-      mode() !== 'edit'
-        ? ('project.pollInput.createPoll' | translate)
-        : ('project.pollInput.updatePoll' | translate)
-    "
-    [icon]="
-      mode() !== 'edit'
-        ? 'fa-regular fa-paper-plane'
-        : 'fa-regular fa-floppy-disk'
-    "
-    [disabled]="!isValid()"
-    (click)="formSubmit.emit()"
-  />
+  <button hlmBtn class="w-full max-w-md" [disabled]="!isValid()" (click)="formSubmit.emit()">
+    <i [class]="mode() !== 'edit' ? 'fa-regular fa-paper-plane' : 'fa-regular fa-floppy-disk'"></i>
+    {{ mode() !== 'edit' ? ('project.pollInput.createPoll' | translate) : ('project.pollInput.updatePoll' | translate) }}
+  </button>
 </div>

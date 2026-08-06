@@ -13,8 +13,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Panel } from 'primeng/panel';
-import { Button } from 'primeng/button';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { TitleBarService } from '../../../common/services/title-bar.service';
@@ -25,8 +26,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   imports: [
     ReactiveFormsModule,
     ...HlmAlertImports,
-    Panel,
-    Button,
+    ...HlmCardImports,
+    HlmButton,
+    HlmSpinner,
     HlmInput,
     TranslatePipe,
   ],

@@ -1,9 +1,5 @@
 <hlm-popover sideOffset="5" [state]="popoverOpen()" (stateChanged)="popoverOpen.set($event)">
-  <button
-    hlmPopoverTrigger
-    type="button"
-    class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50"
-  >
+  <button hlmBtn hlmPopoverTrigger variant="outline" type="button">
     <i class="fa-regular fa-comment"></i>
     {{ 'project.vote.addComment' | translate }}
   </button>
@@ -16,18 +12,12 @@
       class="w-full"
     />
     <div class="flex gap-2 justify-end">
-      <p-button
-        [label]="'project.common.cancel' | translate"
-        severity="secondary"
-        variant="text"
-        size="small"
-        (click)="cancelComment()"
-      />
-      <p-button
-        [label]="'project.vote.submitComment' | translate"
-        size="small"
-        (click)="submitComment()"
-      />
+      <button hlmBtn variant="ghost" size="sm" (click)="cancelComment()">
+        {{ 'project.common.cancel' | translate }}
+      </button>
+      <button hlmBtn size="sm" (click)="submitComment()">
+        {{ 'project.vote.submitComment' | translate }}
+      </button>
     </div>
   </hlm-popover-content>
 </hlm-popover>

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { ProjectDetailStore } from '../../_shared/data/project-detail.store';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
@@ -27,7 +27,7 @@ import { OptionType } from '../../_shared/models/project-detail.model';
   templateUrl: './project-vote.component.html',
   styleUrl: './project-vote.component.css',
   imports: [
-    Button,
+    HlmButton,
     TranslatePipe,
     VoteCardImageComponent,
     VoteCardTextComponent,

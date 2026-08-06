@@ -35,9 +35,19 @@
       "@spartan-ng/helm/popover": ["./src/lib/ui/popover/src/index.ts"],
       "@spartan-ng/helm/tooltip": ["./src/lib/ui/tooltip/src/index.ts"],
       "@spartan-ng/helm/select": ["./src/lib/ui/select/src/index.ts"],
-      "@spartan-ng/helm/toggle-group": ["./src/lib/ui/toggle-group/src/index.ts"],
+      "@spartan-ng/helm/toggle-group": [
+        "./src/lib/ui/toggle-group/src/index.ts"
+      ],
       "@spartan-ng/helm/toggle": ["./src/lib/ui/toggle/src/index.ts"],
-      "@spartan-ng/helm/input-otp": ["./src/lib/ui/input-otp/src/index.ts"]
+      "@spartan-ng/helm/input-otp": ["./src/lib/ui/input-otp/src/index.ts"],
+      "@spartan-ng/helm/card": ["./src/lib/ui/card/src/index.ts"],
+      "@spartan-ng/helm/sheet": ["./src/lib/ui/sheet/src/index.ts"],
+      "@spartan-ng/helm/alert-dialog": [
+        "./src/lib/ui/alert-dialog/src/index.ts"
+      ],
+      "@spartan-ng/helm/date-picker": ["./src/lib/ui/date-picker/src/index.ts"],
+      "@spartan-ng/helm/calendar": ["./src/lib/ui/calendar/src/index.ts"],
+      "@spartan-ng/helm/input-group": ["./src/lib/ui/input-group/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

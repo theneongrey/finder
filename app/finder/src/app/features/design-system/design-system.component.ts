@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
-import { Card } from 'primeng/card';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { HlmBadge } from '@spartan-ng/helm/badge';
@@ -17,6 +17,7 @@ import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
+import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
@@ -40,13 +41,14 @@ const mockSharingStore = {
   imports: [
     NgClass,
     FormsModule,
-    Button,
-    Card,
+    HlmButton,
+    ...HlmCardImports,
     BrnInputOtp,
     ...HlmInputOtpImports,
     HlmInput,
     HlmTextarea,
     ...HlmSelectImports,
+    ...HlmDatePickerImports,
     ...HlmToggleGroupImports,
     ...HlmTabsImports,
     HlmBadge,
@@ -98,24 +100,6 @@ export class DesignSystemComponent {
     { step: '950', hex: '#000000' },
   ];
 
-  buttonSeverities: {
-    severity:
-      | 'primary'
-      | 'secondary'
-      | 'success'
-      | 'danger'
-      | 'info'
-      | 'contrast';
-    label: string;
-  }[] = [
-    { severity: 'primary', label: 'Primary' },
-    { severity: 'secondary', label: 'Secondary' },
-    { severity: 'success', label: 'Success' },
-    { severity: 'danger', label: 'Danger' },
-    { severity: 'info', label: 'Info' },
-    { severity: 'contrast', label: 'Contrast' },
-  ];
-
   selectOptions = [
     { label: 'Day', value: 'day' },
     { label: 'Week', value: 'week' },
@@ -134,6 +118,8 @@ export class DesignSystemComponent {
   textareaValue = '';
   autoResizeValue = '';
   otpValue = '';
+  datePickerValue: Date | undefined = undefined;
+  timeInputValue = '';
 
   faIcons = [
     'fa-solid fa-house',

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 
 @Component({
   selector: 'app-vote-card-text',
   templateUrl: './vote-card-text.component.html',
   styles: [':host { display: contents; }'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonModule],
+  imports: [HlmButton],
 })
 export class VoteCardTextComponent {
   text = input('');

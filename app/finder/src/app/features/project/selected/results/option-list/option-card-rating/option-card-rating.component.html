@@ -57,33 +57,21 @@
 
   @if (option().choice) {
     <div class="flex justify-end">
-      <p-button
-        [label]="'project.votesOverview.reVote' | translate"
-        icon="fa-solid fa-rotate"
-        severity="secondary"
-        variant="text"
-        size="small"
-        [routerLink]="[
+      <button hlmBtn variant="ghost" size="sm" [routerLink]="[
           '/project/detail',
           projectId(),
           'vote',
           pollId(),
           option().id,
-        ]"
-      />
+        ]"><i class="fa-solid fa-rotate"></i>{{ 'project.votesOverview.reVote' | translate }}</button>
     </div>
   } @else {
-    <p-button
-      [label]="'project.common.vote' | translate"
-      icon="fa-solid fa-play"
-      [routerLink]="[
+    <button hlmBtn class="w-full" [routerLink]="[
         '/project/detail',
         projectId(),
         'vote',
         pollId(),
         option().id,
-      ]"
-      styleClass="w-full"
-    />
+      ]"><i class="fa-solid fa-play"></i>{{ 'project.common.vote' | translate }}</button>
   }
 </div>

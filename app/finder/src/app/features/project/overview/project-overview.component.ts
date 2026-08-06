@@ -5,9 +5,8 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ConfirmDialog } from 'primeng/confirmdialog';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
+import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectListStore } from '../_shared/data/project-list.store';
 import { ProjectOverview } from '../_shared/models/project-overview.model';
@@ -24,8 +23,8 @@ import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer
 @Component({
   selector: 'app-project-overview',
   imports: [
-    ConfirmDialog,
     ...HlmTabsImports,
+    ...HlmAlertDialogImports,
     TranslatePipe,
     TitleBarComponent,
     MaxHeightMinusHeaderDirective,
@@ -35,7 +34,6 @@ import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer
     HlmBadge,
     ShareDrawerComponent,
   ],
-  providers: [MessageService, ConfirmationService],
   templateUrl: './project-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -44,7 +42,6 @@ import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer
 })
 export class ProjectOverviewComponent {
   private readonly projectListStore = inject(ProjectListStore);
-  private readonly confirmationService = inject(ConfirmationService);
   private readonly translateService = inject(TranslateService);
   private readonly titleBarService = inject(TitleBarService);
 
@@ -55,6 +52,12 @@ export class ProjectOverviewComponent {
     { type: 'poll' | 'project'; projectId: string } | undefined
   >(undefined);
   sharingProject = computed(() => this.getSharingProject());
+
+  confirmDialogOpen = signal(false);
+  confirmTitle = signal('');
+  confirmMessage = signal('');
+  confirmAcceptLabel = signal('');
+  private pendingConfirmAction: (() => void) | null = null;
 
   constructor() {
     this.projectListStore.getProjects();
@@ -81,43 +84,45 @@ export class ProjectOverviewComponent {
   }
 
   projectDeletionRequested(project: ProjectOverview) {
-    this.confirmationService.confirm({
-      header: this.translateService.instant(
-        'project.overview.deleteConfirm.header',
-      ),
-      message: this.translateService.instant(
-        'project.overview.deleteConfirm.message',
-        { name: project.name },
-      ),
-      acceptLabel: this.translateService.instant(
-        'project.overview.deleteConfirm.accept',
-      ),
-      rejectLabel: this.translateService.instant('project.common.cancel'),
-      accept: () => this.projectListStore.deleteProject(project.id),
-    });
+    this.showConfirmDialog(
+      this.translateService.instant('project.overview.deleteConfirm.header'),
+      this.translateService.instant('project.overview.deleteConfirm.message', { name: project.name }),
+      this.translateService.instant('project.overview.deleteConfirm.accept'),
+      () => this.projectListStore.deleteProject(project.id),
+    );
   }
 
   pollDeletionRequested(poll: PollItem) {
-    this.confirmationService.confirm({
-      header: this.translateService.instant(
-        'project.overview.deletePollConfirm.header',
-      ),
-      message: this.translateService.instant(
-        'project.overview.deletePollConfirm.message',
-        { name: poll.name },
-      ),
-      acceptLabel: this.translateService.instant(
-        'project.overview.deletePollConfirm.accept',
-      ),
-      rejectLabel: this.translateService.instant('project.common.cancel'),
-      accept: () => this.projectListStore.deleteProject(poll.projectId),
-    });
+    this.showConfirmDialog(
+      this.translateService.instant('project.overview.deletePollConfirm.header'),
+      this.translateService.instant('project.overview.deletePollConfirm.message', { name: poll.name }),
+      this.translateService.instant('project.overview.deletePollConfirm.accept'),
+      () => this.projectListStore.deleteProject(poll.projectId),
+    );
+  }
+
+  onConfirmAccept() {
+    this.pendingConfirmAction?.();
+    this.confirmDialogOpen.set(false);
   }
 
   protected shareDrawerVisibilityChanged(value: boolean) {
     if (!value) {
       this.sharingProjectId.set(undefined);
     }
+  }
+
+  private showConfirmDialog(
+    title: string,
+    message: string,
+    acceptLabel: string,
+    action: () => void,
+  ) {
+    this.confirmTitle.set(title);
+    this.confirmMessage.set(message);
+    this.confirmAcceptLabel.set(acceptLabel);
+    this.pendingConfirmAction = action;
+    this.confirmDialogOpen.set(true);
   }
 
   private getSharingProject() {

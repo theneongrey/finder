@@ -11,10 +11,10 @@ import { RouterLink } from '@angular/router';
 import { HlmBadge } from '@spartan-ng/helm/badge';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { TimeSincePipe } from '../_pipe/time-ago.pipe';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectOverview } from '../../_shared/models/project-overview.model';
-import { Card } from 'primeng/card';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { ProjectRole } from '../../_shared/models/project-role.enum';
 
 @Component({
@@ -25,9 +25,9 @@ import { ProjectRole } from '../../_shared/models/project-role.enum';
     HlmBadge,
     ...HlmDropdownMenuImports,
     TimeSincePipe,
-    Button,
+    HlmButton,
     TranslatePipe,
-    Card,
+    ...HlmCardImports,
   ],
   templateUrl: './project-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

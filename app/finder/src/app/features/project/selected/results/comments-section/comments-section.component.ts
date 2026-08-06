@@ -5,7 +5,7 @@ import {
   output,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Comment } from '../../../_shared/models/project-detail.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
@@ -18,7 +18,7 @@ import { User } from '../../../../../common/models/user.model';
   selector: 'app-comments-section',
   templateUrl: './comments-section.component.html',
   imports: [
-    Button,
+    HlmButton,
     TranslatePipe,
     TimeSincePipe,
     DatePipe,

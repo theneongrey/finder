@@ -8,13 +8,13 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import { VisibilityType } from '../../../../../../features/project/_shared/models/project-detail.model';
 
 @Component({
   selector: 'app-share-access-tab',
-  imports: [Button, ...HlmToggleGroupImports, FormsModule, TranslatePipe],
+  imports: [HlmButton, ...HlmToggleGroupImports, FormsModule, TranslatePipe],
   templateUrl: './share-access-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

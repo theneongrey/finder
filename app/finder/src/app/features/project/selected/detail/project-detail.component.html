@@ -10,13 +10,10 @@
       <div class="flex items-center justify-between mb-4">
         <h2>{{ "project.detail.members" | translate }}</h2>
         @if (role() >= ProjectRole.Owner) {
-          <p-button
-            icon="fa-solid fa-user-plus"
-            [label]="'project.detail.invite' | translate"
-            severity="secondary"
-            size="small"
-            (click)="showShare.set(true)"
-          />
+          <button hlmBtn variant="secondary" size="sm" (click)="showShare.set(true)">
+            <i class="fa-solid fa-user-plus"></i>
+            {{ 'project.detail.invite' | translate }}
+          </button>
         }
       </div>
       @if (project.sharedWith.length > 0) {
@@ -67,7 +64,18 @@
   }
 </div>
 
-<p-confirmdialog />
+<hlm-alert-dialog [state]="confirmDialogOpen() ? 'open' : 'closed'" (stateChanged)="confirmDialogOpen.set($event === 'open')">
+  <hlm-alert-dialog-content *hlmAlertDialogPortal>
+    <hlm-alert-dialog-header>
+      <h2 hlmAlertDialogTitle>{{ confirmTitle() }}</h2>
+      <p hlmAlertDialogDescription>{{ confirmMessage() }}</p>
+    </hlm-alert-dialog-header>
+    <hlm-alert-dialog-footer>
+      <button hlmAlertDialogCancel>{{ 'project.common.cancel' | translate }}</button>
+      <button hlmAlertDialogAction (click)="onConfirmAccept()">{{ confirmAcceptLabel() }}</button>
+    </hlm-alert-dialog-footer>
+  </hlm-alert-dialog-content>
+</hlm-alert-dialog>
 
 @if (project(); as project) {
   <app-share-drawer

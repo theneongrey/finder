@@ -12,11 +12,8 @@
       }
       <div class="flex items-center gap-3 mt-2">
         <span
-          [pTooltip]="
-            'project.detail.item.options'
-              | translate: { count: _poll.optionCount }
-          "
-          tooltipPosition="top"
+          [hlmTooltip]="'project.detail.item.options' | translate: { count: _poll.optionCount }"
+          position="top"
           class="flex items-center gap-1 ds-body cursor-default"
         >
           <i class="fa-solid fa-list"></i>
@@ -27,11 +24,8 @@
           size="small"
           icon="fa-regular fa-comments"
           [label]="_poll.commentCount.toString()"
-          [pTooltip]="
-            'project.detail.item.comments'
-              | translate: { count: _poll.commentCount }
-          "
-          tooltipPosition="top"
+          [hlmTooltip]="'project.detail.item.comments' | translate: { count: _poll.commentCount }"
+          position="top"
           [routerLink]="[
             '/project/detail',
             _poll.projectId,
@@ -47,10 +41,26 @@
         <p-button
           icon="fa-solid fa-ellipsis-vertical"
           [text]="true"
-          (click)="menu.toggle($event)"
           data-testid="poll-menu-btn"
+          [hlmDropdownMenuTrigger]="pollMenu"
         />
-        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
+        <ng-template #pollMenu>
+          <hlm-dropdown-menu>
+            @if (editRoute()) {
+              <button hlmDropdownMenuItem [routerLink]="editRoute()">
+                <i class="fa-solid fa-pen mr-2"></i>{{ editLabel() }}
+              </button>
+            }
+            @if (canSharePoll()) {
+              <button hlmDropdownMenuItem (click)="shareRequested.emit()">
+                <i class="fa-solid fa-share-nodes mr-2"></i>{{ shareLabel() }}
+              </button>
+            }
+            <button hlmDropdownMenuItem (click)="deletionRequested.emit()">
+              <i class="fa-regular fa-trash-can mr-2"></i>{{ deleteLabel() }}
+            </button>
+          </hlm-dropdown-menu>
+        </ng-template>
       </div>
     }
   </div>

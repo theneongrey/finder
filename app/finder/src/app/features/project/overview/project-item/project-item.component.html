@@ -19,14 +19,28 @@
       </p>
     </div>
     @if (canEdit()) {
-      <div>
+      <div (click)="$event.stopPropagation()">
         <p-button
           icon="fa-solid fa-ellipsis-vertical"
           [text]="true"
           data-testid="project-menu-btn"
-          (click)="$event.stopPropagation(); menu.toggle($event)"
+          [hlmDropdownMenuTrigger]="projectMenu"
         />
-        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body" />
+        <ng-template #projectMenu>
+          <hlm-dropdown-menu>
+            <button hlmDropdownMenuItem [routerLink]="'/project/edit/' + project().id">
+              <i class="fa-solid fa-pen mr-2"></i>{{ editLabel() }}
+            </button>
+            @if (canShare()) {
+              <button hlmDropdownMenuItem (click)="shareRequested.emit()">
+                <i class="fa-solid fa-share-nodes mr-2"></i>{{ shareLabel() }}
+              </button>
+            }
+            <button hlmDropdownMenuItem (click)="deletionRequested.emit()">
+              <i class="fa-regular fa-trash-can mr-2"></i>{{ deleteLabel() }}
+            </button>
+          </hlm-dropdown-menu>
+        </ng-template>
       </div>
     }
   </div>

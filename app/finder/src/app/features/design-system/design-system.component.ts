@@ -8,15 +8,16 @@ import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { HlmBadge } from '@spartan-ng/helm/badge';
 import { HlmProgressImports } from '@spartan-ng/helm/progress';
 import { HlmSeparator } from '@spartan-ng/helm/separator';
-import { InputOtp } from 'primeng/inputotp';
 import { HlmInput } from '@spartan-ng/helm/input';
+import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
+import { BrnInputOtp } from '@spartan-ng/brain/input-otp';
 import { Panel } from 'primeng/panel';
 import { HlmPopoverImports } from '@spartan-ng/helm/popover';
 import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
-import { Select } from 'primeng/select';
-import { SelectButton } from 'primeng/selectbutton';
+import { HlmSelectImports } from '@spartan-ng/helm/select';
+import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
 import { AutoResizeTextareaComponent } from '../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
@@ -41,11 +42,12 @@ const mockSharingStore = {
     FormsModule,
     Button,
     Card,
-    InputOtp,
+    BrnInputOtp,
+    ...HlmInputOtpImports,
     HlmInput,
     HlmTextarea,
-    Select,
-    SelectButton,
+    ...HlmSelectImports,
+    ...HlmToggleGroupImports,
     ...HlmTabsImports,
     HlmBadge,
     ...HlmAvatarImports,

@@ -369,35 +369,49 @@
 
           <div>
             <p class="ds-label mb-2">InputOtp</p>
-            <p-inputOtp
-              [(ngModel)]="otpValue"
-              [length]="6"
-              [integerOnly]="true"
-            />
+            <brn-input-otp hlmInputOtp [(ngModel)]="otpValue" [length]="6" inputMode="numeric">
+              <hlm-input-otp-group>
+                <hlm-input-otp-slot [index]="0" />
+                <hlm-input-otp-slot [index]="1" />
+                <hlm-input-otp-slot [index]="2" />
+              </hlm-input-otp-group>
+              <hlm-input-otp-separator />
+              <hlm-input-otp-group>
+                <hlm-input-otp-slot [index]="3" />
+                <hlm-input-otp-slot [index]="4" />
+                <hlm-input-otp-slot [index]="5" />
+              </hlm-input-otp-group>
+            </brn-input-otp>
           </div>
         </div>
 
         <div class="flex flex-col gap-4">
           <div>
             <p class="ds-label mb-2">Select (Dropdown)</p>
-            <p-select
-              [options]="dropdownOptions"
-              [(ngModel)]="selectedDropdown"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Choose an option"
-              class="w-full"
-            />
+            <hlm-select [(ngModel)]="selectedDropdown" class="w-full">
+              <hlm-select-trigger class="w-full">
+                <hlm-select-value placeholder="Choose an option" />
+              </hlm-select-trigger>
+              <hlm-select-content *hlmSelectPortal>
+                @for (opt of dropdownOptions; track opt.value) {
+                  <hlm-select-item [value]="opt.value">{{ opt.label }}</hlm-select-item>
+                }
+              </hlm-select-content>
+            </hlm-select>
           </div>
 
           <div>
-            <p class="ds-label mb-2">SelectButton (Toggle Group)</p>
-            <p-selectbutton
-              [options]="selectOptions"
+            <p class="ds-label mb-2">ToggleGroup (SelectButton)</p>
+            <hlm-toggle-group
+              type="single"
+              [nullable]="false"
               [(ngModel)]="selectButtonValue"
-              optionLabel="label"
-              optionValue="value"
-            />
+              variant="outline"
+            >
+              @for (opt of selectOptions; track opt.value) {
+                <button hlmToggleGroupItem [value]="opt.value">{{ opt.label }}</button>
+              }
+            </hlm-toggle-group>
           </div>
 
           <div>

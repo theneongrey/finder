@@ -5,47 +5,22 @@
 </p>
 
 <div class="flex gap-2">
-  @if (contacts().length > 0) {
-    <p-select
-      fluid
-      [editable]="true"
-      [options]="contacts()"
-      [ngModel]="contactEmail()"
-      (ngModelChange)="contactEmail.set($event)"
-      optionLabel="email"
-      optionValue="email"
-      [placeholder]="'project.share.nameOrEmail' | translate"
-      [disabled]="sharingInProgress()"
-      class="flex-1"
-    >
-      <ng-template #item let-contact>
-        <div class="flex items-center gap-2">
-          <p-avatar
-            [image]="contact.picture ?? undefined"
-            [label]="
-              contact.picture ? undefined : contact.name[0].toUpperCase()
-            "
-            shape="circle"
-          />
-          <div>
-            <div class="font-medium text-sm">{{ contact.name }}</div>
-            <div class="text-xs text-gray-500">{{ contact.email }}</div>
-          </div>
-        </div>
-      </ng-template>
-    </p-select>
-  } @else {
-    <input
-      hlmInput
-      type="email"
-      autocomplete="off"
-      [ngModel]="contactEmail()"
-      (ngModelChange)="contactEmail.set($event)"
-      [placeholder]="'project.share.nameOrEmail' | translate"
-      [disabled]="sharingInProgress()"
-      class="flex-1"
-    />
-  }
+  <input
+    hlmInput
+    type="email"
+    list="contacts-list"
+    autocomplete="off"
+    [ngModel]="contactEmail()"
+    (ngModelChange)="contactEmail.set($event)"
+    [placeholder]="'project.share.nameOrEmail' | translate"
+    [disabled]="sharingInProgress()"
+    class="flex-1"
+  />
+  <datalist id="contacts-list">
+    @for (c of contacts(); track c.email) {
+      <option [value]="c.email">{{ c.name }}</option>
+    }
+  </datalist>
   <p-button
     icon="pi pi-send"
     [loading]="sharingInProgress()"
@@ -54,16 +29,20 @@
   />
 </div>
 
-<p-select-button
-  fluid
-  [allowEmpty]="false"
-  [options]="roleOptions()"
-  [ngModel]="selectedRole()"
-  (ngModelChange)="selectedRole.set($event)"
-  optionLabel="label"
-  optionValue="id"
-  class="mt-4"
-/>
+<hlm-toggle-group
+  type="single"
+  [nullable]="false"
+  [value]="selectedRole()"
+  (valueChange)="onRoleChange($event)"
+  variant="outline"
+  class="mt-4 w-full"
+>
+  @for (opt of roleOptions(); track opt.id) {
+    <button hlmToggleGroupItem [value]="opt.id" class="flex-1">
+      {{ opt.label }}
+    </button>
+  }
+</hlm-toggle-group>
 
 <p class="text-sm text-gray-500 mt-2">
   {{ selectedRoleDescription() }}

@@ -9,11 +9,9 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Avatar } from 'primeng/avatar';
 import { Button } from 'primeng/button';
 import { HlmInput } from '@spartan-ng/helm/input';
-import { Select } from 'primeng/select';
-import { SelectButton } from 'primeng/selectbutton';
+import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import { SharingStore } from '../../../../../../features/project/_shared/data/sharing.store';
 import { SharingContact } from '../../../../../../features/project/_shared/models/project-detail.model';
 
@@ -22,11 +20,9 @@ import { SharingContact } from '../../../../../../features/project/_shared/model
   templateUrl: './share-invite-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    SelectButton,
-    Select,
     HlmInput,
     Button,
-    Avatar,
+    ...HlmToggleGroupImports,
     FormsModule,
     TranslatePipe,
   ],
@@ -82,6 +78,12 @@ export class ShareInviteFormComponent {
       }
       wasSharingInProgress = inProgress;
     });
+  }
+
+  onRoleChange(value: number | number[] | null | undefined) {
+    if (typeof value === 'number') {
+      this.selectedRole.set(value);
+    }
   }
 
   invite() {

@@ -56,14 +56,16 @@
         >
           {{ "settings.language" | translate }}
         </label>
-        <p-select
-          id="language"
-          formControlName="language"
-          [options]="languages"
-          optionLabel="label"
-          optionValue="value"
-          class="w-full"
-        />
+        <hlm-select formControlName="language" class="w-full">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            <hlm-select-item value="en">English</hlm-select-item>
+            <hlm-select-item value="de">Deutsch</hlm-select-item>
+            <hlm-select-item value="es">Español</hlm-select-item>
+          </hlm-select-content>
+        </hlm-select>
       </div>
 
       <p-button

@@ -9,12 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
 import { Button } from 'primeng/button';
-import { SelectButton } from 'primeng/selectbutton';
+import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import { VisibilityType } from '../../../../../../features/project/_shared/models/project-detail.model';
 
 @Component({
   selector: 'app-share-access-tab',
-  imports: [SelectButton, Button, FormsModule, TranslatePipe],
+  imports: [Button, ...HlmToggleGroupImports, FormsModule, TranslatePipe],
   templateUrl: './share-access-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -29,8 +29,10 @@ export class ShareAccessFormComponent {
 
   visibilityChange = output<VisibilityType>();
 
-  onVisibilityChange(value: VisibilityType) {
-    this.visibilityChange.emit(value);
+  onVisibilityChange(value: VisibilityType | VisibilityType[] | null | undefined) {
+    if (typeof value === 'number') {
+      this.visibilityChange.emit(value);
+    }
   }
 
   copyLink() {

@@ -48,22 +48,6 @@
       "owner": "Propietario",
       "creator": "Creador"
     },
-    "tabs": {
-      "overview": "Resumen",
-      "projects": "Proyectos",
-      "polls": "Encuestas"
-    },
-    "overviewTab": {
-      "greeting": "Hola {{name}}",
-      "subtitle": "Tus proyectos y encuestas más recientes",
-      "latestProjects": "Proyectos recientes",
-      "latestPolls": "Encuestas recientes",
-      "viewAll": "Ver todos"
-    },
-    "projectsTab": {
-      "title": "Proyectos",
-      "subtitle": "Todos tus proyectos de un vistazo"
-    },
     "pollsTab": {
       "title": "Encuestas",
       "subtitle": "Todas tus encuestas independientes de un vistazo",
@@ -80,20 +64,6 @@
       }
     },
     "overview": {
-      "title": "Proyectos",
-      "subtitle": "Estos son tus proyectos actuales",
-      "addNew": {
-        "cto": "Nuevo proyecto",
-        "description": "Inicia un proyecto colaborativo"
-      },
-      "item": {
-        "by": "de {{name}}"
-      },
-      "deleteConfirm": {
-        "header": "¿Eliminar proyecto?",
-        "message": "¿Estás seguro de que quieres eliminar el proyecto \"{{name}}\"?",
-        "accept": "Eliminar proyecto"
-      },
       "deletePollConfirm": {
         "header": "¿Eliminar encuesta?",
         "message": "¿Estás seguro de que quieres eliminar la encuesta \"{{name}}\"?",

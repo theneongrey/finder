@@ -26,15 +26,27 @@
         >
           {{ 'auth.codeLogin.code' | translate }}
         </label>
-        <p-inputOtp
+        <brn-input-otp
+          hlmInputOtp
           id="code"
           class="mx-auto"
-          aria-label="code"
           formControlName="code"
-          autofocus
-          [integerOnly]="true"
           [length]="6"
-        />
+          inputMode="numeric"
+          [autofocus]="true"
+        >
+          <hlm-input-otp-group>
+            <hlm-input-otp-slot [index]="0" />
+            <hlm-input-otp-slot [index]="1" />
+            <hlm-input-otp-slot [index]="2" />
+          </hlm-input-otp-group>
+          <hlm-input-otp-separator />
+          <hlm-input-otp-group>
+            <hlm-input-otp-slot [index]="3" />
+            <hlm-input-otp-slot [index]="4" />
+            <hlm-input-otp-slot [index]="5" />
+          </hlm-input-otp-group>
+        </brn-input-otp>
       </div>
 
       <p-button

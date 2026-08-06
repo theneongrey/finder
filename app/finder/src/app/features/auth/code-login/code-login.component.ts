@@ -12,16 +12,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { InputOtp } from 'primeng/inputotp';
 import { Panel } from 'primeng/panel';
 import { Button } from 'primeng/button';
+import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
+import { BrnInputOtp } from '@spartan-ng/brain/input-otp';
 import { LoggerService } from '../../../common/services/logger.service';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule, InputOtp, Panel, Button, TranslatePipe],
+  imports: [ReactiveFormsModule, BrnInputOtp, ...HlmInputOtpImports, Panel, Button, TranslatePipe],
   templateUrl: './code-login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

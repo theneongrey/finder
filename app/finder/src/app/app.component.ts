@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { HlmToasterImports } from '@spartan-ng/helm/sonner';
 import { UserStore } from './common/data/user.store';
 import { TranslateService } from '@ngx-translate/core';
-import { SUPPORTED_LANGUAGES } from './common/i18n/languages';
+import { SUPPORTED_LANGUAGES, getStoredLanguage } from './common/i18n/languages';
 import { injectBrnCalendarI18n } from '@spartan-ng/brain/calendar';
 
 type MonthTuple = [string, string, string, string, string, string, string, string, string, string, string, string];

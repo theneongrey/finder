@@ -11,7 +11,7 @@ import { HlmSeparator } from '@spartan-ng/helm/separator';
 import { InputOtp } from 'primeng/inputotp';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { Panel } from 'primeng/panel';
-import { Popover } from 'primeng/popover';
+import { HlmPopoverImports } from '@spartan-ng/helm/popover';
 import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
@@ -55,7 +55,7 @@ const mockSharingStore = {
     ...HlmSkeletonImports,
     Panel,
     HlmSeparator,
-    Popover,
+    ...HlmPopoverImports,
     AddCardComponent,
     AutoResizeTextareaComponent,
     ShareDrawerComponent,

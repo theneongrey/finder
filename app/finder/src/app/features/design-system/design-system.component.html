@@ -613,21 +613,23 @@
 
         <div>
           <p class="ds-label mb-3">Popover</p>
-          <p-button
-            label="Show Popover"
-            icon="pi pi-info-circle"
-            variant="outlined"
-            (click)="op.toggle($event)"
-          />
-          <p-popover #op>
-            <div class="flex max-w-xs flex-col gap-2 p-3">
-              <h3 style="margin: 0">Popover Title</h3>
+          <hlm-popover sideOffset="5">
+            <button
+              hlmPopoverTrigger
+              type="button"
+              class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50"
+            >
+              <i class="fa-solid fa-circle-info"></i>
+              Show Popover
+            </button>
+            <hlm-popover-content *hlmPopoverPortal="let ctx">
+              <h3 class="font-medium mb-1">Popover Title</h3>
               <p class="ds-body text-gray-500">
                 Contextual overlay anchored to its trigger. Used for inline help
                 and extra actions.
               </p>
-            </div>
-          </p-popover>
+            </hlm-popover-content>
+          </hlm-popover>
         </div>
       </div>
     </section>

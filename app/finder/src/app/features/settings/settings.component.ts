@@ -17,7 +17,6 @@ import {
 } from '@angular/forms';
 import { toast } from '@spartan-ng/brain/sonner';
 import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
@@ -35,7 +34,6 @@ import {
   imports: [
     ReactiveFormsModule,
     HlmButton,
-    HlmSpinner,
     HlmInput,
     ...HlmSelectImports,
     TitleBarComponent,

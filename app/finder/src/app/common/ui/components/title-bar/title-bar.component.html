@@ -3,8 +3,7 @@
     class="mx-auto w-full flex h-15 p-2 gap-2 bg-gradient-to-b from-white from-75% to-[#86bba1]/0"
   >
     @if (this.backRoute()) {
-      <button hlmBtn variant="ghost" size="icon" [routerLink]="[this.backRoute()]">
-        <i class="fa-solid fa-arrow-left"></i>
+      <button hlmBtn variant="ghost" icon="fa-solid fa-arrow-left" [routerLink]="[this.backRoute()]">
       </button>
 
       @if (!titleDisabled()) {

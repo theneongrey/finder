@@ -21,8 +21,7 @@
       <option [value]="c.email">{{ c.name }}</option>
     }
   </datalist>
-  <button hlmBtn size="icon" [disabled]="!contactEmail() || sharingInProgress()" (click)="invite()">
-    @if (sharingInProgress()) { <hlm-spinner /> } @else { <i class="pi pi-send"></i> }
+  <button hlmBtn icon="pi pi-send" [disabled]="!contactEmail()" [loading]="sharingInProgress()" (click)="invite()">
   </button>
 </div>
 

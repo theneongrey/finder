@@ -35,8 +35,7 @@
       </div>
       @if (showMenu()) {
         <div>
-          <button hlmBtn variant="ghost" size="icon" data-testid="poll-menu-btn" [hlmDropdownMenuTrigger]="pollMenu">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
+          <button hlmBtn variant="ghost" icon="fa-solid fa-ellipsis-vertical" data-testid="poll-menu-btn" [hlmDropdownMenuTrigger]="pollMenu">
           </button>
           <ng-template #pollMenu>
             <hlm-dropdown-menu>

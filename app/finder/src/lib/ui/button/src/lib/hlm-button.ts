@@ -1,5 +1,21 @@
-import { Directive, input, signal } from '@angular/core';
+import { type BooleanInput } from '@angular/cdk/coercion';
+import {
+  afterNextRender,
+  ApplicationRef,
+  booleanAttribute,
+  ComponentRef,
+  createComponent,
+  Directive,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  Renderer2,
+  signal,
+} from '@angular/core';
 import { BrnButton } from '@spartan-ng/brain/button';
+import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { classes } from '@spartan-ng/helm/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ClassValue } from 'clsx';
@@ -50,25 +66,99 @@ export type ButtonVariants = VariantProps<typeof buttonVariants>;
   hostDirectives: [{ directive: BrnButton, inputs: ['disabled'] }],
   host: { 'data-slot': 'button' },
 })
-export class HlmButton {
+export class HlmButton implements OnDestroy {
+  private readonly _elementRef = inject(ElementRef<HTMLButtonElement>);
+  private readonly _renderer = inject(Renderer2);
+  private readonly _appRef = inject(ApplicationRef);
   private readonly _config = injectBrnButtonConfig();
 
   private readonly _additionalClasses = signal<ClassValue>('');
+  private readonly _iconOnly = signal(false);
 
-  public readonly variant = input<ButtonVariants['variant']>(
-    this._config.variant,
-  );
+  private _iconEl: HTMLElement | null = null;
+  private _spinnerRef: ComponentRef<HlmSpinner> | null = null;
 
+  public readonly variant = input<ButtonVariants['variant']>(this._config.variant);
   public readonly size = input<ButtonVariants['size']>(this._config.size);
+  public readonly icon = input<string | undefined>(undefined);
+  public readonly loading = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
 
   constructor() {
+    afterNextRender(() => {
+      const el = this._elementRef.nativeElement;
+      const hasContent = Array.from<ChildNode>(el.childNodes).some((node) => {
+        if (this._iconEl && node === this._iconEl) return false;
+        if (this._spinnerRef && node === this._spinnerRef.location.nativeElement) return false;
+        return !!(node.textContent?.trim());
+      });
+      this._iconOnly.set(!!this.icon() && !hasContent);
+    });
+
     classes(() => [
       buttonVariants({ variant: this.variant(), size: this.size() }),
+      this._iconOnly() ? 'aspect-square p-0' : '',
       this._additionalClasses(),
     ]);
+
+    effect(() => {
+      const loading = this.loading();
+      const iconClass = this.icon();
+      const button = this._elementRef.nativeElement;
+
+      this._clearIcon();
+      this._clearSpinner();
+
+      if (loading) {
+        button.setAttribute('disabled', '');
+        button.setAttribute('data-disabled', '');
+        this._spinnerRef = createComponent(HlmSpinner, {
+          environmentInjector: this._appRef.injector,
+        });
+        this._appRef.attachView(this._spinnerRef.hostView);
+        this._renderer.insertBefore(
+          button,
+          this._spinnerRef.location.nativeElement,
+          button.firstChild,
+        );
+      } else {
+        button.removeAttribute('disabled');
+        button.removeAttribute('data-disabled');
+        if (iconClass) {
+          this._iconEl = this._renderer.createElement('i');
+          iconClass
+            .split(' ')
+            .filter(Boolean)
+            .forEach((cls) => this._renderer.addClass(this._iconEl!, cls));
+          this._renderer.insertBefore(button, this._iconEl, button.firstChild);
+        }
+      }
+    });
   }
 
-  setClass(classes: string): void {
-    this._additionalClasses.set(classes);
+  private _clearIcon(): void {
+    if (this._iconEl) {
+      this._renderer.removeChild(this._elementRef.nativeElement, this._iconEl);
+      this._iconEl = null;
+    }
+  }
+
+  private _clearSpinner(): void {
+    if (this._spinnerRef) {
+      this._renderer.removeChild(
+        this._elementRef.nativeElement,
+        this._spinnerRef.location.nativeElement,
+      );
+      this._appRef.detachView(this._spinnerRef.hostView);
+      this._spinnerRef.destroy();
+      this._spinnerRef = null;
+    }
+  }
+
+  setClass(value: string): void {
+    this._additionalClasses.set(value);
+  }
+
+  ngOnDestroy(): void {
+    this._clearSpinner();
   }
 }

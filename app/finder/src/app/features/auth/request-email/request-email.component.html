@@ -41,10 +41,8 @@
           }
         </div>
 
-        <button hlmBtn class="mt-2 w-full" type="submit" [disabled]="form.invalid || isLoading()">
-          @if (isLoading()) { <hlm-spinner class="mr-2" /> }
+        <button hlmBtn class="mt-2 w-full" type="submit" [disabled]="form.invalid" icon="fa-solid fa-arrow-right" [loading]="isLoading()">
           {{ 'auth.requestEmail.requestCode' | translate }}
-          @if (!isLoading()) { <i class="fa-solid fa-arrow-right ml-1.5"></i> }
         </button>
       </div>
     </div>

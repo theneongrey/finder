@@ -21,8 +21,7 @@
       </div>
       @if (canEdit()) {
         <div (click)="$event.stopPropagation()">
-          <button hlmBtn variant="ghost" size="icon" data-testid="project-menu-btn" [hlmDropdownMenuTrigger]="projectMenu">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
+          <button hlmBtn variant="ghost" icon="fa-solid fa-ellipsis-vertical" data-testid="project-menu-btn" [hlmDropdownMenuTrigger]="projectMenu">
           </button>
           <ng-template #projectMenu>
             <hlm-dropdown-menu>

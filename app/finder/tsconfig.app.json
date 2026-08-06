@@ -5,8 +5,5 @@
     "types": []
   },
   "files": ["src/main.ts"],
-  "include": [
-    "src/**/*.d.ts",
-    "src/lib/ui/**/src/**/*.ts"
-  ]
+  "include": ["src/**/*.d.ts", "src/lib/ui/**/src/**/*.ts"]
 }

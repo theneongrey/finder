@@ -17,6 +17,7 @@ import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
+import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
@@ -47,6 +48,7 @@ const mockSharingStore = {
     HlmInput,
     HlmTextarea,
     ...HlmSelectImports,
+    ...HlmDatePickerImports,
     ...HlmToggleGroupImports,
     ...HlmTabsImports,
     HlmBadge,
@@ -116,6 +118,8 @@ export class DesignSystemComponent {
   textareaValue = '';
   autoResizeValue = '';
   otpValue = '';
+  datePickerValue: Date | undefined = undefined;
+  timeInputValue = '';
 
   faIcons = [
     'fa-solid fa-house',

@@ -1,11 +1,31 @@
 <div
   class="pointer-events-none flex flex-col items-center w-full"
 >
-  <hlm-calendar-range
-    [startDate]="startDate()"
-    [endDate]="endDate()"
-    [weekStartsOn]="1"
-  />
+  @if (isSameMonth()) {
+    <hlm-calendar-range
+      [startDate]="startDate()"
+      [endDate]="endDate()"
+      [weekStartsOn]="1"
+      [showNavigation]="false"
+    />
+  } @else {
+    <div class="flex justify-center w-full origin-top scale-55">
+      <hlm-calendar-range
+        [startDate]="startDate()"
+        [endDate]="endDate()"
+        [defaultFocusedDate]="startDate()"
+        [weekStartsOn]="1"
+        [showNavigation]="false"
+      />
+      <hlm-calendar-range
+        [startDate]="startDate()"
+        [endDate]="endDate()"
+        [defaultFocusedDate]="endDate()"
+        [weekStartsOn]="1"
+        [showNavigation]="false"
+      />
+    </div>
+  }
 
   @if (entry().date && entry().endDate) {
     <div class="flex flex-col items-center gap-1 text-center">

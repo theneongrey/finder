@@ -31,6 +31,12 @@ export class VoteCardDateDateRangeComponent {
     return d ? new Date(d.getFullYear(), d.getMonth(), d.getDate()) : undefined;
   });
 
+  readonly isSameMonth = computed(() => {
+    const s = this.startDate();
+    const e = this.endDate();
+    return !!(s && e && s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth());
+  });
+
   formatDate(date: Date): string {
     return date.toLocaleDateString(this.translate.currentLang() ?? undefined, {
       weekday: 'long',

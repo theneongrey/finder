@@ -1,5 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
+import { BooleanInput } from '@angular/cdk/coercion';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -81,14 +83,18 @@ import { classes, hlm } from '@spartan-ng/helm/utils';
         </ng-template>
         @let heading = _heading();
 
-        <button
-          brnCalendarPreviousButton
-          variant="ghost"
-          hlmBtn
-          class="order-first size-(--cell-size) p-0 select-none aria-disabled:opacity-50"
-        >
-          <ng-icon name="lucideChevronLeft" class="rtl:rotate-180" />
-        </button>
+        @if (showNavigation()) {
+          <button
+            brnCalendarPreviousButton
+            variant="ghost"
+            hlmBtn
+            class="order-first size-(--cell-size) p-0 select-none aria-disabled:opacity-50"
+          >
+            <ng-icon name="lucideChevronLeft" class="rtl:rotate-180" />
+          </button>
+        } @else {
+          <span class="order-first size-(--cell-size)"></span>
+        }
 
         @switch (captionLayout()) {
           @case ('dropdown') {
@@ -114,14 +120,18 @@ import { classes, hlm } from '@spartan-ng/helm/utils';
           }
         }
 
-        <button
-          brnCalendarNextButton
-          hlmBtn
-          variant="ghost"
-          class="order-last size-(--cell-size) p-0 select-none aria-disabled:opacity-50"
-        >
-          <ng-icon name="lucideChevronRight" class="rtl:rotate-180" />
-        </button>
+        @if (showNavigation()) {
+          <button
+            brnCalendarNextButton
+            hlmBtn
+            variant="ghost"
+            class="order-last size-(--cell-size) p-0 select-none aria-disabled:opacity-50"
+          >
+            <ng-icon name="lucideChevronRight" class="rtl:rotate-180" />
+          </button>
+        } @else {
+          <span class="order-last size-(--cell-size)"></span>
+        }
       </div>
 
       <table class="w-full border-collapse space-y-1" brnCalendarGrid>
@@ -161,6 +171,11 @@ export class HlmCalendarRange<T> {
   public readonly captionLayout = input<
     'dropdown' | 'label' | 'dropdown-months' | 'dropdown-years'
   >('label');
+
+  /** Hide the previous/next month navigation buttons. */
+  public readonly showNavigation = input<boolean, BooleanInput>(true, {
+    transform: booleanAttribute,
+  });
 
   /** Access the calendar i18n */
   protected readonly _i18n = injectBrnCalendarI18n();

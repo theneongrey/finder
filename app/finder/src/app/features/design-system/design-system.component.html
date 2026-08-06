@@ -417,6 +417,26 @@
           </div>
         </div>
       </div>
+
+      <div class="mt-6 grid gap-8" style="grid-template-columns: 1fr 1fr">
+        <div class="flex flex-col gap-1">
+          <p class="ds-label mb-2">Date Picker</p>
+          <hlm-date-picker [(ngModel)]="datePickerValue" autoCloseOnSelect>
+            <hlm-date-picker-input placeholder="Select a date" openOnClick />
+          </hlm-date-picker>
+          <p class="ds-body mt-1 text-gray-400">
+            Calendar popover, auto-closes on selection. Binds to <code>Date | undefined</code>.
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <p class="ds-label mb-2">Time Input</p>
+          <input hlmInput type="time" step="900" [(ngModel)]="timeInputValue" />
+          <p class="ds-body mt-1 text-gray-400">
+            Native time input with 15-minute steps (<code>step="900"</code>). Binds to an <code>HH:MM</code> string.
+          </p>
+        </div>
+      </div>
     </section>
 
     <hlm-separator />

@@ -7,7 +7,6 @@
 @import "@fontsource/plus-jakarta-sans/500.css";
 @import "@fontsource/plus-jakarta-sans/700.css";
 
-
 @theme {
   --color-error: #ad3448;
   --color-primary: #4797bf;
@@ -131,7 +130,14 @@ input.invalid {
 }
 
 .bg-app-gradient {
-  background: linear-gradient(135deg, #faf5ed 10%, #e4f2ee 90%);
+  background: linear-gradient(
+    135deg,
+    #faf5ed 10%,
+    #f6f4ee 30%,
+    #f1f3ee 50%,
+    #edf9ef 70%,
+    #e8f0ef 90%
+  );
 }
 
 /* ── Elevation / Shadow tokens ───────────────────────────────── */
@@ -241,4 +247,3 @@ input.invalid {
   background-color: #ffffff;
   box-shadow: 0 1px 4px rgba(20, 24, 28, 0.1);
 }
-

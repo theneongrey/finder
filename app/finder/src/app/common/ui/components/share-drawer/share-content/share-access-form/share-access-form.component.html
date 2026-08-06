@@ -4,16 +4,20 @@
   {{ "project.share.tabAccess" | translate }}
 </p>
 
-<p-select-button
-  fluid
-  [allowEmpty]="false"
-  [options]="visibilityOptions()"
-  [ngModel]="selectedVisibility()"
-  (ngModelChange)="onVisibilityChange($event)"
-  optionLabel="label"
-  optionValue="value"
+<hlm-toggle-group
+  type="single"
+  [nullable]="false"
+  [value]="selectedVisibility()"
+  (valueChange)="onVisibilityChange($event)"
+  variant="outline"
   class="w-full"
-/>
+>
+  @for (opt of visibilityOptions(); track opt.value) {
+    <button hlmToggleGroupItem [value]="opt.value" class="flex-1">
+      {{ opt.label }}
+    </button>
+  }
+</hlm-toggle-group>
 <p class="text-sm text-gray-500 mt-2 mb-2">
   @if (isPublic()) {
     {{ "project.share.openDescription" | translate }}

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { HlmSeparator } from '@spartan-ng/helm/separator';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { ShareAccessFormComponent } from './share-access-form/share-access-form.component';
 import { ShareInviteFormComponent } from './share-invite-form/share-invite-form.component';
 import { ShareMembersListComponent } from './share-members-list/share-members-list.component';
@@ -25,11 +25,7 @@ import { environment } from '../../../../env/environment';
   selector: 'app-share-content',
   imports: [
     HlmSeparator,
-    Tabs,
-    TabList,
-    Tab,
-    TabPanels,
-    TabPanel,
+    ...HlmTabsImports,
     TranslatePipe,
     ShareAccessFormComponent,
     ShareInviteFormComponent,
@@ -79,10 +75,8 @@ export class ShareContentComponent {
     });
   }
 
-  setActiveTab(value: string | number | undefined) {
-    if (value !== undefined) {
-      this.activeTab.set(String(value));
-    }
+  setActiveTab(value: string) {
+    this.activeTab.set(value);
   }
 
   onVisibilityChange(value: VisibilityType) {

@@ -477,34 +477,32 @@
       <div class="mb-6">
         <h2>Navigation</h2>
         <p class="ds-body mt-1 text-gray-500">
-          PrimeNG Tabs — transparent background, composable structure.
+          Spartan Tabs — transparent background, composable structure.
         </p>
       </div>
 
-      <p-tabs value="overview">
-        <p-tablist>
-          <p-tab value="overview">Overview</p-tab>
-          <p-tab value="details">Details</p-tab>
-          <p-tab value="settings">Settings</p-tab>
-        </p-tablist>
-        <p-tabpanels>
-          <p-tabpanel value="overview">
-            <p class="ds-body text-gray-500">
-              Overview tab content — the default visible panel.
-            </p>
-          </p-tabpanel>
-          <p-tabpanel value="details">
-            <p class="ds-body text-gray-500">
-              Details tab content — shown when Details is selected.
-            </p>
-          </p-tabpanel>
-          <p-tabpanel value="settings">
-            <p class="ds-body text-gray-500">
-              Settings tab content — shown when Settings is selected.
-            </p>
-          </p-tabpanel>
-        </p-tabpanels>
-      </p-tabs>
+      <hlm-tabs tab="overview">
+        <hlm-tabs-list>
+          <button hlmTabsTrigger="overview">Overview</button>
+          <button hlmTabsTrigger="details">Details</button>
+          <button hlmTabsTrigger="settings">Settings</button>
+        </hlm-tabs-list>
+        <div hlmTabsContent="overview">
+          <p class="ds-body text-gray-500">
+            Overview tab content — the default visible panel.
+          </p>
+        </div>
+        <div hlmTabsContent="details">
+          <p class="ds-body text-gray-500">
+            Details tab content — shown when Details is selected.
+          </p>
+        </div>
+        <div hlmTabsContent="settings">
+          <p class="ds-body text-gray-500">
+            Settings tab content — shown when Settings is selected.
+          </p>
+        </div>
+      </hlm-tabs>
     </section>
 
     <hlm-separator />

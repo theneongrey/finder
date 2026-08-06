@@ -17,7 +17,7 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
 import { AutoResizeTextareaComponent } from '../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { ShareDrawerComponent } from '../../common/ui/components/share-drawer/share-drawer.component';
@@ -46,11 +46,7 @@ const mockSharingStore = {
     HlmTextarea,
     Select,
     SelectButton,
-    Tabs,
-    TabList,
-    Tab,
-    TabPanels,
-    TabPanel,
+    ...HlmTabsImports,
     HlmBadge,
     ...HlmAvatarImports,
     ...HlmAlertImports,

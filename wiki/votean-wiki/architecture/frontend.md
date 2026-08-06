@@ -97,7 +97,7 @@ Sharing/permission changes are broadcast via `sharingEvents`. Both `ProjectListS
 
 ## UI Library
 
-**Spartan UI + Tailwind CSS 4.** Spartan components (`@spartan-ng/brain` + project-local `@spartan-ng/helm/*` aliases) are imported individually per component. PrimeNG was removed in 2026 after it changed its licensing model and became no longer open source or usable for commercial projects. See [Adding Spartan Components](../guides/adding-spartan-components.md) for how to install new component primitives.
+**Spartan UI + Tailwind CSS 4.** Spartan components (`@spartan-ng/brain` + project-local `@spartan-ng/helm/*` aliases) are imported individually per component. PrimeNG was removed in 2026 after it changed its licensing model and became no longer open source or usable for commercial projects — see [PrimeNG → Spartan Migration](primeng-to-spartan-migration.md) for the full decision record. See [Adding Spartan Components](../guides/adding-spartan-components.md) for how to install new component primitives.
 
 ## Related
 

@@ -48,25 +48,10 @@
       "owner": "Verwalten",
       "creator": "Gründer"
     },
-    "tabs": {
-      "overview": "Überblick",
-      "projects": "Projekte",
-      "polls": "Umfragen"
-    },
-    "overviewTab": {
-      "greeting": "Hallo {{name}}",
-      "subtitle": "Deine neuesten Projekte und Umfragen",
-      "latestProjects": "Neueste Projekte",
-      "latestPolls": "Neueste Umfragen",
-      "viewAll": "Alle ansehen"
-    },
-    "projectsTab": {
-      "title": "Projekte",
-      "subtitle": "Alle deine Projekte auf einen Blick"
-    },
     "pollsTab": {
       "title": "Umfragen",
-      "subtitle": "Alle deine eigenständigen Umfragen auf einen Blick"
+      "subtitle": "Alle deine eigenständigen Umfragen auf einen Blick",
+      "empty": "Du hast noch keine Umfragen. Erstelle eine!"
     },
     "standaloneItem": {
       "badge": "Ohne Projekt",
@@ -79,20 +64,6 @@
       }
     },
     "overview": {
-      "title": "Projekte",
-      "subtitle": "Das sind deine aktuellen Projekte",
-      "addNew": {
-        "cto": "Neues Projekt",
-        "description": "Starte ein gemeinsames Projekt"
-      },
-      "item": {
-        "by": "von {{name}}"
-      },
-      "deleteConfirm": {
-        "header": "Projekt löschen?",
-        "message": "Bist du sicher, dass du das Projekt \"{{name}}\" löschen möchtest?",
-        "accept": "Projekt löschen"
-      },
       "deletePollConfirm": {
         "header": "Umfrage löschen?",
         "message": "Bist du sicher, dass du die Umfrage \"{{name}}\" löschen möchtest?",

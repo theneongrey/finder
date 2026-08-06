@@ -48,25 +48,10 @@
       "owner": "Owner",
       "creator": "Creator"
     },
-    "tabs": {
-      "overview": "Overview",
-      "projects": "Projects",
-      "polls": "Polls"
-    },
-    "overviewTab": {
-      "greeting": "Hello {{name}}",
-      "subtitle": "Your latest projects and polls",
-      "latestProjects": "Latest Projects",
-      "latestPolls": "Latest Polls",
-      "viewAll": "View all"
-    },
-    "projectsTab": {
-      "title": "Projects",
-      "subtitle": "All your projects at a glance"
-    },
     "pollsTab": {
       "title": "Polls",
-      "subtitle": "All your standalone polls at a glance"
+      "subtitle": "All your standalone polls at a glance",
+      "empty": "You don't have any polls yet. Create one!"
     },
     "standaloneItem": {
       "badge": "No project",
@@ -79,20 +64,6 @@
       }
     },
     "overview": {
-      "title": "Projects",
-      "subtitle": "These are your current projects",
-      "addNew": {
-        "cto": "New project",
-        "description": "Start a collaborative project"
-      },
-      "item": {
-        "by": "by {{name}}"
-      },
-      "deleteConfirm": {
-        "header": "Delete project?",
-        "message": "Are you sure that you want to delete project \"{{name}}\"?",
-        "accept": "Delete project"
-      },
       "deletePollConfirm": {
         "header": "Delete poll?",
         "message": "Are you sure that you want to delete poll \"{{name}}\"?",

@@ -33,7 +33,11 @@
         "./src/lib/ui/dropdown-menu/src/index.ts"
       ],
       "@spartan-ng/helm/popover": ["./src/lib/ui/popover/src/index.ts"],
-      "@spartan-ng/helm/tooltip": ["./src/lib/ui/tooltip/src/index.ts"]
+      "@spartan-ng/helm/tooltip": ["./src/lib/ui/tooltip/src/index.ts"],
+      "@spartan-ng/helm/select": ["./libs/ui/select/src/index.ts"],
+      "@spartan-ng/helm/toggle-group": ["./libs/ui/toggle-group/src/index.ts"],
+      "@spartan-ng/helm/toggle": ["./libs/ui/toggle/src/index.ts"],
+      "@spartan-ng/helm/input-otp": ["./libs/ui/input-otp/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

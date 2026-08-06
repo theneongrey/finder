@@ -18,7 +18,7 @@ import {
 import { toast } from '@spartan-ng/brain/sonner';
 import { Button } from 'primeng/button';
 import { HlmInput } from '@spartan-ng/helm/input';
-import { Select } from 'primeng/select';
+import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
 import { UserAvatarComponent } from '../../common/ui/components/user-avatar/user-avatar.component';
 import { TitleBarService } from '../../common/services/title-bar.service';
@@ -35,7 +35,7 @@ import {
     ReactiveFormsModule,
     Button,
     HlmInput,
-    Select,
+    ...HlmSelectImports,
     TitleBarComponent,
     UserAvatarComponent,
     TranslatePipe,
@@ -50,12 +50,6 @@ export class SettingsComponent {
 
   user = this.userStore.user;
   isSaving = signal(false);
-
-  languages = [
-    { label: 'English', value: 'en' },
-    { label: 'Deutsch', value: 'de' },
-    { label: 'Español', value: 'es' },
-  ];
 
   form = new FormGroup({
     name: new FormControl('', [Validators.required]),

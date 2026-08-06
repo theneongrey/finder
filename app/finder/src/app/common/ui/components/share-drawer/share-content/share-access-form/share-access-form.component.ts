@@ -29,8 +29,8 @@ export class ShareAccessFormComponent {
 
   visibilityChange = output<VisibilityType>();
 
-  onVisibilityChange(value: VisibilityType | null | undefined) {
-    if (value !== null && value !== undefined) {
+  onVisibilityChange(value: VisibilityType | VisibilityType[] | null | undefined) {
+    if (typeof value === 'number') {
       this.visibilityChange.emit(value);
     }
   }

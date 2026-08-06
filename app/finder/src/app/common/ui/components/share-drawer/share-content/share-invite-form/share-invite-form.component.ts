@@ -80,8 +80,8 @@ export class ShareInviteFormComponent {
     });
   }
 
-  onRoleChange(value: number | null | undefined) {
-    if (value !== null && value !== undefined) {
+  onRoleChange(value: number | number[] | null | undefined) {
+    if (typeof value === 'number') {
       this.selectedRole.set(value);
     }
   }

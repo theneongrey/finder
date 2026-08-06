@@ -225,3 +225,20 @@ input.invalid {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ── ToggleGroup: segmented-control look ─────────────────────── */
+[data-slot="toggle-group"][data-variant="outline"][data-spacing="0"] {
+  background-color: oklch(0.97 0 0);
+  padding: 4px;
+}
+
+[data-slot="toggle-group"][data-variant="outline"][data-spacing="0"]
+  [data-slot="toggle-group-item"] {
+  border: none;
+}
+
+[data-slot="toggle-group"][data-variant="outline"][data-spacing="0"]
+  [data-slot="toggle-group-item"][data-state="on"] {
+  background-color: #ffffff;
+  box-shadow: 0 1px 4px rgba(20, 24, 28, 0.1);
+}
+

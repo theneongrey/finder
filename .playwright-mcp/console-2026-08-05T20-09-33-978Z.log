@@ -1,9 +1,0 @@
-[      86ms] [LOG] [User service] fetching user @ http://localhost:4200/chunk-SGYI7ULT.js:5
-[      87ms] [WARNING] @ngrx/signals: SignalStore members cannot be overridden. Trying to override: userService, loggerService @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-NNQTGDVV.js?v=08b66c19:279
-[     111ms] [LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-P3OHJKS6.js?v=08b66c19:11243
-[     115ms] [ERROR] ERROR RuntimeError: NG04002: Cannot match any routes. URL Segment: 'design-system'
-    at Recognizer.noMatchError (http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-TWK3GOCD.js?v=08b66c19:2907:12)
-    at Recognizer.match (http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-TWK3GOCD.js?v=08b66c19:2939:20)
-    at async Recognizer.recognize (http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-TWK3GOCD.js?v=08b66c19:2914:9)
-    at async http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-TWK3GOCD.js?v=08b66c19:3167:9 @ http://localhost:4200/@fs/C:/repos/finder/app/finder/.angular/cache/21.2.15/finder/vite/deps/chunk-RBEGZ7DM.js?v=08b66c19:3171
-[     151ms] [LOG] [UserStore] patching user {isAuthenticated: true, name: Test User 1, email: testuser1@neongrey.de, role: TestUser, language: en} @ http://localhost:4200/chunk-SGYI7ULT.js:5

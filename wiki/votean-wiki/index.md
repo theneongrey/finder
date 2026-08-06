@@ -62,3 +62,4 @@ Developer how-to pages.
 - [Testing](guides/testing.md) — unit tests, integration tests, e2e tests
 - [Adding a Feature](guides/adding-a-feature.md) — step-by-step walkthrough
 - [Design System](guides/design-system.md) — live component and token reference at /ux (dev only)
+- [Adding Spartan Components](guides/adding-spartan-components.md) — install and use Spartan UI (hlm) primitives

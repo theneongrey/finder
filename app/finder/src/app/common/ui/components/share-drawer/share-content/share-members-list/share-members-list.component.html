@@ -1,10 +1,3 @@
-<p-menu
-  #roleMenu
-  [model]="menuItems()"
-  [popup]="true"
-  appendTo="body"
-/>
-
 @if (members().length > 0) {
   <p
     class="text-xs font-semibold uppercase tracking-wide text-gray-500 mt-6 mb-2"
@@ -35,10 +28,29 @@
           @if (member.role !== ProjectRole.Creator) {
             <button
               class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 cursor-pointer hover:bg-gray-200 transition-colors"
-              (click)="openRoleMenu($event, member)"
+              [hlmDropdownMenuTrigger]="roleMenu"
             >
               {{ "project.roles." + getRoleKey(member.role) | translate }}
             </button>
+            <ng-template #roleMenu>
+              <hlm-dropdown-menu>
+                <button
+                  hlmDropdownMenuItem
+                  [disabled]="member.role === ProjectRole.Voter"
+                  (click)="changeRole(member.email, 0)"
+                >{{ voterLabel() }}</button>
+                <button
+                  hlmDropdownMenuItem
+                  [disabled]="member.role === ProjectRole.Maintainer"
+                  (click)="changeRole(member.email, 1)"
+                >{{ maintainerLabel() }}</button>
+                <button
+                  hlmDropdownMenuItem
+                  [disabled]="member.role === ProjectRole.Owner"
+                  (click)="changeRole(member.email, 2)"
+                >{{ ownerLabel() }}</button>
+              </hlm-dropdown-menu>
+            </ng-template>
           } @else {
             <span
               class="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700"

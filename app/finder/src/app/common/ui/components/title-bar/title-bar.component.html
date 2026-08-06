@@ -39,9 +39,20 @@
       <app-user-avatar
         class="my-auto mr-0 ml-auto"
         [user]="user()!"
-        (click)="menu.toggle($event)"
+        [hlmDropdownMenuTrigger]="userMenu"
       />
-      <p-menu #menu [model]="items()" [popup]="true" appendTo="body" />
+      <ng-template #userMenu>
+        <hlm-dropdown-menu>
+          <button hlmDropdownMenuItem [routerLink]="['/logout']">
+            <i class="fa-solid fa-right-from-bracket mr-2"></i>
+            {{ logoutLabel() }}
+          </button>
+          <button hlmDropdownMenuItem [routerLink]="['/settings']">
+            <i class="fa-solid fa-gear mr-2"></i>
+            {{ settingsLabel() }}
+          </button>
+        </hlm-dropdown-menu>
+      </ng-template>
     }
   </header>
 }

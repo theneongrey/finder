@@ -4,47 +4,41 @@
     fMaxHeightMinusHeader
     class="flex-grow max-w-5xl mx-auto w-full h-full rounded-t-2xl overflow-y-auto"
   >
-    <p-tabs [(value)]="activeTabValue">
-      <p-tablist>
-        <p-tab value="overview">{{
+    <hlm-tabs [tab]="activeTabValue" (tabActivated)="activeTabValue = $event" class="px-[22px] pt-5">
+      <hlm-tabs-list variant="line">
+        <button hlmTabsTrigger="overview">{{
           "project.tabs.overview" | translate
-        }}</p-tab>
-        <p-tab value="polls"
-          >{{ "project.tabs.polls" | translate }}
-          <span hlmBadge class="ml-1">{{
-            standalonePolls().length
-          }}</span></p-tab
-        >
-        <p-tab value="projects"
-          >{{ "project.tabs.projects" | translate }}
-          <span hlmBadge class="ml-1">{{
-            projects().length
-          }}</span></p-tab
-        >
-      </p-tablist>
-      <p-tabpanels>
-        <p-tabpanel value="overview">
-          <app-overview-tab
-            (projectDeletionRequested)="projectDeletionRequested($event)"
-            (pollDeletionRequested)="pollDeletionRequested($event)"
-            (shareRequested)="shareRequested($event)"
-            (pollShareRequested)="pollShareRequested($event)"
-          />
-        </p-tabpanel>
-        <p-tabpanel value="projects">
-          <app-projects-tab
-            (deletionRequested)="projectDeletionRequested($event)"
-            (shareRequested)="shareRequested($event)"
-          />
-        </p-tabpanel>
-        <p-tabpanel value="polls">
-          <app-standalone-poll-tab
-            (deletionRequested)="pollDeletionRequested($event)"
-            (shareRequested)="pollShareRequested($event)"
-          />
-        </p-tabpanel>
-      </p-tabpanels>
-    </p-tabs>
+        }}</button>
+        <button hlmTabsTrigger="polls">
+          {{ "project.tabs.polls" | translate }}
+          <span hlmBadge class="ml-1">{{ standalonePolls().length }}</span>
+        </button>
+        <button hlmTabsTrigger="projects">
+          {{ "project.tabs.projects" | translate }}
+          <span hlmBadge class="ml-1">{{ projects().length }}</span>
+        </button>
+      </hlm-tabs-list>
+      <div hlmTabsContent="overview" class="pt-[22px]">
+        <app-overview-tab
+          (projectDeletionRequested)="projectDeletionRequested($event)"
+          (pollDeletionRequested)="pollDeletionRequested($event)"
+          (shareRequested)="shareRequested($event)"
+          (pollShareRequested)="pollShareRequested($event)"
+        />
+      </div>
+      <div hlmTabsContent="projects" class="pt-[22px]">
+        <app-projects-tab
+          (deletionRequested)="projectDeletionRequested($event)"
+          (shareRequested)="shareRequested($event)"
+        />
+      </div>
+      <div hlmTabsContent="polls" class="pt-[22px]">
+        <app-standalone-poll-tab
+          (deletionRequested)="pollDeletionRequested($event)"
+          (shareRequested)="pollShareRequested($event)"
+        />
+      </div>
+    </hlm-tabs>
   </main>
 </div>
 <p-confirmdialog />

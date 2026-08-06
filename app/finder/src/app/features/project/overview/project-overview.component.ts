@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
-import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
+import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectListStore } from '../_shared/data/project-list.store';
 import { ProjectOverview } from '../_shared/models/project-overview.model';
@@ -25,11 +25,7 @@ import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer
   selector: 'app-project-overview',
   imports: [
     ConfirmDialog,
-    Tabs,
-    TabList,
-    Tab,
-    TabPanels,
-    TabPanel,
+    ...HlmTabsImports,
     TranslatePipe,
     TitleBarComponent,
     MaxHeightMinusHeaderDirective,

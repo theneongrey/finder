@@ -24,8 +24,8 @@
           @for (member of project.sharedWith; track member.name) {
             <hlm-avatar
               size="lg"
-              [pTooltip]="member.name"
-              tooltipPosition="bottom"
+              [hlmTooltip]="member.name"
+              position="bottom"
             >
               @if (member.picture) {
                 <img [src]="member.picture" hlmAvatarImage alt="{{ member.name }}" />

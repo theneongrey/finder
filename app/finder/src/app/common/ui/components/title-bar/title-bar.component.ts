@@ -5,8 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { UserStore } from '../../../data/user.store';
-import { MenuItem } from 'primeng/api';
-import { Menu } from 'primeng/menu';
+import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 import { Button } from 'primeng/button';
 import { TitleBarService } from '../../../services/title-bar.service';
@@ -18,12 +17,11 @@ import { LoadingComponent } from '../loading/loading.component';
 @Component({
   selector: 'app-title-bar',
   imports: [
-    Menu,
+    ...HlmDropdownMenuImports,
     UserAvatarComponent,
     Button,
     RouterLink,
     NgOptimizedImage,
-    LoadingComponent,
     LoadingComponent,
   ],
   templateUrl: './title-bar.component.html',
@@ -40,19 +38,6 @@ export class TitleBarComponent {
   backRoute = this.titleService.backRoute;
   isHidden = this.titleService.isHidden;
 
-  private logoutLabel = this.translateService.translate('titleBar.logout');
-  private settingsLabel = this.translateService.translate('titleBar.settings');
-
-  items = computed<MenuItem[]>(() => [
-    {
-      label: this.logoutLabel(),
-      icon: 'fa-solid fa-right-from-bracket',
-      routerLink: ['/logout'],
-    },
-    {
-      label: this.settingsLabel(),
-      icon: 'fa-solid fa-gear',
-      routerLink: ['/settings'],
-    },
-  ]);
+  logoutLabel = this.translateService.translate('titleBar.logout');
+  settingsLabel = this.translateService.translate('titleBar.settings');
 }

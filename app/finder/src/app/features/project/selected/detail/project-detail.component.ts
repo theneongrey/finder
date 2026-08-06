@@ -18,7 +18,7 @@ import {
   HlmAvatarGroup,
   HlmAvatarImage,
 } from '@spartan-ng/helm/avatar';
-import { Tooltip } from 'primeng/tooltip';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { ShareDrawerComponent } from '../../../../common/ui/components/share-drawer/share-drawer.component';
 import { ProjectRole } from '../../_shared/models/project-role.enum';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -40,7 +40,7 @@ import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.componen
     HlmAvatarFallback,
     HlmAvatarGroup,
     HlmAvatarImage,
-    Tooltip,
+    ...HlmTooltipImports,
     ShareDrawerComponent,
     TranslatePipe,
   ],

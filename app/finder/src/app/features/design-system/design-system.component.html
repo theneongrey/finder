@@ -477,34 +477,32 @@
       <div class="mb-6">
         <h2>Navigation</h2>
         <p class="ds-body mt-1 text-gray-500">
-          PrimeNG Tabs — transparent background, composable structure.
+          Spartan Tabs — transparent background, composable structure.
         </p>
       </div>
 
-      <p-tabs value="overview">
-        <p-tablist>
-          <p-tab value="overview">Overview</p-tab>
-          <p-tab value="details">Details</p-tab>
-          <p-tab value="settings">Settings</p-tab>
-        </p-tablist>
-        <p-tabpanels>
-          <p-tabpanel value="overview">
-            <p class="ds-body text-gray-500">
-              Overview tab content — the default visible panel.
-            </p>
-          </p-tabpanel>
-          <p-tabpanel value="details">
-            <p class="ds-body text-gray-500">
-              Details tab content — shown when Details is selected.
-            </p>
-          </p-tabpanel>
-          <p-tabpanel value="settings">
-            <p class="ds-body text-gray-500">
-              Settings tab content — shown when Settings is selected.
-            </p>
-          </p-tabpanel>
-        </p-tabpanels>
-      </p-tabs>
+      <hlm-tabs tab="overview">
+        <hlm-tabs-list variant="line">
+          <button hlmTabsTrigger="overview">Overview</button>
+          <button hlmTabsTrigger="details">Details</button>
+          <button hlmTabsTrigger="settings">Settings</button>
+        </hlm-tabs-list>
+        <div hlmTabsContent="overview" class="pt-[22px]">
+          <p class="ds-body text-gray-500">
+            Overview tab content — the default visible panel.
+          </p>
+        </div>
+        <div hlmTabsContent="details" class="pt-[22px]">
+          <p class="ds-body text-gray-500">
+            Details tab content — shown when Details is selected.
+          </p>
+        </div>
+        <div hlmTabsContent="settings" class="pt-[22px]">
+          <p class="ds-body text-gray-500">
+            Settings tab content — shown when Settings is selected.
+          </p>
+        </div>
+      </hlm-tabs>
     </section>
 
     <hlm-separator />
@@ -615,21 +613,23 @@
 
         <div>
           <p class="ds-label mb-3">Popover</p>
-          <p-button
-            label="Show Popover"
-            icon="pi pi-info-circle"
-            variant="outlined"
-            (click)="op.toggle($event)"
-          />
-          <p-popover #op>
-            <div class="flex max-w-xs flex-col gap-2 p-3">
-              <h3 style="margin: 0">Popover Title</h3>
+          <hlm-popover sideOffset="5">
+            <button
+              hlmPopoverTrigger
+              type="button"
+              class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50"
+            >
+              <i class="fa-solid fa-circle-info"></i>
+              Show Popover
+            </button>
+            <hlm-popover-content *hlmPopoverPortal="let ctx">
+              <h3 class="font-medium mb-1">Popover Title</h3>
               <p class="ds-body text-gray-500">
                 Contextual overlay anchored to its trigger. Used for inline help
                 and extra actions.
               </p>
-            </div>
-          </p-popover>
+            </hlm-popover-content>
+          </hlm-popover>
         </div>
       </div>
     </section>

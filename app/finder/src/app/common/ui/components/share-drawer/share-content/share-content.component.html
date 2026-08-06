@@ -1,24 +1,20 @@
 @if (sharedWith().length > 0) {
-  <p-tabs [value]="activeTab()" (valueChange)="setActiveTab($event)">
-    <p-tablist>
-      <p-tab value="access">{{ "project.share.tabAccess" | translate }}</p-tab>
-      <p-tab value="members">{{
-        "project.share.tabMembers" | translate
-      }}</p-tab>
-    </p-tablist>
-    <p-tabpanels class="px-0!">
-      <p-tabpanel value="access">
-        <ng-container *ngTemplateOutlet="share" />
-      </p-tabpanel>
-      <p-tabpanel value="members">
-        <app-share-members-list
-          [projectId]="projectId()"
-          [members]="sharedWith()"
-          [isPublic]="isPublic()"
-        />
-      </p-tabpanel>
-    </p-tabpanels>
-  </p-tabs>
+  <hlm-tabs [tab]="activeTab()" (tabActivated)="setActiveTab($event)">
+    <hlm-tabs-list variant="line">
+      <button hlmTabsTrigger="access">{{ "project.share.tabAccess" | translate }}</button>
+      <button hlmTabsTrigger="members">{{ "project.share.tabMembers" | translate }}</button>
+    </hlm-tabs-list>
+    <div hlmTabsContent="access" class="mt-[18px]">
+      <ng-container *ngTemplateOutlet="share" />
+    </div>
+    <div hlmTabsContent="members" class="mt-[14px]">
+      <app-share-members-list
+        [projectId]="projectId()"
+        [members]="sharedWith()"
+        [isPublic]="isPublic()"
+      />
+    </div>
+  </hlm-tabs>
 } @else {
   <ng-container *ngTemplateOutlet="share" />
 }

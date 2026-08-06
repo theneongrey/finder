@@ -8,11 +8,10 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
 import { HlmBadge } from '@spartan-ng/helm/badge';
+import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { TimeSincePipe } from '../_pipe/time-ago.pipe';
 import { Button } from 'primeng/button';
-import { Menu } from 'primeng/menu';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ProjectOverview } from '../../_shared/models/project-overview.model';
 import { Card } from 'primeng/card';
@@ -24,13 +23,12 @@ import { ProjectRole } from '../../_shared/models/project-role.enum';
     RouterLink,
     FormsModule,
     HlmBadge,
+    ...HlmDropdownMenuImports,
     TimeSincePipe,
     Button,
-    Menu,
     TranslatePipe,
     Card,
   ],
-  providers: [MessageService],
   templateUrl: './project-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,34 +41,7 @@ export class ProjectItemComponent {
   deletionRequested = output();
   shareRequested = output();
 
-  private editLabel = this.translateService.translate('project.common.edit');
-  private deleteLabel = this.translateService.translate(
-    'project.common.delete',
-  );
-  private shareLabel = this.translateService.translate('project.common.share');
-
-  menuItems = computed<MenuItem[]>(() => {
-    const project = this.project();
-    const items: MenuItem[] = [
-      {
-        label: this.editLabel(),
-        icon: 'fa-solid fa-pen',
-        routerLink: '/project/edit/' + project.id,
-      },
-    ];
-    if (this.canShare()) {
-      items.push({
-        label: this.shareLabel(),
-        icon: 'fa-solid fa-share-nodes',
-        command: () => this.shareRequested.emit(),
-      });
-    }
-    items.push({
-      label: this.deleteLabel(),
-      icon: 'fa-regular fa-trash-can',
-      command: () => this.deletionRequested.emit(),
-    });
-
-    return items;
-  });
+  editLabel = this.translateService.translate('project.common.edit');
+  deleteLabel = this.translateService.translate('project.common.delete');
+  shareLabel = this.translateService.translate('project.common.share');
 }

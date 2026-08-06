@@ -1,22 +1,21 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   inject,
   input,
-  viewChild,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { HlmInput } from '@spartan-ng/helm/input';
-import { Popover } from 'primeng/popover';
+import { HlmPopoverImports } from '@spartan-ng/helm/popover';
 import { ProjectDetailStore } from '../../../_shared/data/project-detail.store';
 
 @Component({
   selector: 'app-vote-comment-button',
   templateUrl: './vote-comment-button.component.html',
-  imports: [Button, Popover, HlmInput, FormsModule, TranslatePipe],
+  imports: [Button, ...HlmPopoverImports, HlmInput, FormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteCommentButtonComponent {
@@ -25,13 +24,8 @@ export class VoteCommentButtonComponent {
   pollId = input('');
   optionText = input<string | undefined>(undefined);
 
-  commentPopover = viewChild<Popover>('commentPopover');
-  anchor = viewChild<ElementRef<HTMLElement>>('anchor');
   commentText = '';
-
-  openCommentPopover(event: Event): void {
-    this.commentPopover()?.toggle(event, this.anchor()?.nativeElement);
-  }
+  popoverOpen = signal<'open' | 'closed'>('closed');
 
   submitComment(): void {
     const content = this.commentText.trim();
@@ -44,11 +38,11 @@ export class VoteCommentButtonComponent {
       quote: this.optionText(),
     });
     this.commentText = '';
-    this.commentPopover()?.hide();
+    this.popoverOpen.set('closed');
   }
 
   cancelComment(): void {
     this.commentText = '';
-    this.commentPopover()?.hide();
+    this.popoverOpen.set('closed');
   }
 }

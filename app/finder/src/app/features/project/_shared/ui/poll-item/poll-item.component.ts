@@ -7,9 +7,8 @@ import {
   output,
 } from '@angular/core';
 import { Button } from 'primeng/button';
-import { Tooltip } from 'primeng/tooltip';
-import { Menu } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
+import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionType } from '../../models/project-detail.model';
@@ -22,8 +21,8 @@ import { ProjectRole } from '../../models/project-role.enum';
   selector: 'app-poll-item',
   imports: [
     Button,
-    Tooltip,
-    Menu,
+    ...HlmDropdownMenuImports,
+    ...HlmTooltipImports,
     OptionTypeIconComponent,
     RouterLink,
     TranslatePipe,
@@ -40,56 +39,21 @@ export class PollItemComponent {
   deletionRequested = output();
   shareRequested = output();
 
-  private editLabel = this.translateService.translate('project.common.edit');
-  private deleteLabel = this.translateService.translate(
-    'project.common.delete',
-  );
-  private shareLabel = this.translateService.translate('project.common.share');
+  editLabel = this.translateService.translate('project.common.edit');
+  deleteLabel = this.translateService.translate('project.common.delete');
+  shareLabel = this.translateService.translate('project.common.share');
 
-  showMenu = computed(() => {
-    return this.poll().role >= ProjectRole.Maintainer;
-  });
+  showMenu = computed(() => this.poll().role >= ProjectRole.Maintainer);
+  canSharePoll = computed(() => this.standalone() && this.poll().role >= ProjectRole.Owner);
 
-  menuItems = computed<MenuItem[]>(() => {
+  editRoute = computed(() => {
     const poll = this.poll();
-    const items: MenuItem[] = [
-      {
-        label: this.editLabel(),
-        icon: 'fa-solid fa-pen',
-        routerLink:
-          poll.optionType === OptionType.YesNo
-            ? [
-                '/project/detail',
-                poll.projectId,
-                'poll',
-                'edit',
-                'yesno',
-                poll.pollId,
-              ]
-            : poll.optionType === OptionType.Date
-              ? [
-                  '/project/detail',
-                  poll.projectId,
-                  'poll',
-                  'edit',
-                  'date',
-                  poll.pollId,
-                ]
-              : undefined,
-      },
-    ];
-    if (this.standalone() && this.poll().role >= ProjectRole.Owner) {
-      items.push({
-        label: this.shareLabel(),
-        icon: 'fa-solid fa-share-nodes',
-        command: () => this.shareRequested.emit(),
-      });
+    if (poll.optionType === OptionType.YesNo) {
+      return ['/project/detail', poll.projectId, 'poll', 'edit', 'yesno', poll.pollId];
     }
-    items.push({
-      label: this.deleteLabel(),
-      icon: 'fa-regular fa-trash-can',
-      command: () => this.deletionRequested.emit(),
-    });
-    return items;
+    if (poll.optionType === OptionType.Date) {
+      return ['/project/detail', poll.projectId, 'poll', 'edit', 'date', poll.pollId];
+    }
+    return null;
   });
 }

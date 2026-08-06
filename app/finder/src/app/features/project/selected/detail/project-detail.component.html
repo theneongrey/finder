@@ -67,7 +67,18 @@
   }
 </div>
 
-<p-confirmdialog />
+<hlm-alert-dialog [state]="confirmDialogOpen() ? 'open' : 'closed'" (stateChanged)="confirmDialogOpen.set($event === 'open')">
+  <hlm-alert-dialog-content *hlmAlertDialogPortal>
+    <hlm-alert-dialog-header>
+      <h2 hlmAlertDialogTitle>{{ confirmTitle() }}</h2>
+      <p hlmAlertDialogDescription>{{ confirmMessage() }}</p>
+    </hlm-alert-dialog-header>
+    <hlm-alert-dialog-footer>
+      <button hlmAlertDialogCancel>{{ 'project.common.cancel' | translate }}</button>
+      <button hlmAlertDialogAction (click)="onConfirmAccept()">{{ confirmAcceptLabel() }}</button>
+    </hlm-alert-dialog-footer>
+  </hlm-alert-dialog-content>
+</hlm-alert-dialog>
 
 @if (project(); as project) {
   <app-share-drawer

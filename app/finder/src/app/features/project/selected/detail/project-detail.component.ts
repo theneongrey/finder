@@ -6,10 +6,9 @@ import {
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
-import { ConfirmDialog } from 'primeng/confirmdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Button } from 'primeng/button';
+import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import {
@@ -26,12 +25,12 @@ import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { ProjectDetailStore } from '../../_shared/data/project-detail.store';
 import { AddCardComponent } from '../../../../common/ui/components/add-card/add-card.component';
 import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.component';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-project-detail',
   imports: [
-    ConfirmDialog,
-    Button,
+    ...HlmAlertDialogImports,
     AddCardComponent,
     ReactiveFormsModule,
     PollItemComponent,
@@ -43,15 +42,14 @@ import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.componen
     ...HlmTooltipImports,
     ShareDrawerComponent,
     TranslatePipe,
+    Button,
   ],
-  providers: [ConfirmationService, MessageService],
   templateUrl: './project-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailComponent {
   private readonly titleService = inject(TitleBarService);
   private readonly projectDetailStore = inject(ProjectDetailStore);
-  private readonly confirmationService = inject(ConfirmationService);
   private readonly translateService = inject(TranslateService);
 
   action = input('');
@@ -73,6 +71,12 @@ export class ProjectDetailComponent {
 
   readonly ProjectRole = ProjectRole;
 
+  confirmDialogOpen = signal(false);
+  confirmTitle = signal('');
+  confirmMessage = signal('');
+  confirmAcceptLabel = signal('');
+  private pendingConfirmAction: (() => void) | null = null;
+
   constructor() {
     effect(() => {
       const project = this.project();
@@ -83,23 +87,21 @@ export class ProjectDetailComponent {
   }
 
   showDeletePollDialog(id: string, title: string) {
-    this.confirmationService.confirm({
-      header: this.translateService.instant(
-        'project.detail.deletePollConfirm.header',
-      ),
-      message: this.translateService.instant(
-        'project.detail.deletePollConfirm.message',
-        {
-          name: title,
-        },
-      ),
-      acceptLabel: this.translateService.instant(
-        'project.detail.deletePollConfirm.accept',
-      ),
-      rejectLabel: this.translateService.instant('project.common.cancel'),
-      accept: () => {
-        this.projectDetailStore.deletePoll(id);
-      },
-    });
+    this.confirmTitle.set(
+      this.translateService.instant('project.detail.deletePollConfirm.header'),
+    );
+    this.confirmMessage.set(
+      this.translateService.instant('project.detail.deletePollConfirm.message', { name: title }),
+    );
+    this.confirmAcceptLabel.set(
+      this.translateService.instant('project.detail.deletePollConfirm.accept'),
+    );
+    this.pendingConfirmAction = () => this.projectDetailStore.deletePoll(id);
+    this.confirmDialogOpen.set(true);
+  }
+
+  onConfirmAccept() {
+    this.pendingConfirmAction?.();
+    this.confirmDialogOpen.set(false);
   }
 }

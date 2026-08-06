@@ -111,15 +111,6 @@
       "remove": "Entfernen",
       "persons": "Personen"
     },
-    "input": {
-      "description": "Ein Projekt ist eine Sammlung von Dingen, über die entschieden werden soll, wie z. B. eine \"Geburtstagsparty\"",
-      "name": "Projektname",
-      "namePlaceholder": "z. B. Geburtstagsparty",
-      "descriptionLabel": "Projektbeschreibung",
-      "descriptionPlaceholder": "z. B. dies ist ein Projekt zur Planung einer Geburtstagsparty. Es umfasst Dinge wie Datum, Ort, Geschenke usw.",
-      "create": "Projekt erstellen",
-      "update": "Projekt aktualisieren"
-    },
     "pollInput": {
       "createPoll": "Umfrage erstellen",
       "updatePoll": "Umfrage aktualisieren",

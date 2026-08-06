@@ -10,28 +10,6 @@ export const projectRoutes: Routes = [
       ),
   },
   {
-    path: 'add',
-    loadComponent: () =>
-      import('./project-input/project-input.component').then(
-        (m) => m.ProjectInputComponent,
-      ),
-    data: {
-      mode: 'add',
-      backRoute: '/project/',
-    },
-  },
-  {
-    path: 'edit/:projectId',
-    loadComponent: () =>
-      import('./project-input/project-input.component').then(
-        (m) => m.ProjectInputComponent,
-      ),
-    data: {
-      mode: 'edit',
-      backRoute: '/project/',
-    },
-  },
-  {
     path: 'add-standalone',
     loadComponent: () =>
       import('./standalone-poll-input-wrapper/standalone-poll-input-wrapper.component').then(

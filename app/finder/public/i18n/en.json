@@ -111,15 +111,6 @@
       "remove": "Remove",
       "persons": "People"
     },
-    "input": {
-      "description": "A project is a collection of things to decide, like a \"Birthday party\"",
-      "name": "Project name",
-      "namePlaceholder": "e.g. Birthday party",
-      "descriptionLabel": "Project description",
-      "descriptionPlaceholder": "e.g. this is a project about planning a birthday party. It includes things like date, location, gifts etc.",
-      "create": "Create project",
-      "update": "Update project"
-    },
     "pollInput": {
       "createPoll": "Create poll",
       "updatePoll": "Update poll",

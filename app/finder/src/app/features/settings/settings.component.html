@@ -68,16 +68,11 @@
         </hlm-select>
       </div>
 
-      <p-button
-        class="mt-2"
-        type="submit"
-        [label]="'settings.save' | translate"
-        icon="fa-solid fa-check"
-        iconPos="right"
-        [disabled]="form.invalid || isSaving()"
-        [loading]="isSaving()"
-        [fluid]="true"
-      />
+      <button hlmBtn class="mt-2 w-full" type="submit" [disabled]="form.invalid || isSaving()">
+        @if (isSaving()) { <hlm-spinner class="mr-2" /> }
+        {{ 'settings.save' | translate }}
+        @if (!isSaving()) { <i class="fa-solid fa-check ml-1.5"></i> }
+      </button>
     </form>
   </main>
 </div>

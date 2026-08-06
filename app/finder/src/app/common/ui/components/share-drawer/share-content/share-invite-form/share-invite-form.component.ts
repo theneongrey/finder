@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import { SharingStore } from '../../../../../../features/project/_shared/data/sharing.store';
@@ -21,7 +22,8 @@ import { SharingContact } from '../../../../../../features/project/_shared/model
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     HlmInput,
-    Button,
+    HlmButton,
+    HlmSpinner,
     ...HlmToggleGroupImports,
     FormsModule,
     TranslatePipe,

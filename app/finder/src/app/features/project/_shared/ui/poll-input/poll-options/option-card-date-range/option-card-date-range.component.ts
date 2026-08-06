@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe } from '@ngx-translate/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -20,7 +20,7 @@ import { UserStore } from '../../../../../../../common/data/user.store';
 @Component({
   selector: 'app-option-card-date-range',
   templateUrl: './option-card-date-range.component.html',
-  imports: [FormsModule, Button, DatePicker, TranslatePipe, ...HlmCardImports],
+  imports: [FormsModule, HlmButton, DatePicker, TranslatePipe, ...HlmCardImports],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateRangeComponent {

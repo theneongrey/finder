@@ -4,14 +4,9 @@
   <div
     class="h-16 flex items-start justify-center gap-4 pt-4"
   >
-    <p-button
-      [label]="'project.vote.overview' | translate"
-      icon="fa-solid fa-list"
-      [rounded]="true"
-      size="small"
-      variant="outlined"
-      (click)="navigateToOverview()"
-    />
+    <button hlmBtn variant="outline" size="sm" (click)="navigateToOverview()">
+      <i class="fa-solid fa-list"></i>{{ 'project.vote.overview' | translate }}
+    </button>
   </div>
 
   <div class="flex-1 flex flex-col">
@@ -141,12 +136,9 @@
               </button>
             }
           </div>
-          <p-button
-            [label]="'project.vote.skip' | translate"
-            variant="text"
-            size="small"
-            (click)="skip()"
-          />
+          <button hlmBtn variant="ghost" size="sm" (click)="skip()">
+            {{ 'project.vote.skip' | translate }}
+          </button>
         </div>
       } @else {
         <div class="flex items-center gap-6">
@@ -157,12 +149,9 @@
             <i class="fa-solid fa-xmark text-2xl"></i>
           </button>
 
-          <p-button
-            [label]="'project.vote.skip' | translate"
-            variant="text"
-            size="small"
-            (click)="skip()"
-          />
+          <button hlmBtn variant="ghost" size="sm" (click)="skip()">
+            {{ 'project.vote.skip' | translate }}
+          </button>
 
           <button
             class="w-16 h-16 rounded-full bg-white border-primary/60 text-primary border border-surface-200 flex items-center justify-center hover:bg-primary-50 transition-all active:scale-90 duration-200"

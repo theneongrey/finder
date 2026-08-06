@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ButtonModule } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 
 @Component({
   selector: 'app-vote-card-image',
   templateUrl: './vote-card-image.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonModule, TranslatePipe],
+  imports: [HlmButton, TranslatePipe],
   host: {
     class: 'h-full flex flex-col',
   },

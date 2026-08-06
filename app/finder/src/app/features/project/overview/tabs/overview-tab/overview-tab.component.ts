@@ -5,7 +5,7 @@ import {
   output,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { ProjectListStore } from '../../../_shared/data/project-list.store';
 import { UserStore } from '../../../../../common/data/user.store';
 import { ProjectItemComponent } from '../../project-item/project-item.component';
@@ -17,7 +17,7 @@ import { PollItem } from '../../../_shared/models/poll-item.model';
 
 @Component({
   selector: 'app-overview-tab',
-  imports: [TranslatePipe, Button, ProjectItemComponent, PollItemComponent],
+  imports: [TranslatePipe, HlmButton, ProjectItemComponent, PollItemComponent],
   templateUrl: './overview-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

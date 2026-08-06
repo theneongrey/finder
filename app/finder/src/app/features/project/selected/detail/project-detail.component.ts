@@ -25,7 +25,7 @@ import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { ProjectDetailStore } from '../../_shared/data/project-detail.store';
 import { AddCardComponent } from '../../../../common/ui/components/add-card/add-card.component';
 import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.component';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 
 @Component({
   selector: 'app-project-detail',
@@ -42,7 +42,7 @@ import { Button } from 'primeng/button';
     ...HlmTooltipImports,
     ShareDrawerComponent,
     TranslatePipe,
-    Button,
+    HlmButton,
   ],
   templateUrl: './project-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

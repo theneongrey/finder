@@ -14,13 +14,9 @@
         [name]="'option-text-' + index()"
       />
       @if (canRemove()) {
-        <p-button
-          type="button"
-          icon="fa-solid fa-xmark"
-          [text]="true"
-          severity="secondary"
-          (click)="remove.emit()"
-        />
+        <button hlmBtn type="button" variant="ghost" size="icon" (click)="remove.emit()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       }
     </div>
 

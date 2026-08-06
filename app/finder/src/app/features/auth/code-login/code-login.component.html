@@ -50,15 +50,10 @@
           </brn-input-otp>
         </div>
 
-        <p-button
-          class="mt-2"
-          type="submit"
-          [label]="'auth.codeLogin.verify' | translate"
-          icon="fa-solid fa-check"
-          iconPos="right"
-          [disabled]="form.invalid"
-          [fluid]="true"
-        />
+        <button hlmBtn class="mt-2 w-full" type="submit" [disabled]="form.invalid">
+          {{ 'auth.codeLogin.verify' | translate }}
+          <i class="fa-solid fa-check ml-1.5"></i>
+        </button>
       </div>
     </div>
   </div>

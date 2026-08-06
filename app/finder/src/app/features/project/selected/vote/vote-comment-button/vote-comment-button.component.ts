@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmPopoverImports } from '@spartan-ng/helm/popover';
 import { ProjectDetailStore } from '../../../_shared/data/project-detail.store';
@@ -15,7 +15,7 @@ import { ProjectDetailStore } from '../../../_shared/data/project-detail.store';
 @Component({
   selector: 'app-vote-comment-button',
   templateUrl: './vote-comment-button.component.html',
-  imports: [Button, ...HlmPopoverImports, HlmInput, FormsModule, TranslatePipe],
+  imports: [HlmButton, ...HlmPopoverImports, HlmInput, FormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteCommentButtonComponent {

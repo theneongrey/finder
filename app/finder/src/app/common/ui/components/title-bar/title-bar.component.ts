@@ -7,7 +7,7 @@ import {
 import { UserStore } from '../../../data/user.store';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TitleBarService } from '../../../services/title-bar.service';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
@@ -19,7 +19,7 @@ import { LoadingComponent } from '../loading/loading.component';
   imports: [
     ...HlmDropdownMenuImports,
     UserAvatarComponent,
-    Button,
+    HlmButton,
     RouterLink,
     NgOptimizedImage,
     LoadingComponent,

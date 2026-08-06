@@ -34,11 +34,8 @@
       class="flex-1 text-sm text-gray-700 break-all select-all cursor-text"
       >{{ shareLink() }}</span
     >
-    <p-button
-      icon="pi pi-copy"
-      [label]="'project.share.copy' | translate"
-      size="small"
-      (click)="copyLink()"
-    />
+    <button hlmBtn size="sm" (click)="copyLink()">
+      <i class="pi pi-copy"></i>{{ 'project.share.copy' | translate }}
+    </button>
   </div>
 }

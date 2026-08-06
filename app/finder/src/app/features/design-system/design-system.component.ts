@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
-import { Card } from 'primeng/card';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { HlmBadge } from '@spartan-ng/helm/badge';
@@ -40,8 +40,8 @@ const mockSharingStore = {
   imports: [
     NgClass,
     FormsModule,
-    Button,
-    Card,
+    HlmButton,
+    ...HlmCardImports,
     BrnInputOtp,
     ...HlmInputOtpImports,
     HlmInput,
@@ -96,24 +96,6 @@ export class DesignSystemComponent {
     { step: '800', hex: '#003549' },
     { step: '900', hex: '#001E2C' },
     { step: '950', hex: '#000000' },
-  ];
-
-  buttonSeverities: {
-    severity:
-      | 'primary'
-      | 'secondary'
-      | 'success'
-      | 'danger'
-      | 'info'
-      | 'contrast';
-    label: string;
-  }[] = [
-    { severity: 'primary', label: 'Primary' },
-    { severity: 'secondary', label: 'Secondary' },
-    { severity: 'success', label: 'Success' },
-    { severity: 'danger', label: 'Danger' },
-    { severity: 'info', label: 'Info' },
-    { severity: 'contrast', label: 'Contrast' },
   ];
 
   selectOptions = [

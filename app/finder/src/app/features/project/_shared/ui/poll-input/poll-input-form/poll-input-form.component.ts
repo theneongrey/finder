@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HlmInput } from '@spartan-ng/helm/input';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionType } from '../../../models/project-detail.model';
 import {
@@ -31,7 +31,7 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
   imports: [
     FormsModule,
     HlmInput,
-    Button,
+    HlmButton,
     TranslatePipe,
     AutoResizeTextareaComponent,
     PollOptionsComponent,

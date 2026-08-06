@@ -6,7 +6,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { RouterLink } from '@angular/router';
@@ -20,7 +20,7 @@ import { ProjectRole } from '../../models/project-role.enum';
 @Component({
   selector: 'app-poll-item',
   imports: [
-    Button,
+    HlmButton,
     ...HlmDropdownMenuImports,
     ...HlmTooltipImports,
     OptionTypeIconComponent,

@@ -10,14 +10,9 @@
     <h3 class="m-0">
       {{ "project.overviewTab.latestPolls" | translate }}
     </h3>
-    <p-button
-      [text]="true"
-      [label]="'project.overviewTab.viewAll' | translate"
-      icon="fa-solid fa-chevron-right"
-      iconPos="right"
-      size="small"
-      (onClick)="switchToPolls()"
-    />
+    <button hlmBtn variant="ghost" size="sm" (click)="switchToPolls()">
+      {{ 'project.overviewTab.viewAll' | translate }}<i class="fa-solid fa-chevron-right ml-1.5"></i>
+    </button>
   </div>
   <div class="flex flex-col gap-3">
     @for (poll of recentPolls(); track poll.pollId) {
@@ -36,14 +31,9 @@
     <h3 class="m-0">
       {{ "project.overviewTab.latestProjects" | translate }}
     </h3>
-    <p-button
-      [text]="true"
-      [label]="'project.overviewTab.viewAll' | translate"
-      icon="fa-solid fa-chevron-right"
-      iconPos="right"
-      size="small"
-      (onClick)="switchToProjects()"
-    />
+    <button hlmBtn variant="ghost" size="sm" (click)="switchToProjects()">
+      {{ 'project.overviewTab.viewAll' | translate }}<i class="fa-solid fa-chevron-right ml-1.5"></i>
+    </button>
   </div>
   <div class="flex flex-col gap-3">
     @for (project of recentProjects(); track project.id) {

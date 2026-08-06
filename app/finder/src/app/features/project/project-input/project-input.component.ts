@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HlmInput } from '@spartan-ng/helm/input';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { AutoResizeTextareaComponent } from '../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -23,7 +23,7 @@ import { TitleBarComponent } from '../../../common/ui/components/title-bar/title
   imports: [
     FormsModule,
     HlmInput,
-    Button,
+    HlmButton,
     AutoResizeTextareaComponent,
     TranslatePipe,
     MaxHeightMinusHeaderDirective,

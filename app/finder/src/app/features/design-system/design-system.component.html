@@ -211,26 +211,26 @@
           <p class="ds-label mb-3">Button Padding</p>
           <div class="flex flex-wrap gap-4">
             <div class="flex flex-col gap-1">
-              <p-button label="Default" />
-              <span class="ds-mono text-center">40px / 8px</span>
+              <button hlmBtn>Default</button>
+              <span class="ds-mono text-center">h-9 / px-2.5</span>
             </div>
             <div class="flex flex-col gap-1">
-              <p-button label="Small" class="small" />
-              <span class="ds-mono text-center">12px / 2px</span>
+              <button hlmBtn size="sm">Small</button>
+              <span class="ds-mono text-center">h-8 / px-2.5</span>
             </div>
-            <div class="p-condensed flex flex-col gap-1">
-              <p-button label="Condensed" />
-              <span class="ds-mono text-center">4px</span>
+            <div class="flex flex-col gap-1">
+              <button hlmBtn size="xs">XSmall</button>
+              <span class="ds-mono text-center">h-6 / px-2</span>
             </div>
           </div>
         </div>
 
         <div>
-          <p class="ds-label mb-3">Disabled Opacity — 0.4</p>
+          <p class="ds-label mb-3">Disabled Opacity — 0.5</p>
           <div class="flex items-center gap-4">
-            <p-button label="Enabled" />
-            <p-button label="Disabled" [disabled]="true" />
-            <span class="ds-body text-gray-500">--p-disabled-opacity: 0.4</span>
+            <button hlmBtn>Enabled</button>
+            <button hlmBtn [disabled]="true">Disabled</button>
+            <span class="ds-body text-gray-500">data-disabled:opacity-50</span>
           </div>
         </div>
       </div>
@@ -243,66 +243,45 @@
       <div class="mb-6">
         <h2>Buttons</h2>
         <p class="ds-body mt-1 text-gray-500">
-          PrimeNG Button — border-radius 12px, padding 40/8px.
+          Spartan hlmBtn directive — variants: default, outline, secondary, ghost, destructive, link.
         </p>
       </div>
 
       <div class="flex flex-col gap-6">
         <div>
-          <p class="ds-label mb-3">Filled</p>
+          <p class="ds-label mb-3">Variants</p>
           <div class="flex flex-wrap gap-3">
-            @for (s of buttonSeverities; track s.severity) {
-              <p-button [label]="s.label" [severity]="s.severity" />
-            }
-          </div>
-        </div>
-        <div>
-          <p class="ds-label mb-3">Outlined</p>
-          <div class="flex flex-wrap gap-3">
-            @for (s of buttonSeverities; track s.severity) {
-              <p-button
-                [label]="s.label"
-                [severity]="s.severity"
-                variant="outlined"
-              />
-            }
-          </div>
-        </div>
-        <div>
-          <p class="ds-label mb-3">Text</p>
-          <div class="flex flex-wrap gap-3">
-            @for (s of buttonSeverities; track s.severity) {
-              <p-button
-                [label]="s.label"
-                [severity]="s.severity"
-                variant="text"
-              />
-            }
+            <button hlmBtn>Default</button>
+            <button hlmBtn variant="secondary">Secondary</button>
+            <button hlmBtn variant="outline">Outline</button>
+            <button hlmBtn variant="ghost">Ghost</button>
+            <button hlmBtn variant="destructive">Destructive</button>
+            <button hlmBtn variant="link">Link</button>
           </div>
         </div>
         <div>
           <p class="ds-label mb-3">With Icons</p>
           <div class="flex flex-wrap gap-3">
-            <p-button label="Add item" icon="pi pi-plus" />
-            <p-button label="Delete" icon="pi pi-trash" severity="danger" />
-            <p-button icon="pi pi-search" [rounded]="true" variant="outlined" />
-            <p-button icon="pi pi-cog" variant="text" severity="secondary" />
+            <button hlmBtn><i class="fa-solid fa-plus mr-1.5"></i>Add item</button>
+            <button hlmBtn variant="destructive"><i class="fa-solid fa-trash mr-1.5"></i>Delete</button>
+            <button hlmBtn variant="outline" size="icon"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button hlmBtn variant="ghost" size="icon"><i class="fa-solid fa-gear"></i></button>
           </div>
         </div>
         <div>
           <p class="ds-label mb-3">Sizes</p>
           <div class="flex flex-wrap items-center gap-3">
-            <p-button label="Default" />
-            <p-button label="Small" class="small" />
-            <div class="p-condensed"><p-button label="Condensed" /></div>
-            <p-button label="Disabled" [disabled]="true" />
-            <p-button label="Loading" [loading]="true" />
+            <button hlmBtn>Default</button>
+            <button hlmBtn size="sm">Small</button>
+            <button hlmBtn size="xs">XSmall</button>
+            <button hlmBtn [disabled]="true">Disabled</button>
+            <button hlmBtn [disabled]="true"><hlm-spinner class="mr-2" />Loading</button>
           </div>
         </div>
         <div>
-          <p class="ds-label mb-3">Full Width (p-fluid)</p>
-          <div class="p-fluid max-w-xs">
-            <p-button label="Full Width Button" />
+          <p class="ds-label mb-3">Full Width</p>
+          <div class="max-w-xs">
+            <button hlmBtn class="w-full">Full Width Button</button>
           </div>
         </div>
       </div>
@@ -447,33 +426,26 @@
       <div class="mb-6">
         <h2>Cards</h2>
         <p class="ds-body mt-1 text-gray-500">
-          PrimeNG Card and the custom AddCard component.
+          Spartan hlmCard directive and the custom AddCard component.
         </p>
       </div>
 
       <div class="flex flex-wrap items-start gap-4">
-        <p-card class="w-64">
-          <ng-template #header>
-            <div class="px-4 pt-4">
-              <h3>Card Title</h3>
+        <div hlmCard class="w-64">
+          <div hlmCardHeader>
+            <h3>Card Title</h3>
+          </div>
+          <div hlmCardContent>
+            <p class="ds-body text-gray-500">
+              Card body content. Used throughout the app as a container for
+              grouped information.
+            </p>
+            <div class="flex gap-2 mt-3">
+              <button hlmBtn size="sm">Action</button>
+              <button hlmBtn size="sm" variant="ghost">Cancel</button>
             </div>
-          </ng-template>
-          <p class="ds-body text-gray-500">
-            Card body content. Used throughout the app as a container for
-            grouped information.
-          </p>
-          <ng-template #footer>
-            <div class="flex gap-2">
-              <p-button label="Action" class="small" />
-              <p-button
-                label="Cancel"
-                class="small"
-                variant="text"
-                severity="secondary"
-              />
-            </div>
-          </ng-template>
-        </p-card>
+          </div>
+        </div>
 
         <app-add-card
           cto="Add New Item"
@@ -599,11 +571,9 @@
       <div class="flex flex-col gap-6">
         <div>
           <p class="ds-label mb-3">ShareDrawer</p>
-          <p-button
-            label="Open Share Drawer"
-            icon="fa-solid fa-share-nodes"
-            (click)="shareDrawerVisible.set(true)"
-          />
+          <button hlmBtn (click)="shareDrawerVisible.set(true)">
+            <i class="fa-solid fa-share-nodes mr-1.5"></i>Open Share Drawer
+          </button>
           <app-share-drawer
             [(visible)]="shareDrawerVisible"
             projectId="demo"

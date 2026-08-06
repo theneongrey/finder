@@ -20,11 +20,7 @@
             <i class="fa-solid fa-list"></i>
             <span>{{ _poll.optionCount }}</span>
           </span>
-          <p-button
-            [text]="true"
-            size="small"
-            icon="fa-regular fa-comments"
-            [label]="_poll.commentCount.toString()"
+          <button hlmBtn variant="ghost" size="sm"
             [hlmTooltip]="'project.detail.item.comments' | translate: { count: _poll.commentCount }"
             position="top"
             [routerLink]="[
@@ -34,17 +30,14 @@
               _poll.pollId,
             ]"
             fragment="comments-section"
-          />
+          ><i class="fa-regular fa-comments"></i>{{ _poll.commentCount }}</button>
         </div>
       </div>
       @if (showMenu()) {
         <div>
-          <p-button
-            icon="fa-solid fa-ellipsis-vertical"
-            [text]="true"
-            data-testid="poll-menu-btn"
-            [hlmDropdownMenuTrigger]="pollMenu"
-          />
+          <button hlmBtn variant="ghost" size="icon" data-testid="poll-menu-btn" [hlmDropdownMenuTrigger]="pollMenu">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
           <ng-template #pollMenu>
             <hlm-dropdown-menu>
               @if (editRoute()) {
@@ -68,57 +61,32 @@
 
     <div class="flex flex-col gap-1">
       @if (_poll.nextOpenOptionId) {
-        <p-button
-          fluid
-          severity="primary"
-          [routerLink]="[
+        <button hlmBtn class="w-full" [routerLink]="[
             '/project/detail',
             _poll.projectId,
             'vote',
             _poll.pollId,
             _poll.nextOpenOptionId,
-          ]"
-          [label]="'project.common.vote' | translate"
-        />
-        <p-button
-          fluid
-          severity="secondary"
-          size="small"
-          [text]="true"
-          [routerLink]="[
+          ]">{{ 'project.common.vote' | translate }}</button>
+        <button hlmBtn variant="ghost" size="sm" class="w-full" [routerLink]="[
             '/project/detail',
             _poll.projectId,
             'poll-overview',
             _poll.pollId,
-          ]"
-          [label]="'project.detail.item.voteOverview' | translate"
-        />
+          ]">{{ 'project.detail.item.voteOverview' | translate }}</button>
       } @else {
-        <p-button
-          fluid
-          severity="primary"
-          [routerLink]="[
+        <button hlmBtn class="w-full" [routerLink]="[
             '/project/detail',
             _poll.projectId,
             'results',
             _poll.pollId,
-          ]"
-          [label]="'project.detail.item.pollOverview' | translate"
-        />
-        <p-button
-          fluid
-          severity="secondary"
-          size="small"
-          [text]="true"
-          [routerLink]="[
+          ]">{{ 'project.detail.item.pollOverview' | translate }}</button>
+        <button hlmBtn variant="ghost" size="sm" class="w-full" [routerLink]="[
             '/project/detail',
             _poll.projectId,
             'vote',
             _poll.pollId,
-          ]"
-          [queryParams]="{ revote: '1' }"
-          [label]="'project.votesOverview.reVote' | translate"
-        />
+          ]" [queryParams]="{ revote: '1' }">{{ 'project.votesOverview.reVote' | translate }}</button>
       }
     </div>
   </div>

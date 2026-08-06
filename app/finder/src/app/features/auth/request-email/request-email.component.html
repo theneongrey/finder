@@ -41,16 +41,11 @@
           }
         </div>
 
-        <p-button
-          class="mt-2"
-          type="submit"
-          [label]="'auth.requestEmail.requestCode' | translate"
-          icon="fa-solid fa-arrow-right"
-          iconPos="right"
-          [loading]="isLoading()"
-          [disabled]="form.invalid || isLoading()"
-          [fluid]="true"
-        />
+        <button hlmBtn class="mt-2 w-full" type="submit" [disabled]="form.invalid || isLoading()">
+          @if (isLoading()) { <hlm-spinner class="mr-2" /> }
+          {{ 'auth.requestEmail.requestCode' | translate }}
+          @if (!isLoading()) { <i class="fa-solid fa-arrow-right ml-1.5"></i> }
+        </button>
       </div>
     </div>
   </div>

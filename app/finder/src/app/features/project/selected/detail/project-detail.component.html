@@ -10,13 +10,10 @@
       <div class="flex items-center justify-between mb-4">
         <h2>{{ "project.detail.members" | translate }}</h2>
         @if (role() >= ProjectRole.Owner) {
-          <p-button
-            icon="fa-solid fa-user-plus"
-            [label]="'project.detail.invite' | translate"
-            severity="secondary"
-            size="small"
-            (click)="showShare.set(true)"
-          />
+          <button hlmBtn variant="secondary" size="sm" (click)="showShare.set(true)">
+            <i class="fa-solid fa-user-plus"></i>
+            {{ 'project.detail.invite' | translate }}
+          </button>
         }
       </div>
       @if (project.sharedWith.length > 0) {

@@ -9,7 +9,7 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { HlmAvatar, HlmAvatarFallback, HlmAvatarImage } from '@spartan-ng/helm/avatar';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { Button } from 'primeng/button';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { SharedWith } from '../../../../../../features/project/_shared/models/project-detail.model';
 import { SharingStore } from '../../../../../../features/project/_shared/data/sharing.store';
 import { ProjectRole } from '../../../../../../features/project/_shared/models/project-role.enum';
@@ -18,7 +18,7 @@ import { ProjectRole } from '../../../../../../features/project/_shared/models/p
   selector: 'app-share-members-list',
   templateUrl: './share-members-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HlmAvatar, HlmAvatarFallback, HlmAvatarImage, Button, ...HlmDropdownMenuImports, TranslatePipe],
+  imports: [HlmAvatar, HlmAvatarFallback, HlmAvatarImage, HlmButton, ...HlmDropdownMenuImports, TranslatePipe],
 })
 export class ShareMembersListComponent {
   private readonly sharingStore = inject(SharingStore);

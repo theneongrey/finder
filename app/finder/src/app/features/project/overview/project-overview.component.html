@@ -4,7 +4,7 @@
     fMaxHeightMinusHeader
     class="flex-grow max-w-5xl mx-auto w-full h-full rounded-t-2xl overflow-y-auto"
   >
-    <hlm-tabs [(tab)]="activeTabValue">
+    <hlm-tabs [tab]="activeTabValue" (tabActivated)="activeTabValue = $event">
       <hlm-tabs-list>
         <button hlmTabsTrigger="overview">{{
           "project.tabs.overview" | translate

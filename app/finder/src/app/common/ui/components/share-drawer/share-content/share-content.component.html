@@ -1,5 +1,5 @@
 @if (sharedWith().length > 0) {
-  <hlm-tabs [tab]="activeTab()" (tabChanged)="setActiveTab($event)">
+  <hlm-tabs [tab]="activeTab()" (tabActivated)="setActiveTab($event)">
     <hlm-tabs-list>
       <button hlmTabsTrigger="access">{{ "project.share.tabAccess" | translate }}</button>
       <button hlmTabsTrigger="members">{{ "project.share.tabMembers" | translate }}</button>

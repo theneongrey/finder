@@ -10,7 +10,6 @@ import { inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, map, of, pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { ProjectOverview } from '../models/project-overview.model';
 import { StandalonePollOverview } from '../models/standalone-poll-overview.model';
 import { ProjectService } from '../../_shared/data/project.service';
 import { Router } from '@angular/router';
@@ -51,50 +50,6 @@ export const ProjectListStore = signalStore(
               },
             }),
           ),
-        ),
-      ),
-    ),
-
-    addProject: rxMethod<{ name: string; description: string }>(
-      pipe(
-        switchMap((project) =>
-          store.projectService
-            .addProject(project.name, project.description)
-            .pipe(
-              tapResponse({
-                next: (project: ProjectOverview) => {
-                  store.router.navigate([`/project/detail/${project.id}`]);
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[ProjectListStore] Error adding a project',
-                    error,
-                  );
-                },
-              }),
-            ),
-        ),
-      ),
-    ),
-
-    editProject: rxMethod<{ id: string; name: string; description: string }>(
-      pipe(
-        switchMap((project) =>
-          store.projectService
-            .updateProject(project.id, project.name, project.description)
-            .pipe(
-              tapResponse({
-                next: (updated: ProjectOverview) => {
-                  store.router.navigate([`/project/detail/${updated.id}`]);
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[ProjectListStore] Error updating project',
-                    error,
-                  );
-                },
-              }),
-            ),
         ),
       ),
     ),

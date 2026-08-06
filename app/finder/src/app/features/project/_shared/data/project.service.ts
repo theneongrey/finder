@@ -57,25 +57,6 @@ export class ProjectService {
     return this.httpClient.get<Project>(`${this.baseUrl}/api/project/${id}`);
   }
 
-  addProject(name: string, description: string) {
-    this.loggerService.debug('[ProjectService] fetching project');
-    return this.httpClient.post<ProjectOverview>(
-      `${this.baseUrl}/api/project`,
-      {
-        name,
-        description,
-      },
-    );
-  }
-
-  updateProject(id: string, name: string, description: string) {
-    this.loggerService.debug('[ProjectService] updating project');
-    return this.httpClient.put<ProjectOverview>(
-      `${this.baseUrl}/api/project/${id}`,
-      { name, description },
-    );
-  }
-
   deleteProject(id: string) {
     this.loggerService.debug('[ProjectService] fetching project');
     return this.httpClient.delete(`${this.baseUrl}/api/project/${id}`);

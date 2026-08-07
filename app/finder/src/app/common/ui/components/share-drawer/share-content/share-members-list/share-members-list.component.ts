@@ -10,9 +10,9 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { HlmAvatar, HlmAvatarFallback, HlmAvatarImage } from '@spartan-ng/helm/avatar';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmButton } from '@spartan-ng/helm/button';
-import { SharedWith } from '../../../../../../features/project/_shared/models/project-detail.model';
-import { SharingStore } from '../../../../../../features/project/_shared/data/sharing.store';
-import { ProjectRole } from '../../../../../../features/project/_shared/models/project-role.enum';
+import { SharedWith } from '../../../../../../features/polls/_shared/models/poll-detail.model';
+import { SharingStore } from '../../../../../../features/polls/_shared/data/sharing.store';
+import { PollRole } from '../../../../../../features/polls/_shared/models/poll-role.enum';
 
 @Component({
   selector: 'app-share-members-list',
@@ -28,7 +28,7 @@ export class ShareMembersListComponent {
   members = input.required<SharedWith[]>();
   isPublic = input.required<boolean>();
 
-  readonly ProjectRole = ProjectRole;
+  readonly PollRole = PollRole;
 
   pendingRemoveEmail = signal<string | undefined>(undefined);
 
@@ -45,12 +45,12 @@ export class ShareMembersListComponent {
   maintainerLabel = this.translateService.translate('project.roles.maintainer');
   ownerLabel = this.translateService.translate('project.roles.owner');
 
-  getRoleKey(role: ProjectRole): string {
+  getRoleKey(role: PollRole): string {
     switch (role) {
-      case ProjectRole.Voter: return 'voter';
-      case ProjectRole.Maintainer: return 'maintainer';
-      case ProjectRole.Owner: return 'owner';
-      case ProjectRole.Creator: return 'creator';
+      case PollRole.Voter: return 'voter';
+      case PollRole.Maintainer: return 'maintainer';
+      case PollRole.Owner: return 'owner';
+      case PollRole.Creator: return 'creator';
       default: return 'unknown';
     }
   }

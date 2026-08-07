@@ -10,7 +10,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
-import { VisibilityType } from '../../../../../../features/project/_shared/models/project-detail.model';
+import { VisibilityType } from '../../../../../../features/polls/_shared/models/poll-detail.model';
 
 @Component({
   selector: 'app-share-access-tab',

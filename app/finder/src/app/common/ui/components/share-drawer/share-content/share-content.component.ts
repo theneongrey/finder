@@ -17,8 +17,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   SharedWith,
   VisibilityType,
-} from '../../../../../features/project/_shared/models/project-detail.model';
-import { SharingStore } from '../../../../../features/project/_shared/data/sharing.store';
+} from '../../../../../features/polls/_shared/models/poll-detail.model';
+import { SharingStore } from '../../../../../features/polls/_shared/data/sharing.store';
 import { environment } from '../../../../env/environment';
 
 @Component({

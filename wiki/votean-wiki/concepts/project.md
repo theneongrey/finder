@@ -40,9 +40,16 @@ A project can be marked `IsStandalone = true`, which means it holds exactly one 
 
 Project IDs use the 8-char hex slug format: `{name-slug}-{8-char-hex}`. The backend extracts the raw ID by taking the last `-`-delimited segment.
 
+## Frontend Status
+
+> **As of 2026-08-06, the Projects concept is a backend-only concept.** The frontend surfaces only standalone polls — there is no project list, project create, or project detail UI. All user-facing URLs use `/polls/` instead of `/project/`. The Angular feature folder was renamed from `features/project/` to `features/polls/`, and all store/model/component files were renamed to be poll-centric.
+>
+> See [Projects Concept Removal (MVP)](../architecture/project-removal-mvp.md) for the full decision record and reintroduction path.
+
 ## Related
 
 - [Poll](poll.md) — polls within a project
 - [Permission](permission.md) — member roles
 - [Public Sharing](../features/public-sharing.md) — how VisibleForEverbody projects are shared
 - [Permissions](../features/permissions.md) — full feature description
+- [Projects Concept Removal (MVP)](../architecture/project-removal-mvp.md) — decision record for the frontend removal

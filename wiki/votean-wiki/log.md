@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-08-07 — ingest: Projects concept removal (issue #170 / #167)
+Pages touched: architecture/project-removal-mvp.md (created), architecture/index.md, index.md, concepts/project.md
+
+---
+
 ## 2026-08-06 — ingest: PrimeNG → Spartan UI migration decision record (issue #141)
 Pages touched: architecture/primeng-to-spartan-migration.md (created), architecture/frontend.md, index.md
 

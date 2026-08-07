@@ -4,7 +4,7 @@ import { DateOptionEntry, DateOptionType } from './date-option.utils';
 @Injectable({ providedIn: 'root' })
 export class AppointmentTypeConversionService {
   convert(entries: DateOptionEntry[], from: DateOptionType, to: DateOptionType): DateOptionEntry[] {
-    if (from === to) return entries;
+    if (from === to) { return entries; }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -96,7 +96,7 @@ export class AppointmentTypeConversionService {
     const seen = new Set<string>();
     return entries.filter((entry) => {
       const key = this.entryKey(entry, type);
-      if (seen.has(key)) return false;
+      if (seen.has(key)) { return false; }
       seen.add(key);
       return true;
     });

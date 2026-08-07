@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  untracked,
-} from '@angular/core';
-import { UserStore } from '../../../common/data/user.store';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-auth-login',
@@ -17,6 +9,4 @@ import { Router } from '@angular/router';
     class: 'm-auto',
   },
 })
-export class LoginComponent {
-  constructor() {}
-}
+export class LoginComponent {}

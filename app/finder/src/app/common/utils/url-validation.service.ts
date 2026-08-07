@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-const URL_REGEX = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\/?#].*)?$/i;
+const URL_REGEX = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([/?#].*)?$/i;
 
 @Injectable({ providedIn: 'root' })
 export class UrlValidationService {

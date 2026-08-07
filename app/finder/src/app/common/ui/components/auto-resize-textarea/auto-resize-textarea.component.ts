@@ -34,7 +34,7 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
   maxlength = input<number | null>(null);
   inputId = input<string | null>(null);
   maxHeight = input<string>('200px');
-  blur = output<void>();
+  blurred = output<void>();
 
   protected readonly textValue = signal('');
   protected readonly isDisabled = signal(false);
@@ -52,7 +52,7 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
 
   protected onBlur(): void {
     this.onTouched();
-    this.blur.emit();
+    this.blurred.emit();
   }
 
   private minHeight = 40;
@@ -109,7 +109,7 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
     const targetHeight = Math.max(el.scrollHeight, this.minHeight);
     el.style.height = `${targetHeight}px`;
     el.classList.toggle('scrollable', this.exceedsMaxHeight(targetHeight));
-    el.offsetHeight; // flush transition:none before re-enabling
+    void el.offsetHeight; // flush transition:none before re-enabling
     el.style.transition = '';
   }
 
@@ -125,7 +125,7 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
     el.style.height = `${fromHeight}px`;
 
     // Flush so the browser commits fromHeight as the animation origin.
-    el.offsetHeight;
+    void el.offsetHeight;
 
     el.style.transition = '';
     el.style.height = `${targetHeight}px`;

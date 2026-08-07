@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
 } from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';

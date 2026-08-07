@@ -32,7 +32,7 @@
       "
       [ngModel]="description()"
       (ngModelChange)="descriptionChange.emit($event)"
-      (blur)="onDescriptionBlur()"
+      (blurred)="onDescriptionBlur()"
     />
   }
   @if (!showDescription()) {

@@ -34,6 +34,6 @@ export class StandalonePollTabComponent {
   );
 
   navigateToAdd() {
-    this.router.navigate(['/project/add-standalone']);
+    this.router.navigate(['/project/poll/add']);
   }
 }

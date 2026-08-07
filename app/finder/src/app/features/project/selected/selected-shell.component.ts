@@ -33,7 +33,7 @@ export class ProjectSelectedShellComponent {
     effect(() => {
       const project = this.projectDetailStore.currentProject();
       if (project && this.projectId() !== project.id) {
-        this.router.navigate(['/project/detail', project.id], { replaceUrl: true });
+        this.router.navigate(['/project/poll', project.id], { replaceUrl: true });
       }
     });
   }

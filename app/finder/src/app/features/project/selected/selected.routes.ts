@@ -15,7 +15,7 @@ export const selectedRoutes: Routes = [
       ),
     data: {
       backRoute: (s: ActivatedRouteSnapshot) =>
-        `/project/detail/${s.parent?.params['projectId']}/poll-overview/${s.params['pollId']}`,
+        `/project/poll/${s.parent?.params['projectId']}/poll-overview/${s.params['pollId']}`,
     },
   },
   {
@@ -26,7 +26,7 @@ export const selectedRoutes: Routes = [
       ),
     data: {
       backRoute: (s: ActivatedRouteSnapshot) =>
-        `/project/detail/${s.parent?.params['projectId']}/poll-overview/${s.params['pollId']}`,
+        `/project/poll/${s.parent?.params['projectId']}/poll-overview/${s.params['pollId']}`,
     },
   },
   {
@@ -35,7 +35,7 @@ export const selectedRoutes: Routes = [
       import('./results/results.component').then((m) => m.ResultsComponent),
     data: {
       backRoute: (s: ActivatedRouteSnapshot) =>
-        `/project/detail/${s.parent?.params['projectId']}/poll-overview/${s.params['pollId']}`,
+        `/project/poll/${s.parent?.params['projectId']}/poll-overview/${s.params['pollId']}`,
     },
   },
   {

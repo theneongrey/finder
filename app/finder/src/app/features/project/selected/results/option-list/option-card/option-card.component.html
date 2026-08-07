@@ -50,7 +50,7 @@
   @if (option().choice) {
     <div class="flex justify-end">
       <button hlmBtn variant="ghost" size="sm" [routerLink]="[
-          '/project/detail',
+          '/project/poll',
           projectId(),
           'vote',
           pollId(),
@@ -59,7 +59,7 @@
     </div>
   } @else {
     <button hlmBtn class="w-full" [routerLink]="[
-        '/project/detail',
+        '/project/poll',
         projectId(),
         'vote',
         pollId(),

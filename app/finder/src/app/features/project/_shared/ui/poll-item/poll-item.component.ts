@@ -49,10 +49,10 @@ export class PollItemComponent {
   editRoute = computed(() => {
     const poll = this.poll();
     if (poll.optionType === OptionType.YesNo) {
-      return ['/project/detail', poll.projectId, 'poll', 'edit', 'yesno', poll.pollId];
+      return ['/project/poll', poll.projectId, 'poll', 'edit', 'yesno', poll.pollId];
     }
     if (poll.optionType === OptionType.Date) {
-      return ['/project/detail', poll.projectId, 'poll', 'edit', 'date', poll.pollId];
+      return ['/project/poll', poll.projectId, 'poll', 'edit', 'date', poll.pollId];
     }
     return null;
   });

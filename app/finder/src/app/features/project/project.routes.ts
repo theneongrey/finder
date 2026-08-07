@@ -10,7 +10,7 @@ export const projectRoutes: Routes = [
       ),
   },
   {
-    path: 'add-standalone',
+    path: 'poll/add',
     loadComponent: () =>
       import('./standalone-poll-input-wrapper/standalone-poll-input-wrapper.component').then(
         (m) => m.StandalonePollInputWrapperComponent,
@@ -20,7 +20,7 @@ export const projectRoutes: Routes = [
     },
   },
   {
-    path: 'detail/:projectId',
+    path: 'poll/:projectId',
     loadComponent: () =>
       import('./selected/selected-shell.component').then(
         (m) => m.ProjectSelectedShellComponent,

@@ -48,7 +48,7 @@
   <div class="mt-4 flex justify-between items-center">
     <p class="ds-body">{{ "project.votesOverview.closesIn" | translate }}</p>
     @if (hasOpenOptions()) {
-      <button hlmBtn size="sm" [routerLink]="['/project/detail', projectId(), 'vote', pollId()]">
+      <button hlmBtn size="sm" [routerLink]="['/project/poll', projectId(), 'vote', pollId()]">
         <i class="fa-solid fa-arrow-right-arrow-left"></i>{{ 'project.votesOverview.continueVoting' | translate }}
       </button>
     }

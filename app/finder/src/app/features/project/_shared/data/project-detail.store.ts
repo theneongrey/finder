@@ -158,7 +158,7 @@ export const ProjectDetailStore = signalStore(
                     });
                   }
 
-                  store.router.navigate([`/project/detail/${poll.projectId}/poll-overview/${responsePoll.id}`]);
+                  store.router.navigate([`/project/poll/${poll.projectId}/poll-overview/${responsePoll.id}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -237,7 +237,7 @@ export const ProjectDetailStore = signalStore(
                     `[ProjectDetailStore] Updated poll`,
                     poll.pollId,
                   );
-                  store.router.navigate([`/project/detail/${poll.projectId}/poll-overview/${poll.pollId}`]);
+                  store.router.navigate([`/project/poll/${poll.projectId}/poll-overview/${poll.pollId}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(

@@ -24,7 +24,7 @@
             [hlmTooltip]="'project.detail.item.comments' | translate: { count: _poll.commentCount }"
             position="top"
             [routerLink]="[
-              '/project/detail',
+              '/project/poll',
               _poll.projectId,
               _poll.nextOpenOptionId ? 'poll-overview' : 'results',
               _poll.pollId,
@@ -61,27 +61,27 @@
     <div class="flex flex-col gap-1">
       @if (_poll.nextOpenOptionId) {
         <button hlmBtn class="w-full" [routerLink]="[
-            '/project/detail',
+            '/project/poll',
             _poll.projectId,
             'vote',
             _poll.pollId,
             _poll.nextOpenOptionId,
           ]">{{ 'project.common.vote' | translate }}</button>
         <button hlmBtn variant="ghost" size="sm" class="w-full" [routerLink]="[
-            '/project/detail',
+            '/project/poll',
             _poll.projectId,
             'poll-overview',
             _poll.pollId,
           ]">{{ 'project.detail.item.voteOverview' | translate }}</button>
       } @else {
         <button hlmBtn class="w-full" [routerLink]="[
-            '/project/detail',
+            '/project/poll',
             _poll.projectId,
             'results',
             _poll.pollId,
           ]">{{ 'project.detail.item.pollOverview' | translate }}</button>
         <button hlmBtn variant="ghost" size="sm" class="w-full" [routerLink]="[
-            '/project/detail',
+            '/project/poll',
             _poll.projectId,
             'vote',
             _poll.pollId,

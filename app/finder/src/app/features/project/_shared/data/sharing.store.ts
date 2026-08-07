@@ -157,7 +157,7 @@ export const SharingStore = signalStore(
               next: (info) => {
                 if (info.isStandalone && info.pollId) {
                   store.router.navigate([
-                    '/project/detail',
+                    '/project/poll',
                     info.projectId,
                     'poll-overview',
                     info.pollId,

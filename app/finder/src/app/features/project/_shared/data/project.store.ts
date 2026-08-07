@@ -226,7 +226,7 @@ export const ProjectStore = signalStore(
                   patchState(store, {
                     projects: [...store.projects(), project],
                   });
-                  store.router.navigate([`/project/detail/${project.id}`]);
+                  store.router.navigate([`/project/poll/${project.id}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -253,7 +253,7 @@ export const ProjectStore = signalStore(
                       .projects()
                       .map((p) => (p.id === updated.id ? updated : p)),
                   });
-                  store.router.navigate([`/project/detail/${updated.id}`]);
+                  store.router.navigate([`/project/poll/${updated.id}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -371,7 +371,7 @@ export const ProjectStore = signalStore(
                     });
                   }
 
-                  store.router.navigate([`/project/detail/${poll.projectId}`]);
+                  store.router.navigate([`/project/poll/${poll.projectId}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -450,7 +450,7 @@ export const ProjectStore = signalStore(
                     `[ProjectStore] Updated poll`,
                     poll.pollId,
                   );
-                  store.router.navigate([`/project/detail/${poll.projectId}`]);
+                  store.router.navigate([`/project/poll/${poll.projectId}`]);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -778,13 +778,13 @@ export const ProjectStore = signalStore(
               next: (info) => {
                 if (info.isStandalone && info.pollId) {
                   store.router.navigate([
-                    '/project/detail',
+                    '/project/poll',
                     info.projectId,
                     'vote',
                     info.pollId,
                   ]);
                 } else {
-                  store.router.navigate(['/project/detail', info.projectId]);
+                  store.router.navigate(['/project/poll', info.projectId]);
                 }
               },
               error: (error) => {

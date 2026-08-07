@@ -15,6 +15,6 @@ export async function login(page: Page, email: string) {
 
 export async function logout(page: Page) {
   await page.locator('app-user-avatar').click();
-  await page.getByRole('link', { name: 'Logout' }).click();
+  await page.getByRole('menuitem', { name: 'Logout' }).click();
   await page.waitForURL('**/home');
 }

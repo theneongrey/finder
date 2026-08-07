@@ -65,7 +65,7 @@ export class PollService {
   getPoll(id: string) {
     this.loggerService.debug('[PollService] fetching poll');
     return this.httpClient.get<PollDetail>(
-      `${this.baseUrl}/api/polls/${id}`,
+      `${this.baseUrl}/api/project/poll/${id}`,
     );
   }
 
@@ -87,14 +87,14 @@ export class PollService {
   updatePoll(pollId: string, name: string, description: string) {
     this.loggerService.debug(`[PollService] updating poll ${pollId}`);
     return this.httpClient.put<PollDetail>(
-      `${this.baseUrl}/api/polls/${pollId}`,
+      `${this.baseUrl}/api/project/poll/${pollId}`,
       { name, description },
     );
   }
 
   deletePoll(pollId: string) {
     this.loggerService.debug(`[PollService] deleting poll ${pollId}`);
-    return this.httpClient.delete(`${this.baseUrl}/api/polls/${pollId}`);
+    return this.httpClient.delete(`${this.baseUrl}/api/project/poll/${pollId}`);
   }
 
   addOption(
@@ -105,7 +105,7 @@ export class PollService {
   ) {
     this.loggerService.debug(`[PollService] adding option ${text}`);
     return this.httpClient.post<Option>(
-      `${this.baseUrl}/api/polls/option`,
+      `${this.baseUrl}/api/project/poll/option`,
       { text, description, pollId, meta },
     );
   }
@@ -118,7 +118,7 @@ export class PollService {
   ) {
     this.loggerService.debug(`[PollService] updating option ${optionId}`);
     return this.httpClient.put<Option>(
-      `${this.baseUrl}/api/polls/option/${optionId}`,
+      `${this.baseUrl}/api/project/poll/option/${optionId}`,
       { text, description, meta },
     );
   }
@@ -126,7 +126,7 @@ export class PollService {
   deleteOption(optionId: string) {
     this.loggerService.debug(`[PollService] deleting option ${optionId}`);
     return this.httpClient.delete(
-      `${this.baseUrl}/api/polls/option/${optionId}`,
+      `${this.baseUrl}/api/project/poll/option/${optionId}`,
     );
   }
 
@@ -135,7 +135,7 @@ export class PollService {
       `[PollService] voted for ${optionId} with ${choice}`,
     );
     return this.httpClient.put(
-      `${this.baseUrl}/api/polls/vote/${optionId}`,
+      `${this.baseUrl}/api/project/poll/vote/${optionId}`,
       {
         choice,
       },
@@ -147,7 +147,7 @@ export class PollService {
       `[PollService] adding comment to poll ${pollId}`,
     );
     return this.httpClient.post<Comment>(
-      `${this.baseUrl}/api/polls/comment`,
+      `${this.baseUrl}/api/project/poll/comment`,
       {
         pollId,
         content,

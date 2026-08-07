@@ -5,13 +5,13 @@ namespace Finder.Business.Auth.Setup;
 
 public static class SetupExtensions
 {
-    public static IServiceCollection AddAuthServices(this IServiceCollection services, ConfigurationManager configuration)
+    public static IServiceCollection AddAuthServices(this IServiceCollection services, ConfigurationManager configuration, bool isDevelopment)
     {
         services.Configure<LoginOptions>(configuration.GetSection("Login"));
-        
+
         services.AddScoped<LoginService>();
         services.AddScoped<MailService>();
-        
+
         services.AddAuthorization();
         services.AddAuthentication().AddCookie(o =>
         {
@@ -25,8 +25,7 @@ public static class SetupExtensions
                     return Task.FromResult<object?>(null);
                 };
         });
-        
-        var isDevMode = configuration.GetSection("Login")["AuthToken"] != null;
+
         services.AddRateLimiter(options =>
         {
             options.AddPolicy("auth", httpContext =>
@@ -34,13 +33,13 @@ public static class SetupExtensions
                     partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                     factory: _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = isDevMode ? 1000 : 5,
+                        PermitLimit = isDevelopment ? 1000 : 5,
                         Window = TimeSpan.FromMinutes(1),
                         QueueLimit = 0
                     }));
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
         });
-        
+
         return services;
     }
 }

@@ -37,7 +37,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.AddScoped<UserService>();
 
-builder.Services.AddAuthServices(builder.Configuration);
+builder.Services.AddAuthServices(builder.Configuration, builder.Environment.IsDevelopment());
 builder.Services.AddProjectServices();
 builder.Services.AddPermissionServices(builder.Configuration);
 builder.Services.AddUserServices();

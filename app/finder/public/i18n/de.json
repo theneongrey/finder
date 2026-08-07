@@ -71,20 +71,11 @@
       }
     },
     "detail": {
-      "members": "Mitglieder",
-      "invite": "Einladen",
-      "noMembers": "Noch keine weiteren Mitglieder.",
-      "currentPolls": "Aktuelle Umfragen",
       "createNewPoll": "Neue Umfrage erstellen",
       "pollTypes": {
         "appointment": "Termin",
         "yesNo": "Ja/Nein",
         "rating": "Bewertung"
-      },
-      "deletePollConfirm": {
-        "header": "Umfrage löschen?",
-        "message": "Bist du sicher, dass du die Umfrage \"{{name}}\" löschen möchtest?",
-        "accept": "Umfrage löschen"
       },
       "item": {
         "options": "Auswahlmöglichkeiten: {{count}}",

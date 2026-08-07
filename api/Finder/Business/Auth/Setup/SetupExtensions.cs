@@ -26,6 +26,7 @@ public static class SetupExtensions
                 };
         });
         
+        var isDevMode = configuration.GetSection("Login")["AuthToken"] != null;
         services.AddRateLimiter(options =>
         {
             options.AddPolicy("auth", httpContext =>
@@ -33,7 +34,7 @@ public static class SetupExtensions
                     partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                     factory: _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = 5,
+                        PermitLimit = isDevMode ? 1000 : 5,
                         Window = TimeSpan.FromMinutes(1),
                         QueueLimit = 0
                     }));

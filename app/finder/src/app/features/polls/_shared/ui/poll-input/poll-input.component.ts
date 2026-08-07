@@ -217,7 +217,7 @@ export class PollInputComponent {
   }
 
   private addPoll(): void {
-    const projectId = this.id();
+    const projectId = this.projectId();
     const optionType = this.optionType();
     if (!projectId || optionType === undefined || !this.isValid()) {
       return;
@@ -296,7 +296,7 @@ export class PollInputComponent {
   }
 
   private editPoll(): void {
-    const projectId = this.id();
+    const projectId = this.projectId();
     const pollId = this.pollId();
     const optionType = this.optionType();
     if (!projectId || !pollId || optionType === undefined || !this.isValid()) {

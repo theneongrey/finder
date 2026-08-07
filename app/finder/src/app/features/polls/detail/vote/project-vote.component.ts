@@ -108,7 +108,7 @@ export class ProjectVoteComponent implements AfterViewInit {
       this.resetCardState();
     });
     effect(() => {
-      if (this.id()) {
+      if (this.projectId()) {
         if (!this.optionId()) {
           this.navigateToNextOption(undefined, true);
         }
@@ -218,7 +218,7 @@ export class ProjectVoteComponent implements AfterViewInit {
   navigateToOverview(): void {
     void this.router.navigate([
       '/polls/',
-      this.id(),
+      this.projectId(),
       'overview',
       this.pollId(),
     ]);
@@ -297,13 +297,13 @@ export class ProjectVoteComponent implements AfterViewInit {
       );
       if (next) {
         void this.router.navigate(
-          ['/polls/', this.id(), 'vote', this.pollId()!, next.id],
+          ['/polls/', this.projectId(), 'vote', this.pollId()!, next.id],
           { replaceUrl, queryParamsHandling: 'preserve' },
         );
         return;
       }
       void this.router.navigate(
-        ['/polls/', this.id(), 'results', this.pollId()!],
+        ['/polls/', this.projectId(), 'results', this.pollId()!],
         { replaceUrl },
       );
       return;
@@ -314,7 +314,7 @@ export class ProjectVoteComponent implements AfterViewInit {
       void this.router.navigate(
         [
           '/polls/',
-          this.id(),
+          this.projectId(),
           'vote',
           this.pollId()!,
           nextUnvoted.id,
@@ -338,7 +338,7 @@ export class ProjectVoteComponent implements AfterViewInit {
       void this.router.navigate(
         [
           '/polls/',
-          this.id(),
+          this.projectId(),
           'vote',
           this.pollId()!,
           nextSkipped.id,
@@ -349,7 +349,7 @@ export class ProjectVoteComponent implements AfterViewInit {
     }
 
     void this.router.navigate(
-      ['/polls/', this.id(), 'results', this.pollId()!],
+      ['/polls/', this.projectId(), 'results', this.pollId()!],
       { replaceUrl },
     );
   }

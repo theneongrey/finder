@@ -63,4 +63,8 @@ export const routes: Routes = [
       ),
     data: { backRoute: '/polls' },
   },
+  {
+    path: '**',
+    redirectTo: 'polls',
+  },
 ];

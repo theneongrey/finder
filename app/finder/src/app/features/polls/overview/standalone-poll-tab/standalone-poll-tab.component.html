@@ -6,10 +6,10 @@
 </p>
 
 @if (standalonePolls().length === 0) {
-  <p class="opacity-60 mb-4">{{ "project.pollsTab.empty" | translate }}</p>
+  <p data-testid="polls-empty-state" class="opacity-60 mb-4">{{ "project.pollsTab.empty" | translate }}</p>
 }
 
-<div class="grid gap-4 grid-cols-auto-fit pb-8">
+<div data-testid="polls-list" class="grid gap-4 grid-cols-auto-fit pb-8">
   @for (poll of standalonePolls(); track poll.pollId) {
     <app-poll-item
       [poll]="poll"
@@ -19,6 +19,7 @@
     />
   }
   <app-add-card
+    data-testid="add-poll-card"
     [cto]="'project.standaloneInput.addNew.cto' | translate"
     [description]="'project.standaloneInput.addNew.description' | translate"
     (action)="navigateToAdd()"

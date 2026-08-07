@@ -10,11 +10,11 @@ export async function login(page: Page, email: string) {
   // Wait for the backend to create the token before navigating to token-login
   await page.waitForURL('**/auth/code-login');
   await page.goto('/auth/token-login?token=1234');
-  await page.waitForURL('**/project/overview');
+  await page.waitForURL('**/polls');
 }
 
 export async function logout(page: Page) {
   await page.locator('app-user-avatar').click();
-  await page.getByRole('link', { name: 'Logout' }).click();
+  await page.getByRole('menuitem', { name: 'Logout' }).click();
   await page.waitForURL('**/home');
 }

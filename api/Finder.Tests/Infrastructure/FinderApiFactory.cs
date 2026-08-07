@@ -114,7 +114,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
     }
 
     public async Task<Project> SeedProject(Guid creatorId, string name = "Test Project",
-        string description = "Test Description")
+        string description = "Test Description", bool isStandalone = false)
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -126,6 +126,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             Name = name,
             Description = description,
             Creator = creator,
+            IsStandalone = isStandalone,
             VisibilityType = VisibilityType.VisibleForSelectedOnly
         };
         db.Projects.Add(project);

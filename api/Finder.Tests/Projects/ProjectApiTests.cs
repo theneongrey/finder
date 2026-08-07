@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Tests.Infrastructure;
 using Xunit;
@@ -13,20 +14,17 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
 
     public ProjectApiTests(FinderApiFactory factory) => _factory = factory;
 
-    // --- GET /api/project ---
+    // --- GET /api/project — disabled, returns 410 ---
 
     [Fact]
-    public async Task GetProjects_WhenAuthenticated_ReturnsOwnProjects()
+    public async Task GetProjects_WhenAuthenticated_Returns410()
     {
         var user = await _factory.SeedUser();
-        var project = await _factory.SeedProject(user.Id, "My Project");
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
         var response = await client.GetAsync("/api/project");
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var projects = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
-        Assert.Contains(projects, p => p!["id"]!.GetValue<string>() == SlugHelper.ToSlug("My Project", project.Id));
+        Assert.Equal(HttpStatusCode.Gone, response.StatusCode);
     }
 
     [Fact]
@@ -37,20 +35,6 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
         var response = await client.GetAsync("/api/project");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task GetProjects_DoesNotReturnOtherUsersProjects()
-    {
-        var user1 = await _factory.SeedUser();
-        var user2 = await _factory.SeedUser();
-        var otherProject = await _factory.SeedProject(user2.Id, "Other User's Project");
-        using var client = _factory.CreateAuthenticatedClient(user1.Id);
-
-        var response = await client.GetAsync("/api/project");
-
-        var projects = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
-        Assert.DoesNotContain(projects, p => p!["id"]!.GetValue<string>() == SlugHelper.ToSlug("Other User's Project", otherProject.Id));
     }
 
     // --- GET /api/project/{id} ---
@@ -104,21 +88,17 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    // --- POST /api/project ---
+    // --- POST /api/project — disabled, returns 410 ---
 
     [Fact]
-    public async Task AddProject_WhenValid_ReturnsCreatedProject()
+    public async Task AddProject_WhenAuthenticated_Returns410()
     {
         var user = await _factory.SeedUser();
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
         var response = await client.PostAsJsonAsync("/api/project", new { name = "New Project", description = "A description" });
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
-        Assert.Equal("New Project", json["name"]!.GetValue<string>());
-        Assert.Equal("A description", json["description"]!.GetValue<string>());
-        Assert.NotEmpty(json["id"]!.GetValue<string>());
+        Assert.Equal(HttpStatusCode.Gone, response.StatusCode);
     }
 
     [Fact]
@@ -131,10 +111,10 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    // --- PUT /api/project/{id} ---
+    // --- PUT /api/project/{slug} — disabled, returns 410 ---
 
     [Fact]
-    public async Task UpdateProject_WhenOwner_ReturnsUpdatedProject()
+    public async Task UpdateProject_WhenAuthenticated_Returns410()
     {
         var user = await _factory.SeedUser();
         var project = await _factory.SeedProject(user.Id, "Original Name", "Original Description");
@@ -142,34 +122,7 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
 
         var response = await client.PutAsJsonAsync($"/api/project/{project.Id}", new { name = "Updated Name", description = "Updated Description" });
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
-        Assert.Equal("Updated Name", json["name"]!.GetValue<string>());
-        Assert.Equal("Updated Description", json["description"]!.GetValue<string>());
-    }
-
-    [Fact]
-    public async Task UpdateProject_WhenNotOwner_Returns404()
-    {
-        var owner = await _factory.SeedUser();
-        var other = await _factory.SeedUser();
-        var project = await _factory.SeedProject(owner.Id);
-        using var client = _factory.CreateAuthenticatedClient(other.Id);
-
-        var response = await client.PutAsJsonAsync($"/api/project/{project.Id}", new { name = "Hacked", description = "Hacked" });
-
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task UpdateProject_WhenNotFound_Returns404()
-    {
-        var user = await _factory.SeedUser();
-        using var client = _factory.CreateAuthenticatedClient(user.Id);
-
-        var response = await client.PutAsJsonAsync($"/api/project/{Guid.NewGuid()}", new { name = "Updated", description = "Updated" });
-
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Gone, response.StatusCode);
     }
 
     [Fact]
@@ -226,6 +179,78 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
         using var client = _factory.CreateClient();
 
         var response = await client.DeleteAsync($"/api/project/{Guid.NewGuid()}");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    // --- GET /api/project/public/{slug} ---
+
+    [Fact]
+    public async Task GetPublicProject_WhenValidSlug_Returns200()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id, "Public Poll");
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync($"/api/project/public/{project.Id}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.Equal(SlugHelper.ToSlug("Public Poll", project.Id), json["projectId"]!.GetValue<string>());
+    }
+
+    // --- GET /api/project/standalone-polls ---
+
+    [Fact]
+    public async Task GetStandalonePolls_WhenAuthenticated_ReturnsOwnStandalonePolls()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id, "My Standalone Poll", isStandalone: true);
+        await _factory.SeedPoll(project.Id, "My Standalone Poll");
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var response = await client.GetAsync("/api/project/standalone-polls");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var polls = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
+        Assert.Contains(polls, p => p!["name"]!.GetValue<string>() == "My Standalone Poll");
+    }
+
+    [Fact]
+    public async Task GetStandalonePolls_WhenUnauthenticated_Returns401()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("/api/project/standalone-polls");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    // --- POST /api/project/standalone-poll ---
+
+    [Fact]
+    public async Task CreateStandalonePoll_WhenValid_Returns200()
+    {
+        var user = await _factory.SeedUser();
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var response = await client.PostAsJsonAsync("/api/project/standalone-poll",
+            new { name = "New Standalone Poll", description = "A description", optionType = (int)OptionType.YesNo });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.Equal("New Standalone Poll", json["name"]!.GetValue<string>());
+        Assert.NotEmpty(json["projectId"]!.GetValue<string>());
+        Assert.NotEmpty(json["pollId"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task CreateStandalonePoll_WhenUnauthenticated_Returns401()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync("/api/project/standalone-poll",
+            new { name = "New Standalone Poll", description = "A description", optionType = (int)OptionType.YesNo });
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }

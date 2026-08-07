@@ -119,7 +119,7 @@ export function formatTime(d: Date): string {
 }
 
 export function parseTimeInput(value: string): Date | undefined {
-  if (!value) return undefined;
+  if (!value) { return undefined; }
   const [h, m] = value.split(':').map(Number);
   const d = new Date(0);
   d.setHours(h, m, 0, 0);

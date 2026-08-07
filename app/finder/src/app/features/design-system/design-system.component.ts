@@ -28,11 +28,11 @@ import { VisibilityType } from '../polls/_shared/models/poll-detail.model';
 const mockSharingStore = {
   sharingContactsSuggestion: signal([]),
   sharingInProgress: signal(false),
-  loadContacts: () => {},
-  share: () => {},
-  removePermission: () => {},
-  updateVisibilityType: () => {},
-  navigateToSharedProject: () => {},
+  loadContacts: () => { /* noop */ },
+  share: () => { /* noop */ },
+  removePermission: () => { /* noop */ },
+  updateVisibilityType: () => { /* noop */ },
+  navigateToSharedProject: () => { /* noop */ },
 } as unknown as InstanceType<typeof SharingStore>;
 
 @Component({

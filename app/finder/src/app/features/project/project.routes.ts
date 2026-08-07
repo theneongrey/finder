@@ -16,7 +16,7 @@ export const projectRoutes: Routes = [
         (m) => m.StandalonePollInputWrapperComponent,
       ),
     data: {
-      backRoute: '/project/',
+      backRoute: '/project/overview',
     },
   },
   {

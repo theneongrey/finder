@@ -163,7 +163,7 @@ export const SharingStore = signalStore(
                     info.pollId,
                   ]);
                 } else {
-                  store.router.navigate(['/project/detail', info.projectId]);
+                  store.router.navigate(['/project/overview']);
                 }
               },
               error: (error) => {

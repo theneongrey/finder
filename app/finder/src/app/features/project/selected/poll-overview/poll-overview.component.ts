@@ -11,7 +11,6 @@ import { VoteOverviewSummaryComponent } from '../results/vote-overview-summary/v
 import { OptionListComponent } from '../results/option-list/option-list.component';
 import { CommentsSectionComponent } from '../results/comments-section/comments-section.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
-import { ProjectListStore } from '../../_shared/data/project-list.store';
 
 @Component({
   selector: 'app-poll-overview',
@@ -26,7 +25,6 @@ import { ProjectListStore } from '../../_shared/data/project-list.store';
 })
 export class PollOverviewComponent {
   private readonly projectDetailStore = inject(ProjectDetailStore);
-  private readonly projectListStore = inject(ProjectListStore);
 
   pollId = input('');
   projectId = this.projectDetailStore.projectId;
@@ -37,8 +35,6 @@ export class PollOverviewComponent {
   constructor() {
     const titleService = inject(TitleBarService);
 
-    this.projectListStore.getStandalonePolls();
-
     effect(() => {
       this.projectDetailStore.getPoll(this.pollId());
     });
@@ -47,12 +43,7 @@ export class PollOverviewComponent {
       const project = this.project();
       if (project) {
         titleService.setTitle(project.name);
-        const isStandalone = this.projectListStore
-          .standalonePolls()
-          .some((p) => p.projectId === project.id);
-        titleService.setBackRoute(
-          isStandalone ? '/project/overview' : `/project/detail/${project.id}`,
-        );
+        titleService.setBackRoute('/project/overview');
       }
     });
   }

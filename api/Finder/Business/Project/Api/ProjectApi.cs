@@ -10,11 +10,8 @@ public static class ProjectApi
 {
     public static void WithProjectApi(this WebApplication app)
     {
-        // Get all projects
-        app.MapGet("/api/project",
-                async (ProjectService projectService, UserService userService) => Results.Ok(
-                    (await projectService.GetAll()).Select(p => p.ToProjectOverviewResponse(userService.GetUserId()))))
-            .RequireAuthorization();
+        // Disabled — projects are backend-only; use /api/project/standalone-polls instead
+        app.MapGet("/api/project", () => Results.StatusCode(410)).RequireAuthorization();
 
         // Get single project
         app.MapGet("/api/project/{slug}", async (string slug, ProjectService projectService, UserService userService) =>
@@ -23,25 +20,8 @@ public static class ProjectApi
             return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectResponse(userService.GetUserId()));
         }).RequireAuthorization();
 
-        // Add project
-        app.MapPost("/api/project",
-                async ([FromBody] AddProjectRequest request, ProjectService projectService, UserService userService) =>
-                {
-                    var result = await projectService.Create(request.Name, request.Description);
-                    return !result.IsSuccess
-                        ? Results.BadRequest()
-                        : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
-                })
-            .RequireAuthorization();
-
-        // Update project
-        app.MapPut("/api/project/{slug}",
-                async (string slug, [FromBody] AddProjectRequest request, ProjectService projectService, UserService userService) =>
-                {
-                    var result = await projectService.Update(slug, request.Name, request.Description);
-                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToProjectOverviewResponse(userService.GetUserId()));
-                })
-            .RequireAuthorization();
+        app.MapPost("/api/project", () => Results.StatusCode(410)).RequireAuthorization();
+        app.MapPut("/api/project/{slug}", () => Results.StatusCode(410)).RequireAuthorization();
 
         // Delete project
         app.MapDelete("/api/project/{slug}",

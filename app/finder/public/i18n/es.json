@@ -71,20 +71,11 @@
       }
     },
     "detail": {
-      "members": "Miembros",
-      "invite": "Invitar",
-      "noMembers": "Aún no hay otros miembros.",
-      "currentPolls": "Encuestas actuales",
       "createNewPoll": "Crear nueva encuesta",
       "pollTypes": {
         "appointment": "Cita",
         "yesNo": "Sí/No",
         "rating": "Valoración"
-      },
-      "deletePollConfirm": {
-        "header": "¿Eliminar encuesta?",
-        "message": "¿Estás seguro de que quieres eliminar la encuesta \"{{name}}\"?",
-        "accept": "Eliminar encuesta"
       },
       "item": {
         "options": "Opciones: {{count}}",

@@ -71,20 +71,11 @@
       }
     },
     "detail": {
-      "members": "Members",
-      "invite": "Invite",
-      "noMembers": "No other members yet.",
-      "currentPolls": "Current polls",
       "createNewPoll": "Create new poll",
       "pollTypes": {
         "appointment": "Appointment",
         "yesNo": "Yes/No",
         "rating": "Rating"
-      },
-      "deletePollConfirm": {
-        "header": "Delete poll?",
-        "message": "Are you sure that you want to delete poll \"{{name}}\"?",
-        "accept": "Delete poll"
       },
       "item": {
         "options": "Options: {{count}}",

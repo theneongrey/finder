@@ -60,7 +60,7 @@
 
     <div class="flex flex-col gap-1">
       @if (_poll.nextOpenOptionId) {
-        <button hlmBtn class="w-full" [routerLink]="[
+        <button hlmBtn class="w-full" data-testid="vote-btn" [routerLink]="[
             '/polls',
             _poll.projectId,
             'vote',

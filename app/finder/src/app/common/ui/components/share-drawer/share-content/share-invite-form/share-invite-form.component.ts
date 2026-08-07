@@ -12,8 +12,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
-import { SharingStore } from '../../../../../../features/project/_shared/data/sharing.store';
-import { SharingContact } from '../../../../../../features/project/_shared/models/project-detail.model';
+import { SharingStore } from '../../../../../../features/polls/_shared/data/sharing.store';
+import { SharingContact } from '../../../../../../features/polls/_shared/models/poll-detail.model';
 @Component({
   selector: 'app-share-invite-form',
   templateUrl: './share-invite-form.component.html',

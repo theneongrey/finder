@@ -12,8 +12,8 @@ import { ShareContentComponent } from './share-content/share-content.component';
 import {
   SharedWith,
   VisibilityType,
-} from '../../../../features/project/_shared/models/project-detail.model';
-import { SharingStore } from '../../../../features/project/_shared/data/sharing.store';
+} from '../../../../features/polls/_shared/models/poll-detail.model';
+import { SharingStore } from '../../../../features/polls/_shared/data/sharing.store';
 
 @Component({
   selector: 'app-share-drawer',

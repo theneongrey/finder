@@ -25,7 +25,7 @@
             </p>
           </div>
 
-          @if (member.role !== ProjectRole.Creator) {
+          @if (member.role !== PollRole.Creator) {
             <button
               class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 cursor-pointer hover:bg-gray-200 transition-colors"
               [hlmDropdownMenuTrigger]="roleMenu"
@@ -36,17 +36,17 @@
               <hlm-dropdown-menu>
                 <button
                   hlmDropdownMenuItem
-                  [disabled]="member.role === ProjectRole.Voter"
+                  [disabled]="member.role === PollRole.Voter"
                   (click)="changeRole(member.email, 0)"
                 >{{ voterLabel() }}</button>
                 <button
                   hlmDropdownMenuItem
-                  [disabled]="member.role === ProjectRole.Maintainer"
+                  [disabled]="member.role === PollRole.Maintainer"
                   (click)="changeRole(member.email, 1)"
                 >{{ maintainerLabel() }}</button>
                 <button
                   hlmDropdownMenuItem
-                  [disabled]="member.role === ProjectRole.Owner"
+                  [disabled]="member.role === PollRole.Owner"
                   (click)="changeRole(member.email, 2)"
                 >{{ ownerLabel() }}</button>
               </hlm-dropdown-menu>
@@ -59,7 +59,7 @@
             </span>
           }
 
-          @if (!isPublic() && member.role !== ProjectRole.Creator) {
+          @if (!isPublic() && member.role !== PollRole.Creator) {
             <button hlmBtn variant="ghost" size="sm" icon="fa-solid fa-xmark" (click)="onRemoveClick(member.email)">
             </button>
           }

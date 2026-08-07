@@ -22,8 +22,8 @@ import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
 import { AutoResizeTextareaComponent } from '../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
 import { ShareDrawerComponent } from '../../common/ui/components/share-drawer/share-drawer.component';
-import { SharingStore } from '../project/_shared/data/sharing.store';
-import { VisibilityType } from '../project/_shared/models/project-detail.model';
+import { SharingStore } from '../polls/_shared/data/sharing.store';
+import { VisibilityType } from '../polls/_shared/models/poll-detail.model';
 
 const mockSharingStore = {
   sharingContactsSuggestion: signal([]),

@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { userAuthentication } from './common/services/auth.guard';
 import { devOnly } from './common/services/dev-only.guard';
 import { authRoutes } from './features/auth/auth.routes';
-import { projectRoutes } from './features/project/project.routes';
+import { pollsRoutes } from './features/polls/polls.routes';
 
 export const routes: Routes = [
   {
@@ -33,8 +33,8 @@ export const routes: Routes = [
   {
     path: 'p/:projectId',
     loadComponent: () =>
-      import('./features/project/public/public-project.component').then(
-        (m) => m.PublicProjectComponent,
+      import('./features/polls/public/public-poll.component').then(
+        (m) => m.PublicPollComponent,
       ),
   },
   {
@@ -47,12 +47,12 @@ export const routes: Routes = [
   },
   {
     canActivate: [userAuthentication()],
-    path: 'project',
+    path: 'polls',
     loadComponent: () =>
-      import('./features/project/project-shell.component').then(
-        (m) => m.ProjectShellComponent,
+      import('./features/polls/polls-shell.component').then(
+        (m) => m.PollsShellComponent,
       ),
-    children: projectRoutes,
+    children: pollsRoutes,
   },
   {
     canActivate: [userAuthentication()],
@@ -61,6 +61,6 @@ export const routes: Routes = [
       import('./features/settings/settings.component').then(
         (m) => m.SettingsComponent,
       ),
-    data: { backRoute: '/project/overview' },
+    data: { backRoute: '/polls' },
   },
 ];

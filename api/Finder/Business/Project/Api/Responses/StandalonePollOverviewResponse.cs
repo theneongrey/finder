@@ -12,6 +12,7 @@ public class StandalonePollOverviewResponse
     public required int OptionCount { get; init; }
     public required int CommentCount { get; init; }
     public required DateTime LastUpdated { get; init; }
+    public DateTime? LastVoteAt { get; init; }
     public string? NextOpenOptionId { get; init; }
     public required int VisibilityType { get; init; }
     public required ICollection<ProjectSharedWith> SharedWith { get; init; }
@@ -54,6 +55,8 @@ public static class StandalonePollOverviewMapper
             .ThenBy(x => x.Option.Created)
             .FirstOrDefault()?.Option;
 
+        var lastVoteDate = poll.Options.SelectMany(o => o.Votes).Select(v => (DateTime?)v.Created).Max();
+
         return new StandalonePollOverviewResponse
         {
             ProjectId = SlugHelper.ToSlug(project.Name, project.Id),
@@ -64,6 +67,7 @@ public static class StandalonePollOverviewMapper
             OptionCount = poll.Options.Count,
             CommentCount = poll.Comments.Count,
             LastUpdated = DateTime.SpecifyKind(newestDate, DateTimeKind.Utc),
+            LastVoteAt = lastVoteDate.HasValue ? DateTime.SpecifyKind(lastVoteDate.Value, DateTimeKind.Utc) : null,
             NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(SlugHelper.OptionSlugName(nextOption.Text), nextOption.Id),
             VisibilityType = (int)project.VisibilityType,
             SharedWith = sharedWith.ToArray(),

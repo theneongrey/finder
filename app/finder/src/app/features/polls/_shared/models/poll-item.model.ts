@@ -9,6 +9,7 @@ export interface PollItem {
   optionType: OptionType;
   optionCount: number;
   commentCount: number;
+  lastVoteAt?: string;
   nextOpenOptionId?: string;
   role: PollRole;
 }

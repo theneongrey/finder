@@ -186,6 +186,26 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         return option;
     }
 
+    public async Task<Vote> SeedVote(string optionId, Guid userId, string choice = "yes")
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var option = await db.Options.FindAsync(optionId)
+                     ?? throw new InvalidOperationException($"Option {optionId} not found. Call SeedOption first.");
+        var user = await db.Persons.FindAsync(userId)
+                   ?? throw new InvalidOperationException($"User {userId} not found.");
+        var vote = new Vote
+        {
+            Id = Guid.NewGuid(),
+            Choice = choice,
+            Option = option,
+            Person = user
+        };
+        db.Votes.Add(vote);
+        await db.SaveChangesAsync();
+        return vote;
+    }
+
     public async Task SeedPermission(string projectId, Guid userId, PermissionType permissionType)
     {
         using var scope = Services.CreateScope();

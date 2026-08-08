@@ -32,6 +32,15 @@
             fragment="comments-section"
           ><i class="fa-regular fa-comments"></i>{{ _poll.commentCount }}</button>
         </div>
+        @if (standalone()) {
+          <p class="ds-body opacity-60 mt-2">
+            @if (_poll.lastVoteAt) {
+              <i class="fa-regular fa-clock mr-1"></i>{{ 'project.lastVote.label' | translate }}: {{ _poll.lastVoteAt | timeSince }}
+            } @else {
+              {{ 'project.lastVote.none' | translate }}
+            }
+          </p>
+        }
       </div>
       @if (showMenu()) {
         <div>

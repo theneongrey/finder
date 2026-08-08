@@ -200,6 +200,10 @@
       "loading": "Loading...",
       "comments": "Comments"
     },
+    "lastVote": {
+      "label": "Last vote",
+      "none": "No votes yet"
+    },
     "timeAgo": {
       "justNow": "just now",
       "minuteAgo": "{{count}} minute ago",

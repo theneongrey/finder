@@ -10,6 +10,7 @@ export interface StandalonePollOverview {
   optionCount: number;
   commentCount: number;
   lastUpdated: string;
+  lastVoteAt?: string;
   nextOpenOptionId?: string;
   visibilityType: VisibilityType;
   sharedWith: SharedWith[];

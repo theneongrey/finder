@@ -32,15 +32,13 @@
             fragment="comments-section"
           ><i class="fa-regular fa-comments"></i>{{ _poll.commentCount }}</button>
         </div>
-        @if (standalone()) {
-          <p class="ds-body opacity-60 mt-2">
-            @if (_poll.lastVoteAt) {
-              <i class="fa-regular fa-clock mr-1"></i>{{ 'project.lastVote.label' | translate }}: {{ _poll.lastVoteAt | timeSince }}
-            } @else {
-              {{ 'project.lastVote.none' | translate }}
-            }
-          </p>
-        }
+        <p class="ds-body opacity-60 mt-2">
+          @if (_poll.lastVoteAt) {
+            <i class="fa-regular fa-clock mr-1"></i>{{ 'project.lastVote.label' | translate }}: {{ _poll.lastVoteAt | timeSince }}
+          } @else {
+            {{ 'project.lastVote.none' | translate }}
+          }
+        </p>
       </div>
       @if (showMenu()) {
         <div>
@@ -67,15 +65,28 @@
       }
     </div>
 
+    <div class="flex items-center gap-2 mb-2 ds-body opacity-70">
+      <span>
+        <span data-testid="voted-count">{{ _poll.votedCount }}</span>
+        <span> / </span>
+        <span data-testid="total-participants">{{ _poll.totalParticipants }}</span>
+      </span>
+      <div class="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+        <div
+          class="h-full rounded-full bg-primary transition-all"
+          [style.width.%]="_poll.totalParticipants > 0 ? (_poll.votedCount / _poll.totalParticipants) * 100 : 0"
+        ></div>
+      </div>
+    </div>
     <div class="flex flex-col gap-1">
-      @if (_poll.nextOpenOptionId) {
-        <button hlmBtn class="w-full" data-testid="vote-btn" [routerLink]="[
+      @if (!_poll.currentUserVoted) {
+        <button hlmBtn class="w-full" data-testid="vote-cta-btn" [routerLink]="[
             '/polls',
             _poll.projectId,
             'vote',
             _poll.pollId,
             _poll.nextOpenOptionId,
-          ]">{{ 'project.common.vote' | translate }}</button>
+          ]">{{ 'project.detail.item.voteNow' | translate }}</button>
         <button hlmBtn variant="ghost" size="sm" class="w-full" [routerLink]="[
             '/polls',
             _poll.projectId,
@@ -83,12 +94,12 @@
             _poll.pollId,
           ]">{{ 'project.detail.item.voteOverview' | translate }}</button>
       } @else {
-        <button hlmBtn class="w-full" [routerLink]="[
+        <button hlmBtn class="w-full" data-testid="vote-cta-btn" [routerLink]="[
             '/polls',
             _poll.projectId,
             'results',
             _poll.pollId,
-          ]">{{ 'project.detail.item.pollOverview' | translate }}</button>
+          ]">{{ 'project.detail.item.viewProgress' | translate }}</button>
         <button hlmBtn variant="ghost" size="sm" class="w-full" [routerLink]="[
             '/polls',
             _poll.projectId,

@@ -37,7 +37,6 @@ export class PollItemComponent {
   private readonly translateService = inject(TranslateService);
 
   poll = input.required<PollItem>();
-  standalone = input(false);
   deletionRequested = output();
   shareRequested = output();
 
@@ -46,7 +45,7 @@ export class PollItemComponent {
   shareLabel = this.translateService.translate('project.common.share');
 
   showMenu = computed(() => this.poll().role >= PollRole.Maintainer);
-  canSharePoll = computed(() => this.standalone() && this.poll().role >= PollRole.Owner);
+  canSharePoll = computed(() => this.poll().role >= PollRole.Owner);
 
   editRoute = computed(() => {
     const poll = this.poll();

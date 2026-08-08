@@ -15,4 +15,7 @@ export interface StandalonePollOverview {
   visibilityType: VisibilityType;
   sharedWith: SharedWith[];
   role: PollRole;
+  totalParticipants: number;
+  votedCount: number;
+  currentUserVoted: boolean;
 }

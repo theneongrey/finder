@@ -13,7 +13,6 @@
   @for (poll of standalonePolls(); track poll.pollId) {
     <app-poll-item
       [poll]="poll"
-      [standalone]="true"
       (deletionRequested)="deletionRequested.emit(poll)"
       (shareRequested)="shareRequested.emit(poll.projectId)"
     />

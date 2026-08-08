@@ -311,6 +311,21 @@ namespace Finder.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("Finder.Business.Project.Entities.ProjectFavorite", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProjectId")
+                        .HasColumnType("character varying(8)");
+
+                    b.HasKey("UserId", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectFavorites");
+                });
+
             modelBuilder.Entity("Finder.Business.Project.Entities.Vote", b =>
                 {
                     b.Property<Guid>("Id")
@@ -437,6 +452,25 @@ namespace Finder.Migrations
                     b.Navigation("Creator");
                 });
 
+            modelBuilder.Entity("Finder.Business.Project.Entities.ProjectFavorite", b =>
+                {
+                    b.HasOne("Finder.Business.Project.Entities.Project", "Project")
+                        .WithMany("Favorites")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Finder.Business.Auth.Entities.Person", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Finder.Business.Project.Entities.Vote", b =>
                 {
                     b.HasOne("Finder.Business.Project.Entities.Option", "Option")
@@ -477,6 +511,8 @@ namespace Finder.Migrations
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
                 {
+                    b.Navigation("Favorites");
+
                     b.Navigation("Permissions");
 
                     b.Navigation("Polls");

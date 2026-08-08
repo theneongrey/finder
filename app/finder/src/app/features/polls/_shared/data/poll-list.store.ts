@@ -85,9 +85,11 @@ export const PollListStore = signalStore(
             tapResponse({
               next: ({ isFavorite }) => {
                 patchState(store, {
-                  standalonePolls: store.standalonePolls().map((p) =>
-                    p.projectId === projectSlug ? { ...p, isFavorite } : p,
-                  ),
+                  standalonePolls: store
+                    .standalonePolls()
+                    .map((p) =>
+                      p.projectId === projectSlug ? { ...p, isFavorite } : p,
+                    ),
                 });
               },
               error: (error) => {

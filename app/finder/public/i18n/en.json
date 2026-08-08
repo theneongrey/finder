@@ -81,7 +81,9 @@
         "options": "Options: {{count}}",
         "comments": "Comments: {{count}}",
         "pollOverview": "Show results",
-        "voteOverview": "To Overview"
+        "voteOverview": "To Overview",
+        "voteNow": "Vote now",
+        "viewProgress": "View current standings"
       }
     },
     "share": {

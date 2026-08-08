@@ -81,7 +81,9 @@
         "options": "Opciones: {{count}}",
         "comments": "Comentarios: {{count}}",
         "pollOverview": "Los resultados",
-        "voteOverview": "Al Resumen"
+        "voteOverview": "Al Resumen",
+        "voteNow": "Votar ahora",
+        "viewProgress": "Ver resultados actuales"
       }
     },
     "share": {

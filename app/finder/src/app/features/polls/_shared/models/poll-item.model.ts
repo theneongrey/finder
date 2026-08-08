@@ -1,5 +1,6 @@
 import { OptionType } from './poll-detail.model';
 import { PollRole } from './poll-role.enum';
+import { PollParticipant } from './standalone-poll-overview.model';
 
 export interface PollItem {
   pollId: string;
@@ -12,4 +13,8 @@ export interface PollItem {
   lastVoteAt?: string;
   nextOpenOptionId?: string;
   role: PollRole;
+  totalParticipants: number;
+  votedCount: number;
+  currentUserVoted: boolean;
+  participants: PollParticipant[];
 }

@@ -11,7 +11,7 @@ test.describe('Polls-only overview (simplified MVP)', () => {
     const page = await browser.newPage();
     await login(page, USER1);
 
-    const voteBtn = page.locator('[data-testid="vote-btn"]').first();
+    const voteBtn = page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: 'Vote now' }).first();
 
     if (await voteBtn.count() === 0) {
       await page.locator('[data-testid="add-poll-card"]').click();
@@ -24,7 +24,7 @@ test.describe('Polls-only overview (simplified MVP)', () => {
     }
 
     // Navigate to vote page to capture projectId and pollId from the URL
-    await page.locator('[data-testid="vote-btn"]').first().click();
+    await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: 'Vote now' }).first().click();
     await page.waitForURL('**/polls/**/vote/**');
     const parts = new URL(page.url()).pathname.split('/');
     // URL shape: /polls/<projectId>/vote/<pollId>/<optionId>
@@ -107,7 +107,7 @@ test.describe('Polls-only overview (simplified MVP)', () => {
 
     test('vote button navigates to vote page and casting a vote advances to next step', async ({ page }) => {
       await page.goto('/polls');
-      await page.locator('[data-testid="vote-btn"]').first().click();
+      await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: 'Vote now' }).first().click();
       await page.waitForURL('**/polls/**/vote/**');
 
       // Cast a "Yes" vote via the heart button

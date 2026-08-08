@@ -46,6 +46,37 @@
     </button>
   }
 
+  <div class="flex flex-col gap-2">
+    <label class="flex items-center gap-2 cursor-pointer text-sm font-semibold px-1">
+      <input
+        type="checkbox"
+        data-testid="close-date-toggle"
+        [checked]="showCloseDate()"
+        (change)="toggleCloseDate($any($event.target).checked)"
+        class="accent-primary w-4 h-4"
+      />
+      Umfrage automatisch schließen
+    </label>
+    @if (showCloseDate()) {
+      <div class="flex gap-2" data-testid="close-date-input">
+        <input
+          hlmInput
+          type="date"
+          class="flex-1 bg-gray-50 border border-transparent rounded-xl"
+          [value]="closeDatePart"
+          (change)="onCloseDateChange($any($event.target).value, closeTimePart)"
+        />
+        <input
+          hlmInput
+          type="time"
+          class="w-32 bg-gray-50 border border-transparent rounded-xl"
+          [value]="closeTimePart"
+          (change)="onCloseDateChange(closeDatePart, $any($event.target).value)"
+        />
+      </div>
+    }
+  </div>
+
   <app-poll-options
     [titleKey]="
       optionType() === OptionType.Date

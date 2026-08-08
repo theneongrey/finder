@@ -9,6 +9,8 @@
     (questionChange)="question.set($event)"
     [description]="description()"
     (descriptionChange)="description.set($event)"
+    [closeDate]="closeDate()"
+    (closeDateChange)="closeDate.set($event)"
     [options]="options()"
     [dateOptions]="dateOptions()"
     [appointmentDateType]="appointmentDateType()"

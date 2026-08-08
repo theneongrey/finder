@@ -55,6 +55,7 @@ export class PollInputComponent {
 
   question = signal('');
   description = signal('');
+  closeDate = signal<string | undefined>(undefined);
   options = signal<OptionEntry[]>([{ text: '', description: '' }]);
   dateOptions = signal<DateOptionEntry[]>([]);
   appointmentDateType = signal<DateOptionType | undefined>(undefined);
@@ -85,6 +86,7 @@ export class PollInputComponent {
       ) {
         this.question.set(currentPoll.name);
         this.description.set(currentPoll.description);
+        this.closeDate.set(currentPoll.closeDate);
 
         if (currentPoll.optionType === OptionType.Date) {
           const entries = currentPoll.options.length
@@ -275,6 +277,7 @@ export class PollInputComponent {
         name: this.question(),
         description: this.description(),
         optionType: OptionType.Date,
+        closeDate: this.closeDate(),
         options,
       });
     } else {
@@ -290,6 +293,7 @@ export class PollInputComponent {
         name: this.question(),
         description: this.description(),
         optionType,
+        closeDate: this.closeDate(),
         options,
       });
     }
@@ -317,6 +321,7 @@ export class PollInputComponent {
         pollId,
         name: this.question(),
         description: this.description(),
+        closeDate: this.closeDate(),
         options,
         removedOptionIds: this.removedOptionIds(),
       });
@@ -335,6 +340,7 @@ export class PollInputComponent {
         pollId,
         name: this.question(),
         description: this.description(),
+        closeDate: this.closeDate(),
         options,
         removedOptionIds: this.removedOptionIds(),
       });

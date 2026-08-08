@@ -65,6 +65,21 @@
       }
     </div>
 
+    <ul class="flex flex-col gap-1 mb-3">
+      @for (p of _poll.participants; track p.name) {
+        <li class="flex items-center gap-2 ds-body">
+          @if (p.votingStatus === PollVotingStatus.Full) {
+            <i class="fa-solid fa-circle-check text-green-500 w-4 text-center"></i>
+          } @else if (p.votingStatus === PollVotingStatus.Partial) {
+            <i class="fa-solid fa-circle-half-stroke text-yellow-500 w-4 text-center"></i>
+          } @else {
+            <i class="fa-regular fa-circle opacity-40 w-4 text-center"></i>
+          }
+          <span class="truncate">{{ p.name }}</span>
+        </li>
+      }
+    </ul>
+
     <div class="flex items-center gap-2 mb-2 ds-body opacity-70">
       <span>
         <span data-testid="voted-count">{{ _poll.votedCount }}</span>

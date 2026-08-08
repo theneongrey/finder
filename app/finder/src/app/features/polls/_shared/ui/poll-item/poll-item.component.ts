@@ -16,6 +16,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { OptionTypeIconComponent } from './option-type-icon/option-type-icon.component';
 import { PollItem } from '../../models/poll-item.model';
 import { PollRole } from '../../models/poll-role.enum';
+import { PollVotingStatus } from '../../models/standalone-poll-overview.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 
 @Component({
@@ -43,6 +44,8 @@ export class PollItemComponent {
   editLabel = this.translateService.translate('project.common.edit');
   deleteLabel = this.translateService.translate('project.common.delete');
   shareLabel = this.translateService.translate('project.common.share');
+
+  readonly PollVotingStatus = PollVotingStatus;
 
   showMenu = computed(() => this.poll().role >= PollRole.Maintainer);
   canSharePoll = computed(() => this.poll().role >= PollRole.Owner);

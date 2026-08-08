@@ -32,7 +32,7 @@ module.exports = defineConfig([
         },
       ],
       "@angular-eslint/prefer-on-push-component-change-detection": "error",
-      "curly": ["error", "all"],
+      curly: ["error", "all"],
       "no-empty": "error",
       "@typescript-eslint/no-unused-vars": [
         "error",
@@ -47,6 +47,13 @@ module.exports = defineConfig([
         },
       ],
       "@typescript-eslint/no-unused-private-class-members": "error",
+    },
+  },
+  {
+    files: ["src/lib/ui/**/*.ts"],
+    rules: {
+      "@angular-eslint/directive-selector": "off",
+      "@angular-eslint/component-selector": "off",
     },
   },
 ]);

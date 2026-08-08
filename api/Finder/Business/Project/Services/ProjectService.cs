@@ -49,6 +49,7 @@ public class ProjectService
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
+            .Include(p => p.Favorites)
             .Where(p => p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
             .Where(p => p.Polls.Any())
             .ToListAsync();
@@ -411,6 +412,42 @@ public class ProjectService
 
         await _dbContext.SaveChangesAsync();
         return Result.Success();
+    }
+
+    public async Task<Result<bool>> ToggleFavoriteAsync(string projectSlug, Guid userId)
+    {
+        var projectId = SlugHelper.ExtractId(projectSlug);
+        var isMember = await _dbContext.Projects
+            .AnyAsync(p => p.Id == projectId &&
+                           (p.Creator.Id == userId || p.Permissions.Any(perm => perm.PersonKey == userId)));
+
+        if (!isMember)
+        {
+            return Result<bool>.Fail(403);
+        }
+
+        var existing = await _dbContext.ProjectFavorites
+            .FirstOrDefaultAsync(f => f.UserId == userId && f.ProjectId == projectId);
+
+        if (existing is not null)
+        {
+            _dbContext.ProjectFavorites.Remove(existing);
+            await _dbContext.SaveChangesAsync();
+            return Result<bool>.Success(false);
+        }
+
+        var user = (await _userService.GetUser()).Payload!;
+        var project = await _dbContext.Projects.FindAsync(projectId);
+
+        _dbContext.ProjectFavorites.Add(new ProjectFavorite
+        {
+            UserId = userId,
+            User = user,
+            Project = project!,
+            ProjectId = projectId!
+        });
+        await _dbContext.SaveChangesAsync();
+        return Result<bool>.Success(true);
     }
 
     public async Task<Result<Comment>> AddComment(AddCommentRequest request)

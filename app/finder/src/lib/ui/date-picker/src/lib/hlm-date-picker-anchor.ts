@@ -17,6 +17,7 @@ export class HlmDatePickerAnchor {
   public readonly hlmDatePickerAnchorForInput = input<BrnPopover | undefined>(
     undefined,
     {
+      // eslint-disable-next-line @angular-eslint/no-input-rename
       alias: 'hlmDatePickerAnchorFor',
     },
   );

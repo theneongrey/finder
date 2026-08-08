@@ -31,4 +31,5 @@ export interface StandalonePollOverview {
   votedCount: number;
   currentUserVoted: boolean;
   participants: PollParticipant[];
+  isFavorite: boolean;
 }

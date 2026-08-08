@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<Person> Persons { get; set; }
     public DbSet<LoginToken> LoginTokens { get; set; }
     public DbSet<Permission> Permissions { get; set; }
+    public DbSet<ProjectFavorite> ProjectFavorites { get; set; }
     
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     

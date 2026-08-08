@@ -19,4 +19,5 @@ public class Project : BaseEntity
     public required Person Creator { get; set; }
     public required VisibilityType VisibilityType { get; set; }
     public bool IsStandalone { get; set; } = false;
+    public List<ProjectFavorite> Favorites { get; set; } = [];
 }

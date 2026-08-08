@@ -25,9 +25,7 @@ export class PollService {
 
   getProjects() {
     this.loggerService.debug('[PollService] fetching projects');
-    return this.httpClient.get<PollOverview[]>(
-      `${this.baseUrl}/api/project`,
-    );
+    return this.httpClient.get<PollOverview[]>(`${this.baseUrl}/api/project`);
   }
 
   getStandalonePolls() {
@@ -142,10 +140,18 @@ export class PollService {
     );
   }
 
-  addComment(pollId: string, content: string, quote?: string) {
+  toggleFavorite(projectSlug: string) {
     this.loggerService.debug(
-      `[PollService] adding comment to poll ${pollId}`,
+      `[PollService] toggling favorite for ${projectSlug}`,
     );
+    return this.httpClient.patch<{ isFavorite: boolean }>(
+      `${this.baseUrl}/api/polls/${projectSlug}/favorite`,
+      {},
+    );
+  }
+
+  addComment(pollId: string, content: string, quote?: string) {
+    this.loggerService.debug(`[PollService] adding comment to poll ${pollId}`);
     return this.httpClient.post<Comment>(
       `${this.baseUrl}/api/project/poll/comment`,
       {

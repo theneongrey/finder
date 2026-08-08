@@ -55,13 +55,19 @@ function getDefaultConfig<T>(): HlmDateRangePickerConfig<T> {
     transformDates: (dates) => dates,
     autoCloseOnEndSelection: false,
     parseDate: (value) => {
-      if (typeof value !== 'string') return null;
+      if (typeof value !== 'string') {
+        return null;
+      }
 
       const parts = value.split(' - ').map((part) => part.trim());
-      if (parts.length === 0 || parts.length > 2) return null;
+      if (parts.length === 0 || parts.length > 2) {
+        return null;
+      }
 
       const start = new Date(parts[0]);
-      if (isNaN(start.getTime())) return null;
+      if (isNaN(start.getTime())) {
+        return null;
+      }
 
       const end = parts.length === 2 ? new Date(parts[1]) : start;
 

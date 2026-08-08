@@ -40,6 +40,7 @@ export class PollItemComponent {
   poll = input.required<PollItem>();
   deletionRequested = output();
   shareRequested = output();
+  favoriteToggled = output<string>();
 
   editLabel = this.translateService.translate('project.common.edit');
   deleteLabel = this.translateService.translate('project.common.delete');

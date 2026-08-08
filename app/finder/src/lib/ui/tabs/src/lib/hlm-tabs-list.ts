@@ -8,7 +8,8 @@ export const listVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-muted rounded-lg p-[3px] group-data-horizontal/tabs:h-9 w-fit',
+        default:
+          'bg-muted rounded-lg p-[3px] group-data-horizontal/tabs:h-9 w-fit',
         line: 'gap-6 bg-transparent !w-full border-b border-border !p-0 !rounded-none !h-auto',
       },
     },

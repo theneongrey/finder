@@ -78,6 +78,32 @@ export const PollListStore = signalStore(
       ),
     ),
 
+    toggleFavorite: rxMethod<string>(
+      pipe(
+        switchMap((projectSlug) =>
+          store.projectService.toggleFavorite(projectSlug).pipe(
+            tapResponse({
+              next: ({ isFavorite }) => {
+                patchState(store, {
+                  standalonePolls: store
+                    .standalonePolls()
+                    .map((p) =>
+                      p.projectId === projectSlug ? { ...p, isFavorite } : p,
+                    ),
+                });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[PollListStore] Error toggling favorite',
+                  error,
+                );
+              },
+            }),
+          ),
+        ),
+      ),
+    ),
+
     addStandalonePoll: rxMethod<{
       name: string;
       description: string;

@@ -17,4 +17,5 @@ export interface PollItem {
   votedCount: number;
   currentUserVoted: boolean;
   participants: PollParticipant[];
+  isFavorite: boolean;
 }

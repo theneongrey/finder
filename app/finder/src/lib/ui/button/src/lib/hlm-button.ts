@@ -78,18 +78,29 @@ export class HlmButton implements OnDestroy {
   private _iconEl: HTMLElement | null = null;
   private _spinnerRef: ComponentRef<HlmSpinner> | null = null;
 
-  public readonly variant = input<ButtonVariants['variant']>(this._config.variant);
+  public readonly variant = input<ButtonVariants['variant']>(
+    this._config.variant,
+  );
   public readonly size = input<ButtonVariants['size']>(this._config.size);
   public readonly icon = input<string | undefined>(undefined);
-  public readonly loading = input<boolean, BooleanInput>(false, { transform: booleanAttribute });
+  public readonly loading = input<boolean, BooleanInput>(false, {
+    transform: booleanAttribute,
+  });
 
   constructor() {
     afterNextRender(() => {
       const el = this._elementRef.nativeElement;
       const hasContent = Array.from<ChildNode>(el.childNodes).some((node) => {
-        if (this._iconEl && node === this._iconEl) return false;
-        if (this._spinnerRef && node === this._spinnerRef.location.nativeElement) return false;
-        return !!(node.textContent?.trim());
+        if (this._iconEl && node === this._iconEl) {
+          return false;
+        }
+        if (
+          this._spinnerRef &&
+          node === this._spinnerRef.location.nativeElement
+        ) {
+          return false;
+        }
+        return !!node.textContent?.trim();
       });
       this._iconOnly.set(!!this.icon() && !hasContent);
     });

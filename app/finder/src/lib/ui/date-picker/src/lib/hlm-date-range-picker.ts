@@ -165,7 +165,9 @@ export class HlmDateRangePicker<T>
 
   protected _handleEndDateChange(value: T | undefined): void {
     this._end.set(value);
-    if (this._disabled()) return;
+    if (this._disabled()) {
+      return;
+    }
 
     const start = this._start();
     if (start && value) {
@@ -186,7 +188,9 @@ export class HlmDateRangePicker<T>
    * that parses user-entered values. Pass `null` to clear the range.
    */
   public updateDate(value: [T, T] | null) {
-    if (this._disabled()) return;
+    if (this._disabled()) {
+      return;
+    }
 
     if (!value) {
       this._mutableDate.set(undefined);

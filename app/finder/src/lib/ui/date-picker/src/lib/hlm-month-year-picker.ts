@@ -141,11 +141,15 @@ export class HlmMonthYearPicker<T>
 
   protected _onStateChange(state: BrnOverlayState) {
     this._popoverState.set(state);
-    if (state === 'closed') this._onTouched?.();
+    if (state === 'closed') {
+      this._onTouched?.();
+    }
   }
 
   protected _handleChange(value: T | undefined) {
-    if (this._disabled()) return;
+    if (this._disabled()) {
+      return;
+    }
     this.updateDate(value ?? null);
 
     if (this.autoCloseOnSelect()) {
@@ -160,7 +164,9 @@ export class HlmMonthYearPicker<T>
    * is parsing user-entered values while typing.
    */
   public updateDate(value: T | null) {
-    if (this._disabled()) return;
+    if (this._disabled()) {
+      return;
+    }
     const transformedDate =
       value != null ? this.transformDate()(value) : undefined;
 

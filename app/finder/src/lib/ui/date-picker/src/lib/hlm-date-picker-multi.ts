@@ -157,13 +157,19 @@ export class HlmDatePickerMulti<T>
 
   protected _onStateChange(state: BrnOverlayState) {
     this._popoverState.set(state);
-    if (state === 'closed') this._onTouched?.();
+    if (state === 'closed') {
+      this._onTouched?.();
+    }
   }
 
   protected _handleChange(value: T[] | undefined) {
-    if (value === undefined) return;
+    if (value === undefined) {
+      return;
+    }
 
-    if (this._disabled()) return;
+    if (this._disabled()) {
+      return;
+    }
     const transformedDate =
       value !== undefined ? this.transformDates()(value) : value;
 
@@ -185,7 +191,9 @@ export class HlmDatePickerMulti<T>
    * that parses user-entered values. Pass `null` to clear the selection.
    */
   public updateDate(value: T[] | null) {
-    if (this._disabled()) return;
+    if (this._disabled()) {
+      return;
+    }
     const transformedDate = value ? this.transformDates()(value) : undefined;
 
     this._mutableDate.set(transformedDate);

@@ -49,7 +49,9 @@ function getDefaultConfig<T>(): HlmDatePickerMultiConfig<T> {
     formatInputDates: (dates) =>
       dates
         .map((date) => {
-          if (!(date instanceof Date)) return `${date}`;
+          if (!(date instanceof Date)) {
+            return `${date}`;
+          }
 
           const day = String(date.getDate()).padStart(2, '0');
           const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -61,21 +63,29 @@ function getDefaultConfig<T>(): HlmDatePickerMultiConfig<T> {
     transformDates: (dates) => dates,
     autoCloseOnMaxSelection: false,
     parseDate: (value) => {
-      if (typeof value !== 'string') return null;
+      if (typeof value !== 'string') {
+        return null;
+      }
 
       const parts = value.split(',').map((v) => v.trim());
       const result: Date[] = [];
 
       for (const part of parts) {
         const match = part.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-        if (!match) return null;
+        if (!match) {
+          return null;
+        }
 
         const day = Number(match[1]);
         const month = Number(match[2]);
         const year = Number(match[3]);
 
-        if (month < 1 || month > 12) return null;
-        if (day < 1 || day > 31) return null;
+        if (month < 1 || month > 12) {
+          return null;
+        }
+        if (day < 1 || day > 31) {
+          return null;
+        }
 
         const date = new Date(year, month - 1, day);
 

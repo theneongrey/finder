@@ -92,7 +92,7 @@ export class HlmTabsPaginatedList extends BrnTabsPaginatedList {
   });
   /** Explicitly annotating type to avoid non-portable inferred type */
   public readonly itemsChanges: Observable<
-    ReadonlyArray<BrnPaginatedTabHeaderItem>
+    readonly BrnPaginatedTabHeaderItem[]
   > = toObservable(this.items);
 
   public readonly tabListContainer =
@@ -106,9 +106,7 @@ export class HlmTabsPaginatedList extends BrnTabsPaginatedList {
   public readonly previousPaginator =
     viewChild.required<ElementRef<HTMLElement>>('previousPaginator');
 
-  public readonly tabListClass = input<ClassValue>('', {
-    alias: 'tabListClass',
-  });
+  public readonly tabListClass = input<ClassValue>('');
   protected readonly _tabListClass = computed(() =>
     hlm(listVariants(), this.tabListClass()),
   );

@@ -39,6 +39,7 @@ import type { ClassValue } from 'clsx';
 export class HlmSelectTrigger {
   private static _id = 0;
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
   protected readonly _computedClass = computed(() =>
     hlm(

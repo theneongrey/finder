@@ -29,6 +29,8 @@ public class StandalonePollOverviewResponse
     public required bool CurrentUserVoted { get; init; }
     public required ICollection<PollParticipant> Participants { get; init; }
     public required bool IsFavorite { get; init; }
+    public DateTime? CloseDate { get; init; }
+    public required bool IsClosed { get; init; }
 }
 
 public static class StandalonePollOverviewMapper
@@ -109,7 +111,9 @@ public static class StandalonePollOverviewMapper
             VotedCount = votedCount,
             CurrentUserVoted = currentUserVoted,
             Participants = participants,
-            IsFavorite = userId.HasValue && project.Favorites.Any(f => f.UserId == userId.Value)
+            IsFavorite = userId.HasValue && project.Favorites.Any(f => f.UserId == userId.Value),
+            CloseDate = poll.CloseDate.HasValue ? DateTime.SpecifyKind(poll.CloseDate.Value, DateTimeKind.Utc) : null,
+            IsClosed = poll.CloseDate != null && poll.CloseDate <= DateTime.UtcNow
         };
     }
 }

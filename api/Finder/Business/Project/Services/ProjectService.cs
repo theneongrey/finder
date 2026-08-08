@@ -77,7 +77,7 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> CreateStandalonePoll(string name, string description, OptionType optionType)
+    public async Task<Result<Entities.Project>> CreateStandalonePoll(string name, string description, OptionType optionType, DateTime? closeDate = null)
     {
         var userRequest = await _userService.GetUser();
         if (!userRequest.IsSuccess)
@@ -101,7 +101,8 @@ public class ProjectService
             Name = name,
             Description = description,
             OptionType = optionType,
-            Project = project
+            Project = project,
+            CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null
         };
 
         project.Polls.Add(poll);
@@ -218,7 +219,8 @@ public class ProjectService
             OptionType = pollRequest.OptionType,
             Name = pollRequest.Name,
             Description = pollRequest.Description,
-            Project = projectResult
+            Project = projectResult,
+            CloseDate = pollRequest.CloseDate.HasValue ? DateTime.SpecifyKind(pollRequest.CloseDate.Value, DateTimeKind.Utc) : null
         };
 
         _dbContext.Polls.Add(poll);
@@ -227,7 +229,7 @@ public class ProjectService
         return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description)
+    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null)
     {
         var poll = await _dbContext.Polls
             .Include(t => t.Project)
@@ -247,6 +249,7 @@ public class ProjectService
 
         poll.Name = name;
         poll.Description = description;
+        poll.CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null;
 
         if (poll.Project.IsStandalone)
         {

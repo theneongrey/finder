@@ -78,7 +78,9 @@ public static class StandalonePollOverviewMapper
             .ToDictionary(g => g.Key, g => g.Select(x => x.OptionId).Distinct().Count());
 
         var allMembers = new[] { (Name: project.Creator.Name ?? project.Creator.Email, project.Creator.Picture, Id: project.Creator.Id) }
-            .Concat(project.Permissions.Select(p => (Name: p.Person.Name ?? p.Person.Email, p.Person.Picture, Id: p.Person.Id)));
+            .Concat(project.Permissions
+                .Where(p => p.PersonKey != project.Creator.Id)
+                .Select(p => (Name: p.Person.Name ?? p.Person.Email, p.Person.Picture, Id: p.Person.Id)));
 
         var participants = allMembers.Select(m =>
         {
@@ -102,7 +104,7 @@ public static class StandalonePollOverviewMapper
             VisibilityType = (int)project.VisibilityType,
             SharedWith = sharedWith.ToArray(),
             Role = project.GetRole(userId),
-            TotalParticipants = project.Permissions.Count + 1,
+            TotalParticipants = project.Permissions.Count(p => p.PersonKey != project.Creator.Id) + 1,
             VotedCount = votedCount,
             CurrentUserVoted = currentUserVoted,
             Participants = participants

@@ -100,7 +100,7 @@ export class PollInputFormComponent {
   }
 
   onCloseDateChange(date: string, time: string): void {
-    if (!date) return;
+    if (!date) { return; }
     const iso = time ? `${date}T${time}:00.000Z` : `${date}T00:00:00.000Z`;
     this.closeDateChange.emit(iso);
   }
@@ -112,7 +112,7 @@ export class PollInputFormComponent {
 
   get closeTimePart(): string {
     const cd = this.closeDate();
-    if (!cd) return '';
+    if (!cd) { return ''; }
     const t = cd.substring(11, 16);
     return t || '';
   }

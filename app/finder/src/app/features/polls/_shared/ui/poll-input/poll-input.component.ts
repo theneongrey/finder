@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   input,
@@ -26,6 +27,7 @@ import { AppointmentTypeConversionService } from '../../utils/appointment-type-c
 import { ActivatedRoute } from '@angular/router';
 import { PollTypeSelectionComponent } from './poll-type-selection/poll-type-selection.component';
 import { PollInputFormComponent } from './poll-input-form/poll-input-form.component';
+import { HlmButton } from '@spartan-ng/helm/button';
 
 export type { OptionEntry, DateOptionEntry, DateOptionType };
 
@@ -33,7 +35,7 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
   selector: 'app-poll-input',
   templateUrl: './poll-input.component.html',
   host: { class: 'block h-full' },
-  imports: [PollTypeSelectionComponent, PollInputFormComponent],
+  imports: [PollTypeSelectionComponent, PollInputFormComponent, HlmButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollInputComponent {
@@ -52,6 +54,11 @@ export class PollInputComponent {
   optionType = signal<OptionType | undefined>(
     this.route.snapshot.data['optionType'],
   );
+
+  canClosePoll = computed(() => {
+    const poll = this.projectDetailStore.currentPoll();
+    return this.mode() === 'edit' && poll !== undefined && !poll.isClosed;
+  });
 
   question = signal('');
   description = signal('');
@@ -205,6 +212,13 @@ export class PollInputComponent {
         this.removedOptionIds.update((ids) => [...ids, removedOption.id!]);
       }
       this.options.update((opts) => opts.filter((_, i) => i !== index));
+    }
+  }
+
+  closePollNow(): void {
+    const pollId = this.pollId();
+    if (pollId) {
+      this.projectDetailStore.closePoll(pollId);
     }
   }
 

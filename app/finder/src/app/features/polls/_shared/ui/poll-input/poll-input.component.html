@@ -1,3 +1,18 @@
+@if (canClosePoll()) {
+  <div class="px-4 pt-4">
+    <button
+      hlmBtn
+      variant="destructive"
+      class="w-full"
+      data-testid="close-poll-btn"
+      (click)="closePollNow()"
+    >
+      <i class="fa-solid fa-lock mr-2"></i>
+      Umfrage jetzt schließen
+    </button>
+  </div>
+}
+
 @if (optionType() === undefined) {
   <app-poll-type-selection (typeSelected)="optionType.set($event)" />
 } @else {

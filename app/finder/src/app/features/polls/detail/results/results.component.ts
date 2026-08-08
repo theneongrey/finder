@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   input,
@@ -11,6 +12,8 @@ import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overv
 import { OptionListComponent } from './option-list/option-list.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { PollRole } from '../../_shared/models/poll-role.enum';
 
 @Component({
   selector: 'app-results',
@@ -20,6 +23,7 @@ import { TitleBarService } from '../../../../common/services/title-bar.service';
     VoteOverviewSummaryComponent,
     OptionListComponent,
     CommentsSectionComponent,
+    HlmButton,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,6 +35,13 @@ export class ResultsComponent {
 
   poll = this.projectDetailStore.currentPoll;
   project = this.projectDetailStore.currentProject;
+
+  canClosePoll = computed(() => {
+    const project = this.project();
+    const poll = this.poll();
+    return project !== undefined && poll !== undefined && !poll.isClosed &&
+      (project.role >= PollRole.Maintainer);
+  });
 
   constructor() {
     const titleService = inject(TitleBarService);
@@ -49,5 +60,9 @@ export class ResultsComponent {
 
   addComment(content: string) {
     this.projectDetailStore.addComment({ pollId: this.pollId(), content });
+  }
+
+  closePoll() {
+    this.projectDetailStore.closePoll(this.pollId());
   }
 }

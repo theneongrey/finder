@@ -17,6 +17,9 @@ public class StandalonePollOverviewResponse
     public required int VisibilityType { get; init; }
     public required ICollection<ProjectSharedWith> SharedWith { get; init; }
     public required ProjectRole Role { get; init; }
+    public required int TotalParticipants { get; init; }
+    public required int VotedCount { get; init; }
+    public required bool CurrentUserVoted { get; init; }
 }
 
 public static class StandalonePollOverviewMapper
@@ -56,6 +59,9 @@ public static class StandalonePollOverviewMapper
             .FirstOrDefault()?.Option;
 
         var lastVoteDate = poll.Options.SelectMany(o => o.Votes).Select(v => (DateTime?)v.Created).Max();
+        var allVotes = poll.Options.SelectMany(o => o.Votes).ToList();
+        var votedCount = allVotes.Select(v => v.Person.Id).Distinct().Count();
+        var currentUserVoted = userId.HasValue && allVotes.Any(v => v.Person.Id == userId.Value);
 
         return new StandalonePollOverviewResponse
         {
@@ -71,7 +77,10 @@ public static class StandalonePollOverviewMapper
             NextOpenOptionId = nextOption is null ? null : SlugHelper.ToSlug(SlugHelper.OptionSlugName(nextOption.Text), nextOption.Id),
             VisibilityType = (int)project.VisibilityType,
             SharedWith = sharedWith.ToArray(),
-            Role = project.GetRole(userId)
+            Role = project.GetRole(userId),
+            TotalParticipants = project.Permissions.Count + 1,
+            VotedCount = votedCount,
+            CurrentUserVoted = currentUserVoted
         };
     }
 }

@@ -484,4 +484,30 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
         return Result<Comment>.Success(comment);
     }
+
+    public async Task<Result<Poll>> ClosePollAsync(string slug)
+    {
+        var poll = await _dbContext.Polls
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Meta)
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Person)
+            .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
+                                            t.Project.Permissions.Any(permission =>
+                                                permission.Person.Id == UserId &&
+                                                permission.PermissionType >= PermissionType.Maintainer)))
+            .SingleOrDefaultAsync();
+
+        if (poll is null)
+        {
+            return Result<Poll>.Fail(404);
+        }
+
+        poll.CloseDate = DateTime.UtcNow;
+        await _dbContext.SaveChangesAsync();
+        return Result<Poll>.Success(poll);
+    }
 }

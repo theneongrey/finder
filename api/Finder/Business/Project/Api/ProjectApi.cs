@@ -159,6 +159,17 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
 
+        // Close poll now (sets CloseDate = UtcNow, bypasses future-date validation)
+        app.MapPost("/api/polls/{pollSlug}/close",
+                async (string pollSlug, ProjectService projectService, UserService userService) =>
+                {
+                    var result = await projectService.ClosePollAsync(pollSlug);
+                    return !result.IsSuccess
+                        ? Results.StatusCode(result.Code)
+                        : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
+                })
+            .RequireAuthorization();
+
         // Toggle favorite
         app.MapPatch("/api/polls/{projectSlug}/favorite",
                 async (string projectSlug, ProjectService projectService, UserService userService) =>

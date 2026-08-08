@@ -16,6 +16,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { OptionTypeIconComponent } from './option-type-icon/option-type-icon.component';
 import { PollItem } from '../../models/poll-item.model';
 import { PollRole } from '../../models/poll-role.enum';
+import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 
 @Component({
   selector: 'app-poll-item',
@@ -26,6 +27,7 @@ import { PollRole } from '../../models/poll-role.enum';
     OptionTypeIconComponent,
     RouterLink,
     TranslatePipe,
+    TimeSincePipe,
     ...HlmCardImports,
   ],
   templateUrl: './poll-item.component.html',

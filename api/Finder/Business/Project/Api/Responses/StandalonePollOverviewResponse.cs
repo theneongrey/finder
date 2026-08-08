@@ -28,6 +28,7 @@ public class StandalonePollOverviewResponse
     public required int VotedCount { get; init; }
     public required bool CurrentUserVoted { get; init; }
     public required ICollection<PollParticipant> Participants { get; init; }
+    public required bool IsFavorite { get; init; }
 }
 
 public static class StandalonePollOverviewMapper
@@ -107,7 +108,8 @@ public static class StandalonePollOverviewMapper
             TotalParticipants = project.Permissions.Count(p => p.PersonKey != project.Creator.Id) + 1,
             VotedCount = votedCount,
             CurrentUserVoted = currentUserVoted,
-            Participants = participants
+            Participants = participants,
+            IsFavorite = userId.HasValue && project.Favorites.Any(f => f.UserId == userId.Value)
         };
     }
 }

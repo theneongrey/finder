@@ -155,6 +155,19 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
 
+        // Toggle favorite
+        app.MapPatch("/api/polls/{projectSlug}/favorite",
+                async (string projectSlug, ProjectService projectService, UserService userService) =>
+                {
+                    var userId = userService.GetUserId();
+                    if (userId is null) return Results.Unauthorized();
+                    var result = await projectService.ToggleFavoriteAsync(projectSlug, userId.Value);
+                    return !result.IsSuccess
+                        ? Results.StatusCode(result.Code)
+                        : Results.Ok(new { isFavorite = result.Payload });
+                })
+            .RequireAuthorization();
+
         // Add comment
         app.MapPost("/api/project/poll/comment",
                 async ([FromBody] AddCommentRequest request, ProjectService projectService) =>

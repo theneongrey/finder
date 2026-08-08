@@ -177,6 +177,7 @@ export const PollDetailStore = signalStore(
       pollId: string;
       name: string;
       description: string;
+      closeDate?: string;
       options: {
         id?: string;
         text: string;
@@ -194,7 +195,7 @@ export const PollDetailStore = signalStore(
       pipe(
         switchMap((poll) =>
           store.projectService
-            .updatePoll(poll.pollId, poll.name, poll.description)
+            .updatePoll(poll.pollId, poll.name, poll.description, poll.closeDate)
             .pipe(
               switchMap(() => {
                 const optionRequests = [
@@ -412,6 +413,26 @@ export const PollDetailStore = signalStore(
               error: (error) => {
                 store.loggerService.log(
                   '[PollDetailStore] Error while voting',
+                  error,
+                );
+              },
+            }),
+          ),
+        ),
+      ),
+    ),
+
+    closePoll: rxMethod<string>(
+      pipe(
+        switchMap((pollSlug) =>
+          store.projectService.closePoll(pollSlug).pipe(
+            tapResponse({
+              next: (updatedPoll) => {
+                patchState(store, { currentPoll: updatedPoll });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[PollDetailStore] Error closing poll',
                   error,
                 );
               },

@@ -63,6 +63,8 @@ export interface PollDetail {
   optionType: OptionType;
   options: OptionDetail[];
   comments: Comment[];
+  closeDate?: string;
+  isClosed: boolean;
 }
 
 export interface Option {

@@ -6,6 +6,7 @@ import {
   input,
   output,
 } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
@@ -29,6 +30,7 @@ import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
     RouterLink,
     TranslatePipe,
     TimeSincePipe,
+    DatePipe,
     ...HlmCardImports,
   ],
   templateUrl: './poll-item.component.html',
@@ -55,6 +57,9 @@ export class PollItemComponent {
     const poll = this.poll();
     if (poll.optionType === OptionType.YesNo) {
       return ['/polls', poll.projectId, 'poll', 'edit', 'yesno', poll.pollId];
+    }
+    if (poll.optionType === OptionType.Rating) {
+      return ['/polls', poll.projectId, 'poll', 'edit', 'rating', poll.pollId];
     }
     if (poll.optionType === OptionType.Date) {
       return ['/polls', poll.projectId, 'poll', 'edit', 'date', poll.pollId];

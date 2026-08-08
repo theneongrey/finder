@@ -19,6 +19,16 @@ export const detailRoutes: Routes = [
     },
   },
   {
+    path: 'poll/edit/rating/:pollId',
+    loadComponent: () =>
+      import('./edit/edit-poll.component').then((m) => m.EditPollComponent),
+    data: {
+      optionType: OptionType.Rating,
+      backRoute: (s: ActivatedRouteSnapshot) =>
+        `/polls/${s.parent?.params['id']}/overview/${s.params['pollId']}`,
+    },
+  },
+  {
     path: 'poll/edit/date/:pollId',
     loadComponent: () =>
       import('./edit/edit-poll.component').then((m) => m.EditPollComponent),

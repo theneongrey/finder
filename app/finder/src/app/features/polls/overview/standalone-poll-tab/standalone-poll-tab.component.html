@@ -15,6 +15,7 @@
       [poll]="poll"
       (deletionRequested)="deletionRequested.emit(poll)"
       (shareRequested)="shareRequested.emit(poll.projectId)"
+      (favoriteToggled)="projectListStore.toggleFavorite($event)"
     />
   }
   <app-add-card

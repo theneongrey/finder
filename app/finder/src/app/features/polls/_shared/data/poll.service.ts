@@ -142,6 +142,14 @@ export class PollService {
     );
   }
 
+  toggleFavorite(projectSlug: string) {
+    this.loggerService.debug(`[PollService] toggling favorite for ${projectSlug}`);
+    return this.httpClient.patch<{ isFavorite: boolean }>(
+      `${this.baseUrl}/api/polls/${projectSlug}/favorite`,
+      {},
+    );
+  }
+
   addComment(pollId: string, content: string, quote?: string) {
     this.loggerService.debug(
       `[PollService] adding comment to poll ${pollId}`,

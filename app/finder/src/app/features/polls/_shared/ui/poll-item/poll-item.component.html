@@ -40,8 +40,22 @@
           }
         </p>
       </div>
-      @if (showMenu()) {
-        <div>
+      <div class="flex items-center gap-1">
+        <button
+          hlmBtn
+          variant="ghost"
+          size="icon"
+          data-testid="favorite-btn"
+          [attr.data-testid-active]="_poll.isFavorite ? 'favorite-active' : null"
+          (click)="favoriteToggled.emit(_poll.projectId)"
+        >
+          @if (_poll.isFavorite) {
+            <i class="fa-solid fa-heart text-red-500" data-testid="favorite-active"></i>
+          } @else {
+            <i class="fa-regular fa-heart"></i>
+          }
+        </button>
+        @if (showMenu()) {
           <button hlmBtn variant="ghost" icon="fa-solid fa-ellipsis-vertical" data-testid="poll-menu-btn" [hlmDropdownMenuTrigger]="pollMenu">
           </button>
           <ng-template #pollMenu>
@@ -61,8 +75,8 @@
               </button>
             </hlm-dropdown-menu>
           </ng-template>
-        </div>
-      }
+        }
+      </div>
     </div>
 
     <ul class="flex flex-col gap-1 mb-3">

@@ -20,7 +20,7 @@ import { PollItem } from '../../_shared/models/poll-item.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StandalonePollTabComponent {
-  private readonly projectListStore = inject(PollListStore);
+  protected readonly projectListStore = inject(PollListStore);
   private readonly router = inject(Router);
 
   deletionRequested = output<PollItem>();

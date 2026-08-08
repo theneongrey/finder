@@ -12,13 +12,28 @@ Accept either an issue number (`#123`) or a title fragment. Fetch full details:
 gh issue view <number> --json number,title,body,state,labels
 ```
 
-If the issue has sub-issues listed in the body checklist, find the **first unchecked one** and fetch it too:
+If the issue has sub-issues listed in the body checklist, fetch each one's details:
+
+```bash
+gh issue view <sub-number> --json number,title,state
+# repeat for each sub-issue in the checklist
+```
+
+Then **stop and present the options to the user:**
+
+- List the open sub-issues by number and title.
+- If the combined scope looks small (all sub-issues together would fit in one focused PR — e.g. an API field, a model update, and a matching test), say so: _"These three sub-issues are small and tightly related — it would make sense to implement them all in one go. Want me to do that, or pick a specific one?"_
+- If the scope looks large or the sub-issues are independent enough to warrant separate PRs, ask: _"Which sub-issue should I start with?"_
+
+**Wait for the user to respond before writing any code or touching git.** Never decide on your own to bundle or split — that call belongs to the user.
+
+Once the user decides, fetch the full details of the chosen sub-issue(s):
 
 ```bash
 gh issue view <sub-number> --json number,title,body,state
 ```
 
-**Always implement one sub-issue at a time.** If the user points at a parent issue that has open sub-issues, confirm which sub-issue to start with. Do not batch-implement multiple sub-issues in a single session.
+If the user points directly at a leaf issue (one with no sub-issues), implement that issue without asking.
 
 If the issue is already closed, tell the user and stop.
 
@@ -160,7 +175,8 @@ gh pr create --base main --title "<issue title>" --body "..."
 ## Summary
 <1–3 bullets describing what changed and why>
 
-Closes #<issue-number>
+Closes #<sub-issue-number>
+<!-- Close each sub-issue this PR implements. If the user approved bundling multiple sub-issues, list all of them. Do not close sub-issues that were not implemented. -->
 
 ## Implementation Notes
 <Explain any non-obvious decisions made during implementation:

@@ -18,4 +18,6 @@ export interface PollItem {
   currentUserVoted: boolean;
   participants: PollParticipant[];
   isFavorite: boolean;
+  closeDate?: string;
+  isClosed: boolean;
 }

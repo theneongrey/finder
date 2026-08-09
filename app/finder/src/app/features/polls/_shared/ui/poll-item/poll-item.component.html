@@ -7,9 +7,28 @@
         <app-option-type-icon [type]="_poll.optionType" />
       </div>
       <div class="flex flex-1 flex-col">
-        <h3>{{ _poll.name }}</h3>
+        <div class="flex items-center gap-2">
+          <h3>{{ _poll.name }}</h3>
+          <span
+            data-testid="poll-status-badge"
+            class="text-xs font-semibold px-2 py-0.5 rounded-full"
+            [class]="
+              _poll.isClosed
+                ? 'bg-gray-200 text-gray-600'
+                : 'bg-green-100 text-green-700'
+            "
+          >
+            {{ (_poll.isClosed ? 'project.detail.item.statusClosed' : 'project.detail.item.statusOpen') | translate }}
+          </span>
+        </div>
         @if (_poll.description) {
           <p class="ds-body mt-1">{{ _poll.description }}</p>
+        }
+        @if (_poll.closeDate && !_poll.isClosed) {
+          <p class="ds-body mt-1 text-orange-600 flex items-center gap-1">
+            <i class="fa-regular fa-clock"></i>
+            {{ 'project.detail.item.openUntil' | translate }}: {{ _poll.closeDate | date:'dd.MM.yyyy' }}
+          </p>
         }
         <div class="mt-2 flex items-center gap-3">
           <span

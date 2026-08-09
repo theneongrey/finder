@@ -23,6 +23,9 @@ public class PollConfiguration : IEntityTypeConfiguration<Poll>
         builder.HasMany(p => p.Comments)
             .WithOne(p => p.Poll);
 
+        builder.HasMany(p => p.StatusChanges)
+            .WithOne(p => p.Poll);
+
         builder.Property(p => p.OptionType)
             .HasConversion<int>();
     }

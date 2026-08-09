@@ -108,6 +108,7 @@ export const PollListStore = signalStore(
       name: string;
       description: string;
       optionType: OptionType;
+      closeDate?: string;
       options?: {
         text: string;
         description: string;
@@ -127,6 +128,7 @@ export const PollListStore = signalStore(
               payload.name,
               payload.description,
               payload.optionType,
+              payload.closeDate,
             )
             .pipe(
               switchMap((responsePoll) => {

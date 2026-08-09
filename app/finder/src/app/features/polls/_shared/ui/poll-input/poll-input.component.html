@@ -1,3 +1,32 @@
+@if (canClosePoll()) {
+  <div class="px-4 pt-4">
+    <button
+      hlmBtn
+      variant="destructive"
+      class="w-full"
+      data-testid="close-poll-btn"
+      (click)="closePollNow()"
+    >
+      <i class="fa-solid fa-lock mr-2"></i>
+      Umfrage jetzt schließen
+    </button>
+  </div>
+}
+@if (canReopenPoll()) {
+  <div class="px-4 pt-4">
+    <button
+      hlmBtn
+      variant="outline"
+      class="w-full"
+      data-testid="reopen-poll-btn"
+      (click)="reopenPollNow()"
+    >
+      <i class="fa-solid fa-lock-open mr-2"></i>
+      Umfrage wieder öffnen
+    </button>
+  </div>
+}
+
 @if (optionType() === undefined) {
   <app-poll-type-selection (typeSelected)="optionType.set($event)" />
 } @else {
@@ -9,6 +38,8 @@
     (questionChange)="question.set($event)"
     [description]="description()"
     (descriptionChange)="description.set($event)"
+    [closeDate]="closeDate()"
+    (closeDateChange)="closeDate.set($event)"
     [options]="options()"
     [dateOptions]="dateOptions()"
     [appointmentDateType]="appointmentDateType()"

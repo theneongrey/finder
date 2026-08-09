@@ -135,7 +135,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
     }
 
     public async Task<Poll> SeedPoll(string projectId, string name = "Test Poll",
-        OptionType optionType = OptionType.YesNo, string description = "")
+        OptionType optionType = OptionType.YesNo, string description = "", DateTime? closeDate = null)
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -148,6 +148,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             Description = description,
             OptionType = optionType,
             Project = project,
+            CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null
         };
         db.Polls.Add(poll);
         await db.SaveChangesAsync();

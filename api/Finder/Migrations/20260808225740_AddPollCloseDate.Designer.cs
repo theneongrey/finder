@@ -3,6 +3,7 @@ using System;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Finder.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260808225740_AddPollCloseDate")]
+    partial class AddPollCloseDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -277,37 +280,6 @@ namespace Finder.Migrations
                     b.ToTable("Polls");
                 });
 
-            modelBuilder.Entity("Finder.Business.Project.Entities.PollStatusChange", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Action")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("ChangedById")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Edited")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("PollId")
-                        .IsRequired()
-                        .HasColumnType("character varying(8)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChangedById");
-
-                    b.HasIndex("PollId");
-
-                    b.ToTable("PollStatusChanges");
-                });
-
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
                 {
                     b.Property<string>("Id")
@@ -475,25 +447,6 @@ namespace Finder.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("Finder.Business.Project.Entities.PollStatusChange", b =>
-                {
-                    b.HasOne("Finder.Business.Auth.Entities.Person", "ChangedBy")
-                        .WithMany()
-                        .HasForeignKey("ChangedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Finder.Business.Project.Entities.Poll", "Poll")
-                        .WithMany("StatusChanges")
-                        .HasForeignKey("PollId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChangedBy");
-
-                    b.Navigation("Poll");
-                });
-
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>
                 {
                     b.HasOne("Finder.Business.Auth.Entities.Person", "Creator")
@@ -560,8 +513,6 @@ namespace Finder.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Options");
-
-                    b.Navigation("StatusChanges");
                 });
 
             modelBuilder.Entity("Finder.Business.Project.Entities.Project", b =>

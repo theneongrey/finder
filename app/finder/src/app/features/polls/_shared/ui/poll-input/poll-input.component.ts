@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   input,
@@ -9,6 +10,7 @@ import {
 import { PollDetailStore } from '../../data/poll-detail.store';
 import { PollListStore } from '../../data/poll-list.store';
 import { OptionType } from '../../models/poll-detail.model';
+import { PollRole } from '../../models/poll-role.enum';
 import {
   OptionEntry,
   DateOptionEntry,
@@ -26,6 +28,7 @@ import { AppointmentTypeConversionService } from '../../utils/appointment-type-c
 import { ActivatedRoute } from '@angular/router';
 import { PollTypeSelectionComponent } from './poll-type-selection/poll-type-selection.component';
 import { PollInputFormComponent } from './poll-input-form/poll-input-form.component';
+import { HlmButton } from '@spartan-ng/helm/button';
 
 export type { OptionEntry, DateOptionEntry, DateOptionType };
 
@@ -33,7 +36,7 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
   selector: 'app-poll-input',
   templateUrl: './poll-input.component.html',
   host: { class: 'block h-full' },
-  imports: [PollTypeSelectionComponent, PollInputFormComponent],
+  imports: [PollTypeSelectionComponent, PollInputFormComponent, HlmButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollInputComponent {
@@ -53,8 +56,29 @@ export class PollInputComponent {
     this.route.snapshot.data['optionType'],
   );
 
+  canClosePoll = computed(() => {
+    const poll = this.projectDetailStore.currentPoll();
+    const project = this.projectDetailStore.currentProject();
+    return this.mode() === 'edit'
+      && poll !== undefined
+      && !poll.isClosed
+      && project !== undefined
+      && project.role >= PollRole.Maintainer;
+  });
+
+  canReopenPoll = computed(() => {
+    const poll = this.projectDetailStore.currentPoll();
+    const project = this.projectDetailStore.currentProject();
+    return this.mode() === 'edit'
+      && poll !== undefined
+      && !!poll.isClosed
+      && project !== undefined
+      && project.role >= PollRole.Maintainer;
+  });
+
   question = signal('');
   description = signal('');
+  closeDate = signal<string | undefined>(undefined);
   options = signal<OptionEntry[]>([{ text: '', description: '' }]);
   dateOptions = signal<DateOptionEntry[]>([]);
   appointmentDateType = signal<DateOptionType | undefined>(undefined);
@@ -85,6 +109,7 @@ export class PollInputComponent {
       ) {
         this.question.set(currentPoll.name);
         this.description.set(currentPoll.description);
+        this.closeDate.set(currentPoll.closeDate);
 
         if (currentPoll.optionType === OptionType.Date) {
           const entries = currentPoll.options.length
@@ -206,6 +231,20 @@ export class PollInputComponent {
     }
   }
 
+  closePollNow(): void {
+    const pollId = this.pollId();
+    if (pollId) {
+      this.projectDetailStore.closePoll(pollId);
+    }
+  }
+
+  reopenPollNow(): void {
+    const pollId = this.pollId();
+    if (pollId) {
+      this.projectDetailStore.reopenPoll(pollId);
+    }
+  }
+
   submit(): void {
     if (this.mode() === 'add') {
       this.addPoll();
@@ -275,6 +314,7 @@ export class PollInputComponent {
         name: this.question(),
         description: this.description(),
         optionType: OptionType.Date,
+        closeDate: this.closeDate(),
         options,
       });
     } else {
@@ -290,6 +330,7 @@ export class PollInputComponent {
         name: this.question(),
         description: this.description(),
         optionType,
+        closeDate: this.closeDate(),
         options,
       });
     }
@@ -317,6 +358,7 @@ export class PollInputComponent {
         pollId,
         name: this.question(),
         description: this.description(),
+        closeDate: this.closeDate(),
         options,
         removedOptionIds: this.removedOptionIds(),
       });
@@ -335,6 +377,7 @@ export class PollInputComponent {
         pollId,
         name: this.question(),
         description: this.description(),
+        closeDate: this.closeDate(),
         options,
         removedOptionIds: this.removedOptionIds(),
       });

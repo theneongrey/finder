@@ -9,4 +9,5 @@ public class AddPollRequest
     public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;
     public required OptionType OptionType { get; set; }
+    public DateTime? CloseDate { get; set; }
 }

@@ -52,12 +52,15 @@ export class PollInputFormComponent {
   dateOptions = input.required<DateOptionEntry[]>();
   appointmentDateType = input<DateOptionType | undefined>(undefined);
   appointmentDateTypeChange = output<DateOptionType>();
+  closeDate = input<string | undefined>(undefined);
+  closeDateChange = output<string | undefined>();
   add = output<void>();
   remove = output<number>();
   weekdayToggle = output<number>();
   formSubmit = output<void>();
 
   showDescription = signal(false);
+  showCloseDate = signal(false);
 
   private injector = inject(Injector);
   private descriptionTextarea =
@@ -67,6 +70,11 @@ export class PollInputFormComponent {
     effect(() => {
       if (this.description()) {
         this.showDescription.set(true);
+      }
+    });
+    effect(() => {
+      if (this.closeDate()) {
+        this.showCloseDate.set(true);
       }
     });
   }
@@ -82,5 +90,30 @@ export class PollInputFormComponent {
     if (!this.description()) {
       this.showDescription.set(false);
     }
+  }
+
+  toggleCloseDate(enabled: boolean): void {
+    this.showCloseDate.set(enabled);
+    if (!enabled) {
+      this.closeDateChange.emit(undefined);
+    }
+  }
+
+  onCloseDateChange(date: string, time: string): void {
+    if (!date) { return; }
+    const iso = time ? `${date}T${time}:00.000Z` : `${date}T00:00:00.000Z`;
+    this.closeDateChange.emit(iso);
+  }
+
+  get closeDatePart(): string {
+    const cd = this.closeDate();
+    return cd ? cd.substring(0, 10) : '';
+  }
+
+  get closeTimePart(): string {
+    const cd = this.closeDate();
+    if (!cd) { return ''; }
+    const t = cd.substring(11, 16);
+    return t || '';
   }
 }

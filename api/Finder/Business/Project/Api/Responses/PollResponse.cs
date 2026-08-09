@@ -35,6 +35,8 @@ public class PollResponse
     public required int OptionType { get; set; }
     public required PollResponseOption[] Options { get; set; }
     public required CommentResponse[] Comments { get; set; }
+    public DateTime? CloseDate { get; set; }
+    public required bool IsClosed { get; set; }
 }
 
 public static class PollMapper
@@ -80,7 +82,9 @@ public static class PollMapper
             Comments = poll.Comments
                 .OrderBy(c => c.Created)
                 .Select(c => c.ToCommentResponse())
-                .ToArray()
+                .ToArray(),
+            CloseDate = poll.CloseDate.HasValue ? DateTime.SpecifyKind(poll.CloseDate.Value, DateTimeKind.Utc) : null,
+            IsClosed = poll.CloseDate != null && poll.CloseDate <= DateTime.UtcNow
         };
     }
 }

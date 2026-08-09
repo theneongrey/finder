@@ -20,6 +20,32 @@
         [comments]="poll.comments"
         (addComment)="addComment($event)"
       />
+
+      @if (canManagePoll()) {
+        @if (poll.isClosed) {
+          <button
+            hlmBtn
+            variant="outline"
+            class="w-full"
+            data-testid="reopen-poll-btn"
+            (click)="reopenPoll()"
+          >
+            <i class="fa-solid fa-lock-open mr-2"></i>
+            Umfrage wieder öffnen
+          </button>
+        } @else {
+          <button
+            hlmBtn
+            variant="destructive"
+            class="w-full"
+            data-testid="close-poll-btn"
+            (click)="closePoll()"
+          >
+            <i class="fa-solid fa-lock mr-2"></i>
+            Umfrage jetzt schließen
+          </button>
+        }
+      }
     } @else {
       <div class="flex justify-center items-center h-32">
         <p class="text-gray-500">

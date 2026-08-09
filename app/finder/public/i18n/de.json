@@ -83,7 +83,10 @@
         "pollOverview": "Zeige Ergebnisse",
         "voteOverview": "Zur Übersicht",
         "voteNow": "Jetzt abstimmen",
-        "viewProgress": "Zwischenstand ansehen"
+        "viewProgress": "Zwischenstand ansehen",
+        "statusOpen": "Läuft",
+        "statusClosed": "Beendet",
+        "openUntil": "Offen bis"
       }
     },
     "share": {

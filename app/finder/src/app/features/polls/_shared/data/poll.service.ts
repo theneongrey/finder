@@ -35,11 +35,11 @@ export class PollService {
     );
   }
 
-  addStandalonePoll(name: string, description: string, optionType: OptionType) {
+  addStandalonePoll(name: string, description: string, optionType: OptionType, closeDate?: string) {
     this.loggerService.debug(`[PollService] adding standalone poll ${name}`);
     return this.httpClient.post<StandalonePollOverview>(
       `${this.baseUrl}/api/project/standalone-poll`,
-      { name, description, optionType },
+      { name, description, optionType, closeDate },
     );
   }
 
@@ -82,11 +82,27 @@ export class PollService {
     });
   }
 
-  updatePoll(pollId: string, name: string, description: string) {
+  updatePoll(pollId: string, name: string, description: string, closeDate?: string) {
     this.loggerService.debug(`[PollService] updating poll ${pollId}`);
     return this.httpClient.put<PollDetail>(
       `${this.baseUrl}/api/project/poll/${pollId}`,
-      { name, description },
+      { name, description, closeDate },
+    );
+  }
+
+  closePoll(pollSlug: string) {
+    this.loggerService.debug(`[PollService] closing poll ${pollSlug}`);
+    return this.httpClient.post<PollDetail>(
+      `${this.baseUrl}/api/polls/${pollSlug}/close`,
+      {},
+    );
+  }
+
+  reopenPoll(pollSlug: string) {
+    this.loggerService.debug(`[PollService] reopening poll ${pollSlug}`);
+    return this.httpClient.post<PollDetail>(
+      `${this.baseUrl}/api/polls/${pollSlug}/reopen`,
+      {},
     );
   }
 

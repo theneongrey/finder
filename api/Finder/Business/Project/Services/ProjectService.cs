@@ -506,7 +506,15 @@ public class ProjectService
             return Result<Poll>.Fail(404);
         }
 
+        var actor = await _userService.GetUser();
         poll.CloseDate = DateTime.UtcNow;
+        poll.StatusChanges.Add(new PollStatusChange
+        {
+            Id = Guid.NewGuid(),
+            Action = PollStatusAction.Closed,
+            Poll = poll,
+            ChangedBy = actor.Payload!,
+        });
         await _dbContext.SaveChangesAsync();
         return Result<Poll>.Success(poll);
     }
@@ -532,7 +540,15 @@ public class ProjectService
             return Result<Poll>.Fail(404);
         }
 
+        var actor = await _userService.GetUser();
         poll.CloseDate = null;
+        poll.StatusChanges.Add(new PollStatusChange
+        {
+            Id = Guid.NewGuid(),
+            Action = PollStatusAction.Reopened,
+            Poll = poll,
+            ChangedBy = actor.Payload!,
+        });
         await _dbContext.SaveChangesAsync();
         return Result<Poll>.Success(poll);
     }

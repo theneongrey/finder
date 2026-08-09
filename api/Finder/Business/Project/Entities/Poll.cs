@@ -20,4 +20,5 @@ public class Poll : BaseEntity
     public required Project Project { get; set; }
     public List<Option> Options { get; set; } = [];
     public List<Comment> Comments { get; set; } = [];
+    public List<PollStatusChange> StatusChanges { get; set; } = [];
 }

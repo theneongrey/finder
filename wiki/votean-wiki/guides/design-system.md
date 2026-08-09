@@ -2,16 +2,19 @@
 type: Guide
 title: Design System
 description: Live component and token reference available at /ux in development builds
-tags: [frontend, ui, design, angular, spartan-ui, tailwind]
+tags: [frontend, ui, design, angular, design-system, tokens]
 status: stable
 generated:
   actor: claude-sonnet-4-6
-  date: 2026-08-04
+  date: 2026-08-10
+stale_after: 2027-02-10
 sources:
   - title: design-system component
     resource: app/finder/src/app/features/design-system/design-system.component.ts
-  - title: global styles
-    resource: app/finder/src/styles.css
+  - title: design tokens
+    resource: app/finder/src/app/common/styles/tokens/
+  - title: ds-* component library — issue #237
+    resource: https://github.com/theneongrey/finder/issues/237
 ---
 
 # Design System
@@ -28,67 +31,79 @@ http://localhost:4200/ux
 
 The route is guarded by `devOnly` (`common/services/dev-only.guard.ts`), which checks `environment.environment === 'development'`.
 
-## What It Covers
+## What It Covers (18 sections)
 
 | Section | Contents |
 |---|---|
-| **Colors** | Brand token swatches (`--color-primary`, etc.) and Spartan semantic scale |
-| **Typography** | Live h1/h2/h3/body/label samples with size and weight annotations |
-| **Spacing & Tokens** | Border radius, gap scale, button padding variants |
-| **Buttons** | All variants × filled / outlined / ghost / destructive / link; sizes; icon variants |
-| **Badge** | `hlmBadge` severity variants |
-| **Forms** | Input, InputGroup, Select, ToggleGroup, Textarea, AutoResizeTextarea, OTP |
-| **Cards** | `hlmCard` and the custom `AddCardComponent` |
-| **Navigation** | Interactive tabs demo |
-| **Feedback** | Alert (all severities), ProgressBar, Spinner, Skeleton, Sonner toast |
-| **Overlays** | ShareDrawer (Sheet), AlertDialog, Popover |
-| **Data Display** | Avatar (sizes), AvatarGroup, Separator |
-| **Icons** | Font Awesome Free 7 sample grid |
-| **Suggestions** | Documented gaps in the current design system |
+| **Colors** | All design token colour swatches — cream/sand neutrals, ink neutrals, teal brand, semantic status, and the 8-slot person palette |
+| **Typography** | Live h1/h2/h3 headings; display scale (xl→3xs); body scale (lg→tiny); font metrics |
+| **Spacing** | `--space-1` through `--space-24` bar visualisation |
+| **Shadows** | Five named shadow tokens rendered on white cards |
+| **Icons** | All 23 `ds-icon` glyphs in a labelled grid |
+| **Buttons** | All 5 `ds-button` variants × normal / icon / loading / fullWidth |
+| **Icon Buttons** | All 3 `ds-icon-button` variants |
+| **Avatars** | `ds-avatar` sizes; `ds-avatar-stack` with overflow bubble |
+| **Badges** | All 7 `ds-badge` tones; `ds-status-dot` tones |
+| **Cards** | `ds-card` default and `accentBorder` variants |
+| **Inputs** | `ds-input` text/date/time types, label, error state |
+| **Progress** | `ds-progress-bar` at 0 / 35 / 75 / 100% |
+| **Segmented Control** | `ds-segmented-control` — interactive, reads out selected value |
+| **Tabs** | `ds-tabs` — interactive, reads out active tab |
+| **Bottom Sheet** | `ds-bottom-sheet` — trigger button; scrim-dismiss |
+| **Menu** | `ds-menu` — trigger button; scrim-dismiss |
+| **Empty State Buttons** | `ds-empty-state-button` row and tile layouts |
+| **Vote Buttons** | `ds-vote-buttons` trio |
 
 ## Design Tokens
 
-Tokens are CSS custom properties defined in `styles.css` under `@theme` and applied globally:
+Tokens are CSS custom properties defined under `app/finder/src/app/common/styles/tokens/`:
 
-| Token | Value | Role |
+| File | Contents |
+|---|---|
+| `_colors.css` | Cream/sand neutrals, ink scale, teal brand, semantic status, person palette, semantic surface/text/border aliases |
+| `_typography.css` | `--fs-display-*`, `--fs-body-*`, `--font-display`, `--font-body` |
+| `_spacing.css` | `--space-1` … `--space-24` (2px–48px) |
+| `_effects.css` | `--shadow-*`, `--radius-*`, `--z-*` |
+
+### Key colour tokens
+
+| Token | Hex | Role |
 |---|---|---|
-| `--color-primary` | `#4797bf` | Main brand blue |
-| `--color-primary-dark` | `#397999` | Hover / active state |
-| `--color-secondary` | `#627d8b` | Secondary text and borders |
-| `--color-tertiary` | `#e8af63` | Warm accent |
-| `--color-error` | `#ad3448` | Validation errors |
-| `--color-neutral` | `#1a1c1e` | Near-black text |
-| `--color-on-surface-variant` | `#404944` | Muted text on surfaces |
+| `--accent` (= `--teal-900`) | `#1f7a8c` | Primary brand teal |
+| `--accent-tint` (= `--teal-150`) | `#e7f2f3` | Tinted teal background |
+| `--ink-900` | `#1d2227` | Primary text |
+| `--ink-600` | `#5a5650` | Secondary text |
+| `--cream-100` | `#f7f5f1` | App background |
+| `--positive` | `#4f7a4a` | Success / open status |
+| `--negative` | `#c1453f` | Error / rejection |
+| `--person-1-bg/fg` … `--person-8-bg/fg` | — | 8-slot deterministic avatar palette |
 
-## Typography
+### Typography
 
-Font: **Plus Jakarta Sans** (weights 300, 400, 500, 700), loaded via `@fontsource/plus-jakarta-sans`.
+Font: **Geist Sans** (regular + medium) for display text; **Geist Mono** for code, loaded via `@fontsource/geist` and `@fontsource/geist-mono`.
 
-| Element | Size | Line Height | Weight |
-|---|---|---|---|
-| `h1` | 20px | 1.4 | 400 |
-| `h2` | 24px | 1.3 | 700 |
-| `h3` | 16px | 20px | 700 |
-| `p.label-sm` | 14px | 1.2 | 400 |
+| Scale | Token | Size |
+|---|---|---|
+| Display | `--fs-display-xl` | 33px |
+| Display | `--fs-display-lg` | 30px |
+| Display | `--fs-display-md` | 27px |
+| Display | `--fs-display-sm` | 24px |
+| Body | `--fs-body` | 15px |
+| UI | `--fs-ui` | 13.5px |
+| Caption | `--fs-caption` | 12.5px |
 
-## Icon Library
+## Component Library
 
-[Font Awesome Free 7](https://fontawesome.com) is the app's icon library. Use `fa-solid`, `fa-regular`, and `fa-brands` prefixes with icon names from the Font Awesome catalog.
+The UI is built on 15 custom `ds-*` Angular standalone components in
+`app/finder/src/app/common/ui/components/`. See the [Component Library reference](component-library.md) for the full API.
 
-## Known Gaps
+**Components:** `ds-icon`, `ds-button`, `ds-icon-button`, `ds-avatar`, `ds-avatar-stack`, `ds-badge`, `ds-status-dot`, `ds-card`, `ds-input`, `ds-progress-bar`, `ds-segmented-control`, `ds-tabs`, `ds-bottom-sheet`, `ds-menu`, `ds-empty-state-button`, `ds-vote-buttons`
 
-The Suggestions section of `/ux` flags eight areas not yet covered by the design system:
-
-1. **Z-index scale** — ad-hoc values; no semantic levels defined
-2. **Transition duration tokens** — 150–300ms values scattered without tokens
-3. **Elevation / shadow tokens** — `shadow-md/lg/xl` applied ad-hoc
-4. **Text color tokens** — muted/disabled text uses Tailwind gray defaults, not named tokens
-5. **Dark mode** — no `prefers-color-scheme` support
-6. **Responsive breakpoints** — used but not documented
-7. **Focus ring token** — `outline-primary` not a first-class CSS property
-8. **Semantic status colors** — no `--color-success` / `--color-warning` alongside `--color-error`
+No Spartan UI (`Hlm*`) or Font Awesome imports are used. All icons are inline SVGs rendered by `ds-icon`.
 
 ## Related Pages
 
+- [Component Library (ds-*)](component-library.md) — selector, inputs, outputs, usage examples for all 15 components
+- [Spartan → ds-* Migration Guide](spartan-to-ds-migration.md) — mapping from old Hlm* imports
 - [Frontend Architecture](../architecture/frontend.md)
 - [Local Setup](local-setup.md)

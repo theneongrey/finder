@@ -68,6 +68,14 @@
   --rose-bg: #f4dfe2;
   --rose-fg: #b56374;
 
+  /* Peach — person */
+  --peach-bg: #fce8dc;
+  --peach-fg: #b05c3a;
+
+  /* Lime — person */
+  --lime-bg: #e8f0c0;
+  --lime-fg: #5e7018;
+
   /* Semantic surface aliases */
   --bg-app: var(--cream-200);
   --bg-sheet: var(--cream-50);
@@ -124,12 +132,8 @@
   --person-5-fg: var(--green-900);
   --person-6-bg: var(--blue-bg);
   --person-6-fg: var(--blue-fg);
-  --person-7-bg: #fce8dc;
-  --person-7-fg: #b05c3a;
-  --person-8-bg: #dceae0;
-  --person-8-fg: #4a7a5a;
-  --person-9-bg: #dce3ec;
-  --person-9-fg: #4a5f7a;
-  --person-10-bg: #ecdde8;
-  --person-10-fg: #8a4a7a;
+  --person-7-bg: var(--peach-bg);
+  --person-7-fg: var(--peach-fg);
+  --person-8-bg: var(--lime-bg);
+  --person-8-fg: var(--lime-fg);
 }

@@ -74,6 +74,13 @@ _services/  — HttpClient services
 **UI:** PrimeNG 21 + Tailwind CSS 4.
 Use primngllms.txt for help to primeng components.
 
+**Component file structure:** Every Angular component must have three separate files — never use inline `template` or `styles` in the decorator:
+```
+my-component.component.ts   — class + @Component decorator (templateUrl + styleUrl)
+my-component.component.html — template
+my-component.component.css  — styles
+```
+
 **Auth flow:** email → code → token. The `AuthGuard` (`userAuthentication`) protects routes; the backend issues tokens validated on each request.
 
 ## Testing

@@ -12,6 +12,7 @@
         link of [
           ["token-palette", "Token Palette"],
           ["token-typography", "Typography"],
+          ["headings", "Headings"],
           ["token-effects", "Effects"],
           ["spacing", "Spacing"],
           ["buttons", "Buttons"],
@@ -130,6 +131,57 @@
               </div>
             }
           </div>
+        </div>
+      </div>
+    </section>
+
+    <hlm-separator />
+
+    <!-- ── HEADINGS ─────────────────────────────────────────────── -->
+    <section id="headings">
+      <div class="mb-6">
+        <h2>Headings</h2>
+        <p class="ds-body mt-1 text-gray-500">
+          All headings use <strong style="font-family: var(--font-display)">Bricolage Grotesque Variable</strong>.
+          h1 scales from 30 px (mobile) to 33 px (≥ 680 px desktop) via media query.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <div class="flex items-baseline gap-6 border-b pb-5" style="border-color: var(--border-hairline)">
+          <div class="w-36 shrink-0">
+            <p class="ds-mono">h1</p>
+            <p class="ds-mono-xs">--fs-display-lg / xl</p>
+            <p class="ds-mono-xs">30 px → 33 px</p>
+          </div>
+          <h1>Page Title</h1>
+        </div>
+
+        <div class="flex items-baseline gap-6 border-b pb-4" style="border-color: var(--border-hairline)">
+          <div class="w-36 shrink-0">
+            <p class="ds-mono">h2</p>
+            <p class="ds-mono-xs">--fs-display-xs</p>
+            <p class="ds-mono-xs">21 px</p>
+          </div>
+          <h2>Section Heading</h2>
+        </div>
+
+        <div class="flex items-baseline gap-6 pb-4">
+          <div class="w-36 shrink-0">
+            <p class="ds-mono">h3</p>
+            <p class="ds-mono-xs">--fs-display-3xs</p>
+            <p class="ds-mono-xs">19 px</p>
+          </div>
+          <h3>Item Heading</h3>
+        </div>
+
+        <div class="flex items-baseline gap-6 border-t pt-5" style="border-color: var(--border-hairline)">
+          <div class="w-36 shrink-0">
+            <p class="ds-mono">.label</p>
+            <p class="ds-mono-xs">--fs-caption-sm</p>
+            <p class="ds-mono-xs">12 px / uppercase</p>
+          </div>
+          <span class="label">Section Label</span>
         </div>
       </div>
     </section>

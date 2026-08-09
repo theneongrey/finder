@@ -166,10 +166,10 @@ export class DesignSystemComponent {
   ];
 
   shadowTokens = [
-    { token: '--shadow-card', shadow: '0 3px 16px rgba(35,40,45,0.06)', label: 'card' },
-    { token: '--shadow-card-lg', shadow: '0 6px 24px rgba(35,40,45,0.07)', label: 'card-lg' },
+    { token: '--shadow-card-soft', shadow: '0 3px 14px rgba(35,40,45,0.05)', label: 'card-soft' },
     { token: '--shadow-overlay', shadow: '0 10px 30px rgba(30,35,40,0.16)', label: 'overlay' },
     { token: '--shadow-sheet', shadow: '0 -12px 40px rgba(20,24,28,0.22)', label: 'sheet' },
+    { token: '--shadow-fab', shadow: '0 1px 4px rgba(20,24,28,0.06)', label: 'fab' },
     { token: '--shadow-accent-btn', shadow: '0 6px 18px rgba(31,122,140,0.28)', label: 'accent-btn' },
   ];
 

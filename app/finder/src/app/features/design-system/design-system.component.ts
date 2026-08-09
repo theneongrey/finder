@@ -20,6 +20,7 @@ import { DsPollTypeBadgeComponent } from '../../common/ui/components/poll-type-b
 import { DsInputOtpComponent } from '../../common/ui/components/input-otp/ds-input-otp.component';
 import { DsTextareaComponent } from '../../common/ui/components/textarea/ds-textarea.component';
 import { DsStepperComponent } from '../../common/ui/components/stepper/ds-stepper.component';
+import { DsPollCardSkeletonComponent } from '../../common/ui/components/poll-card-skeleton/ds-poll-card-skeleton.component';
 
 @Component({
   selector: 'app-design-system',
@@ -44,6 +45,7 @@ import { DsStepperComponent } from '../../common/ui/components/stepper/ds-steppe
     DsInputOtpComponent,
     DsTextareaComponent,
     DsStepperComponent,
+    DsPollCardSkeletonComponent,
     FormsModule,
   ],
   templateUrl: './design-system.component.html',

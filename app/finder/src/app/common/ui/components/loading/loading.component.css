@@ -1,16 +1,1 @@
-.ds-skeleton {
-  border-radius: var(--radius-xs);
-  background: linear-gradient(
-    90deg,
-    var(--cream-300) 25%,
-    var(--cream-200) 50%,
-    var(--cream-300) 75%
-  );
-  background-size: 200% 100%;
-  animation: ds-skeleton-shimmer 1.4s ease-in-out infinite;
-}
-
-@keyframes ds-skeleton-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
+/* .ds-skeleton is defined globally in styles.css */

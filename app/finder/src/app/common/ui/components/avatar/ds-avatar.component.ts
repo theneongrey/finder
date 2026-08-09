@@ -9,10 +9,10 @@ type AvatarSize = keyof typeof SIZE_MAP;
     <div
       [style.width.px]="px()"
       [style.height.px]="px()"
-      [style.background]="bg()"
-      [style.color]="fg()"
+      [style.background]="pending() ? 'var(--cream-50)' : bg()"
+      [style.color]="pending() ? 'var(--sand-500)' : fg()"
       [style.font-size.px]="fontSize()"
-      [style.border]="ring() ? '2.5px solid #fff' : 'none'"
+      [style.border]="pending() ? '1.5px dashed var(--sand-400)' : ring() ? '2.5px solid #fff' : 'none'"
       class="ds-avatar-circle"
     >{{ initial() }}</div>
   `,
@@ -37,7 +37,8 @@ export class DsAvatarComponent {
   bg = input<string>('var(--person-1-bg)');
   fg = input<string>('var(--person-1-fg)');
   size = input<AvatarSize | number>('md');
-  ring = input<boolean>(false);
+  ring    = input<boolean>(false);
+  pending = input<boolean>(false);
 
   protected readonly px = computed(() => {
     const s = this.size();

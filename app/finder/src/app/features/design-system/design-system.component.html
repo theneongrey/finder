@@ -27,6 +27,7 @@
         ['menu', 'Menu'],
         ['empty-state', 'EmptyState'],
         ['vote-buttons', 'VoteButtons'],
+        ['loading', 'Loading'],
       ]; track link[0]) {
         <a href="javascript:void(0)" (click)="scrollTo(link[0])" class="ds-page__nav-link">{{ link[1] }}</a>
       }
@@ -269,6 +270,31 @@
         <div class="ds-row-wrap">
           <ds-avatar-stack [avatars]="avatarStack" [max]="4" data-testid="avatar-stack" />
           <ds-avatar-stack [avatars]="avatarStack" [max]="3" [showAdd]="true" />
+        </div>
+      </div>
+      <div class="ds-section-block">
+        <p class="label mb-3">Avatar — pending (has not voted)</p>
+        <div class="ds-row-wrap" style="align-items: flex-end">
+          <div class="ds-labeled-item">
+            <ds-avatar initial="A" [pending]="true" size="sm" />
+            <span class="ds-mono-xs">sm</span>
+          </div>
+          <div class="ds-labeled-item">
+            <ds-avatar initial="B" [pending]="true" size="md" />
+            <span class="ds-mono-xs">md</span>
+          </div>
+          <div class="ds-labeled-item">
+            <ds-avatar initial="C" [pending]="true" size="lg" />
+            <span class="ds-mono-xs">lg</span>
+          </div>
+          <div class="ds-labeled-item">
+            <ds-avatar initial="D" bg="var(--person-2-bg)" fg="var(--person-2-fg)" size="md" />
+            <span class="ds-mono-xs">voted</span>
+          </div>
+          <div class="ds-labeled-item">
+            <ds-avatar initial="D" [pending]="true" size="md" />
+            <span class="ds-mono-xs">pending</span>
+          </div>
         </div>
       </div>
     </section>
@@ -516,6 +542,33 @@
           (skip)="$event"
           data-testid="vote-buttons"
         />
+      </div>
+    </section>
+
+    <hr class="ds-divider" />
+
+    <!-- ── 19. LOADING / SKELETON ─────────────────────────────────── -->
+    <section id="loading" data-testid="section-loading">
+      <h2>Loading / Skeleton</h2>
+      <p class="ds-section-desc">
+        Skeleton bars use <code>--cream-300 / --cream-200</code> — they are only visible on white card backgrounds, not on the app's cream background.
+      </p>
+      <div class="ds-section-block">
+        <p class="label mb-3">Poll card skeleton — <code>ds-poll-card-skeleton [count]</code></p>
+        <div style="display: flex; flex-direction: column; gap: 14px; max-width: 360px">
+          <ds-poll-card-skeleton [count]="3" />
+        </div>
+      </div>
+      <div class="ds-section-block">
+        <p class="label mb-3">Raw skeleton bars — inside a card</p>
+        <ds-card style="max-width: 360px">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <div class="ds-skeleton" style="height: 20px; width: 60%"></div>
+            <div class="ds-skeleton" style="height: 14px; width: 40%"></div>
+            <div class="ds-skeleton" style="height: 14px; width: 80%"></div>
+            <div class="ds-skeleton" style="height: 9px; width: 100%"></div>
+          </div>
+        </ds-card>
       </div>
     </section>
 

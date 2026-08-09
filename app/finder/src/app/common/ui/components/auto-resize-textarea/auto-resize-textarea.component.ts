@@ -10,11 +10,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { HlmTextarea } from '@spartan-ng/helm/textarea';
 
 @Component({
   selector: 'app-auto-resize-textarea',
-  imports: [HlmTextarea],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -39,12 +37,8 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
   protected readonly textValue = signal('');
   protected readonly isDisabled = signal(false);
 
-  private onChange: (value: string) => void = () => {
-    /* do nothing */
-  };
-  protected onTouched: () => void = () => {
-    /* do nothing */
-  };
+  private onChange: (value: string) => void = () => {};
+  protected onTouched: () => void = () => {};
 
   focus(): void {
     this.textareaRef()?.nativeElement.focus();
@@ -109,24 +103,17 @@ export class AutoResizeTextareaComponent implements ControlValueAccessor {
     const targetHeight = Math.max(el.scrollHeight, this.minHeight);
     el.style.height = `${targetHeight}px`;
     el.classList.toggle('scrollable', this.exceedsMaxHeight(targetHeight));
-    void el.offsetHeight; // flush transition:none before re-enabling
+    void el.offsetHeight;
     el.style.transition = '';
   }
 
   private resizeAnimated(el: HTMLTextAreaElement): void {
     const fromHeight = el.offsetHeight;
-
-    // Collapse without transition to measure true content height, then restore.
-    // No reflow between the two height assignments, so the browser never paints
-    // the collapsed state.
     el.style.transition = 'none';
     el.style.height = `${this.minHeight}px`;
     const targetHeight = Math.max(el.scrollHeight, this.minHeight);
     el.style.height = `${fromHeight}px`;
-
-    // Flush so the browser commits fromHeight as the animation origin.
     void el.offsetHeight;
-
     el.style.transition = '';
     el.style.height = `${targetHeight}px`;
     el.classList.toggle('scrollable', this.exceedsMaxHeight(targetHeight));

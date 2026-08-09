@@ -18,6 +18,7 @@ import { DsEmptyStateButtonComponent } from '../../common/ui/components/empty-st
 import { DsVoteButtonsComponent } from '../../common/ui/components/vote-buttons/ds-vote-buttons.component';
 import { DsPollTypeBadgeComponent } from '../../common/ui/components/poll-type-badge/ds-poll-type-badge.component';
 import { DsInputOtpComponent } from '../../common/ui/components/input-otp/ds-input-otp.component';
+import { DsTextareaComponent } from '../../common/ui/components/textarea/ds-textarea.component';
 
 @Component({
   selector: 'app-design-system',
@@ -40,6 +41,7 @@ import { DsInputOtpComponent } from '../../common/ui/components/input-otp/ds-inp
     DsVoteButtonsComponent,
     DsPollTypeBadgeComponent,
     DsInputOtpComponent,
+    DsTextareaComponent,
     FormsModule,
   ],
   templateUrl: './design-system.component.html',

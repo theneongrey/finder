@@ -18,6 +18,7 @@
         ['badges', 'Badge'],
         ['cards', 'Cards'],
         ['inputs', 'Input'],
+        ['textareas', 'Textarea'],
         ['progress', 'Progress'],
         ['segmented', 'Segmented'],
         ['tabs', 'Tabs'],
@@ -337,6 +338,20 @@
       <div class="ds-section-block">
         <p class="label mb-3">InputOtp — <code>ds-input-otp [length] [groupSize]</code></p>
         <ds-input-otp data-testid="input-otp" />
+      </div>
+    </section>
+
+    <hr class="ds-divider" />
+
+    <!-- ── 11b. TEXTAREA ───────────────────────────────────────────── -->
+    <section id="textareas" data-testid="section-textareas">
+      <h2>Textarea</h2>
+      <p class="ds-section-desc">Selector: <code>ds-textarea [label] [error] [rows] [autoResize] [maxHeight]</code> — implements ControlValueAccessor.</p>
+      <div class="ds-form-grid">
+        <ds-textarea label="Statisch (3 Zeilen)" placeholder="Beschreibung eingeben…" />
+        <ds-textarea label="Fehler" placeholder="Ungültige Eingabe" error="Dieses Feld ist erforderlich." />
+        <ds-textarea label="Auto-resize" placeholder="Wächst beim Tippen mit…" [autoResize]="true" />
+        <ds-textarea label="Auto-resize mit Limit" placeholder="Max. 200 px Höhe…" [autoResize]="true" maxHeight="200px" />
       </div>
     </section>
 

@@ -10,6 +10,7 @@ import {
 import { PollDetailStore } from '../../data/poll-detail.store';
 import { PollListStore } from '../../data/poll-list.store';
 import { OptionType } from '../../models/poll-detail.model';
+import { PollRole } from '../../models/poll-role.enum';
 import {
   OptionEntry,
   DateOptionEntry,
@@ -57,12 +58,22 @@ export class PollInputComponent {
 
   canClosePoll = computed(() => {
     const poll = this.projectDetailStore.currentPoll();
-    return this.mode() === 'edit' && poll !== undefined && !poll.isClosed;
+    const project = this.projectDetailStore.currentProject();
+    return this.mode() === 'edit'
+      && poll !== undefined
+      && !poll.isClosed
+      && project !== undefined
+      && project.role >= PollRole.Maintainer;
   });
 
   canReopenPoll = computed(() => {
     const poll = this.projectDetailStore.currentPoll();
-    return this.mode() === 'edit' && poll !== undefined && !!poll.isClosed;
+    const project = this.projectDetailStore.currentProject();
+    return this.mode() === 'edit'
+      && poll !== undefined
+      && !!poll.isClosed
+      && project !== undefined
+      && project.role >= PollRole.Maintainer;
   });
 
   question = signal('');

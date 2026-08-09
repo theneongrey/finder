@@ -1,14 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
-export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'subtle' | 'ghost';
+export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'subtle' | 'ghost' | 'neutral';
+export type ButtonSize = 'sm' | 'md';
 
 const VARIANT_STYLES: Record<ButtonVariant, { background: string; color: string; border: string; boxShadow: string }> = {
-  primary: { background: 'var(--accent)',    color: 'var(--text-on-accent)', border: 'none',                          boxShadow: 'var(--shadow-accent-btn)' },
-  dark:    { background: 'var(--ink-900)',   color: '#fff',                  border: 'none',                          boxShadow: 'none' },
-  outline: { background: '#fff',             color: 'var(--accent)',         border: '1.5px solid var(--accent)',      boxShadow: 'none' },
-  subtle:  { background: 'var(--bg-panel)',  color: 'var(--ink-600)',        border: '1px solid var(--sand-300)',      boxShadow: 'none' },
-  ghost:   { background: 'transparent',      color: 'var(--accent)',         border: 'none',                          boxShadow: 'none' },
+  primary: { background: 'var(--accent)',    color: 'var(--text-on-accent)', border: 'none',                               boxShadow: 'var(--shadow-accent-btn)' },
+  dark:    { background: 'var(--ink-900)',   color: '#fff',                  border: 'none',                               boxShadow: 'none' },
+  outline: { background: '#fff',             color: 'var(--accent)',         border: '1.5px solid var(--accent)',           boxShadow: 'none' },
+  subtle:  { background: 'var(--bg-panel)',  color: 'var(--ink-600)',        border: '1px solid var(--sand-300)',           boxShadow: 'none' },
+  neutral: { background: '#fff',             color: 'var(--ink-600)',        border: '1px solid var(--border-hairline)',    boxShadow: 'none' },
+  ghost:   { background: 'transparent',      color: 'var(--accent)',         border: 'none',                               boxShadow: 'none' },
+};
+
+const SIZE_STYLES: Record<ButtonSize, { padding: string; borderRadius: string; fontSize: string }> = {
+  md: { padding: '12px 18px',  borderRadius: 'var(--radius-md)',  fontSize: 'var(--fs-body-xs)' },
+  sm: { padding: '6px 12px',   borderRadius: 'var(--radius-xs)',  fontSize: 'var(--fs-ui-sm)' },
 };
 
 @Component({
@@ -22,18 +29,21 @@ const VARIANT_STYLES: Record<ButtonVariant, { background: string; color: string;
       [style.border]="style().border"
       [style.box-shadow]="style().boxShadow"
       [style.width]="fullWidth() ? '100%' : undefined"
-      [style.padding]="variant() === 'ghost' ? '0' : '12px 18px'"
-      [style.border-radius]="variant() === 'ghost' ? '0' : 'var(--radius-md)'"
-      [style.font-size]="variant() === 'ghost' ? 'var(--fs-ui-sm)' : 'var(--fs-body-xs)'"
+      [style.padding]="variant() === 'ghost' ? '0' : sizes().padding"
+      [style.border-radius]="variant() === 'ghost' ? '0' : sizes().borderRadius"
+      [style.font-size]="variant() === 'ghost' ? 'var(--fs-ui-sm)' : sizes().fontSize"
       [style.opacity]="(disabled() || loading()) ? '0.5' : '1'"
       class="ds-btn"
     >
       @if (loading()) {
         <span class="ds-btn__spinner"></span>
       } @else if (icon()) {
-        <ds-icon [name]="icon()!" [size]="15" />
+        <ds-icon [name]="icon()!" [size]="iconSize()" />
       }
       <ng-content />
+      @if (!loading() && trailingIcon()) {
+        <ds-icon [name]="trailingIcon()!" [size]="iconSize()" />
+      }
     </button>
   `,
   styles: [`
@@ -64,11 +74,15 @@ const VARIANT_STYLES: Record<ButtonVariant, { background: string; color: string;
   host: { style: 'display: contents' },
 })
 export class DsButtonComponent {
-  variant = input<ButtonVariant>('primary');
-  icon = input<string | undefined>(undefined);
-  fullWidth = input<boolean>(false);
-  loading = input<boolean>(false);
-  disabled = input<boolean>(false);
+  variant      = input<ButtonVariant>('primary');
+  size         = input<ButtonSize>('md');
+  icon         = input<string | undefined>(undefined);
+  trailingIcon = input<string | undefined>(undefined);
+  fullWidth    = input<boolean>(false);
+  loading      = input<boolean>(false);
+  disabled     = input<boolean>(false);
 
-  protected readonly style = computed(() => VARIANT_STYLES[this.variant()] ?? VARIANT_STYLES['primary']);
+  protected readonly style    = computed(() => VARIANT_STYLES[this.variant()] ?? VARIANT_STYLES['primary']);
+  protected readonly sizes    = computed(() => SIZE_STYLES[this.size()] ?? SIZE_STYLES['md']);
+  protected readonly iconSize = computed(() => this.size() === 'sm' ? 13 : 15);
 }

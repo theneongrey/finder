@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
-export type IconButtonVariant = 'surface' | 'ghost' | 'dark';
+export type IconButtonVariant = 'surface' | 'ghost' | 'dark' | 'teal';
 
 const VARIANT_STYLES: Record<IconButtonVariant, { background: string; color: string; boxShadow: string }> = {
-  surface: { background: '#fff',              color: 'var(--accent)',    boxShadow: 'var(--shadow-fab)' },
-  ghost:   { background: 'transparent',       color: 'var(--ink-250)',   boxShadow: 'none' },
-  dark:    { background: 'var(--sand-200)',   color: 'var(--ink-500)',   boxShadow: 'none' },
+  surface: { background: '#fff',               color: 'var(--accent)',    boxShadow: 'var(--shadow-fab)' },
+  ghost:   { background: 'transparent',        color: 'var(--ink-250)',   boxShadow: 'none' },
+  dark:    { background: 'var(--sand-200)',    color: 'var(--ink-500)',   boxShadow: 'none' },
+  teal:    { background: 'var(--accent-tint)', color: 'var(--accent)',    boxShadow: 'none' },
 };
 
 @Component({

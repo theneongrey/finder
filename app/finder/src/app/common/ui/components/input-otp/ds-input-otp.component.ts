@@ -22,7 +22,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         class="otp-hidden"
         inputmode="numeric"
         autocomplete="one-time-code"
-        [maxlength]="length()"
+        [attr.maxlength]="length()"
         [value]="value()"
         [disabled]="isDisabled()"
         (input)="onInput($event)"
@@ -36,7 +36,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
             <div class="otp-slot"
               [class.otp-slot--active]="focused() && activeIdx() === i"
               [class.otp-slot--filled]="i < value().length">
-              {{ value()[i] ?? '' }}
+              {{ value()[i] || '' }}
               @if (focused() && activeIdx() === i) {
                 <span class="otp-cursor"></span>
               }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 interface IconPath { d: string }
-interface IconCircle { cx: number; cy: number; r: number }
+interface IconCircle { cx: number; cy: number; r: number; filled?: boolean }
 interface IconRect { x: number; y: number; width: number; height: number; rx?: number }
 interface IconDef {
   paths?: IconPath[];
@@ -89,6 +89,23 @@ const ICONS: Record<string, IconDef> = {
     paths: [{ d: 'M8 12.3l2.7 2.7L16.4 9' }],
   },
   plus: { strokeWidth: 2.2, paths: [{ d: 'M12 5v14' }, { d: 'M5 12h14' }] },
+  'circle-dot': {
+    strokeWidth: 2.1,
+    circles: [
+      { cx: 12, cy: 12, r: 8.5 },
+      { cx: 12, cy: 12, r: 3.8, filled: true },
+    ],
+  },
+  mail: {
+    strokeWidth: 2,
+    rects: [{ x: 3, y: 5.5, width: 18, height: 13, rx: 3 }],
+    paths: [{ d: 'M4 8l8 5 8-5' }],
+  },
+  info: {
+    strokeWidth: 2.2,
+    circles: [{ cx: 12, cy: 12, r: 8.6 }],
+    paths: [{ d: 'M12 11v5.2' }, { d: 'M12 7.9v.1' }],
+  },
 };
 
 export const ICON_NAMES = Object.keys(ICONS);
@@ -109,7 +126,11 @@ export const ICON_NAMES = Object.keys(ICONS);
         style="display: block; flex-shrink: 0;"
       >
         @for (c of circles(); track $index) {
-          <circle [attr.cx]="c.cx" [attr.cy]="c.cy" [attr.r]="c.r" [attr.fill]="fillMode() ? color() : 'none'" />
+          <circle
+            [attr.cx]="c.cx" [attr.cy]="c.cy" [attr.r]="c.r"
+            [attr.fill]="c.filled ? color() : (fillMode() ? color() : 'none')"
+            [attr.stroke]="c.filled ? 'none' : null"
+          />
         }
         @for (r of rects(); track $index) {
           <rect [attr.x]="r.x" [attr.y]="r.y" [attr.width]="r.width" [attr.height]="r.height" [attr.rx]="r.rx ?? null" />

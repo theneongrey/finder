@@ -24,7 +24,7 @@ export type StatusTone = 'positive' | 'muted';
       gap: 6px;
       height: 23px;
       padding: 0 10px 0 8px;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-xs);
       font-size: var(--fs-caption);
       font-weight: var(--weight-bold);
     }
@@ -35,11 +35,12 @@ export type StatusTone = 'positive' | 'muted';
       flex-shrink: 0;
     }
     @keyframes ds-status-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.55; transform: scale(1.35); }
+      0%   { box-shadow: 0 0 0 0 rgba(93, 154, 86, 0.5); }
+      70%  { box-shadow: 0 0 0 6px rgba(93, 154, 86, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(93, 154, 86, 0); }
     }
     .ds-status-dot--pulse {
-      animation: ds-status-pulse 1.5s ease-in-out infinite;
+      animation: ds-status-pulse 2.6s ease-out infinite;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -21,6 +21,8 @@ import { DsInputOtpComponent } from '../../common/ui/components/input-otp/ds-inp
 import { DsTextareaComponent } from '../../common/ui/components/textarea/ds-textarea.component';
 import { DsStepperComponent } from '../../common/ui/components/stepper/ds-stepper.component';
 import { DsPollCardSkeletonComponent } from '../../common/ui/components/poll-card-skeleton/ds-poll-card-skeleton.component';
+import { DsSwitchComponent } from '../../common/ui/components/switch/ds-switch.component';
+import { DsChipComponent } from '../../common/ui/components/chip/ds-chip.component';
 
 @Component({
   selector: 'app-design-system',
@@ -46,6 +48,8 @@ import { DsPollCardSkeletonComponent } from '../../common/ui/components/poll-car
     DsTextareaComponent,
     DsStepperComponent,
     DsPollCardSkeletonComponent,
+    DsSwitchComponent,
+    DsChipComponent,
     FormsModule,
   ],
   templateUrl: './design-system.component.html',
@@ -88,6 +92,12 @@ export class DesignSystemComponent {
     { icon: 'share', label: 'Teilen', onClick: () => {} },
     { icon: 'trash', label: 'Löschen', danger: true, onClick: () => {} },
   ];
+
+  chipLauft   = signal(true);
+  chipBeendet = signal(false);
+  chipOffen   = signal(false);
+  switchA     = signal(false);
+  switchB     = signal(true);
 
   scrollTo(id: string): void {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });

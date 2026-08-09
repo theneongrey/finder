@@ -15,6 +15,7 @@ import { DsBottomSheetComponent } from '../../common/ui/components/bottom-sheet/
 import { DsMenuComponent } from '../../common/ui/components/menu/ds-menu.component';
 import { DsEmptyStateButtonComponent } from '../../common/ui/components/empty-state-button/ds-empty-state-button.component';
 import { DsVoteButtonsComponent } from '../../common/ui/components/vote-buttons/ds-vote-buttons.component';
+import { DsPollTypeBadgeComponent } from '../../common/ui/components/poll-type-badge/ds-poll-type-badge.component';
 
 @Component({
   selector: 'app-design-system',
@@ -35,6 +36,7 @@ import { DsVoteButtonsComponent } from '../../common/ui/components/vote-buttons/
     DsMenuComponent,
     DsEmptyStateButtonComponent,
     DsVoteButtonsComponent,
+    DsPollTypeBadgeComponent,
   ],
   templateUrl: './design-system.component.html',
   styleUrl: './design-system.component.css',

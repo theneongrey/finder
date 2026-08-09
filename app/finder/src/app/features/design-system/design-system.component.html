@@ -282,6 +282,22 @@
           <ds-status-dot tone="muted">Beendet</ds-status-dot>
         </div>
       </div>
+      <div class="ds-section-block">
+        <p class="label mb-3">Poll type — pill</p>
+        <div class="ds-row-wrap">
+          <ds-poll-type-badge type="yesno" />
+          <ds-poll-type-badge type="rating" />
+          <ds-poll-type-badge type="date" />
+        </div>
+      </div>
+      <div class="ds-section-block">
+        <p class="label mb-3">Poll type — icon only</p>
+        <div class="ds-row-wrap">
+          <ds-poll-type-badge type="yesno"  [showLabel]="false" />
+          <ds-poll-type-badge type="rating" [showLabel]="false" />
+          <ds-poll-type-badge type="date"   [showLabel]="false" />
+        </div>
+      </div>
     </section>
 
     <hr class="ds-divider" />

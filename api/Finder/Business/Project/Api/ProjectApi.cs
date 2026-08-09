@@ -170,6 +170,17 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
 
+        // Reopen poll (sets CloseDate = null)
+        app.MapPost("/api/polls/{pollSlug}/reopen",
+                async (string pollSlug, ProjectService projectService, UserService userService) =>
+                {
+                    var result = await projectService.ReopenPollAsync(pollSlug);
+                    return !result.IsSuccess
+                        ? Results.StatusCode(result.Code)
+                        : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
+                })
+            .RequireAuthorization();
+
         // Toggle favorite
         app.MapPatch("/api/polls/{projectSlug}/favorite",
                 async (string projectSlug, ProjectService projectService, UserService userService) =>

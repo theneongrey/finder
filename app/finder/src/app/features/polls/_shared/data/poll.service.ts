@@ -98,6 +98,14 @@ export class PollService {
     );
   }
 
+  reopenPoll(pollSlug: string) {
+    this.loggerService.debug(`[PollService] reopening poll ${pollSlug}`);
+    return this.httpClient.post<PollDetail>(
+      `${this.baseUrl}/api/polls/${pollSlug}/reopen`,
+      {},
+    );
+  }
+
   deletePoll(pollId: string) {
     this.loggerService.debug(`[PollService] deleting poll ${pollId}`);
     return this.httpClient.delete(`${this.baseUrl}/api/project/poll/${pollId}`);

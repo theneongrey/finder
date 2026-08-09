@@ -60,6 +60,11 @@ export class PollInputComponent {
     return this.mode() === 'edit' && poll !== undefined && !poll.isClosed;
   });
 
+  canReopenPoll = computed(() => {
+    const poll = this.projectDetailStore.currentPoll();
+    return this.mode() === 'edit' && poll !== undefined && !!poll.isClosed;
+  });
+
   question = signal('');
   description = signal('');
   closeDate = signal<string | undefined>(undefined);
@@ -219,6 +224,13 @@ export class PollInputComponent {
     const pollId = this.pollId();
     if (pollId) {
       this.projectDetailStore.closePoll(pollId);
+    }
+  }
+
+  reopenPollNow(): void {
+    const pollId = this.pollId();
+    if (pollId) {
+      this.projectDetailStore.reopenPoll(pollId);
     }
   }
 

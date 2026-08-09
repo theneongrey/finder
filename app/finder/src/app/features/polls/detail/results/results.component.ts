@@ -36,10 +36,10 @@ export class ResultsComponent {
   poll = this.projectDetailStore.currentPoll;
   project = this.projectDetailStore.currentProject;
 
-  canClosePoll = computed(() => {
+  canManagePoll = computed(() => {
     const project = this.project();
     const poll = this.poll();
-    return project !== undefined && poll !== undefined && !poll.isClosed &&
+    return project !== undefined && poll !== undefined &&
       (project.role >= PollRole.Maintainer);
   });
 
@@ -64,5 +64,9 @@ export class ResultsComponent {
 
   closePoll() {
     this.projectDetailStore.closePoll(this.pollId());
+  }
+
+  reopenPoll() {
+    this.projectDetailStore.reopenPoll(this.pollId());
   }
 }

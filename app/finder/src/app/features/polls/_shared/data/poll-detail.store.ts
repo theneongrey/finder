@@ -442,6 +442,26 @@ export const PollDetailStore = signalStore(
       ),
     ),
 
+    reopenPoll: rxMethod<string>(
+      pipe(
+        switchMap((pollSlug) =>
+          store.projectService.reopenPoll(pollSlug).pipe(
+            tapResponse({
+              next: (updatedPoll) => {
+                patchState(store, { currentPoll: updatedPoll });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[PollDetailStore] Error reopening poll',
+                  error,
+                );
+              },
+            }),
+          ),
+        ),
+      ),
+    ),
+
     addComment: rxMethod<{ pollId: string; content: string; quote?: string }>(
       pipe(
         switchMap((comment) =>

@@ -4,7 +4,7 @@ import { PollInputComponent } from '../../_shared/ui/poll-input/poll-input.compo
 @Component({
   selector: 'app-edit-poll',
   imports: [PollInputComponent],
-  template: `<app-poll-input mode="edit" [pollId]="pollId()" />`,
+  templateUrl: './edit-poll.component.html',
   host: { class: 'block h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,3 +1,6 @@
-<hlm-avatar [class]="sizeClass()">
-  <span hlmAvatarFallback>{{ firstLetter() }}</span>
-</hlm-avatar>
+<ds-avatar
+  [initial]="initial()"
+  [bg]="palette().bg"
+  [fg]="palette().fg"
+  [size]="avatarSize()"
+/>

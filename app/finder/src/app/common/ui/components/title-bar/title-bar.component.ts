@@ -3,34 +3,37 @@ import {
   Component,
   computed,
   inject,
+  signal,
 } from '@angular/core';
-import { UserStore } from '../../../data/user.store';
-import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { TitleBarService } from '../../../services/title-bar.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { UserStore } from '../../../data/user.store';
+import { TitleBarService } from '../../../services/title-bar.service';
 import { LoadingComponent } from '../loading/loading.component';
+import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
+import { DsIconButtonComponent } from '../icon-button/ds-icon-button.component';
+import { DsMenuComponent, MenuItem } from '../menu/ds-menu.component';
 
 @Component({
   selector: 'app-title-bar',
   imports: [
-    ...HlmDropdownMenuImports,
-    UserAvatarComponent,
-    HlmButton,
     RouterLink,
     NgOptimizedImage,
     LoadingComponent,
+    UserAvatarComponent,
+    DsIconButtonComponent,
+    DsMenuComponent,
   ],
   templateUrl: './title-bar.component.html',
+  styleUrl: './title-bar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitleBarComponent {
-  private userStore = inject(UserStore);
-  private titleService = inject(TitleBarService);
-  private translateService = inject(TranslateService);
+  private readonly userStore = inject(UserStore);
+  private readonly titleService = inject(TitleBarService);
+  private readonly translateService = inject(TranslateService);
+  private readonly router = inject(Router);
 
   user = this.userStore.user;
   title = this.titleService.title;
@@ -38,6 +41,25 @@ export class TitleBarComponent {
   backRoute = this.titleService.backRoute;
   isHidden = this.titleService.isHidden;
 
-  logoutLabel = this.translateService.translate('titleBar.logout');
-  settingsLabel = this.translateService.translate('titleBar.settings');
+  menuOpen = signal(false);
+
+  private readonly settingsLabel = this.translateService.translate('titleBar.settings');
+  private readonly logoutLabel = this.translateService.translate('titleBar.logout');
+
+  menuItems = computed<MenuItem[]>(() => [
+    {
+      icon: 'arrow-right',
+      label: this.settingsLabel(),
+      onClick: () => this.navigateTo('/settings'),
+    },
+    {
+      icon: 'arrow-right',
+      label: this.logoutLabel(),
+      onClick: () => this.navigateTo('/logout'),
+    },
+  ]);
+
+  private navigateTo(path: string): void {
+    this.router.navigate([path]);
+  }
 }

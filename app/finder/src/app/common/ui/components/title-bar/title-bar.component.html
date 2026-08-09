@@ -1,11 +1,12 @@
 @if (!isHidden()) {
-  <header
-    class="mx-auto w-full flex h-15 p-2 gap-2 bg-gradient-to-b from-white from-75% to-[#86bba1]/0"
-  >
-    @if (this.backRoute()) {
-      <button hlmBtn variant="ghost" icon="fa-solid fa-arrow-left" [routerLink]="[this.backRoute()]">
-      </button>
-
+  <header class="title-bar">
+    @if (backRoute()) {
+      <ds-icon-button
+        icon="chevron-left"
+        variant="ghost"
+        [size]="36"
+        [routerLink]="[backRoute()]"
+      />
       @if (!titleDisabled()) {
         <app-loading
           [isLoading]="title() === undefined"
@@ -13,43 +14,33 @@
           skeletonHeight="1.5rem"
           innercss="my-auto"
         >
-          <h1
-            class="my-auto text-headline-md font-bold text-primary-dark relative -top-[2px]"
-          >
-            {{ title() }}
-          </h1>
+          <h1 class="title-bar__title">{{ title() }}</h1>
         </app-loading>
       }
     } @else {
-      <a href="/" class="my-auto ml-[5px]">
+      <a href="/" class="title-bar__logo-link">
         <img
           alt="logo"
           ngSrc="logo-primary.svg"
           width="98"
           height="26"
-          class="mx-auto mt-auto icon"
         />
       </a>
     }
 
     @if (user()?.isAuthenticated) {
-      <app-user-avatar
-        class="my-auto mr-0 ml-auto"
-        [user]="user()!"
-        [hlmDropdownMenuTrigger]="userMenu"
-      />
-      <ng-template #userMenu>
-        <hlm-dropdown-menu>
-          <button hlmDropdownMenuItem [routerLink]="['/logout']">
-            <i class="fa-solid fa-right-from-bracket mr-2"></i>
-            {{ logoutLabel() }}
-          </button>
-          <button hlmDropdownMenuItem [routerLink]="['/settings']">
-            <i class="fa-solid fa-gear mr-2"></i>
-            {{ settingsLabel() }}
-          </button>
-        </hlm-dropdown-menu>
-      </ng-template>
+      <div class="title-bar__user">
+        <app-user-avatar
+          [user]="user()!"
+          (click)="menuOpen.set(!menuOpen())"
+          style="cursor: pointer;"
+        />
+        <ds-menu
+          [open]="menuOpen()"
+          [items]="menuItems()"
+          (closed)="menuOpen.set(false)"
+        />
+      </div>
     }
   </header>
 }

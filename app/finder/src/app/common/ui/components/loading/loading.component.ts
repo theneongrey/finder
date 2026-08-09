@@ -7,14 +7,13 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 
 const FADE_DURATION = 300;
 
 @Component({
   selector: 'app-loading',
-  imports: [...HlmSkeletonImports],
   templateUrl: './loading.component.html',
+  styleUrl: './loading.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: contents' },
 })
@@ -53,7 +52,6 @@ export class LoadingComponent implements OnDestroy {
         this.showContent.set(false);
       } else {
         if (this.loadingStartTime === 0) {
-          // Was never loading — show content without any skeleton fade
           this.showContent.set(true);
         } else {
           const elapsed = Date.now() - this.loadingStartTime;

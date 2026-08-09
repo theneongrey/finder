@@ -8,7 +8,11 @@
     style="transition: opacity 0.3s ease-out"
   >
     @for (item of skeletonArray(); track $index) {
-      <hlm-skeleton [style.width]="skeletonWidth()" [style.height]="skeletonHeight()" />
+      <div
+        class="ds-skeleton"
+        [style.width]="skeletonWidth()"
+        [style.height]="skeletonHeight()"
+      ></div>
     }
   </div>
 }

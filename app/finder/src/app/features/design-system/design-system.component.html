@@ -22,6 +22,7 @@
         ['progress', 'Progress'],
         ['segmented', 'Segmented'],
         ['tabs', 'Tabs'],
+        ['stepper', 'Stepper'],
         ['bottom-sheet', 'BottomSheet'],
         ['menu', 'Menu'],
         ['empty-state', 'EmptyState'],
@@ -94,6 +95,20 @@
           <h2>Section Heading — h2</h2>
           <h3>Item Heading — h3</h3>
           <span class="label">Label / Eyebrow</span>
+        </div>
+      </div>
+      <div class="ds-section-block">
+        <p class="label mb-4">Links</p>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <p style="font-size: var(--fs-body); color: var(--text-body); margin: 0">
+            Du hast bereits ein Konto? <a href="javascript:void(0)">Jetzt anmelden</a>
+          </p>
+          <p style="font-size: var(--fs-body-xs); color: var(--text-secondary); margin: 0">
+            Keinen Code erhalten? <a href="javascript:void(0)">Erneut senden</a>
+          </p>
+          <p style="font-size: var(--fs-body-xs); color: var(--text-secondary); margin: 0">
+            <button class="ds-link">Zurück zur E-Mail-Eingabe</button>
+          </p>
         </div>
       </div>
     </section>
@@ -407,6 +422,20 @@
         data-testid="tabs"
       />
       <p class="ds-mono-xs" style="margin-top: 12px">Aktiver Tab: {{ tabsValue() }}</p>
+    </section>
+
+    <hr class="ds-divider" />
+
+    <!-- ── 14b. STEPPER ────────────────────────────────────────────── -->
+    <section id="stepper" data-testid="section-stepper">
+      <h2>Stepper</h2>
+      <p class="ds-section-desc">Selector: <code>ds-stepper [steps] [current]</code></p>
+      <div style="display: flex; flex-direction: column; gap: 24px; max-width: 400px">
+        <ds-stepper [steps]="['E-Mail', 'Code', 'Fertig']" [current]="1" />
+        <ds-stepper [steps]="['E-Mail', 'Code', 'Fertig']" [current]="2" />
+        <ds-stepper [steps]="['E-Mail', 'Code', 'Fertig']" [current]="3" />
+        <ds-stepper [steps]="['E-Mail', 'Code', 'Fertig']" [current]="4" />
+      </div>
     </section>
 
     <hr class="ds-divider" />

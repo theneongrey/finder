@@ -26,7 +26,7 @@
         ['empty-state', 'EmptyState'],
         ['vote-buttons', 'VoteButtons'],
       ]; track link[0]) {
-        <a [href]="'#' + link[0]" class="ds-page__nav-link">{{ link[1] }}</a>
+        <a href="javascript:void(0)" (click)="scrollTo(link[0])" class="ds-page__nav-link">{{ link[1] }}</a>
       }
     </nav>
   </header>

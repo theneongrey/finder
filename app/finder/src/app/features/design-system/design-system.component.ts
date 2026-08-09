@@ -77,6 +77,10 @@ export class DesignSystemComponent {
     { icon: 'trash', label: 'Löschen', danger: true, onClick: () => {} },
   ];
 
+  scrollTo(id: string): void {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
+
   colorGroups = [
     {
       label: 'Cream / Sand Neutrals',

@@ -125,6 +125,10 @@ export class DesignSystemComponent {
         { token: '--person-4', hex: '#e6e0f3', fgHex: '#6f5aa6' },
         { token: '--person-5', hex: '#dcecd9', fgHex: '#4f7a4a' },
         { token: '--person-6', hex: '#d9e4f2', fgHex: '#4a6da6' },
+        { token: '--person-7 peach', hex: '#fce8dc', fgHex: '#b05c3a' },
+        { token: '--person-8 sage', hex: '#dceae0', fgHex: '#4a7a5a' },
+        { token: '--person-9 slate', hex: '#dce3ec', fgHex: '#4a5f7a' },
+        { token: '--person-10 mauve', hex: '#ecdde8', fgHex: '#8a4a7a' },
       ],
     },
   ];

@@ -326,12 +326,17 @@
     <!-- ── 11. INPUT ──────────────────────────────────────────────── -->
     <section id="inputs" data-testid="section-inputs">
       <h2>Input</h2>
-      <p class="ds-section-desc">Selector: <code>ds-input [type] [label] [error] [placeholder] [background]</code> — implements ControlValueAccessor.</p>
+      <p class="ds-section-desc">Selector: <code>ds-input [type] [label] [error] [placeholder] [readonly]</code> — implements ControlValueAccessor.</p>
       <div class="ds-form-grid">
         <ds-input type="text" label="Text" placeholder="Tippe etwas…" data-testid="input-text" />
         <ds-input type="date" label="Datum" />
         <ds-input type="time" label="Uhrzeit" />
         <ds-input type="text" label="Fehler" placeholder="Ungültige Eingabe" error="Dieses Feld ist erforderlich." />
+        <ds-input type="text" label="Read-only" [ngModel]="'Nicht änderbar'" [readonly]="true" />
+      </div>
+      <div class="ds-section-block">
+        <p class="label mb-3">InputOtp — <code>ds-input-otp [length] [groupSize]</code></p>
+        <ds-input-otp data-testid="input-otp" />
       </div>
     </section>
 

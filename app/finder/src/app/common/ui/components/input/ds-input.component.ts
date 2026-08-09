@@ -19,8 +19,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         [value]="value()"
         [placeholder]="placeholder()"
         [disabled]="isDisabled()"
+        [readOnly]="readonly()"
         [style.background]="background()"
         [class.ds-input--error]="!!error()"
+        [class.ds-input--readonly]="readonly()"
         class="ds-input"
         (input)="handleInput($event)"
         (blur)="handleBlur()"
@@ -58,6 +60,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     .ds-input:focus { border-color: var(--accent); }
     .ds-input--error { border-color: var(--negative); }
     .ds-input:disabled { opacity: 0.5; cursor: default; }
+    .ds-input--readonly { background: var(--cream-200) !important; color: var(--text-secondary); cursor: default; }
+    .ds-input--readonly:focus { border-color: var(--border-hairline-strong); }
     .ds-input-error {
       font-size: var(--fs-caption-sm);
       color: var(--negative);
@@ -78,6 +82,7 @@ export class DsInputComponent implements ControlValueAccessor {
   label = input<string | undefined>(undefined);
   error = input<string | undefined>(undefined);
   placeholder = input<string>('');
+  readonly = input(false);
 
   protected readonly value = signal('');
   protected readonly isDisabled = signal(false);

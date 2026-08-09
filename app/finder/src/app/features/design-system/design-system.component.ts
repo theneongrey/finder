@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { DsIconComponent, ICON_NAMES } from '../../common/ui/components/icon/ds-icon.component';
 import { DsBadgeComponent } from '../../common/ui/components/badge/ds-badge.component';
 import { DsStatusDotComponent } from '../../common/ui/components/badge/ds-status-dot.component';
@@ -16,6 +17,7 @@ import { DsMenuComponent } from '../../common/ui/components/menu/ds-menu.compone
 import { DsEmptyStateButtonComponent } from '../../common/ui/components/empty-state-button/ds-empty-state-button.component';
 import { DsVoteButtonsComponent } from '../../common/ui/components/vote-buttons/ds-vote-buttons.component';
 import { DsPollTypeBadgeComponent } from '../../common/ui/components/poll-type-badge/ds-poll-type-badge.component';
+import { DsInputOtpComponent } from '../../common/ui/components/input-otp/ds-input-otp.component';
 
 @Component({
   selector: 'app-design-system',
@@ -37,6 +39,8 @@ import { DsPollTypeBadgeComponent } from '../../common/ui/components/poll-type-b
     DsEmptyStateButtonComponent,
     DsVoteButtonsComponent,
     DsPollTypeBadgeComponent,
+    DsInputOtpComponent,
+    FormsModule,
   ],
   templateUrl: './design-system.component.html',
   styleUrl: './design-system.component.css',

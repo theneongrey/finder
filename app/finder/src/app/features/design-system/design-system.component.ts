@@ -70,32 +70,114 @@ export class DesignSystemComponent {
   shareDrawerVisible = signal(false);
   readonly VisibilityType = VisibilityType;
 
-  colors = [
-    { token: '--color-primary', hex: '#4797bf', label: 'Primary' },
-    { token: '--color-primary-dark', hex: '#397999', label: 'Primary Dark' },
-    { token: '--color-secondary', hex: '#627d8b', label: 'Secondary' },
-    { token: '--color-tertiary', hex: '#e8af63', label: 'Tertiary' },
-    { token: '--color-error', hex: '#ad3448', label: 'Error' },
-    { token: '--color-neutral', hex: '#1a1c1e', label: 'Neutral' },
+  colorGroups = [
     {
-      token: '--color-on-surface-variant',
-      hex: '#404944',
-      label: 'On Surface Variant',
+      label: 'Cream / Sand Neutrals',
+      colors: [
+        { token: '--cream-50', hex: '#faf8f4' },
+        { token: '--cream-100', hex: '#f7f5f1' },
+        { token: '--cream-200', hex: '#f4f1ec' },
+        { token: '--cream-300', hex: '#eeeae3' },
+        { token: '--cream-400', hex: '#e0dbd0' },
+        { token: '--sand-300', hex: '#e8e3da' },
+        { token: '--sand-400', hex: '#d2cdc6' },
+        { token: '--sand-500', hex: '#c8c2b8' },
+      ],
+    },
+    {
+      label: 'Ink Neutrals — Text',
+      colors: [
+        { token: '--ink-900', hex: '#1d2227' },
+        { token: '--ink-700', hex: '#3a3833' },
+        { token: '--ink-600', hex: '#5a5650' },
+        { token: '--ink-500', hex: '#6f6b66' },
+        { token: '--ink-400', hex: '#79756f' },
+        { token: '--ink-350', hex: '#8a8681' },
+        { token: '--ink-300', hex: '#9b968f' },
+        { token: '--ink-250', hex: '#a39e96' },
+        { token: '--ink-200', hex: '#b5b0a8' },
+      ],
+    },
+    {
+      label: 'Teal — Brand',
+      colors: [
+        { token: '--teal-900', hex: '#1f7a8c' },
+        { token: '--teal-300', hex: '#9fc2cf' },
+        { token: '--teal-200', hex: '#cfe6e8' },
+        { token: '--teal-150', hex: '#e7f2f3' },
+        { token: '--teal-100', hex: '#d7eef0' },
+      ],
+    },
+    {
+      label: 'Semantic — Status',
+      colors: [
+        { token: '--positive / --color-success', hex: '#4f7a4a' },
+        { token: '--negative / --color-error', hex: '#c1453f' },
+        { token: '--warning / --color-warning', hex: '#a8742a' },
+      ],
+    },
+    {
+      label: 'Person Palette',
+      colors: [
+        { token: '--person-1 teal', hex: '#d7eef0', fgHex: '#1f7a8c' },
+        { token: '--person-2 rose', hex: '#f4dfe2', fgHex: '#b56374' },
+        { token: '--person-3 amber', hex: '#f6e7cf', fgHex: '#b3863a' },
+        { token: '--person-4 purple', hex: '#e6e0f3', fgHex: '#6f5aa6' },
+        { token: '--person-5 green', hex: '#dcecd9', fgHex: '#4f7a4a' },
+        { token: '--person-6 blue', hex: '#d9e4f2', fgHex: '#4a6da6' },
+        { token: '--person-7 peach', hex: '#fce8dc', fgHex: '#b05c3a' },
+        { token: '--person-8 lime', hex: '#e8f0c0', fgHex: '#5e7018' },
+      ],
     },
   ];
 
-  semanticScale = [
-    { step: '50', hex: '#E3F3FF' },
-    { step: '100', hex: '#C3E8FF' },
-    { step: '200', hex: '#83D0FA' },
-    { step: '300', hex: '#67B4DD' },
-    { step: '400', hex: '#4999C1' },
-    { step: '500', hex: '#297FA6' },
-    { step: '600', hex: '#00668A' },
-    { step: '700', hex: '#004C68' },
-    { step: '800', hex: '#003549' },
-    { step: '900', hex: '#001E2C' },
-    { step: '950', hex: '#000000' },
+  displaySizes = [
+    { token: '--fs-display-xl', size: '33px', tracking: '-0.8px' },
+    { token: '--fs-display-lg', size: '30px', tracking: '-0.7px' },
+    { token: '--fs-display-md', size: '27px', tracking: '-0.4px' },
+    { token: '--fs-display-sm', size: '24px', tracking: '-0.3px' },
+    { token: '--fs-display-xs', size: '21px', tracking: '-0.2px' },
+    { token: '--fs-display-2xs', size: '20px', tracking: '-0.2px' },
+    { token: '--fs-display-3xs', size: '19px', tracking: '0' },
+  ];
+
+  bodySizes = [
+    { token: '--fs-body-lg', size: '16px' },
+    { token: '--fs-body', size: '15px' },
+    { token: '--fs-body-sm', size: '14.5px' },
+    { token: '--fs-body-xs', size: '14px' },
+    { token: '--fs-ui', size: '13.5px' },
+    { token: '--fs-ui-sm', size: '13px' },
+    { token: '--fs-caption', size: '12.5px' },
+    { token: '--fs-caption-sm', size: '12px' },
+    { token: '--fs-micro', size: '11.5px' },
+    { token: '--fs-micro-sm', size: '11px' },
+    { token: '--fs-tiny', size: '10.5px' },
+  ];
+
+  radiusScale = [
+    { token: '--radius-xs', value: '9px' },
+    { token: '--radius-sm', value: '12px' },
+    { token: '--radius-md', value: '14px' },
+    { token: '--radius-lg', value: '16px' },
+    { token: '--radius-xl', value: '18px' },
+    { token: '--radius-2xl', value: '20px' },
+    { token: '--radius-3xl', value: '22px' },
+    { token: '--radius-4xl', value: '26px' },
+    { token: '--radius-pill', value: '999px' },
+  ];
+
+  shadowTokens = [
+    { token: '--shadow-card-soft', shadow: '0 3px 14px rgba(35,40,45,0.05)', label: 'card-soft' },
+    { token: '--shadow-overlay', shadow: '0 10px 30px rgba(30,35,40,0.16)', label: 'overlay' },
+    { token: '--shadow-sheet', shadow: '0 -12px 40px rgba(20,24,28,0.22)', label: 'sheet' },
+    { token: '--shadow-fab', shadow: '0 1px 4px rgba(20,24,28,0.06)', label: 'fab' },
+    { token: '--shadow-accent-btn', shadow: '0 6px 18px rgba(31,122,140,0.28)', label: 'accent-btn' },
+  ];
+
+  durationTokens = [
+    { token: '--duration-fast', value: '120ms', label: 'Fast' },
+    { token: '--duration-standard', value: '180ms', label: 'Standard' },
   ];
 
   selectOptions = [
@@ -122,63 +204,4 @@ export class DesignSystemComponent {
   timeInputValue = '';
   loadingButtonDemo = signal(false);
   loadingIconButtonDemo = signal(false);
-
-  faIcons = [
-    'fa-solid fa-house',
-    'fa-solid fa-user',
-    'fa-solid fa-gear',
-    'fa-solid fa-magnifying-glass',
-    'fa-solid fa-plus',
-    'fa-solid fa-xmark',
-    'fa-solid fa-check',
-    'fa-solid fa-trash',
-    'fa-solid fa-pen',
-    'fa-solid fa-eye',
-    'fa-solid fa-bell',
-    'fa-solid fa-envelope',
-    'fa-solid fa-calendar',
-    'fa-solid fa-clock',
-    'fa-solid fa-arrow-left',
-    'fa-solid fa-arrow-right',
-    'fa-solid fa-chevron-down',
-    'fa-solid fa-link',
-    'fa-solid fa-share-nodes',
-    'fa-solid fa-lock',
-    'fa-solid fa-circle-info',
-    'fa-solid fa-triangle-exclamation',
-    'fa-solid fa-star',
-    'fa-solid fa-heart',
-    'fa-solid fa-location-dot',
-  ];
-
-  suggestions = [
-    {
-      title: 'Z-index scale',
-      body: 'Ad-hoc z-10/20/-10 scattered throughout components. Define semantic named levels: base, dropdown, drawer, modal, toast.',
-    },
-    {
-      title: 'Transition duration tokens',
-      body: '150ms / 200ms / 250ms / 300ms are used in multiple places without a shared source of truth. Define --duration-fast, --duration-normal, --duration-slow.',
-    },
-    {
-      title: 'Text color tokens',
-      body: 'Only surface/background colors are tokenized. Body text, muted text, and disabled text rely on Tailwind defaults (gray-400, gray-500) without named tokens.',
-    },
-    {
-      title: 'Dark mode',
-      body: 'No prefers-color-scheme media query handling exists. All surface and text colors assume a light background.',
-    },
-    {
-      title: 'Responsive breakpoints',
-      body: 'Breakpoints are used in a few places but are not documented or tokenized in the design system.',
-    },
-    {
-      title: 'Focus ring token',
-      body: 'outline-primary is used for accessibility focus rings but is not a defined CSS custom property.',
-    },
-    {
-      title: 'Semantic status colors',
-      body: 'Success and warning colors are not defined as CSS tokens. No --color-success or --color-warning exists alongside --color-error.',
-    },
-  ];
 }

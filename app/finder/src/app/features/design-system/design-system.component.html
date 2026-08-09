@@ -4,14 +4,16 @@
     class="sticky top-0 z-10 flex flex-wrap items-center gap-8 border-b border-gray-200 bg-white px-8 py-3"
   >
     <div class="flex items-baseline gap-3">
-      <h2 style="margin: 0; color: var(--color-primary)">Design System</h2>
+      <h2 style="margin: 0; color: var(--accent)">Design System</h2>
       <span class="ds-label">Votean App</span>
     </div>
     <nav class="flex flex-wrap gap-4">
       @for (
         link of [
-          ["colors", "Colors"],
-          ["typography", "Typography"],
+          ["token-palette", "Token Palette"],
+          ["token-typography", "Typography"],
+          ["headings", "Headings"],
+          ["token-effects", "Effects"],
           ["spacing", "Spacing"],
           ["buttons", "Buttons"],
           ["tags", "Badges"],
@@ -21,15 +23,13 @@
           ["feedback", "Feedback"],
           ["overlays", "Overlays"],
           ["data-display", "Data Display"],
-          ["icons", "Icons"],
           ["elevation", "Elevation"],
-          ["suggestions", "Suggestions"],
         ];
         track link[0]
       ) {
         <a
           [href]="'#' + link[0]"
-          style="color: var(--color-secondary); text-decoration: none"
+          style="color: var(--text-secondary); text-decoration: none"
           class="hover:text-primary transition-colors"
           >{{ link[1] }}</a
         >
@@ -39,126 +39,286 @@
 
   <!-- Main content -->
   <main class="mx-auto flex max-w-5xl flex-col gap-16 px-8 py-12">
-    <!-- ── COLORS ────────────────────────────────────────────── -->
-    <section id="colors">
+
+    <!-- ── TOKEN PALETTE ─────────────────────────────────────────── -->
+    <section id="token-palette">
       <div class="mb-6">
-        <h2>Colors</h2>
+        <h2>Token Palette</h2>
         <p class="ds-body mt-1 text-gray-500">
-          CSS custom properties defined in styles.css &#x40;theme block.
+          CSS custom properties defined in <code>src/app/common/styles/tokens/_colors.css</code>.
         </p>
       </div>
 
-      <div class="mb-8">
-        <p class="ds-label mb-3">Brand Tokens</p>
-        <div class="flex flex-wrap gap-3">
-          @for (color of colors; track color.token) {
-            <div class="flex flex-col items-center gap-2">
-              <div
-                class="ds-shadow-raised h-16 w-16 rounded-xl border border-white/30"
-                [style.background]="color.hex"
-              ></div>
-              <div class="text-center">
-                <p class="ds-label tracking-normal normal-case">
-                  {{ color.label }}
-                </p>
-                <p class="ds-mono">{{ color.hex }}</p>
-                <p class="ds-mono-xs">{{ color.token }}</p>
+      <div class="flex flex-col gap-8">
+        @for (group of colorGroups; track group.label) {
+          <div>
+            <p class="ds-label mb-3">{{ group.label }}</p>
+            <div class="flex flex-wrap gap-3">
+              @for (color of group.colors; track color.token) {
+                <div class="flex flex-col items-center gap-2">
+                  <div
+                    class="ds-shadow-card h-14 w-14 rounded-xl border border-white/30"
+                    [style.background]="color.hex"
+                    [style.border]="'1px solid rgba(0,0,0,0.08)'"
+                  >
+                    @if ($any(color).fgHex) {
+                      <div class="flex h-full items-center justify-center">
+                        <span class="text-xs font-semibold" [style.color]="$any(color).fgHex">Aa</span>
+                      </div>
+                    }
+                  </div>
+                  <div class="text-center" style="max-width: 80px">
+                    <p class="ds-mono" style="word-break: break-word">{{ color.hex }}</p>
+                    <p class="ds-mono-xs" style="word-break: break-all">{{ color.token }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <hlm-separator />
+
+    <!-- ── TOKEN TYPOGRAPHY ──────────────────────────────────────── -->
+    <section id="token-typography">
+      <div class="mb-6">
+        <h2>Typography Tokens</h2>
+        <p class="ds-body mt-1 text-gray-500">
+          Display: <strong style="font-family: var(--font-display)">Bricolage Grotesque Variable</strong> —
+          Body: <strong style="font-family: var(--font-body)">Hanken Grotesk Variable</strong>.
+          Loaded from npm via <code>@fontsource-variable</code>.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-10">
+        <div>
+          <p class="ds-label mb-4">Display Scale — Bricolage Grotesque</p>
+          <div class="flex flex-col gap-4">
+            @for (size of displaySizes; track size.token) {
+              <div class="flex items-baseline gap-4 border-b border-gray-100 pb-3">
+                <span class="ds-mono w-40 shrink-0">{{ size.token }}</span>
+                <span
+                  [style.font-family]="'var(--font-display)'"
+                  [style.font-size]="size.size"
+                  [style.font-weight]="700"
+                  [style.letter-spacing]="size.tracking"
+                  style="line-height: 1.05; color: var(--text-primary)"
+                >
+                  The quick brown fox
+                </span>
+                <span class="ds-mono shrink-0">{{ size.size }} / {{ size.tracking }}</span>
               </div>
-            </div>
-          }
+            }
+          </div>
         </div>
-      </div>
 
-      <div>
-        <p class="ds-label mb-3">
-          Semantic Primary Scale
-        </p>
-        <div class="flex flex-wrap gap-2">
-          @for (step of semanticScale; track step.step) {
-            <div class="flex flex-col items-center gap-1">
-              <div
-                class="ds-shadow-card h-10 w-10 rounded-lg"
-                [style.background]="step.hex"
-                [style.border]="step.step === '950' ? '1px solid #ddd' : 'none'"
-              ></div>
-              <span class="ds-mono-xs">{{ step.step }}</span>
-            </div>
-          }
+        <div>
+          <p class="ds-label mb-4">Body Scale — Hanken Grotesk</p>
+          <div class="flex flex-col gap-3">
+            @for (size of bodySizes; track size.token) {
+              <div class="flex items-baseline gap-4 border-b border-gray-100 pb-2">
+                <span class="ds-mono w-40 shrink-0">{{ size.token }}</span>
+                <span
+                  [style.font-family]="'var(--font-body)'"
+                  [style.font-size]="size.size"
+                  style="color: var(--text-body)"
+                >
+                  The quick brown fox jumps over the lazy dog.
+                </span>
+                <span class="ds-mono shrink-0">{{ size.size }}</span>
+              </div>
+            }
+          </div>
         </div>
       </div>
     </section>
 
     <hlm-separator />
 
-    <!-- ── TYPOGRAPHY ─────────────────────────────────────────── -->
-    <section id="typography">
+    <!-- ── HEADINGS ─────────────────────────────────────────────── -->
+    <section id="headings">
       <div class="mb-6">
-        <h2>Typography</h2>
+        <h2>Headings</h2>
         <p class="ds-body mt-1 text-gray-500">
-          Font: <strong>Plus Jakarta Sans</strong> — weights 300, 400, 500, 700.
+          All headings use <strong style="font-family: var(--font-display)">Bricolage Grotesque Variable</strong>.
+          h1 scales from 30 px (mobile) to 33 px (≥ 680 px desktop) via media query.
         </p>
       </div>
 
       <div class="flex flex-col gap-6">
-        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
-          <span class="ds-label w-32 shrink-0">h1</span>
-          <h1 style="margin: 0">Page Title</h1>
-          <span class="ds-mono">20px / lh 1.4</span>
+        <div class="flex items-baseline gap-6 border-b pb-5" style="border-color: var(--border-hairline)">
+          <div class="w-36 shrink-0">
+            <p class="ds-mono">h1</p>
+            <p class="ds-mono-xs">--fs-display-lg / xl</p>
+            <p class="ds-mono-xs">30 px → 33 px</p>
+          </div>
+          <h1>Page Title</h1>
         </div>
-        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
-          <span class="ds-label w-32 shrink-0">h2</span>
-          <h2 style="margin: 0">Section Heading</h2>
-          <span class="ds-mono">24px / lh 1.3 / bold</span>
+
+        <div class="flex items-baseline gap-6 border-b pb-4" style="border-color: var(--border-hairline)">
+          <div class="w-36 shrink-0">
+            <p class="ds-mono">h2</p>
+            <p class="ds-mono-xs">--fs-display-xs</p>
+            <p class="ds-mono-xs">21 px</p>
+          </div>
+          <h2>Section Heading</h2>
         </div>
-        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
-          <span class="ds-label w-32 shrink-0">h3</span>
-          <h3 style="margin: 0">Sub-heading</h3>
-          <span class="ds-mono">16px / lh 20px / bold</span>
-        </div>
-        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
-          <span class="ds-label w-32 shrink-0">.ds-body</span>
-          <span class="ds-body"
-            >The quick brown fox jumps over the lazy dog.</span
-          >
-          <span class="ds-mono">14px / lh 1.2</span>
-        </div>
-        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
-          <span class="ds-label w-32 shrink-0">.ds-label</span>
-          <span class="ds-label">Section Label</span>
-          <span class="ds-mono">12px / semibold / uppercase / tracking</span>
-        </div>
-        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
-          <span class="ds-label w-32 shrink-0">.ds-small</span>
-          <span class="ds-small">Normal · Large · XLarge · or</span>
-          <span class="ds-mono">11px / #999</span>
-        </div>
-        <div class="flex items-baseline gap-6 border-b border-gray-100 pb-4">
-          <span class="ds-label w-32 shrink-0">.ds-mono</span>
-          <span class="ds-mono">#4797bf · 40px / 8px · 20px / lh 1.4</span>
-          <span class="ds-mono">11px / mono / #999</span>
-        </div>
+
         <div class="flex items-baseline gap-6 pb-4">
-          <span class="ds-label w-32 shrink-0">.ds-mono-xs</span>
-          <span class="ds-mono-xs">--color-primary · 950</span>
-          <span class="ds-mono">10px / mono / #aaa</span>
+          <div class="w-36 shrink-0">
+            <p class="ds-mono">h3</p>
+            <p class="ds-mono-xs">--fs-display-3xs</p>
+            <p class="ds-mono-xs">19 px</p>
+          </div>
+          <h3>Item Heading</h3>
+        </div>
+
+        <div class="flex items-baseline gap-6 border-t pt-5" style="border-color: var(--border-hairline)">
+          <div class="w-36 shrink-0">
+            <p class="ds-mono">.label</p>
+            <p class="ds-mono-xs">--fs-caption-sm</p>
+            <p class="ds-mono-xs">12 px / uppercase</p>
+          </div>
+          <span class="label">Section Label</span>
         </div>
       </div>
     </section>
 
     <hlm-separator />
 
-    <!-- ── SPACING & TOKENS ───────────────────────────────────── -->
+    <!-- ── TOKEN EFFECTS ─────────────────────────────────────────── -->
+    <section id="token-effects">
+      <div class="mb-6">
+        <h2>Effects Tokens</h2>
+        <p class="ds-body mt-1 text-gray-500">
+          Border radius scale, shadow tokens, and animation durations from
+          <code>_effects.css</code>.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-10">
+        <div>
+          <p class="ds-label mb-4">Border Radius Scale</p>
+          <div class="flex flex-wrap items-end gap-6">
+            @for (r of radiusScale; track r.token) {
+              <div class="flex flex-col items-center gap-2">
+                <div
+                  class="h-12 w-12 bg-white"
+                  style="border: 2px solid var(--accent); box-shadow: var(--shadow-card-soft)"
+                  [style.border-radius]="r.value"
+                ></div>
+                <div class="text-center">
+                  <p class="ds-mono">{{ r.value }}</p>
+                  <p class="ds-mono-xs">{{ r.token }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+          <p class="ds-label mb-4">Shadow Tokens</p>
+          <div class="flex flex-wrap items-end gap-8">
+            @for (s of shadowTokens; track s.token) {
+              <div class="flex flex-col items-center gap-3">
+                <div
+                  class="h-16 w-24 rounded-xl bg-white"
+                  [style.box-shadow]="s.shadow"
+                ></div>
+                <div class="text-center">
+                  <p class="ds-mono">{{ s.label }}</p>
+                  <p class="ds-mono-xs">{{ s.token }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+          <p class="ds-label mb-4">Animation Duration Tokens</p>
+          <div class="flex gap-8">
+            @for (d of durationTokens; track d.token) {
+              <div class="flex items-center gap-3">
+                <div
+                  class="h-8 w-8 rounded-full"
+                  style="background: var(--accent)"
+                ></div>
+                <div>
+                  <p class="ds-mono font-semibold">{{ d.value }}</p>
+                  <p class="ds-mono-xs">{{ d.token }}</p>
+                  <p class="ds-small">{{ d.label }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+          <p class="ds-label mb-4">Z-index Scale</p>
+          <div class="flex flex-wrap gap-4">
+            @for (
+              z of [
+                { token: '--z-base', value: '0' },
+                { token: '--z-dropdown', value: '100' },
+                { token: '--z-drawer', value: '200' },
+                { token: '--z-modal', value: '300' },
+                { token: '--z-toast', value: '400' },
+              ];
+              track z.token
+            ) {
+              <div
+                class="flex flex-col gap-1 rounded-lg px-3 py-2"
+                style="background: var(--bg-panel); border: 1px solid var(--border-hairline)"
+              >
+                <p class="ds-mono font-semibold">{{ z.value }}</p>
+                <p class="ds-mono-xs">{{ z.token }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hlm-separator />
+
+    <!-- ── SPACING & TOKENS ───────────────────────────────────────── -->
     <section id="spacing">
       <div class="mb-6">
-        <h2>Spacing &amp; Tokens</h2>
+        <h2>Spacing &amp; Layout</h2>
         <p class="ds-body mt-1 text-gray-500">
-          Key sizing constants derived from styles.css and component patterns.
+          Key sizing constants from <code>_spacing.css</code> and component patterns.
         </p>
       </div>
 
       <div class="flex flex-col gap-8">
         <div>
-          <p class="ds-label mb-3">Border Radius — 12px</p>
+          <p class="ds-label mb-3">Layout Constants</p>
+          <div class="flex flex-wrap gap-4">
+            @for (
+              item of [
+                { token: '--mobile-max-width', value: '480px', note: 'Mobile max viewport' },
+                { token: '--web-content-max-width', value: '1080px', note: 'Desktop content column' },
+                { token: '--screen-padding', value: '22px', note: 'Page horizontal padding' },
+                { token: '--card-padding', value: '20px', note: 'Card internal padding' },
+              ];
+              track item.token
+            ) {
+              <div
+                class="flex flex-col gap-1 rounded-lg px-3 py-2"
+                style="background: var(--bg-panel); border: 1px solid var(--border-hairline)"
+              >
+                <p class="ds-mono font-semibold">{{ item.value }}</p>
+                <p class="ds-mono-xs">{{ item.token }}</p>
+                <p class="ds-small">{{ item.note }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+          <p class="ds-label mb-3">Border Radius — 12px default</p>
           <div class="flex flex-wrap items-end gap-4">
             @for (
               item of [
@@ -172,56 +332,11 @@
                 <div
                   class="bg-primary/20 h-10 w-16"
                   [style.border-radius]="item.radius"
-                  style="border: 2px solid var(--color-primary)"
+                  style="border: 2px solid var(--accent)"
                 ></div>
                 <span class="ds-mono">{{ item.label }}</span>
               </div>
             }
-          </div>
-        </div>
-
-        <div>
-          <p class="ds-label mb-3">Gap Scale (×4px base)</p>
-          <div class="flex flex-wrap items-end gap-6">
-            @for (
-              item of [
-                { label: "gap-2", px: "8px", size: 8 },
-                { label: "gap-3", px: "12px", size: 12 },
-                { label: "gap-4", px: "16px", size: 16 },
-                { label: "gap-6", px: "24px", size: 24 },
-              ];
-              track item.label
-            ) {
-              <div class="flex flex-col items-center gap-2">
-                <div
-                  class="bg-primary/30 rounded"
-                  [style.width.px]="item.size"
-                  [style.height.px]="item.size"
-                ></div>
-                <div class="text-center">
-                  <p class="ds-mono font-semibold">{{ item.px }}</p>
-                  <p class="ds-mono-xs">{{ item.label }}</p>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-
-        <div>
-          <p class="ds-label mb-3">Button Padding</p>
-          <div class="flex flex-wrap gap-4">
-            <div class="flex flex-col gap-1">
-              <button hlmBtn>Default</button>
-              <span class="ds-mono text-center">h-9 / px-2.5</span>
-            </div>
-            <div class="flex flex-col gap-1">
-              <button hlmBtn size="sm">Small</button>
-              <span class="ds-mono text-center">h-8 / px-2.5</span>
-            </div>
-            <div class="flex flex-col gap-1">
-              <button hlmBtn size="xs">XSmall</button>
-              <span class="ds-mono text-center">h-6 / px-2</span>
-            </div>
           </div>
         </div>
 
@@ -238,7 +353,7 @@
 
     <hlm-separator />
 
-    <!-- ── BUTTONS ────────────────────────────────────────────── -->
+    <!-- ── BUTTONS ────────────────────────────────────────────────── -->
     <section id="buttons">
       <div class="mb-6">
         <h2>Buttons</h2>
@@ -260,25 +375,16 @@
           </div>
         </div>
         <div>
-          <p class="ds-label mb-3">With Icons</p>
-          <div class="flex flex-wrap gap-3">
-            <button hlmBtn icon="fa-solid fa-plus">Add item</button>
-            <button hlmBtn variant="destructive" icon="fa-solid fa-trash">Delete</button>
-            <button hlmBtn variant="outline" icon="fa-solid fa-magnifying-glass"></button>
-            <button hlmBtn variant="ghost" icon="fa-solid fa-gear"></button>
-          </div>
-        </div>
-        <div>
           <p class="ds-label mb-3">Sizes</p>
           <div class="flex flex-wrap items-center gap-3">
             <button hlmBtn>Default</button>
             <button hlmBtn size="sm">Small</button>
             <button hlmBtn size="xs">XSmall</button>
             <button hlmBtn [disabled]="true">Disabled</button>
-            <button hlmBtn icon="fa-solid fa-paper-plane" [loading]="loadingButtonDemo()" (click)="loadingButtonDemo.set(!loadingButtonDemo())">
+            <button hlmBtn [loading]="loadingButtonDemo()" (click)="loadingButtonDemo.set(!loadingButtonDemo())">
               Submit
             </button>
-            <button hlmBtn variant="outline" icon="fa-solid fa-arrows-rotate" [loading]="loadingIconButtonDemo()" (click)="loadingIconButtonDemo.set(!loadingIconButtonDemo())">
+            <button hlmBtn variant="outline" [loading]="loadingIconButtonDemo()" (click)="loadingIconButtonDemo.set(!loadingIconButtonDemo())">
             </button>
           </div>
         </div>
@@ -293,13 +399,12 @@
 
     <hlm-separator />
 
-    <!-- ── BADGES ─────────────────────────────────────────────── -->
+    <!-- ── BADGES ─────────────────────────────────────────────────── -->
     <section id="tags">
       <div class="mb-6">
         <h2>Badges</h2>
         <p class="ds-body mt-1 text-gray-500">
-          Spartan hlm-badge — variants: default, secondary, destructive,
-          outline.
+          Spartan hlm-badge — variants: default, secondary, destructive, outline.
         </p>
       </div>
 
@@ -308,13 +413,12 @@
         <span hlmBadge variant="secondary">Secondary</span>
         <span hlmBadge variant="destructive">Destructive</span>
         <span hlmBadge variant="outline">Outline</span>
-        <span hlmBadge><i class="fa-solid fa-check mr-1"></i>With icon</span>
       </div>
     </section>
 
     <hlm-separator />
 
-    <!-- ── FORMS ─────────────────────────────────────────────── -->
+    <!-- ── FORMS ──────────────────────────────────────────────────── -->
     <section id="forms">
       <div class="mb-6">
         <h2>Forms</h2>
@@ -415,9 +519,6 @@
               placeholder="Type to see it grow…"
               class="w-full"
             />
-            <p class="ds-body mt-1 text-gray-400">
-              Grows with content, animated. Max-height: 200px (configurable).
-            </p>
           </div>
         </div>
       </div>
@@ -428,24 +529,18 @@
           <hlm-date-picker [(ngModel)]="datePickerValue" autoCloseOnSelect>
             <hlm-date-picker-input placeholder="Select a date" openOnClick />
           </hlm-date-picker>
-          <p class="ds-body mt-1 text-gray-400">
-            Calendar popover, auto-closes on selection. Binds to <code>Date | undefined</code>.
-          </p>
         </div>
 
         <div class="flex flex-col gap-1">
           <p class="ds-label mb-2">Time Input</p>
           <input hlmInput type="time" step="900" [(ngModel)]="timeInputValue" />
-          <p class="ds-body mt-1 text-gray-400">
-            Native time input with 15-minute steps (<code>step="900"</code>). Binds to an <code>HH:MM</code> string.
-          </p>
         </div>
       </div>
     </section>
 
     <hlm-separator />
 
-    <!-- ── CARDS ──────────────────────────────────────────────── -->
+    <!-- ── CARDS ───────────────────────────────────────────────────── -->
     <section id="cards">
       <div class="mb-6">
         <h2>Cards</h2>
@@ -482,7 +577,7 @@
 
     <hlm-separator />
 
-    <!-- ── NAVIGATION ─────────────────────────────────────────── -->
+    <!-- ── NAVIGATION ─────────────────────────────────────────────── -->
     <section id="navigation">
       <div class="mb-6">
         <h2>Navigation</h2>
@@ -517,7 +612,7 @@
 
     <hlm-separator />
 
-    <!-- ── FEEDBACK ───────────────────────────────────────────── -->
+    <!-- ── FEEDBACK ───────────────────────────────────────────────── -->
     <section id="feedback">
       <div class="mb-6">
         <h2>Feedback</h2>
@@ -565,16 +660,10 @@
         <div>
           <p class="ds-label mb-3">Skeleton Loader</p>
           <div class="flex max-w-sm flex-col gap-2">
-            <hlm-skeleton
-              style="width: 100%; height: 16px"
-              class="rounded-lg"
-            />
+            <hlm-skeleton style="width: 100%; height: 16px" class="rounded-lg" />
             <hlm-skeleton style="width: 80%; height: 16px" class="rounded-lg" />
             <hlm-skeleton style="width: 60%; height: 16px" class="rounded-lg" />
-            <hlm-skeleton
-              style="width: 100%; height: 64px"
-              class="rounded-xl"
-            />
+            <hlm-skeleton style="width: 100%; height: 64px" class="rounded-xl" />
           </div>
         </div>
       </div>
@@ -582,7 +671,7 @@
 
     <hlm-separator />
 
-    <!-- ── OVERLAYS ───────────────────────────────────────────── -->
+    <!-- ── OVERLAYS ───────────────────────────────────────────────── -->
     <section id="overlays">
       <div class="mb-6">
         <h2>Overlays</h2>
@@ -596,7 +685,7 @@
         <div>
           <p class="ds-label mb-3">ShareDrawer</p>
           <button hlmBtn (click)="shareDrawerVisible.set(true)">
-            <i class="fa-solid fa-share-nodes mr-1.5"></i>Open Share Drawer
+            Open Share Drawer
           </button>
           <app-share-drawer
             [(visible)]="shareDrawerVisible"
@@ -613,7 +702,6 @@
             <details class="overflow-hidden rounded-xl border border-gray-200">
               <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3 font-semibold text-gray-800 hover:bg-gray-50">
                 Expandable Panel
-                <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
               </summary>
               <div class="border-t border-gray-200 px-4 py-3">
                 <p class="ds-body text-gray-500">
@@ -633,14 +721,12 @@
               type="button"
               class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50"
             >
-              <i class="fa-solid fa-circle-info"></i>
               Show Popover
             </button>
             <hlm-popover-content *hlmPopoverPortal="let ctx">
               <h3 class="font-medium mb-1">Popover Title</h3>
               <p class="ds-body text-gray-500">
-                Contextual overlay anchored to its trigger. Used for inline help
-                and extra actions.
+                Contextual overlay anchored to its trigger.
               </p>
             </hlm-popover-content>
           </hlm-popover>
@@ -650,7 +736,7 @@
 
     <hlm-separator />
 
-    <!-- ── DATA DISPLAY ───────────────────────────────────────── -->
+    <!-- ── DATA DISPLAY ───────────────────────────────────────────── -->
     <section id="data-display">
       <div class="mb-6">
         <h2>Data Display</h2>
@@ -713,41 +799,7 @@
 
     <hlm-separator />
 
-    <!-- ── ICONS ─────────────────────────────────────────────── -->
-    <section id="icons">
-      <div class="mb-6">
-        <h2>Icons</h2>
-        <p class="ds-body mt-1 text-gray-500">
-          Font Awesome Free 7 is the app's icon library.
-        </p>
-      </div>
-
-      <div class="flex flex-col gap-8">
-        <div>
-          <p class="ds-label mb-3">Font Awesome</p>
-          <div class="flex flex-wrap gap-4">
-            @for (icon of faIcons; track icon) {
-              <div class="flex w-14 flex-col items-center gap-1">
-                <i
-                  class="{{ icon }}"
-                  style="font-size: 20px; color: var(--color-secondary)"
-                ></i>
-                <span
-                  class="ds-mono-xs text-center"
-                  style="word-break: break-all"
-                >
-                  {{ icon.split(" ")[1] }}
-                </span>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <hlm-separator />
-
-    <!-- ── ELEVATION ────────────────────────────────────────────── -->
+    <!-- ── ELEVATION ──────────────────────────────────────────────── -->
     <section id="elevation">
       <div class="mb-6">
         <h2>Elevation</h2>
@@ -759,21 +811,9 @@
       <div class="flex flex-wrap items-end gap-8">
         @for (
           level of [
-            {
-              class: "ds-shadow-card",
-              label: "Card",
-              usage: "Content cards at rest",
-            },
-            {
-              class: "ds-shadow-raised",
-              label: "Raised",
-              usage: "Raised interactive elements",
-            },
-            {
-              class: "ds-shadow-floating",
-              label: "Floating",
-              usage: "Overlays and floating elements",
-            },
+            { class: "ds-shadow-card", label: "Card", usage: "Content cards at rest" },
+            { class: "ds-shadow-raised", label: "Raised", usage: "Raised interactive elements" },
+            { class: "ds-shadow-floating", label: "Floating", usage: "Overlays and floating elements" },
           ];
           track level.class
         ) {
@@ -783,47 +823,10 @@
               [ngClass]="level.class"
             ></div>
             <div class="text-center">
-              <p class="ds-label tracking-normal normal-case">
-                {{ level.label }}
-              </p>
+              <p class="ds-label tracking-normal normal-case">{{ level.label }}</p>
               <p class="ds-mono">{{ level.class }}</p>
               <p class="ds-mono-xs">{{ level.usage }}</p>
             </div>
-          </div>
-        }
-      </div>
-    </section>
-
-    <hlm-separator />
-
-    <!-- ── SUGGESTIONS ────────────────────────────────────────── -->
-    <section id="suggestions">
-      <div class="mb-6">
-        <h2>Suggestions</h2>
-        <p class="ds-body mt-1 text-gray-500">
-          Things that make sense to define in a design system but are currently
-          missing.
-        </p>
-      </div>
-
-      <div
-        class="grid gap-3"
-        style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))"
-      >
-        @for (s of suggestions; track s.title) {
-          <div
-            class="flex flex-col gap-2 rounded-xl p-4"
-            style="background: #fff8ed; border: 1px solid #f5d68a"
-          >
-            <div class="flex items-center gap-2">
-              <i class="fa-solid fa-triangle-exclamation" style="color: #d97706"></i>
-              <h3 class="ds-body" style="margin: 0; color: #92400e">
-                {{ s.title }}
-              </h3>
-            </div>
-            <p class="ds-body" style="color: #78350f; line-height: 1.5">
-              {{ s.body }}
-            </p>
           </div>
         }
       </div>

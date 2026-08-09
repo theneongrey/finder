@@ -25,7 +25,8 @@
               }
             ],
             "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/@fontsource-variable/bricolage-grotesque/index.css",
+              "node_modules/@fontsource-variable/hanken-grotesk/index.css",
               "src/styles.css"
             ],
             "scripts": []

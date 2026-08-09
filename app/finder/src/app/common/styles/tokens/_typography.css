@@ -1,0 +1,47 @@
+/* Fonts loaded from npm packages via angular.json — no CDN import */
+:root {
+  --font-display: 'Bricolage Grotesque Variable', 'Hanken Grotesk Variable', system-ui, sans-serif;
+  --font-body: 'Hanken Grotesk Variable', system-ui, -apple-system, sans-serif;
+
+  /* Display sizes (Bricolage Grotesque, tight tracking) */
+  --fs-display-xl: 33px;
+  --fs-display-lg: 30px;
+  --fs-display-md: 27px;
+  --fs-display-sm: 24px;
+  --fs-display-xs: 21px;
+  --fs-display-2xs: 20px;
+  --fs-display-3xs: 19px;
+
+  --tracking-display-xl: -0.8px;
+  --tracking-display-lg: -0.7px;
+  --tracking-display-md: -0.4px;
+  --tracking-display-sm: -0.3px;
+  --tracking-display-xs: -0.2px;
+
+  /* Body sizes (Hanken Grotesk) */
+  --fs-body-lg: 16px;
+  --fs-body: 15px;
+  --fs-body-sm: 14.5px;
+  --fs-body-xs: 14px;
+  --fs-ui: 13.5px;
+  --fs-ui-sm: 13px;
+  --fs-caption: 12.5px;
+  --fs-caption-sm: 12px;
+  --fs-micro: 11.5px;
+  --fs-micro-sm: 11px;
+  --fs-tiny: 10.5px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-heavy: 800;
+
+  --tracking-eyebrow: 0.6px;
+  --tracking-eyebrow-lg: 0.7px;
+
+  --leading-tight: 1.05;
+  --leading-snug: 1.2;
+  --leading-normal: 1.4;
+  --leading-relaxed: 1.5;
+}

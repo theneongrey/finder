@@ -18,7 +18,7 @@
                 : 'bg-green-100 text-green-700'
             "
           >
-            {{ _poll.isClosed ? 'Beendet' : 'Läuft' }}
+            {{ (_poll.isClosed ? 'project.detail.item.statusClosed' : 'project.detail.item.statusOpen') | translate }}
           </span>
         </div>
         @if (_poll.description) {
@@ -27,7 +27,7 @@
         @if (_poll.closeDate && !_poll.isClosed) {
           <p class="ds-body mt-1 text-orange-600 flex items-center gap-1">
             <i class="fa-regular fa-clock"></i>
-            Endet {{ _poll.closeDate | timeSince }}
+            {{ 'project.detail.item.openUntil' | translate }}: {{ _poll.closeDate | date:'dd.MM.yyyy' }}
           </p>
         }
         <div class="mt-2 flex items-center gap-3">

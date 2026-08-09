@@ -83,7 +83,10 @@
         "pollOverview": "Show results",
         "voteOverview": "To Overview",
         "voteNow": "Vote now",
-        "viewProgress": "View current standings"
+        "viewProgress": "View current standings",
+        "statusOpen": "Open",
+        "statusClosed": "Closed",
+        "openUntil": "Open until"
       }
     },
     "share": {

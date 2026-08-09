@@ -17,6 +17,8 @@
   --tracking-display-md: -0.4px;
   --tracking-display-sm: -0.3px;
   --tracking-display-xs: -0.2px;
+  --tracking-display-2xs: -0.2px;
+  --tracking-display-3xs: -0.2px;
 
   /* Body sizes (Hanken Grotesk) */
   --fs-body-lg: 16px;

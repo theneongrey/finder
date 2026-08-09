@@ -1,8 +1,8 @@
-@import "app/common/styles/tokens/_colors.css";
-@import "app/common/styles/tokens/_typography.css";
-@import "app/common/styles/tokens/_spacing.css";
-@import "app/common/styles/tokens/_effects.css";
-@import "app/common/styles/tokens/_zindex.css";
+@import "./app/common/styles/tokens/_colors.css";
+@import "./app/common/styles/tokens/_typography.css";
+@import "./app/common/styles/tokens/_spacing.css";
+@import "./app/common/styles/tokens/_effects.css";
+@import "./app/common/styles/tokens/_zindex.css";
 
 @import "tailwindcss";
 @import "@spartan-ng/brain/hlm-tailwind-preset.css";

@@ -508,13 +508,15 @@ public class ProjectService
 
         var actor = await _userService.GetUser();
         poll.CloseDate = DateTime.UtcNow;
-        poll.StatusChanges.Add(new PollStatusChange
+        var closedStatus = new PollStatusChange
         {
             Id = Guid.NewGuid(),
             Action = PollStatusAction.Closed,
             Poll = poll,
             ChangedBy = actor.Payload!,
-        });
+        };
+        poll.StatusChanges.Add(closedStatus);
+        _dbContext.PollStatusChanges.Add(closedStatus);
         await _dbContext.SaveChangesAsync();
         return Result<Poll>.Success(poll);
     }
@@ -542,13 +544,15 @@ public class ProjectService
 
         var actor = await _userService.GetUser();
         poll.CloseDate = null;
-        poll.StatusChanges.Add(new PollStatusChange
+        var reopenedStatus = new PollStatusChange
         {
             Id = Guid.NewGuid(),
             Action = PollStatusAction.Reopened,
             Poll = poll,
             ChangedBy = actor.Payload!,
-        });
+        };
+        poll.StatusChanges.Add(reopenedStatus);
+        _dbContext.PollStatusChanges.Add(reopenedStatus);
         await _dbContext.SaveChangesAsync();
         return Result<Poll>.Success(poll);
     }

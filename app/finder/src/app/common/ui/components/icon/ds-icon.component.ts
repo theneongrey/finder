@@ -112,35 +112,8 @@ export const ICON_NAMES = Object.keys(ICONS);
 
 @Component({
   selector: 'ds-icon',
-  template: `
-    @if (def()) {
-      <svg
-        [attr.width]="size()"
-        [attr.height]="size()"
-        viewBox="0 0 24 24"
-        [attr.fill]="fillMode() ? color() : 'none'"
-        [attr.stroke]="fillMode() ? 'none' : color()"
-        [attr.stroke-width]="fillMode() ? null : strokeWidth()"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        style="display: block; flex-shrink: 0;"
-      >
-        @for (c of circles(); track $index) {
-          <circle
-            [attr.cx]="c.cx" [attr.cy]="c.cy" [attr.r]="c.r"
-            [attr.fill]="c.filled ? color() : (fillMode() ? color() : 'none')"
-            [attr.stroke]="c.filled ? 'none' : null"
-          />
-        }
-        @for (r of rects(); track $index) {
-          <rect [attr.x]="r.x" [attr.y]="r.y" [attr.width]="r.width" [attr.height]="r.height" [attr.rx]="r.rx ?? null" />
-        }
-        @for (p of paths(); track $index) {
-          <path [attr.d]="p.d" />
-        }
-      </svg>
-    }
-  `,
+  templateUrl: './ds-icon.component.html',
+  styleUrl: './ds-icon.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: contents' },
 })

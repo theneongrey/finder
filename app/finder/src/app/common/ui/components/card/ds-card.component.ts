@@ -1,25 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { HlmCard } from '@spartan-ng/helm/card';
 
 @Component({
   selector: 'ds-card',
-  template: `
-    <div
-      [style.padding.px]="padding()"
-      [style.border]="accentBorder() ? 'none' : '1px solid var(--border-hairline-soft)'"
-      [style.border-left]="accentBorder() ? '4px solid var(--accent)' : undefined"
-      class="ds-card"
-    >
-      <ng-content />
-    </div>
-  `,
-  styles: [`
-    .ds-card {
-      position: relative;
-      background: var(--surface-card);
-      border-radius: var(--radius-3xl);
-      box-shadow: var(--shadow-card-soft);
-    }
-  `],
+  imports: [HlmCard],
+  templateUrl: './ds-card.component.html',
+  styleUrl: './ds-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: contents' },
 })

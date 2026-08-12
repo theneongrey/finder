@@ -1,45 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
 export type IconButtonVariant = 'surface' | 'ghost' | 'dark' | 'teal';
 
-const VARIANT_STYLES: Record<IconButtonVariant, { background: string; color: string; boxShadow: string }> = {
-  surface: { background: '#fff',               color: 'var(--accent)',    boxShadow: 'var(--shadow-fab)' },
-  ghost:   { background: 'transparent',        color: 'var(--ink-250)',   boxShadow: 'none' },
-  dark:    { background: 'var(--sand-200)',    color: 'var(--ink-500)',   boxShadow: 'none' },
-  teal:    { background: 'var(--accent-tint)', color: 'var(--accent)',    boxShadow: 'none' },
-};
-
 @Component({
   selector: 'ds-icon-button',
-  imports: [DsIconComponent],
-  template: `
-    <button
-      [attr.title]="title()"
-      [style.width.px]="size()"
-      [style.height.px]="size()"
-      [style.background]="style().background"
-      [style.color]="style().color"
-      [style.box-shadow]="style().boxShadow"
-      class="ds-icon-btn"
-    >
-      <ds-icon [name]="icon()" [size]="iconSize()" />
-    </button>
-  `,
-  styles: [`
-    .ds-icon-btn {
-      flex-shrink: 0;
-      border: none;
-      border-radius: var(--radius-circle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      padding: 0;
-      transition: opacity var(--duration-fast) var(--ease-standard);
-    }
-    .ds-icon-btn:hover { opacity: 0.8; }
-  `],
+  imports: [DsIconComponent, HlmButton],
+  templateUrl: './ds-icon-button.component.html',
+  styleUrl: './ds-icon-button.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: contents' },
 })
@@ -49,6 +18,6 @@ export class DsIconButtonComponent {
   size = input<number>(36);
   title = input<string | undefined>(undefined);
 
-  protected readonly style = computed(() => VARIANT_STYLES[this.variant()] ?? VARIANT_STYLES['surface']);
+  protected readonly variantClass = computed(() => `ds-ib--${this.variant()}`);
   protected readonly iconSize = computed(() => Math.round(this.size() * 0.44));
 }

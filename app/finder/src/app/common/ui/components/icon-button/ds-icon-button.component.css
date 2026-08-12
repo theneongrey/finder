@@ -1,0 +1,17 @@
+.ds-icon-btn {
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-circle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+.ds-icon-btn:hover { opacity: 0.8; }
+
+.ds-icon-btn.ds-ib--surface { background: #fff; color: var(--accent); box-shadow: var(--shadow-fab); }
+.ds-icon-btn.ds-ib--ghost   { background: transparent; color: var(--ink-250); }
+.ds-icon-btn.ds-ib--dark    { background: var(--sand-200); color: var(--ink-500); }
+.ds-icon-btn.ds-ib--teal    { background: var(--accent-tint); color: var(--accent); }

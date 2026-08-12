@@ -12,33 +12,10 @@ const CONFIG: Record<PollTypeBadgeType, { icon: string; label: string; bg: strin
 @Component({
   selector: 'ds-poll-type-badge',
   imports: [DsIconComponent],
+  templateUrl: './ds-poll-type-badge.component.html',
+  styleUrl: './ds-poll-type-badge.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: inline-flex' },
-  template: `
-    <div class="badge" [style.background]="cfg().bg" [style.color]="cfg().fg">
-      <ds-icon [name]="cfg().icon" [size]="iconSize()" color="currentColor" />
-      @if (showLabel()) {
-        <span class="badge__label">{{ cfg().label }}</span>
-      }
-    </div>
-  `,
-  styles: [`
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      border-radius: var(--radius-pill);
-      padding: 5px 10px 5px 8px;
-      font-size: var(--fs-caption);
-      font-weight: 600;
-      font-family: var(--font-body);
-      line-height: 1;
-    }
-    .badge:not(:has(.badge__label)) {
-      padding: 8px;
-      border-radius: var(--radius-sm);
-    }
-  `],
 })
 export class DsPollTypeBadgeComponent {
   type      = input.required<PollTypeBadgeType>();

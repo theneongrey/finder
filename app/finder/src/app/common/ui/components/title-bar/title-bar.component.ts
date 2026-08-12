@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   inject,
-  signal,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
@@ -40,8 +39,6 @@ export class TitleBarComponent {
   titleDisabled = computed(() => this.title === null);
   backRoute = this.titleService.backRoute;
   isHidden = this.titleService.isHidden;
-
-  menuOpen = signal(false);
 
   private readonly settingsLabel = this.translateService.translate('titleBar.settings');
   private readonly logoutLabel = this.translateService.translate('titleBar.logout');

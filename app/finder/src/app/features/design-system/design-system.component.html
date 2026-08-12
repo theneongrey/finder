@@ -525,18 +525,17 @@
       <ds-button variant="primary" icon="share" (click)="bottomSheetOpen.set(true)" data-testid="bottom-sheet-trigger">
         Bottom Sheet öffnen
       </ds-button>
-      @if (bottomSheetOpen()) {
-        <ds-bottom-sheet
-          title="Projekt teilen"
-          subtitle="Lade Mitglieder ein oder ändere die Sichtbarkeit"
-          (close)="bottomSheetOpen.set(false)"
-          data-testid="bottom-sheet"
-        >
-          <p style="margin-top: 16px; color: var(--text-tertiary); font-size: var(--fs-body-xs)">
-            Hier käme der Inhalt des Sheets — z. B. das ShareContent-Formular.
-          </p>
-        </ds-bottom-sheet>
-      }
+      <ds-bottom-sheet
+        [open]="bottomSheetOpen()"
+        title="Projekt teilen"
+        subtitle="Lade Mitglieder ein oder ändere die Sichtbarkeit"
+        (close)="bottomSheetOpen.set(false)"
+        data-testid="bottom-sheet"
+      >
+        <p style="margin-top: 16px; color: var(--text-tertiary); font-size: var(--fs-body-xs)">
+          Hier käme der Inhalt des Sheets — z. B. das ShareContent-Formular.
+        </p>
+      </ds-bottom-sheet>
     </section>
 
     <hr class="ds-divider" />
@@ -544,21 +543,10 @@
     <!-- ── 16. MENU ───────────────────────────────────────────────── -->
     <section id="menu" data-testid="section-menu">
       <h2>Menu</h2>
-      <p class="ds-section-desc">Selector: <code>ds-menu [open] [items] (closed)</code> — floating dropdown with scrim dismiss.</p>
-      <div style="position: relative; display: inline-block">
-        <ds-icon-button
-          icon="kebab"
-          variant="surface"
-          (click)="menuOpen.set(!menuOpen())"
-          data-testid="menu-trigger"
-        />
-        <ds-menu
-          [open]="menuOpen()"
-          [items]="menuItems"
-          (closed)="menuOpen.set(false)"
-          data-testid="menu"
-        />
-      </div>
+      <p class="ds-section-desc">Selector: <code>ds-menu [items]</code> — floating dropdown, trigger via ng-content.</p>
+      <ds-menu [items]="menuItems" data-testid="menu">
+        <ds-icon-button icon="kebab" variant="surface" data-testid="menu-trigger" />
+      </ds-menu>
     </section>
 
     <hr class="ds-divider" />

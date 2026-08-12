@@ -1,0 +1,21 @@
+<div class="ds-ta-wrap">
+  @if (label()) {
+    <label class="ds-ta-label">{{ label() }}</label>
+  }
+  <textarea
+    #el
+    hlmTextarea
+    class="ds-ta"
+    [class.ds-ta--error]="!!error()"
+    [placeholder]="placeholder()"
+    [rows]="autoResize() ? 1 : rows()"
+    [attr.maxlength]="maxlength() ?? null"
+    [value]="value()"
+    [disabled]="isDisabled()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  ></textarea>
+  @if (error()) {
+    <span class="ds-ta-error">{{ error() }}</span>
+  }
+</div>

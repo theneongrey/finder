@@ -1,34 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 
 const SIZE_MAP = { sm: 27, md: 34, lg: 38 } as const;
 type AvatarSize = keyof typeof SIZE_MAP;
 
 @Component({
   selector: 'ds-avatar',
-  template: `
-    <div
-      [style.width.px]="px()"
-      [style.height.px]="px()"
-      [style.background]="pending() ? 'var(--cream-50)' : bg()"
-      [style.color]="pending() ? 'var(--sand-500)' : fg()"
-      [style.font-size.px]="fontSize()"
-      [style.border]="pending() ? '1.5px dashed var(--sand-400)' : ring() ? '2.5px solid #fff' : 'none'"
-      class="ds-avatar-circle"
-    >{{ initial() }}</div>
-  `,
-  styles: [`
-    .ds-avatar-circle {
-      border-radius: var(--radius-circle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-body);
-      font-weight: var(--weight-bold);
-      flex-shrink: 0;
-      box-sizing: border-box;
-      user-select: none;
-    }
-  `],
+  imports: [...HlmAvatarImports],
+  templateUrl: './ds-avatar.component.html',
+  styleUrl: './ds-avatar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: contents' },
 })

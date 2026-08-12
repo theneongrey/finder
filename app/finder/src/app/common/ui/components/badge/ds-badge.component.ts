@@ -15,41 +15,16 @@ const BADGE_STYLES: Record<BadgeTone, { background: string; color: string }> = {
 };
 
 const SIZE_STYLES: Record<BadgeSize, { padding: string; fontSize: string; minHeight: string }> = {
-  sm: { padding: '0 6px',   fontSize: 'var(--fs-micro)',      minHeight: '20px' },
-  md: { padding: '6px 13px', fontSize: 'var(--fs-ui-sm)',     minHeight: 'auto' },
+  sm: { padding: '0 6px',    fontSize: 'var(--fs-micro)',       minHeight: '20px' },
+  md: { padding: '6px 13px', fontSize: 'var(--fs-ui-sm)',       minHeight: 'auto' },
   lg: { padding: '5px 11px', fontSize: 'var(--fs-caption-sm)', minHeight: '26px' },
 };
 
 @Component({
   selector: 'ds-badge',
   imports: [DsIconComponent],
-  template: `
-    <span
-      [style.background]="style().background"
-      [style.color]="style().color"
-      [style.padding]="sizes().padding"
-      [style.font-size]="sizes().fontSize"
-      [style.min-height]="sizes().minHeight"
-      class="ds-badge-pill">
-      @if (icon()) {
-        <ds-icon [name]="icon()!" [size]="12" />
-      }
-      <ng-content />
-    </span>
-  `,
-  styles: [`
-    .ds-badge-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-family: var(--font-body);
-      font-weight: var(--weight-bold);
-      border-radius: var(--radius-xs);
-      white-space: nowrap;
-      box-sizing: border-box;
-    }
-  `],
+  templateUrl: './ds-badge.component.html',
+  styleUrl: './ds-badge.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: contents' },
 })

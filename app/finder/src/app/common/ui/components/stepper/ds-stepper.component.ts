@@ -2,28 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 @Component({
   selector: 'ds-stepper',
+  templateUrl: './ds-stepper.component.html',
+  styleUrl: './ds-stepper.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: block' },
-  template: `
-    <div class="stepper">
-      @for (bar of bars(); track $index) {
-        <span class="stepper__bar" [style.background]="bar"></span>
-      }
-    </div>
-  `,
-  styles: [`
-    .stepper {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .stepper__bar {
-      height: 4px;
-      flex: 1;
-      border-radius: 99px;
-      transition: background 260ms ease;
-    }
-  `],
 })
 export class DsStepperComponent {
   steps   = input.required<number>();

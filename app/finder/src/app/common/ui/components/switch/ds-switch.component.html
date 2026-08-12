@@ -1,16 +1,7 @@
-<span
-  class="ds-switch-track"
-  [style.width.px]="dim().trackW"
-  [style.height.px]="dim().trackH"
-  [style.background]="checked() ? 'var(--accent)' : 'var(--cream-400)'"
-  role="switch"
-  [attr.aria-checked]="checked()"
->
-  <span
-    class="ds-switch-knob"
-    [style.width.px]="dim().knobSize"
-    [style.height.px]="dim().knobSize"
-    [style.top.px]="dim().knobOff"
-    [style.left.px]="checked() ? dim().knobOn : dim().knobOff"
-  ></span>
-</span>
+<hlm-switch
+  [checked]="checked()"
+  [size]="hlmSize()"
+  [disabled]="isDisabled"
+  (checkedChange)="onCheckedChange($event)"
+  class="ds-switch"
+></hlm-switch>

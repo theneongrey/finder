@@ -6,67 +6,13 @@ import {
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { HlmInput } from '@spartan-ng/helm/input';
 
 @Component({
   selector: 'ds-input',
-  template: `
-    <div class="ds-input-wrap">
-      @if (label()) {
-        <label class="ds-input-label">{{ label() }}</label>
-      }
-      <input
-        [type]="type()"
-        [value]="value()"
-        [placeholder]="placeholder()"
-        [disabled]="isDisabled()"
-        [readOnly]="readonly()"
-        [style.background]="background()"
-        [class.ds-input--error]="!!error()"
-        [class.ds-input--readonly]="readonly()"
-        class="ds-input"
-        (input)="handleInput($event)"
-        (blur)="handleBlur()"
-      />
-      @if (error()) {
-        <span class="ds-input-error">{{ error() }}</span>
-      }
-    </div>
-  `,
-  styles: [`
-    .ds-input-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      width: 100%;
-    }
-    .ds-input-label {
-      font-family: var(--font-body);
-      font-size: var(--fs-ui-sm);
-      font-weight: var(--weight-semibold);
-      color: var(--text-secondary);
-    }
-    .ds-input {
-      width: 100%;
-      box-sizing: border-box;
-      border: 1px solid var(--border-hairline-strong);
-      border-radius: var(--radius-sm);
-      padding: 11px 14px;
-      font-size: var(--fs-body-xs);
-      font-family: var(--font-body);
-      color: var(--text-primary);
-      outline: none;
-      transition: border-color var(--duration-fast) var(--ease-standard);
-    }
-    .ds-input:focus { border-color: var(--accent); }
-    .ds-input--error { border-color: var(--negative); }
-    .ds-input:disabled { opacity: 0.5; cursor: default; }
-    .ds-input--readonly { background: var(--cream-200) !important; color: var(--text-secondary); cursor: default; }
-    .ds-input--readonly:focus { border-color: var(--border-hairline-strong); }
-    .ds-input-error {
-      font-size: var(--fs-caption-sm);
-      color: var(--negative);
-    }
-  `],
+  imports: [HlmInput],
+  templateUrl: './ds-input.component.html',
+  styleUrl: './ds-input.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

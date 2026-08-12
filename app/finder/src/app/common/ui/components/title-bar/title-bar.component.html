@@ -30,16 +30,9 @@
 
     @if (user()?.isAuthenticated) {
       <div class="title-bar__user">
-        <app-user-avatar
-          [user]="user()!"
-          (click)="menuOpen.set(!menuOpen())"
-          style="cursor: pointer;"
-        />
-        <ds-menu
-          [open]="menuOpen()"
-          [items]="menuItems()"
-          (closed)="menuOpen.set(false)"
-        />
+        <ds-menu [items]="menuItems()">
+          <app-user-avatar [user]="user()!" style="cursor: pointer;" />
+        </ds-menu>
       </div>
     }
   </header>

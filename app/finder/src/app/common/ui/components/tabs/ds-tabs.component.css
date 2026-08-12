@@ -1,0 +1,50 @@
+.ds-tabs-host { display: block; }
+
+.ds-tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--border-hairline);
+  /* Override SpartanNG TabsList defaults */
+  background: transparent !important;
+  height: auto !important;
+  width: 100% !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+.ds-tab {
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 0 0 12px;
+  margin-bottom: -1px;
+  border-bottom: 2.5px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard);
+  /* Override SpartanNG TabsTrigger defaults */
+  border-radius: 0 !important;
+  height: auto !important;
+  flex: unset !important;
+}
+.ds-tab[data-active] {
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+.ds-tab-count {
+  font-size: var(--fs-caption-sm);
+  font-weight: var(--weight-bold);
+  background: var(--cream-300);
+  color: var(--text-muted);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+.ds-tab-count--active {
+  background: var(--accent-tint);
+  color: var(--accent);
+}

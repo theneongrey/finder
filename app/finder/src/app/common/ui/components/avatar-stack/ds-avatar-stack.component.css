@@ -1,0 +1,36 @@
+.ds-avatar-stack {
+  display: flex;
+  padding-left: 7px;
+}
+.ds-avatar-stack__item {
+  margin-left: -7px;
+}
+.ds-avatar-stack__overflow {
+  margin-left: -7px;
+  border-radius: var(--radius-circle);
+  background: var(--sand-200);
+  color: var(--ink-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  border: 2.5px solid #fff;
+  box-sizing: border-box;
+}
+.ds-avatar-stack__add {
+  margin-left: -7px;
+  border-radius: var(--radius-circle);
+  background: #fff;
+  border: 1.5px dashed var(--sand-500);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 0;
+}

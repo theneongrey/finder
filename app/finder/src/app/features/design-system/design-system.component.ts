@@ -60,7 +60,6 @@ export class DesignSystemComponent {
   readonly iconNames = ICON_NAMES;
 
   bottomSheetOpen = signal(false);
-  menuOpen = signal(false);
   loadingDemo = signal(false);
 
   segValue = signal('day');

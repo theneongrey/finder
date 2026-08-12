@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, forwardRef, input, model } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { HlmSwitch } from '@spartan-ng/helm/switch';
 
 export type SwitchSize = 'sm' | 'md';
 
-const SIZES: Record<SwitchSize, { trackW: number; trackH: number; knobSize: number; knobOff: number; knobOn: number }> = {
-  sm: { trackW: 32, trackH: 19, knobSize: 14, knobOff: 2.5, knobOn: 15.5 },
-  md: { trackW: 38, trackH: 22, knobSize: 18, knobOff: 2,   knobOn: 18   },
-};
-
 @Component({
   selector: 'ds-switch',
+  imports: [HlmSwitch],
   templateUrl: './ds-switch.component.html',
   styleUrl: './ds-switch.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +17,9 @@ export class DsSwitchComponent implements ControlValueAccessor {
   size    = input<SwitchSize>('md');
   checked = model<boolean>(false);
 
-  protected readonly dim = computed(() => SIZES[this.size()] ?? SIZES['md']);
+  protected readonly hlmSize = computed(() => this.size() === 'sm' ? 'sm' as const : 'default' as const);
+
+  isDisabled = false;
 
   private onChange: (v: boolean) => void = () => {};
   private onTouched: () => void = () => {};
@@ -33,7 +32,10 @@ export class DsSwitchComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
-  private isDisabled = false;
+  protected onCheckedChange(v: boolean): void {
+    this.checked.set(v);
+    this.onChange(v);
+  }
 
   writeValue(val: boolean): void { this.checked.set(!!val); }
   registerOnChange(fn: (v: boolean) => void): void { this.onChange = fn; }

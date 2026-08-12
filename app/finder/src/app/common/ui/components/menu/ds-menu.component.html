@@ -1,0 +1,19 @@
+<div [hlmDropdownMenuTrigger]="menuPanel" class="ds-menu-trigger">
+  <ng-content />
+</div>
+
+<ng-template #menuPanel>
+  <hlm-dropdown-menu class="ds-menu-panel">
+    @for (item of items(); track item.label) {
+      <button
+        hlmDropdownMenuItem
+        [style.color]="item.danger ? 'var(--negative)' : 'var(--ink-700)'"
+        class="ds-menu-item"
+        (click)="item.onClick()"
+      >
+        <ds-icon [name]="item.icon" [size]="15" />
+        {{ item.label }}
+      </button>
+    }
+  </hlm-dropdown-menu>
+</ng-template>

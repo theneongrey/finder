@@ -1,0 +1,12 @@
+<span
+  [style.background]="style().background"
+  [style.color]="style().color"
+  [style.padding]="sizes().padding"
+  [style.font-size]="sizes().fontSize"
+  [style.min-height]="sizes().minHeight"
+  class="ds-badge-pill">
+  @if (icon()) {
+    <ds-icon [name]="icon()!" [size]="12" />
+  }
+  <ng-content />
+</span>

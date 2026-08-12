@@ -1,28 +1,27 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DsIconComponent, ICON_NAMES } from '../../common/ui/components/icon/ds-icon.component';
-import { DsBadgeComponent } from '../../common/ui/components/badge/ds-badge.component';
-import { DsStatusDotComponent } from '../../common/ui/components/badge/ds-status-dot.component';
-import { DsAvatarComponent } from '../../common/ui/components/avatar/ds-avatar.component';
-import { DsAvatarStackComponent } from '../../common/ui/components/avatar-stack/ds-avatar-stack.component';
-import { DsButtonComponent } from '../../common/ui/components/button/ds-button.component';
-import { DsCardComponent } from '../../common/ui/components/card/ds-card.component';
-import { DsIconButtonComponent } from '../../common/ui/components/icon-button/ds-icon-button.component';
-import { DsInputComponent } from '../../common/ui/components/input/ds-input.component';
-import { DsProgressBarComponent } from '../../common/ui/components/progress-bar/ds-progress-bar.component';
-import { DsSegmentedControlComponent } from '../../common/ui/components/segmented-control/ds-segmented-control.component';
-import { DsTabsComponent } from '../../common/ui/components/tabs/ds-tabs.component';
-import { DsBottomSheetComponent } from '../../common/ui/components/bottom-sheet/ds-bottom-sheet.component';
-import { DsMenuComponent } from '../../common/ui/components/menu/ds-menu.component';
-import { DsEmptyStateButtonComponent } from '../../common/ui/components/empty-state-button/ds-empty-state-button.component';
-import { DsVoteButtonsComponent } from '../../common/ui/components/vote-buttons/ds-vote-buttons.component';
-import { DsPollTypeBadgeComponent } from '../../common/ui/components/poll-type-badge/ds-poll-type-badge.component';
-import { DsInputOtpComponent } from '../../common/ui/components/input-otp/ds-input-otp.component';
-import { DsTextareaComponent } from '../../common/ui/components/textarea/ds-textarea.component';
-import { DsStepperComponent } from '../../common/ui/components/stepper/ds-stepper.component';
-import { DsPollCardSkeletonComponent } from '../../common/ui/components/poll-card-skeleton/ds-poll-card-skeleton.component';
-import { DsSwitchComponent } from '../../common/ui/components/switch/ds-switch.component';
-import { DsChipComponent } from '../../common/ui/components/chip/ds-chip.component';
+import { DsIconComponent, ICON_NAMES } from '@ds/icon/ds-icon.component';
+import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
+import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
+import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
+import { DsAvatarStackComponent } from '@ds/avatar-stack/ds-avatar-stack.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsProgressBarComponent } from '@ds/progress-bar/ds-progress-bar.component';
+import { DsSegmentedControlComponent } from '@ds/segmented-control/ds-segmented-control.component';
+import { DsTabsComponent } from '@ds/tabs/ds-tabs.component';
+import { DsBottomSheetComponent } from '@ds/bottom-sheet/ds-bottom-sheet.component';
+import { DsMenuComponent } from '@ds/menu/ds-menu.component';
+import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
+import { DsVoteButtonsComponent } from '@ds/vote-buttons/ds-vote-buttons.component';
+import { DsPollTypeBadgeComponent } from '@ds/poll-type-badge/ds-poll-type-badge.component';
+import { DsInputOtpComponent } from '@ds/input-otp/ds-input-otp.component';
+import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
+import { DsStepperComponent } from '@ds/stepper/ds-stepper.component';
+import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
+import { DsSwitchComponent } from '@ds/switch/ds-switch.component';
+import { DsChipComponent } from '@ds/chip/ds-chip.component';
 
 @Component({
   selector: 'app-design-system',
@@ -34,7 +33,6 @@ import { DsChipComponent } from '../../common/ui/components/chip/ds-chip.compone
     DsAvatarStackComponent,
     DsButtonComponent,
     DsCardComponent,
-    DsIconButtonComponent,
     DsInputComponent,
     DsProgressBarComponent,
     DsSegmentedControlComponent,
@@ -87,9 +85,9 @@ export class DesignSystemComponent {
   ];
 
   readonly menuItems = [
-    { icon: 'edit', label: 'Bearbeiten', onClick: () => {} },
-    { icon: 'share', label: 'Teilen', onClick: () => {} },
-    { icon: 'trash', label: 'Löschen', danger: true, onClick: () => {} },
+    { icon: 'edit', label: 'Bearbeiten', onClick: () => { /* demo */ } },
+    { icon: 'share', label: 'Teilen', onClick: () => { /* demo */ } },
+    { icon: 'trash', label: 'Löschen', danger: true, onClick: () => { /* demo */ } },
   ];
 
   chipLauft   = signal(true);

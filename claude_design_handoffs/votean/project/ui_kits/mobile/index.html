@@ -1,0 +1,655 @@
+<!-- @dsCard group="Mobile app" viewport="480x900" name="Votean mobile" subtitle="Overview, projects, surveys, poll detail, voting, create, share" -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Votean — Mobile UI Kit</title>
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font-body);-webkit-font-smoothing:antialiased;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/plain" id="app-src">
+// Component library, inlined from components/core|feedback|patterns for a self-contained runtime.
+// Source of truth for each lives in its own components/**/*.jsx file.
+const ICONS = {
+  logo: { paths: [{ d: 'M4.5 12.5l4.5 4.5L20 5', strokeWidth: 3.4 }] },
+  'chevron-left': { paths: [{ d: 'M15 5l-7 7 7 7', strokeWidth: 2.6 }] },
+  'chevron-right': { paths: [{ d: 'M9 5l7 7-7 7', strokeWidth: 2.6 }] },
+  'arrow-right': { paths: [{ d: 'M4 12h16' }, { d: 'M14 6l6 6-6 6' }], strokeWidth: 2.4 },
+  kebab: { fill: true, paths: [{ d: 'M12 3.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 10.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 17.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6z' }] },
+  comment: { paths: [{ d: 'M20 4H4a1.5 1.5 0 0 0-1.5 1.5V15A1.5 1.5 0 0 0 4 16.5h3V20l4-3.5h9A1.5 1.5 0 0 0 21.5 15V5.5A1.5 1.5 0 0 0 20 4z' }] },
+  share: { strokeWidth: 2, circles: [{ cx: 18, cy: 5, r: 2.6 }, { cx: 6, cy: 12, r: 2.6 }, { cx: 18, cy: 19, r: 2.6 }], paths: [{ d: 'M8.3 10.7l7.4-4.4' }, { d: 'M8.3 13.3l7.4 4.4' }] },
+  edit: { paths: [{ d: 'M4 20h4L20 8l-4-4L4 16z' }, { d: 'M14 6l4 4' }] },
+  trash: { paths: [{ d: 'M4 7h16' }, { d: 'M9 7V4h6v3' }, { d: 'M6 7l1 13h10l1-13' }] },
+  lock: { strokeWidth: 2.2, rects: [{ x: 5, y: 10, width: 14, height: 10, rx: 2.5 }], paths: [{ d: 'M8 10V7a4 4 0 0 1 8 0v3' }] },
+  users: { strokeWidth: 2, circles: [{ cx: 9.5, cy: 7.5, r: 3.5 }], paths: [{ d: 'M17 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 5 18.5V20' }, { d: 'M19 20v-1.5a3.5 3.5 0 0 0-2.5-3.35' }, { d: 'M15 4.2a3.5 3.5 0 0 1 0 6.6' }] },
+  calendar: { strokeWidth: 2, rects: [{ x: 3.5, y: 5, width: 17, height: 15.5, rx: 2.5 }], paths: [{ d: 'M3.5 9.5h17' }, { d: 'M8 3v4' }, { d: 'M16 3v4' }] },
+  clock: { strokeWidth: 2.2, circles: [{ cx: 12, cy: 12, r: 8.5 }], paths: [{ d: 'M12 7.5V12l3 2' }] },
+  refresh: { strokeWidth: 2.2, paths: [{ d: 'M17 2.5l4 4-4 4' }, { d: 'M3 12.9V12a9 9 0 0 1 15-6.8l3 2.9' }, { d: 'M7 21.5l-4-4 4-4' }, { d: 'M21 11.1V12a9 9 0 0 1-15 6.8l-3-2.9' }] },
+  play: { fill: true, paths: [{ d: 'M6 4l14 8-14 8V4z' }] },
+  send: { fill: true, paths: [{ d: 'M2.5 12L21 3l-6 18-4.5-7.5L2.5 12z' }] },
+  trophy: { strokeWidth: 2, paths: [{ d: 'M8 4h8v4a4 4 0 0 1-8 0V4z' }, { d: 'M8 5H5a2 2 0 0 0 2 4' }, { d: 'M16 5h3a2 2 0 0 1-2 4' }, { d: 'M12 12v3' }, { d: 'M9 19h6' }, { d: 'M10 15h4l.6 4H9.4z' }] },
+  close: { strokeWidth: 2.4, paths: [{ d: 'M5 5l14 14' }, { d: 'M19 5L5 19' }] },
+  check: { strokeWidth: 3, paths: [{ d: 'M4 12.5l5 5L20 6' }] },
+  heart: { strokeWidth: 2.1, paths: [{ d: 'M12 20.3s-7.5-4.6-9.7-9C.8 8 2 4.7 5 3.7c2.2-.7 4.3.2 5.6 2 .4.5 1 1.4 1.4 1.4s1-.9 1.4-1.4c1.3-1.8 3.4-2.7 5.6-2 3 1 4.2 4.3 2.7 7.6-2.2 4.4-9.7 9-9.7 9z' }] },
+  grid: { strokeWidth: 2, rects: [{ x: 3.5, y: 3.5, width: 7, height: 7, rx: 1.8 }, { x: 13.5, y: 3.5, width: 7, height: 7, rx: 1.8 }, { x: 3.5, y: 13.5, width: 7, height: 7, rx: 1.8 }, { x: 13.5, y: 13.5, width: 7, height: 7, rx: 1.8 }] },
+  folder: { strokeWidth: 2, paths: [{ d: 'M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' }] },
+  checklist: { strokeWidth: 2, rects: [{ x: 3.5, y: 3.5, width: 17, height: 17, rx: 4.5 }], paths: [{ d: 'M8 12.3l2.7 2.7L16.4 9' }] },
+  plus: { strokeWidth: 2.2, paths: [{ d: 'M12 5v14' }, { d: 'M5 12h14' }] },
+};
+function Icon({ name, size = 18, color = 'currentColor', style, strokeWidth }) {
+  const def = ICONS[name];
+  if (!def) return null;
+  const sw = strokeWidth || def.strokeWidth || 2;
+  const fillMode = !!def.fill;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fillMode ? color : 'none'} stroke={fillMode ? 'none' : color} strokeWidth={fillMode ? undefined : sw} strokeLinecap="round" strokeLinejoin="round" style={style}>
+      {(def.circles || []).map((c, i) => <circle key={'c' + i} cx={c.cx} cy={c.cy} r={c.r} fill={fillMode ? color : 'none'} />)}
+      {(def.rects || []).map((r, i) => <rect key={'r' + i} x={r.x} y={r.y} width={r.width} height={r.height} rx={r.rx} />)}
+      {(def.paths || []).map((p, i) => <path key={'p' + i} d={p.d} />)}
+    </svg>
+  );
+}
+
+const BTN_VARIANTS = {
+  primary: { background: 'var(--accent)', color: 'var(--text-on-accent)', border: 'none', boxShadow: 'var(--shadow-accent-btn)' },
+  dark: { background: 'var(--ink-900)', color: '#fff', border: 'none', boxShadow: 'none' },
+  outline: { background: '#fff', color: 'var(--accent)', border: '1.5px solid var(--accent)', boxShadow: 'none' },
+  subtle: { background: 'var(--bg-panel)', color: 'var(--ink-600)', border: '1px solid var(--sand-300)', boxShadow: 'none' },
+  ghost: { background: 'transparent', color: 'var(--accent)', border: 'none', boxShadow: 'none' },
+};
+function Button({ variant = 'primary', icon, fullWidth = false, disabled = false, onClick, children, style }) {
+  const v = BTN_VARIANTS[variant] || BTN_VARIANTS.primary;
+  return (
+    <button onClick={onClick} disabled={disabled} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: fullWidth ? '100%' : undefined, border: v.border, background: v.background, color: v.color, boxShadow: v.boxShadow, fontFamily: 'var(--font-body)', fontSize: variant === 'ghost' ? 'var(--fs-ui-sm)' : 'var(--fs-body-xs)', fontWeight: 'var(--weight-bold)', padding: variant === 'ghost' ? 0 : '12px 18px', borderRadius: variant === 'ghost' ? 0 : 'var(--radius-md)', cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.5 : 1, whiteSpace: 'nowrap', ...style }}>
+      {icon ? <Icon name={icon} size={15} /> : null}
+      {children}
+    </button>
+  );
+}
+
+const ICONBTN_VARIANTS = {
+  surface: { background: '#fff', color: 'var(--accent)', boxShadow: 'var(--shadow-fab)' },
+  ghost: { background: 'transparent', color: 'var(--ink-250)', boxShadow: 'none' },
+  dark: { background: 'var(--sand-200)', color: 'var(--ink-500)', boxShadow: 'none' },
+};
+function IconButton({ icon, variant = 'surface', size = 36, iconSize, onClick, style }) {
+  const v = ICONBTN_VARIANTS[variant] || ICONBTN_VARIANTS.surface;
+  return (
+    <button onClick={onClick} style={{ width: size, height: size, flex: 'none', border: 'none', borderRadius: 'var(--radius-circle)', background: v.background, color: v.color, boxShadow: v.boxShadow, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0, ...style }}>
+      <Icon name={icon} size={iconSize || Math.round(size * 0.44)} />
+    </button>
+  );
+}
+
+function Avatar({ initial, bg = 'var(--person-1-bg)', fg = 'var(--person-1-fg)', size = 'md', ring = false }) {
+  const SIZES = { sm: 27, md: 34, lg: 38 };
+  const px = typeof size === 'number' ? size : SIZES[size] || SIZES.md;
+  return (
+    <div style={{ width: px, height: px, borderRadius: 'var(--radius-circle)', background: bg, color: fg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)', fontSize: Math.round(px * 0.4), flex: 'none', border: ring ? '2.5px solid #fff' : 'none', boxSizing: 'border-box' }}>{initial}</div>
+  );
+}
+
+function AvatarStack({ members = [], max = 4, size = 'md', onAddClick }) {
+  const shown = members.slice(0, max);
+  const extra = members.length - shown.length;
+  const px = size === 'sm' ? 27 : size === 'lg' ? 38 : 29;
+  return (
+    <div style={{ display: 'flex', paddingLeft: 7 }}>
+      {shown.map((m, i) => <div key={i} style={{ marginLeft: -7 }}><Avatar initial={m.initial} bg={m.bg} fg={m.fg} size={px} ring /></div>)}
+      {extra > 0 ? <div style={{ width: px, height: px, marginLeft: -7, borderRadius: 'var(--radius-circle)', background: 'var(--sand-200)', color: 'var(--ink-500)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-body)', fontWeight: 'var(--weight-bold)', fontSize: Math.round(px * 0.36), border: '2.5px solid #fff', boxSizing: 'border-box' }}>+{extra}</div> : null}
+      {onAddClick ? <button onClick={onAddClick} style={{ width: px, height: px, marginLeft: -7, borderRadius: 'var(--radius-circle)', background: '#fff', border: '1.5px dashed var(--sand-500)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 500, lineHeight: 1, cursor: 'pointer', boxSizing: 'border-box' }}>+</button> : null}
+    </div>
+  );
+}
+
+const BADGE_VARIANTS = {
+  accent: { background: 'var(--accent-tint)', color: 'var(--accent)' },
+  neutral: { background: 'var(--sand-100)', color: 'var(--ink-400)' },
+  warning: { background: 'var(--amber-100)', color: 'var(--warning)' },
+  viewer: { background: 'var(--sand-100)', color: 'var(--ink-400)' },
+  contributor: { background: 'var(--accent-tint)', color: 'var(--accent)' },
+  manager: { background: 'var(--purple-badge-bg)', color: 'var(--purple-fg)' },
+  success: { background: 'var(--green-badge-bg)', color: 'var(--green-badge-fg)' },
+};
+function Badge({ variant = 'neutral', icon, children }) {
+  const v = BADGE_VARIANTS[variant] || BADGE_VARIANTS.neutral;
+  return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: v.background, color: v.color, fontFamily: 'var(--font-body)', fontSize: 'var(--fs-ui-sm)', fontWeight: 'var(--weight-bold)', padding: '6px 13px', borderRadius: 'var(--radius-pill)', whiteSpace: 'nowrap' }}>{icon}{children}</span>;
+}
+function StatusDot({ label, tone = 'positive' }) {
+  const color = tone === 'positive' ? 'var(--positive)' : 'var(--text-muted)';
+  const dot = tone === 'positive' ? 'var(--positive-strong)' : 'var(--sand-500)';
+  return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 'var(--fs-caption-sm)', fontWeight: 'var(--weight-bold)', color }}><span style={{ width: 7, height: 7, borderRadius: '50%', background: dot }} />{label}</span>;
+}
+
+function Card({ padding = 20, radius = 'var(--radius-3xl)', accentBorder = false, style, children }) {
+  return <div style={{ position: 'relative', background: 'var(--surface-card)', borderRadius: radius, padding, boxShadow: 'var(--shadow-card-soft)', border: accentBorder ? 'none' : '1px solid var(--border-hairline-soft)', borderLeft: accentBorder ? '4px solid var(--accent)' : undefined, ...style }}>{children}</div>;
+}
+
+function Input({ type = 'text', value, onChange, placeholder, background = 'var(--bg-input)', style }) {
+  return <input type={type} value={value} onChange={onChange} placeholder={placeholder} style={{ width: '100%', boxSizing: 'border-box', border: '1px solid var(--border-hairline-strong)', background, borderRadius: 'var(--radius-sm)', padding: '11px 14px', fontSize: 'var(--fs-body-xs)', fontFamily: 'var(--font-body)', color: 'var(--text-primary)', ...style }} />;
+}
+
+function SegmentedControl({ options, value, onChange, size = 'md' }) {
+  return (
+    <div style={{ display: 'flex', gap: 6, background: 'var(--cream-300)', padding: 4, borderRadius: 'var(--radius-md)' }}>
+      {options.map((opt) => {
+        const active = opt.value === value;
+        return <button key={opt.value} onClick={() => onChange(opt.value)} style={{ flex: 1, border: 'none', borderRadius: 'var(--radius-xs)', padding: size === 'sm' ? '8px 4px' : '9px 8px', fontFamily: 'var(--font-body)', fontSize: size === 'sm' ? 'var(--fs-caption)' : 'var(--fs-ui-sm)', fontWeight: active ? 'var(--weight-bold)' : 'var(--weight-semibold)', cursor: 'pointer', background: active ? '#fff' : 'transparent', color: active ? 'var(--text-primary)' : 'var(--text-tertiary)', boxShadow: active ? '0 1px 4px rgba(20,24,28,.1)' : 'none' }}>{opt.label}</button>;
+      })}
+    </div>
+  );
+}
+
+function Tabs({ items, value, onChange, size = 'md' }) {
+  return (
+    <div style={{ display: 'flex', gap: size === 'sm' ? 22 : 24, borderBottom: '1px solid var(--border-hairline)' }}>
+      {items.map((item) => {
+        const active = item.value === value;
+        return (
+          <button key={item.value} onClick={() => onChange(item.value)} style={{ border: 'none', background: 'none', fontFamily: 'var(--font-body)', fontSize: size === 'sm' ? 'var(--fs-body-sm)' : 'var(--fs-body)', fontWeight: active ? 'var(--weight-bold)' : 'var(--weight-semibold)', cursor: 'pointer', color: active ? 'var(--text-primary)' : 'var(--text-muted)', padding: '0 0 12px', marginBottom: -1, borderBottom: active ? '2.5px solid var(--accent)' : '2.5px solid transparent', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            {item.label}
+            {item.count != null ? <span style={{ fontSize: 'var(--fs-caption-sm)', fontWeight: 'var(--weight-bold)', color: active ? 'var(--accent)' : 'var(--text-muted)', background: active ? 'var(--accent-tint)' : 'var(--cream-300)', padding: '1px 7px', borderRadius: 10 }}>{item.count}</span> : null}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function ProgressBar({ percent, height = 9 }) {
+  const p = Math.max(0, Math.min(100, percent));
+  return <div style={{ width: '100%', height, background: 'var(--cream-300)', borderRadius: height / 2, overflow: 'hidden' }}><div style={{ height: '100%', background: 'var(--accent)', borderRadius: height / 2, width: p + '%' }} /></div>;
+}
+
+function Menu({ open, onClose, items }) {
+  if (!open) return null;
+  return (
+    <React.Fragment>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 15 }} />
+      <div style={{ position: 'absolute', top: 48, right: 16, background: '#fff', border: '1px solid var(--border-hairline)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-overlay)', padding: 6, minWidth: 160, zIndex: 20 }}>
+        {items.map((item, i) => (
+          <button key={i} onClick={item.onClick} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', border: 'none', background: 'none', fontFamily: 'var(--font-body)', fontSize: 'var(--fs-ui)', fontWeight: 'var(--weight-semibold)', color: item.danger ? 'var(--negative)' : 'var(--ink-700)', padding: '9px 10px', borderRadius: 'var(--radius-xs)', cursor: 'pointer', textAlign: 'left' }}>
+            <Icon name={item.icon} size={15} />{item.label}
+          </button>
+        ))}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function BottomSheet({ title, subtitle, onClose, children }) {
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', fontFamily: 'var(--font-body)' }}>
+      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'var(--backdrop-scrim)', backdropFilter: 'blur(1px)' }} />
+      <div style={{ position: 'relative', width: '100%', maxWidth: 'var(--mobile-max-width)', background: 'var(--bg-sheet)', borderRadius: '26px 26px 0 0', boxShadow: 'var(--shadow-sheet)', padding: '10px 22px 26px', maxHeight: '92vh', overflowY: 'auto' }}>
+        <div style={{ width: 38, height: 4.5, borderRadius: 3, background: 'var(--cream-400)', margin: '0 auto 16px' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div>
+            <div style={{ fontSize: 'var(--fs-display-2xs)', fontWeight: 'var(--weight-bold)', color: 'var(--text-primary)', letterSpacing: 'var(--tracking-display-sm)', fontFamily: 'var(--font-display)' }}>{title}</div>
+            {subtitle ? <div style={{ fontSize: 'var(--fs-ui)', color: 'var(--text-tertiary)', marginTop: 2 }}>{subtitle}</div> : null}
+          </div>
+          <button onClick={onClose} style={{ marginLeft: 'auto', border: 'none', background: 'var(--sand-200)', color: 'var(--ink-500)', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+            <Icon name="close" size={15} strokeWidth={2.4} />
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function EmptyStateButton({ layout = 'row', icon = 'plus', label, onClick }) {
+  if (layout === 'tile') {
+    return (
+      <button onClick={onClick} style={{ border: '1.5px dashed var(--sand-500)', background: 'rgba(255,255,255,.4)', borderRadius: 'var(--radius-xl)', padding: '18px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9, cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+        <span style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--accent-tint)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={icon === 'calendar' ? 'calendar' : 'plus'} size={19} /></span>
+        <span style={{ fontSize: 'var(--fs-ui)', fontWeight: 'var(--weight-bold)', color: 'var(--ink-700)', textAlign: 'center', lineHeight: 1.2 }}>{label}</span>
+      </button>
+    );
+  }
+  return (
+    <button onClick={onClick} style={{ width: '100%', border: '1.5px dashed var(--sand-500)', background: 'rgba(255,255,255,.4)', borderRadius: 'var(--radius-3xl)', padding: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', fontFamily: 'var(--font-body)', color: 'var(--ink-600)', fontSize: 'var(--fs-body)', fontWeight: 'var(--weight-bold)' }}>
+      <span style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 21, lineHeight: 1, fontWeight: 500 }}>+</span>
+      {label}
+    </button>
+  );
+}
+
+function VoteButtons({ onYes, onSkip, onNo }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 34, width: '100%' }}>
+      <button onClick={onNo} style={{ width: 60, height: 60, borderRadius: '50%', border: '2px solid var(--red-200)', background: 'var(--red-100)', color: 'var(--red-700)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon name="close" size={24} strokeWidth={2.6} /></button>
+      <button onClick={onSkip} style={{ border: 'none', background: 'none', color: 'var(--accent)', fontFamily: 'var(--font-body)', fontSize: 'var(--fs-body)', fontWeight: 'var(--weight-bold)', cursor: 'pointer' }}>Überspringen</button>
+      <button onClick={onYes} style={{ width: 60, height: 60, borderRadius: '50%', border: '2px solid var(--teal-300)', background: '#fff', color: 'var(--accent)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon name="heart" size={24} /></button>
+    </div>
+  );
+}
+
+// ---- sample data ----
+const PEOPLE = {
+  G: { name: 'Giovanni', initial: 'G', bg: 'var(--person-1-bg)', fg: 'var(--person-1-fg)' },
+  F: { name: 'Fabia', initial: 'F', bg: 'var(--person-2-bg)', fg: 'var(--person-2-fg)' },
+  M: { name: 'Marco', initial: 'M', bg: 'var(--person-3-bg)', fg: 'var(--person-3-fg)' },
+  L: { name: 'Lena', initial: 'L', bg: 'var(--person-4-bg)', fg: 'var(--person-4-fg)' },
+  N: { name: 'Noah', initial: 'N', bg: 'var(--person-5-bg)', fg: 'var(--person-5-fg)' },
+  S: { name: 'Sara', initial: 'S', bg: 'var(--person-6-bg)', fg: 'var(--person-6-fg)' },
+};
+const PROJECTS = [
+  { name: 'Sommerurlaub 2026', owner: PEOPLE.G, time: 'vor 2 Std', description: "Wohin geht die Reise während der Kita-Schließzeiten? Lasst uns gemeinsam entscheiden.", topics: 5, members: [PEOPLE.G, PEOPLE.F, PEOPLE.M, PEOPLE.L] },
+  { name: 'Yunas Geburtstag', owner: PEOPLE.F, time: 'vor 1 Tag', description: 'Planung für die kleine Feier im Garten.', topics: 3, members: [PEOPLE.G, PEOPLE.F] },
+  { name: 'Team-Offsite', owner: PEOPLE.M, time: 'vor 3 Tagen', description: 'Standort, Agenda und Verpflegung gemeinsam festlegen.', topics: 8, members: [PEOPLE.G, PEOPLE.M, PEOPLE.L, PEOPLE.N, PEOPLE.S] },
+];
+const TOPICS = [
+  { title: "Wohin soll's gehen?", question: 'Sammelt eure Vorschläge fürs Reiseziel.', project: 'Sommerurlaub 2026', status: 'open', options: 6, votes: 12, voted: false, members: [PEOPLE.G, PEOPLE.F, PEOPLE.M, PEOPLE.L] },
+  { title: 'Welches Datum passt?', question: 'Findet einen Termin, der für alle klappt.', project: 'Sommerurlaub 2026', status: 'open', options: 4, votes: 8, voted: true, members: [PEOPLE.G, PEOPLE.F, PEOPLE.M] },
+  { title: 'Restaurant am Freitag', question: 'Schnelle Abstimmung fürs Team-Essen.', project: '', status: 'closed', options: 3, votes: 9, voted: true, members: [PEOPLE.M, PEOPLE.L, PEOPLE.N] },
+  { title: 'Geschenkideen für Yuna', question: 'Was schenken wir zum Geburtstag?', project: 'Yunas Geburtstag', status: 'open', options: 5, votes: 4, voted: false, members: [PEOPLE.G, PEOPLE.F] },
+];
+
+// ---- composed cards ----
+function ProjectCard({ project, onOpen, onShare }) {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const n = project.topics || 0;
+  return (
+    <div style={{ position: 'relative', background: '#fff', border: '1px solid var(--border-hairline-soft)', borderRadius: 'var(--radius-3xl)', padding: '20px 20px 18px', boxShadow: 'var(--shadow-card)', cursor: 'pointer' }} onClick={onOpen}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 13 }}>
+        <Avatar initial={project.owner.initial} bg={project.owner.bg} fg={project.owner.fg} size={28} />
+        <div style={{ fontSize: 13, color: 'var(--ink-500)', fontWeight: 600 }}>{project.owner.name}</div>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ fontSize: 12.5, color: 'var(--text-muted)' }}>{project.time}</span>
+          <IconButton icon="kebab" variant="ghost" size={26} iconSize={16} onClick={(e) => { e.stopPropagation(); setMenuOpen(v => !v); }} />
+        </div>
+      </div>
+      <div style={{ fontSize: 21, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-.3px', lineHeight: 1.18, fontFamily: 'var(--font-display)' }}>{project.name}</div>
+      {project.description ? <p style={{ margin: '8px 0 0', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.45 }}>{project.description}</p> : null}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
+        <AvatarStack members={project.members} max={4} />
+        <Badge variant="accent">{n === 1 ? '1 Umfrage' : n + ' Umfragen'}</Badge>
+      </div>
+      <Menu open={menuOpen} onClose={() => setMenuOpen(false)} items={[
+        { icon: 'share', label: 'Teilen', onClick: () => { setMenuOpen(false); onShare && onShare(); } },
+        { icon: 'edit', label: 'Bearbeiten', onClick: () => setMenuOpen(false) },
+        { icon: 'trash', label: 'Löschen', onClick: () => setMenuOpen(false), danger: true },
+      ]} />
+    </div>
+  );
+}
+
+function TopicCard({ topic, onVote, onResults, onShare, hideProjectBadge = false }) {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const closed = topic.status !== 'open';
+  const primaryIsResults = closed || topic.voted;
+  return (
+    <div style={{ position: 'relative', background: '#fff', border: '1px solid var(--border-hairline-soft)', borderRadius: 'var(--radius-3xl)', padding: '18px 20px', boxShadow: 'var(--shadow-card-soft)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        {!hideProjectBadge && topic.project ? <Badge variant="accent">{topic.project}</Badge> : null}
+        {!hideProjectBadge && !topic.project ? <Badge variant="warning">Ohne Projekt</Badge> : null}
+        <span style={{ marginLeft: 'auto' }}><StatusDot label={closed ? 'Beendet' : 'Läuft'} tone={closed ? 'muted' : 'positive'} /></span>
+        <IconButton icon="kebab" variant="ghost" size={26} iconSize={16} onClick={() => setMenuOpen(v => !v)} />
+      </div>
+      <div style={{ fontSize: 19, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-.2px', lineHeight: 1.22, fontFamily: 'var(--font-display)' }}>{topic.title}</div>
+      {topic.question ? <p style={{ margin: '6px 0 0', fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{topic.question}</p> : null}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 13 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 11, fontSize: 13, color: 'var(--text-tertiary)', fontWeight: 600, flex: 'none' }}>
+          <span>{topic.options === 1 ? '1 Option' : topic.options + ' Optionen'}</span>
+          <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'var(--sand-400)' }} />
+          <span>{topic.votes === 1 ? '1 Stimme' : topic.votes + ' Stimmen'}</span>
+        </div>
+        <AvatarStack members={topic.members} max={4} size="sm" />
+      </div>
+      {primaryIsResults
+        ? <Button variant="subtle" fullWidth onClick={onResults} style={{ marginTop: 16 }}>{closed ? 'Ergebnisse' : 'Zu den Ergebnissen'}</Button>
+        : <Button variant="primary" fullWidth onClick={onVote} style={{ marginTop: 16 }}>Abstimmen</Button>}
+      <Menu open={menuOpen} onClose={() => setMenuOpen(false)} items={[
+        { icon: 'share', label: 'Teilen', onClick: () => { setMenuOpen(false); onShare && onShare(); } },
+        { icon: 'edit', label: 'Bearbeiten', onClick: () => setMenuOpen(false) },
+        { icon: 'trash', label: 'Löschen', onClick: () => setMenuOpen(false), danger: true },
+      ]} />
+    </div>
+  );
+}
+
+function SectionHeader({ label, onSeeAll }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>
+      <span style={{ fontSize: 'var(--fs-caption)', fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: 'var(--tracking-eyebrow)' }}>{label}</span>
+      <button onClick={onSeeAll} style={{ border: 'none', background: 'none', fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 700, color: 'var(--accent)', cursor: 'pointer', padding: 0 }}>Alle ansehen</button>
+    </div>
+  );
+}
+
+function Header({ title, onBack }) {
+  return (
+    <div style={{ position: 'sticky', top: 0, zIndex: 5, background: 'rgba(244,241,236,.9)', backdropFilter: 'blur(8px)', padding: '18px 22px 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
+      <IconButton icon="chevron-left" variant="surface" onClick={onBack} />
+      <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-.3px', fontFamily: 'var(--font-display)', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</div>
+      <Avatar initial="G" bg="var(--person-1-bg)" fg="var(--person-1-fg)" size={36} />
+    </div>
+  );
+}
+
+// ---- screens ----
+function OverviewScreen({ tab, setTab, onOpenProject, onOpenTopic, onShare, onCreatePoll }) {
+  const latestProjects = PROJECTS.slice(0, 2);
+  const latestTopics = [TOPICS[0], TOPICS[2], TOPICS[3]];
+  return (
+    <div style={{ width: '100%', maxWidth: 'var(--mobile-max-width)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: '20px 22px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <Icon name="logo" size={21} color="var(--accent)" />
+            <span style={{ fontSize: 19, fontWeight: 700, color: 'var(--accent)', letterSpacing: '-.3px', fontFamily: 'var(--font-display)' }}>Votean</span>
+          </div>
+          <Avatar initial="G" bg="var(--person-1-bg)" fg="var(--person-1-fg)" size={38} />
+        </div>
+        <div style={{ marginTop: 22 }}>
+          <div style={{ fontSize: 'var(--fs-display-lg)', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: 'var(--tracking-display-lg)', lineHeight: 1.05, fontFamily: 'var(--font-display)' }}>Hallo Giovanni</div>
+          <div style={{ fontSize: 14.5, color: 'var(--text-secondary)', marginTop: 5 }}>Hier ist, was bei deinen Leuten gerade ansteht.</div>
+        </div>
+        <div style={{ marginTop: 22 }}>
+          <Tabs items={[
+            { value: 'overview', label: 'Überblick' },
+            { value: 'projects', label: 'Projekte', count: PROJECTS.length },
+            { value: 'surveys', label: 'Umfragen', count: TOPICS.length },
+          ]} value={tab} onChange={setTab} />
+        </div>
+      </div>
+      <div style={{ flex: 1, padding: 22 }}>
+        {tab === 'overview' && (
+          <React.Fragment>
+            <SectionHeader label="Neueste Projekte" onSeeAll={() => setTab('projects')} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {latestProjects.map((p, i) => <ProjectCard key={i} project={p} onOpen={() => onOpenProject(p)} onShare={() => onShare(p.name, 'project', p.members)} />)}
+            </div>
+            <div style={{ marginTop: 26 }}><SectionHeader label="Neueste Umfragen" onSeeAll={() => setTab('surveys')} /></div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {latestTopics.map((t, i) => <TopicCard key={i} topic={t} onVote={() => onOpenTopic(t, 'vote')} onResults={() => onOpenTopic(t, 'overview')} onShare={() => onShare(t.title, 'topic', t.members)} />)}
+            </div>
+          </React.Fragment>
+        )}
+        {tab === 'projects' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {PROJECTS.map((p, i) => <ProjectCard key={i} project={p} onOpen={() => onOpenProject(p)} onShare={() => onShare(p.name, 'project', p.members)} />)}
+            <EmptyStateButton layout="row" label="Neues Projekt starten" />
+          </div>
+        )}
+        {tab === 'surveys' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {TOPICS.map((t, i) => <TopicCard key={i} topic={t} onVote={() => onOpenTopic(t, 'vote')} onResults={() => onOpenTopic(t, 'overview')} onShare={() => onShare(t.title, 'topic', t.members)} />)}
+            <EmptyStateButton layout="row" label="Neue Umfrage erstellen" onClick={onCreatePoll} />
+            <div style={{ textAlign: 'center', fontSize: 12.5, color: 'var(--text-muted)', marginTop: -4 }}>Auch ohne Projekt möglich</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const DEFAULT_PROJECT_TOPICS = [
+  { title: 'Urlaubsziel', question: 'Was könnte man sich in etwa vorstellen?', status: 'open', options: 6, votes: 1, voted: false, members: [PEOPLE.G] },
+  { title: 'Wann?', question: '', status: 'open', options: 2, votes: 0, voted: false, members: [PEOPLE.G] },
+];
+
+function ProjectDetailScreen({ project, onBack, onOpenTopic, onShare }) {
+  return (
+    <div style={{ width: '100%', maxWidth: 'var(--mobile-max-width)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header title={project.name} onBack={onBack} />
+      <div style={{ flex: 1, padding: '4px 22px 32px' }}>
+        {project.description ? <p style={{ fontSize: 15, color: 'var(--ink-600)', lineHeight: 1.5, margin: '2px 0 0' }}>{project.description}</p> : null}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 24 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.7px' }}>{project.members.length} Mitglieder</span>
+          <Button variant="dark" icon="share" onClick={onShare}>Teilen</Button>
+        </div>
+        <div style={{ marginTop: 13 }}><AvatarStack members={project.members} max={6} size="lg" onAddClick={onShare} /></div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.7px', margin: '28px 0 14px' }}>Aktuelle Umfragen</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {DEFAULT_PROJECT_TOPICS.map((t, i) => <TopicCard key={i} topic={t} hideProjectBadge onVote={() => onOpenTopic(t, 'vote')} onResults={() => onOpenTopic(t, 'overview')} />)}
+        </div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.7px', margin: '28px 0 14px' }}>Neue Umfrage erstellen</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 11 }}>
+          <EmptyStateButton layout="tile" label="Termin" />
+          <EmptyStateButton layout="tile" icon="calendar" label="Ja/Nein" />
+          <EmptyStateButton layout="tile" label="Bewertung" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const CANDIDATES = [
+  { line: 'Mo., 9. Juni 2026, 16:09 Uhr', vote: 'yes', top: true, votes: '1 von 2 Stimmen' },
+  { line: 'Mi., 11. Juni 2026, 16:09 Uhr', vote: null, top: false, votes: '0 von 2 Stimmen' },
+  { line: 'Freitag, 18:00 Uhr', vote: 'no', top: false, votes: '0 von 2 Stimmen' },
+];
+
+function TopicOverviewScreen({ project, question, onBack, onStartVoting }) {
+  return (
+    <div style={{ width: '100%', maxWidth: 'var(--mobile-max-width)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header title={project} onBack={onBack} />
+      <div style={{ flex: 1, padding: '6px 22px 24px' }}>
+        <div style={{ background: '#fff', borderRadius: 22, padding: '20px 20px 18px', boxShadow: 'var(--shadow-card)', borderLeft: '4px solid var(--accent)' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-.3px', fontFamily: 'var(--font-display)' }}>{question}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)' }} />
+                <span style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '.5px' }}>Aktiv</span>
+              </div>
+            </div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--accent-tint)', color: 'var(--accent)', fontSize: 13, fontWeight: 700, padding: '7px 12px', borderRadius: 20, flex: 'none' }}>
+              <Icon name="comment" size={14} />3
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: 5, marginTop: 14 }}>
+            <span style={{ fontSize: 19, fontWeight: 800, color: 'var(--text-primary)' }}>1</span>
+            <span style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>von 2 bewertet</span>
+          </div>
+          <div style={{ marginTop: 9 }}><ProgressBar percent={50} /></div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 16 }}>
+            <div style={{ fontSize: 13.5, color: 'var(--text-secondary)', fontWeight: 600, lineHeight: 1.35 }}>Schließt in 2 Tagen</div>
+            <Button variant="primary" icon="refresh" onClick={onStartVoting}>Weiter abstimmen</Button>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', margin: '24px 0 12px' }}>
+          <span style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>Kandidaten</span>
+          <span style={{ fontSize: 12.5, color: 'var(--text-muted)', fontWeight: 600 }}>Sortiert nach Beliebtheit</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {CANDIDATES.map((c, i) => (
+            <div key={i} style={{ background: '#fff', borderRadius: 18, padding: '16px 17px', boxShadow: 'var(--shadow-card-soft)' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
+                <div style={{ fontSize: 16.5, fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>{c.line}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flex: 'none' }}>
+                  {c.vote === 'yes' && <React.Fragment><div style={{ width: 26, height: 26, borderRadius: '50%', border: '2px solid var(--green-700)', color: 'var(--positive)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={13} /></div><span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--positive)' }}>Ja</span></React.Fragment>}
+                  {c.vote === 'no' && <React.Fragment><div style={{ width: 26, height: 26, borderRadius: '50%', border: '2px solid var(--red-300)', color: 'var(--negative)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={13} /></div><span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--negative)' }}>Nein</span></React.Fragment>}
+                  {!c.vote && <React.Fragment><div style={{ width: 26, height: 26, borderRadius: '50%', border: '2px solid var(--sand-400)', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700 }}>?</div><span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-muted)' }}>Offen</span></React.Fragment>}
+                </div>
+              </div>
+              {c.top && <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'var(--green-badge-bg)', color: 'var(--green-badge-fg)', fontSize: 12.5, fontWeight: 700, padding: '7px 13px', borderRadius: 20, marginTop: 12 }}><Icon name="trophy" size={14} />Meiste Stimmen</div>}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 12, fontSize: 13, color: 'var(--text-tertiary)', fontWeight: 600 }}><Icon name="users" size={14} />{c.votes}</div>
+              {c.vote
+                ? <button style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: 'none', background: 'none', color: 'var(--text-tertiary)', fontFamily: 'var(--font-body)', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', padding: 0, marginTop: 13 }}><Icon name="refresh" size={14} />Erneut abstimmen</button>
+                : <Button variant="primary" fullWidth icon="play" style={{ marginTop: 14 }}>Abstimmen</Button>}
+            </div>
+          ))}
+        </div>
+
+        <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-display)', margin: '26px 0 12px' }}>Kommentare</div>
+        <div style={{ background: '#fff', borderRadius: 18, padding: 14, boxShadow: 'var(--shadow-card-soft)' }}>
+          <div style={{ display: 'flex', gap: 9 }}>
+            <Input placeholder="Neuer Kommentar..." background="var(--bg-app)" />
+            <button style={{ flex: 'none', width: 44, border: 'none', background: 'var(--accent)', color: '#fff', borderRadius: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="send" size={17} /></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VoteScreen({ project, question, onBack, onOverview, onComplete }) {
+  const [votedCount, setVotedCount] = React.useState(0);
+  const total = 2;
+  const vote = () => {
+    const next = Math.min(total, votedCount + 1);
+    setVotedCount(next);
+    if (next >= total) onComplete && onComplete();
+  };
+  return (
+    <div style={{ width: '100%', maxWidth: 'var(--mobile-max-width)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header title={project} onBack={onBack} />
+      <div style={{ flex: 1, padding: '6px 22px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Button variant="outline" icon="grid" onClick={onOverview} style={{ marginTop: 8 }}>zur Übersicht</Button>
+        <div style={{ textAlign: 'center', marginTop: 20 }}>
+          <div style={{ fontSize: 27, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-.4px', fontFamily: 'var(--font-display)' }}>{question}</div>
+          <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginTop: 6, fontWeight: 600 }}>{votedCount} / {total} abgestimmt</div>
+        </div>
+        <div style={{ width: '100%', background: '#fff', borderRadius: 24, padding: '40px 24px', marginTop: 22, boxShadow: 'var(--shadow-card-lg)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minHeight: 200, justifyContent: 'center' }}>
+          <div style={{ width: 108, height: 108, borderRadius: '50%', border: '2.5px solid var(--teal-ring)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Icon name="clock" size={40} color="var(--accent)" />
+          </div>
+          <div style={{ fontSize: 30, fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>16:09 Uhr</div>
+        </div>
+        <button style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid var(--border-hairline-strong)', background: '#fff', color: 'var(--ink-600)', fontFamily: 'var(--font-body)', fontSize: 13.5, fontWeight: 600, padding: '9px 18px', borderRadius: 20, cursor: 'pointer', marginTop: 22 }}><Icon name="comment" size={15} />Kommentieren</button>
+        <div style={{ marginTop: 26, width: '100%' }}><VoteButtons onYes={vote} onSkip={() => {}} onNo={vote} /></div>
+      </div>
+    </div>
+  );
+}
+
+const POLL_TYPES = [
+  { key: 'weekday', label: 'Wochentag', icon: 'refresh' },
+  { key: 'date', label: 'Kalendertag', icon: 'calendar' },
+  { key: 'time', label: 'Uhrzeit', icon: 'clock' },
+];
+
+function CreatePollScreen({ onBack }) {
+  const [question, setQuestion] = React.useState('');
+  const [type, setType] = React.useState(null);
+  return (
+    <div style={{ width: '100%', maxWidth: 'var(--mobile-max-width)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header title="Terminumfrage erstellen" onBack={onBack} />
+      <div style={{ flex: 1, padding: '6px 22px 24px' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.6px', margin: '14px 0 8px' }}>Deine Frage</div>
+        <Input value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Wann?" style={{ padding: '14px 16px', fontSize: 16 }} />
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.6px', margin: '22px 0 9px' }}>Art der Terminoptionen</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 9 }}>
+          {POLL_TYPES.map((t) => {
+            const active = type === t.key;
+            return (
+              <button key={t.key} onClick={() => setType(t.key)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, border: active ? '1.5px solid var(--accent)' : '1.5px solid var(--border-hairline)', background: active ? 'var(--accent-tint)' : '#fff', borderRadius: 16, padding: '13px 6px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+                <Icon name={t.icon} size={19} color={active ? 'var(--accent)' : 'var(--text-tertiary)'} />
+                <span style={{ fontSize: 12, fontWeight: active ? 700 : 600, color: active ? 'var(--accent)' : 'var(--ink-500)', textAlign: 'center', lineHeight: 1.2 }}>{t.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        {type && (
+          <React.Fragment>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', margin: '24px 0 11px' }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.6px' }}>Terminoptionen</span>
+              <span style={{ fontSize: 12.5, color: 'var(--text-muted)', fontWeight: 600 }}>Mind. 1 Termin</span>
+            </div>
+            <Card accentBorder padding={17}>
+              <div style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 6 }}>{type === 'weekday' ? 'Wochentag' : type === 'date' ? 'Datum' : 'Uhrzeit'}</div>
+              <Input type={type === 'date' ? 'date' : type === 'time' ? 'time' : 'text'} placeholder={type === 'weekday' ? 'Montag' : ''} />
+            </Card>
+            <button style={{ width: '100%', border: '1.5px dashed var(--teal-300)', background: 'rgba(231,242,243,.5)', borderRadius: 16, padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, cursor: 'pointer', fontFamily: 'var(--font-body)', color: 'var(--accent)', fontSize: 14.5, fontWeight: 700, marginTop: 12 }}>
+              <span style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--teal-100)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 600, lineHeight: 1 }}>+</span>
+              Termin hinzufügen
+            </button>
+          </React.Fragment>
+        )}
+      </div>
+      <div style={{ position: 'sticky', bottom: 0, background: 'linear-gradient(180deg, rgba(244,241,236,0), var(--bg-app) 26%)', padding: '16px 22px 22px' }}>
+        <Button variant="primary" icon="send" fullWidth>Terminumfrage erstellen</Button>
+      </div>
+    </div>
+  );
+}
+
+function ShareSheetContent({ title, itemType, members, onClose }) {
+  const [tab, setTab] = React.useState('invite');
+  const [access, setAccess] = React.useState('restricted');
+  const [role, setRole] = React.useState('contributor');
+  return (
+    <BottomSheet title="Teilen" subtitle={(itemType === 'project' ? 'Projekt' : 'Umfrage') + ' · ' + title} onClose={onClose}>
+      <div style={{ marginTop: 20 }}>
+        <Tabs items={[{ value: 'invite', label: 'Einladen' }, { value: 'members', label: 'Mitglieder (' + members.length + ')' }]} value={tab} onChange={setTab} size="sm" />
+      </div>
+      {tab === 'invite' && (
+        <div style={{ marginTop: 18 }}>
+          <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 8 }}>Sichtbarkeit</div>
+          <SegmentedControl options={[{ value: 'restricted', label: 'Nur Eingeladene' }, { value: 'open', label: 'Offen' }]} value={access} onChange={setAccess} />
+          <div style={{ fontSize: 12.5, color: 'var(--text-muted)', marginTop: 7, lineHeight: 1.4 }}>{access === 'restricted' ? 'Nur Personen, die du einlädst, haben Zugriff.' : 'Jede Person mit dem Link kann beitreten.'}</div>
+          <div style={{ marginTop: 22, borderTop: '1px solid var(--border-hairline)', paddingTop: 18 }}>
+            <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 8 }}>Person einladen</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <Input placeholder="Name oder E-Mail" />
+              <button style={{ flex: 'none', border: 'none', background: 'var(--ink-900)', color: '#fff', fontFamily: 'var(--font-body)', fontSize: 13.5, fontWeight: 700, padding: '0 18px', borderRadius: 12, cursor: 'pointer' }}>Einladen</button>
+            </div>
+            <div style={{ marginTop: 16 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 8 }}>Rolle für neue Einladungen</div>
+              <SegmentedControl options={[{ value: 'viewer', label: 'Betrachter' }, { value: 'contributor', label: 'Mitwirkend' }, { value: 'manager', label: 'Verwalter' }]} value={role} onChange={setRole} size="sm" />
+            </div>
+          </div>
+        </div>
+      )}
+      {tab === 'members' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 14 }}>
+          {members.map((m, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '8px 4px' }}>
+              <Avatar initial={m.initial} bg={m.bg} fg={m.fg} size={34} />
+              <div style={{ flex: 1, minWidth: 0, fontSize: 14.5, fontWeight: 600, color: 'var(--text-primary)' }}>{m.name}</div>
+              {i === 0 ? <Badge variant="accent">Ersteller</Badge> : <Badge variant="contributor">Mitwirkend</Badge>}
+            </div>
+          ))}
+        </div>
+      )}
+    </BottomSheet>
+  );
+}
+
+function App() {
+  const [tab, setTab] = React.useState('overview');
+  const [screen, setScreen] = React.useState('overview');
+  const [project, setProject] = React.useState(null);
+  const [topic, setTopic] = React.useState(null);
+  const [share, setShare] = React.useState(null);
+
+  const openProject = (p) => { setProject(p); setScreen('detail'); };
+  const openTopic = (t, mode) => { setTopic(t); setScreen(mode === 'vote' ? 'vote' : 'topicOverview'); };
+  const openShare = (title, itemType, members) => setShare({ title, itemType, members });
+
+  return (
+    <div style={{ minHeight: '100vh', background: 'var(--bg-app)', display: 'flex', justifyContent: 'center', fontFamily: 'var(--font-body)' }}>
+      {screen === 'overview' && <OverviewScreen tab={tab} setTab={setTab} onOpenProject={openProject} onOpenTopic={openTopic} onShare={openShare} onCreatePoll={() => setScreen('createPoll')} />}
+      {screen === 'detail' && project && <ProjectDetailScreen project={project} onBack={() => setScreen('overview')} onOpenTopic={openTopic} onShare={() => openShare(project.name, 'project', project.members)} />}
+      {screen === 'vote' && topic && <VoteScreen project={project ? project.name : (topic.project || 'Umfrage')} question={topic.title} onBack={() => setScreen(project ? 'detail' : 'overview')} onOverview={() => setScreen('topicOverview')} onComplete={() => setScreen('topicOverview')} />}
+      {screen === 'topicOverview' && topic && <TopicOverviewScreen project={project ? project.name : (topic.project || 'Umfrage')} question={topic.title} onBack={() => setScreen(project ? 'detail' : 'overview')} onStartVoting={() => setScreen('vote')} />}
+      {screen === 'createPoll' && <CreatePollScreen onBack={() => setScreen('overview')} />}
+      {share && <ShareSheetContent title={share.title} itemType={share.itemType} members={share.members} onClose={() => setShare(null)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+</script>
+<script>
+  const code = document.getElementById('app-src').textContent;
+  const out = Babel.transform(code, { presets: [['react', { runtime: 'classic' }]] }).code;
+  const s = document.createElement('script');
+  s.textContent = out;
+  document.body.appendChild(s);
+</script>
+</body>
+</html>

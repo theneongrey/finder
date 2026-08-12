@@ -22,10 +22,10 @@
   </div>
 
   @if (showDescription()) {
-    <app-auto-resize-textarea
+    <ds-textarea
       #descriptionTextarea
       name="description"
-      inputId="description"
+      [autoResize]="true"
       [maxlength]="200"
       [placeholder]="
         'project.pollInput.yesNo.descriptionPlaceholder' | translate

@@ -1,0 +1,52 @@
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+  border: none;
+  outline: none;
+}
+.ds-btn:disabled { cursor: default; opacity: 0.5; }
+
+/* Variant overrides — override SpartanNG Tailwind defaults */
+.ds-btn.ds-btn--primary   { background: var(--accent); color: var(--text-on-accent); box-shadow: var(--shadow-accent-btn); border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
+.ds-btn.ds-btn--dark      { background: var(--ink-900); color: #fff; border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
+.ds-btn.ds-btn--outline   { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
+.ds-btn.ds-btn--subtle    { background: var(--bg-panel); color: var(--ink-600); border: 1px solid var(--sand-300); border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
+.ds-btn.ds-btn--neutral   { background: #fff; color: var(--ink-600); border: 1px solid var(--border-hairline); border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
+.ds-btn.ds-btn--ghost     { background: transparent; color: var(--accent); padding: 0; border-radius: 0; font-size: var(--fs-ui-sm); box-shadow: none; }
+
+/* Small size modifier */
+.ds-btn.ds-btn--sm { padding: 6px 12px; border-radius: var(--radius-xs); font-size: var(--fs-ui-sm); }
+.ds-btn.ds-btn--ghost.ds-btn--sm { padding: 0; }
+
+/* Icon-only mode (size is a pixel number) */
+.ds-btn.ds-btn--icon-only {
+  flex-shrink: 0;
+  border-radius: var(--radius-circle);
+  padding: 0;
+  font-size: inherit;
+  box-shadow: none;
+  border: none;
+}
+.ds-btn.ds-btn--icon-only:hover { opacity: 0.8; }
+.ds-btn.ds-btn--icon-only.ds-btn--surface { background: #fff; color: var(--accent); box-shadow: var(--shadow-fab); }
+.ds-btn.ds-btn--icon-only.ds-btn--ghost   { background: transparent; color: var(--ink-250); }
+.ds-btn.ds-btn--icon-only.ds-btn--dark    { background: var(--sand-200); color: var(--ink-500); }
+.ds-btn.ds-btn--icon-only.ds-btn--teal    { background: var(--accent-tint); color: var(--accent); }
+
+.ds-btn__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ds-spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes ds-spin { to { transform: rotate(360deg); } }

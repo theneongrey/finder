@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { UserStore } from '../../common/data/user.store';
 import { Router, RouterOutlet } from '@angular/router';
-import { BackgroundAnimationComponent } from '../../common/ui/components/background-animation/background-animation.component';
-import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
+import { BackgroundAnimationComponent } from '@ds/background-animation/background-animation.component';
+import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { MaxHeightMinusHeaderDirective } from '../../common/ui/directives/max-height-minus-header.directive';
 import { LoggerService } from '../../common/services/logger.service';
 

@@ -1,0 +1,19 @@
+<button
+  hlmBtn
+  [disabled]="disabled() || loading()"
+  [attr.aria-label]="label() ?? null"
+  [style.width]="widthStyle()"
+  [style.height]="heightStyle()"
+  [class]="variantClass()"
+  class="ds-btn"
+>
+  @if (loading()) {
+    <span class="ds-btn__spinner"></span>
+  } @else if (icon()) {
+    <ds-icon [name]="icon()!" [size]="iconSize()" />
+  }
+  <ng-content />
+  @if (!loading() && trailingIcon()) {
+    <ds-icon [name]="trailingIcon()!" [size]="iconSize()" />
+  }
+</button>

@@ -236,26 +236,26 @@
     <!-- ── 7. ICON BUTTONS ───────────────────────────────────────── -->
     <section id="icon-buttons" data-testid="section-icon-buttons">
       <h2>IconButton</h2>
-      <p class="ds-section-desc">Selector: <code>ds-icon-button [icon] [variant] [size] [title]</code></p>
+      <p class="ds-section-desc">Selector: <code>ds-button [icon] [variant] [size]="&lt;px&gt;" [label]</code> — pass a pixel number for [size] to activate icon-only circular mode.</p>
       <div class="ds-row-wrap">
         <div class="ds-labeled-item">
-          <ds-icon-button icon="chevron-left" variant="surface" data-testid="icon-btn-surface" />
+          <ds-button icon="chevron-left" variant="surface" data-testid="icon-btn-surface" />
           <span class="ds-mono-xs">surface</span>
         </div>
         <div class="ds-labeled-item">
-          <ds-icon-button icon="kebab" variant="ghost" />
+          <ds-button icon="kebab" variant="ghost" />
           <span class="ds-mono-xs">ghost</span>
         </div>
         <div class="ds-labeled-item">
-          <ds-icon-button icon="close" variant="dark" />
+          <ds-button icon="close" variant="dark" />
           <span class="ds-mono-xs">dark</span>
         </div>
         <div class="ds-labeled-item">
-          <ds-icon-button icon="share" variant="teal" />
+          <ds-button icon="share" variant="teal" />
           <span class="ds-mono-xs">teal</span>
         </div>
         <div class="ds-labeled-item">
-          <ds-icon-button icon="share" variant="surface" [size]="44" />
+          <ds-button icon="share" variant="surface" [size]="44" />
           <span class="ds-mono-xs">size 44</span>
         </div>
       </div>
@@ -529,7 +529,7 @@
         [open]="bottomSheetOpen()"
         title="Projekt teilen"
         subtitle="Lade Mitglieder ein oder ändere die Sichtbarkeit"
-        (close)="bottomSheetOpen.set(false)"
+        (dismissed)="bottomSheetOpen.set(false)"
         data-testid="bottom-sheet"
       >
         <p style="margin-top: 16px; color: var(--text-tertiary); font-size: var(--fs-body-xs)">
@@ -545,7 +545,7 @@
       <h2>Menu</h2>
       <p class="ds-section-desc">Selector: <code>ds-menu [items]</code> — floating dropdown, trigger via ng-content.</p>
       <ds-menu [items]="menuItems" data-testid="menu">
-        <ds-icon-button icon="kebab" variant="surface" data-testid="menu-trigger" />
+        <ds-button icon="kebab" variant="surface" data-testid="menu-trigger" />
       </ds-menu>
     </section>
 

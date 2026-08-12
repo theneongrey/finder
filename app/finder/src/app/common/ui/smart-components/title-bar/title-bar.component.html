@@ -1,0 +1,39 @@
+@if (!isHidden()) {
+  <header class="title-bar">
+    @if (backRoute()) {
+      <ds-button
+        icon="chevron-left"
+        variant="ghost"
+        [size]="36"
+        [routerLink]="[backRoute()]"
+      />
+      @if (!titleDisabled()) {
+        <app-loading
+          [isLoading]="title() === undefined"
+          skeletonWidth="8rem"
+          skeletonHeight="1.5rem"
+          innercss="my-auto"
+        >
+          <h1 class="title-bar__title">{{ title() }}</h1>
+        </app-loading>
+      }
+    } @else {
+      <a href="/" class="title-bar__logo-link">
+        <img
+          alt="logo"
+          ngSrc="logo-primary.svg"
+          width="98"
+          height="26"
+        />
+      </a>
+    }
+
+    @if (user()?.isAuthenticated) {
+      <div class="title-bar__user">
+        <ds-menu [items]="menuItems()">
+          <app-user-avatar [user]="user()!" style="cursor: pointer;" />
+        </ds-menu>
+      </div>
+    }
+  </header>
+}

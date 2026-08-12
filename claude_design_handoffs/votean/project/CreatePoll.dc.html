@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..48,600;12..48,700;12..48,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #eae6df; }
+  body { font-family: 'Hanken Grotesk', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #1f7a8c; text-decoration: none; }
+  a:hover { color: #17606e; }
+  button, input, textarea { font-family: inherit; }
+  input::placeholder, textarea::placeholder { color: #b5b0a8; }
+  input[type="time"]::-webkit-calendar-picker-indicator { opacity: .5; cursor: pointer; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  @keyframes vtIn { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+  @keyframes vtStepIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+  @keyframes vtPop { 0% { transform: scale(1); } 45% { transform: scale(1.28); } 100% { transform: scale(1); } }
+  @keyframes vtRowIn { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+  @keyframes vtToast { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes vtPulse { 0% { box-shadow: 0 0 0 0 rgba(31,122,140,.42); } 70% { box-shadow: 0 0 0 7px rgba(31,122,140,0); } 100% { box-shadow: 0 0 0 0 rgba(31,122,140,0); } }
+  [data-vt-stagger] > * { animation: vtIn .4s cubic-bezier(.22,.7,.3,1) both; }
+  [data-vt-stagger] > *:nth-child(1) { animation-delay: .02s; }
+  [data-vt-stagger] > *:nth-child(2) { animation-delay: .08s; }
+  [data-vt-stagger] > *:nth-child(3) { animation-delay: .14s; }
+  [data-vt-stagger] > *:nth-child(4) { animation-delay: .2s; }
+</style>
+</helmet>
+
+<section style="display:flex;flex-direction:column;gap:22px;padding:52px 64px 84px;width:max-content;font-family:'Hanken Grotesk',system-ui,sans-serif">
+
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:8px;background:#24272b;color:#fff;font-size:12px;font-weight:700;letter-spacing:.6px">1a</span>
+    <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:20px;font-weight:700;letter-spacing:-.4px;color:#1d2227">Umfrage erstellen · Termin</span>
+    <span style="font-size:13.5px;color:#79756f">Art · Terminoptionen · Teilen — Mobil in 3 Schritten, Web mit Teilen-Panel</span>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:56px">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Mobil</span>
+        <span style="font-size:12px;color:#a39e96">390 × 844 · Umfrage erstellen</span>
+      </div>
+
+      <div data-screen-label="Mobil – Umfrage erstellen" style="position:relative;width:390px;height:844px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:9px solid #24272b;border-radius:46px;box-shadow:0 24px 60px rgba(30,35,40,.22);overflow:hidden">
+
+        <div style="position:absolute;top:0;left:0;right:0;height:44px;z-index:8;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 4px;font-size:12.5px;font-weight:700;color:#3a3833;background:rgba(244,241,236,.86);backdrop-filter:blur(8px)">
+          <span>9:41</span>
+          <span style="width:16px;height:8px;border:1.4px solid #3a3833;border-radius:2px;display:inline-block"></span>
+        </div>
+
+        <div style="position:absolute;top:44px;left:0;right:0;z-index:7;background:rgba(250,247,242,.88);backdrop-filter:blur(10px);border-bottom:1px solid rgba(20,24,28,.06)">
+          <div style="display:flex;align-items:center;gap:10px;padding:9px 18px 10px">
+            <button onClick="{{ m.onBack }}" title="Zurück" style="flex:none;width:36px;height:36px;border-radius:50%;border:1px solid rgba(20,24,28,.07);background:#fff;color:#1f7a8c;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease,transform 140ms ease" style-hover="background:#f1eee9" style-active="transform:scale(.94)">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+            </button>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:17px;font-weight:700;letter-spacing:-.3px;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.headTitle }}</div>
+              <div style="font-size:12px;font-weight:600;color:#8a8681;margin-top:1px">{{ m.headSub }}</div>
+            </div>
+            <div style="flex:none;width:34px;height:34px;border-radius:50%;background:#d7eef0;color:#1f7a8c;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700">G</div>
+          </div>
+          <div style="height:3px;background:rgba(20,24,28,.07)">
+            <div style="height:100%;width:{{ m.progress }};background:{{ accent }};border-radius:0 99px 99px 0;transition:width 420ms cubic-bezier(.22,.7,.3,1)"></div>
+          </div>
+        </div>
+
+        <div style="position:absolute;top:92px;bottom:0;left:0;right:0;overflow-y:auto">
+
+          <sc-if value="{{ m.isStep1 }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:22px 18px 40px;animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
+              <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:27px;font-weight:700;letter-spacing:-.7px;line-height:1.1;color:#1d2227;text-wrap:pretty">Was soll entschieden werden?</div>
+              <div style="font-size:14px;color:#79756f;margin-top:7px;text-wrap:pretty">Wähle die Art der Umfrage — den Rest füllst du im nächsten Schritt aus.</div>
+
+              <div data-vt-stagger style="display:flex;flex-direction:column;gap:12px;margin-top:20px">
+                <sc-for list="{{ m.types }}" as="t" hint-placeholder-count="3">
+                  <button onClick="{{ t.onPick }}" style="display:flex;align-items:center;gap:14px;text-align:left;padding:16px;border-radius:20px;border:1.5px solid {{ t.border }};background:{{ t.bg }};box-shadow:{{ t.shadow }};cursor:pointer;transition:border-color 180ms ease,background 180ms ease,box-shadow 220ms ease,transform 140ms ease" style-active="transform:scale(.985)">
+                    <span style="flex:none;width:46px;height:46px;border-radius:15px;background:{{ t.iconBg }};color:{{ t.iconFg }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,color 180ms ease">
+                      <sc-if value="{{ t.isDate }}" hint-placeholder-val="{{ true }}">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3.2"></rect><path d="M3.5 10h17"></path><path d="M8 3.5v3"></path><path d="M16 3.5v3"></path></svg>
+                      </sc-if>
+                      <sc-if value="{{ t.isYesno }}">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect><path d="M8 12.4l2.8 2.8L16.5 9.5"></path></svg>
+                      </sc-if>
+                      <sc-if value="{{ t.isRating }}">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.9l5.9-.8z"></path></svg>
+                      </sc-if>
+                    </span>
+                    <span style="flex:1;min-width:0">
+                      <span style="display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:17.5px;font-weight:700;letter-spacing:-.2px;color:#1d2227">{{ t.name }}</span>
+                      <span style="display:block;font-size:13px;color:#79756f;margin-top:3px;text-wrap:pretty">{{ t.desc }}</span>
+                    </span>
+                    <span style="flex:none;width:24px;height:24px;border-radius:50%;border:1.6px solid {{ t.radioBorder }};background:{{ t.radioBg }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,border-color 180ms ease">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:{{ t.check }};transition:opacity 160ms ease"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                    </span>
+                  </button>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;align-items:flex-start;gap:9px;margin-top:18px;padding:13px 14px;border-radius:16px;background:rgba(255,255,255,.55);border:1px solid rgba(20,24,28,.05)">
+                <svg width="16" height="16" style="flex:none;margin-top:1px" viewBox="0 0 24 24" fill="none" stroke="#a39e96" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"></circle><path d="M12 11v5.4"></path><path d="M12 7.9v.1"></path></svg>
+                <span style="font-size:12.5px;line-height:1.42;color:#79756f;text-wrap:pretty">Die Art lässt sich später nicht mehr ändern — Frage, Optionen und Teilnehmende schon.</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ m.isStep2 }}">
+            <div style="padding:20px 18px 130px;animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
+
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:16px 16px 18px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Deine Frage</div>
+                <input value="{{ m.q }}" onChange="{{ m.onQ }}" placeholder="z. B. Wann passt es allen?" style="width:100%;height:48px;margin-top:8px;padding:0 14px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:16px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                <sc-if value="{{ m.descOff }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ m.onAddDesc }}" style="display:flex;align-items:center;gap:6px;margin-top:11px;padding:0;border:none;background:none;color:#1f7a8c;font-size:13.5px;font-weight:700;cursor:pointer">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                    <span>Beschreibung hinzufügen</span>
+                  </button>
+                </sc-if>
+                <sc-if value="{{ m.descOn }}">
+                  <div style="margin-top:12px;animation:vtRowIn .28s cubic-bezier(.22,.7,.3,1) both">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Beschreibung</span>
+                      <button onClick="{{ m.onRemoveDesc }}" title="Entfernen" style="width:24px;height:24px;border:none;border-radius:50%;background:#f4f1ec;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6f6b66" stroke-width="2.8" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+                      </button>
+                    </div>
+                    <textarea value="{{ m.desc }}" onChange="{{ m.onDesc }}" placeholder="z. B. Hilf uns, einen Termin zu finden." style="width:100%;height:72px;margin-top:7px;padding:11px 13px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:14.5px;line-height:1.4;color:#1d2227;resize:none;outline:none;transition:border-color 160ms ease" style-focus="border-color:#9fc2cf"></textarea>
+                  </div>
+                </sc-if>
+              </div>
+
+              <div style="margin:22px 2px 9px;font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Art der Terminoptionen</div>
+              <div style="display:flex;gap:7px;overflow-x:auto;padding:1px 2px 3px">
+                <sc-for list="{{ m.modes }}" as="md" hint-placeholder-count="5">
+                  <button onClick="{{ md.onPick }}" style="flex:none;display:flex;align-items:center;gap:7px;height:38px;padding:0 13px;border-radius:12px;border:1px solid {{ md.border }};background:{{ md.bg }};color:{{ md.fg }};font-size:13.5px;font-weight:700;white-space:nowrap;cursor:pointer;transition:background 180ms ease,color 180ms ease,border-color 180ms ease" style-active="transform:scale(.96)">
+                    <span style="width:7px;height:7px;border-radius:50%;background:{{ md.dot }};transition:background 180ms ease"></span>
+                    <span>{{ md.label }}</span>
+                  </button>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ m.canTime }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ m.onToggleTime }}" style="display:flex;align-items:center;gap:11px;width:100%;margin-top:10px;padding:12px 14px;border-radius:16px;border:1px solid rgba(20,24,28,.055);background:rgba(255,255,255,.7);text-align:left;cursor:pointer">
+                  <span style="flex:1;min-width:0">
+                    <span style="display:block;font-size:14px;font-weight:700;color:#1d2227">Uhrzeit je Option</span>
+                    <span style="display:block;font-size:12.5px;color:#8a8681;margin-top:2px">{{ m.timeHint }}</span>
+                  </span>
+                  <span style="position:relative;flex:none;width:44px;height:26px;border-radius:99px;background:{{ m.timeTrack }};transition:background 180ms ease">
+                    <span style="position:absolute;top:3px;left:{{ m.timeKnob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(30,35,40,.28);transition:left 200ms cubic-bezier(.22,.7,.3,1)"></span>
+                  </span>
+                </button>
+              </sc-if>
+
+              <sc-if value="{{ m.showCal }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-top:12px;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:14px 14px 16px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <button onClick="{{ m.onPrevMonth }}" title="Vorheriger Monat" style="width:32px;height:32px;border:none;border-radius:10px;background:#f7f5f1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#efece7">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a5650" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+                    </button>
+                    <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:16px;font-weight:700;letter-spacing:-.2px;color:#1d2227">{{ m.monthLabel }}</span>
+                    <button onClick="{{ m.onNextMonth }}" title="Nächster Monat" style="width:32px;height:32px;border:none;border-radius:10px;background:#f7f5f1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#efece7">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a5650" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:12px">
+                    <sc-for list="{{ weekdays }}" as="wd" hint-placeholder-count="7">
+                      <div style="text-align:center;font-size:11.5px;font-weight:700;letter-spacing:.3px;color:#b5b0a8;padding-bottom:4px">{{ wd }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">
+                    <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="35">
+                      <div style="height:42px">
+                        <sc-if value="{{ c.day }}" hint-placeholder-val="{{ true }}">
+                          <button onClick="{{ c.onPick }}" disabled="{{ c.disabled }}" title="{{ c.title }}" style="position:relative;width:100%;height:100%;border:1.4px solid {{ c.border }};border-radius:13px;background:{{ c.bg }};color:{{ c.fg }};font-size:14.5px;font-weight:{{ c.weight }};cursor:{{ c.cursor }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,color 180ms ease,border-color 180ms ease,transform 140ms ease" style-active="transform:scale(.9)">
+                            <span key="{{ c.key }}" style="animation:{{ c.anim }}">{{ c.num }}</span>
+                            <span style="position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:{{ c.dot }};transition:background 180ms ease"></span>
+                          </button>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="font-size:12.5px;color:#8a8681;margin-top:11px;text-align:center">{{ m.calHint }}</div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ m.showWd }}">
+                <div style="margin-top:12px;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:16px 14px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px">
+                    <sc-for list="{{ m.wdChips }}" as="wc" hint-placeholder-count="7">
+                      <button onClick="{{ wc.onPick }}" title="{{ wc.title }}" style="height:44px;border:1.4px solid {{ wc.border }};border-radius:13px;background:{{ wc.bg }};color:{{ wc.fg }};font-size:13.5px;font-weight:700;cursor:pointer;transition:background 180ms ease,color 180ms ease,border-color 180ms ease,transform 140ms ease" style-active="transform:scale(.92)">{{ wc.label }}</button>
+                    </sc-for>
+                  </div>
+                  <div style="font-size:12.5px;color:#8a8681;margin-top:11px;text-align:center">Wochentage ohne festes Datum — gut für wiederkehrende Treffen.</div>
+                </div>
+              </sc-if>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;margin:20px 2px 9px">
+                <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Optionen</span>
+                <span style="font-size:12.5px;font-weight:700;color:{{ m.countColor }};transition:color 200ms ease">{{ m.countLabel }}</span>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ m.items }}" as="p" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:flex-start;gap:11px;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:16px;padding:11px 12px;box-shadow:0 2px 10px rgba(35,40,45,.04);animation:vtRowIn .3s cubic-bezier(.22,.7,.3,1) both">
+                    <span style="flex:none;width:38px;height:38px;border-radius:12px;background:#eaf4f5;color:#1f7a8c;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1">
+                      <span style="font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.75">{{ p.badgeTop }}</span>
+                      <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:15px;font-weight:700">{{ p.badgeBottom }}</span>
+                    </span>
+                    <span style="flex:1;min-width:0">
+                      <span style="display:block;font-size:14.5px;font-weight:700;color:#1d2227">{{ p.label }}</span>
+                      <span style="display:block;font-size:12.5px;color:#8a8681;margin-top:2px">{{ p.sub }}</span>
+                      <span style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:7px">
+                        <sc-for list="{{ p.fields }}" as="f" hint-placeholder-count="1">
+                          <span style="display:flex;align-items:center;gap:5px">
+                            <span style="font-size:11.5px;font-weight:700;color:#a39e96">{{ f.label }}</span>
+                            <input type="time" value="{{ f.value }}" onChange="{{ f.onChange }}" style="height:30px;padding:0 8px;border-radius:9px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:13px;font-weight:600;color:#1d2227;outline:none;transition:border-color 160ms ease" style-focus="border-color:#9fc2cf">
+                          </span>
+                        </sc-for>
+                        <sc-for list="{{ p.quick }}" as="qk" hint-placeholder-count="0">
+                          <button onClick="{{ qk.onPick }}" style="height:30px;padding:0 9px;border-radius:9px;border:1px solid {{ qk.border }};background:{{ qk.bg }};color:{{ qk.fg }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease,border-color 160ms ease">{{ qk.label }}</button>
+                        </sc-for>
+                      </span>
+                    </span>
+                    <button onClick="{{ p.onRemove }}" title="Option entfernen" style="flex:none;width:32px;height:32px;border:none;border-radius:10px;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#fbeeed">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c1453f" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+                    </button>
+                  </div>
+                </sc-for>
+
+                <sc-if value="{{ m.noItems }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:1.5px dashed #c8c2b8;border-radius:16px;padding:18px 16px;text-align:center;background:rgba(255,255,255,.5)">
+                    <div style="font-size:14px;font-weight:700;color:#5a5650">Noch keine Option</div>
+                    <div style="font-size:12.5px;color:#8a8681;margin-top:4px">{{ m.emptyHint }}</div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.showAddBtn }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ m.onAddItem }}" style="display:flex;align-items:center;justify-content:center;gap:9px;height:52px;border-radius:16px;border:1.5px dashed #9fc2cf;background:rgba(231,242,243,.5);color:#1f7a8c;font-size:14.5px;font-weight:700;cursor:pointer;transition:background 160ms ease" style-hover="background:rgba(231,242,243,.85)">
+                    <span style="width:24px;height:24px;border-radius:50%;background:#d7eef0;display:flex;align-items:center;justify-content:center">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                    </span>
+                    <span>{{ m.addLabel }}</span>
+                  </button>
+                </sc-if>
+              </div>
+
+              <div style="margin-top:22px;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:15px 16px 16px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Automatisch schließen</div>
+                <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:10px">
+                  <sc-for list="{{ m.deadlines }}" as="d" hint-placeholder-count="4">
+                    <button onClick="{{ d.onPick }}" style="height:34px;padding:0 12px;border-radius:11px;border:1px solid {{ d.border }};background:{{ d.bg }};color:{{ d.fg }};font-size:13px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease,border-color 160ms ease">{{ d.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;margin-top:10px">
+                  <span style="flex:none;font-size:12.5px;font-weight:700;color:#8a8681">oder</span>
+                  <input type="datetime-local" value="{{ m.customEnd }}" onChange="{{ m.onCustomEnd }}" style="flex:1;min-width:0;height:42px;border:1px solid {{ m.customBorder }};background:{{ m.customBg }};border-radius:12px;padding:0 12px;font-size:14px;font-weight:600;color:#1d2227;outline:none;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                </div>
+                <div style="font-size:12px;color:#a39e96;margin-top:7px">Eigener Endzeitpunkt — überschreibt die Auswahl oben.</div>
+                <div style="height:1px;background:rgba(20,24,28,.055);margin:16px 0 4px"></div>
+                <sc-for list="{{ m.switches }}" as="s" hint-placeholder-count="2">
+                  <button onClick="{{ s.onToggle }}" style="display:flex;align-items:center;gap:12px;width:100%;padding:11px 0;border:none;background:none;text-align:left;cursor:pointer">
+                    <span style="flex:1;min-width:0">
+                      <span style="display:block;font-size:14.5px;font-weight:700;color:#1d2227">{{ s.title }}</span>
+                      <span style="display:block;font-size:12.5px;color:#8a8681;margin-top:2px;text-wrap:pretty">{{ s.hint }}</span>
+                    </span>
+                    <span style="position:relative;flex:none;width:44px;height:26px;border-radius:99px;background:{{ s.track }};transition:background 180ms ease">
+                      <span style="position:absolute;top:3px;left:{{ s.knob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(30,35,40,.28);transition:left 200ms cubic-bezier(.22,.7,.3,1)"></span>
+                    </span>
+                  </button>
+                </sc-for>
+                <div style="padding-top:12px;border-top:1px solid rgba(20,24,28,.055)">
+                  <div style="font-size:14.5px;font-weight:700;color:#1d2227">Umfrage sofort beenden</div>
+                  <div style="font-size:12.5px;color:#8a8681;margin-top:2px;line-height:1.4;text-wrap:pretty">Niemand kann danach noch abstimmen – das Ergebnis bleibt sichtbar.</div>
+                  <button onClick="{{ m.onCloseNow }}" style="width:100%;height:44px;margin-top:11px;border-radius:14px;border:1px solid #f0c3bd;background:#fdf3f1;color:#c1453f;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 140ms ease" style-hover="background:#fbeeed">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M8.5 12h7"></path></svg>
+                    <span>Jetzt beenden</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ m.isStep3 }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:20px 18px 130px;animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
+              <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:24px;font-weight:700;letter-spacing:-.6px;line-height:1.12;color:#1d2227;text-wrap:pretty">Wer soll abstimmen?</div>
+              <div style="font-size:14px;color:#79756f;margin-top:6px;text-wrap:pretty">Lade Leute ein oder teile den Link — du kannst das auch später noch tun.</div>
+
+              <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:16px;padding:8px 8px 8px 13px;margin-top:16px;box-shadow:0 2px 10px rgba(35,40,45,.04)">
+                <span style="flex:1;min-width:0;font-size:13.5px;color:#5a5650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.shareLink }}</span>
+                <button onClick="{{ m.onCopy }}" style="flex:none;border:none;background:{{ accent }};color:#fff;font-size:13px;font-weight:700;padding:9px 14px;border-radius:11px;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.96)">{{ m.copyLabel }}</button>
+              </div>
+
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:16px;margin-top:12px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Person einladen</div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <input value="{{ m.shareQuery }}" onChange="{{ m.onShareQuery }}" onKeyDown="{{ m.onShareKey }}" placeholder="Name oder E-Mail" style="flex:1;min-width:0;height:46px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;border-radius:14px;padding:0 14px;font-size:15px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                  <button onClick="{{ m.onAddInvite }}" style="flex:none;height:46px;border:none;background:#1d2227;color:#fff;font-size:14px;font-weight:700;padding:0 16px;border-radius:14px;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.97)">Einladen</button>
+                </div>
+
+                <sc-if value="{{ m.hasQuery }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:8px;border:1px solid rgba(20,24,28,.08);border-radius:14px;overflow:hidden;animation:vtRowIn .22s cubic-bezier(.22,.7,.3,1) both">
+                    <sc-for list="{{ m.suggestions }}" as="c" hint-placeholder-count="0">
+                      <button onClick="{{ c.onPick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:11px 13px;cursor:pointer;text-align:left">
+                        <span style="flex:none;width:32px;height:32px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ c.initial }}</span>
+                        <span style="font-size:14.5px;font-weight:600;color:#1d2227">{{ c.name }}</span>
+                      </button>
+                    </sc-for>
+                    <sc-if value="{{ m.noSugg }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:12px 13px;font-size:13px;color:#a39e96;text-wrap:pretty">Kein Kontakt gefunden — mit „Einladen“ per Name oder E-Mail hinzufügen.</div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.showFreq }}" hint-placeholder-val="{{ true }}">
+                  <div style="margin-top:14px">
+                    <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin-bottom:4px">Zuletzt oft geteilt</div>
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <sc-for list="{{ m.frequent }}" as="c" hint-placeholder-count="3">
+                        <button onClick="{{ c.onPick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:8px 4px;border-radius:12px;cursor:pointer;text-align:left;transition:background 140ms ease" style-active="background:#f4f1ec">
+                          <span style="flex:none;width:34px;height:34px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">{{ c.initial }}</span>
+                          <span style="flex:1;font-size:14.5px;font-weight:600;color:#1d2227">{{ c.name }}</span>
+                          <span style="flex:none;width:26px;height:26px;border-radius:50%;background:#eaf4f5;color:{{ accent }};display:flex;align-items:center;justify-content:center">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                          </span>
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin:18px 0 8px">Rolle für neue Einladungen</div>
+                <div style="display:flex;gap:5px;background:#eeeae3;padding:4px;border-radius:13px">
+                  <sc-for list="{{ m.roles }}" as="r" hint-placeholder-count="3">
+                    <button onClick="{{ r.onPick }}" style="flex:1;height:36px;border:none;border-radius:9px;background:{{ r.bg }};color:{{ r.fg }};box-shadow:{{ r.shadow }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 180ms ease,color 180ms ease,box-shadow 180ms ease">{{ r.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="font-size:12.5px;line-height:1.45;color:#79756f;background:#f1eee9;border-radius:11px;padding:10px 12px;margin-top:9px;text-wrap:pretty">{{ m.roleDesc }}</div>
+              </div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;margin:22px 2px 9px">
+                <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Bereits geteilt</span>
+                <span style="font-size:12.5px;font-weight:700;color:#79756f">{{ m.sharedCount }}</span>
+              </div>
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:8px 12px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <sc-for list="{{ m.sharedList }}" as="p" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:11px;padding:9px 2px;animation:vtRowIn .28s cubic-bezier(.22,.7,.3,1) both">
+                    <span style="flex:none;width:36px;height:36px;border-radius:50%;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700">{{ p.initial }}</span>
+                    <span style="flex:1;min-width:0;font-size:14.5px;font-weight:600;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span>
+                    <span style="flex:none;font-size:12px;font-weight:700;color:{{ p.roleFg }};background:{{ p.roleBg }};padding:5px 11px;border-radius:20px;white-space:nowrap">{{ p.roleLabel }}</span>
+                    <sc-if value="{{ p.notOwner }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ p.onRemove }}" title="Zugriff entziehen" style="flex:none;width:30px;height:30px;border:none;border-radius:9px;background:transparent;color:#c1453f;display:flex;align-items:center;justify-content:center;cursor:pointer" style-active="background:#fbeeed">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+                      </button>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="position:absolute;left:0;right:0;bottom:0;z-index:6;padding:14px 20px 22px;background:linear-gradient(to top,#e7efef 46%,rgba(231,239,239,0) 100%)">
+          <button onClick="{{ m.onCta }}" style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:52px;border-radius:17px;border:none;background:{{ m.ctaBg }};color:{{ m.ctaFg }};box-shadow:{{ m.ctaShadow }};font-size:16px;font-weight:700;cursor:{{ m.ctaCursor }};transition:background 200ms ease,color 200ms ease,box-shadow 220ms ease,transform 140ms ease" style-active="transform:scale(.985)">
+            <sc-if value="{{ m.ctaIcon }}" hint-placeholder-val="{{ true }}">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3.5L10.6 13.9"></path><path d="M21 3.5l-6.6 17.2-3.8-7.4-7.4-3.8z"></path></svg>
+            </sc-if>
+            <span>{{ m.ctaLabel }}</span>
+          </button>
+          <div style="text-align:center;font-size:12.5px;color:#79756f;margin-top:9px">{{ m.ctaHint }}</div>
+        </div>
+
+        <sc-if value="{{ m.toastOn }}">
+          <div style="position:absolute;left:16px;right:16px;bottom:104px;z-index:9;display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:vtToast 260ms cubic-bezier(.22,.7,.3,1) both">
+            <span style="flex:none;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+            </span>
+            <span style="flex:1;font-size:13.5px;font-weight:600">{{ m.toastText }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Web</span>
+        <span style="font-size:12px;color:#a39e96">1280 × 820 · Kalender + Teilen-Panel</span>
+      </div>
+
+      <div data-screen-label="Web – Umfrage erstellen" style="position:relative;width:1280px;height:820px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:1px solid rgba(20,24,28,.1);border-radius:20px;box-shadow:0 24px 60px rgba(30,35,40,.16);overflow:hidden;display:flex;flex-direction:column">
+
+        <div style="flex:none;display:flex;align-items:center;gap:14px;padding:16px 28px;background:rgba(255,253,249,.72);backdrop-filter:blur(8px);border-bottom:1px solid rgba(20,24,28,.06)">
+          <div style="display:flex;align-items:center;gap:6px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+            <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.3px;color:#1f7a8c">Votean</span>
+          </div>
+          <span style="width:1px;height:20px;background:rgba(20,24,28,.1)"></span>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a8681">
+            <a href="#">Umfragen</a>
+            <span>/</span>
+            <span style="font-weight:700;color:#3a3833">Neue Umfrage</span>
+          </div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+            <div style="text-align:right">
+              <div style="font-size:13.5px;font-weight:700;color:#1d2227;line-height:1.2">Giovanni</div>
+              <div style="font-size:12px;color:#a39e96;line-height:1.2">Alle Umfragen</div>
+            </div>
+            <div style="width:36px;height:36px;border-radius:50%;background:#d7eef0;color:#1f7a8c;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">G</div>
+          </div>
+        </div>
+
+        <div style="flex:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 28px;background:rgba(255,253,249,.45);border-bottom:1px solid rgba(20,24,28,.06)">
+            <div style="display:flex;align-items:center;gap:6px">
+              <sc-for list="{{ w.steps }}" as="s" hint-placeholder-count="2">
+                <button onClick="{{ s.onGo }}" style="display:flex;align-items:center;gap:10px;padding:8px 6px;border:none;border-radius:10px;background:{{ s.bg }};text-align:left;cursor:pointer;transition:background 160ms ease" style-hover="background:#f7f5f1">
+                  <span style="flex:none;width:24px;height:24px;border-radius:50%;border:1.6px solid {{ s.ringBorder }};background:{{ s.ringBg }};color:{{ s.ringFg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:background 180ms ease,border-color 180ms ease;animation:{{ s.pulse }}">
+                    <sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                    </sc-if>
+                    <sc-if value="{{ s.showNum }}" hint-placeholder-val="{{ true }}">
+                      <span>{{ s.num }}</span>
+                    </sc-if>
+                  </span>
+                  <span style="flex:1;min-width:0">
+                    <span style="display:block;font-size:13.5px;font-weight:700;color:{{ s.titleFg }}">{{ s.title }}</span>
+                    <span style="display:block;font-size:12px;color:#a39e96;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.sub }}</span>
+                  </span>
+                </button>
+              </sc-for>
+            </div>
+
+            <span style="width:1px;height:24px;background:rgba(20,24,28,.1);margin:0 6px"></span>
+            <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Bereit zum Start</span>
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+              <sc-for list="{{ w.checks }}" as="ck" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:9px">
+                  <span style="flex:none;width:19px;height:19px;border-radius:50%;background:{{ ck.bg }};display:flex;align-items:center;justify-content:center;transition:background 200ms ease">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="{{ ck.stroke }}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="transition:stroke 200ms ease"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                  </span>
+                  <span style="font-size:12.5px;font-weight:{{ ck.weight }};color:{{ ck.fg }};line-height:1.3;transition:color 200ms ease;text-wrap:pretty">{{ ck.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+        </div>
+
+        <div style="flex:1;min-height:0;min-width:0;display:flex;flex-direction:column">
+          <div style="padding:26px 32px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:24px">
+            <div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <button onClick="{{ w.onBack }}" title="Zurück" style="width:34px;height:34px;border-radius:11px;border:1px solid rgba(20,24,28,.08);background:#fff;color:#1f7a8c;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#f1eee9">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+                </button>
+                <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:30px;font-weight:700;letter-spacing:-.8px;line-height:1.05;color:#1d2227">{{ w.headTitle }}</span>
+              </div>
+              <div style="font-size:14.5px;color:#79756f;margin-top:7px;padding-left:44px">{{ w.headSub }}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex:none">
+              <button style="height:42px;padding:0 15px;border-radius:13px;border:1px solid rgba(20,24,28,.08);background:#fff;color:#5a5650;font-size:14px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f1eee9">Verwerfen</button>
+              <button onClick="{{ w.onCta }}" style="display:flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:13px;border:none;background:{{ w.ctaBg }};color:{{ w.ctaFg }};box-shadow:{{ w.ctaShadow }};font-size:14.5px;font-weight:700;cursor:{{ w.ctaCursor }};transition:background 200ms ease,color 200ms ease,box-shadow 220ms ease,transform 140ms ease" style-active="transform:scale(.99)">
+                <sc-if value="{{ w.ctaIcon }}" hint-placeholder-val="{{ true }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3.5L10.6 13.9"></path><path d="M21 3.5l-6.6 17.2-3.8-7.4-7.4-3.8z"></path></svg>
+                </sc-if>
+                <span>{{ w.ctaLabel }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:22px 32px 32px">
+
+            <sc-if value="{{ w.isStep1 }}" hint-placeholder-val="{{ true }}">
+              <div style="animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
+                <div data-vt-stagger style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:940px">
+                  <sc-for list="{{ w.types }}" as="t" hint-placeholder-count="3">
+                    <button onClick="{{ t.onPick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:14px;text-align:left;padding:22px 22px 24px;border-radius:22px;border:1.5px solid {{ t.border }};background:{{ t.bg }};box-shadow:{{ t.shadow }};cursor:pointer;transition:border-color 180ms ease,background 180ms ease,box-shadow 220ms ease,transform 180ms ease" style-hover="transform:translateY(-2px)">
+                      <span style="display:flex;align-items:center;justify-content:space-between;width:100%">
+                        <span style="width:52px;height:52px;border-radius:17px;background:{{ t.iconBg }};color:{{ t.iconFg }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,color 180ms ease">
+                          <sc-if value="{{ t.isDate }}" hint-placeholder-val="{{ true }}">
+                            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3.2"></rect><path d="M3.5 10h17"></path><path d="M8 3.5v3"></path><path d="M16 3.5v3"></path></svg>
+                          </sc-if>
+                          <sc-if value="{{ t.isYesno }}">
+                            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect><path d="M8 12.4l2.8 2.8L16.5 9.5"></path></svg>
+                          </sc-if>
+                          <sc-if value="{{ t.isRating }}">
+                            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.9l5.9-.8z"></path></svg>
+                          </sc-if>
+                        </span>
+                        <span style="width:26px;height:26px;border-radius:50%;border:1.6px solid {{ t.radioBorder }};background:{{ t.radioBg }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,border-color 180ms ease">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:{{ t.check }};transition:opacity 160ms ease"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                        </span>
+                      </span>
+                      <span>
+                        <span style="display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:21px;font-weight:700;letter-spacing:-.3px;color:#1d2227">{{ t.name }}</span>
+                        <span style="display:block;font-size:14px;line-height:1.45;color:#79756f;margin-top:6px;text-wrap:pretty">{{ t.desc }}</span>
+                      </span>
+                      <span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:8px;background:rgba(20,24,28,.045);color:#6f6b66;font-size:12px;font-weight:700">{{ t.tag }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;margin-top:20px;max-width:940px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid rgba(20,24,28,.05)">
+                  <svg width="17" height="17" style="flex:none" viewBox="0 0 24 24" fill="none" stroke="#a39e96" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"></circle><path d="M12 11v5.4"></path><path d="M12 7.9v.1"></path></svg>
+                  <span style="font-size:13.5px;color:#79756f">Die Art lässt sich später nicht mehr ändern — Frage, Optionen und Teilnehmende schon.</span>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ w.isStep2 }}">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 344px;gap:24px;align-items:start;animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
+
+                <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+                  <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:20px 22px 22px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                    <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Deine Frage</div>
+                    <input value="{{ w.q }}" onChange="{{ w.onQ }}" placeholder="z. B. Wann passt es allen?" style="width:100%;height:50px;margin-top:9px;padding:0 15px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:16.5px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                    <sc-if value="{{ w.descOff }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ w.onAddDesc }}" style="display:flex;align-items:center;gap:6px;margin-top:12px;padding:0;border:none;background:none;color:#1f7a8c;font-size:14px;font-weight:700;cursor:pointer">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                        <span>Beschreibung hinzufügen</span>
+                      </button>
+                    </sc-if>
+                    <sc-if value="{{ w.descOn }}">
+                      <div style="margin-top:14px;animation:vtRowIn .28s cubic-bezier(.22,.7,.3,1) both">
+                        <div style="display:flex;align-items:center;justify-content:space-between">
+                          <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Beschreibung</span>
+                          <button onClick="{{ w.onRemoveDesc }}" title="Entfernen" style="width:26px;height:26px;border:none;border-radius:50%;background:#f4f1ec;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6f6b66" stroke-width="2.8" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+                          </button>
+                        </div>
+                        <textarea value="{{ w.desc }}" onChange="{{ w.onDesc }}" placeholder="z. B. Hilf uns, einen Termin zu finden." style="width:100%;height:76px;margin-top:8px;padding:12px 14px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:15px;line-height:1.45;color:#1d2227;resize:none;outline:none;transition:border-color 160ms ease" style-focus="border-color:#9fc2cf"></textarea>
+                      </div>
+                    </sc-if>
+                  </div>
+
+                  <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:20px 22px 22px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                    <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Art der Terminoptionen</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:11px">
+                      <sc-for list="{{ w.modes }}" as="md" hint-placeholder-count="5">
+                        <button onClick="{{ md.onPick }}" style="display:flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-radius:12px;border:1px solid {{ md.border }};background:{{ md.bg }};color:{{ md.fg }};font-size:13.5px;font-weight:700;cursor:pointer;transition:background 180ms ease,color 180ms ease,border-color 180ms ease">
+                          <span style="width:7px;height:7px;border-radius:50%;background:{{ md.dot }};transition:background 180ms ease"></span>
+                          <span>{{ md.label }}</span>
+                        </button>
+                      </sc-for>
+                    </div>
+
+                    <sc-if value="{{ w.canTime }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ w.onToggleTime }}" style="display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px 14px;border-radius:14px;border:1px solid rgba(20,24,28,.06);background:#fdfcfa;text-align:left;cursor:pointer">
+                        <span style="flex:1;min-width:0">
+                          <span style="display:block;font-size:14px;font-weight:700;color:#1d2227">Uhrzeit je Option</span>
+                          <span style="display:block;font-size:12.5px;color:#8a8681;margin-top:2px">{{ w.timeHint }}</span>
+                        </span>
+                        <span style="position:relative;flex:none;width:44px;height:26px;border-radius:99px;background:{{ w.timeTrack }};transition:background 180ms ease">
+                          <span style="position:absolute;top:3px;left:{{ w.timeKnob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(30,35,40,.28);transition:left 200ms cubic-bezier(.22,.7,.3,1)"></span>
+                        </span>
+                      </button>
+                    </sc-if>
+
+                    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:18px">
+                      <div>
+                        <sc-if value="{{ w.showCal }}" hint-placeholder-val="{{ true }}">
+                          <div>
+                            <div style="display:flex;align-items:center;justify-content:space-between">
+                              <button onClick="{{ w.onPrevMonth }}" title="Vorheriger Monat" style="width:32px;height:32px;border:none;border-radius:10px;background:#f7f5f1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#efece7">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a5650" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+                              </button>
+                              <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:17px;font-weight:700;letter-spacing:-.2px;color:#1d2227">{{ w.monthLabel }}</span>
+                              <button onClick="{{ w.onNextMonth }}" title="Nächster Monat" style="width:32px;height:32px;border:none;border-radius:10px;background:#f7f5f1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#efece7">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a5650" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+                              </button>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:12px">
+                              <sc-for list="{{ weekdays }}" as="wd" hint-placeholder-count="7">
+                                <div style="text-align:center;font-size:11.5px;font-weight:700;letter-spacing:.3px;color:#b5b0a8;padding-bottom:4px">{{ wd }}</div>
+                              </sc-for>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
+                              <sc-for list="{{ w.cells }}" as="c" hint-placeholder-count="35">
+                                <div style="height:40px">
+                                  <sc-if value="{{ c.day }}" hint-placeholder-val="{{ true }}">
+                                    <button onClick="{{ c.onPick }}" disabled="{{ c.disabled }}" title="{{ c.title }}" style="position:relative;width:100%;height:100%;border:1.4px solid {{ c.border }};border-radius:12px;background:{{ c.bg }};color:{{ c.fg }};font-size:14px;font-weight:{{ c.weight }};cursor:{{ c.cursor }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,color 180ms ease,border-color 180ms ease,transform 140ms ease" style-hover="border-color:#9fc2cf" style-active="transform:scale(.9)">
+                                      <span key="{{ c.key }}" style="animation:{{ c.anim }}">{{ c.num }}</span>
+                                      <span style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:{{ c.dot }};transition:background 180ms ease"></span>
+                                    </button>
+                                  </sc-if>
+                                </div>
+                              </sc-for>
+                            </div>
+                            <div style="font-size:12.5px;color:#8a8681;margin-top:10px">{{ w.calHint }}</div>
+                          </div>
+                        </sc-if>
+
+                        <sc-if value="{{ w.showWd }}">
+                          <div>
+                            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+                              <sc-for list="{{ w.wdChips }}" as="wc" hint-placeholder-count="7">
+                                <button onClick="{{ wc.onPick }}" title="{{ wc.title }}" style="height:44px;border:1.4px solid {{ wc.border }};border-radius:13px;background:{{ wc.bg }};color:{{ wc.fg }};font-size:13.5px;font-weight:700;cursor:pointer;transition:background 180ms ease,color 180ms ease,border-color 180ms ease">{{ wc.title }}</button>
+                              </sc-for>
+                            </div>
+                            <div style="font-size:12.5px;color:#8a8681;margin-top:10px">Wochentage ohne festes Datum — gut für wiederkehrende Treffen.</div>
+                          </div>
+                        </sc-if>
+
+                        <sc-if value="{{ w.showAddBtn }}">
+                          <button onClick="{{ w.onAddItem }}" style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:96px;border-radius:16px;border:1.5px dashed #9fc2cf;background:rgba(231,242,243,.5);color:#1f7a8c;font-size:14.5px;font-weight:700;cursor:pointer;transition:background 160ms ease" style-hover="background:rgba(231,242,243,.85)">
+                            <span style="width:26px;height:26px;border-radius:50%;background:#d7eef0;display:flex;align-items:center;justify-content:center">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                            </span>
+                            <span>{{ w.addLabel }}</span>
+                          </button>
+                        </sc-if>
+                      </div>
+
+                      <div style="min-width:0">
+                        <div style="display:flex;align-items:baseline;justify-content:space-between">
+                          <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Gewählt</span>
+                          <span style="font-size:12.5px;font-weight:700;color:{{ w.countColor }};transition:color 200ms ease">{{ w.countLabel }}</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+                          <sc-for list="{{ w.items }}" as="p" hint-placeholder-count="2">
+                            <div style="display:flex;align-items:flex-start;gap:10px;background:#fdfcfa;border:1px solid rgba(20,24,28,.07);border-radius:14px;padding:9px 10px;animation:vtRowIn .3s cubic-bezier(.22,.7,.3,1) both">
+                              <span style="flex:none;width:34px;height:34px;border-radius:11px;background:#eaf4f5;color:#1f7a8c;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1">
+                                <span style="font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.75">{{ p.badgeTop }}</span>
+                                <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:14px;font-weight:700">{{ p.badgeBottom }}</span>
+                              </span>
+                              <span style="flex:1;min-width:0">
+                                <span style="display:block;font-size:13.5px;font-weight:700;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.label }}</span>
+                                <span style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:5px">
+                                  <sc-for list="{{ p.fields }}" as="f" hint-placeholder-count="1">
+                                    <span style="display:flex;align-items:center;gap:4px">
+                                      <span style="font-size:11px;font-weight:700;color:#a39e96">{{ f.label }}</span>
+                                      <input type="time" value="{{ f.value }}" onChange="{{ f.onChange }}" style="height:28px;padding:0 6px;border-radius:8px;border:1px solid rgba(20,24,28,.1);background:#fff;font-size:12.5px;font-weight:600;color:#1d2227;outline:none;transition:border-color 160ms ease" style-focus="border-color:#9fc2cf">
+                                    </span>
+                                  </sc-for>
+                                  <sc-for list="{{ p.quick }}" as="qk" hint-placeholder-count="0">
+                                    <button onClick="{{ qk.onPick }}" style="height:28px;padding:0 8px;border-radius:8px;border:1px solid {{ qk.border }};background:{{ qk.bg }};color:{{ qk.fg }};font-size:12px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease,border-color 160ms ease">{{ qk.label }}</button>
+                                  </sc-for>
+                                </span>
+                              </span>
+                              <button onClick="{{ p.onRemove }}" title="Option entfernen" style="flex:none;width:28px;height:28px;border:none;border-radius:9px;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#fbeeed">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c1453f" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+                              </button>
+                            </div>
+                          </sc-for>
+                          <sc-if value="{{ w.noItems }}">
+                            <div style="border:1.5px dashed #c8c2b8;border-radius:14px;padding:22px 14px;text-align:center;background:rgba(244,241,236,.5)">
+                              <div style="font-size:13.5px;font-weight:700;color:#5a5650">Noch keine Option</div>
+                              <div style="font-size:12.5px;color:#8a8681;margin-top:4px">{{ w.emptyHint }}</div>
+                            </div>
+                          </sc-if>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:20px 22px 14px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                    <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+                      <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Automatisch schließen</span>
+                      <span style="display:flex;gap:7px;flex-wrap:wrap">
+                        <sc-for list="{{ w.deadlines }}" as="d" hint-placeholder-count="4">
+                          <button onClick="{{ d.onPick }}" style="height:34px;padding:0 13px;border-radius:11px;border:1px solid {{ d.border }};background:{{ d.bg }};color:{{ d.fg }};font-size:13px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease,border-color 160ms ease">{{ d.label }}</button>
+                        </sc-for>
+                        <span style="display:flex;align-items:center;gap:8px">
+                          <span style="font-size:12.5px;font-weight:700;color:#8a8681">oder</span>
+                          <input type="datetime-local" value="{{ w.customEnd }}" onChange="{{ w.onCustomEnd }}" title="Eigener Endzeitpunkt" style="height:34px;border:1px solid {{ w.customBorder }};background:{{ w.customBg }};border-radius:11px;padding:0 10px;font-size:13px;font-weight:600;color:#1d2227;outline:none;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                        </span>
+                      </span>
+                    </div>
+                    <div style="height:1px;background:rgba(20,24,28,.055);margin:16px 0 2px"></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px">
+                      <sc-for list="{{ w.switches }}" as="s" hint-placeholder-count="2">
+                        <button onClick="{{ s.onToggle }}" style="display:flex;align-items:center;gap:12px;padding:12px 0;border:none;background:none;text-align:left;cursor:pointer">
+                          <span style="flex:1;min-width:0">
+                            <span style="display:block;font-size:14px;font-weight:700;color:#1d2227">{{ s.title }}</span>
+                            <span style="display:block;font-size:12.5px;color:#8a8681;margin-top:2px;text-wrap:pretty">{{ s.hint }}</span>
+                          </span>
+                          <span style="position:relative;flex:none;width:44px;height:26px;border-radius:99px;background:{{ s.track }};transition:background 180ms ease">
+                            <span style="position:absolute;top:3px;left:{{ s.knob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(30,35,40,.28);transition:left 200ms cubic-bezier(.22,.7,.3,1)"></span>
+                          </span>
+                        </button>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;padding:14px 0 8px;border-top:1px solid rgba(20,24,28,.055)">
+                      <span style="flex:1;min-width:0">
+                        <span style="display:block;font-size:14px;font-weight:700;color:#1d2227">Umfrage sofort beenden</span>
+                        <span style="display:block;font-size:12.5px;color:#8a8681;margin-top:2px;text-wrap:pretty">Niemand kann danach noch abstimmen – das Ergebnis bleibt sichtbar.</span>
+                      </span>
+                      <button onClick="{{ w.onCloseNow }}" style="flex:none;height:40px;padding:0 16px;border-radius:13px;border:1px solid #f0c3bd;background:#fdf3f1;color:#c1453f;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background 140ms ease" style-hover="background:#fbeeed">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M8.5 12h7"></path></svg>
+                        <span>Jetzt beenden</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <sc-if value="{{ showShare }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;align-items:center;gap:8px;padding-left:2px">
+                      <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Teilen</span>
+                      <span style="font-size:12.5px;color:#b5b0a8">{{ w.sharedCount }} haben Zugriff</span>
+                    </div>
+                    <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:18px 20px 20px;box-shadow:0 6px 24px rgba(35,40,45,.08)">
+                      <div style="display:flex;align-items:center;gap:8px;background:#f4f1ec;border-radius:12px;padding:8px 8px 8px 12px">
+                        <span style="flex:1;min-width:0;font-size:13px;color:#5a5650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ w.shareLink }}</span>
+                        <button onClick="{{ w.onCopy }}" style="flex:none;border:none;background:{{ accent }};color:#fff;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:9px;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.96)">{{ w.copyLabel }}</button>
+                      </div>
+
+                      <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin:18px 0 8px">Person einladen</div>
+                      <div style="display:flex;gap:8px">
+                        <input value="{{ w.shareQuery }}" onChange="{{ w.onShareQuery }}" onKeyDown="{{ w.onShareKey }}" placeholder="Name oder E-Mail" style="flex:1;min-width:0;height:42px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;border-radius:12px;padding:0 13px;font-size:14px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                        <button onClick="{{ w.onAddInvite }}" style="flex:none;height:42px;border:none;background:#1d2227;color:#fff;font-size:13.5px;font-weight:700;padding:0 16px;border-radius:12px;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.97)">Einladen</button>
+                      </div>
+
+                      <sc-if value="{{ w.hasQuery }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top:8px;background:#fff;border:1px solid rgba(20,24,28,.08);border-radius:14px;box-shadow:0 6px 18px rgba(20,24,28,.08);overflow:hidden;animation:vtRowIn .22s cubic-bezier(.22,.7,.3,1) both">
+                          <sc-for list="{{ w.suggestions }}" as="c" hint-placeholder-count="0">
+                            <button onClick="{{ c.onPick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:10px 13px;cursor:pointer;text-align:left;transition:background 140ms ease" style-hover="background:#f4f1ec">
+                              <span style="flex:none;width:30px;height:30px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">{{ c.initial }}</span>
+                              <span style="font-size:14px;font-weight:600;color:#1d2227">{{ c.name }}</span>
+                            </button>
+                          </sc-for>
+                          <sc-if value="{{ w.noSugg }}" hint-placeholder-val="{{ false }}">
+                            <div style="padding:12px 13px;font-size:13px;color:#a39e96;text-wrap:pretty">Kein Kontakt gefunden — mit „Einladen“ per Name oder E-Mail hinzufügen.</div>
+                          </sc-if>
+                        </div>
+                      </sc-if>
+
+                      <sc-if value="{{ w.showFreq }}" hint-placeholder-val="{{ true }}">
+                        <div style="margin-top:14px">
+                          <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin-bottom:4px">Zuletzt oft geteilt</div>
+                          <div style="display:flex;flex-direction:column;gap:2px">
+                            <sc-for list="{{ w.frequent }}" as="c" hint-placeholder-count="3">
+                              <button onClick="{{ c.onPick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:7px 6px;border-radius:11px;cursor:pointer;text-align:left;transition:background 140ms ease" style-hover="background:#f4f1ec">
+                                <span style="flex:none;width:32px;height:32px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ c.initial }}</span>
+                                <span style="flex:1;font-size:14px;font-weight:600;color:#1d2227">{{ c.name }}</span>
+                                <span style="flex:none;width:24px;height:24px;border-radius:50%;background:#eaf4f5;color:{{ accent }};display:flex;align-items:center;justify-content:center">
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                                </span>
+                              </button>
+                            </sc-for>
+                          </div>
+                        </div>
+                      </sc-if>
+
+                      <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin:18px 0 8px">Rolle für neue Einladungen</div>
+                      <div style="display:flex;gap:5px;background:#eeeae3;padding:4px;border-radius:13px">
+                        <sc-for list="{{ w.roles }}" as="r" hint-placeholder-count="3">
+                          <button onClick="{{ r.onPick }}" style="flex:1;height:34px;border:none;border-radius:9px;background:{{ r.bg }};color:{{ r.fg }};box-shadow:{{ r.shadow }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 180ms ease,color 180ms ease,box-shadow 180ms ease">{{ r.label }}</button>
+                        </sc-for>
+                      </div>
+                      <div style="font-size:12.5px;line-height:1.45;color:#79756f;background:#f1eee9;border-radius:11px;padding:9px 12px;margin-top:9px;text-wrap:pretty">{{ w.roleDesc }}</div>
+
+                      <div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 6px">
+                        <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Bereits geteilt</span>
+                        <span style="font-size:12.5px;font-weight:700;color:#79756f">{{ w.sharedCount }}</span>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:2px">
+                        <sc-for list="{{ w.sharedList }}" as="p" hint-placeholder-count="2">
+                          <div style="display:flex;align-items:center;gap:10px;padding:7px 4px;animation:vtRowIn .28s cubic-bezier(.22,.7,.3,1) both">
+                            <span style="flex:none;width:32px;height:32px;border-radius:50%;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ p.initial }}</span>
+                            <span style="flex:1;min-width:0;font-size:14px;font-weight:600;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span>
+                            <span style="flex:none;font-size:12px;font-weight:700;color:{{ p.roleFg }};background:{{ p.roleBg }};padding:4px 10px;border-radius:20px;white-space:nowrap">{{ p.roleLabel }}</span>
+                            <sc-if value="{{ p.notOwner }}" hint-placeholder-val="{{ true }}">
+                              <button onClick="{{ p.onRemove }}" title="Zugriff entziehen" style="flex:none;width:26px;height:26px;border:none;border-radius:8px;background:transparent;color:#c1453f;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#fbeeed">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+                              </button>
+                            </sc-if>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <sc-if value="{{ w.toastOn }}">
+          <div style="position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:11px;padding:14px 16px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:vtToast 260ms cubic-bezier(.22,.7,.3,1) both;white-space:nowrap">
+            <span style="flex:none;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+            </span>
+            <span style="font-size:14px;font-weight:600">{{ w.toastText }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1860,&quot;height&quot;:1020},&quot;showShare&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Web&quot;},&quot;autoAdvance&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Verhalten&quot;},&quot;requireTwoOptions&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Verhalten&quot;}}">
+const MONTHS = ['Januar','Februar','M\u00e4rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const MON_SHORT = ['Jan','Feb','M\u00e4r','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+const WD = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+const WD_SHORT = ['Mo.','Di.','Mi.','Do.','Fr.','Sa.','So.'];
+const WD_LONG = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+const TODAY = { y: 2026, m: 7, d: 7 };
+const QUICK = ['18:00', '20:00'];
+
+const TYPES = [
+  { id: 'date', name: 'Termin', desc: 'Mehrere Zeitpunkte vorschlagen, alle sagen wann sie k\u00f6nnen.', tag: 'Mehrfachauswahl' },
+  { id: 'yesno', name: 'Ja / Nein', desc: 'Eine Frage, zwei Antworten \u2014 schnell entschieden.', tag: 'Eine Frage' },
+  { id: 'rating', name: 'Bewertung', desc: 'Optionen sammeln und mit Sternen gewichten.', tag: '1\u20135 Sterne' },
+];
+
+const MODES = [
+  { id: 'day', label: 'Kalendertag' },
+  { id: 'weekday', label: 'Wochentag' },
+  { id: 'range', label: 'Datumsbereich' },
+  { id: 'time', label: 'Uhrzeit' },
+  { id: 'timerange', label: 'Zeitspanne' },
+];
+
+const PEOPLE = [
+  { i: 'G', bg: '#d7eef0', fg: '#1f7a8c' },
+  { i: 'F', bg: '#f4dfe2', fg: '#b56374' },
+  { i: 'M', bg: '#f6e7cf', fg: '#b3863a' },
+  { i: 'L', bg: '#e6e0f3', fg: '#6f5aa6' },
+  { i: 'N', bg: '#dcecd9', fg: '#4f7a4a' },
+  { i: 'S', bg: '#d9e4f2', fg: '#4a6da6' },
+];
+
+const DEADLINES = [
+  { id: 'd3', label: 'in 3 Tagen', text: 'Offen bis Mo., 10. Aug., 18:00 Uhr' },
+  { id: 'w1', label: 'in 1 Woche', text: 'Offen bis Fr., 14. Aug., 18:00 Uhr' },
+  { id: 'w2', label: 'in 2 Wochen', text: 'Offen bis Fr., 21. Aug., 18:00 Uhr' },
+  { id: 'none', label: 'kein Ende', text: 'L\u00e4uft ohne Enddatum' },
+];
+
+const CONTACTS = [
+  { name: 'Marco', initial: 'M', bg: '#f6e7cf', fg: '#b3863a' },
+  { name: 'Lena', initial: 'L', bg: '#e6e0f3', fg: '#6f5aa6' },
+  { name: 'Noah', initial: 'N', bg: '#dcecd9', fg: '#4f7a4a' },
+  { name: 'Sara', initial: 'S', bg: '#d9e4f2', fg: '#4a6da6' },
+  { name: 'Julia', initial: 'J', bg: '#f4dfe2', fg: '#b56374' },
+  { name: 'Tom', initial: 'T', bg: '#e0ecef', fg: '#3f7f91' },
+];
+const FREQUENT = ['Marco', 'Lena', 'Noah'];
+const ROLES = [
+  { id: 'viewer', label: 'Betrachter', desc: 'Kann die Umfrage sehen, aber nicht abstimmen.' },
+  { id: 'contributor', label: 'Mitwirkend', desc: 'Kann abstimmen und kommentieren.' },
+  { id: 'manager', label: 'Verwalter', desc: 'Kann die Umfrage bearbeiten und schlie\u00dfen.' },
+];
+const ROLE_COLORS = {
+  viewer: { bg: '#f1eee9', fg: '#79756f' },
+  contributor: { bg: '#e7f2f3', fg: '#1f7a8c' },
+  manager: { bg: '#eae4f4', fg: '#6f5aa6' },
+};
+const PALETTE = [
+  { bg: '#dcecd9', fg: '#4f7a4a' }, { bg: '#f6e7cf', fg: '#b3863a' },
+  { bg: '#e6e0f3', fg: '#6f5aa6' }, { bg: '#d9e4f2', fg: '#4a6da6' },
+];
+
+const pad = n => (n < 10 ? '0' + n : '' + n);
+const isoParts = iso => iso.split('-').map(Number);
+const isoWd = iso => { const p = isoParts(iso); return (new Date(p[0], p[1] - 1, p[2]).getDay() + 6) % 7; };
+const dayLabel = iso => { const p = isoParts(iso); return WD_SHORT[isoWd(iso)] + ', ' + p[2] + '. ' + MON_SHORT[p[1] - 1]; };
+
+let uid = 0;
+const nid = () => 'i' + (++uid);
+
+class Component extends DCLogic {
+  state = {
+    m: this.blank(1, [{ k: nid(), kind: 'day', iso: '2026-08-14', t: '18:00' }, { k: nid(), kind: 'day', iso: '2026-08-15', t: '18:00' }]),
+    w: this.blank(2, [{ k: nid(), kind: 'day', iso: '2026-08-14', t: '18:00' }, { k: nid(), kind: 'day', iso: '2026-08-15', t: '18:00' }, { k: nid(), kind: 'day', iso: '2026-08-21', t: '18:00' }]),
+    popped: null,
+  };
+
+  blank(step, items) {
+    return {
+      step: step,
+      type: 'date',
+      q: step === 1 ? '' : 'Wann passt das Grillen allen?',
+      desc: null,
+      mode: 'day',
+      withTime: false,
+      items: items || [],
+      pending: null,
+      deadline: 'w1',
+      multi: true,
+      anon: false,
+      month: 7,
+      year: 2026,
+      invite: '',
+      customEnd: '',
+      role: 'contributor',
+      copied: false,
+      shared: [
+        { name: 'Giovanni', initial: 'G', bg: '#d7eef0', fg: '#1f7a8c', role: 'manager', owner: true },
+        { name: 'Fabia', initial: 'F', bg: '#f4dfe2', fg: '#b56374', role: 'contributor' },
+      ],
+      toast: null,
+    };
+  }
+
+  addPerson(k, name, contact) {
+    const s = this.state[k];
+    const n = (name || '').trim();
+    if (!n) return;
+    if (s.shared.some(p => p.name.toLowerCase() === n.toLowerCase())) { this.patch(k, { invite: '' }); return; }
+    const c = contact || PALETTE[s.shared.length % PALETTE.length];
+    this.patch(k, {
+      invite: '',
+      shared: s.shared.concat([{ name: n, initial: contact ? contact.initial : n.charAt(0).toUpperCase(), bg: c.bg, fg: c.fg, role: s.role }]),
+    });
+  }
+
+  removePerson(k, name) {
+    const s = this.state[k];
+    this.patch(k, { shared: s.shared.filter(p => p.name !== name) });
+  }
+
+  copyLink(k) {
+    this.patch(k, { copied: true });
+    const t = k === 'm' ? '_cm' : '_cw';
+    clearTimeout(this[t]);
+    this[t] = setTimeout(() => this.patch(k, { copied: false }), 1800);
+  }
+
+  share(k) {
+    const s = this.state[k];
+    const ac = this.accent;
+    const q = s.invite.trim().toLowerCase();
+    const names = s.shared.map(p => p.name.toLowerCase());
+    const pool = CONTACTS.filter(c => names.indexOf(c.name.toLowerCase()) < 0);
+    const wrap = c => Object.assign({}, c, { onPick: () => this.addPerson(k, c.name, c) });
+    const sugg = q ? pool.filter(c => c.name.toLowerCase().indexOf(q) >= 0).slice(0, 4).map(wrap) : [];
+    const freq = pool.filter(c => FREQUENT.indexOf(c.name) >= 0).slice(0, 3).map(wrap);
+    const roleDesc = (ROLES.filter(r => r.id === s.role)[0] || ROLES[1]).desc;
+
+    return {
+      shareQuery: s.invite,
+      onShareQuery: e => this.patch(k, { invite: e.target.value }),
+      onShareKey: e => { if (e.key === 'Enter') this.addPerson(k, this.state[k].invite, null); },
+      onAddInvite: () => this.addPerson(k, s.invite, null),
+      hasQuery: q.length > 0,
+      hasSugg: sugg.length > 0,
+      noSugg: q.length > 0 && sugg.length === 0,
+      suggestions: sugg,
+      showFreq: q.length === 0 && freq.length > 0,
+      frequent: freq,
+      roles: ROLES.map(r => {
+        const on = s.role === r.id;
+        return {
+          label: r.label,
+          bg: on ? '#ffffff' : 'transparent',
+          fg: on ? '#1d2227' : '#8a8681',
+          shadow: on ? '0 1px 4px rgba(20,24,28,.12)' : 'none',
+          onPick: () => this.patch(k, { role: r.id }),
+        };
+      }),
+      roleDesc: roleDesc,
+      sharedList: s.shared.map(p => {
+        const c = ROLE_COLORS[p.role] || ROLE_COLORS.contributor;
+        return {
+          name: p.name, initial: p.initial, bg: p.bg, fg: p.fg,
+          isOwner: !!p.owner, notOwner: !p.owner,
+          roleLabel: p.owner ? 'Ersteller' : (ROLES.filter(r => r.id === p.role)[0] || ROLES[1]).label,
+          roleBg: p.owner ? '#e7f2f3' : c.bg,
+          roleFg: p.owner ? ac : c.fg,
+          onRemove: () => this.removePerson(k, p.name),
+        };
+      }),
+      sharedCount: s.shared.length === 1 ? '1 Person' : s.shared.length + ' Personen',
+      shareLink: 'votean.app/u/grillen-august',
+      copyLabel: s.copied ? 'Kopiert \u2713' : 'Kopieren',
+      onCopy: () => this.copyLink(k),
+    };
+  }
+
+  componentWillUnmount() { clearTimeout(this._tm); clearTimeout(this._tw); clearTimeout(this._pop); }
+
+  get accent() { return this.props.accent || '#1f7a8c'; }
+  get minItems() { return this.props.requireTwoOptions === false ? 1 : 2; }
+
+  patch(k, obj) { this.setState(s => ({ [k]: Object.assign({}, s[k], obj) })); }
+
+  toast(k, text) {
+    this.patch(k, { toast: text });
+    const t = k === 'm' ? '_tm' : '_tw';
+    clearTimeout(this[t]);
+    this[t] = setTimeout(() => this.patch(k, { toast: null }), 2600);
+  }
+
+  pop(id) {
+    this.setState({ popped: id });
+    clearTimeout(this._pop);
+    this._pop = setTimeout(() => this.setState({ popped: null }), 420);
+  }
+
+  sortItems(list) {
+    const rank = it => {
+      if (it.kind === 'day' || it.kind === 'range') return it.iso;
+      if (it.kind === 'weekday') return 'w' + it.wd;
+      return 'z' + it.t;
+    };
+    return list.slice().sort((a, b) => (rank(a) < rank(b) ? -1 : rank(a) > rank(b) ? 1 : 0));
+  }
+
+  setMode(k, mode) {
+    const s = this.state[k];
+    if (s.mode === mode) return;
+    this.patch(k, { mode: mode, items: [], pending: null, withTime: mode === 'time' || mode === 'timerange' ? false : s.withTime });
+  }
+
+  tapDay(k, iso) {
+    const s = this.state[k];
+    if (s.mode === 'day') {
+      const found = s.items.filter(it => it.iso === iso)[0];
+      if (found) { this.patch(k, { items: s.items.filter(it => it !== found) }); return; }
+      this.patch(k, { items: this.sortItems(s.items.concat([{ k: nid(), kind: 'day', iso: iso, t: '18:00' }])) });
+      this.pop(k + iso);
+      return;
+    }
+    if (s.pending) {
+      const a = s.pending < iso ? s.pending : iso;
+      const b = s.pending < iso ? iso : s.pending;
+      this.patch(k, { pending: null, items: this.sortItems(s.items.concat([{ k: nid(), kind: 'range', iso: a, iso2: b, t: '10:00', t2: '17:00' }])) });
+      this.pop(k + iso);
+    } else {
+      const hit = s.items.filter(it => it.iso === iso || it.iso2 === iso)[0];
+      if (hit) { this.patch(k, { items: s.items.filter(it => it !== hit) }); return; }
+      this.patch(k, { pending: iso });
+    }
+  }
+
+  setCustomEnd(k, val) {
+    this.patch(k, { customEnd: val, deadline: val ? 'custom' : 'w1' });
+  }
+
+  tapWd(k, i) {
+    const s = this.state[k];
+    const found = s.items.filter(it => it.wd === i)[0];
+    if (found) { this.patch(k, { items: s.items.filter(it => it !== found) }); return; }
+    this.patch(k, { items: this.sortItems(s.items.concat([{ k: nid(), kind: 'weekday', wd: i, t: '18:00' }])) });
+  }
+
+  addItem(k) {
+    const s = this.state[k];
+    const it = s.mode === 'timerange'
+      ? { k: nid(), kind: 'timerange', t: '18:00', t2: '20:00' }
+      : { k: nid(), kind: 'time', t: '18:00' };
+    this.patch(k, { items: s.items.concat([it]) });
+  }
+
+  setField(k, key, field, val) {
+    const s = this.state[k];
+    this.patch(k, { items: s.items.map(it => (it.k === key ? Object.assign({}, it, { [field]: val }) : it)) });
+  }
+
+  removeItem(k, key) {
+    const s = this.state[k];
+    this.patch(k, { items: s.items.filter(it => it.k !== key) });
+  }
+
+  shiftMonth(k, dir) {
+    const s = this.state[k];
+    let m = s.month + dir, y = s.year;
+    if (m > 11) { m = 0; y += 1; }
+    if (m < 0) { m = 11; y -= 1; }
+    this.patch(k, { month: m, year: y });
+  }
+
+  next(k) {
+    const s = this.state[k];
+    if (s.step === 1) { this.patch(k, { step: 2 }); return; }
+    if (s.step === 2) {
+      if (!s.q.trim()) { this.toast(k, 'Bitte zuerst eine Frage eingeben'); return; }
+      if (s.items.length < this.minItems) { this.toast(k, 'Mindestens ' + this.minItems + ' Optionen w\u00e4hlen'); return; }
+      if (k === 'm') { this.patch(k, { step: 3 }); return; }
+    }
+    const n = s.shared.length - 1;
+    this.toast(k, n > 0 ? 'Umfrage erstellt \u2014 ' + (n === 1 ? '1 Person eingeladen' : n + ' Personen eingeladen') : 'Umfrage erstellt \u2014 Link kopiert');
+  }
+
+  back(k) {
+    const s = this.state[k];
+    if (s.step > 1) this.patch(k, { step: s.step - 1 });
+    else this.toast(k, 'Zur\u00fcck zur \u00dcbersicht');
+  }
+
+  valid(s) { return s.q.trim().length > 0 && s.items.length >= this.minItems; }
+
+  cells(k) {
+    const s = this.state[k];
+    const first = new Date(s.year, s.month, 1);
+    const offset = (first.getDay() + 6) % 7;
+    const count = new Date(s.year, s.month + 1, 0).getDate();
+    const ac = this.accent;
+    const out = [];
+    for (let i = 0; i < offset; i++) out.push({ day: false });
+    for (let d = 1; d <= count; d++) {
+      const iso = s.year + '-' + pad(s.month + 1) + '-' + pad(d);
+      const past = new Date(s.year, s.month, d) < new Date(TODAY.y, TODAY.m, TODAY.d);
+      const isToday = s.year === TODAY.y && s.month === TODAY.m && d === TODAY.d;
+      const weekend = ((new Date(s.year, s.month, d).getDay() + 6) % 7) >= 5;
+      const endpoint = s.items.some(it => it.iso === iso || it.iso2 === iso);
+      const inside = s.items.some(it => it.kind === 'range' && it.iso < iso && iso < it.iso2);
+      const isPending = s.pending === iso;
+      let bg, fg, border;
+      if (endpoint) { bg = ac; fg = '#ffffff'; border = ac; }
+      else if (isPending) { bg = '#eaf4f5'; fg = ac; border = ac; }
+      else if (inside) { bg = '#eaf4f5'; fg = '#1f7a8c'; border = 'transparent'; }
+      else if (past) { bg = 'transparent'; fg = '#cdc8c1'; border = 'rgba(20,24,28,.04)'; }
+      else { bg = isToday ? '#f2f6f6' : '#fdfcfa'; fg = weekend ? '#8a8681' : '#3a3833'; border = isToday ? '#bcdfe3' : 'rgba(20,24,28,.07)'; }
+      out.push({
+        day: true,
+        num: d,
+        key: iso + (endpoint ? '-on' : '-off'),
+        anim: this.state.popped === (k + iso) ? 'vtPop 420ms cubic-bezier(.3,1.4,.5,1) both' : 'none',
+        bg: bg, fg: fg, border: border,
+        weight: endpoint || isToday || isPending ? '700' : '600',
+        cursor: past ? 'default' : 'pointer',
+        disabled: past ? true : false,
+        dot: isToday && !endpoint ? ac : 'transparent',
+        title: past ? 'vergangen' : dayLabel(iso),
+        onPick: past ? () => {} : () => this.tapDay(k, iso),
+      });
+    }
+    return out;
+  }
+
+  itemView(k, it, s) {
+    const ac = this.accent;
+    const wt = s.withTime;
+    const f = (field, label) => ({
+      label: label,
+      value: it[field],
+      onChange: e => this.setField(k, it.k, field, e.target.value),
+    });
+    let badgeTop = '', badgeBottom = '', label = '', sub = '', fields = [];
+
+    if (it.kind === 'day') {
+      const p = isoParts(it.iso);
+      badgeTop = MON_SHORT[p[1] - 1]; badgeBottom = '' + p[2];
+      label = dayLabel(it.iso);
+      sub = wt ? '' : 'Ganzt\u00e4gig';
+      fields = wt ? [f('t', 'Uhrzeit')] : [];
+    } else if (it.kind === 'weekday') {
+      badgeTop = 'Tag'; badgeBottom = WD[it.wd];
+      label = WD_LONG[it.wd];
+      sub = wt ? '' : 'ohne festes Datum';
+      fields = wt ? [f('t', 'Uhrzeit')] : [];
+    } else if (it.kind === 'range') {
+      const a = isoParts(it.iso), b = isoParts(it.iso2);
+      badgeTop = MON_SHORT[a[1] - 1]; badgeBottom = '' + a[2];
+      label = a[2] + '. ' + MON_SHORT[a[1] - 1] + ' \u2013 ' + b[2] + '. ' + MON_SHORT[b[1] - 1];
+      const nights = Math.round((new Date(b[0], b[1] - 1, b[2]) - new Date(a[0], a[1] - 1, a[2])) / 86400000);
+      sub = nights === 1 ? '1 Nacht' : nights + ' N\u00e4chte';
+      fields = wt ? [f('t', 'ab'), f('t2', 'bis')] : [];
+    } else if (it.kind === 'time') {
+      badgeTop = 'Uhr'; badgeBottom = it.t.slice(0, 2);
+      label = it.t + ' Uhr';
+      sub = 'ohne festes Datum';
+      fields = [f('t', 'Uhrzeit')];
+    } else {
+      badgeTop = 'Von'; badgeBottom = it.t.slice(0, 2);
+      label = it.t + ' \u2013 ' + it.t2 + ' Uhr';
+      sub = 'Zeitspanne';
+      fields = [f('t', 'von'), f('t2', 'bis')];
+    }
+
+    const single = fields.length === 1;
+    return {
+      badgeTop: badgeTop, badgeBottom: badgeBottom, label: label, sub: sub, fields: fields,
+      quick: single ? QUICK.map(q => {
+        const on = it.t === q;
+        return {
+          label: q,
+          bg: on ? '#eaf4f5' : '#fff',
+          fg: on ? ac : '#79756f',
+          border: on ? '#bcdfe3' : 'rgba(20,24,28,.1)',
+          onPick: () => this.setField(k, it.k, 't', q),
+        };
+      }) : [],
+      onRemove: () => this.removeItem(k, it.k),
+    };
+  }
+
+  pvLabel(it, s) {
+    const wt = s.withTime;
+    if (it.kind === 'day') return dayLabel(it.iso) + (wt ? ' \u00b7 ' + it.t + ' Uhr' : '');
+    if (it.kind === 'weekday') return WD_LONG[it.wd] + (wt ? ' \u00b7 ' + it.t + ' Uhr' : '');
+    if (it.kind === 'range') {
+      const a = isoParts(it.iso), b = isoParts(it.iso2);
+      return a[2] + '. \u2013 ' + b[2] + '. ' + MON_SHORT[b[1] - 1] + (wt ? ' \u00b7 ' + it.t + '\u2013' + it.t2 : '');
+    }
+    if (it.kind === 'time') return it.t + ' Uhr';
+    return it.t + ' \u2013 ' + it.t2 + ' Uhr';
+  }
+
+  side(k) {
+    const s = this.state[k];
+    const ac = this.accent;
+    const step1 = s.step === 1;
+    const valid = this.valid(s);
+    let dl = DEADLINES.filter(d => d.id === s.deadline)[0] || DEADLINES[1];
+    if (s.deadline === 'custom' && s.customEnd) {
+      const dt = s.customEnd.split('T');
+      const p = isoParts(dt[0]);
+      dl = { id: 'custom', label: 'eigenes Datum', text: 'Offen bis ' + WD_SHORT[isoWd(dt[0])] + ', ' + p[2] + '. ' + MON_SHORT[p[1] - 1] + '.' + (dt[1] ? ', ' + dt[1] + ' Uhr' : '') };
+    }
+    const calMode = s.mode === 'day' || s.mode === 'range';
+    const canTime = s.mode !== 'time' && s.mode !== 'timerange';
+    const modeLabel = (MODES.filter(md => md.id === s.mode)[0] || MODES[0]).label;
+
+    const items = s.items.map(it => this.itemView(k, it, s));
+
+    const sw = (on, title, hint, onToggle) => ({
+      title: title, hint: hint,
+      track: on ? ac : 'rgba(20,24,28,.16)',
+      knob: on ? '21px' : '3px',
+      onToggle: onToggle,
+    });
+
+    const step3 = s.step === 3;
+    const steps = k === 'm' ? 3 : 2;
+    const headTitles = { 1: 'Neue Umfrage', 2: 'Terminoptionen', 3: 'Teilen' };
+    const headSubs = {
+      1: 'Schritt 1 von ' + steps + ' \u00b7 Art',
+      2: 'Schritt 2 von ' + steps + ' \u00b7 ' + modeLabel,
+      3: 'Schritt 3 von 3 \u00b7 ' + (s.shared.length - 1) + ' eingeladen',
+    };
+
+    return Object.assign(this.share(k), {
+      isStep1: step1,
+      isStep2: s.step === 2,
+      isStep3: step3,
+      progress: step1 ? '33%' : (s.step === 2 ? (steps === 3 ? '66%' : '100%') : '100%'),
+      headTitle: headTitles[s.step],
+      headSub: headSubs[s.step],
+      onBack: () => this.back(k),
+
+      types: TYPES.map(t => {
+        const on = s.type === t.id;
+        return {
+          name: t.name, desc: t.desc, tag: t.tag,
+          isDate: t.id === 'date', isYesno: t.id === 'yesno', isRating: t.id === 'rating',
+          bg: on ? '#f4fafa' : '#ffffff',
+          border: on ? ac : 'rgba(20,24,28,.06)',
+          shadow: on ? '0 6px 22px rgba(31,122,140,.14)' : '0 3px 14px rgba(35,40,45,.05)',
+          iconBg: on ? ac : '#f1eee9',
+          iconFg: on ? '#ffffff' : '#79756f',
+          radioBg: on ? ac : 'transparent',
+          radioBorder: on ? ac : 'rgba(20,24,28,.18)',
+          check: on ? '1' : '0',
+          onPick: () => this.patch(k, { type: t.id, step: this.props.autoAdvance === false ? s.step : 2 }),
+        };
+      }),
+
+      q: s.q,
+      onQ: e => this.patch(k, { q: e.target.value }),
+      desc: s.desc || '',
+      descOn: s.desc !== null,
+      descOff: s.desc === null,
+      onAddDesc: () => this.patch(k, { desc: '' }),
+      onRemoveDesc: () => this.patch(k, { desc: null }),
+      onDesc: e => this.patch(k, { desc: e.target.value }),
+
+      modes: MODES.map(md => {
+        const on = s.mode === md.id;
+        return {
+          label: md.label,
+          bg: on ? ac : '#ffffff',
+          fg: on ? '#ffffff' : '#5a5650',
+          border: on ? ac : 'rgba(20,24,28,.08)',
+          dot: on ? 'rgba(255,255,255,.7)' : '#d2cdc6',
+          onPick: () => this.setMode(k, md.id),
+        };
+      }),
+
+      canTime: canTime,
+      onToggleTime: () => this.patch(k, { withTime: !s.withTime }),
+      timeTrack: s.withTime ? ac : 'rgba(20,24,28,.16)',
+      timeKnob: s.withTime ? '21px' : '3px',
+      timeHint: s.withTime ? 'Jede Option hat eine feste Uhrzeit.' : 'Aus: Optionen gelten ganzt\u00e4gig.',
+
+      showCal: calMode,
+      showWd: s.mode === 'weekday',
+      showAddBtn: !calMode && s.mode !== 'weekday',
+      addLabel: s.mode === 'timerange' ? 'Zeitspanne hinzuf\u00fcgen' : 'Uhrzeit hinzuf\u00fcgen',
+      calHint: s.mode === 'range'
+        ? (s.pending ? 'Startdatum ' + dayLabel(s.pending) + ' \u2014 jetzt Enddatum w\u00e4hlen.' : 'Erst Start, dann Ende antippen \u2014 mehrere Bereiche m\u00f6glich.')
+        : 'Mehrere Tage antippen \u2014 nochmal tippen entfernt sie wieder.',
+
+      monthLabel: MONTHS[s.month] + ' ' + s.year,
+      onPrevMonth: () => this.shiftMonth(k, -1),
+      onNextMonth: () => this.shiftMonth(k, 1),
+      cells: this.cells(k),
+
+      wdChips: WD.map((w, i) => {
+        const on = s.items.some(it => it.wd === i);
+        return {
+          label: w, title: WD_LONG[i],
+          bg: on ? ac : '#fdfcfa',
+          fg: on ? '#ffffff' : (i >= 5 ? '#8a8681' : '#3a3833'),
+          border: on ? ac : 'rgba(20,24,28,.07)',
+          onPick: () => this.tapWd(k, i),
+        };
+      }),
+
+      items: items,
+      noItems: items.length === 0,
+      emptyHint: calMode ? 'Tippe im Kalender auf die Tage, die zur Wahl stehen.' : (s.mode === 'weekday' ? 'W\u00e4hle oben die Wochentage aus.' : 'F\u00fcge unten die erste Option hinzu.'),
+      countLabel: s.items.length === 0 ? 'mind. ' + this.minItems + ' w\u00e4hlen' : (s.items.length === 1 ? '1 Option' : s.items.length + ' Optionen'),
+      countColor: s.items.length >= this.minItems ? '#3f7a4e' : '#a8742a',
+
+      deadlines: DEADLINES.map(d => {
+        const on = s.deadline === d.id;
+        return {
+          label: d.label,
+          bg: on ? '#eaf4f5' : '#ffffff',
+          fg: on ? ac : '#5a5650',
+          border: on ? '#bcdfe3' : 'rgba(20,24,28,.1)',
+          onPick: () => this.patch(k, { deadline: d.id, customEnd: '' }),
+        };
+      }),
+
+      switches: [
+        sw(s.anon, 'Anonym abstimmen', 'Namen bleiben verborgen, nur Summen sind sichtbar.', () => this.patch(k, { anon: !s.anon })),
+      ],
+
+      customEnd: s.customEnd,
+      onCloseNow: () => this.toast(k, 'Umfrage beendet \u2014 Abstimmung geschlossen'),
+      onCustomEnd: e => this.setCustomEnd(k, e.target.value),
+      customBorder: s.deadline === 'custom' ? '#bcdfe3' : 'rgba(20,24,28,.1)',
+      customBg: s.deadline === 'custom' ? '#eaf4f5' : '#fdfcfa',
+
+      ctaLabel: step1 ? 'Weiter zu den Optionen' : (step3 || steps === 2 ? 'Umfrage erstellen' : 'Weiter zum Teilen'),
+      ctaIcon: step3 || (steps === 2 && !step1),
+      ctaBg: step1 || step3 ? ac : (valid ? ac : '#e4e0da'),
+      ctaFg: step1 || step3 ? '#ffffff' : (valid ? '#ffffff' : '#a39e96'),
+      ctaShadow: (step1 || step3 || valid) ? '0 8px 22px rgba(31,122,140,.28)' : 'none',
+      ctaCursor: (step1 || step3 || valid) ? 'pointer' : 'not-allowed',
+      ctaHint: step1
+        ? 'Sp\u00e4ter \u00e4nderbar: Frage, Optionen, Teilnehmende'
+        : (step3
+          ? (s.shared.length - 1 === 1 ? '1 Person wird benachrichtigt' : (s.shared.length - 1 > 1 ? (s.shared.length - 1) + ' Personen werden benachrichtigt' : 'Du kannst auch sp\u00e4ter noch einladen'))
+          : (valid ? dl.text : 'Frage und mind. ' + this.minItems + ' Optionen fehlen noch')),
+      onCta: () => this.next(k),
+
+      pvTitle: s.q.trim() || 'Deine Frage erscheint hier',
+      pvTitleFg: s.q.trim() ? '#1d2227' : '#c8c2b8',
+      pvHasDesc: !!(s.desc && s.desc.trim()),
+      pvDeadline: dl.text,
+      pvRows: s.items.slice(0, 4).map(it => ({ label: this.pvLabel(it, s) })),
+      pvEmpty: s.items.length === 0,
+      pvMore: s.items.length > 4,
+      pvMoreLabel: '+ ' + (s.items.length - 4) + ' weitere Optionen',
+
+      checks: [
+        { ok: !!s.q.trim(), label: 'Frage formuliert' },
+        { ok: s.items.length >= this.minItems, label: 'Mind. ' + this.minItems + ' Optionen' },
+        { ok: s.deadline !== 'none', label: 'Enddatum gesetzt (empfohlen)' },
+      ].map(c => ({
+        label: c.label,
+        bg: c.ok ? '#e2ede1' : '#efece7',
+        stroke: c.ok ? '#3f7a4e' : '#c8c2b8',
+        fg: c.ok ? '#3a3833' : '#a39e96',
+        weight: c.ok ? '700' : '600',
+      })),
+
+      toastOn: !!s.toast,
+      toastText: s.toast || '',
+    });
+  }
+
+  renderVals() {
+    const ac = this.accent;
+    const st = this.state.w;
+    return {
+      accent: ac,
+      weekdays: WD,
+      people: PEOPLE,
+      showShare: this.props.showShare !== false,
+      m: this.side('m'),
+      w: Object.assign(this.side('w'), {
+        steps: [
+          {
+            num: '1', title: 'Art der Umfrage', sub: 'Terminumfrage',
+            done: st.step > 1, showNum: st.step === 1,
+            bg: st.step === 1 ? '#f7f5f1' : 'transparent',
+            ringBg: ac, ringBorder: ac, ringFg: '#ffffff',
+            titleFg: '#1d2227', cursor: 'pointer', pulse: 'none',
+            onGo: () => this.patch('w', { step: 1 }),
+          },
+          {
+            num: '2', title: 'Optionen & Regeln', sub: st.items.length + ' gew\u00e4hlt',
+            done: false, showNum: true,
+            bg: st.step === 2 ? '#f7f5f1' : 'transparent',
+            ringBg: st.step === 2 ? ac : 'transparent',
+            ringBorder: st.step === 2 ? ac : 'rgba(20,24,28,.18)',
+            ringFg: st.step === 2 ? '#ffffff' : '#a39e96',
+            titleFg: st.step === 2 ? '#1d2227' : '#79756f',
+            cursor: 'pointer',
+            pulse: st.step === 2 ? 'vtPulse 2.6s ease-out infinite' : 'none',
+            onGo: () => this.patch('w', { step: 2 }),
+          },
+        ],
+      }),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

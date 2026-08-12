@@ -8,12 +8,12 @@ import {
 import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollListStore } from '../_shared/data/poll-list.store';
-import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
+import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { StandalonePollTabComponent } from './standalone-poll-tab/standalone-poll-tab.component';
 import { PollItem } from '../_shared/models/poll-item.model';
-import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer/share-drawer.component';
+import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
 
 @Component({
   selector: 'app-polls-overview',

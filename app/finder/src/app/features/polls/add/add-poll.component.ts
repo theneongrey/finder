@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
+import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslateService } from '@ngx-translate/core';

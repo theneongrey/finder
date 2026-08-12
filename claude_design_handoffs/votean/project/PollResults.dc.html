@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..48,600;12..48,700;12..48,800&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #eae6df; }
+  body { font-family: 'Hanken Grotesk', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #1f7a8c; text-decoration: none; }
+  a:hover { color: #17606e; }
+  button, input, textarea { font-family: inherit; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  @keyframes rsBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes rsRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes rsPop { 0% { transform: scale(1); } 45% { transform: scale(1.28); } 100% { transform: scale(1); } }
+  @keyframes rsToast { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes rsExpand { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  @keyframes rsPulse { 0% { box-shadow: 0 0 0 0 rgba(93,154,86,.4); } 70% { box-shadow: 0 0 0 7px rgba(93,154,86,0); } 100% { box-shadow: 0 0 0 0 rgba(93,154,86,0); } }
+  [data-rs-stagger] > * { animation: rsRise .44s cubic-bezier(.22,.7,.3,1) both; }
+  [data-rs-stagger] > *:nth-child(1) { animation-delay: .02s; }
+  [data-rs-stagger] > *:nth-child(2) { animation-delay: .07s; }
+  [data-rs-stagger] > *:nth-child(3) { animation-delay: .12s; }
+  [data-rs-stagger] > *:nth-child(4) { animation-delay: .17s; }
+  [data-rs-stagger] > *:nth-child(5) { animation-delay: .22s; }
+  [data-rs-stagger] > *:nth-child(6) { animation-delay: .27s; }
+  [data-rs-stagger] > *:nth-child(7) { animation-delay: .32s; }
+</style>
+</helmet>
+
+<div style="display:flex;flex-direction:column;gap:26px;padding:52px 64px 80px;width:max-content;font-family:'Hanken Grotesk',system-ui,sans-serif">
+
+  <div style="display:flex;align-items:center;gap:14px">
+    <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:22px;font-weight:700;letter-spacing:-.4px;color:#1d2227">Ergebnis</span>
+    <span style="width:1px;height:20px;background:rgba(20,24,28,.14)"></span>
+    <div style="display:flex;gap:6px;padding:5px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid rgba(20,24,28,.06)">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.onClick }}" style="height:34px;padding:0 14px;border-radius:10px;border:none;background:{{ t.bg }};color:{{ t.fg }};font-size:13.5px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease">{{ t.label }}</button>
+      </sc-for>
+    </div>
+    <button onClick="{{ onToggleAnon }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 13px;border-radius:11px;border:1px solid rgba(20,24,28,.08);background:{{ anonBtnBg }};color:{{ anonBtnFg }};font-size:13px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <span>{{ anonBtnLabel }}</span>
+    </button>
+    <span style="font-size:13px;color:#8a8681">{{ syncHint }}</span>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:64px">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Mobil</span>
+        <span style="font-size:12px;color:#a39e96">390 × 844 · {{ typeLabel }}</span>
+      </div>
+
+      <div data-screen-label="Mobil – Ergebnis" style="position:relative;width:390px;height:844px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:9px solid #24272b;border-radius:46px;box-shadow:0 24px 60px rgba(30,35,40,.22);overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:44px;z-index:8;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 4px;font-size:12.5px;font-weight:700;color:#3a3833;background:rgba(244,241,236,.86);backdrop-filter:blur(8px)">
+          <span>9:41</span>
+          <span style="width:16px;height:8px;border:1.4px solid #3a3833;border-radius:2px;display:inline-block"></span>
+        </div>
+
+        <div style="position:absolute;inset:44px 0 0 0;display:flex;flex-direction:column">
+
+          <div style="flex:none;display:flex;align-items:center;gap:10px;padding:8px 16px 8px 12px;background:rgba(250,248,244,.82);backdrop-filter:blur(10px);border-bottom:1px solid rgba(20,24,28,.06)">
+            <button style="width:36px;height:36px;flex:none;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#f1eee9">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5l-7 7 7 7"></path><path d="M4 12h16"></path></svg>
+            </button>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:16px;font-weight:700;letter-spacing:-.3px;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ poll.title }}</div>
+              <div style="font-size:11.5px;color:#8a8681;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ poll.project }}</div>
+            </div>
+            <div style="width:34px;height:34px;flex:none;border-radius:50%;background:#d7eef0;color:#1f7a8c;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700">G</div>
+          </div>
+
+          <div style="flex:none;display:flex;gap:24px;padding:0 20px;border-bottom:1px solid rgba(20,24,28,.08)">
+            <sc-for list="{{ views }}" as="v" hint-placeholder-count="2">
+              <button onClick="{{ v.onClick }}" style="border:none;background:none;padding:12px 0 11px;margin-bottom:-1px;font-size:14.5px;font-weight:700;color:{{ v.fg }};border-bottom:2.5px solid {{ v.line }};cursor:pointer;transition:color 180ms ease,border-color 180ms ease">{{ v.label }}</button>
+            </sc-for>
+          </div>
+
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:14px 20px 26px">
+
+            <sc-if value="{{ viewResults }}" hint-placeholder-val="{{ true }}">
+              <div data-rs-stagger="" style="display:flex;flex-direction:column;gap:14px">
+
+                <div style="position:relative;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:18px;box-shadow:0 3px 14px rgba(35,40,45,.05);overflow:hidden">
+                  <div style="position:absolute;inset:0 auto 0 0;width:5px;background:{{ hero.accent }}"></div>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span style="display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:99px;background:{{ hero.badgeBg }};color:{{ hero.badgeFg }};font-size:11.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase">{{ hero.badge }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#8a8681">
+                      <span style="width:6px;height:6px;border-radius:50%;background:{{ poll.statusDot }};animation:{{ poll.statusAnim }}"></span>
+                      <span>{{ poll.deadline }}</span>
+                    </span>
+                  </div>
+                  <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:25px;font-weight:700;letter-spacing:-.6px;line-height:1.15;color:#1d2227;margin-top:12px;text-wrap:pretty">{{ hero.title }}</div>
+                  <div style="display:flex;align-items:flex-end;gap:10px;margin-top:12px">
+                    <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:40px;font-weight:800;letter-spacing:-1.4px;line-height:1;color:{{ hero.accent }}">{{ hero.big }}</span>
+                    <span style="font-size:13.5px;color:#79756f;padding-bottom:5px">{{ hero.small }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;margin-top:14px">
+                    <span style="display:flex">
+                      <sc-for list="{{ hero.people }}" as="p" hint-placeholder-count="4">
+                        <span title="{{ p.tip }}" style="width:28px;height:28px;margin-left:-7px;border-radius:50%;border:2px solid #fff;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700">{{ p.i }}</span>
+                      </sc-for>
+                    </span>
+                    <span style="font-size:12.5px;font-weight:600;color:#5a5650">{{ hero.peopleLine }}</span>
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0 4px">
+                  <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:17px;font-weight:700;letter-spacing:-.3px;color:#1d2227">Alle Optionen</span>
+                  <button onClick="{{ onSort }}" style="display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid rgba(20,24,28,.08);border-radius:10px;background:#fff;color:#5a5650;font-size:12.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16"></path><path d="M3.5 16.5L7 20l3.5-3.5"></path><path d="M13.5 6.5h7"></path><path d="M13.5 12h5"></path><path d="M13.5 17.5h3"></path></svg>
+                    <span>{{ sortLabel }}</span>
+                  </button>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
+                    <div style="background:#fff;border:1px solid {{ r.border }};border-radius:22px;box-shadow:0 3px 14px rgba(35,40,45,.05);overflow:hidden">
+                      <button onClick="{{ r.onToggle }}" style="width:100%;display:block;padding:15px 16px 14px;border:none;background:transparent;text-align:left;cursor:pointer;transition:background 140ms ease" style-hover="background:#faf8f4">
+                        <div style="display:flex;align-items:center;gap:10px">
+                          <span style="flex:none;width:24px;height:24px;border-radius:8px;background:{{ r.rankBg }};color:{{ r.rankFg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">{{ r.rank }}</span>
+                          <span style="flex:1;min-width:0;font-size:15px;font-weight:700;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span>
+                          <span style="flex:none;font-size:14.5px;font-weight:700;color:{{ r.metricColor }}">{{ r.metricBig }}</span>
+                          <svg width="15" height="15" style="flex:none;transform:{{ r.chevron }};transition:transform 200ms ease" viewBox="0 0 24 24" fill="none" stroke="#c8c2b8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg>
+                        </div>
+                        <sc-if value="{{ r.hasSub }}">
+                          <div style="font-size:12.5px;color:#8a8681;margin-top:3px;padding-left:34px">{{ r.sub }}</div>
+                        </sc-if>
+                        <div style="display:flex;gap:3px;height:8px;margin-top:11px;border-radius:99px;background:#efece7;overflow:hidden;transform-origin:left;animation:rsBar .62s cubic-bezier(.22,.7,.3,1) both">
+                          <sc-for list="{{ r.segs }}" as="s" hint-placeholder-count="2">
+                            <span style="width:{{ s.w }};background:{{ s.bg }};transition:width 320ms ease"></span>
+                          </sc-for>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:11px">
+                          <sc-if value="{{ namesOn }}">
+                            <span style="display:flex">
+                              <sc-for list="{{ r.avatars }}" as="p" hint-placeholder-count="3">
+                                <span title="{{ p.tip }}" style="width:24px;height:24px;margin-left:-6px;border-radius:50%;border:2px solid #fff;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;opacity:{{ p.opacity }}">{{ p.i }}</span>
+                              </sc-for>
+                            </span>
+                          </sc-if>
+                          <span style="flex:1;font-size:12.5px;font-weight:600;color:#79756f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.voteLine }}</span>
+                          <sc-if value="{{ r.hasComments }}">
+                            <span style="flex:none;display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#1f7a8c">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12.4c0 4.1-3.8 7.4-8.5 7.4-1 0-2-.15-2.9-.43L4 21l1.3-3.5C4.2 16.2 3.5 14.4 3.5 12.4 3.5 8.3 7.3 5 12 5s8.5 3.3 8.5 7.4z"></path></svg>
+                              <span>{{ r.commentCount }}</span>
+                            </span>
+                          </sc-if>
+                        </div>
+                      </button>
+                      <sc-if value="{{ r.expanded }}">
+                        <div style="padding:2px 16px 16px;animation:rsExpand 220ms cubic-bezier(.22,.7,.3,1) both">
+                          <div style="height:1px;background:rgba(20,24,28,.06);margin-bottom:12px"></div>
+                          <sc-for list="{{ r.groups }}" as="g" hint-placeholder-count="2">
+                            <div style="display:flex;align-items:flex-start;gap:10px;padding:7px 0">
+                              <span style="flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:62px;height:24px;padding:0 9px;border-radius:8px;background:{{ g.bg }};color:{{ g.fg }};font-size:11.5px;font-weight:700">{{ g.label }}</span>
+                              <span style="flex:1;min-width:0;font-size:13px;color:#5a5650;line-height:1.5;padding-top:3px">{{ g.names }}</span>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <sc-if value="{{ anonNote }}">
+                  <div style="display:flex;align-items:flex-start;gap:10px;padding:13px 14px;border-radius:16px;background:rgba(255,255,255,.6);border:1px dashed rgba(20,24,28,.14)">
+                    <svg width="16" height="16" style="flex:none;margin-top:1px" viewBox="0 0 24 24" fill="none" stroke="#8a8681" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"></path><path d="M10.6 6a9.6 9.6 0 0 1 1.4-.1c6 0 9.5 6.1 9.5 6.1a17 17 0 0 1-2.7 3.5"></path><path d="M6.3 7.9A17 17 0 0 0 2.5 12S6 18.1 12 18.1c1.4 0 2.7-.3 3.8-.8"></path></svg>
+                    <span style="font-size:12.5px;line-height:1.5;color:#79756f">Anonyme Umfrage – es werden nur Summen gezeigt, keine Namen.</span>
+                  </div>
+                </sc-if>
+
+                <button onClick="{{ onToggleClosed }}" style="width:100%;height:46px;margin-top:2px;border-radius:15px;border:1px solid {{ closeBorder }};background:{{ closeBg }};color:{{ closeFg }};font-size:14.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:background 140ms ease,color 140ms ease,border-color 140ms ease">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="{{ closeIcon }}"></path></svg>
+                  <span>{{ closeLabel }}</span>
+                </button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ viewComments }}">
+              <div data-rs-stagger="" style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;gap:6px">
+                  <sc-for list="{{ filters }}" as="f" hint-placeholder-count="2">
+                    <button onClick="{{ f.onClick }}" style="height:32px;padding:0 12px;border-radius:10px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 150ms ease,color 150ms ease">{{ f.label }}</button>
+                  </sc-for>
+                </div>
+
+                <sc-for list="{{ comments }}" as="c" hint-placeholder-count="3">
+                  <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:14px 15px;box-shadow:0 3px 14px rgba(35,40,45,.05);animation:{{ c.anim }}">
+                    <div style="display:flex;align-items:center;gap:9px">
+                      <span style="width:30px;height:30px;flex:none;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ c.i }}</span>
+                      <span style="flex:1;min-width:0;font-size:14px;font-weight:700;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+                      <span style="flex:none;font-size:12px;color:#a39e96">{{ c.time }}</span>
+                    </div>
+                    <sc-if value="{{ c.hasContext }}">
+                      <div style="display:inline-flex;align-items:center;gap:6px;margin-top:9px;height:24px;padding:0 10px;border-radius:8px;background:#f4f1ec;color:#6f6b66;font-size:11.5px;font-weight:700">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="{{ c.contextDot }}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                        <span>{{ c.context }}</span>
+                      </div>
+                    </sc-if>
+                    <p style="margin:9px 0 0;font-size:14px;line-height:1.5;color:#3a3833;text-wrap:pretty">{{ c.text }}</p>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:11px">
+                      <button onClick="{{ c.onLike }}" style="display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid {{ c.likeBorder }};border-radius:10px;background:{{ c.likeBg }};color:{{ c.likeFg }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 150ms ease,color 150ms ease">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="{{ c.likeFill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:{{ c.likeAnim }}"><path d="M7 21V10l4.2-7c1.4.1 2.3 1.1 2.3 2.5V9h4.7c1.4 0 2.4 1.3 2.1 2.6l-1.5 7A2.5 2.5 0 0 1 16.4 21H7z"></path><path d="M7 10H4.5v11H7"></path></svg>
+                        <span>{{ c.likes }}</span>
+                      </button>
+                      <button style="height:30px;padding:0 10px;border:none;border-radius:10px;background:transparent;color:#79756f;font-size:12.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f4f1ec">Antworten</button>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+
+          <sc-if value="{{ viewComments }}">
+            <div style="flex:none;display:flex;align-items:center;gap:9px;padding:12px 20px 20px;background:linear-gradient(to top,rgba(247,245,241,.98) 60%,rgba(247,245,241,0));border-top:1px solid rgba(20,24,28,.05)">
+              <input value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onDraftKey }}" placeholder="Kommentar schreiben…" style="flex:1;min-width:0;height:46px;padding:0 15px;border-radius:15px;border:1px solid rgba(20,24,28,.1);background:#fff;font-size:14.5px;color:#1d2227;outline:none">
+              <button onClick="{{ onSend }}" title="Senden" style="width:46px;height:46px;flex:none;border:none;border-radius:15px;background:{{ sendBg }};display:flex;align-items:center;justify-content:center;cursor:{{ sendCursor }};transition:background 160ms ease,transform 140ms ease" style-active="transform:scale(.94)">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="{{ sendFg }}" stroke="none"><path d="M3.4 20.4L21 12 3.4 3.6 3.4 10l12 2-12 2z"></path></svg>
+              </button>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ toastOn }}">
+          <div style="position:absolute;left:16px;right:16px;bottom:26px;z-index:9;display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:rsToast 260ms cubic-bezier(.22,.7,.3,1) both">
+            <span style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex:none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+            </span>
+            <span style="flex:1;font-size:13.5px;font-weight:600">{{ toastText }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Web</span>
+        <span style="font-size:12px;color:#a39e96">1280 × 820 · {{ typeLabel }}</span>
+      </div>
+
+      <div data-screen-label="Web – Ergebnis" style="position:relative;width:1280px;height:820px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:1px solid rgba(20,24,28,.1);border-radius:20px;box-shadow:0 24px 60px rgba(30,35,40,.16);overflow:hidden;display:flex;flex-direction:column">
+
+        <div style="flex:none;display:flex;align-items:center;gap:14px;padding:16px 28px;background:rgba(255,253,249,.72);backdrop-filter:blur(8px);border-bottom:1px solid rgba(20,24,28,.06)">
+          <div style="display:flex;align-items:center;gap:6px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+            <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.3px;color:#1f7a8c">Votean</span>
+          </div>
+          <span style="width:1px;height:20px;background:rgba(20,24,28,.1)"></span>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a8681">
+            <a href="#">Umfragen</a>
+            <span>/</span>
+            <a href="#">{{ poll.project }}</a>
+            <span>/</span>
+            <span style="font-weight:700;color:#3a3833">{{ poll.title }}</span>
+          </div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+                        <div style="width:36px;height:36px;border-radius:50%;background:#d7eef0;color:#1f7a8c;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">G</div>
+          </div>
+        </div>
+
+        <div style="flex:1;min-height:0;display:flex">
+
+          <div style="flex:1;min-width:0;overflow-y:auto;padding:26px 30px 34px">
+            <div data-rs-stagger="" style="display:flex;flex-direction:column;gap:18px;max-width:820px">
+
+              <div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:8px;background:#f1eee9;color:#6f6b66;font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">{{ typeLabel }}</span>
+                  <span style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 10px;border-radius:8px;background:{{ poll.statusBg }};color:{{ poll.statusFg }};font-size:11.5px;font-weight:700">
+                    <span style="width:6px;height:6px;border-radius:50%;background:{{ poll.statusDot }};animation:{{ poll.statusAnim }}"></span>
+                    <span>{{ poll.statusLabel }}</span>
+                  </span>
+                  <span style="font-size:13px;color:#8a8681">{{ poll.deadline }}</span>
+                </div>
+                <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:32px;font-weight:700;letter-spacing:-.8px;line-height:1.14;color:#1d2227;margin-top:10px;text-wrap:pretty">{{ poll.title }}</div>
+                <p style="margin:6px 0 0;font-size:15px;line-height:1.5;color:#79756f;text-wrap:pretty">{{ poll.question }}</p>
+              </div>
+
+              <div style="display:flex;gap:12px">
+                <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+                  <div style="flex:1;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:18px;padding:15px 16px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                    <div style="font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">{{ s.label }}</div>
+                    <div style="display:flex;align-items:baseline;gap:7px;margin-top:7px">
+                      <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:27px;font-weight:800;letter-spacing:-.8px;color:{{ s.color }}">{{ s.value }}</span>
+                      <span style="font-size:13px;color:#8a8681">{{ s.sub }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="position:relative;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:22px 24px;box-shadow:0 3px 14px rgba(35,40,45,.05);overflow:hidden">
+                <div style="position:absolute;inset:0 auto 0 0;width:6px;background:{{ hero.accent }}"></div>
+                <div style="display:flex;align-items:center;gap:22px">
+                  <div style="flex:1;min-width:0">
+                    <span style="display:inline-flex;align-items:center;height:25px;padding:0 11px;border-radius:99px;background:{{ hero.badgeBg }};color:{{ hero.badgeFg }};font-size:11.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase">{{ hero.badge }}</span>
+                    <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:28px;font-weight:700;letter-spacing:-.7px;line-height:1.16;color:#1d2227;margin-top:11px;text-wrap:pretty">{{ hero.title }}</div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:13px">
+                      <span style="display:flex">
+                        <sc-for list="{{ hero.people }}" as="p" hint-placeholder-count="4">
+                          <span title="{{ p.tip }}" style="width:30px;height:30px;margin-left:-7px;border-radius:50%;border:2px solid #fff;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">{{ p.i }}</span>
+                        </sc-for>
+                      </span>
+                      <span style="font-size:13.5px;font-weight:600;color:#5a5650">{{ hero.peopleLine }}</span>
+                    </div>
+                  </div>
+                  <div style="flex:none;text-align:right">
+                    <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:56px;font-weight:800;letter-spacing:-2px;line-height:1;color:{{ hero.accent }}">{{ hero.big }}</div>
+                    <div style="font-size:13.5px;color:#79756f;margin-top:5px">{{ hero.small }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.4px;color:#1d2227">Alle Optionen</span>
+                <button onClick="{{ onSort }}" style="display:flex;align-items:center;gap:7px;height:34px;padding:0 12px;border:1px solid rgba(20,24,28,.08);border-radius:11px;background:#fff;color:#5a5650;font-size:13px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16"></path><path d="M3.5 16.5L7 20l3.5-3.5"></path><path d="M13.5 6.5h7"></path><path d="M13.5 12h5"></path><path d="M13.5 17.5h3"></path></svg>
+                  <span>{{ sortLabel }}</span>
+                </button>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
+                  <div style="background:#fff;border:1px solid {{ r.border }};border-radius:22px;box-shadow:0 3px 14px rgba(35,40,45,.05);overflow:hidden">
+                    <button onClick="{{ r.onToggle }}" style="width:100%;display:flex;align-items:center;gap:16px;padding:16px 20px;border:none;background:transparent;text-align:left;cursor:pointer;transition:background 140ms ease" style-hover="background:#faf8f4">
+                      <span style="flex:none;width:28px;height:28px;border-radius:9px;background:{{ r.rankBg }};color:{{ r.rankFg }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">{{ r.rank }}</span>
+                      <span style="flex:none;width:210px;min-width:0">
+                        <span style="display:block;font-size:15.5px;font-weight:700;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span>
+                        <sc-if value="{{ r.hasSub }}">
+                          <span style="display:block;font-size:12.5px;color:#8a8681;margin-top:2px">{{ r.sub }}</span>
+                        </sc-if>
+                      </span>
+                      <span style="flex:1;min-width:0">
+                        <span style="display:flex;gap:3px;height:10px;border-radius:99px;background:#efece7;overflow:hidden;transform-origin:left;animation:rsBar .62s cubic-bezier(.22,.7,.3,1) both">
+                          <sc-for list="{{ r.segs }}" as="s" hint-placeholder-count="2">
+                            <span style="width:{{ s.w }};background:{{ s.bg }};transition:width 320ms ease"></span>
+                          </sc-for>
+                        </span>
+                        <span style="display:block;font-size:12.5px;font-weight:600;color:#79756f;margin-top:8px">{{ r.voteLine }}</span>
+                      </span>
+                      <sc-if value="{{ namesOn }}">
+                        <span style="flex:none;display:flex;width:132px;justify-content:flex-end">
+                          <sc-for list="{{ r.avatars }}" as="p" hint-placeholder-count="3">
+                            <span title="{{ p.tip }}" style="width:28px;height:28px;margin-left:-7px;border-radius:50%;border:2px solid #fff;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;opacity:{{ p.opacity }}">{{ p.i }}</span>
+                          </sc-for>
+                        </span>
+                      </sc-if>
+                      <span style="flex:none;width:74px;text-align:right;font-size:17px;font-weight:700;color:{{ r.metricColor }}">{{ r.metricBig }}</span>
+                      <svg width="16" height="16" style="flex:none;transform:{{ r.chevron }};transition:transform 200ms ease" viewBox="0 0 24 24" fill="none" stroke="#c8c2b8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg>
+                    </button>
+                    <sc-if value="{{ r.expanded }}">
+                      <div style="padding:0 20px 18px 64px;animation:rsExpand 220ms cubic-bezier(.22,.7,.3,1) both">
+                        <div style="height:1px;background:rgba(20,24,28,.06);margin-bottom:14px"></div>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px">
+                          <sc-for list="{{ r.groups }}" as="g" hint-placeholder-count="2">
+                            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px 8px 10px;border-radius:14px;background:{{ g.softBg }}">
+                              <span style="display:inline-flex;align-items:center;justify-content:center;height:22px;padding:0 8px;border-radius:7px;background:{{ g.bg }};color:{{ g.fg }};font-size:11.5px;font-weight:700">{{ g.label }}</span>
+                              <span style="font-size:13px;color:#5a5650">{{ g.names }}</span>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ matrixOn }}">
+                <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:20px 22px 22px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                    <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:18px;font-weight:700;letter-spacing:-.3px;color:#1d2227">Wer hat was gestimmt</span>
+                    <div style="display:flex;align-items:center;gap:12px">
+                      <sc-for list="{{ legend }}" as="l" hint-placeholder-count="3">
+                        <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#79756f">
+                          <span style="width:12px;height:12px;border-radius:4px;background:{{ l.bg }}"></span>
+                          <span>{{ l.label }}</span>
+                        </span>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="margin-top:16px;overflow-x:auto">
+                    <div style="display:flex;align-items:center;gap:6px;padding-left:244px">
+                      <sc-for list="{{ matrixPeople }}" as="p" hint-placeholder-count="6">
+                        <span title="{{ p.tip }}" style="width:46px;flex:none;display:flex;flex-direction:column;align-items:center;gap:4px">
+                          <span style="width:30px;height:30px;border-radius:50%;background:{{ p.bg }};color:{{ p.fg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">{{ p.i }}</span>
+                          <span style="font-size:11px;color:#8a8681;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46px">{{ p.n }}</span>
+                        </span>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:5px;margin-top:10px">
+                      <sc-for list="{{ matrixRows }}" as="m" hint-placeholder-count="4">
+                        <div style="display:flex;align-items:center;gap:6px;height:40px;border-radius:12px;background:{{ m.rowBg }}">
+                          <span style="width:226px;flex:none;padding-left:12px;font-size:13.5px;font-weight:600;color:#3a3833;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.label }}</span>
+                          <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="6">
+                            <span title="{{ c.tip }}" style="width:46px;height:32px;flex:none;border-radius:9px;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">{{ c.mark }}</span>
+                          </sc-for>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ anonNote }}">
+                <div style="display:flex;align-items:center;gap:11px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.6);border:1px dashed rgba(20,24,28,.14)">
+                  <svg width="18" height="18" style="flex:none" viewBox="0 0 24 24" fill="none" stroke="#8a8681" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"></path><path d="M10.6 6a9.6 9.6 0 0 1 1.4-.1c6 0 9.5 6.1 9.5 6.1a17 17 0 0 1-2.7 3.5"></path><path d="M6.3 7.9A17 17 0 0 0 2.5 12S6 18.1 12 18.1c1.4 0 2.7-.3 3.8-.8"></path></svg>
+                  <span style="font-size:13.5px;color:#79756f">Anonyme Umfrage – es werden nur Summen gezeigt, keine Namen. Kommentare erscheinen ohne Absender.</span>
+                </div>
+              </sc-if>
+
+              <div style="display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:22px;background:#fff;border:1px solid rgba(20,24,28,.055);box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:15px;font-weight:700;color:#1d2227">{{ closeTitle }}</div>
+                  <div style="font-size:13px;color:#8a8681;margin-top:3px;text-wrap:pretty">{{ closeHint }}</div>
+                </div>
+                <button onClick="{{ onToggleClosed }}" style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border:1px solid {{ closeBorder }};border-radius:13px;background:{{ closeBg }};color:{{ closeFg }};font-size:13.5px;font-weight:700;cursor:pointer;transition:background 140ms ease,color 140ms ease,border-color 140ms ease" style-hover="filter:brightness(.97)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="{{ closeIcon }}"></path></svg>
+                  <span>{{ closeLabel }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div style="width:392px;flex:none;border-left:1px solid rgba(20,24,28,.06);background:rgba(255,253,249,.5);display:flex;flex-direction:column">
+            <div style="flex:none;padding:20px 22px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:18px;font-weight:700;letter-spacing:-.3px;color:#1d2227">Kommentare</span>
+                <span style="display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:8px;background:#f1eee9;color:#6f6b66;font-size:12px;font-weight:700">{{ commentCount }}</span>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:12px">
+                <sc-for list="{{ filters }}" as="f" hint-placeholder-count="2">
+                  <button onClick="{{ f.onClick }}" style="height:32px;padding:0 12px;border-radius:10px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 150ms ease,color 150ms ease">{{ f.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:6px 22px 14px;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ comments }}" as="c" hint-placeholder-count="4">
+                <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:18px;padding:14px 15px;box-shadow:0 3px 14px rgba(35,40,45,.04);animation:{{ c.anim }}">
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <span style="width:30px;height:30px;flex:none;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ c.i }}</span>
+                    <span style="flex:1;min-width:0;font-size:14px;font-weight:700;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+                    <span style="flex:none;font-size:12px;color:#a39e96">{{ c.time }}</span>
+                  </div>
+                  <sc-if value="{{ c.hasContext }}">
+                    <div style="display:inline-flex;align-items:center;gap:6px;margin-top:9px;height:24px;padding:0 10px;border-radius:8px;background:#f4f1ec;color:#6f6b66;font-size:11.5px;font-weight:700;max-width:100%">
+                      <svg width="12" height="12" style="flex:none" viewBox="0 0 24 24" fill="none" stroke="{{ c.contextDot }}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                      <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.context }}</span>
+                    </div>
+                  </sc-if>
+                  <p style="margin:9px 0 0;font-size:14px;line-height:1.5;color:#3a3833;text-wrap:pretty">{{ c.text }}</p>
+                  <div style="display:flex;align-items:center;gap:8px;margin-top:11px">
+                    <button onClick="{{ c.onLike }}" style="display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid {{ c.likeBorder }};border-radius:10px;background:{{ c.likeBg }};color:{{ c.likeFg }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 150ms ease,color 150ms ease">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="{{ c.likeFill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:{{ c.likeAnim }}"><path d="M7 21V10l4.2-7c1.4.1 2.3 1.1 2.3 2.5V9h4.7c1.4 0 2.4 1.3 2.1 2.6l-1.5 7A2.5 2.5 0 0 1 16.4 21H7z"></path><path d="M7 10H4.5v11H7"></path></svg>
+                      <span>{{ c.likes }}</span>
+                    </button>
+                    <button style="height:30px;padding:0 10px;border:none;border-radius:10px;background:transparent;color:#79756f;font-size:12.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f4f1ec">Antworten</button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="flex:none;display:flex;align-items:center;gap:9px;padding:14px 22px 20px;border-top:1px solid rgba(20,24,28,.06)">
+              <input value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onDraftKey }}" placeholder="Kommentar schreiben…" style="flex:1;min-width:0;height:44px;padding:0 15px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fff;font-size:14px;color:#1d2227;outline:none">
+              <button onClick="{{ onSend }}" title="Senden" style="width:44px;height:44px;flex:none;border:none;border-radius:14px;background:{{ sendBg }};display:flex;align-items:center;justify-content:center;cursor:{{ sendCursor }};transition:background 160ms ease,transform 140ms ease" style-active="transform:scale(.94)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="{{ sendFg }}" stroke="none"><path d="M3.4 20.4L21 12 3.4 3.6 3.4 10l12 2-12 2z"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <sc-if value="{{ toastOn }}">
+          <div style="position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:11px;padding:14px 16px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:rsToast 260ms cubic-bezier(.22,.7,.3,1) both;white-space:nowrap">
+            <span style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex:none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+            </span>
+            <span style="font-size:14px;font-weight:600">{{ toastText }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1860,&quot;height&quot;:1020},&quot;pollType&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;yesno&quot;,&quot;options&quot;:[&quot;yesno&quot;,&quot;rating&quot;,&quot;date&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Inhalt&quot;},&quot;anonymous&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inhalt&quot;}}">
+const PPL = {
+  G: { n: 'Giovanni', i: 'G', bg: '#d7eef0', fg: '#1f7a8c' },
+  F: { n: 'Fabia', i: 'F', bg: '#f4dfe2', fg: '#b56374' },
+  M: { n: 'Marco', i: 'M', bg: '#f6e7cf', fg: '#b3863a' },
+  L: { n: 'Lena', i: 'L', bg: '#e6e0f3', fg: '#6f5aa6' },
+  N: { n: 'Noah', i: 'N', bg: '#dcecd9', fg: '#4f7a4a' },
+  S: { n: 'Sara', i: 'S', bg: '#d9e4f2', fg: '#4a6da6' },
+};
+const ALL = ['G', 'F', 'M', 'L', 'N', 'S'];
+
+const POLLS = {
+  yesno: {
+    label: 'Ja / Nein',
+    title: 'Was nehmen wir mit?',
+    project: 'Sommerurlaub 2026',
+    question: 'Sechs Vorschl\u00e4ge \u2013 jede\u2009*r hat mit Ja oder Nein geantwortet.',
+    deadline: 'Endet in 2 Tagen',
+    people: ALL,
+    items: [
+      { id: 'y1', title: 'Stand-up-Paddel mieten', sub: '60\u2009\u20ac pro Board', votes: { G: 'yes', F: 'yes', M: 'yes', L: 'yes', S: 'no' } },
+      { id: 'y2', title: 'Ein Tag Kochkurs vor Ort', sub: 'halber Tag', votes: { G: 'yes', F: 'yes', M: 'no', L: 'yes', S: 'yes' } },
+      { id: 'y3', title: 'Fr\u00fchst\u00fcck immer selbst machen', sub: '', votes: { G: 'no', F: 'yes', M: 'yes', L: 'no', S: 'yes' } },
+      { id: 'y4', title: 'Am Sonntag zum Markt in Verona', sub: 'fr\u00fch los, 15 Uhr zur\u00fcck', votes: { G: 'yes', F: 'no', M: 'no', L: 'no', S: 'yes' } },
+      { id: 'y5', title: 'Gemeinsame Kasse f\u00fcr Eink\u00e4ufe', sub: '80\u2009\u20ac pro Person', votes: { G: 'yes', F: 'yes', M: 'yes', L: 'yes', S: 'yes' } },
+      { id: 'y6', title: 'Letzter Abend: Grillen am See', sub: '', votes: { G: 'no', F: 'no', M: 'no', L: 'yes', S: 'no' } },
+    ],
+  },
+  rating: {
+    label: 'Bewertung',
+    title: 'Wie gut passen die Unterk\u00fcnfte?',
+    project: 'Sommerurlaub 2026',
+    question: 'Jede Unterkunft wurde mit ein bis f\u00fcnf Sternen bewertet.',
+    deadline: 'Endet morgen, 20:00 Uhr',
+    people: ALL,
+    items: [
+      { id: 'r1', title: 'Casa Lucia, Torbole', sub: '4 Schlafzimmer, Terrasse', votes: { G: 5, F: 5, M: 4, L: 5, S: 4 } },
+      { id: 'r2', title: 'Ferienwohnung Ponale', sub: 'g\u00fcnstig, ohne Garten', votes: { G: 3, F: 2, M: 4, L: 3, S: 3 } },
+      { id: 'r3', title: 'Agriturismo San Marco', sub: 'mit Fr\u00fchst\u00fcck, 20 Min. au\u00dferhalb', votes: { G: 4, F: 4, M: 5, L: 3, S: 4 } },
+      { id: 'r4', title: 'Hotel Riva Centrale', sub: '', votes: { G: 2, F: 1, M: 2, L: 2, S: 3 } },
+    ],
+  },
+  date: {
+    label: 'Terminumfrage',
+    title: 'Welches Datum passt allen?',
+    project: 'Team-Offsite',
+    question: 'F\u00fcnf Termine im August \u2013 Ja, Vielleicht oder Nein pro Termin.',
+    deadline: 'Endet in 2 Tagen',
+    people: ALL,
+    items: [
+      { id: 'd1', title: 'Fr., 14. Aug.', sub: '18:00 \u2013 open end', votes: { G: 'yes', F: 'yes', M: 'yes', L: 'maybe', S: 'yes' } },
+      { id: 'd2', title: 'Sa., 15. Aug.', sub: 'ganzt\u00e4gig', votes: { G: 'yes', F: 'yes', M: 'maybe', L: 'yes', S: 'yes' } },
+      { id: 'd3', title: 'So., 16. Aug.', sub: '11:00 \u2013 16:00', votes: { G: 'no', F: 'maybe', M: 'yes', L: 'no', S: 'maybe' } },
+      { id: 'd4', title: 'Fr., 21. Aug.', sub: '18:00 \u2013 open end', votes: { G: 'maybe', F: 'yes', M: 'yes', L: 'yes', S: 'no' } },
+      { id: 'd5', title: 'Sa., 22. Aug.', sub: 'ganzt\u00e4gig', votes: { G: 'no', F: 'no', M: 'no', L: 'maybe', S: 'no' } },
+    ],
+  },
+};
+
+const COMMENTS = {
+  yesno: [
+    { id: 'c1', who: 'F', time: 'vor 2 Std.', item: 'y1', during: true, text: 'Zwei Boards reichen locker, wir wechseln uns eh ab.', likes: 3 },
+    { id: 'c2', who: 'M', time: 'vor 4 Std.', item: 'y4', during: true, text: 'Sonntag ist mir zu voll dort, lieber unter der Woche.', likes: 2 },
+    { id: 'c3', who: 'S', time: 'gestern', item: '', during: false, text: 'Die Kasse funktioniert nur, wenn wir alles wirklich eintragen. Ich mache eine Liste.', likes: 4 },
+    { id: 'c4', who: 'L', time: 'gestern', item: 'y6', during: true, text: 'Grillen am See geht nur mit Genehmigung \u2013 ich frage nach.', likes: 1 },
+  ],
+  rating: [
+    { id: 'c1', who: 'G', time: 'vor 1 Std.', item: 'r1', during: true, text: 'Terrasse ist riesig, hier passen wir alle drauf.', likes: 5 },
+    { id: 'c2', who: 'M', time: 'vor 3 Std.', item: 'r3', during: true, text: 'Fr\u00fchst\u00fcck inklusive gleicht die Fahrzeit fast aus.', likes: 2 },
+    { id: 'c3', who: 'F', time: 'gestern', item: 'r4', during: true, text: 'Hotel f\u00fchlt sich nicht nach gemeinsamem Urlaub an.', likes: 3 },
+    { id: 'c4', who: 'S', time: 'gestern', item: '', during: false, text: 'Sollen wir die Top zwei noch mal direkt vergleichen?', likes: 1 },
+  ],
+  date: [
+    { id: 'c1', who: 'L', time: 'vor 30 Min.', item: 'd1', during: true, text: 'Ich kann erst ab 19 Uhr, sonst passt der Freitag gut.', likes: 2 },
+    { id: 'c2', who: 'M', time: 'vor 2 Std.', item: 'd2', during: true, text: 'Samstag w\u00e4re mir am liebsten, da haben wir den ganzen Tag.', likes: 4 },
+    { id: 'c3', who: 'S', time: 'vor 5 Std.', item: 'd3', during: true, text: 'Sonntag geht bei mir nur vormittags.', likes: 0 },
+    { id: 'c4', who: 'G', time: 'gestern', item: '', during: false, text: 'Wenn der 15. klappt, buche ich den Raum gleich morgen.', likes: 3 },
+  ],
+};
+
+const TYPE_KEYS = ['yesno', 'rating', 'date'];
+const STARS = '\u2605';
+
+class Component extends DCLogic {
+  state = { type: null, anon: null, view: 'results', sort: 'top', open: {}, filter: 'all', draft: '', likes: {}, pop: null, added: {}, toast: null, closed: false };
+
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._p); }
+
+  get type() { return this.state.type || (TYPE_KEYS.indexOf(this.props.pollType) >= 0 ? this.props.pollType : 'yesno'); }
+  get poll() { return POLLS[this.type]; }
+  get anon() { return this.state.anon == null ? this.props.anonymous === true : this.state.anon; }
+
+  toast(text) {
+    this.setState({ toast: text });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), 2200);
+  }
+
+  like(id) {
+    this.setState(s => {
+      const per = Object.assign({}, s.likes[this.type] || {});
+      per[id] = !per[id];
+      return { likes: Object.assign({}, s.likes, { [this.type]: per }), pop: per[id] ? id : null };
+    });
+    clearTimeout(this._p);
+    this._p = setTimeout(() => this.setState({ pop: null }), 460);
+  }
+
+  send() {
+    const text = this.state.draft.trim();
+    if (!text) return;
+    const c = { id: 'n' + Date.now(), who: 'G', time: 'gerade eben', item: '', during: false, text: text, likes: 0, fresh: true };
+    this.setState(s => ({
+      added: Object.assign({}, s.added, { [this.type]: [c].concat(s.added[this.type] || []) }),
+      draft: '',
+    }));
+    this.toast('Kommentar ver\u00f6ffentlicht');
+  }
+
+  stat(item) {
+    const t = this.type;
+    const vs = item.votes;
+    const keys = Object.keys(vs);
+    if (t === 'rating') {
+      let sum = 0;
+      keys.forEach(k => { sum += vs[k]; });
+      const avg = keys.length ? sum / keys.length : 0;
+      return { score: avg, count: keys.length, avg: avg, yes: 0, maybe: 0, no: 0 };
+    }
+    let yes = 0, maybe = 0, no = 0;
+    keys.forEach(k => { if (vs[k] === 'yes') yes++; else if (vs[k] === 'maybe') maybe++; else no++; });
+    return { score: yes + maybe * 0.35, count: keys.length, avg: 0, yes: yes, maybe: maybe, no: no };
+  }
+
+  avatarsFor(item) {
+    const vs = item.votes;
+    const order = { yes: 0, maybe: 1, no: 2 };
+    return this.poll.people.filter(k => vs[k] != null).sort((a, b) => {
+      if (this.type === 'rating') return vs[b] - vs[a];
+      return order[vs[a]] - order[vs[b]];
+    }).slice(0, 5).map(k => {
+      const p = PPL[k];
+      const v = vs[k];
+      const dim = this.type === 'rating' ? v <= 2 : v === 'no';
+      return { i: p.i, bg: p.bg, fg: p.fg, opacity: dim ? '.4' : '1', tip: p.n + ' \u2013 ' + (this.type === 'rating' ? v + ' von 5' : (v === 'yes' ? 'Ja' : v === 'maybe' ? 'Vielleicht' : 'Nein')) };
+    });
+  }
+
+  groupsFor(item) {
+    const vs = item.votes;
+    const names = ks => ks.map(k => PPL[k].n).join(', ');
+    if (this.type === 'rating') {
+      const out = [];
+      for (let n = 5; n >= 1; n--) {
+        const ks = this.poll.people.filter(k => vs[k] === n);
+        if (!ks.length) continue;
+        out.push({ label: n + ' ' + STARS, bg: '#f9edd5', fg: '#a8742a', softBg: '#fdf8ee', names: this.anon ? ks.length + '\u00d7' : names(ks) });
+      }
+      return out;
+    }
+    const defs = [
+      { key: 'yes', label: this.type === 'date' ? 'Kann' : 'Ja', bg: '#e2ede1', fg: '#3f7a4e', softBg: '#f4f9f3' },
+      { key: 'maybe', label: 'Vielleicht', bg: '#f6e7cf', fg: '#a8742a', softBg: '#fdf8ee' },
+      { key: 'no', label: this.type === 'date' ? 'Kann nicht' : 'Nein', bg: '#fdf3f1', fg: '#c1453f', softBg: '#fdf7f6' },
+    ];
+    const out = defs.map(d => {
+      const ks = this.poll.people.filter(k => vs[k] === d.key);
+      return Object.assign({}, d, { names: this.anon ? ks.length + ' Personen' : (ks.length ? names(ks) : '\u2013'), n: ks.length });
+    }).filter(g => g.n > 0);
+    const missing = this.poll.people.filter(k => vs[k] == null);
+    if (missing.length) out.push({ label: 'Offen', bg: '#f1eee9', fg: '#8a8681', softBg: '#faf8f4', names: this.anon ? missing.length + ' Personen' : names(missing) });
+    return out;
+  }
+
+  renderVals() {
+    const t = this.type;
+    const poll = this.poll;
+    const anon = this.anon;
+    const closed = this.state.closed;
+    const total = poll.people.length;
+    const commentsRaw = (this.state.added[t] || []).concat(COMMENTS[t]);
+    const likeState = this.state.likes[t] || {};
+
+    const items = poll.items.map(it => ({ it: it, st: this.stat(it) }));
+    const sorted = this.state.sort === 'top' ? items.slice().sort((a, b) => b.st.score - a.st.score) : items;
+    const best = items.slice().sort((a, b) => b.st.score - a.st.score)[0];
+    const voters = {};
+    poll.items.forEach(it => Object.keys(it.votes).forEach(k => { voters[k] = 1; }));
+    const votedCount = Object.keys(voters).length;
+
+    const commentsPerItem = {};
+    commentsRaw.forEach(c => { if (c.item) commentsPerItem[c.item] = (commentsPerItem[c.item] || 0) + 1; });
+
+    const pct = n => Math.round((n / total) * 100);
+    const fmt = n => (Math.round(n * 10) / 10).toString().replace('.', ',');
+
+    const rows = sorted.map((e, idx) => {
+      const it = e.it, st = e.st;
+      const expanded = !!this.state.open[it.id];
+      const isTop = this.state.sort === 'top' && idx === 0;
+      let segs, metricBig, metricColor, voteLine;
+      if (t === 'rating') {
+        segs = [{ w: Math.round((st.avg / 5) * 100) + '%', bg: '#e0a42c' }];
+        metricBig = fmt(st.avg);
+        metricColor = '#a8742a';
+        voteLine = st.count + ' Bewertungen \u00b7 \u00d8 ' + fmt(st.avg) + ' von 5';
+      } else {
+        segs = [
+          { w: pct(st.yes) + '%', bg: '#5d9a56' },
+          { w: pct(st.maybe) + '%', bg: '#e0b45c' },
+          { w: pct(st.no) + '%', bg: '#e3a7a2' },
+        ].filter(s => parseInt(s.w, 10) > 0);
+        metricBig = pct(st.yes) + '\u2009%';
+        metricColor = '#3f7a4e';
+        voteLine = st.yes + ' \u00d7 ' + (t === 'date' ? 'kann' : 'Ja')
+          + (st.maybe ? ' \u00b7 ' + st.maybe + ' \u00d7 vielleicht' : '')
+          + (st.no ? ' \u00b7 ' + st.no + ' \u00d7 ' + (t === 'date' ? 'kann nicht' : 'Nein') : '');
+      }
+      return {
+        key: it.id,
+        rank: idx + 1,
+        rankBg: isTop ? '#1f7a8c' : '#f1eee9',
+        rankFg: isTop ? '#ffffff' : '#8a8681',
+        border: isTop ? 'rgba(31,122,140,.35)' : 'rgba(20,24,28,.055)',
+        label: it.title,
+        sub: it.sub,
+        hasSub: !!it.sub,
+        segs: segs,
+        metricBig: metricBig,
+        metricColor: metricColor,
+        voteLine: voteLine,
+        avatars: anon ? [] : this.avatarsFor(it),
+        groups: this.groupsFor(it),
+        expanded: expanded,
+        chevron: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+        hasComments: !!commentsPerItem[it.id],
+        commentCount: commentsPerItem[it.id] || 0,
+        onToggle: () => this.setState(s => ({ open: Object.assign({}, s.open, { [it.id]: !s.open[it.id] }) })),
+      };
+    });
+
+    const bestSt = best.st;
+    const hero = t === 'rating'
+      ? {
+          badge: 'Beste Bewertung',
+          badgeBg: '#f9edd5', badgeFg: '#a8742a', accent: '#c98f2c',
+          title: best.it.title,
+          big: fmt(bestSt.avg),
+          small: 'von 5 Sternen \u00b7 ' + bestSt.count + " Bewertungen",
+          people: anon ? [] : this.avatarsFor(best.it),
+          peopleLine: anon ? bestSt.count + ' Bewertungen abgegeben' : 'Am h\u00f6chsten bewertet von ' + poll.people.filter(k => best.it.votes[k] === 5).map(k => PPL[k].n).join(', '),
+        }
+      : {
+          badge: t === 'date' ? 'Bester Termin' : 'F\u00fchrt',
+          badgeBg: '#e2ede1', badgeFg: '#3f7a4e', accent: '#5d9a56',
+          title: best.it.title + (best.it.sub ? ' \u00b7 ' + best.it.sub : ''),
+          big: pct(bestSt.yes) + '\u2009%',
+          small: bestSt.yes + ' von ' + total + (t === 'date' ? ' k\u00f6nnen' : ' dafür'),
+          people: anon ? [] : poll.people.filter(k => best.it.votes[k] === 'yes').map(k => ({ i: PPL[k].i, bg: PPL[k].bg, fg: PPL[k].fg, tip: PPL[k].n })),
+          peopleLine: anon ? 'Anonym abgestimmt' : (bestSt.maybe ? bestSt.maybe + ' \u00d7 vielleicht, ' + bestSt.no + ' \u00d7 nein' : bestSt.no + ' \u00d7 dagegen'),
+        };
+
+    const filtered = this.state.filter === 'item' ? commentsRaw.filter(c => !!c.item) : commentsRaw;
+    const itemTitle = id => { const f = poll.items.filter(x => x.id === id)[0]; return f ? f.title : ''; };
+
+    const comments = filtered.map(c => {
+      const p = PPL[c.who];
+      const liked = !!likeState[c.id];
+      return {
+        key: c.id,
+        i: anon ? '?' : p.i,
+        bg: anon ? '#f1eee9' : p.bg,
+        fg: anon ? '#a39e96' : p.fg,
+        name: anon ? 'Anonym' : p.n,
+        time: c.time,
+        text: c.text,
+        hasContext: !!c.item,
+        context: c.item ? (c.during ? 'Beim Abstimmen \u00b7 ' : 'Zu ') + itemTitle(c.item) : '',
+        contextDot: '#5d9a56',
+        likes: c.likes + (liked ? 1 : 0),
+        likeBg: liked ? '#d7eef0' : '#ffffff',
+        likeFg: liked ? '#1f7a8c' : '#79756f',
+        likeBorder: liked ? 'rgba(31,122,140,.28)' : 'rgba(20,24,28,.08)',
+        likeFill: liked ? 'currentColor' : 'none',
+        likeAnim: this.state.pop === c.id ? 'rsPop 440ms cubic-bezier(.3,1.4,.5,1) both' : 'none',
+        anim: c.fresh ? 'rsRise .4s cubic-bezier(.22,.7,.3,1) both' : 'none',
+        onLike: () => this.like(c.id),
+      };
+    });
+
+    const matrixPeople = poll.people.map(k => ({ i: PPL[k].i, n: PPL[k].n, bg: PPL[k].bg, fg: PPL[k].fg, tip: PPL[k].n }));
+    const cellFor = (v, name, label) => {
+      if (v == null) return { mark: '\u2013', bg: '#f4f1ec', fg: '#c8c2b8', tip: name + ' \u2013 noch offen' };
+      if (t === 'rating') {
+        const shade = ['#f9f2e2', '#f7ebd3', '#f4e2bd', '#efd6a2', '#e9c77f'][v - 1];
+        return { mark: String(v), bg: shade, fg: '#8a6420', tip: name + ' \u2013 ' + v + ' von 5' };
+      }
+      if (v === 'yes') return { mark: '\u2713', bg: '#dcecd9', fg: '#3f7a4e', tip: name + ' \u2013 ' + (t === 'date' ? 'kann' : 'Ja') };
+      if (v === 'maybe') return { mark: '~', bg: '#f6e7cf', fg: '#a8742a', tip: name + ' \u2013 vielleicht' };
+      return { mark: '\u2715', bg: '#fae9e6', fg: '#c1453f', tip: name + ' \u2013 ' + (t === 'date' ? 'kann nicht' : 'Nein') };
+    };
+    const matrixRows = sorted.map((e, idx) => ({
+      key: e.it.id,
+      label: e.it.title,
+      rowBg: idx % 2 === 0 ? 'rgba(255,255,255,.75)' : 'transparent',
+      cells: poll.people.map(k => Object.assign({ key: k }, cellFor(e.it.votes[k], PPL[k].n))),
+    }));
+
+    const legend = t === 'rating'
+      ? [{ label: '1 Stern', bg: '#f9f2e2' }, { label: '3 Sterne', bg: '#f4e2bd' }, { label: '5 Sterne', bg: '#e9c77f' }]
+      : [
+          { label: t === 'date' ? 'Kann' : 'Ja', bg: '#dcecd9' },
+          { label: 'Vielleicht', bg: '#f6e7cf' },
+          { label: t === 'date' ? 'Kann nicht' : 'Nein', bg: '#fae9e6' },
+          { label: 'Offen', bg: '#f4f1ec' },
+        ];
+
+    const view = this.state.view;
+    const chip = (on) => on
+      ? { bg: '#1f7a8c', fg: '#ffffff', border: '#1f7a8c' }
+      : { bg: '#ffffff', fg: '#5a5650', border: 'rgba(20,24,28,.08)' };
+    const tab = (on) => on
+      ? { fg: '#1d2227', line: '#1f7a8c' }
+      : { fg: '#8a8681', line: 'transparent' };
+
+    return {
+      bgGrad: 'linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%)',
+      typeLabel: poll.label,
+      syncHint: 'Beide Ansichten teilen denselben Stand.',
+      tabs: TYPE_KEYS.map(k => ({
+        label: POLLS[k].label,
+        bg: k === t ? '#1f7a8c' : 'transparent',
+        fg: k === t ? '#ffffff' : '#5a5650',
+        onClick: () => this.setState({ type: k, open: {}, filter: 'all' }),
+      })),
+      anonBtnLabel: anon ? 'Anonym' : 'Namen sichtbar',
+      anonBtnBg: anon ? '#24272b' : '#ffffff',
+      anonBtnFg: anon ? '#ffffff' : '#5a5650',
+      onToggleAnon: () => this.setState({ anon: !anon }),
+      namesOn: !anon,
+      anonNote: anon,
+      closeLabel: closed ? 'Wieder \u00f6ffnen' : 'Umfrage beenden',
+      closeShort: closed ? '\u00d6ffnen' : 'Beenden',
+      closeTitle: closed ? 'Umfrage ist beendet' : 'Abstimmung l\u00e4uft',
+      closeHint: closed ? 'Teilnehmende k\u00f6nnen wieder abstimmen und ihre Antwort \u00e4ndern.' : 'Keine weiteren Stimmen m\u00f6glich \u2014 das Ergebnis bleibt sichtbar.',
+      closeIcon: closed ? 'M12 8v8' : 'M8.5 12h7',
+      closeBg: closed ? '#eaf4f5' : '#fdf3f1',
+      closeFg: closed ? '#17606e' : '#c1453f',
+      closeBorder: closed ? '#bcdfe3' : '#f0c3bd',
+      onToggleClosed: () => {
+        this.setState({ closed: !closed });
+        this.toast(closed ? 'Umfrage wieder ge\u00f6ffnet' : 'Umfrage beendet \u2014 Abstimmung geschlossen');
+      },
+      poll: {
+        title: poll.title,
+        project: poll.project,
+        question: poll.question,
+        deadline: closed ? 'Beendet am 8. Aug., 20:00 Uhr' : poll.deadline,
+        statusLabel: closed ? 'Beendet' : 'Aktiv',
+        statusBg: closed ? '#f1eee9' : '#e2ede1',
+        statusFg: closed ? '#6f6b66' : '#3f7a4e',
+        statusDot: closed ? '#b5b0a8' : '#5d9a56',
+        statusAnim: closed ? 'none' : 'rsPulse 2.6s ease-out infinite',
+      },
+      stats: [
+        { label: 'Beteiligung', value: votedCount + '/' + total, sub: Math.round((votedCount / total) * 100) + '\u2009% dabei', color: '#1f7a8c' },
+        { label: t === 'rating' ? 'Schnitt gesamt' : 'Klarer Favorit', value: t === 'rating' ? fmt(items.reduce((a, e) => a + e.st.avg, 0) / items.length) : pct(bestSt.yes) + '\u2009%', sub: t === 'rating' ? 'von 5' : 'Zustimmung', color: '#3f7a4e' },
+        { label: 'Kommentare', value: String(commentsRaw.length), sub: commentsRaw.filter(c => c.during).length + ' beim Abstimmen', color: '#a8742a' },
+      ],
+      hero: hero,
+      rows: rows,
+      sortLabel: this.state.sort === 'top' ? 'Nach Zustimmung' : 'Reihenfolge',
+      onSort: () => this.setState(s => ({ sort: s.sort === 'top' ? 'order' : 'top' })),
+      matrixOn: !anon,
+      matrixPeople: matrixPeople,
+      matrixRows: matrixRows,
+      legend: legend,
+      views: [
+        Object.assign({ label: 'Ergebnis', onClick: () => this.setState({ view: 'results' }) }, tab(view === 'results')),
+        Object.assign({ label: 'Kommentare \u00b7 ' + commentsRaw.length, onClick: () => this.setState({ view: 'comments' }) }, tab(view === 'comments')),
+      ],
+      viewResults: view === 'results',
+      viewComments: view === 'comments',
+      filters: [
+        Object.assign({ label: 'Alle', onClick: () => this.setState({ filter: 'all' }) }, chip(this.state.filter === 'all')),
+        Object.assign({ label: 'Mit Bezug zur Option', onClick: () => this.setState({ filter: 'item' }) }, chip(this.state.filter === 'item')),
+      ],
+      comments: comments,
+      commentCount: commentsRaw.length,
+      draft: this.state.draft,
+      onDraft: (e) => this.setState({ draft: e.target.value }),
+      onDraftKey: (e) => { if (e.key === 'Enter') this.send(); },
+      onSend: () => this.send(),
+      sendBg: this.state.draft.trim() ? '#1f7a8c' : '#e2ded7',
+      sendFg: this.state.draft.trim() ? '#ffffff' : '#b5b0a8',
+      sendCursor: this.state.draft.trim() ? 'pointer' : 'not-allowed',
+      toastOn: !!this.state.toast,
+      toastText: this.state.toast || '',
+    };
+  }
+}
+
+</script>
+</body>
+</html>

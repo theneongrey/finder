@@ -5,7 +5,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
+import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { Router, RouterOutlet } from '@angular/router';
 import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { PollDetailStore } from '../_shared/data/poll-detail.store';

@@ -40,13 +40,13 @@ export class TitleBarComponent {
   user = this.userStore.user;
   title = this.titleService.title;
   subtitle = this.titleService.subtitle;
-  titleDisabled = computed(() => this.title === null);
+  titleDisabled = computed(() => this.title() === null);
   backRoute = this.titleService.backRoute;
   isHidden = this.titleService.isHidden;
 
   isScrolled = toSignal(
-    fromEvent(window, 'scroll').pipe(
-      map(() => window.scrollY > 10),
+    fromEvent(window, 'scroll', { passive: true }).pipe(
+      map(() => window.scrollY > 40),
       startWith(false),
       distinctUntilChanged(),
     ),

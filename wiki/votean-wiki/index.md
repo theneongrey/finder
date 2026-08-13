@@ -46,6 +46,7 @@ System design and technical decisions.
 - [Backend](architecture/backend.md) — ASP.NET Core 9, Minimal API, feature-based layout
 - [Frontend](architecture/frontend.md) — Angular 21, standalone components, NgRx Signals
 - [Database](architecture/database.md) — PostgreSQL, EF Core 9, migration strategy
+- [Component Architecture](architecture/component-architecture.md) — three-layer model (ds-*, common smart, domain feature) and placement rules
 - [CI/CD](architecture/ci-cd.md) — GitHub Actions pipeline
 - [PrimeNG → Spartan UI Migration](architecture/primeng-to-spartan-migration.md) — why PrimeNG was replaced, migration scope, and Spartan UI approach
 - [Projects Concept Removal (MVP)](architecture/project-removal-mvp.md) — removing multi-poll projects from UI, URLs, and code; backend model preserved

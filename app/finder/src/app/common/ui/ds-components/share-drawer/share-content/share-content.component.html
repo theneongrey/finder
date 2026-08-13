@@ -1,0 +1,38 @@
+@if (sharedWith().length > 0) {
+  <hlm-tabs [tab]="activeTab()" (tabActivated)="setActiveTab($event)">
+    <hlm-tabs-list variant="line">
+      <button hlmTabsTrigger="access">{{ "project.share.tabAccess" | translate }}</button>
+      <button hlmTabsTrigger="members">{{ "project.share.tabMembers" | translate }}</button>
+    </hlm-tabs-list>
+    <div hlmTabsContent="access" class="mt-[18px]">
+      <ng-container *ngTemplateOutlet="share" />
+    </div>
+    <div hlmTabsContent="members" class="mt-[14px]">
+      <app-share-members-list
+        [projectId]="projectId()"
+        [members]="sharedWith()"
+        [isPublic]="isPublic()"
+      />
+    </div>
+  </hlm-tabs>
+} @else {
+  <ng-container *ngTemplateOutlet="share" />
+}
+
+<ng-template #share>
+  <app-share-access-tab
+    [visibilityOptions]="visibilityOptions()"
+    [selectedVisibility]="selectedVisibility()"
+    [isPublic]="isPublic()"
+    [shareLink]="shareLink()"
+    (visibilityChange)="onVisibilityChange($event)"
+  />
+  <hlm-separator class="my-2" />
+  <div class="mb-4">
+    <app-share-invite-form
+      [projectId]="projectId()"
+      [contacts]="sharingContacts()"
+      [sharingInProgress]="sharingInProgress()"
+    />
+  </div>
+</ng-template>

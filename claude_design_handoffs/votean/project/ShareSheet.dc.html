@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#faf8f4">
+  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="120" fill="#faf8f4"/>
+    <circle cx="60" cy="60" r="26" fill="none" stroke="#1f7a8c" stroke-width="5"/>
+    <line x1="60" y1="34" x2="60" y2="86" stroke="#1f7a8c" stroke-width="5"/>
+    <line x1="34" y1="60" x2="86" y2="60" stroke="#1f7a8c" stroke-width="5"/>
+  </svg>
+</template>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..48,500;12..48,600;12..48,700;12..48,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</helmet>
+<div style="position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;font-family:'Hanken Grotesk',system-ui,-apple-system,sans-serif;">
+  <div onClick="{{ onClose }}" style="position:absolute;inset:0;background:rgba(25,28,24,.42);backdrop-filter:blur(1px);"></div>
+
+  <div style="position:relative;width:100%;max-width:480px;background:#faf8f4;border-radius:26px 26px 0 0;box-shadow:0 -12px 40px rgba(20,24,28,.22);padding:10px 22px 26px;max-height:92vh;overflow-y:auto;font-family:inherit;">
+    <div style="width:38px;height:4.5px;border-radius:3px;background:#e0dbd0;margin:0 auto 16px;"></div>
+
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div>
+        <div style="font-size:20px;font-weight:700;color:#1d2227;letter-spacing:-.3px;font-family:'Bricolage Grotesque','Hanken Grotesk',sans-serif;">Teilen</div>
+        <div style="font-size:13.5px;color:#8a8681;margin-top:2px;">{{ typeLabel }} · {{ itemTitle }}</div>
+      </div>
+      <button onClick="{{ onClose }}" style="margin-left:auto;border:none;background:#efece6;color:#6f6b66;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+      </button>
+    </div>
+
+    <!-- Sub tabs -->
+    <div style="display:flex;gap:22px;margin-top:20px;border-bottom:1px solid rgba(20,24,28,.08);">
+      <sc-if value="{{ isInviteTab }}" hint-placeholder-val="{{ true }}">
+        <button style="border:none;background:none;font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;color:#1d2227;padding:0 0 11px;margin-bottom:-1px;border-bottom:2.5px solid #1f7a8c;">Einladen</button>
+      </sc-if>
+      <sc-if value="{{ isMembersTab }}">
+        <button onClick="{{ goInvite }}" style="border:none;background:none;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;color:#a39e96;padding:0 0 11px;margin-bottom:-1px;border-bottom:2.5px solid transparent;">Einladen</button>
+      </sc-if>
+      <sc-if value="{{ isMembersTab }}">
+        <button style="border:none;background:none;font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;color:#1d2227;padding:0 0 11px;margin-bottom:-1px;border-bottom:2.5px solid #1f7a8c;">{{ membersTabLabel }}</button>
+      </sc-if>
+      <sc-if value="{{ isInviteTab }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goMembers }}" style="border:none;background:none;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;color:#a39e96;padding:0 0 11px;margin-bottom:-1px;border-bottom:2.5px solid transparent;">{{ membersTabLabel }}</button>
+      </sc-if>
+    </div>
+
+    <!-- INVITE + VISIBILITY TAB -->
+    <sc-if value="{{ isInviteTab }}" hint-placeholder-val="{{ true }}">
+
+      <div style="margin-top:18px;">
+        <div style="font-size:12.5px;font-weight:700;color:#9b968f;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Sichtbarkeit</div>
+        <div style="display:flex;gap:6px;background:#eeeae3;padding:4px;border-radius:13px;">
+          <sc-if value="{{ isRestricted }}" hint-placeholder-val="{{ true }}">
+            <button style="flex:1;border:none;border-radius:9px;padding:9px 8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#1d2227;box-shadow:0 1px 4px rgba(20,24,28,.1);">Nur Eingeladene</button>
+          </sc-if>
+          <sc-if value="{{ isOpen }}">
+            <button onClick="{{ setRestricted }}" style="flex:1;border:none;border-radius:9px;padding:9px 8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#8a8681;">Nur Eingeladene</button>
+          </sc-if>
+          <sc-if value="{{ isOpen }}">
+            <button style="flex:1;border:none;border-radius:9px;padding:9px 8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#1d2227;box-shadow:0 1px 4px rgba(20,24,28,.1);">Offen</button>
+          </sc-if>
+          <sc-if value="{{ isRestricted }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ setOpen }}" style="flex:1;border:none;border-radius:9px;padding:9px 8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#8a8681;">Offen</button>
+          </sc-if>
+        </div>
+        <sc-if value="{{ isRestricted }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:12.5px;color:#a39e96;margin-top:7px;line-height:1.4;">Nur Personen, die du einlädst, haben Zugriff.</div>
+        </sc-if>
+        <sc-if value="{{ isOpen }}">
+          <div style="font-size:12.5px;color:#a39e96;margin-top:7px;line-height:1.4;">Jede Person mit dem Link kann beitreten.</div>
+
+          <div style="margin-top:12px;display:flex;align-items:center;gap:8px;background:#f4f1ec;border-radius:12px;padding:9px 12px;">
+            <span style="flex:1;min-width:0;font-size:13px;color:#5a5650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ shareLink }}</span>
+            <button onClick="{{ copyLink }}" style="flex:none;border:none;background:#1f7a8c;color:#fff;font-family:inherit;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;">{{ copyLabel }}</button>
+          </div>
+
+          <div style="font-size:12px;font-weight:700;color:#9b968f;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 8px;">Rolle für Link-Beitritte</div>
+          <div style="display:flex;gap:6px;background:#eeeae3;padding:4px;border-radius:13px;">
+            <sc-if value="{{ linkRoleIsViewer }}" hint-placeholder-val="{{ true }}"><button style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;background:#fff;color:#1d2227;box-shadow:0 1px 4px rgba(20,24,28,.1);">Betrachter</button></sc-if>
+            <sc-if value="{{ linkRoleNotViewer }}"><button onClick="{{ setLinkRoleViewer }}" style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#8a8681;">Betrachter</button></sc-if>
+            <sc-if value="{{ linkRoleIsContributor }}"><button style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;background:#fff;color:#1d2227;box-shadow:0 1px 4px rgba(20,24,28,.1);">Mitwirkend</button></sc-if>
+            <sc-if value="{{ linkRoleNotContributor }}" hint-placeholder-val="{{ true }}"><button onClick="{{ setLinkRoleContributor }}" style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#8a8681;">Mitwirkend</button></sc-if>
+          </div>
+          <sc-if value="{{ linkRoleIsViewer }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:12.5px;color:#79756f;line-height:1.45;background:#f1eee9;border-radius:11px;padding:9px 12px;margin-top:9px;">{{ viewerDesc }}</div>
+          </sc-if>
+          <sc-if value="{{ linkRoleIsContributor }}">
+            <div style="font-size:12.5px;color:#79756f;line-height:1.45;background:#f1eee9;border-radius:11px;padding:9px 12px;margin-top:9px;">{{ contributorDesc }}</div>
+          </sc-if>
+        </sc-if>
+      </div>
+
+      <div style="margin-top:22px;border-top:1px solid rgba(20,24,28,.08);padding-top:18px;">
+        <div style="font-size:12.5px;font-weight:700;color:#9b968f;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Person einladen</div>
+        <div style="display:flex;gap:8px;position:relative;">
+          <input value="{{ inviteValue }}" onChange="{{ onInviteChange }}" onKeyDown="{{ onInviteKeyDown }}" placeholder="Name oder E-Mail" style="flex:1;min-width:0;border:1px solid rgba(20,24,28,.1);background:#fff;border-radius:12px;padding:11px 14px;font-size:14px;font-family:inherit;color:#1d2227;"></input>
+          <button onClick="{{ addInvite }}" style="flex:none;border:none;background:#1d2227;color:#fff;font-family:inherit;font-size:13.5px;font-weight:700;padding:0 18px;border-radius:12px;cursor:pointer;">Einladen</button>
+        </div>
+
+        <sc-if value="{{ hasQuery }}">
+          <div style="margin-top:8px;background:#fff;border:1px solid rgba(20,24,28,.08);border-radius:14px;box-shadow:0 6px 18px rgba(20,24,28,.08);overflow:hidden;">
+            <sc-if value="{{ hasSuggestions }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ suggestions }}" as="c" hint-placeholder-count="2">
+                <button onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:10px 13px;cursor:pointer;text-align:left;font-family:inherit;" style-hover="background:#f4f1ec;">
+                  <div style="width:30px;height:30px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;">{{ c.initial }}</div>
+                  <span style="font-size:14px;font-weight:600;color:#1d2227;">{{ c.name }}</span>
+                </button>
+              </sc-for>
+            </sc-if>
+            <sc-if value="{{ noSuggestions }}">
+              <div style="padding:12px 13px;font-size:13px;color:#a39e96;">Keine Kontakte gefunden — mit „Einladen“ per Name/E-Mail hinzufügen.</div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showFrequent }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:14px;">
+            <div style="font-size:12px;font-weight:700;color:#9b968f;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;">Häufig geteilt mit</div>
+            <div style="display:flex;flex-direction:column;gap:3px;">
+              <sc-for list="{{ frequent }}" as="c" hint-placeholder-count="2">
+                <button onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:7px 4px;cursor:pointer;text-align:left;font-family:inherit;" style-hover="background:#f1eee9;border-radius:10px;">
+                  <div style="width:32px;height:32px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;flex:none;">{{ c.initial }}</div>
+                  <span style="flex:1;font-size:14px;font-weight:600;color:#1d2227;">{{ c.name }}</span>
+                  <span style="font-size:19px;color:#1f7a8c;font-weight:500;line-height:1;">+</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="margin-top:16px;">
+          <div style="font-size:12px;font-weight:700;color:#9b968f;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Rolle für neue Einladungen</div>
+          <div style="display:flex;gap:6px;background:#eeeae3;padding:4px;border-radius:13px;">
+            <sc-if value="{{ roleIsViewer }}" hint-placeholder-val="{{ true }}"><button style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;background:#fff;color:#1d2227;box-shadow:0 1px 4px rgba(20,24,28,.1);">Betrachter</button></sc-if>
+            <sc-if value="{{ roleNotViewer }}"><button onClick="{{ setRoleViewer }}" style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#8a8681;">Betrachter</button></sc-if>
+
+            <sc-if value="{{ roleIsContributor }}"><button style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;background:#fff;color:#1d2227;box-shadow:0 1px 4px rgba(20,24,28,.1);">Mitwirkend</button></sc-if>
+            <sc-if value="{{ roleNotContributor }}" hint-placeholder-val="{{ true }}"><button onClick="{{ setRoleContributor }}" style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#8a8681;">Mitwirkend</button></sc-if>
+
+            <sc-if value="{{ roleIsManager }}"><button style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;background:#fff;color:#1d2227;box-shadow:0 1px 4px rgba(20,24,28,.1);">Verwalter</button></sc-if>
+            <sc-if value="{{ roleNotManager }}" hint-placeholder-val="{{ true }}"><button onClick="{{ setRoleManager }}" style="flex:1;border:none;border-radius:9px;padding:8px 4px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;background:transparent;color:#8a8681;">Verwalter</button></sc-if>
+          </div>
+
+          <sc-if value="{{ roleIsViewer }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:12.5px;color:#79756f;line-height:1.45;background:#f1eee9;border-radius:11px;padding:9px 12px;margin-top:9px;">{{ viewerDesc }}</div>
+          </sc-if>
+          <sc-if value="{{ roleIsContributor }}">
+            <div style="font-size:12.5px;color:#79756f;line-height:1.45;background:#f1eee9;border-radius:11px;padding:9px 12px;margin-top:9px;">{{ contributorDesc }}</div>
+          </sc-if>
+          <sc-if value="{{ roleIsManager }}">
+            <div style="font-size:12.5px;color:#79756f;line-height:1.45;background:#f1eee9;border-radius:11px;padding:9px 12px;margin-top:9px;">{{ managerDesc }}</div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- MEMBERS TAB -->
+    <sc-if value="{{ isMembersTab }}">
+      <div style="display:flex;flex-direction:column;gap:3px;margin-top:14px;">
+        <sc-for list="{{ allMembers }}" as="m" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:11px;padding:8px 4px;">
+            <div style="width:34px;height:34px;border-radius:50%;background:{{ m.bg }};color:{{ m.fg }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;">{{ m.initial }}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:14.5px;font-weight:600;color:#1d2227;">{{ m.name }}</div>
+            </div>
+            <sc-if value="{{ m.isOwner }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:12px;font-weight:600;color:#1f7a8c;background:#e7f2f3;padding:4px 11px;border-radius:20px;">Ersteller</span>
+            </sc-if>
+            <sc-if value="{{ m.notOwner }}">
+              <span style="font-size:12px;font-weight:600;color:{{ m.roleFg }};background:{{ m.roleBg }};padding:4px 11px;border-radius:20px;white-space:nowrap;">{{ m.roleLabel }}</span>
+              <button onClick="{{ m.remove }}" style="border:none;background:none;color:#c1453f;cursor:pointer;padding:5px;display:flex;flex:none;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+              </button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 480, &quot;height&quot;: 780 },
+  &quot;itemTitle&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Sommerurlaub 2026&quot;, &quot;tsType&quot;: &quot;string&quot; },
+  &quot;itemType&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;project&quot;, &quot;topic&quot;], &quot;default&quot;: &quot;project&quot;, &quot;tsType&quot;: &quot;string&quot; },
+  &quot;members&quot;: { &quot;editor&quot;: null, &quot;default&quot;: [
+    { &quot;name&quot;: &quot;Giovanni&quot;, &quot;initial&quot;: &quot;G&quot;, &quot;bg&quot;: &quot;#d7eef0&quot;, &quot;fg&quot;: &quot;#1f7a8c&quot; },
+    { &quot;name&quot;: &quot;Fabia&quot;, &quot;initial&quot;: &quot;F&quot;, &quot;bg&quot;: &quot;#f4dfe2&quot;, &quot;fg&quot;: &quot;#b56374&quot;, &quot;role&quot;: &quot;contributor&quot; }
+  ], &quot;tsType&quot;: &quot;{name:string,initial:string,bg:string,fg:string,role:string}[]&quot; },
+  &quot;onClose&quot;: { &quot;editor&quot;: null, &quot;tsType&quot;: &quot;() =&gt; void&quot; }
+}">
+const CONTACTS = [
+  { name: 'Marco', initial: 'M', bg: '#f6e7cf', fg: '#b3863a' },
+  { name: 'Lena', initial: 'L', bg: '#e6e0f3', fg: '#6f5aa6' },
+  { name: 'Noah', initial: 'N', bg: '#dcecd9', fg: '#4f7a4a' },
+  { name: 'Sara', initial: 'S', bg: '#d9e4f2', fg: '#4a6da6' },
+  { name: 'Julia', initial: 'J', bg: '#f4dfe2', fg: '#b56374' },
+  { name: 'Tom', initial: 'T', bg: '#e0ecef', fg: '#3f7f91' },
+];
+const FREQUENT_NAMES = ['Marco', 'Lena'];
+const ROLE_LABELS = { viewer: 'Betrachter', contributor: 'Mitwirkend', manager: 'Verwalter' };
+const ROLE_COLORS = {
+  viewer: { bg: '#f1eee9', fg: '#79756f' },
+  contributor: { bg: '#e7f2f3', fg: '#1f7a8c' },
+  manager: { bg: '#eae4f4', fg: '#6f5aa6' },
+};
+
+class Component extends DCLogic {
+  state = {
+    tab: 'invite',
+    access: 'restricted',
+    inviteRole: 'contributor',
+    linkRole: 'viewer',
+    query: '',
+    copied: false,
+    extra: [],
+    removed: {},
+  };
+
+  renderVals() {
+    const p = this.props;
+    const type = p.itemType || 'project';
+    const baseMembers = Array.isArray(p.members) ? p.members : [];
+    const removed = this.state.removed;
+    const kept = baseMembers.filter((m, i) => !removed[m.name || i]);
+    const extra = this.state.extra;
+    const combined = [...kept, ...extra];
+    const allNames = combined.map(m => m.name);
+
+    const allMembers = combined.map((m, i) => {
+      const role = m.role || 'contributor';
+      const c = ROLE_COLORS[role] || ROLE_COLORS.contributor;
+      return {
+        ...m,
+        isOwner: i === 0,
+        notOwner: i !== 0,
+        roleLabel: ROLE_LABELS[role] || 'Mitwirkend',
+        roleBg: c.bg,
+        roleFg: c.fg,
+        remove: () => this.setState(s => ({ removed: { ...s.removed, [m.name]: true } })),
+      };
+    });
+
+    const query = this.state.query.trim();
+    const queryLower = query.toLowerCase();
+    const available = CONTACTS.filter(c => !allNames.includes(c.name));
+    const suggestions = query
+      ? available.filter(c => c.name.toLowerCase().includes(queryLower)).slice(0, 5).map(c => ({
+          ...c, pick: () => this.addPerson(c.name, c),
+        }))
+      : [];
+    const frequent = available
+      .filter(c => FREQUENT_NAMES.includes(c.name))
+      .map(c => ({ ...c, pick: () => this.addPerson(c.name, c) }));
+
+    const descriptions = type === 'project'
+      ? {
+          viewer: 'Kann das Projekt und seine Umfragen ansehen, aber nichts ändern.',
+          contributor: 'Kann abstimmen, kommentieren und neue Umfragen erstellen.',
+          manager: 'Kann Mitglieder verwalten sowie Umfragen bearbeiten und löschen.',
+        }
+      : {
+          viewer: 'Kann die Umfrage ansehen, aber nicht abstimmen.',
+          contributor: 'Kann abstimmen und kommentieren.',
+          manager: 'Kann die Umfrage bearbeiten und löschen.',
+        };
+
+    const access = this.state.access;
+    const inviteRole = this.state.inviteRole;
+    const linkRole = this.state.linkRole;
+
+    return {
+      itemTitle: p.itemTitle || '',
+      typeLabel: type === 'project' ? 'Projekt' : 'Umfrage',
+      onClose: p.onClose || (() => {}),
+
+      isInviteTab: this.state.tab === 'invite',
+      isMembersTab: this.state.tab === 'members',
+      goInvite: () => this.setState({ tab: 'invite' }),
+      goMembers: () => this.setState({ tab: 'members' }),
+      membersTabLabel: 'Mitglieder (' + allMembers.length + ')',
+
+      isRestricted: access === 'restricted',
+      isOpen: access === 'open',
+      setRestricted: () => this.setState({ access: 'restricted' }),
+      setOpen: () => this.setState({ access: 'open' }),
+
+      roleIsViewer: inviteRole === 'viewer',
+      roleNotViewer: inviteRole !== 'viewer',
+      roleIsContributor: inviteRole === 'contributor',
+      roleNotContributor: inviteRole !== 'contributor',
+      roleIsManager: inviteRole === 'manager',
+      roleNotManager: inviteRole !== 'manager',
+      setRoleViewer: () => this.setState({ inviteRole: 'viewer' }),
+      setRoleContributor: () => this.setState({ inviteRole: 'contributor' }),
+      setRoleManager: () => this.setState({ inviteRole: 'manager' }),
+      viewerDesc: descriptions.viewer,
+      contributorDesc: descriptions.contributor,
+      managerDesc: descriptions.manager,
+
+      linkRoleIsViewer: linkRole === 'viewer',
+      linkRoleNotViewer: linkRole !== 'viewer',
+      linkRoleIsContributor: linkRole === 'contributor',
+      linkRoleNotContributor: linkRole !== 'contributor',
+      setLinkRoleViewer: () => this.setState({ linkRole: 'viewer' }),
+      setLinkRoleContributor: () => this.setState({ linkRole: 'contributor' }),
+
+      inviteValue: this.state.query,
+      onInviteChange: (e) => this.setState({ query: e.target.value }),
+      onInviteKeyDown: (e) => { if (e.key === 'Enter') this.addPerson(this.state.query.trim(), null); },
+      addInvite: () => this.addPerson(this.state.query.trim(), null),
+      hasQuery: query.length > 0,
+      hasSuggestions: suggestions.length > 0,
+      noSuggestions: query.length > 0 && suggestions.length === 0,
+      suggestions,
+      showFrequent: query.length === 0 && frequent.length > 0,
+      frequent,
+
+      shareLink: 'votean.app/' + (type === 'project' ? 'p' : 'u') + '/' + this.slug(p.itemTitle),
+      copyLabel: this.state.copied ? 'Kopiert ✓' : 'Kopieren',
+      copyLink: () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1600); },
+
+      allMembers,
+      memberCountLabel: allMembers.length === 1 ? '1 Person' : allMembers.length + ' Personen',
+    };
+  }
+
+  slug(s) {
+    return String(s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'projekt';
+  }
+
+  addPerson(name, contact) {
+    name = (name || '').trim();
+    if (!name) return;
+    const palette = [
+      { bg: '#dcecd9', fg: '#4f7a4a' }, { bg: '#f6e7cf', fg: '#b3863a' },
+      { bg: '#e6e0f3', fg: '#6f5aa6' }, { bg: '#d9e4f2', fg: '#4a6da6' },
+      { bg: '#f4dfe2', fg: '#b56374' },
+    ];
+    const c = contact || palette[this.state.extra.length % palette.length];
+    this.setState(s => ({
+      extra: [...s.extra, { name, initial: (contact ? contact.initial : name.charAt(0).toUpperCase()), bg: c.bg, fg: c.fg, role: s.inviteRole }],
+      query: '',
+    }));
+  }
+}
+</script>
+</body>
+</html>

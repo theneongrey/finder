@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..48,600;12..48,700;12..48,800&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #eae6df; }
+  body { font-family: 'Hanken Grotesk', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #1f7a8c; text-decoration: none; }
+  a:hover { color: #17606e; }
+  button, input, select { font-family: inherit; }
+  input::placeholder { color: #b5b0a8; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  @keyframes vtIn { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+  @keyframes vtToast { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes vtBarUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes vtPop { 0% { transform: scale(1); } 45% { transform: scale(1.18); } 100% { transform: scale(1); } }
+  @keyframes vtRing { 0% { box-shadow: 0 0 0 0 rgba(31,122,140,.35); } 70% { box-shadow: 0 0 0 12px rgba(31,122,140,0); } 100% { box-shadow: 0 0 0 0 rgba(31,122,140,0); } }
+  @keyframes vtSpin { to { transform: rotate(360deg); } }
+  [data-vt-stagger] > * { animation: vtIn .42s cubic-bezier(.22,.7,.3,1) both; }
+  [data-vt-stagger] > *:nth-child(1) { animation-delay: .01s; }
+  [data-vt-stagger] > *:nth-child(2) { animation-delay: .07s; }
+  [data-vt-stagger] > *:nth-child(3) { animation-delay: .13s; }
+  [data-vt-stagger] > *:nth-child(4) { animation-delay: .19s; }
+  [data-vt-stagger] > *:nth-child(5) { animation-delay: .25s; }
+  [data-vt-stagger] > *:nth-child(6) { animation-delay: .31s; }
+</style>
+</helmet>
+
+<div style="display:flex;align-items:flex-start;gap:64px;padding:56px 64px 80px;width:max-content;font-family:'Hanken Grotesk',system-ui,sans-serif">
+
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+      <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Mobil</span>
+      <span style="font-size:12px;color:#a39e96">390 × 844 · Einstellungen</span>
+    </div>
+
+    <div data-screen-label="Mobil – Einstellungen" style="position:relative;width:390px;height:844px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:9px solid #24272b;border-radius:46px;box-shadow:0 24px 60px rgba(30,35,40,.22);overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:44px;z-index:8;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 4px;font-size:12.5px;font-weight:700;color:#3a3833;background:rgba(244,241,236,.86);backdrop-filter:blur(8px)">
+        <span>9:41</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:8px;border:1.4px solid #3a3833;border-radius:2px;display:inline-block"></span></span>
+      </div>
+
+      <div onScroll="{{ onScroll }}" style="position:absolute;inset:44px 0 0 0;overflow-y:auto">
+        <div style="position:sticky;top:0;z-index:7;padding:9px 16px;background:{{ barBg }};backdrop-filter:blur(10px);border-bottom:1px solid {{ barBorder }};box-shadow:{{ barShadow }};transition:background 220ms ease,border-color 220ms ease,box-shadow 220ms ease">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button title="Zurück" style="width:36px;height:36px;flex:none;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:rgba(20,24,28,.05)">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1d2227" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+            </button>
+            <div style="flex:1;min-width:0;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:17px;font-weight:700;letter-spacing:-.3px;color:#1d2227;opacity:{{ barTitleOpacity }};transform:{{ barTitleShift }};transition:opacity 200ms ease,transform 260ms cubic-bezier(.22,.7,.3,1)">Einstellungen</div>
+            <div style="width:36px;height:36px;flex:none;border-radius:50%;background:#d7eef0;color:#1f7a8c;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">{{ initial }}</div>
+          </div>
+        </div>
+
+        <div data-vt-stagger="" style="padding:8px 20px 150px;display:flex;flex-direction:column;gap:16px">
+
+          <div style="padding:0 2px">
+            <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:30px;font-weight:700;letter-spacing:-.7px;line-height:1.05;color:#1d2227">Einstellungen</div>
+            <div style="font-size:14px;color:#79756f;margin-top:5px">{{ subline }}</div>
+          </div>
+
+          <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:20px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+            <div style="display:flex;align-items:center;gap:16px">
+              <button onClick="{{ onAvatar }}" title="Bild ändern" style="position:relative;width:76px;height:76px;flex:none;border:none;padding:0;border-radius:50%;background:#d7eef0;color:#1f7a8c;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:29px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;animation:{{ avatarAnim }}">
+                <span>{{ initial }}</span>
+                <span style="position:absolute;right:-2px;bottom:-2px;width:27px;height:27px;border-radius:50%;background:#1f7a8c;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5h3.2l1.5-2.3h6.6l1.5 2.3H20v10H4z"></path><circle cx="12" cy="13.2" r="3.1"></circle></svg>
+                </span>
+              </button>
+              <div style="min-width:0">
+                <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:20px;font-weight:700;letter-spacing:-.3px;color:#1d2227">{{ name }}</div>
+                <div style="font-size:13.5px;color:#8a8681;margin-top:3px">{{ email }}</div>
+                <div style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;height:23px;padding:0 9px 0 7px;border-radius:8px;background:#e2ede1;color:#3f7a4e;font-size:11.5px;font-weight:700">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                  <span>E-Mail bestätigt</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:18px 20px 20px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Profil</div>
+
+            <div style="margin-top:14px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                <label style="font-size:13.5px;font-weight:700;color:#3a3833">Name</label>
+                <span style="font-size:12px;color:{{ nameCountColor }};transition:color 160ms ease">{{ nameCount }}</span>
+              </div>
+              <input value="{{ name }}" onChange="{{ onName }}" placeholder="Wie sollen dich andere sehen?" style="width:100%;box-sizing:border-box;height:48px;margin-top:7px;padding:0 14px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fff;font-size:15px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+              <div style="font-size:12.5px;color:#a39e96;margin-top:6px">So erscheinst du in Umfragen und Projekten.</div>
+            </div>
+
+            <div style="margin-top:16px">
+              <label style="font-size:13.5px;font-weight:700;color:#3a3833">E-Mail-Adresse</label>
+              <div style="display:flex;align-items:center;gap:10px;height:48px;margin-top:7px;padding:0 12px 0 14px;border-radius:14px;border:1px solid rgba(20,24,28,.07);background:#f7f5f1">
+                <span style="flex:1;min-width:0;font-size:15px;color:#79756f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ email }}</span>
+                <button onClick="{{ onChangeMail }}" style="flex:none;height:32px;padding:0 12px;border-radius:10px;border:1px solid rgba(20,24,28,.08);background:#fff;color:#1f7a8c;font-size:13px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f1eee9">Ändern</button>
+              </div>
+            </div>
+
+            <div style="margin-top:16px">
+              <label style="font-size:13.5px;font-weight:700;color:#3a3833">Sprache</label>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <sc-for list="{{ langs }}" as="l" hint-placeholder-count="3">
+                  <button onClick="{{ l.onPick }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:44px;border-radius:14px;border:1px solid {{ l.border }};background:{{ l.bg }};color:{{ l.fg }};font-size:14px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease,border-color 160ms ease" style-active="transform:scale(.97)">
+                    <span style="font-size:15px">{{ l.flag }}</span>
+                    <span>{{ l.label }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:18px 20px 8px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Benachrichtigungen</div>
+            <div style="display:flex;flex-direction:column;margin-top:4px">
+              <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="4">
+                <button onClick="{{ n.onToggle }}" style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border:none;border-top:1px solid {{ n.divider }};background:transparent;text-align:left;cursor:pointer">
+                  <span style="flex:1;min-width:0">
+                    <span style="display:block;font-size:14.5px;font-weight:700;color:#1d2227">{{ n.title }}</span>
+                    <span style="display:block;font-size:12.5px;line-height:1.4;color:#8a8681;margin-top:3px">{{ n.desc }}</span>
+                  </span>
+                  <span style="position:relative;flex:none;width:44px;height:26px;margin-top:2px;border-radius:99px;background:{{ n.track }};transition:background 180ms ease">
+                    <span style="position:absolute;top:3px;left:{{ n.knob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(30,35,40,.28);transition:left 200ms cubic-bezier(.3,1.3,.5,1)"></span>
+                  </span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:18px 20px 20px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Standard für neue Umfragen</div>
+            <div style="font-size:13px;color:#8a8681;margin-top:8px;line-height:1.45">Laufzeit, die beim Erstellen vorausgefüllt wird.</div>
+            <div style="display:flex;gap:7px;margin-top:12px">
+              <sc-for list="{{ durations }}" as="d" hint-placeholder-count="4">
+                <button onClick="{{ d.onPick }}" style="flex:1;height:40px;border-radius:13px;border:1px solid {{ d.border }};background:{{ d.bg }};color:{{ d.fg }};font-size:13.5px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease,border-color 160ms ease" style-active="transform:scale(.97)">{{ d.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:6px 8px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+            <sc-for list="{{ links }}" as="a" hint-placeholder-count="3">
+              <button onClick="{{ a.onTap }}" style="width:100%;display:flex;align-items:center;gap:12px;height:52px;padding:0 12px;border:none;border-radius:16px;background:transparent;color:{{ a.color }};font-size:14.5px;font-weight:600;text-align:left;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">
+                <span style="flex:1">{{ a.label }}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5"><path d="M9 5l7 7-7 7"></path></svg>
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="text-align:center;font-size:12px;color:#b5b0a8;padding-top:2px">Votean · Version 2.4.0</div>
+        </div>
+      </div>
+
+      <sc-if value="{{ dirty }}">
+        <div style="position:absolute;left:0;right:0;bottom:0;z-index:9;padding:14px 20px 22px;background:linear-gradient(to top,#e7efef 46%,rgba(231,239,239,0) 100%);animation:vtBarUp 280ms cubic-bezier(.22,.7,.3,1) both">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button onClick="{{ onReset }}" style="flex:none;height:52px;padding:0 18px;border-radius:16px;border:1px solid rgba(20,24,28,.1);background:#fff;color:#5a5650;font-size:15px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f1eee9">Verwerfen</button>
+            <button onClick="{{ onSave }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:9px;height:52px;border-radius:16px;border:none;background:#1f7a8c;color:#fff;font-size:15.5px;font-weight:700;box-shadow:0 8px 22px rgba(31,122,140,.3);cursor:pointer;transition:transform 140ms ease,filter 140ms ease" style-hover="filter:brightness(.97)" style-active="transform:scale(.985)">
+              <sc-if value="{{ saving }}">
+                <span style="width:17px;height:17px;border-radius:50%;border:2.4px solid rgba(255,255,255,.35);border-top-color:#fff;animation:vtSpin .7s linear infinite"></span>
+              </sc-if>
+              <sc-if value="{{ notSaving }}" hint-placeholder-val="{{ true }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+              </sc-if>
+              <span>{{ saveLabel }}</span>
+            </button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ toastOn }}">
+        <div style="position:absolute;left:16px;right:16px;bottom:{{ mToastBottom }};z-index:10;display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:vtToast 260ms cubic-bezier(.22,.7,.3,1) both">
+          <span style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex:none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+          </span>
+          <span style="flex:1;font-size:13.5px;font-weight:600">{{ toastText }}</span>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+      <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Web</span>
+      <span style="font-size:12px;color:#a39e96">1280 × 820 · Einstellungen</span>
+    </div>
+
+    <div data-screen-label="Web – Einstellungen" style="position:relative;width:1280px;height:820px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:1px solid rgba(20,24,28,.1);border-radius:20px;box-shadow:0 24px 60px rgba(30,35,40,.16);overflow:hidden;display:flex;flex-direction:column">
+
+      <div style="flex:none;display:flex;align-items:center;gap:14px;padding:16px 28px;background:rgba(255,253,249,.72);backdrop-filter:blur(8px);border-bottom:1px solid rgba(20,24,28,.06)">
+        <div style="display:flex;align-items:center;gap:6px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+          <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.3px;color:#1f7a8c">Votean</span>
+        </div>
+        <span style="width:1px;height:20px;background:rgba(20,24,28,.1)"></span>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a8681">
+          <span style="font-weight:700;color:#3a3833">Einstellungen</span>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+          <div style="text-align:right">
+            <div style="font-size:13.5px;font-weight:700;color:#1d2227;line-height:1.2">{{ name }}</div>
+            <div style="font-size:12px;color:#a39e96;line-height:1.2">Angemeldet</div>
+          </div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#d7eef0;color:#1f7a8c;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">{{ initial }}</div>
+        </div>
+      </div>
+
+      <div style="flex:1;min-height:0;display:flex">
+
+      
+
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+        <div style="flex:none;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:30px 34px 20px;border-bottom:1px solid rgba(20,24,28,.055)">
+          <div>
+            <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:33px;font-weight:700;letter-spacing:-.8px;line-height:1.05;color:#1d2227">Einstellungen</div>
+            <div style="font-size:15px;color:#79756f;margin-top:6px">{{ subline }}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;flex:none">
+            <div style="font-size:13.5px;font-weight:600;color:{{ statusColor }};opacity:{{ statusOpacity }};transition:opacity 200ms ease">{{ statusText }}</div>
+            <button onClick="{{ onReset }}" style="height:44px;padding:0 16px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fff;color:#5a5650;font-size:14.5px;font-weight:700;opacity:{{ resetOpacity }};pointer-events:{{ resetEvents }};cursor:pointer;transition:opacity 200ms ease,background 140ms ease" style-hover="background:#f1eee9">Verwerfen</button>
+            <button onClick="{{ onSave }}" style="display:flex;align-items:center;gap:9px;height:44px;padding:0 20px;border-radius:14px;border:none;background:{{ saveBg }};color:{{ saveFg }};font-size:14.5px;font-weight:700;box-shadow:{{ saveShadow }};cursor:{{ saveCursor }};transition:background 200ms ease,color 200ms ease,box-shadow 200ms ease,transform 140ms ease" style-active="transform:scale(.985)">
+              <sc-if value="{{ saving }}">
+                <span style="width:16px;height:16px;border-radius:50%;border:2.4px solid rgba(255,255,255,.35);border-top-color:#fff;animation:vtSpin .7s linear infinite"></span>
+              </sc-if>
+              <sc-if value="{{ notSaving }}" hint-placeholder-val="{{ true }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+              </sc-if>
+              <span>{{ saveLabel }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:24px 34px 40px">
+          <div data-vt-stagger="" style="display:grid;grid-template-columns:380px 1fr;gap:18px;align-items:start;max-width:1080px">
+
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:24px;box-shadow:0 3px 14px rgba(35,40,45,.05);text-align:center">
+                <button onClick="{{ onAvatar }}" title="Bild ändern" style="position:relative;width:104px;height:104px;margin:0 auto;border:none;padding:0;border-radius:50%;background:#d7eef0;color:#1f7a8c;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:38px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;animation:{{ avatarAnim }}">
+                  <span>{{ initial }}</span>
+                  <span style="position:absolute;right:0;bottom:0;width:32px;height:32px;border-radius:50%;background:#1f7a8c;border:3px solid #fff;display:flex;align-items:center;justify-content:center">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5h3.2l1.5-2.3h6.6l1.5 2.3H20v10H4z"></path><circle cx="12" cy="13.2" r="3.1"></circle></svg>
+                  </span>
+                </button>
+                <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:22px;font-weight:700;letter-spacing:-.3px;color:#1d2227;margin-top:14px">{{ name }}</div>
+                <div style="font-size:13.5px;color:#8a8681;margin-top:4px">{{ email }}</div>
+                <div style="display:inline-flex;align-items:center;gap:5px;margin-top:12px;height:24px;padding:0 10px 0 8px;border-radius:8px;background:#e2ede1;color:#3f7a4e;font-size:11.5px;font-weight:700">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                  <span>E-Mail bestätigt</span>
+                </div>
+                <div style="font-size:12.5px;color:#a39e96;margin-top:14px;line-height:1.45;text-wrap:pretty">Ziehe ein Bild hierher oder klicke auf den Kreis. PNG oder JPG, max. 5 MB.</div>
+              </div>
+
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:6px 8px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <sc-for list="{{ links }}" as="a" hint-placeholder-count="3">
+                  <button onClick="{{ a.onTap }}" style="width:100%;display:flex;align-items:center;gap:12px;height:48px;padding:0 12px;border:none;border-radius:16px;background:transparent;color:{{ a.color }};font-size:14.5px;font-weight:600;text-align:left;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">
+                    <span style="flex:1">{{ a.label }}</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5"><path d="M9 5l7 7-7 7"></path></svg>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:22px 24px 24px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.3px;color:#1d2227">Profil</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+                  <div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                      <label style="font-size:13.5px;font-weight:700;color:#3a3833">Name</label>
+                      <span style="font-size:12px;color:{{ nameCountColor }};transition:color 160ms ease">{{ nameCount }}</span>
+                    </div>
+                    <input value="{{ name }}" onChange="{{ onName }}" placeholder="Wie sollen dich andere sehen?" style="width:100%;box-sizing:border-box;height:46px;margin-top:7px;padding:0 14px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fff;font-size:15px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                  </div>
+                  <div>
+                    <label style="font-size:13.5px;font-weight:700;color:#3a3833">E-Mail-Adresse</label>
+                    <div style="display:flex;align-items:center;gap:10px;height:46px;margin-top:7px;padding:0 10px 0 14px;border-radius:14px;border:1px solid rgba(20,24,28,.07);background:#f7f5f1">
+                      <span style="flex:1;min-width:0;font-size:15px;color:#79756f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ email }}</span>
+                      <button onClick="{{ onChangeMail }}" style="flex:none;height:32px;padding:0 12px;border-radius:10px;border:1px solid rgba(20,24,28,.08);background:#fff;color:#1f7a8c;font-size:13px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f1eee9">Ändern</button>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:18px">
+                  <label style="font-size:13.5px;font-weight:700;color:#3a3833">Sprache</label>
+                  <div style="display:flex;gap:8px;margin-top:8px;max-width:420px">
+                    <sc-for list="{{ langs }}" as="l" hint-placeholder-count="3">
+                      <button onClick="{{ l.onPick }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:44px;border-radius:14px;border:1px solid {{ l.border }};background:{{ l.bg }};color:{{ l.fg }};font-size:14px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease,border-color 160ms ease" style-active="transform:scale(.98)">
+                        <span style="font-size:15px">{{ l.flag }}</span>
+                        <span>{{ l.label }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:22px 24px 10px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.3px;color:#1d2227">Benachrichtigungen</div>
+                <div style="display:flex;flex-direction:column;margin-top:6px">
+                  <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="4">
+                    <button onClick="{{ n.onToggle }}" style="display:flex;align-items:center;gap:16px;padding:14px 0;border:none;border-top:1px solid {{ n.divider }};background:transparent;text-align:left;cursor:pointer">
+                      <span style="flex:1;min-width:0">
+                        <span style="display:block;font-size:15px;font-weight:700;color:#1d2227">{{ n.title }}</span>
+                        <span style="display:block;font-size:13px;line-height:1.4;color:#8a8681;margin-top:3px">{{ n.desc }}</span>
+                      </span>
+                      <span style="position:relative;flex:none;width:44px;height:26px;border-radius:99px;background:{{ n.track }};transition:background 180ms ease">
+                        <span style="position:absolute;top:3px;left:{{ n.knob }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(30,35,40,.28);transition:left 200ms cubic-bezier(.3,1.3,.5,1)"></span>
+                      </span>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:22px 24px 24px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.3px;color:#1d2227">Standard für neue Umfragen</div>
+                <div style="font-size:13.5px;color:#8a8681;margin-top:7px">Laufzeit, die beim Erstellen vorausgefüllt wird.</div>
+                <div style="display:flex;gap:8px;margin-top:14px;max-width:520px">
+                  <sc-for list="{{ durations }}" as="d" hint-placeholder-count="4">
+                    <button onClick="{{ d.onPick }}" style="flex:1;height:42px;border-radius:13px;border:1px solid {{ d.border }};background:{{ d.bg }};color:{{ d.fg }};font-size:14px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease,border-color 160ms ease" style-active="transform:scale(.98)">{{ d.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+
+      <sc-if value="{{ toastOn }}">
+        <div style="position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:11px;padding:14px 16px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:vtToast 260ms cubic-bezier(.22,.7,.3,1) both;white-space:nowrap">
+          <span style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex:none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+          </span>
+          <span style="font-size:14px;font-weight:600">{{ toastText }}</span>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1860,&quot;height&quot;:1020},&quot;email&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;giovanni@neongrey.de&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Inhalt&quot;}}">
+const LANGS = [
+  { id: 'de', label: 'Deutsch', flag: 'DE' },
+  { id: 'en', label: 'English', flag: 'EN' },
+  { id: 'it', label: 'Italiano', flag: 'IT' },
+];
+
+const DURATIONS = [
+  { id: '2', label: '2 Tage' },
+  { id: '3', label: '3 Tage' },
+  { id: '7', label: '1 Woche' },
+  { id: 'x', label: 'Ohne' },
+];
+
+const NOTIFS = [
+  { id: 'invite', title: 'Neue Umfrage in meinen Projekten', desc: 'Push, sobald jemand eine Umfrage startet.' },
+  { id: 'remind', title: 'Erinnerung vor Ablauf', desc: 'Einen Tag bevor eine Umfrage schließt.' },
+  { id: 'result', title: 'Ergebnis steht fest', desc: 'Wenn alle abgestimmt haben oder die Frist endet.' },
+  { id: 'digest', title: 'Wöchentliche Zusammenfassung', desc: 'Montags per E-Mail, was offen ist.' },
+];
+
+const BASE = {
+  name: 'Giovanni',
+  lang: 'de',
+  duration: '3',
+  notif: { invite: true, remind: true, result: true, digest: false },
+};
+
+class Component extends DCLogic {
+  state = {
+    form: { name: BASE.name, lang: BASE.lang, duration: BASE.duration, notif: Object.assign({}, BASE.notif) },
+    saved: { name: BASE.name, lang: BASE.lang, duration: BASE.duration, notif: Object.assign({}, BASE.notif) },
+    saving: false,
+    justSaved: false,
+    toast: null,
+    scrolled: false,
+    avatarPop: false,
+  };
+
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._s); clearTimeout(this._p); clearTimeout(this._j); }
+
+  get accent() { return this.props.accent || '#1f7a8c'; }
+
+  onScroll(e) {
+    const on = e.target.scrollTop > 46;
+    if (on !== this.state.scrolled) this.setState({ scrolled: on });
+  }
+
+  patch(obj) { this.setState(s => ({ form: Object.assign({}, s.form, obj), justSaved: false })); }
+
+  toggle(id) {
+    this.setState(s => ({
+      form: Object.assign({}, s.form, { notif: Object.assign({}, s.form.notif, { [id]: !s.form.notif[id] }) }),
+      justSaved: false,
+    }));
+  }
+
+  toast(text) {
+    this.setState({ toast: text });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), 2600);
+  }
+
+  dirty() {
+    const f = this.state.form, s = this.state.saved;
+    if (f.name !== s.name || f.lang !== s.lang || f.duration !== s.duration) return true;
+    return Object.keys(f.notif).some(k => f.notif[k] !== s.notif[k]);
+  }
+
+  save() {
+    if (!this.dirty() || this.state.saving) return;
+    this.setState({ saving: true });
+    clearTimeout(this._s);
+    this._s = setTimeout(() => {
+      this.setState(st => ({
+        saving: false,
+        justSaved: true,
+        saved: { name: st.form.name, lang: st.form.lang, duration: st.form.duration, notif: Object.assign({}, st.form.notif) },
+      }));
+      this.toast('Änderungen gespeichert');
+      clearTimeout(this._j);
+      this._j = setTimeout(() => this.setState({ justSaved: false }), 3000);
+    }, 900);
+  }
+
+  reset() {
+    this.setState(s => ({ form: { name: s.saved.name, lang: s.saved.lang, duration: s.saved.duration, notif: Object.assign({}, s.saved.notif) }, justSaved: false }));
+    this.toast('Änderungen verworfen');
+  }
+
+  avatar() {
+    this.setState({ avatarPop: true });
+    clearTimeout(this._p);
+    this._p = setTimeout(() => this.setState({ avatarPop: false }), 480);
+    this.toast('Bild auswählen …');
+  }
+
+  lin(c) { const v = c / 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }
+  enc(v) { const s = v <= 0.0031308 ? v * 12.92 : 1.055 * Math.pow(v, 1 / 2.4) - 0.055; return Math.max(0, Math.min(255, Math.round(s * 255))); }
+  hexArr(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+  mix(a, b, t) {
+    const A = this.hexArr(a), B = this.hexArr(b);
+    const ch = i => this.enc(this.lin(A[i]) + (this.lin(B[i]) - this.lin(A[i])) * t);
+    return '#' + [ch(0), ch(1), ch(2)].map(v => v.toString(16).padStart(2, '0')).join('');
+  }
+  bg() {
+    const k = 55 / 100;
+    const warm = '#faf5ed';
+    const cool = this.mix(warm, '#d5eaf0', k);
+    const stops = [0, 0.25, 0.5, 0.75, 1].map(t => this.mix(warm, cool, t));
+    return {
+      grad: 'linear-gradient(135deg,' + stops[0] + ' 10%,' + stops[1] + ' 30%,' + stops[2] + ' 50%,' + stops[3] + ' 70%,' + stops[4] + ' 90%)',
+      fade: 'linear-gradient(to top,' + stops[4] + ' 46%,' + stops[4] + '00 100%)',
+    };
+  }
+
+  renderVals() {
+    const st = this.state;
+    const f = st.form;
+    const ac = this.accent;
+    const bg = this.bg();
+    const dirty = this.dirty();
+    const nameLen = f.name.length;
+    const email = this.props.email || 'giovanni@neongrey.de';
+
+    const pick = on => on
+      ? { bg: '#e7f2f3', fg: ac, border: '#bcdfe3' }
+      : { bg: '#fff', fg: '#5a5650', border: 'rgba(20,24,28,.1)' };
+
+    const navItems = ['Überblick', 'Projekte', 'Umfragen', 'Einstellungen'].map(l => {
+      const on = l === 'Einstellungen';
+      return { label: l, bg: on ? '#e7f2f3' : 'transparent', fg: on ? ac : '#5a5650', weight: on ? '700' : '600', dot: on ? ac : 'rgba(20,24,28,.18)' };
+    });
+
+    const sectionNames = ['Profil', 'Benachrichtigungen', 'Umfrage-Standards', 'Konto'];
+
+    return {
+      bgGrad: bg.grad,
+      bgFade: bg.fade,
+      initial: (f.name.trim()[0] || 'G').toUpperCase(),
+      name: f.name,
+      email: email,
+      subline: dirty ? 'Du hast ungespeicherte Änderungen' : 'Profil, Benachrichtigungen und Standards',
+      nameCount: nameLen + '/32',
+      nameCountColor: nameLen > 28 ? '#a8742a' : '#b5b0a8',
+      onName: e => this.patch({ name: e.target.value.slice(0, 32) }),
+      onChangeMail: () => this.toast('Bestätigungslink wird verschickt'),
+      onAvatar: () => this.avatar(),
+      avatarAnim: st.avatarPop ? 'vtPop 420ms cubic-bezier(.3,1.4,.5,1) both, vtRing 620ms ease-out both' : 'none',
+
+      langs: LANGS.map(l => {
+        const p = pick(f.lang === l.id);
+        return { label: l.label, flag: l.flag, bg: p.bg, fg: p.fg, border: p.border, onPick: () => this.patch({ lang: l.id }) };
+      }),
+
+      durations: DURATIONS.map(d => {
+        const p = pick(f.duration === d.id);
+        return { label: d.label, bg: p.bg, fg: p.fg, border: p.border, onPick: () => this.patch({ duration: d.id }) };
+      }),
+
+      notifs: NOTIFS.map((n, i) => {
+        const on = !!f.notif[n.id];
+        return {
+          title: n.title, desc: n.desc,
+          track: on ? ac : 'rgba(20,24,28,.16)',
+          knob: on ? '21px' : '3px',
+          divider: i === 0 ? 'transparent' : 'rgba(20,24,28,.055)',
+          onToggle: () => this.toggle(n.id),
+        };
+      }),
+
+      links: [
+        { label: 'Passwort ändern', color: '#3a3833', onTap: () => this.toast('Passwort ändern') },
+        { label: 'Datenschutz & Daten-Export', color: '#3a3833', onTap: () => this.toast('Daten-Export angefragt') },
+        { label: 'Abmelden', color: '#3a3833', onTap: () => this.toast('Abgemeldet') },
+        { label: 'Konto löschen', color: '#c1453f', onTap: () => this.toast('Konto löschen – Bestätigung nötig') },
+      ],
+
+      nav: navItems,
+      sections: sectionNames.map((l, i) => ({
+        label: l,
+        bg: i === 0 ? '#f2efe9' : 'transparent',
+        fg: i === 0 ? '#1d2227' : '#79756f',
+        weight: i === 0 ? '700' : '500',
+        onPick: () => this.toast(l),
+      })),
+
+      dirty: dirty,
+      saving: st.saving,
+      notSaving: !st.saving,
+      saveLabel: st.saving ? 'Speichert …' : (st.justSaved && !dirty ? 'Gespeichert' : 'Speichern'),
+      saveBg: dirty ? ac : '#f1eee9',
+      saveFg: dirty ? '#fff' : '#a39e96',
+      saveShadow: dirty ? '0 6px 18px rgba(31,122,140,.28)' : 'none',
+      saveCursor: dirty ? 'pointer' : 'default',
+      resetOpacity: dirty ? '1' : '0',
+      resetEvents: dirty ? 'auto' : 'none',
+      statusText: dirty ? 'Nicht gespeichert' : (st.justSaved ? 'Alles gespeichert' : ''),
+      statusColor: dirty ? '#a8742a' : '#5d9a56',
+      statusOpacity: (dirty || st.justSaved) ? '1' : '0',
+      onSave: () => this.save(),
+      onReset: () => this.reset(),
+
+      barTitleOpacity: st.scrolled ? '1' : '0',
+      barTitleShift: st.scrolled ? 'none' : 'translateY(6px)',
+      barBg: st.scrolled ? 'rgba(250,248,244,.9)' : 'rgba(250,248,244,0)',
+      barBorder: st.scrolled ? 'rgba(20,24,28,.07)' : 'rgba(20,24,28,0)',
+      barShadow: st.scrolled ? '0 4px 16px rgba(35,40,45,.05)' : 'none',
+
+      toastOn: !!st.toast,
+      toastText: st.toast || '',
+      mToastBottom: dirty ? '104px' : '26px',
+      onScroll: e => this.onScroll(e),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

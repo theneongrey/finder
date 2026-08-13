@@ -1,0 +1,16 @@
+.ds-progress-track {
+  width: 100%;
+  background: var(--cream-300);
+  border-radius: 999px;
+  overflow: hidden;
+  /* Override SpartanNG defaults */
+  height: unset;
+}
+.ds-progress-fill {
+  background: var(--accent);
+  border-radius: 999px;
+  transition: transform var(--duration-standard) var(--ease-standard);
+  height: 100%;
+  /* Override SpartanNG bg-primary */
+  background-color: var(--accent);
+}

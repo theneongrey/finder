@@ -1,0 +1,50 @@
+<!-- @dsCard group="Components" viewport="700x420" name="Feedback" -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg-app);font-family:var(--font-body);padding:20px;color:var(--text-primary);display:flex;gap:30px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+
+<div style="position:relative;width:260px;height:230px;background:#fff;border-radius:18px;box-shadow:var(--shadow-card-soft);padding:14px;">
+  <div style="display:flex;justify-content:flex-end;">
+    <button style="border:none;background:none;color:var(--ink-250);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="12" cy="19" r="1.8"></circle></svg>
+    </button>
+  </div>
+  <div style="position:absolute;top:48px;right:14px;background:#fff;border:1px solid var(--border-hairline);border-radius:14px;box-shadow:var(--shadow-overlay);padding:6px;min-width:160px;">
+    <button style="display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;font-size:13.5px;font-weight:600;color:var(--ink-700);padding:9px 10px;border-radius:9px;text-align:left;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"></circle><circle cx="6" cy="12" r="2.6"></circle><circle cx="18" cy="19" r="2.6"></circle></svg>Teilen
+    </button>
+    <button style="display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;font-size:13.5px;font-weight:600;color:var(--ink-700);padding:9px 10px;border-radius:9px;text-align:left;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L20 8l-4-4L4 16z"></path></svg>Bearbeiten
+    </button>
+    <button style="display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;font-size:13.5px;font-weight:600;color:var(--negative);padding:9px 10px;border-radius:9px;text-align:left;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg>Löschen
+    </button>
+  </div>
+</div>
+
+<div style="position:relative;width:320px;height:230px;">
+  <div style="position:absolute;bottom:0;left:0;right:0;background:var(--bg-sheet);border-radius:20px 20px 0 0;box-shadow:var(--shadow-sheet);padding:14px 18px 20px;">
+    <div style="width:34px;height:4px;border-radius:3px;background:var(--cream-400);margin:0 auto 12px;"></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div>
+        <div style="font-family:var(--font-display);font-weight:700;font-size:18px;">Teilen</div>
+        <div style="font-size:12.5px;color:var(--text-tertiary);margin-top:2px;">Projekt · Sommerurlaub 2026</div>
+      </div>
+      <button style="margin-left:auto;border:none;background:var(--sand-200);color:var(--ink-500);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+      </button>
+    </div>
+    <div style="margin-top:14px;font-size:13px;color:var(--text-secondary);">Sheet-Inhalt …</div>
+  </div>
+</div>
+
+</body>
+</html>

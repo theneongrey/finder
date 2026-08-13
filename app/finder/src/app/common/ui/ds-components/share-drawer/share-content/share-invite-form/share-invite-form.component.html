@@ -1,0 +1,45 @@
+<p
+  class="text-xs font-semibold uppercase tracking-wide text-gray-500 mt-4 mb-2"
+>
+  {{ "project.share.invite" | translate }}
+</p>
+
+<div class="flex gap-2">
+  <input
+    hlmInput
+    type="email"
+    list="contacts-list"
+    autocomplete="off"
+    [ngModel]="contactEmail()"
+    (ngModelChange)="contactEmail.set($event)"
+    [placeholder]="'project.share.nameOrEmail' | translate"
+    [disabled]="sharingInProgress()"
+    class="flex-1"
+  />
+  <datalist id="contacts-list">
+    @for (c of contacts(); track c.email) {
+      <option [value]="c.email">{{ c.name }}</option>
+    }
+  </datalist>
+  <button hlmBtn icon="fa-solid fa-paper-plane" [disabled]="!contactEmail()" [loading]="sharingInProgress()" (click)="invite()">
+  </button>
+</div>
+
+<hlm-toggle-group
+  type="single"
+  [nullable]="false"
+  [value]="selectedRole()"
+  (valueChange)="onRoleChange($event)"
+  variant="outline"
+  class="mt-4 w-full"
+>
+  @for (opt of roleOptions(); track opt.id) {
+    <button hlmToggleGroupItem [value]="opt.id" class="flex-1">
+      {{ opt.label }}
+    </button>
+  }
+</hlm-toggle-group>
+
+<p class="text-sm text-gray-500 mt-2">
+  {{ selectedRoleDescription() }}
+</p>

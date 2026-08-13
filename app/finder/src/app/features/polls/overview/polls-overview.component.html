@@ -1,9 +1,6 @@
-<div class="flex flex-col h-full w-full">
-  <app-title-bar class="sticky top-0 z-10" />
-  <main
-    fMaxHeightMinusHeader
-    class="flex-grow max-w-5xl mx-auto w-full h-full rounded-t-2xl overflow-y-auto px-[22px] pt-5"
-  >
+<div class="flex flex-col w-full">
+  <app-title-bar />
+  <main class="flex-grow mx-auto w-full max-w-(--mobile-max-width) lg:max-w-5xl rounded-t-2xl px-[22px] pt-5">
     <app-standalone-poll-tab
       (deletionRequested)="pollDeletionRequested($event)"
       (shareRequested)="pollShareRequested($event)"

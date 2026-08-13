@@ -1,9 +1,9 @@
 ---
 type: Guide
 title: Adding Spartan Components
-description: How to install and use new Spartan UI (hlm) component primitives in the frontend
+description: DEPRECATED — Spartan UI (hlm) has been replaced by the ds-* component library. See component-library.md.
 tags: [frontend, spartan-ui, tailwind, angular, guide]
-status: stable
+status: deprecated
 generated:
   actor: claude-sonnet-4-6
   date: 2026-08-06
@@ -17,7 +17,16 @@ sources:
 
 # Adding Spartan Components
 
-The project uses [Spartan UI](https://www.spartan.ng) — open-source, composable, and Tailwind-native — as its component library. Components are generated locally into `app/finder/src/lib/ui/` and path-aliased under `@spartan-ng/helm/*` in `tsconfig.json`.
+> **Deprecated (2026-08-10):** Spartan UI is no longer the active component library.
+> All `Hlm*` imports have been replaced by the custom `ds-*` library (issue #237).
+> See [Component Library (ds-*)](component-library.md) for the new API reference and
+> [Spartan → ds-* Migration Guide](spartan-to-ds-migration.md) for the import mapping.
+>
+> This page is kept for historical context only.
+
+---
+
+The project previously used [Spartan UI](https://www.spartan.ng) — open-source, composable, and Tailwind-native — as its component library. Components are generated locally into `app/finder/src/lib/ui/` and path-aliased under `@spartan-ng/helm/*` in `tsconfig.json`.
 
 ## Background
 

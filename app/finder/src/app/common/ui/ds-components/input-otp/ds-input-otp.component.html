@@ -1,0 +1,20 @@
+<brn-input-otp
+  hlmInputOtp
+  [length]="length()"
+  [value]="value()"
+  [disabled]="isDisabled()"
+  (valueChange)="onValueChange($event)"
+  (blur)="onTouched()"
+  class="ds-otp-root"
+>
+  @for (group of groups(); track $index; let gi = $index) {
+    @if (gi > 0) {
+      <hlm-input-otp-separator class="ds-otp-sep" />
+    }
+    <hlm-input-otp-group class="ds-otp-group">
+      @for (i of group; track i) {
+        <hlm-input-otp-slot [index]="i" class="ds-otp-slot" />
+      }
+    </hlm-input-otp-group>
+  }
+</brn-input-otp>

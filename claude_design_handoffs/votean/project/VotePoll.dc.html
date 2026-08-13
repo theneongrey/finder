@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..48,600;12..48,700;12..48,800&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #eae6df; }
+  body { font-family: 'Hanken Grotesk', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #1f7a8c; text-decoration: none; }
+  a:hover { color: #17606e; }
+  button { font-family: inherit; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  @keyframes vtIn { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+  @keyframes vtToast { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes vtPop { 0% { transform: scale(1); } 45% { transform: scale(1.3); } 100% { transform: scale(1); } }
+  @keyframes vtRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  @keyframes vtPulse { 0% { box-shadow: 0 0 0 0 rgba(93,154,86,.45); } 70% { box-shadow: 0 0 0 7px rgba(93,154,86,0); } 100% { box-shadow: 0 0 0 0 rgba(93,154,86,0); } }
+  @keyframes vtNudge { 0%, 62%, 100% { transform: translateX(0); } 72% { transform: translateX(7px) rotate(1.4deg); } 86% { transform: translateX(-7px) rotate(-1.4deg); } }
+  [data-vt-stagger] > * { animation: vtRise .42s cubic-bezier(.22,.7,.3,1) both; }
+  [data-vt-stagger] > *:nth-child(1) { animation-delay: .02s; }
+  [data-vt-stagger] > *:nth-child(2) { animation-delay: .07s; }
+  [data-vt-stagger] > *:nth-child(3) { animation-delay: .12s; }
+  [data-vt-stagger] > *:nth-child(4) { animation-delay: .17s; }
+  [data-vt-stagger] > *:nth-child(5) { animation-delay: .22s; }
+  [data-vt-stagger] > *:nth-child(6) { animation-delay: .27s; }
+</style>
+</helmet>
+
+<div style="display:flex;flex-direction:column;gap:26px;padding:52px 64px 80px;width:max-content;font-family:'Hanken Grotesk',system-ui,sans-serif">
+
+  <div style="display:flex;align-items:center;gap:14px">
+    <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:22px;font-weight:700;letter-spacing:-.4px;color:#1d2227">Abstimmen</span>
+    <span style="width:1px;height:20px;background:rgba(20,24,28,.14)"></span>
+    <div style="display:flex;gap:6px;padding:5px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid rgba(20,24,28,.06)">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.onClick }}" style="height:34px;padding:0 14px;border-radius:10px;border:none;background:{{ t.bg }};color:{{ t.fg }};font-size:13.5px;font-weight:700;cursor:pointer;transition:background 160ms ease,color 160ms ease">{{ t.label }}</button>
+      </sc-for>
+    </div>
+    <span style="font-size:13px;color:#8a8681">{{ syncHint }}</span>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:64px">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Mobil</span>
+        <span style="font-size:12px;color:#a39e96">390 × 844 · {{ typeLabel }}</span>
+      </div>
+
+      <div data-screen-label="Mobil – Abstimmen" style="position:relative;width:390px;height:844px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:9px solid #24272b;border-radius:46px;box-shadow:0 24px 60px rgba(30,35,40,.22);overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:44px;z-index:8;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 4px;font-size:12.5px;font-weight:700;color:#3a3833;background:rgba(244,241,236,.86);backdrop-filter:blur(8px)">
+          <span>9:41</span>
+          <span style="width:16px;height:8px;border:1.4px solid #3a3833;border-radius:2px;display:inline-block"></span>
+        </div>
+
+        <div style="position:absolute;inset:44px 0 0 0;display:flex;flex-direction:column">
+
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 16px 8px 12px;background:rgba(250,248,244,.82);backdrop-filter:blur(10px);border-bottom:1px solid rgba(20,24,28,.06)">
+            <button style="width:36px;height:36px;flex:none;border:none;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#f1eee9">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5l-7 7 7 7"></path><path d="M4 12h16"></path></svg>
+            </button>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:16px;font-weight:700;letter-spacing:-.3px;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ poll.title }}</div>
+              <div style="font-size:11.5px;color:#8a8681;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ poll.project }}</div>
+            </div>
+            
+            <div style="width:34px;height:34px;flex:none;border-radius:50%;background:#d7eef0;color:#1f7a8c;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700">G</div>
+          </div>
+
+          <div style="padding:12px 20px 4px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+              <span style="display:inline-flex;align-items:center;height:23px;padding:0 9px;border-radius:8px;background:#f1eee9;color:#6f6b66;font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">{{ typeLabel }}</span>
+              <span style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#5a5650">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>
+                <span>{{ poll.deadline }}</span>
+              </span>
+            </div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:12px">
+              <span style="font-size:13px;font-weight:700;color:#3a3833">{{ progressLabel }}</span>
+              <span style="font-size:12px;font-weight:600;color:#a39e96">{{ progressPct }}</span>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:8px">
+              <sc-for list="{{ segments }}" as="s" hint-placeholder-count="5">
+                <span style="flex:1;height:5px;border-radius:99px;background:{{ s.bg }};transition:background 260ms ease"></span>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ open }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;min-height:0;position:relative;padding:16px 20px 6px">
+              <div style="position:absolute;inset:16px 20px 6px">
+                <sc-for list="{{ cards }}" as="c" hint-placeholder-count="2">
+                  <div onPointerDown="{{ c.onDown }}" onPointerMove="{{ c.onMove }}" onPointerUp="{{ c.onUp }}" onPointerCancel="{{ c.onUp }}" style="position:absolute;inset:0;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:26px;overflow:hidden;display:flex;flex-direction:column;touch-action:none;user-select:none;cursor:{{ c.cursor }};z-index:{{ c.z }};opacity:{{ c.opacity }};box-shadow:{{ c.shadow }};transform:{{ c.transform }};transition:{{ c.transition }};animation:{{ c.animation }}">
+
+                    <sc-if value="{{ c.hasImg }}">
+                      <div style="height:168px;flex:none;background:repeating-linear-gradient(135deg,#efece7 0 9px,#f7f5f1 9px 18px);display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(20,24,28,.05)">
+                        <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;letter-spacing:.4px;color:#a39e96">{{ c.imgLabel }}</span>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ c.isDate }}">
+                      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:24px">
+                        <span style="font-size:15px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#1f7a8c">{{ c.weekday }}</span>
+                        <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:52px;font-weight:800;letter-spacing:-1.6px;line-height:1.05;color:#1d2227">{{ c.dateBig }}</span>
+                        <span style="font-size:16px;color:#5a5650">{{ c.timeText }}</span>
+                        <div style="display:flex;align-items:center;gap:7px;margin-top:18px;padding:7px 12px 7px 8px;border-radius:99px;background:#f7f5f1">
+                          <span style="display:flex">
+                            <sc-for list="{{ c.yesPeople }}" as="v" hint-placeholder-count="3">
+                              <span style="width:24px;height:24px;margin-left:-6px;border-radius:50%;border:2px solid #fff;background:{{ v.bg }};color:{{ v.fg }};display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700">{{ v.i }}</span>
+                            </sc-for>
+                          </span>
+                          <span style="font-size:12.5px;font-weight:600;color:#5a5650">{{ c.yesLine }}</span>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ c.isYesNo }}">
+                      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:26px 24px">
+                        <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:27px;font-weight:700;letter-spacing:-.5px;line-height:1.14;color:#1d2227;text-wrap:pretty">{{ c.title }}</div>
+                        <sc-if value="{{ c.hasDesc }}">
+                          <p style="margin:0;font-size:15px;line-height:1.45;color:#79756f;text-wrap:pretty">{{ c.desc }}</p>
+                        </sc-if>
+                        <sc-if value="{{ c.hasUrl }}">
+                          <a href="#" style="display:inline-flex;align-items:center;gap:7px;align-self:flex-start;margin-top:4px;height:34px;padding:0 12px;border-radius:11px;border:1px solid rgba(20,24,28,.08);background:#fff;font-size:13px;font-weight:700;color:#1f7a8c">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.4 1.4"></path><path d="M14 10.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.4-1.4"></path></svg>
+                            <span>{{ c.url }}</span>
+                          </a>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ c.isRating }}">
+                      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:26px 24px">
+                        <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:26px;font-weight:700;letter-spacing:-.5px;line-height:1.16;color:#1d2227;text-wrap:pretty">{{ c.title }}</div>
+                        <sc-if value="{{ c.hasDesc }}">
+                          <p style="margin:0;font-size:14.5px;line-height:1.45;color:#79756f;text-wrap:pretty">{{ c.desc }}</p>
+                        </sc-if>
+                        <div style="display:flex;gap:8px;margin-top:20px">
+                          <sc-for list="{{ c.stars }}" as="s" hint-placeholder-count="5">
+                            <button onClick="{{ s.onClick }}" onMouseEnter="{{ s.onEnter }}" onMouseLeave="{{ s.onLeave }}" title="{{ s.title }}" style="width:48px;height:48px;border:none;border-radius:14px;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">
+                              <svg key="{{ s.key }}" width="36" height="36" viewBox="0 0 24 24" fill="{{ s.fill }}" stroke="{{ s.stroke }}" stroke-width="1.8" stroke-linejoin="round" style="animation:{{ s.anim }}"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 16.9 6.7 19.7l1.1-5.9-4.3-4.1 5.9-.8z"></path></svg>
+                            </button>
+                          </sc-for>
+                        </div>
+                        <div style="height:22px;margin-top:8px;font-size:14.5px;font-weight:700;color:{{ c.ratingColor }};transition:color 160ms ease">{{ c.ratingLabel }}</div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ c.isTop }}">
+                      <span style="position:absolute;top:20px;left:20px;padding:6px 14px;border-radius:12px;border:2.5px solid #5d9a56;color:#5d9a56;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:22px;font-weight:800;letter-spacing:.5px;transform:rotate(-11deg);opacity:{{ c.yesOp }};background:rgba(255,255,255,.9)">{{ yesStamp }}</span>
+                    </sc-if>
+                    <sc-if value="{{ c.isTop }}">
+                      <span style="position:absolute;top:20px;right:20px;padding:6px 14px;border-radius:12px;border:2.5px solid #c1453f;color:#c1453f;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:22px;font-weight:800;letter-spacing:.5px;transform:rotate(11deg);opacity:{{ c.noOp }};background:rgba(255,255,255,.9)">{{ noStamp }}</span>
+                    </sc-if>
+                    <sc-if value="{{ c.showMaybe }}">
+                      <span style="position:absolute;bottom:24px;left:50%;margin-left:-56px;width:112px;text-align:center;padding:6px 0;border-radius:12px;border:2.5px solid #b3863a;color:#b3863a;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:800;opacity:{{ c.maybeOp }};background:rgba(255,255,255,.9)">Vielleicht</span>
+                    </sc-if>
+
+                    <sc-if value="{{ c.showHint }}">
+                      <div style="position:absolute;left:16px;right:16px;bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;height:40px;border-radius:14px;background:rgba(36,39,43,.9);color:#fff;font-size:12.5px;font-weight:600;opacity:{{ c.hintOp }};transition:opacity 200ms ease;animation:vtNudge 4.2s ease-in-out 1.2s infinite">{{ hintText }}</div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="padding:6px 20px 22px">
+              <sc-if value="{{ swipeable }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;align-items:center;justify-content:center;gap:14px">
+                  <button onClick="{{ onNo }}" title="Nein" style="width:62px;height:62px;border-radius:50%;border:1.5px solid #f0c3bd;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 140ms ease,background 140ms ease" style-hover="background:#fdf3f1" style-active="transform:scale(.92)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c1453f" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg>
+                  </button>
+                  <sc-if value="{{ hasMaybe }}">
+                    <button onClick="{{ onMaybe }}" title="Vielleicht" style="width:54px;height:54px;border-radius:50%;border:1.5px solid #e6cfa4;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 140ms ease,background 140ms ease" style-hover="background:#fbf4e8" style-active="transform:scale(.92)">
+                      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#b3863a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 9a3.5 3.5 0 1 1 4.6 3.3c-.7.3-1.1 1-1.1 1.7v.6"></path><circle cx="12" cy="18.3" r="1.15" fill="#b3863a" stroke="none"></circle></svg>
+                    </button>
+                  </sc-if>
+                  <button onClick="{{ onSkip }}" style="height:44px;padding:0 16px;border-radius:14px;border:1px solid rgba(20,24,28,.08);background:#fff;color:#5a5650;font-size:14px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">Überspringen</button>
+                  <button onClick="{{ onYes }}" title="Ja" style="width:62px;height:62px;border-radius:50%;border:none;background:#5d9a56;box-shadow:0 8px 20px rgba(93,154,86,.34);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.92)">
+                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                  </button>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ isRatingType }}">
+                <button onClick="{{ onNext }}" disabled="{{ nextDisabled }}" style="width:100%;height:52px;border-radius:16px;border:none;background:{{ nextBg }};color:{{ nextFg }};box-shadow:{{ nextShadow }};font-size:15.5px;font-weight:700;cursor:{{ nextCursor }};transition:background 180ms ease,color 180ms ease,box-shadow 180ms ease,transform 140ms ease" style-active="transform:scale(.985)">{{ nextLabel }}</button>
+              </sc-if>
+
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px">
+                <button onClick="{{ onBack }}" disabled="{{ backDisabled }}" style="display:flex;align-items:center;gap:7px;height:36px;padding:0 13px;border:none;border-radius:12px;background:transparent;color:{{ backFg }};font-size:13.5px;font-weight:700;cursor:{{ backCursor }};transition:background 140ms ease" style-hover="background:rgba(255,255,255,.6)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3.5 9.5 9 15"></path><path d="M3.5 9.5H14a6.5 6.5 0 0 1 0 13h-2"></path></svg>
+                  <span>Zurück</span>
+                </button>
+                <button onClick="{{ onComment }}" style="display:flex;align-items:center;gap:7px;height:36px;padding:0 13px;border:none;border-radius:12px;background:transparent;color:#5a5650;font-size:13.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:rgba(255,255,255,.6)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12.4c0 4.1-3.8 7.4-8.5 7.4-1 0-2-.15-2.9-.43L4 21l1.3-3.5C4.2 16.2 3.5 14.4 3.5 12.4 3.5 8.3 7.3 5 12 5s8.5 3.3 8.5 7.4z"></path></svg>
+                  <span>Kommentar</span>
+                </button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ done }}">
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 20px 26px">
+              <div data-vt-stagger="" style="display:flex;flex-direction:column;gap:14px">
+                <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:22px 20px;box-shadow:0 3px 14px rgba(35,40,45,.05);text-align:center">
+                  <span style="display:inline-flex;width:52px;height:52px;border-radius:50%;background:#e2ede1;align-items:center;justify-content:center;animation:vtPop 520ms cubic-bezier(.3,1.4,.5,1) both">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5d9a56" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                  </span>
+                  <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:24px;font-weight:700;letter-spacing:-.5px;color:#1d2227;margin-top:12px">Deine Stimme steht</div>
+                  <div style="font-size:14px;color:#79756f;margin-top:6px">{{ doneLine }}</div>
+                </div>
+
+                <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:16px 18px 18px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                  <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;padding-bottom:6px">Deine Antworten</div>
+                  <sc-for list="{{ summary }}" as="a" hint-placeholder-count="4">
+                    <button onClick="{{ a.onClick }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:11px 6px;border:none;border-bottom:1px solid rgba(20,24,28,.055);background:transparent;text-align:left;cursor:pointer;transition:background 140ms ease" style-hover="background:#faf8f4">
+                      <span style="flex:1;min-width:0;font-size:14.5px;font-weight:600;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.label }}</span>
+                      <span style="flex:none;display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:9px;background:{{ a.bg }};color:{{ a.fg }};font-size:12.5px;font-weight:700">{{ a.answer }}</span>
+                      <svg width="14" height="14" style="flex:none" viewBox="0 0 24 24" fill="none" stroke="#c8c2b8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                  </sc-for>
+                </div>
+
+                <button style="width:100%;height:52px;border-radius:16px;border:none;background:#1f7a8c;color:#fff;box-shadow:0 8px 20px rgba(31,122,140,.28);font-size:15.5px;font-weight:700;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.985)">Ergebnis ansehen</button>
+                <button onClick="{{ onRestart }}" style="width:100%;height:48px;border-radius:15px;border:1px solid rgba(20,24,28,.08);background:#fff;color:#3a3833;font-size:14.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">Antworten ändern</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ toastOn }}">
+          <div style="position:absolute;left:16px;right:16px;bottom:26px;z-index:9;display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:vtToast 260ms cubic-bezier(.22,.7,.3,1) both">
+            <span style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex:none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+            </span>
+            <span style="flex:1;font-size:13.5px;font-weight:600">{{ toastText }}</span>
+            <sc-if value="{{ toastUndo }}">
+              <button onClick="{{ onBack }}" style="border:none;background:none;color:#9fc2cf;font-size:13.5px;font-weight:700;cursor:pointer;padding:0 2px">Rückgängig</button>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Web</span>
+        <span style="font-size:12px;color:#a39e96">1280 × 820 · {{ typeLabel }}</span>
+      </div>
+
+      <div data-screen-label="Web – Abstimmen" style="position:relative;width:1280px;height:820px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:1px solid rgba(20,24,28,.1);border-radius:20px;box-shadow:0 24px 60px rgba(30,35,40,.16);overflow:hidden;display:flex;flex-direction:column">
+
+        <div style="flex:none;display:flex;align-items:center;gap:14px;padding:16px 28px;background:rgba(255,253,249,.72);backdrop-filter:blur(8px);border-bottom:1px solid rgba(20,24,28,.06)">
+          <div style="display:flex;align-items:center;gap:6px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+            <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.3px;color:#1f7a8c">Votean</span>
+          </div>
+          <span style="width:1px;height:20px;background:rgba(20,24,28,.1)"></span>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a8681">
+            <a href="#">Umfragen</a>
+            <span>/</span>
+            <a href="#">{{ poll.project }}</a>
+            <span>/</span>
+            <span style="font-weight:700;color:#3a3833">{{ poll.title }}</span>
+          </div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+            
+            <div style="width:36px;height:36px;border-radius:50%;background:#d7eef0;color:#1f7a8c;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">G</div>
+          </div>
+        </div>
+
+        <div style="flex:1;min-height:0;display:flex">
+
+          <div style="width:296px;flex:none;padding:26px 22px;border-right:1px solid rgba(20,24,28,.06);display:flex;flex-direction:column;gap:18px;overflow-y:auto">
+            <div>
+              <span style="display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:8px;background:#f1eee9;color:#6f6b66;font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">{{ typeLabel }}</span>
+              <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:26px;font-weight:700;letter-spacing:-.6px;line-height:1.15;color:#1d2227;margin-top:12px;text-wrap:pretty">{{ poll.title }}</div>
+              <p style="margin:8px 0 0;font-size:14px;line-height:1.45;color:#79756f;text-wrap:pretty">{{ poll.question }}</p>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:9px;padding:14px 15px;border-radius:16px;background:#fff;border:1px solid rgba(20,24,28,.055)">
+              <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:#5a5650">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>
+                <span>{{ poll.deadline }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#8a8681">
+                <span style="width:15px;display:flex;justify-content:center"><span style="width:6px;height:6px;border-radius:50%;background:#5d9a56;animation:vtPulse 2.6s ease-out infinite"></span></span>
+                <span>{{ poll.votedLine }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+                <sc-for list="{{ people }}" as="v" hint-placeholder-count="5">
+                  <span title="{{ v.tip }}" style="width:30px;height:30px;margin-left:-7px;border-radius:50%;border:2px solid #fff;background:{{ v.bg }};color:{{ v.fg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;opacity:{{ v.opacity }}">{{ v.i }}</span>
+                </sc-for>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;padding:0 2px 9px">Deine Antworten</div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ summary }}" as="a" hint-placeholder-count="4">
+                  <button onClick="{{ a.onClick }}" style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;border-radius:11px;background:{{ a.rowBg }};text-align:left;cursor:pointer;transition:background 140ms ease" style-hover="background:#f2efe9">
+                    <span style="width:6px;height:6px;flex:none;border-radius:50%;background:{{ a.dot }}"></span>
+                    <span style="flex:1;min-width:0;font-size:13.5px;font-weight:{{ a.weight }};color:#3a3833;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.label }}</span>
+                    <span style="flex:none;display:inline-flex;align-items:center;height:23px;padding:0 8px;border-radius:8px;background:{{ a.bg }};color:{{ a.fg }};font-size:11.5px;font-weight:700">{{ a.answer }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;padding:24px 32px 26px">
+            <div style="width:100%;max-width:560px;display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+              <span style="font-size:13.5px;font-weight:700;color:#3a3833">{{ progressLabel }}</span>
+              <span style="font-size:12.5px;font-weight:600;color:#a39e96">{{ progressPct }}</span>
+            </div>
+            <div style="width:100%;max-width:560px;display:flex;gap:5px;margin-top:9px">
+              <sc-for list="{{ segments }}" as="s" hint-placeholder-count="5">
+                <span style="flex:1;height:5px;border-radius:99px;background:{{ s.bg }};transition:background 260ms ease"></span>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ open }}" hint-placeholder-val="{{ true }}">
+              <div style="flex:1;min-height:0;width:100%;max-width:560px;position:relative;margin-top:20px">
+                <sc-for list="{{ cards }}" as="c" hint-placeholder-count="2">
+                  <div onPointerDown="{{ c.onDown }}" onPointerMove="{{ c.onMove }}" onPointerUp="{{ c.onUp }}" onPointerCancel="{{ c.onUp }}" style="position:absolute;inset:0;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:26px;overflow:hidden;display:flex;flex-direction:column;touch-action:none;user-select:none;cursor:{{ c.cursor }};z-index:{{ c.z }};opacity:{{ c.opacity }};box-shadow:{{ c.shadow }};transform:{{ c.transform }};transition:{{ c.transition }};animation:{{ c.animation }}">
+
+                  <sc-if value="{{ c.hasImg }}">
+                    <div style="height:220px;flex:none;background:repeating-linear-gradient(135deg,#efece7 0 9px,#f7f5f1 9px 18px);display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(20,24,28,.05)">
+                      <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.4px;color:#a39e96">{{ c.imgLabel }}</span>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ c.isDate }}">
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:28px">
+                      <span style="font-size:16px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#1f7a8c">{{ c.weekday }}</span>
+                      <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:64px;font-weight:800;letter-spacing:-2px;line-height:1.04;color:#1d2227">{{ c.dateBig }}</span>
+                      <span style="font-size:18px;color:#5a5650">{{ c.timeText }}</span>
+                      <div style="display:flex;align-items:center;gap:8px;margin-top:22px;padding:8px 14px 8px 10px;border-radius:99px;background:#f7f5f1">
+                        <span style="display:flex">
+                          <sc-for list="{{ c.yesPeople }}" as="v" hint-placeholder-count="3">
+                            <span style="width:26px;height:26px;margin-left:-7px;border-radius:50%;border:2px solid #fff;background:{{ v.bg }};color:{{ v.fg }};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">{{ v.i }}</span>
+                          </sc-for>
+                        </span>
+                        <span style="font-size:13.5px;font-weight:600;color:#5a5650">{{ c.yesLine }}</span>
+                      </div>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ c.isYesNo }}">
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:34px 36px">
+                      <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:34px;font-weight:700;letter-spacing:-.7px;line-height:1.12;color:#1d2227;text-wrap:pretty">{{ c.title }}</div>
+                      <sc-if value="{{ c.hasDesc }}">
+                        <p style="margin:0;font-size:16px;line-height:1.5;color:#79756f;text-wrap:pretty">{{ c.desc }}</p>
+                      </sc-if>
+                      <sc-if value="{{ c.hasUrl }}">
+                        <a href="#" style="display:inline-flex;align-items:center;gap:8px;align-self:flex-start;margin-top:4px;height:38px;padding:0 14px;border-radius:12px;border:1px solid rgba(20,24,28,.08);background:#fff;font-size:14px;font-weight:700;color:#1f7a8c">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.4 1.4"></path><path d="M14 10.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.4-1.4"></path></svg>
+                          <span>{{ c.url }}</span>
+                        </a>
+                      </sc-if>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ c.isRating }}">
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:34px 36px">
+                      <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:32px;font-weight:700;letter-spacing:-.6px;line-height:1.14;color:#1d2227;text-wrap:pretty">{{ c.title }}</div>
+                      <sc-if value="{{ c.hasDesc }}">
+                        <p style="margin:0;font-size:15.5px;line-height:1.5;color:#79756f;text-wrap:pretty">{{ c.desc }}</p>
+                      </sc-if>
+                      <div style="display:flex;gap:10px;margin-top:24px">
+                        <sc-for list="{{ c.stars }}" as="s" hint-placeholder-count="5">
+                          <button onClick="{{ s.onClick }}" onMouseEnter="{{ s.onEnter }}" onMouseLeave="{{ s.onLeave }}" title="{{ s.title }}" style="width:58px;height:58px;border:none;border-radius:16px;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">
+                            <svg key="{{ s.key }}" width="44" height="44" viewBox="0 0 24 24" fill="{{ s.fill }}" stroke="{{ s.stroke }}" stroke-width="1.7" stroke-linejoin="round" style="animation:{{ s.anim }}"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 16.9 6.7 19.7l1.1-5.9-4.3-4.1 5.9-.8z"></path></svg>
+                          </button>
+                        </sc-for>
+                      </div>
+                      <div style="height:24px;margin-top:10px;font-size:16px;font-weight:700;color:{{ c.ratingColor }};transition:color 160ms ease">{{ c.ratingLabel }}</div>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ c.isTop }}">
+                    <span style="position:absolute;top:24px;left:24px;padding:7px 16px;border-radius:13px;border:3px solid #5d9a56;color:#5d9a56;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:26px;font-weight:800;letter-spacing:.5px;transform:rotate(-11deg);opacity:{{ c.yesOp }};background:rgba(255,255,255,.9)">{{ yesStamp }}</span>
+                  </sc-if>
+                  <sc-if value="{{ c.isTop }}">
+                    <span style="position:absolute;top:24px;right:24px;padding:7px 16px;border-radius:13px;border:3px solid #c1453f;color:#c1453f;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:26px;font-weight:800;letter-spacing:.5px;transform:rotate(11deg);opacity:{{ c.noOp }};background:rgba(255,255,255,.9)">{{ noStamp }}</span>
+                  </sc-if>
+                  <sc-if value="{{ c.showMaybe }}">
+                    <span style="position:absolute;bottom:28px;left:50%;margin-left:-70px;width:140px;text-align:center;padding:7px 0;border-radius:13px;border:3px solid #b3863a;color:#b3863a;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:22px;font-weight:800;opacity:{{ c.maybeOp }};background:rgba(255,255,255,.9)">Vielleicht</span>
+                  </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="flex:none;width:100%;max-width:560px;margin-top:20px">
+                <sc-if value="{{ swipeable }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <button onClick="{{ onNo }}" style="flex:1;height:56px;border-radius:16px;border:1.5px solid #f0c3bd;background:#fff;color:#c1453f;display:flex;align-items:center;justify-content:center;gap:9px;font-size:15.5px;font-weight:700;cursor:pointer;transition:background 140ms ease,transform 140ms ease" style-hover="background:#fdf3f1" style-active="transform:scale(.985)">
+                      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg>
+                      <span>{{ noStamp }}</span>
+                    </button>
+                    <sc-if value="{{ hasMaybe }}">
+                      <button onClick="{{ onMaybe }}" style="flex:1;height:56px;border-radius:16px;border:1.5px solid #e6cfa4;background:#fff;color:#b3863a;display:flex;align-items:center;justify-content:center;gap:9px;font-size:15.5px;font-weight:700;cursor:pointer;transition:background 140ms ease,transform 140ms ease" style-hover="background:#fbf4e8" style-active="transform:scale(.985)">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 9a3.5 3.5 0 1 1 4.6 3.3c-.7.3-1.1 1-1.1 1.7v.6"></path><circle cx="12" cy="18.3" r="1.15" fill="currentColor" stroke="none"></circle></svg>
+                      <span>Vielleicht</span>
+                      </button>
+                    </sc-if>
+                    <button onClick="{{ onYes }}" style="flex:1;height:56px;border-radius:16px;border:none;background:#5d9a56;color:#fff;box-shadow:0 8px 20px rgba(93,154,86,.3);display:flex;align-items:center;justify-content:center;gap:9px;font-size:15.5px;font-weight:700;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.985)">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                      <span>{{ yesStamp }}</span>
+                    </button>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ isRatingType }}">
+                  <button onClick="{{ onNext }}" disabled="{{ nextDisabled }}" style="width:100%;height:56px;border-radius:16px;border:none;background:{{ nextBg }};color:{{ nextFg }};box-shadow:{{ nextShadow }};font-size:16px;font-weight:700;cursor:{{ nextCursor }};transition:background 180ms ease,color 180ms ease,box-shadow 180ms ease,transform 140ms ease" style-active="transform:scale(.99)">{{ nextLabel }}</button>
+                </sc-if>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px">
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <button onClick="{{ onBack }}" disabled="{{ backDisabled }}" style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border:none;border-radius:12px;background:transparent;color:{{ backFg }};font-size:13.5px;font-weight:700;cursor:{{ backCursor }};transition:background 140ms ease" style-hover="background:rgba(255,255,255,.7)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3.5 9.5 9 15"></path><path d="M3.5 9.5H14a6.5 6.5 0 0 1 0 13h-2"></path></svg>
+                      <span>Zurück</span>
+                    </button>
+                    <button onClick="{{ onSkip }}" style="height:36px;padding:0 12px;border:none;border-radius:12px;background:transparent;color:#79756f;font-size:13.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:rgba(255,255,255,.7)">Überspringen</button>
+                    <button onClick="{{ onComment }}" style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border:none;border-radius:12px;background:transparent;color:#79756f;font-size:13.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:rgba(255,255,255,.7)">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12.4c0 4.1-3.8 7.4-8.5 7.4-1 0-2-.15-2.9-.43L4 21l1.3-3.5C4.2 16.2 3.5 14.4 3.5 12.4 3.5 8.3 7.3 5 12 5s8.5 3.3 8.5 7.4z"></path></svg>
+                      <span>Kommentar</span>
+                    </button>
+                  </div>
+                  <span style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#a39e96">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border-radius:7px;border:1px solid rgba(20,24,28,.12);background:#fff;font-size:11.5px;font-weight:700;color:#5a5650">{{ keyHintA }}</span>
+                    <span>{{ keyHint }}</span>
+                  </span>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ done }}">
+              <div style="flex:1;min-height:0;width:100%;max-width:560px;display:flex;flex-direction:column;justify-content:center;gap:16px;margin-top:20px" data-vt-stagger="">
+                <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:34px 30px;box-shadow:0 3px 14px rgba(35,40,45,.05);text-align:center">
+                  <span style="display:inline-flex;width:64px;height:64px;border-radius:50%;background:#e2ede1;align-items:center;justify-content:center;animation:vtPop 520ms cubic-bezier(.3,1.4,.5,1) both">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5d9a56" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                  </span>
+                  <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:30px;font-weight:700;letter-spacing:-.7px;color:#1d2227;margin-top:14px">Deine Stimme steht</div>
+                  <div style="font-size:15px;color:#79756f;margin-top:7px">{{ doneLine }}</div>
+                  <div style="display:flex;gap:12px;margin-top:24px">
+                    <button onClick="{{ onRestart }}" style="flex:1;height:50px;border-radius:15px;border:1px solid rgba(20,24,28,.08);background:#fff;color:#3a3833;font-size:15px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f7f5f1">Antworten ändern</button>
+                    <button style="flex:1;height:50px;border-radius:15px;border:none;background:#1f7a8c;color:#fff;box-shadow:0 8px 20px rgba(31,122,140,.28);font-size:15px;font-weight:700;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.985)">Ergebnis ansehen</button>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <sc-if value="{{ toastOn }}">
+          <div style="position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:11px;padding:14px 16px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:vtToast 260ms cubic-bezier(.22,.7,.3,1) both;white-space:nowrap">
+            <span style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex:none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+            </span>
+            <span style="font-size:14px;font-weight:600">{{ toastText }}</span>
+            <sc-if value="{{ toastUndo }}">
+              <button onClick="{{ onBack }}" style="border:none;background:none;color:#9fc2cf;font-size:14px;font-weight:700;cursor:pointer;padding:0 2px">Rückgängig</button>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1860,&quot;height&quot;:1020},&quot;pollType&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;yesno&quot;,&quot;options&quot;:[&quot;yesno&quot;,&quot;rating&quot;,&quot;date&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Inhalt&quot;},&quot;showImages&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inhalt&quot;},&quot;swipeHint&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Verhalten&quot;},&quot;allowMaybe&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Verhalten&quot;},&quot;autoAdvance&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Verhalten&quot;}}">
+const PPL = {
+  G: { n: 'Giovanni', i: 'G', bg: '#d7eef0', fg: '#1f7a8c' },
+  F: { n: 'Fabia', i: 'F', bg: '#f4dfe2', fg: '#b56374' },
+  M: { n: 'Marco', i: 'M', bg: '#f6e7cf', fg: '#b3863a' },
+  L: { n: 'Lena', i: 'L', bg: '#e6e0f3', fg: '#6f5aa6' },
+  N: { n: 'Noah', i: 'N', bg: '#dcecd9', fg: '#4f7a4a' },
+  S: { n: 'Sara', i: 'S', bg: '#d9e4f2', fg: '#4a6da6' },
+};
+
+const POLLS = {
+  yesno: {
+    label: 'Ja / Nein',
+    title: 'Was nehmen wir mit?',
+    project: 'Sommerurlaub 2026',
+    question: 'Sechs Vorschl\u00e4ge \u2013 sag zu jedem kurz Ja oder Nein.',
+    deadline: 'Offen bis Mi., 12. Aug., 18:00 Uhr',
+    people: ['G', 'F', 'M', 'L', 'N', 'S'],
+    votedBy: ['F', 'M', 'S'],
+    items: [
+      { id: 'y1', title: 'Stand-up-Paddel mieten', desc: 'Zwei Boards f\u00fcr die ganze Woche, 60\u2009\u20ac pro Board.', url: 'sup-verleih-gardasee.it', img: true },
+      { id: 'y2', title: 'Ein Tag Kochkurs vor Ort', desc: 'Halber Tag, danach Abendessen zusammen.', url: '', img: true },
+      { id: 'y3', title: 'Fr\u00fchst\u00fcck immer selbst machen', desc: '', url: '', img: false },
+      { id: 'y4', title: 'Am Sonntag zum Markt in Verona', desc: 'Fr\u00fch los, gegen 15 Uhr zur\u00fcck.', url: 'verona-markt.it/termine', img: false },
+      { id: 'y5', title: 'Gemeinsame Kasse f\u00fcr Eink\u00e4ufe', desc: 'Jede\u2009*r legt 80\u2009\u20ac ein, Rest wird am Ende geteilt.', url: '', img: false },
+      { id: 'y6', title: 'Letzter Abend: Grillen am See', desc: '', url: '', img: true },
+    ],
+  },
+  rating: {
+    label: 'Bewertung',
+    title: 'Wie gut passen die Unterk\u00fcnfte?',
+    project: 'Sommerurlaub 2026',
+    question: 'Gib jeder Unterkunft ein bis f\u00fcnf Sterne.',
+    deadline: 'Offen bis So., 9. Aug., 20:00 Uhr',
+    people: ['G', 'F', 'M', 'L', 'N', 'S'],
+    votedBy: ['G', 'F', 'M', 'S'],
+    items: [
+      { id: 'r1', title: 'Casa Lucia, Torbole', desc: 'Vier Schlafzimmer, gro\u00dfe Terrasse, 10 Minuten zum See.', img: true },
+      { id: 'r2', title: 'Ferienwohnung Ponale', desc: 'G\u00fcnstiger, daf\u00fcr ohne Garten.', img: false },
+      { id: 'r3', title: 'Agriturismo San Marco', desc: 'Mit Fr\u00fchst\u00fcck, aber 20 Minuten au\u00dferhalb.', img: true },
+      { id: 'r4', title: 'Hotel Riva Centrale', desc: '', img: false },
+    ],
+  },
+  date: {
+    label: 'Terminumfrage',
+    title: 'Welches Datum passt allen?',
+    project: 'Team-Offsite',
+    question: 'F\u00fcnf Termine im August \u2013 sag zu jedem Ja, Vielleicht oder Nein.',
+    deadline: 'Offen bis Mi., 12. Aug., 18:00 Uhr',
+    people: ['G', 'F', 'M', 'L', 'N', 'S'],
+    votedBy: ['F', 'M', 'S'],
+    items: [
+      { id: 'd1', weekday: 'Freitag', dateBig: '14. Aug.', time: '18:00 \u2013 open end', yes: ['F', 'M', 'S'] },
+      { id: 'd2', weekday: 'Samstag', dateBig: '15. Aug.', time: 'ganzt\u00e4gig', yes: ['F', 'S'] },
+      { id: 'd3', weekday: 'Sonntag', dateBig: '16. Aug.', time: '11:00 \u2013 16:00', yes: ['M'] },
+      { id: 'd4', weekday: 'Freitag', dateBig: '21. Aug.', time: '18:00 \u2013 open end', yes: ['F', 'M', 'S'] },
+      { id: 'd5', weekday: 'Samstag', dateBig: '22. Aug.', time: 'ganzt\u00e4gig', yes: [] },
+    ],
+  },
+};
+
+const RATING_WORDS = ['', 'Gar nicht', 'Eher nicht', 'Geht so', 'Gut', 'Perfekt'];
+const TYPE_KEYS = ['yesno', 'rating', 'date'];
+
+class Component extends DCLogic {
+  state = { type: null, index: 0, answers: {}, dx: 0, dy: 0, dragging: false, fly: null, hover: null, toast: null, pop: null };
+
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._fly); clearTimeout(this._pop); clearTimeout(this._adv); }
+
+  get type() { return this.state.type || (TYPE_KEYS.indexOf(this.props.pollType) >= 0 ? this.props.pollType : 'yesno'); }
+  get poll() { return POLLS[this.type]; }
+  get answers() { return this.state.answers[this.type] || {}; }
+
+  setType(t) {
+    clearTimeout(this._fly); clearTimeout(this._adv);
+    this.setState({ type: t, index: 0, dx: 0, dy: 0, dragging: false, fly: null, hover: null });
+  }
+
+  toast(text, undo) {
+    this.setState({ toast: { text: text, undo: !!undo } });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), undo ? 3200 : 2000);
+  }
+
+  answer(id, val) {
+    this.setState(s => {
+      const per = Object.assign({}, s.answers[this.type] || {});
+      per[id] = val;
+      return { answers: Object.assign({}, s.answers, { [this.type]: per }) };
+    });
+  }
+
+  commit(dir) {
+    if (this.state.fly) return;
+    const item = this.poll.items[this.state.index];
+    if (!item) return;
+    const val = dir === 'right' ? 'yes' : dir === 'left' ? 'no' : dir === 'up' ? 'maybe' : 'skip';
+    if (val !== 'skip') this.answer(item.id, val);
+    const labels = { yes: this.type === 'date' ? 'Kann ich' : 'Ja', no: this.type === 'date' ? 'Kann ich nicht' : 'Nein', maybe: 'Vielleicht', skip: '\u00dcbersprungen' };
+    this.toast(labels[val] + ' \u00b7 ' + (item.title || (item.weekday + ', ' + item.dateBig)), true);
+    this.setState({ fly: dir, dragging: false });
+    clearTimeout(this._fly);
+    this._fly = setTimeout(() => this.setState(s => ({ index: s.index + 1, fly: null, dx: 0, dy: 0 })), 260);
+  }
+
+  back() {
+    if (this.state.index === 0) return;
+    clearTimeout(this._fly); clearTimeout(this._adv);
+    this.setState(s => ({ index: s.index - 1, fly: null, dx: 0, dy: 0, toast: null }));
+  }
+
+  next() {
+    clearTimeout(this._adv);
+    this.setState(s => ({ index: s.index + 1, dx: 0, dy: 0 }));
+  }
+
+  rate(id, n) {
+    this.answer(id, n);
+    this.setState({ pop: id + '-' + n });
+    clearTimeout(this._pop);
+    this._pop = setTimeout(() => this.setState({ pop: null }), 440);
+    if (this.props.autoAdvance !== false) {
+      clearTimeout(this._adv);
+      this._adv = setTimeout(() => this.next(), 620);
+    }
+  }
+
+  onDown(e) {
+    if (!this.swipeable) return;
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+    this._p = { x: e.clientX, y: e.clientY };
+    this.setState({ dragging: true, dx: 0, dy: 0 });
+  }
+  onMove(e) {
+    if (!this._p || !this.state.dragging) return;
+    this.setState({ dx: e.clientX - this._p.x, dy: e.clientY - this._p.y });
+  }
+  onUp() {
+    if (!this._p) return;
+    const dx = this.state.dx, dy = this.state.dy;
+    this._p = null;
+    if (this.hasMaybe && dy < -84 && Math.abs(dx) < 90) return this.commit('up');
+    if (dx > 96) return this.commit('right');
+    if (dx < -96) return this.commit('left');
+    this.setState({ dragging: false, dx: 0, dy: 0 });
+  }
+
+  get swipeable() { return this.type !== 'rating'; }
+  get hasMaybe() { return this.type === 'date' && this.props.allowMaybe !== false; }
+
+  starsFor(item) {
+    const cur = this.answers[item.id] || 0;
+    const hov = this.state.hover && this.state.hover.id === item.id ? this.state.hover.n : 0;
+    const shown = hov || cur;
+    const out = [];
+    for (let n = 1; n <= 5; n++) {
+      const on = n <= shown;
+      out.push({
+        key: item.id + '-' + n + (on ? '-on' : '-off'),
+        fill: on ? '#e0a42c' : 'none',
+        stroke: on ? '#e0a42c' : '#cdc7bf',
+        anim: this.state.pop === item.id + '-' + n ? 'vtPop 440ms cubic-bezier(.3,1.4,.5,1) both' : 'none',
+        title: n + ' von 5',
+        onClick: () => this.rate(item.id, n),
+        onEnter: () => this.setState({ hover: { id: item.id, n: n } }),
+        onLeave: () => this.setState({ hover: null }),
+      });
+    }
+    return out;
+  }
+
+  cardVals(item, depth) {
+    const isTop = depth === 0;
+    const st = this.state;
+    const t = this.type;
+    const dx = isTop ? st.dx : 0;
+    const dy = isTop ? st.dy : 0;
+    let transform, transition;
+    if (isTop && st.fly) {
+      const off = st.fly === 'right' ? 720 : st.fly === 'left' ? -720 : 0;
+      transform = 'translate(' + off + 'px,' + (st.fly === 'up' ? -760 : -30) + 'px) rotate(' + (off / 40) + 'deg)';
+      transition = 'transform 280ms cubic-bezier(.4,0,.6,1),opacity 280ms ease';
+    } else if (isTop) {
+      transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (dx / 22) + 'deg)';
+      transition = st.dragging ? 'none' : 'transform 320ms cubic-bezier(.22,.7,.3,1)';
+    } else {
+      transform = 'translateY(' + (depth * 12) + 'px) scale(' + (1 - depth * 0.045) + ')';
+      transition = 'transform 320ms cubic-bezier(.22,.7,.3,1)';
+    }
+    const rating = t === 'rating' ? (this.answers[item.id] || 0) : 0;
+    const hov = t === 'rating' && st.hover && st.hover.id === item.id ? st.hover.n : 0;
+    const shownRating = hov || rating;
+    const yesPeople = t === 'date' ? item.yes.map(k => PPL[k]) : [];
+
+    return {
+      key: item.id,
+      isTop: isTop,
+      isYesNo: t === 'yesno',
+      isRating: t === 'rating',
+      isDate: t === 'date',
+      title: item.title,
+      desc: item.desc,
+      hasDesc: !!item.desc,
+      url: item.url,
+      hasUrl: !!item.url,
+      hasImg: !!item.img && this.props.showImages !== false,
+      imgLabel: 'Vorschaubild optional',
+      weekday: item.weekday,
+      dateBig: item.dateBig,
+      timeText: item.time,
+      yesPeople: yesPeople.map(p => ({ i: p.i, bg: p.bg, fg: p.fg })),
+      yesLine: yesPeople.length === 0 ? 'Noch niemand kann' : (yesPeople.length === 1 ? '1 Person kann' : yesPeople.length + ' Personen k\u00f6nnen'),
+      stars: t === 'rating' ? this.starsFor(item) : [],
+      ratingLabel: shownRating ? RATING_WORDS[shownRating] : 'Tippe auf die Sterne',
+      ratingColor: shownRating ? '#a8742a' : '#a39e96',
+      z: 10 - depth,
+      opacity: st.fly && isTop ? '0' : '1',
+      shadow: isTop ? '0 14px 34px rgba(30,35,40,.14)' : '0 6px 18px rgba(30,35,40,.07)',
+      transform: transform,
+      transition: transition,
+      animation: isTop ? 'none' : 'vtIn .34s cubic-bezier(.22,.7,.3,1) both',
+      cursor: isTop && this.swipeable ? (st.dragging ? 'grabbing' : 'grab') : 'default',
+      onDown: isTop ? (e => this.onDown(e)) : null,
+      onMove: isTop ? (e => this.onMove(e)) : null,
+      onUp: isTop ? (() => this.onUp()) : null,
+      yesOp: isTop ? String(Math.min(1, Math.max(0, dx / 90))) : '0',
+      noOp: isTop ? String(Math.min(1, Math.max(0, -dx / 90))) : '0',
+      maybeOp: isTop ? String(Math.min(1, Math.max(0, -dy / 80))) : '0',
+      showMaybe: isTop && this.hasMaybe,
+      showHint: isTop && this.swipeable && this.props.swipeHint !== false,
+      hintOp: Math.abs(dx) > 20 || dy < -20 ? '0' : '1',
+    };
+  }
+
+  renderVals() {
+    const t = this.type;
+    const poll = this.poll;
+    const items = poll.items;
+    const i = this.state.index;
+    const done = i >= items.length;
+    const answers = this.answers;
+
+    const cards = [];
+    for (let d = 0; d < 3 && i + d < items.length; d++) cards.push(this.cardVals(items[i + d], d));
+    cards.reverse();
+
+    const answerMeta = (v) => {
+      if (t === 'rating') return typeof v === 'number' ? { answer: v + ' \u2605', bg: '#f9edd5', fg: '#a8742a', dot: '#e0a42c' } : { answer: 'offen', bg: '#f1eee9', fg: '#8a8681', dot: '#d2cdc6' };
+      if (v === 'yes') return { answer: t === 'date' ? 'Kann' : 'Ja', bg: '#e2ede1', fg: '#3f7a4e', dot: '#5d9a56' };
+      if (v === 'no') return { answer: t === 'date' ? 'Kann nicht' : 'Nein', bg: '#fdf3f1', fg: '#c1453f', dot: '#c1453f' };
+      if (v === 'maybe') return { answer: 'Vielleicht', bg: '#f6e7cf', fg: '#a8742a', dot: '#b3863a' };
+      return { answer: 'offen', bg: '#f1eee9', fg: '#8a8681', dot: '#d2cdc6' };
+    };
+
+    const summary = items.map((it, idx) => {
+      const meta = answerMeta(answers[it.id]);
+      return Object.assign({
+        label: it.title || (it.weekday + ', ' + it.dateBig),
+        rowBg: idx === i && !done ? '#f2efe9' : 'transparent',
+        weight: idx === i && !done ? '700' : '600',
+        onClick: () => this.setState({ index: idx, dx: 0, dy: 0, fly: null }),
+      }, meta);
+    });
+
+    const answered = items.filter(it => answers[it.id] != null).length;
+    const segments = items.map((it, idx) => ({
+      bg: answers[it.id] != null ? '#1f7a8c' : (idx === i && !done ? '#9fc2cf' : '#e2ded7'),
+    }));
+
+    const current = items[i];
+    const rated = current && t === 'rating' ? answers[current.id] : null;
+    const needsRating = t === 'rating' && !rated;
+
+    const voted = poll.votedBy.length + (done ? 1 : 0);
+
+    return {
+      bgGrad: 'linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%)',
+      typeLabel: poll.label,
+      syncHint: 'Beide Ansichten teilen denselben Stand \u2013 tippe in einer, die andere zieht mit.',
+      tabs: TYPE_KEYS.map(k => ({
+        label: POLLS[k].label,
+        bg: k === t ? '#1f7a8c' : 'transparent',
+        fg: k === t ? '#ffffff' : '#5a5650',
+        onClick: () => this.setType(k),
+      })),
+      poll: {
+        title: poll.title,
+        project: poll.project,
+        question: poll.question,
+        deadline: poll.deadline,
+        votedLine: voted + ' von ' + poll.people.length + ' haben abgestimmt',
+      },
+      people: poll.people.map(k => {
+        const p = PPL[k];
+        const has = poll.votedBy.indexOf(k) >= 0 || (k === 'G' && done);
+        return { i: p.i, bg: p.bg, fg: p.fg, opacity: has ? '1' : '.45', tip: p.n + (has ? ' \u2013 hat abgestimmt' : ' \u2013 fehlt noch') };
+      }),
+      segments: segments,
+      progressLabel: done ? 'Alle ' + items.length + ' beantwortet' : 'Option ' + (i + 1) + ' von ' + items.length,
+      progressPct: Math.round((answered / items.length) * 100) + '\u2009%',
+      cards: cards,
+      open: !done,
+      done: done,
+      swipeable: this.swipeable,
+      isRatingType: t === 'rating',
+      hasMaybe: this.hasMaybe,
+      yesStamp: t === 'date' ? 'Kann' : 'Ja',
+      noStamp: t === 'date' ? 'Kann nicht' : 'Nein',
+      hintText: this.hasMaybe ? 'Rechts = kann, links = kann nicht, hoch = vielleicht' : 'Nach rechts f\u00fcr Ja, nach links f\u00fcr Nein',
+      keyHintA: this.swipeable ? '\u2190 \u2192' : '1 \u2013 5',
+      keyHint: this.swipeable ? 'oder ziehen' : 'Sterne per Tastatur',
+      onYes: () => this.commit('right'),
+      onNo: () => this.commit('left'),
+      onMaybe: () => this.commit('up'),
+      onSkip: () => this.commit('skip'),
+      onNext: () => { if (!needsRating) this.next(); },
+      nextLabel: needsRating ? 'Bitte bewerten' : (i === items.length - 1 ? 'Fertig' : 'Weiter'),
+      nextDisabled: needsRating,
+      nextBg: needsRating ? '#efece7' : '#1f7a8c',
+      nextFg: needsRating ? '#b5b0a8' : '#ffffff',
+      nextShadow: needsRating ? 'none' : '0 8px 20px rgba(31,122,140,.28)',
+      nextCursor: needsRating ? 'not-allowed' : 'pointer',
+      onBack: () => this.back(),
+      backDisabled: i === 0,
+      backFg: i === 0 ? '#c8c2b8' : '#5a5650',
+      backCursor: i === 0 ? 'not-allowed' : 'pointer',
+      onComment: () => this.toast('Kommentar schreiben'),
+      onRestart: () => this.setState({ index: 0, dx: 0, dy: 0, fly: null }),
+      doneLine: t === 'rating'
+        ? 'Alle ' + items.length + ' Unterk\u00fcnfte bewertet. Du kannst bis zum Ende der Umfrage \u00e4ndern.'
+        : 'Du hast zu allen ' + items.length + ' Optionen geantwortet. \u00c4ndern geht bis zum Ende der Umfrage.',
+      summary: summary,
+      toastOn: !!this.state.toast,
+      toastText: (this.state.toast && this.state.toast.text) || '',
+      toastUndo: !!(this.state.toast && this.state.toast.undo),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

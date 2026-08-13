@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  height: auto;
   font-family: var(--font-body);
   font-weight: var(--weight-bold);
   cursor: pointer;

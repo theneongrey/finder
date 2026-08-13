@@ -195,6 +195,17 @@ input.invalid {
     0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
+/* ── CDK overlay content (outside component host scope) ─────── */
+/* hlm-dropdown-menu lives in the CDK overlay; ::ng-deep can't reach it */
+[data-slot='dropdown-menu'].ds-menu-panel {
+  background: #fff;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-overlay);
+  padding: 6px;
+  min-width: 160px;
+}
+
 /* ── Accessibility ───────────────────────────────────────────── */
 
 .focus-ring {

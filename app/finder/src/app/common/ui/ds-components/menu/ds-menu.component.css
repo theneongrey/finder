@@ -1,17 +1,9 @@
 .ds-menu-trigger {
-  display: contents;
+  display: inline-flex;
   cursor: pointer;
 }
 
-/* Override SpartanNG dropdown-menu panel styles */
-:host ::ng-deep .ds-menu-panel {
-  background: #fff;
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-overlay);
-  padding: 6px;
-  min-width: 160px;
-}
+/* .ds-menu-panel background/border is in styles.css (CDK overlay lives outside host scope) */
 .ds-menu-item {
   display: flex;
   align-items: center;

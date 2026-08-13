@@ -3,12 +3,14 @@
   background: rgba(255, 255, 255, 0.4);
   border-radius: var(--radius-xl);
   padding: 18px 8px;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 9px;
   cursor: pointer;
   font-family: var(--font-body);
+  white-space: normal;
   width: 100%;
 }
 .ds-esb-tile__icon-wrap {
@@ -33,6 +35,7 @@
   background: rgba(255, 255, 255, 0.4);
   border-radius: var(--radius-3xl);
   padding: 24px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;

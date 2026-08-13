@@ -1,5 +1,8 @@
 :host {
   display: block;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-base);
 }
 
 .title-bar {
@@ -9,7 +12,13 @@
   height: 60px;
   padding: 8px;
   gap: 8px;
-  background: linear-gradient(to bottom, #fff 75%, transparent);
+  transition: background var(--duration-fast) var(--ease-standard),
+              backdrop-filter var(--duration-fast) var(--ease-standard);
+}
+
+.title-bar--scrolled {
+  background: rgba(var(--bg-sheet-rgb), 0.86);
+  backdrop-filter: blur(8px);
 }
 
 .title-bar__title {

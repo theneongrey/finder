@@ -4,6 +4,9 @@ import {
   computed,
   inject,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { Router, RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,6 +42,14 @@ export class TitleBarComponent {
   titleDisabled = computed(() => this.title === null);
   backRoute = this.titleService.backRoute;
   isHidden = this.titleService.isHidden;
+
+  isScrolled = toSignal(
+    fromEvent(window, 'scroll').pipe(
+      map(() => window.scrollY > 0),
+      startWith(false),
+    ),
+    { initialValue: false },
+  );
 
   private readonly settingsLabel = this.translateService.translate('titleBar.settings');
   private readonly logoutLabel = this.translateService.translate('titleBar.logout');

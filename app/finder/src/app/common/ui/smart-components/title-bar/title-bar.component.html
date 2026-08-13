@@ -1,5 +1,5 @@
 @if (!isHidden()) {
-  <header class="title-bar">
+  <header class="title-bar" [class.title-bar--scrolled]="isScrolled()">
     @if (backRoute()) {
       <ds-button
         icon="chevron-left"

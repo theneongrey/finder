@@ -7,7 +7,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 const GERMAN_NAMES = [
@@ -41,11 +41,21 @@ const PPL: Record<string, { i: string; bg: string; fg: string }> = {
   S: { i: 'S', bg: '#d9e4f2', fg: '#4a6da6' },
 };
 
-const DEMO_OPTIONS = [
-  { label: 'Gardasee', n: 4, voters: ['F', 'M', 'S', 'L'] },
-  { label: 'Prag', n: 2, voters: ['G', 'N'] },
-  { label: 'Nordsee', n: 1, voters: ['M'] },
+const DEMO = [
+  { label: 'Gardasee', voters: ['F', 'M', 'S', 'L'] },
+  { label: 'Prag',     voters: ['G', 'N'] },
+  { label: 'Nordsee',  voters: ['M'] },
 ];
+const DEMO_SEQ: number[][][] = [
+  [[], [], []],
+  [[0], [], []],
+  [[0], [0], []],
+  [[0, 1], [0], []],
+  [[0, 1], [0, 1], [0]],
+  [[0, 1, 2], [0, 1], [0]],
+  [[0, 1, 2, 3], [0, 1], [0]],
+];
+const DEMO_TOTAL_VOTERS = 7;
 
 const STEPS = [
   { n: '1', title: 'Frage stellen', text: 'Termin, Auswahl oder Ja/Nein. Optionen eintippen, fertig — in unter einer Minute steht die Umfrage.' },
@@ -113,7 +123,7 @@ const IDEAS = [
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -127,18 +137,40 @@ export class HomeComponent implements OnInit, OnDestroy {
   readonly scrolled = signal(false);
   readonly ideaIdx = signal(1);
   readonly floatName = signal('');
+  readonly demoStep = signal(0);
+  readonly codeN = signal(0);
+  readonly ideaVisible = signal(true);
 
   private nameQueue: string[] = [];
   private nameIdx = 0;
   private nameTimer: ReturnType<typeof setInterval> | undefined;
+  private demoTimer: ReturnType<typeof setInterval> | undefined;
+  private codeTimer: ReturnType<typeof setInterval> | undefined;
+  private ideaTimer: ReturnType<typeof setInterval> | undefined;
+
+  private static readonly CODE = ['4', '8', '2', '1', '9', '6'];
 
   readonly steps = STEPS;
 
   readonly floatVisible = signal(true);
 
+  readonly codeBoxes = computed(() => {
+    const n = this.codeN();
+    return HomeComponent.CODE.map((v, i) => ({
+      v: i < n ? v : '',
+      bg: i < n ? 'rgba(159,194,207,.16)' : 'rgba(255,255,255,.05)',
+      border: i === n ? '#9fc2cf' : (i < n ? 'rgba(159,194,207,.5)' : 'rgba(255,255,255,.14)'),
+    }));
+  });
+
+  readonly codeHint = computed(() =>
+    this.codeN() >= 6 ? 'Angemeldet – ohne Passwort.' : 'Code eingeben, fertig.',
+  );
+
   ngOnInit(): void {
     this.nameQueue = shuffle(GERMAN_NAMES);
     this.floatName.set(this.nameQueue[0]);
+
     this.nameTimer = setInterval(() => {
       this.floatVisible.set(false);
       setTimeout(() => {
@@ -147,15 +179,32 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.floatVisible.set(true);
       }, 220);
     }, 2200);
+
+    this.demoTimer = setInterval(() => {
+      this.demoStep.update(s => (s + 1) % (DEMO_SEQ.length + 2));
+    }, 1800);
+
+    this.codeTimer = setInterval(() => {
+      this.codeN.update(n => (n >= 7 ? 0 : n + 1));
+    }, 520);
+
+    this.ideaTimer = setInterval(() => {
+      this.ideaVisible.set(false);
+      setTimeout(() => {
+        this.ideaIdx.update(i => (i + 1) % IDEAS.length);
+        this.ideaVisible.set(true);
+      }, 300);
+    }, 3500);
   }
 
   ngOnDestroy(): void {
     clearInterval(this.nameTimer);
+    clearInterval(this.demoTimer);
+    clearInterval(this.codeTimer);
+    clearInterval(this.ideaTimer);
   }
   readonly features = FEATURES;
   readonly ideas = IDEAS;
-  readonly demoOptions = DEMO_OPTIONS;
-
   readonly faces = ['G', 'F', 'M', 'L', 'N'].map((k, i) => ({
     ...PPL[k], ml: i === 0 ? '0' : '-9px',
   }));
@@ -180,17 +229,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
   });
 
-  readonly demoOptionsFormatted = computed(() => {
-    const maxN = Math.max(...DEMO_OPTIONS.map(o => o.n)) || 1;
-    return DEMO_OPTIONS.map((o, i) => ({
-      ...o,
-      pct: Math.round((o.n / maxN) * 100) + '%',
-      fill: o.n === maxN ? 'rgba(31,122,140,.13)' : 'rgba(20,24,28,.045)',
-      border: o.n === maxN ? '#bcdfe3' : 'rgba(20,24,28,.08)',
-      numColor: o.n === maxN ? '#1f7a8c' : '#a39e96',
-      weight: o.n === maxN ? '700' : '600',
-      chips: o.voters.map(k => PPL[k]),
-    }));
+  readonly demoState = computed(() => {
+    const seqI = Math.min(this.demoStep(), DEMO_SEQ.length - 1);
+    const seq = DEMO_SEQ[seqI];
+    const counts = DEMO.map((_, i) => (seq[i] || []).length);
+    const total = counts.reduce((a, b) => a + b, 0);
+    const maxCount = Math.max(...counts, 1);
+    const leadIdx = counts.indexOf(maxCount);
+
+    const options = DEMO.map((d, i) => {
+      const n = counts[i];
+      const isLead = i === leadIdx && n > 0;
+      return {
+        label: d.label,
+        n,
+        numLabel: n === 0 ? '–' : String(n),
+        numColor: isLead ? '#1f7a8c' : '#a39e96',
+        weight: isLead ? '700' : '600',
+        pct: Math.round((n / maxCount) * 100) + '%',
+        fill: isLead ? 'rgba(31,122,140,.13)' : 'rgba(20,24,28,.045)',
+        border: isLead ? '#bcdfe3' : 'rgba(20,24,28,.08)',
+        chips: (seq[i] || []).map(vi => PPL[d.voters[vi]]),
+      };
+    });
+
+    return {
+      options,
+      voted: `${total} von ${DEMO_TOTAL_VOTERS} haben abgestimmt`,
+      pct: Math.round((total / DEMO_TOTAL_VOTERS) * 100) + '%',
+    };
   });
 
   onScroll(e: Event): void {
@@ -220,7 +287,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   selectIdea(i: number): void {
+    clearInterval(this.ideaTimer);
     this.ideaIdx.set(i);
+    this.ideaVisible.set(true);
+    this.ideaTimer = setInterval(() => {
+      this.ideaVisible.set(false);
+      setTimeout(() => {
+        this.ideaIdx.update(idx => (idx + 1) % IDEAS.length);
+        this.ideaVisible.set(true);
+      }, 300);
+    }, 3500);
+  }
+
+  scrollToSection(id: string): void {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   scrollToEmail(): void {

@@ -4,23 +4,20 @@
   <nav class="home-nav" [class.scrolled]="scrolled()">
     <div class="nav-inner">
       <div class="nav-logo">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4.5 12.5l4.5 4.5L20 5"/>
-        </svg>
-        <span class="nav-logo-text">Votean</span>
+        <img src="logo-primary.svg" alt="Votean" class="nav-logo-img" width="98" height="26" />
       </div>
 
       <!-- Desktop nav links (hidden on mobile) -->
       <div class="nav-links">
-        <a href="#how-it-works" class="nav-link">So funktioniert's</a>
-        <a href="#ideas" class="nav-link">Ideen</a>
-        <a href="#features" class="nav-link">Funktionen</a>
+        <a class="nav-link" (click)="scrollToSection('how-it-works')">So funktioniert's</a>
+        <a class="nav-link" (click)="scrollToSection('ideas')">Ideen</a>
+        <a class="nav-link" (click)="scrollToSection('features')">Funktionen</a>
       </div>
 
       <!-- Desktop tagline (hidden on mobile) -->
       <span class="nav-tagline">Neu oder schon dabei — derselbe Weg rein</span>
 
-      <button class="nav-cta" (click)="scrollToEmail()">
+      <a class="nav-cta" routerLink="/auth/request-email">
         <!-- Mobile: short label -->
         <span class="mobile-only">Anmelden</span>
         <!-- Desktop: full label + arrow -->
@@ -28,7 +25,7 @@
         <svg class="desktop-only" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
         </svg>
-      </button>
+      </a>
     </div>
   </nav>
 
@@ -40,7 +37,7 @@
         <!-- Live badge -->
         <div class="live-badge">
           <span class="live-dot"></span>
-          <span>Gerade laufen 1.284 Umfragen</span>
+          <span>Gerade laufen unmengen an Umfragen</span>
         </div>
 
         <h1 class="hero-h1">Findet gemeinsam einen Nenner.</h1>
@@ -101,7 +98,7 @@
               <span class="avatar" [style.background]="f.bg" [style.color]="f.fg" [style.margin-left]="f.ml">{{ f.i }}</span>
             }
           </div>
-          <span class="proof-text">Über 40.000 Entscheidungen getroffen</span>
+          <span class="proof-text">Unmengen an Entscheidungen wurden bereits getroffen</span>
           <span class="proof-divider desktop-only"></span>
           <span class="proof-text desktop-only">Kein Passwort · keine App nötig</span>
         </div>
@@ -119,7 +116,7 @@
           </div>
           <div class="demo-question">Wohin fahren wir am Wochenende?</div>
           <div class="demo-options">
-            @for (o of demoOptionsFormatted(); track o.label) {
+            @for (o of demoState().options; track o.label) {
               <div class="demo-option" [style.border-color]="o.border">
                 <div class="demo-bar" [style.width]="o.pct" [style.background]="o.fill"></div>
                 <div class="demo-option-row">
@@ -129,15 +126,15 @@
                       <span class="demo-chip" [style.background]="c.bg" [style.color]="c.fg">{{ c.i }}</span>
                     }
                   </div>
-                  <span class="demo-count" [style.color]="o.numColor">{{ o.n }}</span>
+                  <span class="demo-count" [style.color]="o.numColor">{{ o.numLabel }}</span>
                 </div>
               </div>
             }
           </div>
           <div class="demo-footer">
-            <span class="demo-voted">7 von 7 haben abgestimmt</span>
+            <span class="demo-voted">{{ demoState().voted }}</span>
             <span class="demo-progress-track">
-              <span class="demo-progress-fill" style="width:100%"></span>
+              <span class="demo-progress-fill" [style.width]="demoState().pct"></span>
             </span>
           </div>
         </div>
@@ -210,7 +207,7 @@
       </div>
 
       <!-- Idea card: single column mobile, two-column desktop -->
-      <div class="idea-card">
+      <div class="idea-card" [class.idea-card-visible]="ideaVisible()">
         <div class="idea-content">
           <span class="idea-who" [style.background]="currentIdea().tintBg" [style.color]="currentIdea().tintFg">
             {{ currentIdea().who }}
@@ -278,13 +275,13 @@
             <p class="auth-sub">Kein Passwort, kein Profil, keine Kreditkarte. Wir schicken dir einen 6-stelligen Code — einmal eingeben und du bist drin.</p>
             <!-- Code boxes (static) -->
             <div class="code-boxes">
-              @for (d of [4,8,2,1,9,6]; track d) {
-                <span class="code-box code-filled">{{ d }}</span>
+              @for (box of codeBoxes(); track $index) {
+                <span class="code-box" [style.background]="box.bg" [style.border-color]="box.border">{{ box.v }}</span>
               }
             </div>
             <div class="code-hint">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
-              <span>Code eingeben, fertig.</span>
+              <span>{{ codeHint() }}</span>
             </div>
           </div>
         </div>
@@ -330,12 +327,12 @@
             <p class="final-sub">Stell die Frage jetzt — die erste Umfrage steht schneller als die nächste Sprachnachricht.</p>
           </div>
           <div class="final-cta-action">
-            <button class="final-btn" (click)="scrollToEmail()">
+            <a class="final-btn" routerLink="/auth/request-email">
               <span>Mit E-Mail anmelden</span>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
               </svg>
-            </button>
+            </a>
             <span class="final-note">Ob zum ersten Mal oder zum hundertsten: immer nur E-Mail und Code.</span>
           </div>
         </div>

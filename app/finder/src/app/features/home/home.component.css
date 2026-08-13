@@ -55,6 +55,12 @@
   color: var(--accent);
 }
 
+.nav-logo-img {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+
 .nav-links {
   display: none;
 }
@@ -81,6 +87,7 @@
   transition: filter 140ms ease;
 }
 
+.nav-cta { text-decoration: none; }
 .nav-cta:hover { filter: brightness(1.07); }
 .nav-cta:active { transform: scale(0.97); }
 
@@ -767,6 +774,14 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.idea-card.idea-card-visible {
+  opacity: 1;
+  transform: none;
 }
 
 .idea-who {
@@ -1233,6 +1248,7 @@
   transition: filter 140ms ease, transform 140ms ease;
 }
 
+.final-btn { text-decoration: none; }
 .final-btn:hover { filter: brightness(1.06); }
 .final-btn:active { transform: scale(0.985); }
 

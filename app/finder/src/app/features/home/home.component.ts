@@ -188,13 +188,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.codeN.update(n => (n >= 7 ? 0 : n + 1));
     }, 520);
 
+    this.startIdeaTimer(7000);
+  }
+
+  private startIdeaTimer(delay: number): void {
+    clearInterval(this.ideaTimer);
     this.ideaTimer = setInterval(() => {
       this.ideaVisible.set(false);
       setTimeout(() => {
         this.ideaIdx.update(i => (i + 1) % IDEAS.length);
         this.ideaVisible.set(true);
       }, 300);
-    }, 3500);
+    }, delay);
   }
 
   ngOnDestroy(): void {
@@ -287,16 +292,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   selectIdea(i: number): void {
-    clearInterval(this.ideaTimer);
-    this.ideaIdx.set(i);
-    this.ideaVisible.set(true);
-    this.ideaTimer = setInterval(() => {
-      this.ideaVisible.set(false);
-      setTimeout(() => {
-        this.ideaIdx.update(idx => (idx + 1) % IDEAS.length);
-        this.ideaVisible.set(true);
-      }, 300);
-    }, 3500);
+    this.ideaVisible.set(false);
+    setTimeout(() => {
+      this.ideaIdx.set(i);
+      this.ideaVisible.set(true);
+      this.startIdeaTimer(60_000);
+    }, 300);
   }
 
   scrollToSection(id: string): void {

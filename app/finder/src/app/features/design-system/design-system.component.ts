@@ -15,7 +15,8 @@ import { DsBottomSheetComponent } from '@ds/bottom-sheet/ds-bottom-sheet.compone
 import { DsMenuComponent } from '@ds/menu/ds-menu.component';
 import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
 import { DsVoteButtonsComponent } from '@ds/vote-buttons/ds-vote-buttons.component';
-import { DsPollTypeBadgeComponent } from '@ds/poll-type-badge/ds-poll-type-badge.component';
+import { PollTypeBadgeComponent } from '../polls/_shared/ui/poll-type-badge/poll-type-badge.component';
+import { OptionType } from '../polls/_shared/models/poll-detail.model';
 import { DsInputOtpComponent } from '@ds/input-otp/ds-input-otp.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { DsStepperComponent } from '@ds/stepper/ds-stepper.component';
@@ -41,7 +42,7 @@ import { DsChipComponent } from '@ds/chip/ds-chip.component';
     DsMenuComponent,
     DsEmptyStateButtonComponent,
     DsVoteButtonsComponent,
-    DsPollTypeBadgeComponent,
+    PollTypeBadgeComponent,
     DsInputOtpComponent,
     DsTextareaComponent,
     DsStepperComponent,
@@ -56,6 +57,7 @@ import { DsChipComponent } from '@ds/chip/ds-chip.component';
 })
 export class DesignSystemComponent {
   readonly iconNames = ICON_NAMES;
+  readonly OptionType = OptionType;
 
   bottomSheetOpen = signal(false);
   loadingDemo = signal(false);

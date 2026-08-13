@@ -1,12 +1,36 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
+  OnInit,
   computed,
   inject,
   signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+
+const GERMAN_NAMES = [
+  'Emma','Hannah','Mia','Sofia','Lena','Anna','Laura','Lea','Marie','Julia',
+  'Sarah','Lisa','Lara','Jana','Katharina','Sandra','Nina','Sabrina','Melanie','Jessica',
+  'Lukas','Felix','Leon','Jonas','Maximilian','Tim','Jan','Nico','Daniel','Thomas',
+  'Michael','Stefan','Andreas','Tobias','Sebastian','Christian','Markus','Florian','Simon','David',
+  'Liam','Noah','Elias','Finn','Ben','Paul','Max','Moritz','Julian','Fabian',
+  'Leonie','Amelie','Emilia','Maja','Clara','Johanna','Charlotte','Alina','Lina','Maria',
+  'Farah','Marco','Samir','Leyla','Yuna','Niklas','Philip','Luisa','Elena','Nora',
+  'Valeria','Luis','Omar','Yasmin','Kerim','Dilara','Mehmet','Aylin','Deniz','Sven',
+  'Petra','Renate','Klaus','Günter','Monika','Helga','Werner','Dieter','Ursula','Gabi',
+  'Kilian','Oskar','Leo','Theo','Emil','Frieda','Mathilda','Maren','Svenja','Tanja',
+];
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 const PPL: Record<string, { i: string; bg: string; fg: string }> = {
   G: { i: 'G', bg: '#d7eef0', fg: '#1f7a8c' },
@@ -94,7 +118,7 @@ const IDEAS = [
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
   private router = inject(Router);
 
   readonly email = signal('');
@@ -102,8 +126,32 @@ export class HomeComponent {
   readonly emailSent = signal(false);
   readonly scrolled = signal(false);
   readonly ideaIdx = signal(1);
+  readonly floatName = signal('');
+
+  private nameQueue: string[] = [];
+  private nameIdx = 0;
+  private nameTimer: ReturnType<typeof setInterval> | undefined;
 
   readonly steps = STEPS;
+
+  readonly floatVisible = signal(true);
+
+  ngOnInit(): void {
+    this.nameQueue = shuffle(GERMAN_NAMES);
+    this.floatName.set(this.nameQueue[0]);
+    this.nameTimer = setInterval(() => {
+      this.floatVisible.set(false);
+      setTimeout(() => {
+        this.nameIdx = (this.nameIdx + 1) % this.nameQueue.length;
+        this.floatName.set(this.nameQueue[this.nameIdx]);
+        this.floatVisible.set(true);
+      }, 220);
+    }, 2200);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.nameTimer);
+  }
   readonly features = FEATURES;
   readonly ideas = IDEAS;
   readonly demoOptions = DEMO_OPTIONS;

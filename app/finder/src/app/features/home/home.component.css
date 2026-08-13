@@ -549,6 +549,17 @@
 .float-icon-dark { background: rgba(255, 255, 255, 0.14); }
 
 .float-title { font-size: var(--fs-ui); font-weight: var(--weight-bold); color: var(--text-primary); }
+
+.float-name-wrap {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.float-name-wrap.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 .float-bottom .float-title { color: #fff; }
 .float-sub { font-size: var(--fs-caption-sm); color: var(--text-muted); }
 .float-sub-light { font-size: var(--fs-caption-sm); color: #9fc2cf; }

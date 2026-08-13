@@ -1,8 +1,4 @@
-<p
-  class="text-xs font-semibold uppercase tracking-wide text-gray-500 mt-4 mb-2"
->
-  {{ "project.share.tabAccess" | translate }}
-</p>
+<p class="label mb-2">{{ 'project.share.whoCanJoin' | translate }}</p>
 
 <hlm-toggle-group
   type="single"
@@ -13,29 +9,25 @@
   class="w-full"
 >
   @for (opt of visibilityOptions(); track opt.value) {
-    <button hlmToggleGroupItem [value]="opt.value" class="flex-1">
+    <button hlmToggleGroupItem [value]="opt.value" class="flex-1 text-sm">
       {{ opt.label }}
     </button>
   }
 </hlm-toggle-group>
-<p class="text-sm text-gray-500 mt-2 mb-2">
-  @if (isPublic()) {
-    {{ "project.share.openDescription" | translate }}
-  } @else {
-    {{ "project.share.inviteOnlyDescription" | translate }}
-  }
-</p>
 
-@if (isPublic()) {
-  <div
-    class="flex items-center gap-2 bg-primary/8 p-2 rounded-md"
-  >
-    <span
-      class="flex-1 text-sm text-gray-700 break-all select-all cursor-text"
-      >{{ shareLink() }}</span
-    >
-    <button hlmBtn size="sm" (click)="copyLink()">
-      <i class="fa-regular fa-copy"></i>{{ 'project.share.copy' | translate }}
-    </button>
-  </div>
-}
+<div class="mt-3 rounded-[var(--radius-xl)] p-3.5" style="background: var(--sand-100)">
+  @if (isPublic()) {
+    <p class="text-sm text-[var(--text-secondary)] mb-2.5">{{ 'project.share.linkNote' | translate }}</p>
+    <div class="flex items-center gap-2 rounded-[var(--radius-md)] px-3 py-2" style="background: rgba(255,255,255,0.7)">
+      <span class="flex-1 text-xs text-[var(--text-muted)] break-all select-all leading-relaxed">{{ shareLink() }}</span>
+      <button
+        class="shrink-0 text-xs font-semibold text-[var(--accent)] hover:opacity-70 transition-opacity"
+        (click)="copyLink()"
+      >
+        {{ 'project.share.copy' | translate }}
+      </button>
+    </div>
+  } @else {
+    <p class="text-sm text-[var(--text-secondary)]">{{ 'project.share.inviteOnlyDescription' | translate }}</p>
+  }
+</div>

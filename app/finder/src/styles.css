@@ -152,6 +152,24 @@ input.invalid {
   outline-offset: 2px;
 }
 
+/* ── Share drawer: centered modal on desktop ─────────────────── */
+@media (min-width: 680px) {
+  [data-slot="sheet-content"][data-side="bottom"] {
+    inset: auto !important;
+    left: 50% !important;
+    top: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90vw !important;
+    max-width: 820px !important;
+    max-height: 86vh !important;
+    border-radius: var(--radius-4xl) !important;
+    border-top: none !important;
+    overflow-y: auto;
+  }
+}
+
 /* ── ToggleGroup: segmented-control look ─────────────────────── */
 [data-slot="toggle-group"][data-variant="outline"][data-spacing="0"] {
   background-color: oklch(0.97 0 0);

@@ -1,12 +1,20 @@
 <hlm-sheet [state]="visible() ? 'open' : 'closed'" side="bottom" (stateChanged)="visible.set($event === 'open')">
-  <hlm-sheet-content class="!h-auto rounded-t-2xl px-[22px] pb-[26px]" *hlmSheetPortal>
-    <div hlmSheetHeader class="!px-0">
-      <h3 hlmSheetTitle>{{ ('project.share.title' | translate) + ' – ' + projectName() }}</h3>
+  <hlm-sheet-content
+    class="!rounded-t-[var(--radius-3xl)] !border-t-0 !pt-0 !px-0 !pb-0 !gap-0 !bg-[var(--bg-sheet)]"
+    *hlmSheetPortal
+  >
+    <div class="flex items-start gap-3 px-5 pt-5 pb-0 pr-12">
+      <div class="min-w-0 flex-1">
+        <p class="label !text-[var(--text-muted)] mb-0.5">{{ 'project.share.title' | translate }}</p>
+        <h3 class="truncate !font-semibold">{{ projectName() }}</h3>
+      </div>
     </div>
-    <app-share-content
-      [projectId]="projectId()"
-      [sharedWith]="sharedWith()"
-      [visibilityType]="visibilityType()"
-    />
+    <div class="mt-4 px-5 pb-8 overflow-y-auto">
+      <app-share-content
+        [projectId]="projectId()"
+        [sharedWith]="sharedWith()"
+        [visibilityType]="visibilityType()"
+      />
+    </div>
   </hlm-sheet-content>
 </hlm-sheet>

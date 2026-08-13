@@ -105,7 +105,15 @@
       "maintainerDescription": "Kann Abstimmungen erstellen und bearbeiten sowie selbst abstimmen.",
       "ownerDescription": "Kann alles was Abstimmende und Ersteller können, und zusätzlich Benutzer einladen und verwalten.",
       "remove": "Entfernen",
-      "persons": "Personen"
+      "persons": "Personen",
+      "whoCanJoin": "Wer darf beitreten",
+      "personInvite": "Person einladen",
+      "alreadyShared": "Bereits geteilt",
+      "inviteMore": "Weitere einladen",
+      "roleLabel": "Rolle für neue Einladungen",
+      "linkNote": "Wer über den Link beitritt, kommt als Betrachter rein.",
+      "recentLabel": "Zuletzt oft geteilt",
+      "noContact": "Kein Kontakt gefunden – per E-Mail einladen"
     },
     "pollInput": {
       "createPoll": "Umfrage erstellen",

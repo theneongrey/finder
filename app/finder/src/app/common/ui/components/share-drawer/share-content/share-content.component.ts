@@ -8,12 +8,10 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmSeparator } from '@spartan-ng/helm/separator';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { ShareAccessFormComponent } from './share-access-form/share-access-form.component';
 import { ShareInviteFormComponent } from './share-invite-form/share-invite-form.component';
 import { ShareMembersListComponent } from './share-members-list/share-members-list.component';
-import { NgTemplateOutlet } from '@angular/common';
 import {
   SharedWith,
   VisibilityType,
@@ -24,13 +22,11 @@ import { environment } from '../../../../env/environment';
 @Component({
   selector: 'app-share-content',
   imports: [
-    HlmSeparator,
     ...HlmTabsImports,
     TranslatePipe,
     ShareAccessFormComponent,
     ShareInviteFormComponent,
     ShareMembersListComponent,
-    NgTemplateOutlet,
   ],
   templateUrl: './share-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,33 +39,30 @@ export class ShareContentComponent {
   sharedWith = input.required<SharedWith[]>();
   visibilityType = input.required<VisibilityType>();
 
-  selectedVisibility = signal<VisibilityType>(
-    VisibilityType.VisibleForSelectedOnly,
-  );
-  activeTab = signal('access');
+  selectedVisibility = signal<VisibilityType>(VisibilityType.VisibleForSelectedOnly);
+  activeTab = signal('invite');
 
   sharingContacts = this.sharingStore.sharingContactsSuggestion;
   sharingInProgress = this.sharingStore.sharingInProgress;
 
-  isPublic = computed(
-    () => this.selectedVisibility() === VisibilityType.VisibleForEverybody,
-  );
+  isPublic = computed(() => this.selectedVisibility() === VisibilityType.VisibleForEverybody);
   shareLink = computed(() => `${environment.baseUrl}/p/${this.projectId()}`);
+  memberCount = computed(() => this.sharedWith().length);
 
-  private inviteOnlyLabel = this.translateService.translate(
-    'project.share.inviteOnly',
-  );
+  private inviteOnlyLabel = this.translateService.translate('project.share.inviteOnly');
   private openLabel = this.translateService.translate('project.share.open');
 
   visibilityOptions = computed(() => [
-    {
-      label: this.inviteOnlyLabel(),
-      value: VisibilityType.VisibleForSelectedOnly,
-    },
+    { label: this.inviteOnlyLabel(), value: VisibilityType.VisibleForSelectedOnly },
     { label: this.openLabel(), value: VisibilityType.VisibleForEverybody },
   ]);
 
   constructor() {
+    effect(() => {
+      this.projectId();
+      this.activeTab.set('invite');
+    });
+
     effect(() => {
       this.selectedVisibility.set(this.visibilityType());
     });
@@ -77,6 +70,10 @@ export class ShareContentComponent {
 
   setActiveTab(value: string) {
     this.activeTab.set(value);
+  }
+
+  goToInviteTab() {
+    this.activeTab.set('invite');
   }
 
   onVisibilityChange(value: VisibilityType) {

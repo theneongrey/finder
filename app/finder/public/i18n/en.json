@@ -105,7 +105,15 @@
       "maintainerDescription": "Can manage topics and options and participate in votes.",
       "ownerDescription": "Can manage project settings and user permissions.",
       "remove": "Remove",
-      "persons": "People"
+      "persons": "People",
+      "whoCanJoin": "Who can join",
+      "personInvite": "Invite person",
+      "alreadyShared": "Already shared",
+      "inviteMore": "Invite more",
+      "roleLabel": "Role for new invites",
+      "linkNote": "Anyone joining via link joins as a viewer.",
+      "recentLabel": "Frequently shared",
+      "noContact": "No contact found – invite via email"
     },
     "pollInput": {
       "createPoll": "Create poll",

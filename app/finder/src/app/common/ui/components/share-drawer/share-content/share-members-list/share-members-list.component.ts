@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,15 +29,15 @@ export class ShareMembersListComponent {
   members = input.required<SharedWith[]>();
   isPublic = input.required<boolean>();
 
+  goInvite = output<void>();
+
   readonly PollRole = PollRole;
 
   pendingRemoveEmail = signal<string | undefined>(undefined);
 
   sortedMembers = computed(() =>
     [...this.members()].sort((a, b) => {
-      if (b.role !== a.role) {
-        return b.role - a.role;
-      }
+      if (b.role !== a.role) return b.role - a.role;
       return a.name.localeCompare(b.name);
     }),
   );
@@ -44,6 +45,7 @@ export class ShareMembersListComponent {
   voterLabel = this.translateService.translate('project.roles.voter');
   maintainerLabel = this.translateService.translate('project.roles.maintainer');
   ownerLabel = this.translateService.translate('project.roles.owner');
+  creatorLabel = this.translateService.translate('project.roles.creator');
 
   getRoleKey(role: PollRole): string {
     switch (role) {
@@ -56,24 +58,15 @@ export class ShareMembersListComponent {
   }
 
   changeRole(email: string, permissionType: number) {
-    this.sharingStore.share({
-      email,
-      permissionType,
-      projectId: this.projectId(),
-    });
+    this.sharingStore.share({ email, permissionType, projectId: this.projectId() });
   }
 
   onRemoveClick(email: string) {
-    this.pendingRemoveEmail.set(
-      this.pendingRemoveEmail() === email ? undefined : email,
-    );
+    this.pendingRemoveEmail.set(this.pendingRemoveEmail() === email ? undefined : email);
   }
 
   confirmRemove(email: string) {
-    this.sharingStore.removePermission({
-      projectId: this.projectId(),
-      email,
-    });
+    this.sharingStore.removePermission({ projectId: this.projectId(), email });
     this.pendingRemoveEmail.set(undefined);
   }
 }

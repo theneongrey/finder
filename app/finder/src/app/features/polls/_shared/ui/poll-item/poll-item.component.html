@@ -73,6 +73,17 @@
         </p>
       </div>
       <div class="flex items-center gap-1">
+        @if (canSharePoll()) {
+          <button
+            hlmBtn
+            variant="ghost"
+            size="icon"
+            data-testid="share-btn"
+            (click)="shareRequested.emit()"
+          >
+            <i class="fa-solid fa-share-nodes"></i>
+          </button>
+        }
         <button
           hlmBtn
           variant="ghost"

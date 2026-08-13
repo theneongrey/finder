@@ -7,8 +7,10 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { SupportedLanguage, setStoredLanguage } from '../../common/i18n/languages';
 
 const GERMAN_NAMES = [
   'Emma','Hannah','Mia','Sofia','Lena','Anna','Laura','Lea','Marie','Julia',
@@ -42,9 +44,9 @@ const PPL: Record<string, { i: string; bg: string; fg: string }> = {
 };
 
 const DEMO = [
-  { label: 'Gardasee', voters: ['F', 'M', 'S', 'L'] },
-  { label: 'Prag',     voters: ['G', 'N'] },
-  { label: 'Nordsee',  voters: ['M'] },
+  { labelKey: 'home.demo.opt0', voters: ['F', 'M', 'S', 'L'] },
+  { labelKey: 'home.demo.opt1', voters: ['G', 'N'] },
+  { labelKey: 'home.demo.opt2', voters: ['M'] },
 ];
 const DEMO_SEQ: number[][][] = [
   [[], [], []],
@@ -58,78 +60,97 @@ const DEMO_SEQ: number[][][] = [
 const DEMO_TOTAL_VOTERS = 7;
 
 const STEPS = [
-  { n: '1', title: 'Frage stellen', text: 'Termin, Auswahl oder Ja/Nein. Optionen eintippen, fertig — in unter einer Minute steht die Umfrage.' },
-  { n: '2', title: 'Link teilen', text: 'Ein Link in den Gruppenchat. Wer abstimmt, braucht kein Konto und keine App.' },
-  { n: '3', title: 'Ergebnis sehen', text: 'Live siehst du, wer schon abgestimmt hat und wer noch fehlt. Am Ende steht eine Entscheidung.' },
+  { n: '1', titleKey: 'home.steps.0.title', textKey: 'home.steps.0.text' },
+  { n: '2', titleKey: 'home.steps.1.title', textKey: 'home.steps.1.text' },
+  { n: '3', titleKey: 'home.steps.2.title', textKey: 'home.steps.2.text' },
 ];
 
 const FEATURES = [
-  { title: 'Jede Art von Frage', text: 'Termin, freie Auswahl, Ja/Nein oder Bewertung — passend zur Entscheidung.', iconBg: '#d7eef0', iconFg: '#1f7a8c', icon: 'check-list' },
-  { title: 'Beitreten per Link', text: 'Eingeladene öffnen den Link, geben ihre E-Mail ein — das Konto entsteht dabei automatisch.', iconBg: '#f4dfe2', iconFg: '#b56374', icon: 'share' },
-  { title: 'Sieht, wer noch fehlt', text: 'Offene Stimmen auf einen Blick, mit freundlichem Stupser statt Nachfragen.', iconBg: '#f6e7cf', iconFg: '#b3863a', icon: 'clock' },
-  { title: 'Alles an einem Ort', text: 'Umfragen bleiben nach der Entscheidung erhalten — als Gedächtnis der Gruppe.', iconBg: '#e6e0f3', iconFg: '#6f5aa6', icon: 'grid' },
+  { titleKey: 'home.features.0.title', textKey: 'home.features.0.text', iconBg: '#d7eef0', iconFg: '#1f7a8c', icon: 'check-list' },
+  { titleKey: 'home.features.1.title', textKey: 'home.features.1.text', iconBg: '#f4dfe2', iconFg: '#b56374', icon: 'share' },
+  { titleKey: 'home.features.2.title', textKey: 'home.features.2.text', iconBg: '#f6e7cf', iconFg: '#b3863a', icon: 'clock' },
+  { titleKey: 'home.features.3.title', textKey: 'home.features.3.text', iconBg: '#e6e0f3', iconFg: '#6f5aa6', icon: 'grid' },
 ];
 
 const IDEAS = [
   {
-    id: 'wohnen', tab: 'Wohnzimmer einrichten', short: 'Wohnzimmer',
-    who: 'Zu zweit', tintBg: '#f4dfe2', tintFg: '#a8566a',
-    headline: 'Zwei Meinungen, ein Sofa.',
-    story: 'Neue Wohnung, leeres Wohnzimmer. Statt 40 Screenshots im Chat legt ihr eine Umfrage an, jeder stimmt in Ruhe ab — und am Abend steht die Entscheidung schwarz auf weiß.',
-    cta: 'Wohn-Umfrage starten',
-    pollKind: 'Auswahl · 2 Personen',
-    question: 'Welches Sofa nehmen wir?',
-    options: [{ label: 'Samtsofa, petrol', n: 2 }, { label: 'Cord-Ecksofa, sand', n: 1 }, { label: 'Modulsofa, grau', n: 0 }],
-    total: 2, voters: ['G', 'F'], votersLine: 'Beide haben abgestimmt',
-    points: ['Fotos, Links und Preise stehen direkt an der Option', 'Jeder entscheidet für sich — ohne sich zu beeinflussen', 'Mehrere Umfragen pro Raum: Sofa, Lampe, Teppich'],
+    id: 'wohnen', tabKey: 'home.ideas.wohnen.tab', shortKey: 'home.ideas.wohnen.short',
+    whoKey: 'home.ideas.wohnen.who', tintBg: '#f4dfe2', tintFg: '#a8566a',
+    headlineKey: 'home.ideas.wohnen.headline',
+    storyKey: 'home.ideas.wohnen.story',
+    ctaKey: 'home.ideas.wohnen.cta',
+    pollKindKey: 'home.ideas.wohnen.pollKind',
+    questionKey: 'home.ideas.wohnen.question',
+    options: [
+      { labelKey: 'home.ideas.wohnen.opt0', n: 2 },
+      { labelKey: 'home.ideas.wohnen.opt1', n: 1 },
+      { labelKey: 'home.ideas.wohnen.opt2', n: 0 },
+    ],
+    total: 2, voters: ['G', 'F'], votersLineKey: 'home.ideas.wohnen.votersLine',
+    pointKeys: ['home.ideas.wohnen.pt0', 'home.ideas.wohnen.pt1', 'home.ideas.wohnen.pt2'],
   },
   {
-    id: 'trip', tab: 'Wochenendtrip planen', short: 'Wochenendtrip',
-    who: 'Gruppe · 6 Leute', tintBg: '#d7eef0', tintFg: '#1f7a8c',
-    headline: 'Sechs Kalender, ein Wochenende.',
-    story: 'Erst der Termin, dann das Ziel. Zwei Umfragen, ein Link in der Gruppe — und niemand muss mehr durch 200 Nachrichten scrollen.',
-    cta: 'Trip-Umfrage starten',
-    pollKind: 'Auswahl · 6 Personen',
-    question: 'Wohin fahren wir im September?',
-    options: [{ label: 'Gardasee', n: 4 }, { label: 'Prag', n: 3 }, { label: 'Nordsee', n: 2 }, { label: 'Zu Hause bleiben', n: 0 }],
-    total: 6, voters: ['G', 'F', 'M', 'L'], votersLine: '5 von 6 haben abgestimmt',
-    points: ['Terminumfrage findet den Tag, an dem wirklich alle können', 'Mitmachen per Link — E-Mail eingeben genügt', 'Erinnerung an alle, die noch fehlen'],
+    id: 'trip', tabKey: 'home.ideas.trip.tab', shortKey: 'home.ideas.trip.short',
+    whoKey: 'home.ideas.trip.who', tintBg: '#d7eef0', tintFg: '#1f7a8c',
+    headlineKey: 'home.ideas.trip.headline',
+    storyKey: 'home.ideas.trip.story',
+    ctaKey: 'home.ideas.trip.cta',
+    pollKindKey: 'home.ideas.trip.pollKind',
+    questionKey: 'home.ideas.trip.question',
+    options: [
+      { labelKey: 'home.ideas.trip.opt0', n: 4 },
+      { labelKey: 'home.ideas.trip.opt1', n: 3 },
+      { labelKey: 'home.ideas.trip.opt2', n: 2 },
+      { labelKey: 'home.ideas.trip.opt3', n: 0 },
+    ],
+    total: 6, voters: ['G', 'F', 'M', 'L'], votersLineKey: 'home.ideas.trip.votersLine',
+    pointKeys: ['home.ideas.trip.pt0', 'home.ideas.trip.pt1', 'home.ideas.trip.pt2'],
   },
   {
-    id: 'geschenk', tab: 'Gemeinsames Geschenk', short: 'Geschenk',
-    who: 'Freundeskreis · 5 Leute', tintBg: '#f6e7cf', tintFg: '#a8742a',
-    headline: 'Ein Geschenk, keine Doppelkäufe.',
-    story: 'Fünf Ideen sammeln, alle stimmen ab, die zwei mit den meisten Stimmen werden gekauft. Und die Person, die beschenkt wird, sieht die Umfrage einfach nicht.',
-    cta: 'Geschenk-Umfrage starten',
-    pollKind: 'Auswahl · 5 Personen',
-    question: 'Was schenken wir Yuna?',
-    options: [{ label: 'Konzertkarten', n: 4 }, { label: 'Wochenende im Spa', n: 3 }, { label: 'Kochkurs', n: 1 }],
-    total: 5, voters: ['F', 'M', 'L', 'S'], votersLine: '4 von 5 haben abgestimmt',
-    points: ['Vorschläge kommen von allen, nicht nur vom Organisator', 'Budget als Notiz an der Umfrage', 'Ergebnis bleibt als Beleg erhalten'],
+    id: 'geschenk', tabKey: 'home.ideas.geschenk.tab', shortKey: 'home.ideas.geschenk.short',
+    whoKey: 'home.ideas.geschenk.who', tintBg: '#f6e7cf', tintFg: '#a8742a',
+    headlineKey: 'home.ideas.geschenk.headline',
+    storyKey: 'home.ideas.geschenk.story',
+    ctaKey: 'home.ideas.geschenk.cta',
+    pollKindKey: 'home.ideas.geschenk.pollKind',
+    questionKey: 'home.ideas.geschenk.question',
+    options: [
+      { labelKey: 'home.ideas.geschenk.opt0', n: 4 },
+      { labelKey: 'home.ideas.geschenk.opt1', n: 3 },
+      { labelKey: 'home.ideas.geschenk.opt2', n: 1 },
+    ],
+    total: 5, voters: ['F', 'M', 'L', 'S'], votersLineKey: 'home.ideas.geschenk.votersLine',
+    pointKeys: ['home.ideas.geschenk.pt0', 'home.ideas.geschenk.pt1', 'home.ideas.geschenk.pt2'],
   },
   {
-    id: 'team', tab: 'Team-Entscheidung', short: 'Team-Termin',
-    who: 'Team · 9 Leute', tintBg: '#dcecd9', tintFg: '#4f7a4a',
-    headline: 'Entscheiden statt vertagen.',
-    story: 'Der Kick-off-Termin, das Sommerfest, das neue Tool: kurze Umfrage, klare Deadline, sichtbares Ergebnis. Keine Meeting-Schleife, keine Mail-Kette.',
-    cta: 'Team-Umfrage starten',
-    pollKind: 'Terminumfrage · 9 Personen',
-    question: 'Wann machen wir das Offsite?',
-    options: [{ label: 'Do., 17. September', n: 8 }, { label: 'Fr., 18. September', n: 5 }, { label: 'Do., 24. September', n: 3 }],
-    total: 9, voters: ['G', 'M', 'N', 'S'], votersLine: '8 von 9 haben abgestimmt',
-    points: ['Deadline setzen — danach schließt die Umfrage automatisch', 'Zwischenstand erst nach der eigenen Stimme sichtbar', 'Ergebnis als Link in Slack oder Mail teilen'],
+    id: 'team', tabKey: 'home.ideas.team.tab', shortKey: 'home.ideas.team.short',
+    whoKey: 'home.ideas.team.who', tintBg: '#dcecd9', tintFg: '#4f7a4a',
+    headlineKey: 'home.ideas.team.headline',
+    storyKey: 'home.ideas.team.story',
+    ctaKey: 'home.ideas.team.cta',
+    pollKindKey: 'home.ideas.team.pollKind',
+    questionKey: 'home.ideas.team.question',
+    options: [
+      { labelKey: 'home.ideas.team.opt0', n: 8 },
+      { labelKey: 'home.ideas.team.opt1', n: 5 },
+      { labelKey: 'home.ideas.team.opt2', n: 3 },
+    ],
+    total: 9, voters: ['G', 'M', 'N', 'S'], votersLineKey: 'home.ideas.team.votersLine',
+    pointKeys: ['home.ideas.team.pt0', 'home.ideas.team.pt1', 'home.ideas.team.pt2'],
   },
 ];
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, TranslatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private translate = inject(TranslateService);
 
   readonly email = signal('');
   readonly emailError = signal(false);
@@ -163,11 +184,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     }));
   });
 
-  readonly codeHint = computed(() =>
-    this.codeN() >= 6 ? 'Angemeldet – ohne Passwort.' : 'Code eingeben, fertig.',
+  readonly codeHintKey = computed(() =>
+    this.codeN() >= 6 ? 'home.authPitch.codeHintDone' : 'home.authPitch.codeHintDefault',
   );
 
   ngOnInit(): void {
+    const lang = this.route.snapshot.data['lang'] as SupportedLanguage;
+    if (lang) {
+      this.translate.use(lang);
+      setStoredLanguage(lang);
+    }
+
     this.nameQueue = shuffle(GERMAN_NAMES);
     this.floatName.set(this.nameQueue[0]);
 
@@ -246,7 +273,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       const n = counts[i];
       const isLead = i === leadIdx && n > 0;
       return {
-        label: d.label,
+        labelKey: d.labelKey,
         n,
         numLabel: n === 0 ? '–' : String(n),
         numColor: isLead ? '#1f7a8c' : '#a39e96',
@@ -260,7 +287,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     return {
       options,
-      voted: `${total} von ${DEMO_TOTAL_VOTERS} haben abgestimmt`,
+      votedCount: total,
+      votedTotal: DEMO_TOTAL_VOTERS,
       pct: Math.round((total / DEMO_TOTAL_VOTERS) * 100) + '%',
     };
   });
@@ -288,7 +316,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onEmailKey(e: KeyboardEvent): void {
-    if (e.key === 'Enter') this.onStart();
+    if (e.key === 'Enter') { this.onStart(); }
   }
 
   selectIdea(i: number): void {

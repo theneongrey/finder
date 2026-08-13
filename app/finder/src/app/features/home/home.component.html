@@ -9,19 +9,19 @@
 
       <!-- Desktop nav links (hidden on mobile) -->
       <div class="nav-links">
-        <a class="nav-link" (click)="scrollToSection('how-it-works')">So funktioniert's</a>
-        <a class="nav-link" (click)="scrollToSection('ideas')">Ideen</a>
-        <a class="nav-link" (click)="scrollToSection('features')">Funktionen</a>
+        <a class="nav-link" (click)="scrollToSection('how-it-works')">{{ 'home.nav.howItWorks' | translate }}</a>
+        <a class="nav-link" (click)="scrollToSection('ideas')">{{ 'home.nav.ideas' | translate }}</a>
+        <a class="nav-link" (click)="scrollToSection('features')">{{ 'home.nav.features' | translate }}</a>
       </div>
 
       <!-- Desktop tagline (hidden on mobile) -->
-      <span class="nav-tagline">Neu oder schon dabei — derselbe Weg rein</span>
+      <span class="nav-tagline">{{ 'home.nav.tagline' | translate }}</span>
 
       <a class="nav-cta" routerLink="/auth/request-email">
         <!-- Mobile: short label -->
-        <span class="mobile-only">Anmelden</span>
+        <span class="mobile-only">{{ 'home.nav.signInMobile' | translate }}</span>
         <!-- Desktop: full label + arrow -->
-        <span class="desktop-only">Mit E-Mail anmelden</span>
+        <span class="desktop-only">{{ 'home.nav.signInDesktop' | translate }}</span>
         <svg class="desktop-only" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
         </svg>
@@ -37,19 +37,16 @@
         <!-- Live badge -->
         <div class="live-badge">
           <span class="live-dot"></span>
-          <span>Gerade laufen unmengen an Umfragen</span>
+          <span>{{ 'home.hero.liveBadge' | translate }}</span>
         </div>
 
-        <h1 class="hero-h1">Findet gemeinsam einen Nenner.</h1>
+        <h1 class="hero-h1">{{ 'home.hero.headline' | translate }}</h1>
 
-        <p class="hero-sub">
-          Votean macht aus endlosen Chat-Diskussionen eine klare Entscheidung.
-          Zu zweit oder zu zwölft: Frage stellen, Link teilen, Ergebnis sehen.
-        </p>
+        <p class="hero-sub">{{ 'home.hero.sub' | translate }}</p>
 
         <!-- Email form -->
         <div class="email-form-wrap">
-          <label class="form-label" for="home-email">In 20 Sekunden startklar</label>
+          <label class="form-label" for="home-email">{{ 'home.hero.formLabel' | translate }}</label>
           <div class="email-row">
             <div class="email-field-wrap">
               <span class="email-icon" aria-hidden="true">
@@ -63,7 +60,7 @@
                 class="email-input"
                 [class.error]="emailError()"
                 [class.ok]="emailSent()"
-                placeholder="deine@mail.de"
+                [placeholder]="'home.hero.emailPlaceholder' | translate"
                 [ngModel]="email()"
                 (ngModelChange)="onEmailChange($event)"
                 (keydown)="onEmailKey($event)"
@@ -71,7 +68,7 @@
               />
             </div>
             <button class="cta-btn" (click)="onStart()">
-              <span>{{ emailSent() ? 'Code gesendet' : 'Loslegen' }}</span>
+              <span>{{ (emailSent() ? 'home.hero.ctaSent' : 'home.hero.ctaSend') | translate }}</span>
               @if (!emailSent()) {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
@@ -84,9 +81,9 @@
               <path d="M4.5 12.5l4.5 4.5L20 5"/>
             </svg>
             <span>
-              @if (emailError()) { Bitte gib eine gültige E-Mail-Adresse ein. }
-              @else if (emailSent()) { Code ist unterwegs – schau kurz in dein Postfach. }
-              @else { Kein Passwort. Nur die E-Mail – dein Konto entsteht automatisch. }
+              @if (emailError()) { {{ 'home.hero.hintError' | translate }} }
+              @else if (emailSent()) { {{ 'home.hero.hintSent' | translate }} }
+              @else { {{ 'home.hero.hintDefault' | translate }} }
             </span>
           </div>
         </div>
@@ -98,9 +95,9 @@
               <span class="avatar" [style.background]="f.bg" [style.color]="f.fg" [style.margin-left]="f.ml">{{ f.i }}</span>
             }
           </div>
-          <span class="proof-text">Unmengen an Entscheidungen wurden bereits getroffen</span>
+          <span class="proof-text">{{ 'home.hero.proof' | translate }}</span>
           <span class="proof-divider desktop-only"></span>
-          <span class="proof-text desktop-only">Kein Passwort · keine App nötig</span>
+          <span class="proof-text desktop-only">{{ 'home.hero.proofNoPassword' | translate }}</span>
         </div>
       </div>
 
@@ -108,19 +105,19 @@
       <div class="hero-demo">
         <div class="demo-card">
           <div class="demo-tags">
-            <span class="tag-pill tag-type">Auswahl</span>
+            <span class="tag-pill tag-type">{{ 'home.demo.tagType' | translate }}</span>
             <span class="tag-pill tag-live">
-              <span class="live-dot-sm"></span>Läuft
+              <span class="live-dot-sm"></span>{{ 'home.demo.tagLive' | translate }}
             </span>
-            <span class="demo-time">endet in 2 Tagen</span>
+            <span class="demo-time">{{ 'home.demo.endsIn' | translate }}</span>
           </div>
-          <div class="demo-question">Wohin fahren wir am Wochenende?</div>
+          <div class="demo-question">{{ 'home.demo.question' | translate }}</div>
           <div class="demo-options">
-            @for (o of demoState().options; track o.label) {
+            @for (o of demoState().options; track o.labelKey) {
               <div class="demo-option" [style.border-color]="o.border">
                 <div class="demo-bar" [style.width]="o.pct" [style.background]="o.fill"></div>
                 <div class="demo-option-row">
-                  <span class="demo-option-label" [style.font-weight]="o.weight">{{ o.label }}</span>
+                  <span class="demo-option-label" [style.font-weight]="o.weight">{{ o.labelKey | translate }}</span>
                   <div class="demo-chips">
                     @for (c of o.chips; track c.i) {
                       <span class="demo-chip" [style.background]="c.bg" [style.color]="c.fg">{{ c.i }}</span>
@@ -132,7 +129,7 @@
             }
           </div>
           <div class="demo-footer">
-            <span class="demo-voted">{{ demoState().voted }}</span>
+            <span class="demo-voted">{{ 'home.demo.voted' | translate:{ count: demoState().votedCount, total: demoState().votedTotal } }}</span>
             <span class="demo-progress-track">
               <span class="demo-progress-fill" [style.width]="demoState().pct"></span>
             </span>
@@ -145,8 +142,8 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3f7a4e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"/></svg>
           </span>
           <div class="float-name-wrap" [class.visible]="floatVisible()">
-            <div class="float-title">{{ floatName() }} hat abgestimmt</div>
-            <div class="float-sub">gerade eben</div>
+            <div class="float-title">{{ 'home.demo.floatVoted' | translate:{ name: floatName() } }}</div>
+            <div class="float-sub">{{ 'home.demo.floatJustNow' | translate }}</div>
           </div>
         </div>
 
@@ -158,8 +155,8 @@
             </svg>
           </span>
           <div>
-            <div class="float-title">Link kopiert</div>
-            <div class="float-sub-light">Mitmachen mit einer E-Mail</div>
+            <div class="float-title">{{ 'home.demo.floatLinkTitle' | translate }}</div>
+            <div class="float-sub-light">{{ 'home.demo.floatLinkSub' | translate }}</div>
           </div>
         </div>
       </div>
@@ -175,10 +172,10 @@
           <div class="step-card">
             <div class="step-header">
               <span class="step-num">{{ s.n }}</span>
-              <span class="step-title desktop-only">{{ s.title }}</span>
+              <span class="step-title desktop-only">{{ s.titleKey | translate }}</span>
             </div>
-            <div class="step-title mobile-only">{{ s.title }}</div>
-            <p class="step-text">{{ s.text }}</p>
+            <div class="step-title mobile-only">{{ s.titleKey | translate }}</div>
+            <p class="step-text">{{ s.textKey | translate }}</p>
           </div>
         }
       </div>
@@ -189,10 +186,10 @@
   <section id="ideas" class="section section-ideas">
     <div class="section-inner">
       <div class="ideas-header">
-        <span class="section-eyebrow">Ideen zum Loslegen</span>
+        <span class="section-eyebrow">{{ 'home.ideas.eyebrow' | translate }}</span>
         <!-- Different heading sizes mobile vs desktop -->
-        <h2 class="ideas-h2">Wofür Leute Votean benutzen</h2>
-        <p class="ideas-sub">Zu zweit das Wohnzimmer einrichten oder mit acht Leuten ein Reiseziel finden — dieselbe Umfrage, dieselben 30 Sekunden Aufwand.</p>
+        <h2 class="ideas-h2">{{ 'home.ideas.heading' | translate }}</h2>
+        <p class="ideas-sub">{{ 'home.ideas.sub' | translate }}</p>
       </div>
 
       <!-- Tabs: 2-col grid on mobile, flex row on desktop -->
@@ -200,8 +197,8 @@
         @for (idea of ideas; track idea.id; let i = $index) {
           <button class="idea-tab" [class.active]="ideaIdx() === i" (click)="selectIdea(i)">
             <span class="tab-dot" [style.background]="ideaIdx() === i ? 'rgba(255,255,255,.75)' : idea.tintFg"></span>
-            <span class="tab-label-short mobile-only">{{ idea.short }}</span>
-            <span class="tab-label-full desktop-only">{{ idea.tab }}</span>
+            <span class="tab-label-short mobile-only">{{ idea.shortKey | translate }}</span>
+            <span class="tab-label-full desktop-only">{{ idea.tabKey | translate }}</span>
           </button>
         }
       </div>
@@ -210,22 +207,22 @@
       <div class="idea-card" [class.idea-card-visible]="ideaVisible()">
         <div class="idea-content">
           <span class="idea-who" [style.background]="currentIdea().tintBg" [style.color]="currentIdea().tintFg">
-            {{ currentIdea().who }}
+            {{ currentIdea().whoKey | translate }}
           </span>
-          <div class="idea-headline">{{ currentIdea().headline }}</div>
-          <p class="idea-story">{{ currentIdea().story }}</p>
+          <div class="idea-headline">{{ currentIdea().headlineKey | translate }}</div>
+          <p class="idea-story">{{ currentIdea().storyKey | translate }}</p>
           <div class="idea-points">
-            @for (p of currentIdea().points; track p) {
+            @for (pk of currentIdea().pointKeys; track pk) {
               <div class="idea-point">
                 <span class="point-check">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"/></svg>
                 </span>
-                <span>{{ p }}</span>
+                <span>{{ pk | translate }}</span>
               </div>
             }
           </div>
           <button class="idea-cta" (click)="scrollToEmail()">
-            <span>{{ currentIdea().cta }}</span>
+            <span>{{ currentIdea().ctaKey | translate }}</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
             </svg>
@@ -235,14 +232,14 @@
         <!-- Poll preview -->
         <div class="idea-preview">
           <div class="idea-preview-inner">
-            <div class="preview-kind">{{ currentIdea().pollKind }}</div>
-            <div class="preview-question">{{ currentIdea().question }}</div>
+            <div class="preview-kind">{{ currentIdea().pollKindKey | translate }}</div>
+            <div class="preview-question">{{ currentIdea().questionKey | translate }}</div>
             <div class="preview-options">
-              @for (o of currentIdea().optionsFormatted; track o.label) {
+              @for (o of currentIdea().optionsFormatted; track o.labelKey) {
                 <div class="preview-option" [style.border-color]="o.border">
                   <div class="preview-bar" [style.width]="o.pct" [style.background]="o.fill"></div>
                   <div class="preview-option-row">
-                    <span [style.font-weight]="o.weight">{{ o.label }}</span>
+                    <span [style.font-weight]="o.weight">{{ o.labelKey | translate }}</span>
                     <span class="preview-count" [style.color]="o.numColor">{{ o.numLabel }}</span>
                   </div>
                 </div>
@@ -254,7 +251,7 @@
                   <span class="preview-avatar" [style.background]="v.bg" [style.color]="v.fg" [style.margin-left]="v.ml">{{ v.i }}</span>
                 }
               </div>
-              <span class="preview-voters-line">{{ currentIdea().votersLine }}</span>
+              <span class="preview-voters-line">{{ currentIdea().votersLineKey | translate }}</span>
             </div>
           </div>
         </div>
@@ -270,9 +267,9 @@
         <div class="auth-card">
           <div class="auth-glow"></div>
           <div class="auth-content">
-            <span class="auth-eyebrow">Anmelden in Sekunden</span>
-            <div class="auth-headline">Nur deine E-Mail.<br>Sonst nichts.</div>
-            <p class="auth-sub">Kein Passwort, kein Profil, keine Kreditkarte. Wir schicken dir einen 6-stelligen Code — einmal eingeben und du bist drin.</p>
+            <span class="auth-eyebrow">{{ 'home.authPitch.eyebrow' | translate }}</span>
+            <div class="auth-headline">{{ 'home.authPitch.headline1' | translate }}<br>{{ 'home.authPitch.headline2' | translate }}</div>
+            <p class="auth-sub">{{ 'home.authPitch.sub' | translate }}</p>
             <!-- Code boxes (static) -->
             <div class="code-boxes">
               @for (box of codeBoxes(); track $index) {
@@ -281,14 +278,14 @@
             </div>
             <div class="code-hint">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
-              <span>{{ codeHint() }}</span>
+              <span>{{ codeHintKey() | translate }}</span>
             </div>
           </div>
         </div>
 
         <!-- Feature cards (2×2 grid on desktop, stacked on mobile) -->
         <div id="features" class="feature-cards">
-          @for (f of features; track f.title) {
+          @for (f of features; track f.titleKey) {
             <div class="feature-card">
               <span class="feature-icon" [style.background]="f.iconBg">
                 @switch (f.icon) {
@@ -306,8 +303,8 @@
                   }
                 }
               </span>
-              <div class="feature-title">{{ f.title }}</div>
-              <p class="feature-text">{{ f.text }}</p>
+              <div class="feature-title">{{ f.titleKey | translate }}</div>
+              <p class="feature-text">{{ f.textKey | translate }}</p>
             </div>
           }
         </div>
@@ -323,17 +320,17 @@
         <!-- Mobile: single column; Desktop: row with text left, button right -->
         <div class="final-cta-inner">
           <div class="final-cta-text">
-            <h2 class="final-h2">Worüber diskutiert ihr gerade?</h2>
-            <p class="final-sub">Stell die Frage jetzt — die erste Umfrage steht schneller als die nächste Sprachnachricht.</p>
+            <h2 class="final-h2">{{ 'home.finalCta.heading' | translate }}</h2>
+            <p class="final-sub">{{ 'home.finalCta.sub' | translate }}</p>
           </div>
           <div class="final-cta-action">
             <a class="final-btn" routerLink="/auth/request-email">
-              <span>Mit E-Mail anmelden</span>
+              <span>{{ 'home.finalCta.btn' | translate }}</span>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
               </svg>
             </a>
-            <span class="final-note">Ob zum ersten Mal oder zum hundertsten: immer nur E-Mail und Code.</span>
+            <span class="final-note">{{ 'home.finalCta.note' | translate }}</span>
           </div>
         </div>
       </div>
@@ -349,11 +346,11 @@
         </svg>
         <span class="footer-logo-text">Votean</span>
       </div>
-      <span class="footer-tagline desktop-only">Gemeinsam entscheiden, ohne Diskussion.</span>
+      <span class="footer-tagline desktop-only">{{ 'home.footer.tagline' | translate }}</span>
       <div class="footer-links">
-        <a href="#">Datenschutz</a>
-        <a href="#">Impressum</a>
-        <a href="#">Hilfe</a>
+        <a href="#">{{ 'home.footer.privacy' | translate }}</a>
+        <a href="#">{{ 'home.footer.imprint' | translate }}</a>
+        <a href="#">{{ 'home.footer.help' | translate }}</a>
       </div>
     </div>
   </footer>

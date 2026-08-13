@@ -7,14 +7,13 @@ import {
 } from '@angular/core';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { Router, RouterOutlet } from '@angular/router';
-import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { PollDetailStore } from '../_shared/data/poll-detail.store';
 
 @Component({
   selector: 'app-poll-detail-shell',
-  imports: [TitleBarComponent, RouterOutlet, MaxHeightMinusHeaderDirective],
+  imports: [TitleBarComponent, RouterOutlet],
   templateUrl: './detail-shell.component.html',
-  host: { class: 'block h-full' },
+  host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollDetailShellComponent {

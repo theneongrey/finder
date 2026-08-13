@@ -95,6 +95,18 @@ Sharing/permission changes are broadcast via `sharingEvents`. Both `ProjectListS
 | de | `dd.MM.yyyy` |
 | es | `dd/MM/yyyy` |
 
+## Component Layers
+
+The UI is split into three layers — see [Component Architecture](component-architecture.md) for the full decision rules and examples.
+
+| Layer | Directory | Selector | Domain knowledge |
+|-------|-----------|----------|-----------------|
+| ds-* design system | `common/ui/ds-components/` (`@ds/*`) | `ds-*` | None — generic primitive types only |
+| Common smart | `common/ui/smart-components/` (`@smart/*`) | `app-*` | Cross-cutting (User, global stores) |
+| Domain feature | `features/<domain>/…` | `app-*` | Feature-specific models and stores |
+
+Within a feature, components shared across sub-features live in `_shared/ui/`; single-use components are co-located with the sub-feature that owns them.
+
 ## UI Library
 
 **Spartan UI + Tailwind CSS 4.** Spartan components (`@spartan-ng/brain` + project-local `@spartan-ng/helm/*` aliases) are imported individually per component. PrimeNG was removed in 2026 after it changed its licensing model and became no longer open source or usable for commercial projects — see [PrimeNG → Spartan Migration](primeng-to-spartan-migration.md) for the full decision record. See [Adding Spartan Components](../guides/adding-spartan-components.md) for how to install new component primitives.

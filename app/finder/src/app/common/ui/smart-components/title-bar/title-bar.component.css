@@ -1,7 +1,16 @@
+/* ===========================
+   Host: sticky shell
+   =========================== */
 :host {
   display: block;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
 }
 
+/* ===========================
+   Bar layout
+   =========================== */
 .title-bar {
   display: flex;
   align-items: center;
@@ -9,30 +18,168 @@
   height: 60px;
   padding: 8px;
   gap: 8px;
-  background: linear-gradient(to bottom, #fff 75%, transparent);
+  transition:
+    background var(--duration-fast) var(--ease-standard),
+    backdrop-filter var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.title-bar--scrolled {
+  background: rgba(var(--bg-sheet-rgb), 0.86);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(35, 40, 45, 0.05);
+}
+
+/* ===========================
+   Mobile: back button + title
+   =========================== */
+.title-bar__back-btn {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.title-bar__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .title-bar__title {
-  font-size: var(--fs-display-lg);
   font-family: var(--font-display);
+  font-size: 16px;
   font-weight: var(--weight-bold);
+  letter-spacing: -0.3px;
   color: var(--text-primary);
-  letter-spacing: var(--tracking-display-lg);
-  margin: auto 0;
-  position: relative;
-  top: -1px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.title-bar__logo-link {
+/* ===========================
+   Brand: logo + cross-fade label
+   =========================== */
+.title-bar__brand {
+  position: relative;
   display: flex;
   align-items: center;
   margin-left: 5px;
 }
 
+.title-bar__brand--web-only {
+  display: none;
+}
+
+.title-bar__logo-link {
+  display: flex;
+  align-items: center;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.title-bar__mobile-label {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(calc(-50% + 6px));
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    transform 260ms cubic-bezier(0.22, 0.7, 0.3, 1);
+}
+
+.title-bar--scrolled .title-bar__logo-link {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.title-bar--scrolled .title-bar__mobile-label {
+  opacity: 1;
+  transform: translateY(-50%);
+}
+
+/* ===========================
+   Web breadcrumb labels (mobile: hidden)
+   =========================== */
+.title-bar__sep,
+.title-bar__web-label {
+  display: none;
+}
+
+/* ===========================
+   User menu
+   =========================== */
 .title-bar__user {
   position: relative;
   margin-left: auto;
-  margin-right: 0;
   display: flex;
   align-items: center;
+}
+
+/* ===========================
+   Web overrides (≥ 680px)
+   =========================== */
+@media (min-width: 680px) {
+  .title-bar {
+    border-bottom: 1px solid rgba(20, 24, 28, 0.06);
+    gap: 14px;
+  }
+
+  .title-bar--scrolled {
+    box-shadow: none;
+  }
+
+  /* Back button and title replaced by logo + breadcrumb */
+  .title-bar__back-btn,
+  .title-bar__info,
+  .title-bar__mobile-label {
+    display: none;
+  }
+
+  .title-bar__brand--web-only {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+  }
+
+  /* Logo always visible when scrolled */
+  .title-bar--scrolled .title-bar__logo-link {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .title-bar__sep {
+    display: block;
+    width: 1px;
+    height: 20px;
+    background: rgba(20, 24, 28, 0.1);
+    flex-shrink: 0;
+  }
+
+  .title-bar__web-label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .title-bar__web-label--breadcrumb {
+    color: var(--accent);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .title-bar__web-label--breadcrumb:hover {
+    color: var(--teal-alt-fg);
+  }
 }

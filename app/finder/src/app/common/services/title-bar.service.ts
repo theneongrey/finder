@@ -18,6 +18,8 @@ export class TitleBarService {
 
   #title = signal<string | null | undefined>(undefined);
   title = this.#title.asReadonly();
+  #subtitle = signal<string | undefined>(undefined);
+  subtitle = this.#subtitle.asReadonly();
   #backRoute = signal<string | undefined>(undefined);
   backRoute = this.#backRoute.asReadonly();
   #isHidden = signal<boolean>(false);
@@ -41,12 +43,20 @@ export class TitleBarService {
     this.#title.set(title);
   }
 
+  setSubtitle(label: string): void {
+    this.#subtitle.set(label);
+  }
+
   setBackRoute(route: string): void {
     this.#backRoute.set(route);
   }
 
   clearTitle(): void {
     this.#title.set(undefined);
+  }
+
+  clearSubtitle(): void {
+    this.#subtitle.set(undefined);
   }
 
   disableTitle(): void {
@@ -62,6 +72,7 @@ export class TitleBarService {
         : (backRouteDef ?? undefined),
     );
     this.#isHidden.set(snapshot.data['hidden'] ?? false);
+    this.#subtitle.set(undefined);
   }
 
   private getDeepestSnapshot(): ActivatedRouteSnapshot {

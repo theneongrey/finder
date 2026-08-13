@@ -1,0 +1,21 @@
+.ds-menu-trigger {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+/* .ds-menu-panel background/border is in styles.css (CDK overlay lives outside host scope) */
+.ds-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--fs-ui);
+  font-weight: var(--weight-semibold);
+  padding: 9px 10px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+.ds-menu-item:hover { background: var(--sand-100); }

@@ -1,0 +1,46 @@
+.ds-sheet-panel {
+  width: 100%;
+  max-width: var(--mobile-max-width);
+  background: var(--bg-sheet);
+  border-radius: 26px 26px 0 0;
+  box-shadow: var(--shadow-sheet);
+  padding: 10px 22px 26px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  font-family: var(--font-body);
+  /* Override SpartanNG sheet content defaults */
+  border: none;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ds-sheet-handle {
+  width: 38px;
+  height: 4.5px;
+  border-radius: 3px;
+  background: var(--cream-400);
+  margin: 0 auto 16px;
+}
+.ds-sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ds-sheet-titles { flex: 1; }
+.ds-sheet-title {
+  font-size: var(--fs-display-2xs);
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-display-sm);
+}
+.ds-sheet-subtitle {
+  font-size: var(--fs-ui);
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+@media (min-width: 680px) {
+  .ds-sheet-panel {
+    border-radius: var(--radius-3xl);
+    max-height: 80vh;
+  }
+}

@@ -1,0 +1,32 @@
+.card {
+  background: #fff;
+  border: 1px solid rgba(20, 24, 28, 0.055);
+  border-radius: var(--radius-3xl);
+  padding: 18px 20px 20px;
+  box-shadow: var(--shadow-card-soft);
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bar {
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--cream-300) 0%, var(--cream-200) 45%, var(--cream-300) 90%);
+  background-size: 200% 100%;
+  animation: ds-skeleton-shimmer 1.25s linear infinite;
+}
+.bar--light {
+  background: linear-gradient(90deg, var(--cream-200) 0%, var(--cream-100) 45%, var(--cream-200) 90%);
+  background-size: 200% 100%;
+}
+.track {
+  height: 6px;
+  width: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--cream-300);
+}
+@keyframes ds-skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

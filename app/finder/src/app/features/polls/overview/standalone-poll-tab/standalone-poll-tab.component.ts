@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AddCardComponent } from '../../../../common/ui/components/add-card/add-card.component';
+import { AddCardComponent } from '@smart/add-card/add-card.component';
 import { OptionType } from '../../_shared/models/poll-detail.model';
 import { PollListStore } from '../../_shared/data/poll-list.store';
 import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.component';

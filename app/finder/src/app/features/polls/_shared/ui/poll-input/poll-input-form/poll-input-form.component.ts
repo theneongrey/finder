@@ -21,7 +21,7 @@ import {
   DateOptionEntry,
   DateOptionType,
 } from '../poll-options/poll-options.component';
-import { AutoResizeTextareaComponent } from '../../../../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
+import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 
 export type { OptionEntry, DateOptionEntry, DateOptionType };
 
@@ -33,7 +33,7 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
     HlmInput,
     HlmButton,
     TranslatePipe,
-    AutoResizeTextareaComponent,
+    DsTextareaComponent,
     PollOptionsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +64,7 @@ export class PollInputFormComponent {
 
   private injector = inject(Injector);
   private descriptionTextarea =
-    viewChild<AutoResizeTextareaComponent>('descriptionTextarea');
+    viewChild<DsTextareaComponent>('descriptionTextarea');
 
   constructor() {
     effect(() => {

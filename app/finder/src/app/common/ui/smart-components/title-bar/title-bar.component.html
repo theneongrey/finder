@@ -1,0 +1,70 @@
+@if (!isHidden()) {
+  <header class="title-bar" [class.title-bar--scrolled]="isScrolled()">
+    @if (backRoute()) {
+      <!-- Mobile: back button -->
+      <div class="title-bar__back-btn">
+        <ds-button
+          icon="chevron-left"
+          variant="ghost"
+          [size]="36"
+          [routerLink]="[backRoute()]"
+        />
+      </div>
+
+      <!-- Mobile: single-line title -->
+      @if (!titleDisabled()) {
+        <div class="title-bar__info">
+          <app-loading
+            [isLoading]="title() === undefined"
+            skeletonWidth="8rem"
+            skeletonHeight="1rem"
+            innercss="my-auto"
+          >
+            <h1 class="title-bar__title">{{ title() }}</h1>
+          </app-loading>
+        </div>
+      }
+
+      <!-- Web (≥ 680px): logo + breadcrumb replaces back button -->
+      <div class="title-bar__brand title-bar__brand--web-only">
+        <a href="/" class="title-bar__logo-link">
+          <img alt="logo" ngSrc="logo-primary.svg" width="87" height="23" />
+        </a>
+      </div>
+      @if (subtitle()) {
+        <span class="title-bar__sep" aria-hidden="true"></span>
+        <a
+          [routerLink]="[backRoute()]"
+          class="title-bar__web-label title-bar__web-label--breadcrumb"
+          >{{ subtitle() }}</a
+        >
+        <span class="title-bar__sep" aria-hidden="true"></span>
+        <span class="title-bar__web-label">{{ title() }}</span>
+      } @else if (!titleDisabled()) {
+        <span class="title-bar__sep" aria-hidden="true"></span>
+        <span class="title-bar__web-label">{{ title() }}</span>
+      }
+    } @else {
+      <div class="title-bar__brand">
+        <a href="/" class="title-bar__logo-link">
+          <img alt="logo" ngSrc="logo-primary.svg" width="87" height="23" />
+        </a>
+        @if (title()) {
+          <span class="title-bar__mobile-label">{{ title() }}</span>
+        }
+      </div>
+      @if (title()) {
+        <span class="title-bar__sep" aria-hidden="true"></span>
+        <span class="title-bar__web-label">{{ title() }}</span>
+      }
+    }
+
+    @if (user()?.isAuthenticated) {
+      <div class="title-bar__user">
+        <ds-menu [items]="menuItems()">
+          <app-user-avatar [user]="user()!" style="cursor: pointer" />
+        </ds-menu>
+      </div>
+    }
+  </header>
+}

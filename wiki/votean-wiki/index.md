@@ -46,9 +46,11 @@ System design and technical decisions.
 - [Backend](architecture/backend.md) — ASP.NET Core 9, Minimal API, feature-based layout
 - [Frontend](architecture/frontend.md) — Angular 21, standalone components, NgRx Signals
 - [Database](architecture/database.md) — PostgreSQL, EF Core 9, migration strategy
+- [Component Architecture](architecture/component-architecture.md) — three-layer model (ds-*, common smart, domain feature) and placement rules
 - [CI/CD](architecture/ci-cd.md) — GitHub Actions pipeline
 - [PrimeNG → Spartan UI Migration](architecture/primeng-to-spartan-migration.md) — why PrimeNG was replaced, migration scope, and Spartan UI approach
 - [Projects Concept Removal (MVP)](architecture/project-removal-mvp.md) — removing multi-poll projects from UI, URLs, and code; backend model preserved
+- [Spartan → ds-* Migration](guides/spartan-to-ds-migration.md) — why Spartan UI was replaced, import mapping, and pattern migrations
 
 ## API
 
@@ -64,4 +66,6 @@ Developer how-to pages.
 - [Testing](guides/testing.md) — unit tests, integration tests, e2e tests
 - [Adding a Feature](guides/adding-a-feature.md) — step-by-step walkthrough
 - [Design System](guides/design-system.md) — live component and token reference at /ux (dev only)
-- [Adding Spartan Components](guides/adding-spartan-components.md) — install and use Spartan UI (hlm) primitives
+- [Component Library (ds-*)](guides/component-library.md) — API reference for all 15 custom ds-* Angular components
+- [Spartan → ds-* Migration](guides/spartan-to-ds-migration.md) — import mapping and pattern guide for migrating from Hlm* to ds-*
+- [Adding Spartan Components](guides/adding-spartan-components.md) — *(deprecated)* Spartan UI install guide; superseded by ds-*

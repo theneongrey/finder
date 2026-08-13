@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AddCardComponent } from '../../../../../../common/ui/components/add-card/add-card.component';
+import { AddCardComponent } from '@smart/add-card/add-card.component';
 import { OptionType } from '../../../models/poll-detail.model';
 
 @Component({

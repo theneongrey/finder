@@ -1,0 +1,11 @@
+.ds-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  border-radius: var(--radius-xs);
+  white-space: nowrap;
+  box-sizing: border-box;
+}

@@ -1,0 +1,17 @@
+.ds-avatar-circle {
+  border-radius: var(--radius-circle) !important;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  /* Override SpartanNG size-8 default */
+  width: unset;
+  height: unset;
+}
+/* Override SpartanNG after-ring */
+.ds-avatar-circle::after { display: none; }
+
+.ds-avatar-fallback {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  border-radius: var(--radius-circle);
+  user-select: none;
+}

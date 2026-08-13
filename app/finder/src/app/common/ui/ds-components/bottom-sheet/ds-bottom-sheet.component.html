@@ -1,0 +1,19 @@
+<hlm-sheet
+  [state]="open() ? 'open' : 'closed'"
+  side="bottom"
+  (stateChanged)="onStateChanged($event)"
+>
+  <hlm-sheet-content *hlmSheetPortal class="ds-sheet-panel">
+    <div class="ds-sheet-handle"></div>
+    <div class="ds-sheet-header">
+      <div class="ds-sheet-titles">
+        <div class="ds-sheet-title">{{ title() }}</div>
+        @if (subtitle()) {
+          <div class="ds-sheet-subtitle">{{ subtitle() }}</div>
+        }
+      </div>
+      <ds-button icon="close" variant="dark" [size]="32" (click)="dismissed.emit()" />
+    </div>
+    <ng-content />
+  </hlm-sheet-content>
+</hlm-sheet>

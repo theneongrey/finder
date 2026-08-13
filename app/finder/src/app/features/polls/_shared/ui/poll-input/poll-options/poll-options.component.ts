@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { HlmCard } from '@spartan-ng/helm/card';
-import { AddCardComponent } from '../../../../../../common/ui/components/add-card/add-card.component';
+import { AddCardComponent } from '@smart/add-card/add-card.component';
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionCardWeekdayComponent } from './option-card-weekday/option-card-weekday.component';

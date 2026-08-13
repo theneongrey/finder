@@ -1,0 +1,6 @@
+<div class="badge" [style.background]="cfg().bg" [style.color]="cfg().fg">
+  <ds-icon [name]="cfg().icon" [size]="iconSize()" color="currentColor" />
+  @if (showLabel()) {
+    <span class="badge__label">{{ cfg().label }}</span>
+  }
+</div>

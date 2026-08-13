@@ -27,7 +27,7 @@ module.exports = defineConfig([
         "error",
         {
           type: "element",
-          prefix: "app",
+          prefix: ["app", "ds"],
           style: "kebab-case",
         },
       ],
@@ -54,6 +54,7 @@ module.exports = defineConfig([
     rules: {
       "@angular-eslint/directive-selector": "off",
       "@angular-eslint/component-selector": "off",
+      "@angular-eslint/no-input-rename": "off",
     },
   },
 ]);

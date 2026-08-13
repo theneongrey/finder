@@ -7,20 +7,14 @@ import {
 } from '@angular/core';
 import { UserStore } from '../../common/data/user.store';
 import { Router, RouterOutlet } from '@angular/router';
-import { BackgroundAnimationComponent } from '@ds/background-animation/background-animation.component';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
-import { MaxHeightMinusHeaderDirective } from '../../common/ui/directives/max-height-minus-header.directive';
 import { LoggerService } from '../../common/services/logger.service';
 
 @Component({
   selector: 'app-auth-shell',
-  imports: [
-    RouterOutlet,
-    BackgroundAnimationComponent,
-    TitleBarComponent,
-    MaxHeightMinusHeaderDirective,
-  ],
+  imports: [RouterOutlet, TitleBarComponent],
   templateUrl: './shell.component.html',
+  host: { class: 'flex flex-col h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthShellComponent {

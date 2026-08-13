@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { BackgroundAnimationComponent } from '../../common/ui/components/background-animation/background-animation.component';
+import { DsIconComponent } from '../../common/ui/components/icon/icon.component';
+import { DsButtonComponent } from '../../common/ui/components/button/button.component';
 
 @Component({
   selector: 'app-home',
-  imports: [HlmButton, NgOptimizedImage, RouterLink, BackgroundAnimationComponent],
+  imports: [RouterLink, DsIconComponent, DsButtonComponent],
   templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {}

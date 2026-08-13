@@ -1,15 +1,17 @@
-<app-background-animation>
-  <div class="flex h-full w-full flex-col">
-    <img
-      priority
-      alt="logo"
-      ngSrc="logo.svg"
-      width="328"
-      height="87"
-      class="mx-auto mt-auto"
-    />
-    <button hlmBtn class="mx-auto mt-10 mb-auto" [routerLink]="'/polls'">
-      Start
-    </button>
+<div class="home-page">
+  <div class="home-content">
+    <div class="wordmark">
+      <ds-icon name="logo" />
+      <span class="wordmark-text">Votean</span>
+    </div>
+
+    <h1>Gemeinsam bessere Entscheidungen treffen</h1>
+
+    <p class="subtitle">Erstelle Abstimmungen, sammle Meinungen und entscheide als Team — schnell und unkompliziert.</p>
+
+    <div class="cta-group">
+      <ds-button variant="primary" [routerLink]="['/auth/login']">Jetzt starten</ds-button>
+      <ds-button variant="ghost">Mehr erfahren</ds-button>
+    </div>
   </div>
-</app-background-animation>
+</div>

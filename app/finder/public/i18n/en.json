@@ -229,5 +229,148 @@
       "monthAgo": "{{count}} month ago",
       "monthsAgo": "{{count}} months ago"
     }
+  },
+  "home": {
+    "nav": {
+      "howItWorks": "How it works",
+      "ideas": "Ideas",
+      "features": "Features",
+      "tagline": "New or returning — same simple way in",
+      "signInMobile": "Sign in",
+      "signInDesktop": "Sign in with email"
+    },
+    "hero": {
+      "liveBadge": "Polls are running right now",
+      "headline": "Find common ground, together.",
+      "sub": "Votean turns endless chat debates into clear decisions. Two people or twelve: ask the question, share the link, see the result.",
+      "formLabel": "Ready in 20 seconds",
+      "emailPlaceholder": "your@email.com",
+      "ctaSend": "Get started",
+      "ctaSent": "Code sent",
+      "hintDefault": "No password. Just your email — your account is created automatically.",
+      "hintError": "Please enter a valid email address.",
+      "hintSent": "Code is on its way — check your inbox.",
+      "proof": "Countless decisions have already been made",
+      "proofNoPassword": "No password · no app required"
+    },
+    "demo": {
+      "tagType": "Choice",
+      "tagLive": "Live",
+      "endsIn": "ends in 2 days",
+      "question": "Where should we go this weekend?",
+      "opt0": "Lake Garda",
+      "opt1": "Prague",
+      "opt2": "North Sea",
+      "voted": "{{count}} of {{total}} voted",
+      "floatVoted": "{{name}} voted",
+      "floatJustNow": "just now",
+      "floatLinkTitle": "Link copied",
+      "floatLinkSub": "Join with one email"
+    },
+    "steps": {
+      "0": { "title": "Ask the question", "text": "Appointment, choice, or yes/no. Type in the options, done — your poll is ready in under a minute." },
+      "1": { "title": "Share the link", "text": "One link in the group chat. Voters need no account and no app." },
+      "2": { "title": "See the result", "text": "Watch live who has voted and who hasn't. At the end, you have a decision." }
+    },
+    "ideas": {
+      "eyebrow": "Ideas to get started",
+      "heading": "What people use Votean for",
+      "sub": "Furnishing a living room for two or finding a travel destination for eight — same poll, same 30 seconds of effort.",
+      "wohnen": {
+        "tab": "Furnishing a living room",
+        "short": "Living room",
+        "who": "Just the two of you",
+        "headline": "Two opinions, one sofa.",
+        "story": "New apartment, empty living room. Instead of 40 screenshots in the chat, you create a poll, everyone votes at their own pace — and by evening the decision is made in black and white.",
+        "cta": "Start a home poll",
+        "pollKind": "Choice · 2 people",
+        "question": "Which sofa should we get?",
+        "opt0": "Velvet sofa, teal",
+        "opt1": "Corduroy corner sofa, sand",
+        "opt2": "Modular sofa, grey",
+        "votersLine": "Both have voted",
+        "pt0": "Photos, links and prices sit right next to the option",
+        "pt1": "Everyone decides independently — no influence on each other",
+        "pt2": "Multiple polls per room: sofa, lamp, rug"
+      },
+      "trip": {
+        "tab": "Planning a weekend trip",
+        "short": "Weekend trip",
+        "who": "Group · 6 people",
+        "headline": "Six calendars, one weekend.",
+        "story": "First the date, then the destination. Two polls, one link in the group — and nobody has to scroll through 200 messages anymore.",
+        "cta": "Start a trip poll",
+        "pollKind": "Choice · 6 people",
+        "question": "Where shall we go in September?",
+        "opt0": "Lake Garda",
+        "opt1": "Prague",
+        "opt2": "North Sea",
+        "opt3": "Stay home",
+        "votersLine": "5 of 6 have voted",
+        "pt0": "Date poll finds the day when everyone can actually make it",
+        "pt1": "Join by link — just enter your email",
+        "pt2": "Reminder for everyone who hasn't voted yet"
+      },
+      "geschenk": {
+        "tab": "Group gift",
+        "short": "Gift",
+        "who": "Friend group · 5 people",
+        "headline": "One gift, no duplicates.",
+        "story": "Collect five ideas, everyone votes, the two with the most votes get bought. And the person being gifted simply doesn't see the poll.",
+        "cta": "Start a gift poll",
+        "pollKind": "Choice · 5 people",
+        "question": "What should we give Yuna?",
+        "opt0": "Concert tickets",
+        "opt1": "Spa weekend",
+        "opt2": "Cooking class",
+        "votersLine": "4 of 5 have voted",
+        "pt0": "Ideas come from everyone, not just the organizer",
+        "pt1": "Budget as a note on the poll",
+        "pt2": "Result stays as a record"
+      },
+      "team": {
+        "tab": "Team decision",
+        "short": "Team meeting",
+        "who": "Team · 9 people",
+        "headline": "Decide instead of postpone.",
+        "story": "The kick-off date, the summer party, the new tool: short poll, clear deadline, visible result. No meeting loop, no email chain.",
+        "cta": "Start a team poll",
+        "pollKind": "Date poll · 9 people",
+        "question": "When shall we do the offsite?",
+        "opt0": "Thu, Sep 17",
+        "opt1": "Fri, Sep 18",
+        "opt2": "Thu, Sep 24",
+        "votersLine": "8 of 9 have voted",
+        "pt0": "Set a deadline — the poll closes automatically",
+        "pt1": "Interim results only visible after casting your own vote",
+        "pt2": "Share the result as a link in Slack or email"
+      }
+    },
+    "authPitch": {
+      "eyebrow": "Sign in within seconds",
+      "headline1": "Just your email.",
+      "headline2": "Nothing else.",
+      "sub": "No password, no profile, no credit card. We send you a 6-digit code — enter it once and you're in.",
+      "codeHintDefault": "Enter the code, done.",
+      "codeHintDone": "Signed in — no password needed."
+    },
+    "features": {
+      "0": { "title": "Any kind of question", "text": "Appointment, free choice, yes/no or rating — matched to the decision." },
+      "1": { "title": "Join by link", "text": "Invitees open the link, enter their email — the account is created automatically." },
+      "2": { "title": "See who's missing", "text": "Pending votes at a glance, with a gentle nudge instead of chasing people." },
+      "3": { "title": "Everything in one place", "text": "Polls stay after the decision is made — as the group's memory." }
+    },
+    "finalCta": {
+      "heading": "What are you debating right now?",
+      "sub": "Ask the question now — the first poll is ready faster than the next voice message.",
+      "btn": "Sign in with email",
+      "note": "Whether it's your first time or your hundredth: always just email and code."
+    },
+    "footer": {
+      "tagline": "Decide together, without the debate.",
+      "privacy": "Privacy",
+      "imprint": "Imprint",
+      "help": "Help"
+    }
   }
 }

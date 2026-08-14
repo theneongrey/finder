@@ -1,15 +1,33 @@
-<app-background-animation>
-  <div class="flex h-full w-full flex-col">
-    <img
-      priority
-      alt="logo"
-      ngSrc="logo.svg"
-      width="328"
-      height="87"
-      class="mx-auto mt-auto"
-    />
-    <button hlmBtn class="mx-auto mt-10 mb-auto" [routerLink]="'/polls'">
-      Start
-    </button>
-  </div>
-</app-background-animation>
+<div class="page-scroll" (scroll)="onScroll($event)">
+
+  <app-home-nav [scrolled]="scrolled()" />
+
+  <app-home-hero />
+
+  <section id="how-it-works" class="section">
+    <div class="section-inner">
+      <app-home-steps />
+    </div>
+  </section>
+
+  <section id="ideas" class="section section-ideas">
+    <div class="section-inner">
+      <app-home-ideas-section />
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <div class="section-inner">
+      <app-home-code-animation />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <app-home-final-cta />
+    </div>
+  </section>
+
+  <app-home-footer />
+
+</div>

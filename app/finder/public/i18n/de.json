@@ -229,5 +229,148 @@
       "monthAgo": "vor {{count}} Monat",
       "monthsAgo": "vor {{count}} Monaten"
     }
+  },
+  "home": {
+    "nav": {
+      "howItWorks": "So funktioniert's",
+      "ideas": "Ideen",
+      "features": "Funktionen",
+      "tagline": "Neu oder schon dabei — derselbe Weg rein",
+      "signInMobile": "Anmelden",
+      "signInDesktop": "Mit E-Mail anmelden"
+    },
+    "hero": {
+      "liveBadge": "Gerade laufen unmengen an Umfragen",
+      "headline": "Findet gemeinsam einen Nenner.",
+      "sub": "Votean macht aus endlosen Chat-Diskussionen eine klare Entscheidung. Zu zweit oder zu zwölft: Frage stellen, Link teilen, Ergebnis sehen.",
+      "formLabel": "In 20 Sekunden startklar",
+      "emailPlaceholder": "deine@mail.de",
+      "ctaSend": "Loslegen",
+      "ctaSent": "Code gesendet",
+      "hintDefault": "Kein Passwort. Nur die E-Mail – dein Konto entsteht automatisch.",
+      "hintError": "Bitte gib eine gültige E-Mail-Adresse ein.",
+      "hintSent": "Code ist unterwegs – schau kurz in dein Postfach.",
+      "proof": "Unmengen an Entscheidungen wurden bereits getroffen",
+      "proofNoPassword": "Kein Passwort · keine App nötig"
+    },
+    "demo": {
+      "tagType": "Auswahl",
+      "tagLive": "Läuft",
+      "endsIn": "endet in 2 Tagen",
+      "question": "Wohin fahren wir am Wochenende?",
+      "opt0": "Gardasee",
+      "opt1": "Prag",
+      "opt2": "Nordsee",
+      "voted": "{{count}} von {{total}} haben abgestimmt",
+      "floatVoted": "{{name}} hat abgestimmt",
+      "floatJustNow": "gerade eben",
+      "floatLinkTitle": "Link kopiert",
+      "floatLinkSub": "Mitmachen mit einer E-Mail"
+    },
+    "steps": {
+      "0": { "title": "Frage stellen", "text": "Termin, Auswahl oder Ja/Nein. Optionen eintippen, fertig — in unter einer Minute steht die Umfrage." },
+      "1": { "title": "Link teilen", "text": "Ein Link in den Gruppenchat. Wer abstimmt, braucht kein Konto und keine App." },
+      "2": { "title": "Ergebnis sehen", "text": "Live siehst du, wer schon abgestimmt hat und wer noch fehlt. Am Ende steht eine Entscheidung." }
+    },
+    "ideas": {
+      "eyebrow": "Ideen zum Loslegen",
+      "heading": "Wofür Leute Votean benutzen",
+      "sub": "Zu zweit das Wohnzimmer einrichten oder mit acht Leuten ein Reiseziel finden — dieselbe Umfrage, dieselben 30 Sekunden Aufwand.",
+      "wohnen": {
+        "tab": "Wohnzimmer einrichten",
+        "short": "Wohnzimmer",
+        "who": "Zu zweit",
+        "headline": "Zwei Meinungen, ein Sofa.",
+        "story": "Neue Wohnung, leeres Wohnzimmer. Statt 40 Screenshots im Chat legt ihr eine Umfrage an, jeder stimmt in Ruhe ab — und am Abend steht die Entscheidung schwarz auf weiß.",
+        "cta": "Wohn-Umfrage starten",
+        "pollKind": "Auswahl · 2 Personen",
+        "question": "Welches Sofa nehmen wir?",
+        "opt0": "Samtsofa, petrol",
+        "opt1": "Cord-Ecksofa, sand",
+        "opt2": "Modulsofa, grau",
+        "votersLine": "Beide haben abgestimmt",
+        "pt0": "Fotos, Links und Preise stehen direkt an der Option",
+        "pt1": "Jeder entscheidet für sich — ohne sich zu beeinflussen",
+        "pt2": "Mehrere Umfragen pro Raum: Sofa, Lampe, Teppich"
+      },
+      "trip": {
+        "tab": "Wochenendtrip planen",
+        "short": "Wochenendtrip",
+        "who": "Gruppe · 6 Leute",
+        "headline": "Sechs Kalender, ein Wochenende.",
+        "story": "Erst der Termin, dann das Ziel. Zwei Umfragen, ein Link in der Gruppe — und niemand muss mehr durch 200 Nachrichten scrollen.",
+        "cta": "Trip-Umfrage starten",
+        "pollKind": "Auswahl · 6 Personen",
+        "question": "Wohin fahren wir im September?",
+        "opt0": "Gardasee",
+        "opt1": "Prag",
+        "opt2": "Nordsee",
+        "opt3": "Zu Hause bleiben",
+        "votersLine": "5 von 6 haben abgestimmt",
+        "pt0": "Terminumfrage findet den Tag, an dem wirklich alle können",
+        "pt1": "Mitmachen per Link — E-Mail eingeben genügt",
+        "pt2": "Erinnerung an alle, die noch fehlen"
+      },
+      "geschenk": {
+        "tab": "Gemeinsames Geschenk",
+        "short": "Geschenk",
+        "who": "Freundeskreis · 5 Leute",
+        "headline": "Ein Geschenk, keine Doppelkäufe.",
+        "story": "Fünf Ideen sammeln, alle stimmen ab, die zwei mit den meisten Stimmen werden gekauft. Und die Person, die beschenkt wird, sieht die Umfrage einfach nicht.",
+        "cta": "Geschenk-Umfrage starten",
+        "pollKind": "Auswahl · 5 Personen",
+        "question": "Was schenken wir Yuna?",
+        "opt0": "Konzertkarten",
+        "opt1": "Wochenende im Spa",
+        "opt2": "Kochkurs",
+        "votersLine": "4 von 5 haben abgestimmt",
+        "pt0": "Vorschläge kommen von allen, nicht nur vom Organisator",
+        "pt1": "Budget als Notiz an der Umfrage",
+        "pt2": "Ergebnis bleibt als Beleg erhalten"
+      },
+      "team": {
+        "tab": "Team-Entscheidung",
+        "short": "Team-Termin",
+        "who": "Team · 9 Leute",
+        "headline": "Entscheiden statt vertagen.",
+        "story": "Der Kick-off-Termin, das Sommerfest, das neue Tool: kurze Umfrage, klare Deadline, sichtbares Ergebnis. Keine Meeting-Schleife, keine Mail-Kette.",
+        "cta": "Team-Umfrage starten",
+        "pollKind": "Terminumfrage · 9 Personen",
+        "question": "Wann machen wir das Offsite?",
+        "opt0": "Do., 17. September",
+        "opt1": "Fr., 18. September",
+        "opt2": "Do., 24. September",
+        "votersLine": "8 von 9 haben abgestimmt",
+        "pt0": "Deadline setzen — danach schließt die Umfrage automatisch",
+        "pt1": "Zwischenstand erst nach der eigenen Stimme sichtbar",
+        "pt2": "Ergebnis als Link in Slack oder Mail teilen"
+      }
+    },
+    "authPitch": {
+      "eyebrow": "Anmelden in Sekunden",
+      "headline1": "Nur deine E-Mail.",
+      "headline2": "Sonst nichts.",
+      "sub": "Kein Passwort, kein Profil, keine Kreditkarte. Wir schicken dir einen 6-stelligen Code — einmal eingeben und du bist drin.",
+      "codeHintDefault": "Code eingeben, fertig.",
+      "codeHintDone": "Angemeldet – ohne Passwort."
+    },
+    "features": {
+      "0": { "title": "Jede Art von Frage", "text": "Termin, freie Auswahl, Ja/Nein oder Bewertung — passend zur Entscheidung." },
+      "1": { "title": "Beitreten per Link", "text": "Eingeladene öffnen den Link, geben ihre E-Mail ein — das Konto entsteht dabei automatisch." },
+      "2": { "title": "Sieht, wer noch fehlt", "text": "Offene Stimmen auf einen Blick, mit freundlichem Stupser statt Nachfragen." },
+      "3": { "title": "Alles an einem Ort", "text": "Umfragen bleiben nach der Entscheidung erhalten — als Gedächtnis der Gruppe." }
+    },
+    "finalCta": {
+      "heading": "Worüber diskutiert ihr gerade?",
+      "sub": "Stell die Frage jetzt — die erste Umfrage steht schneller als die nächste Sprachnachricht.",
+      "btn": "Mit E-Mail anmelden",
+      "note": "Ob zum ersten Mal oder zum hundertsten: immer nur E-Mail und Code."
+    },
+    "footer": {
+      "tagline": "Gemeinsam entscheiden, ohne Diskussion.",
+      "privacy": "Datenschutz",
+      "imprint": "Impressum",
+      "help": "Hilfe"
+    }
   }
 }

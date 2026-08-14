@@ -79,7 +79,8 @@
   /* Semantic surface aliases */
   --bg-app: var(--cream-200);
   --bg-sheet: var(--cream-50);
-  --bg-sheet-rgb: 250, 248, 244; /* cream-50 as RGB components for rgba() backdrop usage */
+  --bg-sheet-rgb:
+    250, 248, 244; /* cream-50 as RGB components for rgba() backdrop usage */
   --bg-panel: var(--cream-100);
   --bg-input: var(--white);
   --surface-card: var(--white);

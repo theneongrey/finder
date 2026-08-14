@@ -111,9 +111,10 @@
       "alreadyShared": "Ya compartido",
       "inviteMore": "Invitar más",
       "roleLabel": "Rol para nuevas invitaciones",
-      "linkNote": "Quien se una mediante el enlace entrará como observador.",
+      "linkNote": "Quien se una mediante el enlace entrará como observador. Puedes otorgar más permisos en la pestaña 'Acceso'.",
       "recentLabel": "Compartido frecuentemente",
-      "noContact": "Contacto no encontrado – invitar por correo"
+      "noContact": "Contacto no encontrado – invitar por correo",
+      "pollLabel": "Encuesta"
     },
     "pollInput": {
       "createPoll": "Crear encuesta",

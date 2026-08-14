@@ -111,9 +111,10 @@
       "alreadyShared": "Bereits geteilt",
       "inviteMore": "Weitere einladen",
       "roleLabel": "Rolle für neue Einladungen",
-      "linkNote": "Wer über den Link beitritt, kommt als Betrachter rein.",
+      "linkNote": "Wer über den Link beitritt, kommt als Betrachter rein. Mehr Rechte vergibst du im Tab „Zugriff“.",
       "recentLabel": "Zuletzt oft geteilt",
-      "noContact": "Kein Kontakt gefunden – per E-Mail einladen"
+      "noContact": "Kein Kontakt gefunden – per E-Mail einladen",
+      "pollLabel": "Umfrage"
     },
     "pollInput": {
       "createPoll": "Umfrage erstellen",

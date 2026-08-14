@@ -41,6 +41,8 @@
 .ds-btn.ds-btn--icon-only.ds-btn--dark    { background: var(--sand-200); color: var(--ink-500); }
 .ds-btn.ds-btn--icon-only.ds-btn--teal    { background: var(--accent-tint); color: var(--accent); }
 
+.ds-btn.ds-btn--no-glow { box-shadow: none !important; }
+
 .ds-btn__spinner {
   width: 14px;
   height: 14px;

@@ -111,9 +111,10 @@
       "alreadyShared": "Already shared",
       "inviteMore": "Invite more",
       "roleLabel": "Role for new invites",
-      "linkNote": "Anyone joining via link joins as a viewer.",
+      "linkNote": "Anyone joining via link joins as a viewer. You can grant more permissions in the 'Access' tab.",
       "recentLabel": "Frequently shared",
-      "noContact": "No contact found – invite via email"
+      "noContact": "No contact found – invite via email",
+      "pollLabel": "Poll"
     },
     "pollInput": {
       "createPoll": "Create poll",

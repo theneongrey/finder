@@ -1,0 +1,11 @@
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.stepper__bar {
+  height: 4px;
+  flex: 1;
+  border-radius: 99px;
+  transition: background 260ms ease;
+}

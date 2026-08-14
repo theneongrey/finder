@@ -38,8 +38,9 @@
     </div>
 
     <div class="flex items-end gap-2">
-      <app-auto-resize-textarea
+      <ds-textarea
         class="flex-1"
+        [autoResize]="true"
         [(ngModel)]="newCommentText"
         [placeholder]="'project.votesOverview.newComment' | translate"
         (keydown.enter)="onEnterKey($event)"

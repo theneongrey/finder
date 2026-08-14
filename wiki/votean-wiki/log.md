@@ -3,6 +3,16 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-08-13 — ingest: component architecture — ds-* vs smart vs domain feature layers
+Pages touched: architecture/component-architecture.md (created), architecture/frontend.md (added Component Layers section), index.md (added component-architecture link)
+
+---
+
+## 2026-08-10 — ingest: ds-* component library (issue #237 and sub-issues #234, #235, #236)
+Pages touched: guides/component-library.md (created), guides/spartan-to-ds-migration.md (created), guides/design-system.md (updated — Spartan/Font Awesome/Plus Jakarta Sans references replaced), guides/adding-spartan-components.md (status → deprecated), index.md
+
+---
+
 ## 2026-08-07 — ingest: Projects concept removal (issue #170 / #167)
 Pages touched: architecture/project-removal-mvp.md (created), architecture/index.md, index.md, concepts/project.md
 

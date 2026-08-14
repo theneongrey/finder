@@ -1,74 +1,106 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmCardImports } from '@spartan-ng/helm/card';
-import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
-import { HlmAlertImports } from '@spartan-ng/helm/alert';
-import { HlmBadge } from '@spartan-ng/helm/badge';
-import { HlmProgressImports } from '@spartan-ng/helm/progress';
-import { HlmSeparator } from '@spartan-ng/helm/separator';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
-import { BrnInputOtp } from '@spartan-ng/brain/input-otp';
-import { HlmPopoverImports } from '@spartan-ng/helm/popover';
-import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
-import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
-import { HlmTextarea } from '@spartan-ng/helm/textarea';
-import { HlmSelectImports } from '@spartan-ng/helm/select';
-import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
-import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
-import { HlmTabsImports } from '@spartan-ng/helm/tabs';
-import { AddCardComponent } from '../../common/ui/components/add-card/add-card.component';
-import { AutoResizeTextareaComponent } from '../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
-import { ShareDrawerComponent } from '../../common/ui/components/share-drawer/share-drawer.component';
-import { SharingStore } from '../polls/_shared/data/sharing.store';
-import { VisibilityType } from '../polls/_shared/models/poll-detail.model';
-
-const mockSharingStore = {
-  sharingContactsSuggestion: signal([]),
-  sharingInProgress: signal(false),
-  loadContacts: () => { /* noop */ },
-  share: () => { /* noop */ },
-  removePermission: () => { /* noop */ },
-  updateVisibilityType: () => { /* noop */ },
-  navigateToSharedProject: () => { /* noop */ },
-} as unknown as InstanceType<typeof SharingStore>;
+import { DsIconComponent, ICON_NAMES } from '@ds/icon/ds-icon.component';
+import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
+import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
+import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
+import { DsAvatarStackComponent } from '@ds/avatar-stack/ds-avatar-stack.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsProgressBarComponent } from '@ds/progress-bar/ds-progress-bar.component';
+import { DsSegmentedControlComponent } from '@ds/segmented-control/ds-segmented-control.component';
+import { DsTabsComponent } from '@ds/tabs/ds-tabs.component';
+import { DsBottomSheetComponent } from '@ds/bottom-sheet/ds-bottom-sheet.component';
+import { DsMenuComponent } from '@ds/menu/ds-menu.component';
+import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
+import { DsVoteButtonsComponent } from '@ds/vote-buttons/ds-vote-buttons.component';
+import { PollTypeBadgeComponent } from '../polls/_shared/ui/poll-type-badge/poll-type-badge.component';
+import { OptionType } from '../polls/_shared/models/poll-detail.model';
+import { DsInputOtpComponent } from '@ds/input-otp/ds-input-otp.component';
+import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
+import { DsStepperComponent } from '@ds/stepper/ds-stepper.component';
+import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
+import { DsSwitchComponent } from '@ds/switch/ds-switch.component';
+import { DsChipComponent } from '@ds/chip/ds-chip.component';
 
 @Component({
   selector: 'app-design-system',
   imports: [
-    NgClass,
+    DsIconComponent,
+    DsBadgeComponent,
+    DsStatusDotComponent,
+    DsAvatarComponent,
+    DsAvatarStackComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsInputComponent,
+    DsProgressBarComponent,
+    DsSegmentedControlComponent,
+    DsTabsComponent,
+    DsBottomSheetComponent,
+    DsMenuComponent,
+    DsEmptyStateButtonComponent,
+    DsVoteButtonsComponent,
+    PollTypeBadgeComponent,
+    DsInputOtpComponent,
+    DsTextareaComponent,
+    DsStepperComponent,
+    DsPollCardSkeletonComponent,
+    DsSwitchComponent,
+    DsChipComponent,
     FormsModule,
-    HlmButton,
-    ...HlmCardImports,
-    BrnInputOtp,
-    ...HlmInputOtpImports,
-    HlmInput,
-    HlmTextarea,
-    ...HlmSelectImports,
-    ...HlmDatePickerImports,
-    ...HlmToggleGroupImports,
-    ...HlmTabsImports,
-    HlmBadge,
-    ...HlmAvatarImports,
-    ...HlmAlertImports,
-    ...HlmProgressImports,
-    ...HlmSpinnerImports,
-    ...HlmSkeletonImports,
-    HlmSeparator,
-    ...HlmPopoverImports,
-    AddCardComponent,
-    AutoResizeTextareaComponent,
-    ShareDrawerComponent,
   ],
-  providers: [{ provide: SharingStore, useValue: mockSharingStore }],
   templateUrl: './design-system.component.html',
+  styleUrl: './design-system.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DesignSystemComponent {
-  shareDrawerVisible = signal(false);
-  readonly VisibilityType = VisibilityType;
+  readonly iconNames = ICON_NAMES;
+  readonly OptionType = OptionType;
+
+  bottomSheetOpen = signal(false);
+  loadingDemo = signal(false);
+
+  segValue = signal('day');
+  tabsValue = signal('overview');
+
+  readonly segOptions = [
+    { value: 'day', label: 'Tag' },
+    { value: 'week', label: 'Woche' },
+    { value: 'month', label: 'Monat' },
+  ];
+
+  readonly tabItems = [
+    { value: 'overview', label: 'Überblick', count: 3 },
+    { value: 'members', label: 'Mitglieder' },
+    { value: 'settings', label: 'Einstellungen' },
+  ];
+
+  readonly avatarStack = [
+    { initial: 'A', bg: 'var(--person-1-bg)', fg: 'var(--person-1-fg)' },
+    { initial: 'B', bg: 'var(--person-2-bg)', fg: 'var(--person-2-fg)' },
+    { initial: 'C', bg: 'var(--person-3-bg)', fg: 'var(--person-3-fg)' },
+    { initial: 'D', bg: 'var(--person-4-bg)', fg: 'var(--person-4-fg)' },
+    { initial: 'E', bg: 'var(--person-5-bg)', fg: 'var(--person-5-fg)' },
+    { initial: 'F', bg: 'var(--person-6-bg)', fg: 'var(--person-6-fg)' },
+  ];
+
+  readonly menuItems = [
+    { icon: 'edit', label: 'Bearbeiten', onClick: () => { /* demo */ } },
+    { icon: 'share', label: 'Teilen', onClick: () => { /* demo */ } },
+    { icon: 'trash', label: 'Löschen', danger: true, onClick: () => { /* demo */ } },
+  ];
+
+  chipLauft   = signal(true);
+  chipBeendet = signal(false);
+  chipOffen   = signal(false);
+  switchA     = signal(false);
+  switchB     = signal(true);
+
+  scrollTo(id: string): void {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
 
   colorGroups = [
     {
@@ -101,32 +133,34 @@ export class DesignSystemComponent {
     {
       label: 'Teal — Brand',
       colors: [
-        { token: '--teal-900', hex: '#1f7a8c' },
+        { token: '--teal-900 (--accent)', hex: '#1f7a8c' },
         { token: '--teal-300', hex: '#9fc2cf' },
         { token: '--teal-200', hex: '#cfe6e8' },
-        { token: '--teal-150', hex: '#e7f2f3' },
+        { token: '--teal-150 (--accent-tint)', hex: '#e7f2f3' },
         { token: '--teal-100', hex: '#d7eef0' },
       ],
     },
     {
       label: 'Semantic — Status',
       colors: [
-        { token: '--positive / --color-success', hex: '#4f7a4a' },
-        { token: '--negative / --color-error', hex: '#c1453f' },
-        { token: '--warning / --color-warning', hex: '#a8742a' },
+        { token: '--positive', hex: '#4f7a4a' },
+        { token: '--positive-strong', hex: '#5d9a56' },
+        { token: '--negative', hex: '#c1453f' },
+        { token: '--negative-strong', hex: '#d24a3d' },
+        { token: '--warning', hex: '#a8742a' },
       ],
     },
     {
       label: 'Person Palette',
       colors: [
-        { token: '--person-1 teal', hex: '#d7eef0', fgHex: '#1f7a8c' },
-        { token: '--person-2 rose', hex: '#f4dfe2', fgHex: '#b56374' },
-        { token: '--person-3 amber', hex: '#f6e7cf', fgHex: '#b3863a' },
-        { token: '--person-4 purple', hex: '#e6e0f3', fgHex: '#6f5aa6' },
-        { token: '--person-5 green', hex: '#dcecd9', fgHex: '#4f7a4a' },
-        { token: '--person-6 blue', hex: '#d9e4f2', fgHex: '#4a6da6' },
-        { token: '--person-7 peach', hex: '#fce8dc', fgHex: '#b05c3a' },
-        { token: '--person-8 lime', hex: '#e8f0c0', fgHex: '#5e7018' },
+        { token: '--person-1', hex: '#d7eef0', fgHex: '#1f7a8c' },
+        { token: '--person-2', hex: '#f4dfe2', fgHex: '#b56374' },
+        { token: '--person-3', hex: '#f6e7cf', fgHex: '#b3863a' },
+        { token: '--person-4', hex: '#e6e0f3', fgHex: '#6f5aa6' },
+        { token: '--person-5', hex: '#dcecd9', fgHex: '#4f7a4a' },
+        { token: '--person-6', hex: '#d9e4f2', fgHex: '#4a6da6' },
+        { token: '--person-7', hex: '#fce8dc', fgHex: '#b05c3a' },
+        { token: '--person-8', hex: '#e8f0c0', fgHex: '#5e7018' },
       ],
     },
   ];
@@ -138,7 +172,7 @@ export class DesignSystemComponent {
     { token: '--fs-display-sm', size: '24px', tracking: '-0.3px' },
     { token: '--fs-display-xs', size: '21px', tracking: '-0.2px' },
     { token: '--fs-display-2xs', size: '20px', tracking: '-0.2px' },
-    { token: '--fs-display-3xs', size: '19px', tracking: '0' },
+    { token: '--fs-display-3xs', size: '19px', tracking: '-0.2px' },
   ];
 
   bodySizes = [
@@ -165,43 +199,24 @@ export class DesignSystemComponent {
     { token: '--radius-3xl', value: '22px' },
     { token: '--radius-4xl', value: '26px' },
     { token: '--radius-pill', value: '999px' },
+    { token: '--radius-circle', value: '50%' },
   ];
 
   shadowTokens = [
-    { token: '--shadow-card-soft', shadow: '0 3px 14px rgba(35,40,45,0.05)', label: 'card-soft' },
-    { token: '--shadow-overlay', shadow: '0 10px 30px rgba(30,35,40,0.16)', label: 'overlay' },
-    { token: '--shadow-sheet', shadow: '0 -12px 40px rgba(20,24,28,0.22)', label: 'sheet' },
-    { token: '--shadow-fab', shadow: '0 1px 4px rgba(20,24,28,0.06)', label: 'fab' },
-    { token: '--shadow-accent-btn', shadow: '0 6px 18px rgba(31,122,140,0.28)', label: 'accent-btn' },
+    { token: '--shadow-card-soft', shadow: 'var(--shadow-card-soft)', label: 'card-soft' },
+    { token: '--shadow-overlay', shadow: 'var(--shadow-overlay)', label: 'overlay' },
+    { token: '--shadow-sheet', shadow: 'var(--shadow-sheet)', label: 'sheet' },
+    { token: '--shadow-fab', shadow: 'var(--shadow-fab)', label: 'fab' },
+    { token: '--shadow-accent-btn', shadow: 'var(--shadow-accent-btn)', label: 'accent-btn' },
   ];
 
-  durationTokens = [
-    { token: '--duration-fast', value: '120ms', label: 'Fast' },
-    { token: '--duration-standard', value: '180ms', label: 'Standard' },
+  spacingScale = [
+    { token: '--space-1', px: 2 }, { token: '--space-2', px: 4 },
+    { token: '--space-3', px: 6 }, { token: '--space-4', px: 8 },
+    { token: '--space-5', px: 10 }, { token: '--space-6', px: 12 },
+    { token: '--space-7', px: 14 }, { token: '--space-8', px: 16 },
+    { token: '--space-9', px: 18 }, { token: '--space-10', px: 20 },
+    { token: '--space-12', px: 24 }, { token: '--space-16', px: 32 },
+    { token: '--space-20', px: 40 }, { token: '--space-24', px: 48 },
   ];
-
-  selectOptions = [
-    { label: 'Day', value: 'day' },
-    { label: 'Week', value: 'week' },
-    { label: 'Month', value: 'month' },
-  ];
-  selectButtonValue = 'day';
-
-  dropdownOptions = [
-    { label: 'Option A', value: 'a' },
-    { label: 'Option B', value: 'b' },
-    { label: 'Option C', value: 'c' },
-  ];
-  selectedDropdown: string | undefined;
-  dropdownOptionToString = (value: string): string =>
-    this.dropdownOptions.find((o) => o.value === value)?.label ?? value;
-
-  inputText = '';
-  textareaValue = '';
-  autoResizeValue = '';
-  otpValue = '';
-  datePickerValue: Date | undefined = undefined;
-  timeInputValue = '';
-  loadingButtonDemo = signal(false);
-  loadingIconButtonDemo = signal(false);
 }

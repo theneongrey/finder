@@ -1,0 +1,114 @@
+<!-- @dsCard group="Components" viewport="700x820" name="Core" -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg-app);font-family:var(--font-body);padding:20px;color:var(--text-primary);}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:22px;}
+button{font-family:inherit;cursor:pointer;}
+.btn-primary{border:none;background:var(--accent);color:#fff;box-shadow:var(--shadow-accent-btn);font-size:14px;font-weight:700;padding:12px 18px;border-radius:14px;display:inline-flex;align-items:center;gap:8px;}
+.btn-dark{border:none;background:var(--ink-900);color:#fff;font-size:14px;font-weight:700;padding:12px 18px;border-radius:14px;}
+.btn-outline{border:1.5px solid var(--accent);background:#fff;color:var(--accent);font-size:14px;font-weight:700;padding:12px 18px;border-radius:14px;}
+.btn-subtle{border:1px solid var(--sand-300);background:var(--bg-panel);color:var(--ink-600);font-size:14px;font-weight:700;padding:12px 18px;border-radius:14px;}
+.btn-ghost{border:none;background:none;color:var(--accent);font-size:13px;font-weight:700;}
+.iconbtn{width:36px;height:36px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-body);flex:none;}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:6px 13px;border-radius:999px;}
+.card{background:#fff;border:1px solid var(--border-hairline-soft);border-radius:22px;box-shadow:var(--shadow-card-soft);padding:20px;}
+input{width:220px;border:1px solid var(--border-hairline-strong);background:#fff;border-radius:12px;padding:11px 14px;font-size:14px;font-family:inherit;color:var(--text-primary);}
+.seg{display:inline-flex;gap:6px;background:var(--cream-300);padding:4px;border-radius:13px;}
+.seg button{border:none;border-radius:9px;padding:9px 14px;font-size:13px;font-weight:700;}
+.seg .active{background:#fff;color:var(--text-primary);box-shadow:0 1px 4px rgba(20,24,28,.1);}
+.seg .inactive{background:transparent;color:var(--text-tertiary);}
+.tabs{display:flex;gap:24px;border-bottom:1px solid var(--border-hairline);}
+.tabs button{border:none;background:none;font-size:15px;padding:0 0 12px;margin-bottom:-1px;}
+.tabs .active{font-weight:700;color:var(--text-primary);border-bottom:2.5px solid var(--accent);}
+.tabs .inactive{font-weight:600;color:var(--text-muted);border-bottom:2.5px solid transparent;}
+.progress{width:240px;height:9px;background:var(--cream-300);border-radius:5px;overflow:hidden;}
+.progress > div{height:100%;background:var(--accent);border-radius:5px;}
+</style>
+</head>
+<body>
+
+<div class="row">
+  <button class="btn-primary">Weiter abstimmen</button>
+  <button class="btn-dark">Teilen</button>
+  <button class="btn-outline">zur Übersicht</button>
+  <button class="btn-subtle">Ergebnisse</button>
+  <button class="btn-ghost">Alle ansehen</button>
+</div>
+
+<div class="row">
+  <button class="iconbtn" style="background:#fff;color:var(--accent);box-shadow:var(--shadow-fab);">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+  </button>
+  <button class="iconbtn" style="background:transparent;color:var(--ink-250);">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="12" cy="19" r="1.8"></circle></svg>
+  </button>
+  <button class="iconbtn" style="background:var(--sand-200);color:var(--ink-500);">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+  </button>
+</div>
+
+<div class="row">
+  <div class="av" style="width:27px;height:27px;font-size:11px;background:var(--person-1-bg);color:var(--person-1-fg);">G</div>
+  <div class="av" style="width:34px;height:34px;font-size:13px;background:var(--person-2-bg);color:var(--person-2-fg);">F</div>
+  <div class="av" style="width:38px;height:38px;font-size:14px;background:var(--person-3-bg);color:var(--person-3-fg);">M</div>
+  <div style="display:flex;padding-left:7px;margin-left:16px;">
+    <div class="av" style="width:29px;height:29px;font-size:11.5px;margin-left:-7px;border:2.5px solid #fff;background:var(--person-1-bg);color:var(--person-1-fg);">G</div>
+    <div class="av" style="width:29px;height:29px;font-size:11.5px;margin-left:-7px;border:2.5px solid #fff;background:var(--person-4-bg);color:var(--person-4-fg);">L</div>
+    <div class="av" style="width:29px;height:29px;font-size:11.5px;margin-left:-7px;border:2.5px solid #fff;background:var(--sand-200);color:var(--ink-500);">+3</div>
+  </div>
+</div>
+
+<div class="row">
+  <span class="badge" style="background:var(--accent-tint);color:var(--accent);">5 Umfragen</span>
+  <span class="badge" style="background:var(--sand-100);color:var(--ink-400);">Ohne Projekt</span>
+  <span class="badge" style="background:var(--amber-100);color:var(--warning);">Neu</span>
+  <span class="badge" style="background:var(--sand-100);color:var(--ink-400);">Betrachter</span>
+  <span class="badge" style="background:var(--accent-tint);color:var(--accent);">Mitwirkend</span>
+  <span class="badge" style="background:var(--purple-badge-bg);color:var(--purple-fg);">Verwalter</span>
+  <span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--positive);"><span style="width:7px;height:7px;border-radius:50%;background:var(--green-700);"></span>Läuft</span>
+  <span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--text-muted);"><span style="width:7px;height:7px;border-radius:50%;background:var(--sand-500);"></span>Beendet</span>
+</div>
+
+<div class="row" style="align-items:stretch;">
+  <div class="card" style="width:260px;">
+    <div style="font-family:var(--font-display);font-weight:700;font-size:19px;">Card-Titel</div>
+    <div style="font-size:13.5px;color:var(--text-secondary);margin-top:6px;">Basis-Oberfläche für Projekt- und Umfragekarten.</div>
+  </div>
+  <div class="card" style="width:260px;border-left:4px solid var(--accent);border-radius:22px;">
+    <div style="font-family:var(--font-display);font-weight:700;font-size:19px;">Mit Akzentrand</div>
+    <div style="font-size:13.5px;color:var(--text-secondary);margin-top:6px;">Für Fragen-Zusammenfassung &amp; Options-Editor.</div>
+  </div>
+</div>
+
+<div class="row">
+  <input placeholder="Neuer Kommentar...">
+  <input type="date">
+</div>
+
+<div class="row">
+  <div class="seg">
+    <button class="active">Nur Eingeladene</button>
+    <button class="inactive">Offen</button>
+  </div>
+</div>
+
+<div class="row" style="display:block;">
+  <div class="tabs">
+    <button class="active">Überblick</button>
+    <button class="inactive">Projekte <span style="font-size:12.5px;background:var(--cream-300);color:var(--text-muted);padding:1px 7px;border-radius:10px;">3</span></button>
+    <button class="inactive">Umfragen <span style="font-size:12.5px;background:var(--cream-300);color:var(--text-muted);padding:1px 7px;border-radius:10px;">4</span></button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="progress"><div style="width:60%;"></div></div>
+</div>
+
+</body>
+</html>

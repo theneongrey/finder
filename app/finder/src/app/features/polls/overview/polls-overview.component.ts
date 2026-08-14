@@ -5,15 +5,15 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollListStore } from '../_shared/data/poll-list.store';
-import { TitleBarComponent } from '../../../common/ui/components/title-bar/title-bar.component';
+import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
-import { MaxHeightMinusHeaderDirective } from '../../../common/ui/directives/max-height-minus-header.directive';
 import { StandalonePollTabComponent } from './standalone-poll-tab/standalone-poll-tab.component';
 import { PollItem } from '../_shared/models/poll-item.model';
-import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer/share-drawer.component';
+import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
 
 @Component({
   selector: 'app-polls-overview',
@@ -21,7 +21,6 @@ import { ShareDrawerComponent } from '../../../common/ui/components/share-drawer
     ...HlmAlertDialogImports,
     TranslatePipe,
     TitleBarComponent,
-    MaxHeightMinusHeaderDirective,
     StandalonePollTabComponent,
     ShareDrawerComponent,
   ],
@@ -48,7 +47,12 @@ export class PollsOverviewComponent {
 
   constructor() {
     this.projectListStore.getStandalonePolls();
-    this.titleBarService.clearTitle();
+    this.translateService
+      .stream('project.pollsTab.title')
+      .pipe(takeUntilDestroyed())
+      .subscribe((title: string) => {
+        this.titleBarService.setTitle(title);
+      });
   }
 
   pollShareRequested(projectId: string) {
@@ -57,9 +61,16 @@ export class PollsOverviewComponent {
 
   pollDeletionRequested(poll: PollItem) {
     this.showConfirmDialog(
-      this.translateService.instant('project.overview.deletePollConfirm.header'),
-      this.translateService.instant('project.overview.deletePollConfirm.message', { name: poll.name }),
-      this.translateService.instant('project.overview.deletePollConfirm.accept'),
+      this.translateService.instant(
+        'project.overview.deletePollConfirm.header',
+      ),
+      this.translateService.instant(
+        'project.overview.deletePollConfirm.message',
+        { name: poll.name },
+      ),
+      this.translateService.instant(
+        'project.overview.deletePollConfirm.accept',
+      ),
       () => this.projectListStore.deleteProject(poll.projectId),
     );
   }

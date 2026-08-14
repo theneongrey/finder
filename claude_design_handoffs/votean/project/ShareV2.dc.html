@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..48,600;12..48,700;12..48,800&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #eae6df; }
+  body { font-family: 'Hanken Grotesk', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #1f7a8c; text-decoration: none; }
+  a:hover { color: #17606e; }
+  button, input { font-family: inherit; }
+  input::placeholder { color: #b5b0a8; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  @keyframes vtSheet { from { transform: translateY(26px); opacity: .4; } to { transform: none; opacity: 1; } }
+  @keyframes vtModal { from { transform: translate(-50%,-50%) translateY(12px) scale(.985); opacity: 0; } to { transform: translate(-50%,-50%); opacity: 1; } }
+  @keyframes vtToast { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes vtMenu { from { opacity: 0; transform: translateY(-4px) scale(.98); } to { opacity: 1; transform: none; } }
+  @keyframes vtRowIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes vtTabIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  [data-vt-stagger] > * { animation: vtRowIn .32s cubic-bezier(.22,.7,.3,1) both; }
+  [data-vt-stagger] > *:nth-child(2) { animation-delay: .04s; }
+  [data-vt-stagger] > *:nth-child(3) { animation-delay: .08s; }
+  [data-vt-stagger] > *:nth-child(4) { animation-delay: .12s; }
+  [data-vt-stagger] > *:nth-child(5) { animation-delay: .16s; }
+  [data-vt-stagger] > *:nth-child(6) { animation-delay: .2s; }
+</style>
+</helmet>
+
+<div style="display:flex;align-items:flex-start;gap:64px;padding:56px 64px 80px;width:max-content;font-family:'Hanken Grotesk',system-ui,sans-serif">
+
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+      <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Mobil</span>
+      <span style="font-size:12px;color:#a39e96">390 × 844 · Teilen-Drawer, 2 Tabs</span>
+    </div>
+
+    <div data-screen-label="Mobil – Teilen" style="position:relative;width:390px;height:844px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:9px solid #24272b;border-radius:46px;box-shadow:0 24px 60px rgba(30,35,40,.22);overflow:hidden">
+
+      <div style="position:absolute;inset:0;filter:blur(1.5px);opacity:.75;padding:56px 20px 0;box-sizing:border-box">
+        <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:30px;font-weight:700;letter-spacing:-.7px;color:#1d2227">Umfragen</div>
+        <div style="height:46px;border-radius:15px;background:#fff;margin-top:16px;border:1px solid rgba(20,24,28,.06)"></div>
+        <div style="height:150px;border-radius:22px;background:#fff;margin-top:16px;border:1px solid rgba(20,24,28,.06)"></div>
+        <div style="height:150px;border-radius:22px;background:#fff;margin-top:14px;border:1px solid rgba(20,24,28,.06)"></div>
+      </div>
+      <div style="position:absolute;inset:0;background:rgba(25,28,24,.36)"></div>
+
+      <div style="position:absolute;left:0;right:0;bottom:0;height:90%;background:#f4f1ec;border-radius:28px 28px 0 0;box-shadow:0 -14px 44px rgba(20,24,28,.24);display:flex;flex-direction:column;animation:vtSheet 340ms cubic-bezier(.22,.7,.3,1) both">
+        <div style="flex:none;padding:9px 0 0"><div style="width:38px;height:4.5px;border-radius:3px;background:#e0dbd0;margin:0 auto"></div></div>
+
+        <div style="flex:none;display:flex;align-items:flex-start;gap:10px;padding:12px 18px 12px">
+          <div style="min-width:0">
+            <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:22px;font-weight:700;letter-spacing:-.4px;color:#1d2227">Teilen</div>
+            <div style="font-size:13.5px;color:#79756f;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ typeLabel }} · {{ itemTitle }}</div>
+          </div>
+          <button onClick="{{ onClose }}" style="margin-left:auto;flex:none;width:32px;height:32px;border:none;border-radius:50%;background:#e9e5de;color:#6f6b66;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-active="background:#e0dbd0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+          </button>
+        </div>
+
+        <div style="flex:none;display:flex;gap:24px;padding:0 18px;border-bottom:1px solid rgba(20,24,28,.08)">
+          <button onClick="{{ goInvite }}" style="border:none;background:none;padding:0 0 11px;margin-bottom:-1px;font-size:14.5px;font-weight:700;color:{{ tabInviteFg }};border-bottom:2.5px solid {{ tabInviteLine }};cursor:pointer;transition:color 180ms ease,border-color 180ms ease">Einladen</button>
+          <button onClick="{{ goMembers }}" style="display:flex;align-items:center;gap:7px;border:none;background:none;padding:0 0 11px;margin-bottom:-1px;font-size:14.5px;font-weight:700;color:{{ tabMembersFg }};border-bottom:2.5px solid {{ tabMembersLine }};cursor:pointer;transition:color 180ms ease,border-color 180ms ease">
+            <span>Zugriff</span>
+            <span style="display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:{{ tabMembersBadgeBg }};color:{{ tabMembersBadgeFg }};font-size:11.5px;font-weight:700">{{ memberCount }}</span>
+          </button>
+        </div>
+
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 18px 24px">
+
+          <sc-if value="{{ isInvite }}" hint-placeholder-val="{{ true }}">
+            <div style="animation:vtTabIn .3s cubic-bezier(.22,.7,.3,1) both">
+              <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin-bottom:8px">Wer darf beitreten</div>
+              <div style="position:relative;display:flex;gap:5px;background:#eeeae3;padding:4px;border-radius:13px">
+                <div style="position:absolute;top:4px;bottom:4px;left:{{ accessLeft }};width:calc(50% - 4.5px);background:#fff;border-radius:9px;box-shadow:0 1px 5px rgba(20,24,28,.1);transition:left 280ms cubic-bezier(.22,.7,.3,1)"></div>
+                <button onClick="{{ setRestricted }}" style="position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:38px;border:none;background:none;border-radius:9px;font-size:13px;font-weight:700;color:{{ restrictedFg }};cursor:pointer;transition:color 180ms ease">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.6"></rect><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"></path></svg>
+                  <span>Nur Eingeladene</span>
+                </button>
+                <button onClick="{{ setOpen }}" style="position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;gap:7px;height:38px;border:none;background:none;border-radius:9px;font-size:13px;font-weight:700;color:{{ openFg }};cursor:pointer;transition:color 180ms ease">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4 4 0 0 0 5.7 0l2.6-2.6a4 4 0 0 0-5.7-5.7l-1.1 1.1"></path><path d="M13.8 10.2a4 4 0 0 0-5.7 0l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.1-1.1"></path></svg>
+                  <span>Jeder mit Link</span>
+                </button>
+              </div>
+              <div style="font-size:12.5px;line-height:1.45;color:#79756f;background:#f1eee9;border-radius:11px;padding:10px 12px;margin-top:9px;text-wrap:pretty">{{ accessHint }}</div>
+
+              <div style="max-height:{{ linkMax }};opacity:{{ linkOpacity }};overflow:hidden;transition:max-height 340ms cubic-bezier(.4,0,.2,1),opacity 220ms ease">
+                <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:16px;padding:8px 8px 8px 13px;margin-top:12px;box-shadow:0 2px 10px rgba(35,40,45,.04)">
+                  <span style="flex:1;min-width:0;font-size:13.5px;color:#5a5650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ shareLink }}</span>
+                  <button onClick="{{ copyLink }}" style="flex:none;border:none;background:{{ copyBg }};color:#fff;font-size:13px;font-weight:700;padding:9px 14px;border-radius:11px;cursor:pointer;transition:background 200ms ease,transform 140ms ease" style-active="transform:scale(.96)">{{ copyLabel }}</button>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:8px;margin-top:9px;padding:0 2px">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a39e96" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="8.6"></circle><path d="M12 11v5.2"></path><path d="M12 7.9v.1"></path></svg>
+                  <span style="font-size:12.5px;color:#79756f;line-height:1.45;text-wrap:pretty">Wer über den Link beitritt, kommt als Betrachter rein. Mehr Rechte vergibst du im Tab „Zugriff“.</span>
+                </div>
+              </div>
+
+              <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:16px;margin-top:14px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Person einladen</div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <input value="{{ inviteValue }}" onChange="{{ onInviteChange }}" onKeyDown="{{ onInviteKeyDown }}" placeholder="Name oder E-Mail" style="flex:1;min-width:0;height:46px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;border-radius:14px;padding:0 14px;font-size:15px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                  <button onClick="{{ addInvite }}" style="flex:none;height:46px;border:none;background:#1d2227;color:#fff;font-size:14px;font-weight:700;padding:0 16px;border-radius:14px;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.97)">Einladen</button>
+                </div>
+
+                <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:8px;border:1px solid rgba(20,24,28,.08);border-radius:14px;overflow:hidden;animation:vtRowIn .22s cubic-bezier(.22,.7,.3,1) both">
+                    <sc-for list="{{ suggestions }}" as="c" hint-placeholder-count="0">
+                      <button onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:11px 13px;cursor:pointer;text-align:left">
+                        <span style="flex:none;width:32px;height:32px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ c.initial }}</span>
+                        <span style="flex:1;min-width:0">
+                          <span style="display:block;font-size:14.5px;font-weight:600;color:#1d2227">{{ c.name }}</span>
+                          <span style="display:block;font-size:12px;color:#a39e96">{{ c.email }}</span>
+                        </span>
+                      </button>
+                    </sc-for>
+                    <sc-if value="{{ noSuggestions }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:12px 13px;font-size:13px;color:#a39e96;text-wrap:pretty">Kein Kontakt gefunden — mit „Einladen“ per Name oder E-Mail hinzufügen.</div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ showFrequent }}" hint-placeholder-val="{{ true }}">
+                  <div style="margin-top:14px">
+                    <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin-bottom:4px">Zuletzt oft geteilt</div>
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <sc-for list="{{ frequent }}" as="c" hint-placeholder-count="3">
+                        <button onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:8px 4px;border-radius:12px;cursor:pointer;text-align:left;transition:background 140ms ease" style-active="background:#f4f1ec">
+                          <span style="flex:none;width:34px;height:34px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">{{ c.initial }}</span>
+                          <span style="flex:1;font-size:14.5px;font-weight:600;color:#1d2227">{{ c.name }}</span>
+                          <span style="flex:none;width:26px;height:26px;border-radius:50%;background:#eaf4f5;color:{{ accent }};display:flex;align-items:center;justify-content:center">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                          </span>
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin:18px 0 8px">Rolle für neue Einladungen</div>
+                <div style="display:flex;gap:5px;background:#eeeae3;padding:4px;border-radius:13px">
+                  <sc-for list="{{ roleChoices }}" as="r" hint-placeholder-count="3">
+                    <button onClick="{{ r.pick }}" style="flex:1;height:36px;border:none;border-radius:9px;background:{{ r.bg }};color:{{ r.fg }};box-shadow:{{ r.shadow }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 180ms ease,color 180ms ease,box-shadow 180ms ease">{{ r.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="font-size:12.5px;line-height:1.45;color:#79756f;background:#f1eee9;border-radius:11px;padding:10px 12px;margin-top:9px;text-wrap:pretty">{{ inviteRoleDesc }}</div>
+              </div>
+
+              <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ goMembers }}" style="display:flex;align-items:center;gap:10px;width:100%;margin-top:14px;padding:12px 14px;border:1px solid rgba(20,24,28,.055);border-radius:16px;background:#fff;cursor:pointer;text-align:left;transition:background 140ms ease" style-active="background:#f4f1ec">
+                  <span style="flex:1;font-size:13.5px;font-weight:600;color:#3a3833">{{ pendingLine }}</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a39e96" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg>
+                </button>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isMembers }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:vtTabIn .3s cubic-bezier(.22,.7,.3,1) both">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px">
+                <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Bereits geteilt</span>
+                <span style="font-size:12.5px;font-weight:700;color:#79756f">{{ memberCountLabel }}</span>
+              </div>
+              <div data-vt-stagger="" style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:8px 12px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                <sc-for list="{{ members }}" as="m" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:11px;padding:9px 2px">
+                    <span style="flex:none;width:36px;height:36px;border-radius:50%;background:{{ m.bg }};color:{{ m.fg }};display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700">{{ m.initial }}</span>
+                    <span style="flex:1;min-width:0">
+                      <span style="display:block;font-size:14.5px;font-weight:600;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.name }}</span>
+                      <span style="display:block;font-size:12px;color:#a39e96;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.sub }}</span>
+                    </span>
+                    <sc-if value="{{ m.isOwner }}" hint-placeholder-val="{{ false }}">
+                      <span style="flex:none;font-size:12px;font-weight:700;color:{{ accent }};background:#eaf4f5;padding:5px 11px;border-radius:20px;white-space:nowrap">Ersteller</span>
+                    </sc-if>
+                    <sc-if value="{{ m.notOwner }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ m.cycleRole }}" style="flex:none;display:inline-flex;align-items:center;gap:6px;border:none;border-radius:22px;padding:5px 10px 5px 11px;background:{{ m.roleBg }};color:{{ m.roleFg }};font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer">
+                        <span>{{ m.roleLabel }}</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg>
+                      </button>
+                    </sc-if>
+                    <sc-if value="{{ m.notOwner }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ m.remove }}" title="Zugriff entziehen" style="flex:none;width:30px;height:30px;border:none;border-radius:9px;background:transparent;color:#c1453f;display:flex;align-items:center;justify-content:center;cursor:pointer" style-active="background:#fbeeed">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+                      </button>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;padding:0 2px">
+                <sc-for list="{{ roleSummary }}" as="r" hint-placeholder-count="2">
+                  <span style="display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:20px;background:{{ r.bg }};color:{{ r.fg }};font-size:12px;font-weight:700">{{ r.text }}</span>
+                </sc-for>
+              </div>
+
+              <button onClick="{{ goInvite }}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:48px;margin-top:16px;border:1.5px dashed #c8c2b8;border-radius:16px;background:transparent;color:#3a3833;font-size:14.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-active="background:rgba(255,255,255,.6)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                <span>Weitere einladen</span>
+              </button>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ toastOn }}">
+          <div style="position:absolute;left:16px;right:16px;bottom:20px;display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);animation:vtToast 260ms cubic-bezier(.22,.7,.3,1) both">
+            <span style="width:22px;height:22px;flex:none;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+            </span>
+            <span style="flex:1;font-size:13.5px;font-weight:600">{{ toastText }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
+      <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Web</span>
+      <span style="font-size:12px;color:#a39e96">1280 × 820 · Teilen-Dialog, 2 Tabs</span>
+    </div>
+
+    <div data-screen-label="Web – Teilen" style="position:relative;width:1280px;height:820px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:1px solid rgba(20,24,28,.1);border-radius:20px;box-shadow:0 24px 60px rgba(30,35,40,.16);overflow:hidden">
+
+      <div style="position:absolute;inset:0;filter:blur(2px);opacity:.7">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px 28px;background:rgba(255,253,249,.72);border-bottom:1px solid rgba(20,24,28,.06)">
+          <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.3px;color:#1f7a8c">Votean</span>
+        </div>
+        <div style="padding:30px 34px">
+          <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:33px;font-weight:700;letter-spacing:-.8px;color:#1d2227">Umfragen</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px">
+            <div style="height:250px;border-radius:22px;background:#fff;border:1px solid rgba(20,24,28,.06)"></div>
+            <div style="height:250px;border-radius:22px;background:#fff;border:1px solid rgba(20,24,28,.06)"></div>
+            <div style="height:250px;border-radius:22px;background:#fff;border:1px solid rgba(20,24,28,.06)"></div>
+            <div style="height:250px;border-radius:22px;background:#fff;border:1px solid rgba(20,24,28,.06)"></div>
+          </div>
+        </div>
+      </div>
+      <div onClick="{{ onClose }}" style="position:absolute;inset:0;background:rgba(25,28,24,.34);backdrop-filter:blur(1px)"></div>
+
+      <div style="position:absolute;left:50%;top:50%;width:820px;max-height:690px;display:flex;flex-direction:column;background:#f4f1ec;border-radius:26px;box-shadow:0 30px 80px rgba(20,24,28,.32);overflow:hidden;animation:vtModal 300ms cubic-bezier(.22,.7,.3,1) both">
+
+        <div style="flex:none;padding:24px 28px 0">
+          <div style="display:flex;align-items:flex-start;gap:16px">
+            <div style="min-width:0">
+              <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:26px;font-weight:700;letter-spacing:-.6px;color:#1d2227">Teilen</div>
+              <div style="font-size:14px;color:#79756f;margin-top:3px">{{ typeLabel }} · {{ itemTitle }}</div>
+            </div>
+            <button onClick="{{ onClose }}" style="margin-left:auto;flex:none;width:36px;height:36px;border:none;border-radius:50%;background:#e9e5de;color:#6f6b66;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#e0dbd0">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+            </button>
+          </div>
+
+          <div style="display:flex;gap:26px;margin-top:18px;border-bottom:1px solid rgba(20,24,28,.08)">
+            <button onClick="{{ goInvite }}" style="border:none;background:none;padding:0 0 12px;margin-bottom:-1px;font-size:15px;font-weight:700;color:{{ tabInviteFg }};border-bottom:2.5px solid {{ tabInviteLine }};cursor:pointer;transition:color 180ms ease,border-color 180ms ease">Einladen</button>
+            <button onClick="{{ goMembers }}" style="display:flex;align-items:center;gap:8px;border:none;background:none;padding:0 0 12px;margin-bottom:-1px;font-size:15px;font-weight:700;color:{{ tabMembersFg }};border-bottom:2.5px solid {{ tabMembersLine }};cursor:pointer;transition:color 180ms ease,border-color 180ms ease">
+              <span>Zugriff verwalten</span>
+              <span style="display:inline-flex;align-items:center;justify-content:center;min-width:21px;height:21px;padding:0 7px;border-radius:99px;background:{{ tabMembersBadgeBg }};color:{{ tabMembersBadgeFg }};font-size:12px;font-weight:700">{{ memberCount }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:22px 28px 26px">
+
+          <sc-if value="{{ isInvite }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:296px 1fr;gap:22px;align-items:start;animation:vtTabIn .3s cubic-bezier(.22,.7,.3,1) both">
+
+              <div>
+                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin-bottom:9px">Wer darf beitreten</div>
+
+                <button onClick="{{ setRestricted }}" style="display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;border:1.5px solid {{ restrictedBorder }};background:{{ restrictedBg }};border-radius:18px;padding:14px 15px;cursor:pointer;transition:border-color 180ms ease,background 180ms ease">
+                  <span style="flex:none;width:34px;height:34px;border-radius:11px;background:{{ restrictedIconBg }};color:{{ restrictedIconFg }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,color 180ms ease">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.6"></rect><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"></path></svg>
+                  </span>
+                  <span style="flex:1;min-width:0">
+                    <span style="display:block;font-size:14.5px;font-weight:700;color:#1d2227">Nur Eingeladene</span>
+                    <span style="display:block;font-size:12.5px;color:#79756f;line-height:1.45;margin-top:2px">Nur Personen aus der Zugriffsliste kommen rein.</span>
+                  </span>
+                  <span style="flex:none;width:18px;height:18px;margin-top:2px;border-radius:50%;border:1.8px solid {{ restrictedRingBorder }};background:{{ restrictedRingBg }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,border-color 180ms ease">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="opacity:{{ restrictedCheck }}"><path d="M4 12.5l5 5L20 6"></path></svg>
+                  </span>
+                </button>
+
+                <button onClick="{{ setOpen }}" style="display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;border:1.5px solid {{ openBorder }};background:{{ openBg }};border-radius:18px;padding:14px 15px;margin-top:10px;cursor:pointer;transition:border-color 180ms ease,background 180ms ease">
+                  <span style="flex:none;width:34px;height:34px;border-radius:11px;background:{{ openIconBg }};color:{{ openIconFg }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,color 180ms ease">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4 4 0 0 0 5.7 0l2.6-2.6a4 4 0 0 0-5.7-5.7l-1.1 1.1"></path><path d="M13.8 10.2a4 4 0 0 0-5.7 0l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.1-1.1"></path></svg>
+                  </span>
+                  <span style="flex:1;min-width:0">
+                    <span style="display:block;font-size:14.5px;font-weight:700;color:#1d2227">Jeder mit Link</span>
+                    <span style="display:block;font-size:12.5px;color:#79756f;line-height:1.45;margin-top:2px">Wer den Link hat, kann ohne Einladung beitreten.</span>
+                  </span>
+                  <span style="flex:none;width:18px;height:18px;margin-top:2px;border-radius:50%;border:1.8px solid {{ openRingBorder }};background:{{ openRingBg }};display:flex;align-items:center;justify-content:center;transition:background 180ms ease,border-color 180ms ease">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="opacity:{{ openCheck }}"><path d="M4 12.5l5 5L20 6"></path></svg>
+                  </span>
+                </button>
+
+                <div style="max-height:{{ linkMaxWeb }};opacity:{{ linkOpacity }};overflow:hidden;transition:max-height 340ms cubic-bezier(.4,0,.2,1),opacity 220ms ease">
+                  <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:16px;margin-top:12px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                    <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin-bottom:8px">Einladungslink</div>
+                    <div style="display:flex;align-items:center;gap:8px;background:#f4f1ec;border-radius:12px;padding:8px 8px 8px 12px">
+                      <span style="flex:1;min-width:0;font-size:13px;color:#5a5650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ shareLink }}</span>
+                      <button onClick="{{ copyLink }}" style="flex:none;border:none;background:{{ copyBg }};color:#fff;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:9px;cursor:pointer;transition:background 200ms ease,transform 140ms ease" style-active="transform:scale(.96)">{{ copyLabel }}</button>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(20,24,28,.06)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a39e96" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="8.6"></circle><path d="M12 11v5.2"></path><path d="M12 7.9v.1"></path></svg>
+                      <span style="font-size:12.5px;color:#79756f;line-height:1.45;text-wrap:pretty">Wer über den Link beitritt, kommt als Betrachter rein. Mehr Rechte vergibst du im Tab „Zugriff verwalten“.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="font-size:12.5px;line-height:1.45;color:#79756f;background:#f1eee9;border-radius:11px;padding:10px 12px;margin-top:12px;text-wrap:pretty">{{ accessHint }}</div>
+              </div>
+
+              <div>
+                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin-bottom:9px">Person einladen</div>
+                <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:18px 20px 20px;box-shadow:0 6px 24px rgba(35,40,45,.08)">
+                  <div style="display:flex;gap:8px">
+                    <div style="position:relative;flex:1;min-width:0">
+                      <input value="{{ inviteValue }}" onChange="{{ onInviteChange }}" onKeyDown="{{ onInviteKeyDown }}" placeholder="Name oder E-Mail" style="width:100%;box-sizing:border-box;height:44px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;border-radius:13px;padding:0 14px;font-size:14.5px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                      <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:absolute;left:0;right:0;top:50px;z-index:6;background:#fff;border:1px solid rgba(20,24,28,.08);border-radius:14px;box-shadow:0 12px 30px rgba(20,24,28,.12);overflow:hidden;animation:vtMenu .18s cubic-bezier(.22,.7,.3,1) both">
+                          <sc-for list="{{ suggestions }}" as="c" hint-placeholder-count="0">
+                            <button onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:10px 13px;cursor:pointer;text-align:left;transition:background 140ms ease" style-hover="background:#f4f1ec">
+                              <span style="flex:none;width:30px;height:30px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">{{ c.initial }}</span>
+                              <span style="flex:1;min-width:0">
+                                <span style="display:block;font-size:14px;font-weight:600;color:#1d2227">{{ c.name }}</span>
+                                <span style="display:block;font-size:12px;color:#a39e96">{{ c.email }}</span>
+                              </span>
+                            </button>
+                          </sc-for>
+                          <sc-if value="{{ noSuggestions }}" hint-placeholder-val="{{ false }}">
+                            <div style="padding:12px 13px;font-size:13px;color:#a39e96;text-wrap:pretty">Kein Kontakt gefunden — mit „Einladen“ per Name oder E-Mail hinzufügen.</div>
+                          </sc-if>
+                        </div>
+                      </sc-if>
+                    </div>
+                    <button onClick="{{ addInvite }}" style="flex:none;height:44px;border:none;background:#1d2227;color:#fff;font-size:13.5px;font-weight:700;padding:0 18px;border-radius:13px;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.97)">Einladen</button>
+                  </div>
+
+                  <sc-if value="{{ showFrequent }}" hint-placeholder-val="{{ true }}">
+                    <div style="margin-top:16px">
+                      <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin-bottom:4px">Zuletzt oft geteilt</div>
+                      <div style="display:flex;flex-direction:column;gap:2px">
+                        <sc-for list="{{ frequent }}" as="c" hint-placeholder-count="3">
+                          <button onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:11px;width:100%;border:none;background:none;padding:7px 6px;border-radius:11px;cursor:pointer;text-align:left;transition:background 140ms ease" style-hover="background:#f4f1ec">
+                            <span style="flex:none;width:32px;height:32px;border-radius:50%;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">{{ c.initial }}</span>
+                            <span style="flex:1;min-width:0">
+                              <span style="display:block;font-size:14px;font-weight:600;color:#1d2227">{{ c.name }}</span>
+                              <span style="display:block;font-size:12px;color:#a39e96">{{ c.email }}</span>
+                            </span>
+                            <span style="flex:none;width:24px;height:24px;border-radius:50%;background:#eaf4f5;color:{{ accent }};display:flex;align-items:center;justify-content:center">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                            </span>
+                          </button>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+
+                  <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96;margin:18px 0 8px">Rolle für neue Einladungen</div>
+                  <div style="display:flex;gap:5px;background:#eeeae3;padding:4px;border-radius:13px">
+                    <sc-for list="{{ roleChoices }}" as="r" hint-placeholder-count="3">
+                      <button onClick="{{ r.pick }}" style="flex:1;height:34px;border:none;border-radius:9px;background:{{ r.bg }};color:{{ r.fg }};box-shadow:{{ r.shadow }};font-size:12.5px;font-weight:700;cursor:pointer;transition:background 180ms ease,color 180ms ease,box-shadow 180ms ease">{{ r.label }}</button>
+                    </sc-for>
+                  </div>
+                  <div style="font-size:12.5px;line-height:1.45;color:#79756f;background:#f1eee9;border-radius:11px;padding:9px 12px;margin-top:9px;text-wrap:pretty">{{ inviteRoleDesc }}</div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isMembers }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:vtTabIn .3s cubic-bezier(.22,.7,.3,1) both">
+              <div style="display:flex;align-items:center;gap:10px;margin:0 2px 9px">
+                <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Bereits geteilt</span>
+                <span style="font-size:12.5px;color:#b5b0a8">{{ memberCountLabel }}</span>
+                <span style="margin-left:auto;display:flex;align-items:center;gap:6px">
+                  <sc-for list="{{ roleSummary }}" as="r" hint-placeholder-count="2">
+                    <span style="display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:20px;background:{{ r.bg }};color:{{ r.fg }};font-size:12px;font-weight:700">{{ r.text }}</span>
+                  </sc-for>
+                </span>
+              </div>
+
+              <div data-vt-stagger="" style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:10px 14px;box-shadow:0 6px 24px rgba(35,40,45,.08)">
+                <sc-for list="{{ members }}" as="m" hint-placeholder-count="4">
+                  <div style="position:relative;display:flex;align-items:center;gap:12px;padding:10px 6px;border-radius:14px;transition:background 140ms ease" style-hover="background:#faf8f4">
+                    <span style="flex:none;width:38px;height:38px;border-radius:50%;background:{{ m.bg }};color:{{ m.fg }};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">{{ m.initial }}</span>
+                    <span style="flex:1;min-width:0">
+                      <span style="display:block;font-size:15px;font-weight:600;color:#1d2227;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.name }}</span>
+                      <span style="display:block;font-size:12.5px;color:#a39e96;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.sub }}</span>
+                    </span>
+                    <sc-if value="{{ m.isOwner }}" hint-placeholder-val="{{ false }}">
+                      <span style="flex:none;font-size:12px;font-weight:700;color:{{ accent }};background:#eaf4f5;padding:5px 12px;border-radius:20px;white-space:nowrap">Ersteller</span>
+                    </sc-if>
+                    <sc-if value="{{ m.notOwner }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ m.toggleMenu }}" style="flex:none;display:inline-flex;align-items:center;gap:7px;border:none;border-radius:22px;padding:6px 11px 6px 12px;background:{{ m.roleBg }};color:{{ m.roleFg }};font-size:12.5px;font-weight:700;white-space:nowrap;cursor:pointer;transition:filter 140ms ease" style-hover="filter:brightness(.97)">
+                        <span>{{ m.roleLabel }}</span>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="transform:{{ m.chevron }};transition:transform 200ms ease"><path d="M6 9.5l6 6 6-6"></path></svg>
+                      </button>
+                    </sc-if>
+                    <sc-if value="{{ m.notOwner }}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{ m.remove }}" title="Zugriff entziehen" style="flex:none;width:30px;height:30px;border:none;border-radius:9px;background:transparent;color:#c1453f;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 140ms ease" style-hover="background:#fbeeed">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg>
+                      </button>
+                    </sc-if>
+                    <sc-if value="{{ m.menuOpen }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;right:44px;top:{{ m.menuTop }};bottom:{{ m.menuBottom }};z-index:8;width:268px;background:#fff;border:1px solid rgba(20,24,28,.08);border-radius:16px;box-shadow:0 14px 34px rgba(20,24,28,.16);padding:6px;animation:vtMenu .17s cubic-bezier(.22,.7,.3,1) both">
+                        <sc-for list="{{ m.roleOptions }}" as="r" hint-placeholder-count="3">
+                          <button onClick="{{ r.pick }}" style="display:flex;align-items:flex-start;gap:10px;width:100%;border:none;background:none;border-radius:12px;padding:10px;cursor:pointer;text-align:left;transition:background 140ms ease" style-hover="background:#f4f1ec">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{ accent }}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-top:2px;flex:none;opacity:{{ r.check }}"><path d="M4 12.5l5 5L20 6"></path></svg>
+                            <span style="flex:1;min-width:0">
+                              <span style="display:block;font-size:14px;font-weight:700;color:#1d2227">{{ r.label }}</span>
+                              <span style="display:block;font-size:12.5px;color:#79756f;line-height:1.4;margin-top:2px">{{ r.desc }}</span>
+                            </span>
+                          </button>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+
+              <button onClick="{{ goInvite }}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:48px;margin-top:16px;border:1.5px dashed #c8c2b8;border-radius:16px;background:transparent;color:#3a3833;font-size:14.5px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:rgba(255,255,255,.6)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                <span>Weitere einladen</span>
+              </button>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="flex:none;display:flex;align-items:center;gap:12px;padding:16px 28px;border-top:1px solid rgba(20,24,28,.07);background:rgba(255,253,249,.6)">
+          <span style="font-size:13px;color:#79756f">{{ pendingLine }}</span>
+          <button onClick="{{ onClose }}" style="margin-left:auto;height:42px;padding:0 22px;border:none;border-radius:13px;background:#1d2227;color:#fff;font-size:14.5px;font-weight:700;cursor:pointer;transition:transform 140ms ease" style-active="transform:scale(.985)">Fertig</button>
+        </div>
+
+        <sc-if value="{{ toastOn }}">
+          <div style="position:absolute;left:50%;bottom:80px;transform:translateX(-50%);display:flex;align-items:center;gap:11px;padding:13px 16px;border-radius:16px;background:#24272b;color:#fff;box-shadow:0 10px 30px rgba(30,35,40,.28);white-space:nowrap;animation:vtToast 260ms cubic-bezier(.22,.7,.3,1) both">
+            <span style="width:22px;height:22px;flex:none;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"></path></svg>
+            </span>
+            <span style="font-size:14px;font-weight:600">{{ toastText }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1860,&quot;height&quot;:1020},&quot;itemTitle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Wohin soll’s im Sommer gehen?&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Inhalt&quot;},&quot;itemType&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;poll&quot;,&quot;project&quot;],&quot;default&quot;:&quot;poll&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Inhalt&quot;},&quot;onClose&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;() =&amp;gt; void&quot;}}">
+const CONTACTS = [
+  { name: 'Marco Ritter', initial: 'M', bg: '#f6e7cf', fg: '#b3863a', email: 'marco@example.com' },
+  { name: 'Lena Hoff', initial: 'L', bg: '#e6e0f3', fg: '#6f5aa6', email: 'lena@example.com' },
+  { name: 'Noah Berg', initial: 'N', bg: '#dcecd9', fg: '#4f7a4a', email: 'noah@example.com' },
+  { name: 'Sara Klein', initial: 'S', bg: '#d9e4f2', fg: '#4a6da6', email: 'sara@example.com' },
+  { name: 'Julia Mai', initial: 'J', bg: '#f4dfe2', fg: '#b56374', email: 'julia@example.com' },
+  { name: 'Tom Vogel', initial: 'T', bg: '#e0ecef', fg: '#3f7f91', email: 'tom@example.com' },
+];
+const FREQUENT = ['Marco Ritter', 'Lena Hoff', 'Julia Mai'];
+
+const ROLES = ['viewer', 'contributor', 'manager'];
+const ROLE_LABELS = { viewer: 'Betrachter', contributor: 'Mitwirkend', manager: 'Verwalter' };
+const ROLE_COLORS = {
+  viewer: { bg: '#f1eee9', fg: '#79756f' },
+  contributor: { bg: '#eaf4f5', fg: '#1f7a8c' },
+  manager: { bg: '#eae4f4', fg: '#6f5aa6' },
+};
+
+const DEFAULT_MEMBERS = [
+  { name: 'Giovanni Kern', initial: 'G', bg: '#d7eef0', fg: '#1f7a8c', email: 'giovanni@example.com', role: 'manager', owner: true },
+  { name: 'Fabia Lang', initial: 'F', bg: '#f4dfe2', fg: '#b56374', email: 'fabia@example.com', role: 'contributor' },
+  { name: 'Noah Berg', initial: 'N', bg: '#dcecd9', fg: '#4f7a4a', email: 'noah@example.com', role: 'contributor', pending: true },
+  { name: 'Sara Klein', initial: 'S', bg: '#d9e4f2', fg: '#4a6da6', email: 'sara@example.com', role: 'viewer' },
+];
+
+class Component extends DCLogic {
+  state = {
+    tab: 'invite',
+    members: DEFAULT_MEMBERS.map(m => Object.assign({}, m)),
+    access: 'restricted',
+    inviteRole: 'contributor',
+    linkRole: 'viewer',
+    query: '',
+    copied: false,
+    toast: null,
+    menu: null,
+  };
+
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._c); }
+
+  get accent() { return this.props.accent || '#1f7a8c'; }
+
+  descs() {
+    const type = this.props.itemType || 'poll';
+    return type === 'project'
+      ? {
+          viewer: 'Sieht das Projekt und alle Umfragen, stimmt aber nicht ab.',
+          contributor: 'Stimmt ab, kommentiert und legt neue Umfragen an.',
+          manager: 'Verwaltet Mitglieder und bearbeitet alle Umfragen.',
+        }
+      : {
+          viewer: 'Sieht die Umfrage und den Zwischenstand, stimmt nicht ab.',
+          contributor: 'Stimmt ab und kommentiert.',
+          manager: 'Bearbeitet, beendet und löscht die Umfrage.',
+        };
+  }
+
+  toast(text) {
+    this.setState({ toast: text });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), 2400);
+  }
+
+  setRole(name, role) {
+    this.setState(s => ({
+      members: s.members.map(m => (m.name === name ? Object.assign({}, m, { role: role }) : m)),
+      menu: null,
+    }));
+    this.toast(name.split(' ')[0] + ' ist jetzt ' + ROLE_LABELS[role]);
+  }
+
+  remove(name) {
+    this.setState(s => ({ members: s.members.filter(m => m.name !== name), menu: null }));
+    this.toast(name.split(' ')[0] + ' hat keinen Zugriff mehr');
+  }
+
+  add(contact, raw) {
+    const name = contact ? contact.name : (raw || '').trim();
+    if (!name) return;
+    if (this.state.members.some(m => m.name === name)) { this.setState({ query: '' }); return; }
+    const c = contact || { initial: name.charAt(0).toUpperCase(), bg: '#e0ecef', fg: '#3f7f91', email: name.indexOf('@') > 0 ? name : '' };
+    this.setState(s => ({
+      members: s.members.concat([{ name: name, initial: c.initial, bg: c.bg, fg: c.fg, email: c.email, role: s.inviteRole, pending: true }]),
+      query: '',
+    }));
+    this.toast('Einladung an ' + name.split(' ')[0] + ' gesendet');
+  }
+
+  slug(s) {
+    return String(s || '').toLowerCase().trim()
+      .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+      .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'umfrage';
+  }
+
+  renderVals() {
+    const st = this.state;
+    const ac = this.accent;
+    const d = this.descs();
+    const type = this.props.itemType || 'poll';
+    const title = this.props.itemTitle || 'Wohin soll’s im Sommer gehen?';
+    const isOpen = st.access === 'open';
+    const isInvite = st.tab === 'invite';
+
+    const q = st.query.trim().toLowerCase();
+    const taken = st.members.map(m => m.name);
+    const available = CONTACTS.filter(c => taken.indexOf(c.name) < 0);
+    const suggestions = q
+      ? available.filter(c => (c.name + ' ' + c.email).toLowerCase().indexOf(q) >= 0).slice(0, 4)
+          .map(c => Object.assign({}, c, { pick: () => this.add(c) }))
+      : [];
+    const frequent = available.filter(c => FREQUENT.indexOf(c.name) >= 0).slice(0, 3)
+      .map(c => Object.assign({}, c, { pick: () => this.add(c) }));
+
+    const roleChoices = ROLES.map(r => {
+      const on = st.inviteRole === r;
+      return {
+        label: ROLE_LABELS[r], desc: d[r],
+        bg: on ? '#ffffff' : 'transparent',
+        fg: on ? '#1d2227' : '#8a8681',
+        shadow: on ? '0 1px 4px rgba(20,24,28,.1)' : 'none',
+        pick: () => this.setState({ inviteRole: r }),
+      };
+    });
+
+    const total = st.members.length;
+    const members = st.members.map((m, i) => {
+      const role = m.role || 'contributor';
+      const c = ROLE_COLORS[role];
+      const open = st.menu === m.name;
+      const flipUp = total > 3 && i >= total - 2;
+      return {
+        name: m.name, initial: m.initial, bg: m.bg, fg: m.fg,
+        sub: m.pending ? 'Eingeladen · wartet auf Zusage' : (m.email || ''),
+        isOwner: !!m.owner, notOwner: !m.owner,
+        roleLabel: ROLE_LABELS[role], roleBg: c.bg, roleFg: c.fg,
+        menuOpen: open,
+        menuTop: flipUp ? 'auto' : '50px',
+        menuBottom: flipUp ? '50px' : 'auto',
+        chevron: open ? 'rotate(180deg)' : 'none',
+        toggleMenu: () => this.setState(s => ({ menu: s.menu === m.name ? null : m.name })),
+        cycleRole: () => this.setRole(m.name, ROLES[(ROLES.indexOf(role) + 1) % ROLES.length]),
+        remove: () => this.remove(m.name),
+        roleOptions: ROLES.map(r => ({
+          label: ROLE_LABELS[r], desc: d[r], check: r === role ? '1' : '0',
+          pick: () => this.setRole(m.name, r),
+        })),
+      };
+    });
+
+    const counts = {};
+    st.members.forEach(m => { const r = m.role || 'contributor'; counts[r] = (counts[r] || 0) + 1; });
+    const roleSummary = ROLES.filter(r => counts[r]).map(r => ({
+      text: counts[r] + ' ' + ROLE_LABELS[r], bg: ROLE_COLORS[r].bg, fg: ROLE_COLORS[r].fg,
+    }));
+    const pending = st.members.filter(m => m.pending).length;
+
+    return {
+      accent: ac,
+      bgGrad: 'linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%)',
+      itemTitle: title,
+      typeLabel: type === 'project' ? 'Projekt' : 'Umfrage',
+      onClose: this.props.onClose || (() => this.toast('Dialog schließen')),
+
+      isInvite: isInvite,
+      isMembers: !isInvite,
+      goInvite: () => this.setState({ tab: 'invite', menu: null }),
+      goMembers: () => this.setState({ tab: 'members' }),
+      tabInviteFg: isInvite ? '#1d2227' : '#a39e96',
+      tabInviteLine: isInvite ? ac : 'transparent',
+      tabMembersFg: isInvite ? '#a39e96' : '#1d2227',
+      tabMembersLine: isInvite ? 'transparent' : ac,
+      tabMembersBadgeBg: isInvite ? '#e9e5de' : '#eaf4f5',
+      tabMembersBadgeFg: isInvite ? '#79756f' : ac,
+      memberCount: st.members.length,
+
+      accessLeft: isOpen ? '50%' : '4px',
+      restrictedFg: isOpen ? '#8a8681' : '#1d2227',
+      openFg: isOpen ? '#1d2227' : '#8a8681',
+      setRestricted: () => this.setState({ access: 'restricted' }),
+      setOpen: () => this.setState({ access: 'open' }),
+      accessHint: isOpen
+        ? 'Jede Person mit dem Link kann beitreten – auch ohne Einladung.'
+        : 'Kein offener Link: Nur wer in der Zugriffsliste steht, sieht ' + (type === 'project' ? 'das Projekt' : 'die Umfrage') + '.',
+
+      restrictedBorder: isOpen ? 'rgba(20,24,28,.08)' : ac,
+      restrictedBg: isOpen ? '#ffffff' : '#eaf4f5',
+      restrictedIconBg: isOpen ? '#f1eee9' : '#ffffff',
+      restrictedIconFg: isOpen ? '#8a8681' : ac,
+      restrictedRingBorder: isOpen ? 'rgba(20,24,28,.18)' : ac,
+      restrictedRingBg: isOpen ? 'transparent' : ac,
+      restrictedCheck: isOpen ? '0' : '1',
+      openBorder: isOpen ? ac : 'rgba(20,24,28,.08)',
+      openBg: isOpen ? '#eaf4f5' : '#ffffff',
+      openIconBg: isOpen ? '#ffffff' : '#f1eee9',
+      openIconFg: isOpen ? ac : '#8a8681',
+      openRingBorder: isOpen ? ac : 'rgba(20,24,28,.18)',
+      openRingBg: isOpen ? ac : 'transparent',
+      openCheck: isOpen ? '1' : '0',
+
+      linkMax: isOpen ? '170px' : '0px',
+      linkMaxWeb: isOpen ? '220px' : '0px',
+      linkOpacity: isOpen ? '1' : '0',
+      shareLink: 'votean.app/' + (type === 'project' ? 'p' : 'u') + '/' + this.slug(title),
+      copyLabel: st.copied ? 'Kopiert ✓' : 'Kopieren',
+      copyBg: st.copied ? '#5d9a56' : ac,
+      copyLink: () => {
+        this.setState({ copied: true });
+        clearTimeout(this._c);
+        this._c = setTimeout(() => this.setState({ copied: false }), 1800);
+        this.toast('Link kopiert');
+      },
+      linkRoleLabel: ROLE_LABELS[st.linkRole],
+      cycleLinkRole: () => this.setState(s => ({ linkRole: ROLES[(ROLES.indexOf(s.linkRole) + 1) % 2] })),
+
+      inviteValue: st.query,
+      onInviteChange: e => this.setState({ query: e.target.value }),
+      onInviteKeyDown: e => { if (e.key === 'Enter') this.add(null, this.state.query); },
+      addInvite: () => this.add(null, this.state.query),
+      hasQuery: q.length > 0,
+      noSuggestions: q.length > 0 && suggestions.length === 0,
+      suggestions: suggestions,
+      showFrequent: q.length === 0 && frequent.length > 0,
+      frequent: frequent,
+      roleChoices: roleChoices,
+      inviteRoleDesc: d[st.inviteRole],
+
+      members: members,
+      memberCountLabel: st.members.length === 1 ? '1 Person' : st.members.length + ' Personen',
+      roleSummary: roleSummary,
+      hasPending: pending > 0,
+      pendingLine: pending === 0
+        ? 'Alle Einladungen angenommen'
+        : pending + (pending === 1 ? ' Einladung offen' : ' Einladungen offen'),
+
+      toastOn: !!st.toast,
+      toastText: st.toast || '',
+    };
+  }
+}
+
+</script>
+</body>
+</html>

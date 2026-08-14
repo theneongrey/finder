@@ -1,0 +1,78 @@
+/* brn-input-otp host gets our design token layout */
+:host ::ng-deep brn-input-otp.ds-otp-root {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Separator: replaces the lucide minus icon with our dash */
+:host ::ng-deep hlm-input-otp-separator.ds-otp-sep {
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  padding: 0 2px;
+}
+
+:host ::ng-deep hlm-input-otp-separator.ds-otp-sep ng-icon {
+  display: none;
+}
+
+:host ::ng-deep hlm-input-otp-separator.ds-otp-sep::before {
+  content: '—';
+}
+
+/* Group: strip SpartanNG ring/border-radius defaults */
+:host ::ng-deep hlm-input-otp-group.ds-otp-group {
+  display: flex;
+  gap: 6px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Slot: our design token visual style */
+:host ::ng-deep hlm-input-otp-slot.ds-otp-slot {
+  width: 42px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-hairline-strong) !important;
+  background: var(--bg-input);
+  font-size: var(--fs-display-xs);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+  position: relative;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+  box-shadow: none !important;
+  ring: none !important;
+}
+
+/* Active slot: accent border */
+:host ::ng-deep hlm-input-otp-slot.ds-otp-slot brn-input-otp-slot[data-active='true'] {
+  border-color: var(--accent);
+}
+
+:host ::ng-deep hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot[data-active='true']) {
+  border-color: var(--accent) !important;
+}
+
+/* Filled slot: accent tint background */
+:host ::ng-deep hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot:not([data-active='true'])) {
+  background: var(--accent-tint);
+}
+
+/* Fake caret styling */
+:host ::ng-deep hlm-input-otp-fake-caret {
+  position: absolute;
+  width: 2px;
+  height: 22px;
+  background: var(--accent);
+  border-radius: 1px;
+  animation: ds-otp-blink 1s ease-in-out infinite;
+}
+
+@keyframes ds-otp-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}

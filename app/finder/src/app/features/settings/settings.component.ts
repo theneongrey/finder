@@ -19,8 +19,8 @@ import { toast } from '@spartan-ng/brain/sonner';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
-import { TitleBarComponent } from '../../common/ui/components/title-bar/title-bar.component';
-import { UserAvatarComponent } from '../../common/ui/components/user-avatar/user-avatar.component';
+import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { TitleBarService } from '../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {

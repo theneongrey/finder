@@ -1,0 +1,36 @@
+.ds-seg-track {
+  display: flex;
+  gap: 6px;
+  background: var(--cream-300);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  /* Override SpartanNG ToggleGroup defaults */
+  width: 100% !important;
+  height: auto !important;
+}
+.ds-seg-btn {
+  flex: 1;
+  border: none;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-body);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-tertiary);
+  box-shadow: none;
+  transition: background var(--duration-fast) var(--ease-standard),
+              color var(--duration-fast) var(--ease-standard),
+              box-shadow var(--duration-fast) var(--ease-standard);
+  /* Override SpartanNG ToggleGroupItem defaults */
+  height: auto !important;
+  min-width: unset !important;
+  padding: unset;
+  border-radius: var(--radius-xs) !important;
+}
+.ds-seg-btn[data-state='on'],
+.ds-seg-btn[aria-pressed='true'] {
+  font-weight: var(--weight-bold);
+  background: #fff;
+  color: var(--text-primary);
+  box-shadow: 0 1px 4px rgba(20, 24, 28, 0.1);
+}

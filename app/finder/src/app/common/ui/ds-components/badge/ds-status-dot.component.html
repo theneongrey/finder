@@ -1,0 +1,11 @@
+<span
+  [style.background]="pillBg()"
+  [style.color]="pillFg()"
+  class="ds-status-dot-wrap">
+  <span
+    [style.background]="dotColor()"
+    [class.ds-status-dot--pulse]="tone() === 'positive'"
+    class="ds-status-dot-circle">
+  </span>
+  <ng-content />
+</span>

@@ -10,8 +10,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Comment } from '../../../_shared/models/poll-detail.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 import { FormsModule } from '@angular/forms';
-import { AutoResizeTextareaComponent } from '../../../../../common/ui/components/auto-resize-textarea/auto-resize-textarea.component';
-import { UserAvatarComponent } from '../../../../../common/ui/components/user-avatar/user-avatar.component';
+import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { User } from '../../../../../common/models/user.model';
 
 @Component({
@@ -23,7 +23,7 @@ import { User } from '../../../../../common/models/user.model';
     TimeSincePipe,
     DatePipe,
     FormsModule,
-    AutoResizeTextareaComponent,
+    DsTextareaComponent,
     UserAvatarComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

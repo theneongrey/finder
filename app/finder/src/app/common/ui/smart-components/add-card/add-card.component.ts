@@ -1,0 +1,29 @@
+import { ChangeDetectionStrategy, Component, computed, input, isDevMode, output } from '@angular/core';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
+
+@Component({
+  selector: 'app-add-card',
+  imports: [DsIconComponent, HlmButton],
+  templateUrl: './add-card.component.html',
+  styleUrl: './add-card.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AddCardComponent {
+  cto = input<string>();
+  description = input<string>('');
+  icon = input<string>('plus');
+  disabled = input<boolean>(false);
+  iconLeft = input<boolean>(false);
+
+  action = output<void>();
+
+  protected readonly dsIcon = computed(() => {
+    const raw = this.icon();
+    if (raw.startsWith('fa-')) {
+      if (isDevMode()) { console.warn(`add-card: unknown icon "${raw}", falling back to "plus". Update caller to use a ds-icon name.`); }
+      return 'plus';
+    }
+    return raw;
+  });
+}

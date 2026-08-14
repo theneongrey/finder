@@ -6,7 +6,8 @@ import {
   input,
 } from '@angular/core';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
-import { TranslatePipe } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VoteOverviewSummaryComponent } from '../results/vote-overview-summary/vote-overview-summary.component';
 import { OptionListComponent } from '../results/option-list/option-list.component';
 import { CommentsSectionComponent } from '../results/comments-section/comments-section.component';
@@ -34,15 +35,29 @@ export class PollOverviewComponent {
 
   constructor() {
     const titleService = inject(TitleBarService);
+    const translateService = inject(TranslateService);
 
     effect(() => {
       this.projectDetailStore.getPoll(this.pollId());
     });
 
     effect(() => {
+      const poll = this.poll();
+      if (poll) {
+        titleService.setTitle(poll.name);
+      }
+    });
+
+    translateService
+      .stream('project.pollsTab.title')
+      .pipe(takeUntilDestroyed())
+      .subscribe((label: string) => {
+        titleService.setSubtitle(label);
+      });
+
+    effect(() => {
       const project = this.project();
       if (project) {
-        titleService.setTitle(project.name);
         titleService.setBackRoute('/polls');
       }
     });

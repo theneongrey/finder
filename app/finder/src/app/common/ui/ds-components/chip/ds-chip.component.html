@@ -1,0 +1,17 @@
+<button
+  hlmBtn
+  type="button"
+  class="ds-chip"
+  [attr.aria-pressed]="active()"
+  [style.background]="active() ? 'var(--teal-150)' : '#fff'"
+  [style.color]="active() ? 'var(--accent)' : 'var(--ink-500)'"
+  [style.border]="active() ? '1px solid var(--teal-300)' : '1px solid var(--border-hairline)'"
+  (click)="toggle()"
+>
+  @if (icon()) {
+    <span class="ds-chip__icon" [style.opacity]="active() ? 1 : 0.35">
+      <ds-icon [name]="icon()!" [size]="14" />
+    </span>
+  }
+  {{ label() }}
+</button>

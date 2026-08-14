@@ -19,5 +19,5 @@ export class ShowOnSmallDirective {
     { initialValue: window.innerWidth },
   );
 
-  protected isSmallScreen = computed(() => this.screenWidth() < 640);
+  protected isSmallScreen = computed(() => this.screenWidth() < 680);
 }

@@ -16,6 +16,8 @@
     "target": "ES2022",
     "module": "ES2022",
     "paths": {
+      "@ds/*": ["./src/app/common/ui/ds-components/*"],
+      "@smart/*": ["./src/app/common/ui/smart-components/*"],
       "@spartan-ng/helm/skeleton": ["./src/lib/ui/skeleton/src/index.ts"],
       "@spartan-ng/helm/utils": ["./src/lib/ui/utils/src/index.ts"],
       "@spartan-ng/helm/spinner": ["./src/lib/ui/spinner/src/index.ts"],
@@ -47,7 +49,8 @@
       ],
       "@spartan-ng/helm/date-picker": ["./src/lib/ui/date-picker/src/index.ts"],
       "@spartan-ng/helm/calendar": ["./src/lib/ui/calendar/src/index.ts"],
-      "@spartan-ng/helm/input-group": ["./src/lib/ui/input-group/src/index.ts"]
+      "@spartan-ng/helm/input-group": ["./src/lib/ui/input-group/src/index.ts"],
+      "@spartan-ng/helm/switch": ["./src/lib/ui/switch/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

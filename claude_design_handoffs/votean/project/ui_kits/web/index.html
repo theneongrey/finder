@@ -1,0 +1,251 @@
+<!-- @dsCard group="Web app" viewport="1280x820" name="Votean web" subtitle="Sidebar nav — overview, projects, surveys" -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Votean — Web UI Kit</title>
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font-body);-webkit-font-smoothing:antialiased;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/plain" id="app-src">
+const ICONS = {
+  logo: { paths: [{ d: 'M4.5 12.5l4.5 4.5L20 5', strokeWidth: 3.4 }] },
+  kebab: { fill: true, paths: [{ d: 'M12 3.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 10.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 17.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6z' }] },
+  share: { strokeWidth: 2, circles: [{ cx: 18, cy: 5, r: 2.6 }, { cx: 6, cy: 12, r: 2.6 }, { cx: 18, cy: 19, r: 2.6 }], paths: [{ d: 'M8.3 10.7l7.4-4.4' }, { d: 'M8.3 13.3l7.4 4.4' }] },
+  edit: { paths: [{ d: 'M4 20h4L20 8l-4-4L4 16z' }, { d: 'M14 6l4 4' }] },
+  trash: { paths: [{ d: 'M4 7h16' }, { d: 'M9 7V4h6v3' }, { d: 'M6 7l1 13h10l1-13' }] },
+  grid: { strokeWidth: 2, rects: [{ x: 3.5, y: 3.5, width: 7, height: 7, rx: 1.8 }, { x: 13.5, y: 3.5, width: 7, height: 7, rx: 1.8 }, { x: 3.5, y: 13.5, width: 7, height: 7, rx: 1.8 }, { x: 13.5, y: 13.5, width: 7, height: 7, rx: 1.8 }] },
+  folder: { strokeWidth: 2, paths: [{ d: 'M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' }] },
+  checklist: { strokeWidth: 2, rects: [{ x: 3.5, y: 3.5, width: 17, height: 17, rx: 4.5 }], paths: [{ d: 'M8 12.3l2.7 2.7L16.4 9' }] },
+  plus: { strokeWidth: 2.2, paths: [{ d: 'M12 5v14' }, { d: 'M5 12h14' }] },
+  close: { strokeWidth: 2.4, paths: [{ d: 'M5 5l14 14' }, { d: 'M19 5L5 19' }] },
+};
+function Icon({ name, size = 18, color = 'currentColor', style }) {
+  const def = ICONS[name];
+  if (!def) return null;
+  const sw = def.strokeWidth || 2;
+  const fillMode = !!def.fill;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fillMode ? color : 'none'} stroke={fillMode ? 'none' : color} strokeWidth={fillMode ? undefined : sw} strokeLinecap="round" strokeLinejoin="round" style={style}>
+      {(def.circles || []).map((c, i) => <circle key={'c' + i} cx={c.cx} cy={c.cy} r={c.r} fill={fillMode ? color : 'none'} />)}
+      {(def.rects || []).map((r, i) => <rect key={'r' + i} x={r.x} y={r.y} width={r.width} height={r.height} rx={r.rx} />)}
+      {(def.paths || []).map((p, i) => <path key={'p' + i} d={p.d} />)}
+    </svg>
+  );
+}
+function Avatar({ initial, bg = 'var(--person-1-bg)', fg = 'var(--person-1-fg)', size = 34 }) {
+  const px = size;
+  return <div style={{ width: px, height: px, borderRadius: '50%', background: bg, color: fg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: Math.round(px * 0.4), flex: 'none', border: '2.5px solid #fff', boxSizing: 'border-box' }}>{initial}</div>;
+}
+function AvatarStack({ members = [], max = 4 }) {
+  const shown = members.slice(0, max);
+  const extra = members.length - shown.length;
+  return (
+    <div style={{ display: 'flex', paddingLeft: 7 }}>
+      {shown.map((m, i) => <div key={i} style={{ marginLeft: -7 }}><Avatar initial={m.initial} bg={m.bg} fg={m.fg} size={29} /></div>)}
+      {extra > 0 ? <div style={{ width: 29, height: 29, marginLeft: -7, borderRadius: '50%', background: 'var(--sand-200)', color: 'var(--ink-500)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 11, border: '2.5px solid #fff' }}>+{extra}</div> : null}
+    </div>
+  );
+}
+function Badge({ tone = 'accent', children }) {
+  const map = { accent: { background: 'var(--accent-tint)', color: 'var(--accent)' }, warning: { background: 'var(--amber-100)', color: 'var(--warning)' } };
+  const v = map[tone] || map.accent;
+  return <span style={{ fontSize: 13, fontWeight: 600, background: v.background, color: v.color, padding: '6px 13px', borderRadius: 20 }}>{children}</span>;
+}
+function Menu({ open, onClose, items }) {
+  if (!open) return null;
+  return (
+    <React.Fragment>
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 15 }} />
+      <div style={{ position: 'absolute', top: 44, right: 16, background: '#fff', border: '1px solid var(--border-hairline)', borderRadius: 14, boxShadow: 'var(--shadow-overlay)', padding: 6, minWidth: 160, zIndex: 20 }}>
+        {items.map((item, i) => (
+          <button key={i} onClick={item.onClick} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', border: 'none', background: 'none', fontFamily: 'var(--font-body)', fontSize: 13.5, fontWeight: 600, color: item.danger ? 'var(--negative)' : 'var(--ink-700)', padding: '9px 10px', borderRadius: 9, cursor: 'pointer', textAlign: 'left' }}>
+            <Icon name={item.icon} size={15} />{item.label}
+          </button>
+        ))}
+      </div>
+    </React.Fragment>
+  );
+}
+
+const PEOPLE = {
+  G: { name: 'Giovanni', initial: 'G', bg: 'var(--person-1-bg)', fg: 'var(--person-1-fg)' },
+  F: { name: 'Fabia', initial: 'F', bg: 'var(--person-2-bg)', fg: 'var(--person-2-fg)' },
+  M: { name: 'Marco', initial: 'M', bg: 'var(--person-3-bg)', fg: 'var(--person-3-fg)' },
+  L: { name: 'Lena', initial: 'L', bg: 'var(--person-4-bg)', fg: 'var(--person-4-fg)' },
+  N: { name: 'Noah', initial: 'N', bg: 'var(--person-5-bg)', fg: 'var(--person-5-fg)' },
+  S: { name: 'Sara', initial: 'S', bg: 'var(--person-6-bg)', fg: 'var(--person-6-fg)' },
+};
+const PROJECTS = [
+  { name: 'Sommerurlaub 2026', owner: PEOPLE.G, time: 'vor 2 Std', description: 'Wohin geht die Reise während der Kita-Schließzeiten? Lasst uns gemeinsam entscheiden.', topics: 5, members: [PEOPLE.G, PEOPLE.F, PEOPLE.M, PEOPLE.L] },
+  { name: 'Yunas Geburtstag', owner: PEOPLE.F, time: 'vor 1 Tag', description: 'Planung für die kleine Feier im Garten.', topics: 3, members: [PEOPLE.G, PEOPLE.F] },
+  { name: 'Team-Offsite', owner: PEOPLE.M, time: 'vor 3 Tagen', description: 'Standort, Agenda und Verpflegung gemeinsam festlegen.', topics: 8, members: [PEOPLE.G, PEOPLE.M, PEOPLE.L, PEOPLE.N, PEOPLE.S] },
+];
+const TOPICS = [
+  { title: "Wohin soll's gehen?", project: 'Sommerurlaub 2026', open: true, options: 6, votes: 12, members: [PEOPLE.G, PEOPLE.F, PEOPLE.M, PEOPLE.L] },
+  { title: 'Welches Datum passt?', project: 'Sommerurlaub 2026', open: true, options: 4, votes: 8, members: [PEOPLE.G, PEOPLE.F, PEOPLE.M] },
+  { title: 'Restaurant am Freitag', project: '', open: false, options: 3, votes: 9, members: [PEOPLE.M, PEOPLE.L, PEOPLE.N] },
+  { title: 'Geschenkideen für Yuna', project: 'Yunas Geburtstag', open: true, options: 5, votes: 4, members: [PEOPLE.G, PEOPLE.F] },
+];
+
+function ProjectCard({ project, onShare }) {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const n = project.topics || 0;
+  return (
+    <div style={{ position: 'relative', background: '#fff', border: '1px solid var(--border-hairline-soft)', borderRadius: 22, padding: '20px 20px 18px', boxShadow: 'var(--shadow-card)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 13 }}>
+        <Avatar initial={project.owner.initial} bg={project.owner.bg} fg={project.owner.fg} size={28} />
+        <div style={{ fontSize: 13, color: 'var(--ink-500)', fontWeight: 600 }}>{project.owner.name}</div>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ fontSize: 12.5, color: 'var(--text-muted)' }}>{project.time}</span>
+          <button onClick={() => setMenuOpen(v => !v)} style={{ border: 'none', background: 'none', color: 'var(--ink-250)', width: 26, height: 26, borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="kebab" size={16} /></button>
+        </div>
+      </div>
+      <div style={{ fontSize: 21, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-.3px', lineHeight: 1.18, fontFamily: 'var(--font-display)' }}>{project.name}</div>
+      {project.description ? <p style={{ margin: '8px 0 0', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.45 }}>{project.description}</p> : null}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
+        <AvatarStack members={project.members} max={4} />
+        <Badge>{n === 1 ? '1 Umfrage' : n + ' Umfragen'}</Badge>
+      </div>
+      <Menu open={menuOpen} onClose={() => setMenuOpen(false)} items={[
+        { icon: 'share', label: 'Teilen', onClick: () => { setMenuOpen(false); onShare && onShare(); } },
+        { icon: 'edit', label: 'Bearbeiten', onClick: () => setMenuOpen(false) },
+        { icon: 'trash', label: 'Löschen', onClick: () => setMenuOpen(false), danger: true },
+      ]} />
+    </div>
+  );
+}
+
+function TopicCard({ topic }) {
+  return (
+    <div style={{ background: '#fff', border: '1px solid var(--border-hairline-soft)', borderRadius: 22, padding: '18px 20px', boxShadow: 'var(--shadow-card-soft)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        {topic.project ? <Badge>{topic.project}</Badge> : <Badge tone="warning">Ohne Projekt</Badge>}
+        <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: topic.open ? 'var(--positive)' : 'var(--text-muted)' }}>
+          <span style={{ width: 7, height: 7, borderRadius: '50%', background: topic.open ? 'var(--green-700)' : 'var(--sand-500)' }} />{topic.open ? 'Läuft' : 'Beendet'}
+        </span>
+      </div>
+      <div style={{ fontSize: 19, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-.2px', fontFamily: 'var(--font-display)' }}>{topic.title}</div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 13 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 11, fontSize: 13, color: 'var(--text-tertiary)', fontWeight: 600 }}>
+          <span>{topic.options} Optionen</span><span style={{ width: 3, height: 3, borderRadius: '50%', background: 'var(--sand-400)' }} /><span>{topic.votes} Stimmen</span>
+        </div>
+        <AvatarStack members={topic.members} max={4} />
+      </div>
+    </div>
+  );
+}
+
+function NavItem({ icon, label, count, active, onClick }) {
+  return (
+    <button onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', border: 'none', background: active ? 'var(--accent-tint)' : 'transparent', color: active ? 'var(--accent)' : 'var(--ink-500)', fontFamily: 'var(--font-body)', fontSize: 14.5, fontWeight: active ? 700 : 600, padding: '11px 14px', borderRadius: 13, cursor: 'pointer', textAlign: 'left' }}>
+      <Icon name={icon} size={18} />
+      {label}
+      {count != null ? <span style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, background: active ? 'var(--teal-200)' : 'var(--cream-300)', color: active ? 'var(--accent)' : 'var(--text-muted)', padding: '1px 8px', borderRadius: 11 }}>{count}</span> : null}
+    </button>
+  );
+}
+
+function App() {
+  const [tab, setTab] = React.useState('overview');
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)' }}>
+      <aside style={{ width: 262, flex: 'none', background: '#fff', borderRight: '1px solid var(--border-hairline)', padding: '26px 20px', display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 6px 4px' }}>
+          <Icon name="logo" size={22} color="var(--accent)" />
+          <span style={{ fontSize: 21, fontWeight: 700, color: 'var(--accent)', letterSpacing: '-.3px', fontFamily: 'var(--font-display)' }}>Votean</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 30 }}>
+          <NavItem icon="grid" label="Überblick" active={tab === 'overview'} onClick={() => setTab('overview')} />
+          <NavItem icon="folder" label="Projekte" count={PROJECTS.length} active={tab === 'projects'} onClick={() => setTab('projects')} />
+          <NavItem icon="checklist" label="Umfragen" count={TOPICS.length} active={tab === 'surveys'} onClick={() => setTab('surveys')} />
+        </div>
+        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: 11, padding: 11, borderRadius: 14, background: 'var(--bg-panel)' }}>
+          <Avatar initial="G" bg="var(--person-1-bg)" fg="var(--person-1-fg)" size={36} />
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Giovanni</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Konto verwalten</div>
+          </div>
+        </div>
+      </aside>
+
+      <main style={{ flex: 1, minWidth: 0, padding: '34px 44px 48px' }}>
+        <div style={{ maxWidth: 'var(--web-content-max-width)', margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, marginBottom: 30 }}>
+            <div>
+              <div style={{ fontSize: 33, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-.8px', lineHeight: 1, fontFamily: 'var(--font-display)' }}>Hallo Giovanni</div>
+              <div style={{ fontSize: 15, color: 'var(--text-secondary)', marginTop: 7 }}>Hier ist, was bei deinen Leuten gerade ansteht.</div>
+            </div>
+            <button style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: 'none', background: 'var(--accent)', color: '#fff', fontFamily: 'var(--font-body)', fontSize: 14.5, fontWeight: 700, padding: '11px 20px', borderRadius: 22, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              <Icon name="plus" size={16} />Neu erstellen
+            </button>
+          </div>
+
+          {tab === 'overview' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1.04fr 1fr', gap: 30, alignItems: 'start' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 15 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.7px' }}>Neueste Projekte</span>
+                  <button onClick={() => setTab('projects')} style={{ border: 'none', background: 'none', fontSize: 13, fontWeight: 700, color: 'var(--accent)', cursor: 'pointer' }}>Alle ansehen</button>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {PROJECTS.slice(0, 2).map((p, i) => <ProjectCard key={i} project={p} />)}
+                </div>
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 15 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-eyebrow)', textTransform: 'uppercase', letterSpacing: '.7px' }}>Neueste Umfragen</span>
+                  <button onClick={() => setTab('surveys')} style={{ border: 'none', background: 'none', fontSize: 13, fontWeight: 700, color: 'var(--accent)', cursor: 'pointer' }}>Alle ansehen</button>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {[TOPICS[0], TOPICS[2], TOPICS[3]].map((t, i) => <TopicCard key={i} topic={t} />)}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {tab === 'projects' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(330px,1fr))', gap: 18 }}>
+              {PROJECTS.map((p, i) => <ProjectCard key={i} project={p} />)}
+              <button style={{ border: '1.5px dashed var(--sand-500)', background: 'rgba(255,255,255,.4)', borderRadius: 22, padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 11, cursor: 'pointer', color: 'var(--ink-600)', fontSize: 15, fontWeight: 700, minHeight: 150 }}>
+                <span style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 23, lineHeight: 1, fontWeight: 500 }}>+</span>
+                Neues Projekt starten
+              </button>
+            </div>
+          )}
+
+          {tab === 'surveys' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(330px,1fr))', gap: 18 }}>
+              {TOPICS.map((t, i) => <TopicCard key={i} topic={t} />)}
+              <button style={{ border: '1.5px dashed var(--sand-500)', background: 'rgba(255,255,255,.4)', borderRadius: 22, padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 11, cursor: 'pointer', color: 'var(--ink-600)', fontSize: 15, fontWeight: 700, minHeight: 150 }}>
+                <span style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--accent)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 23, lineHeight: 1, fontWeight: 500 }}>+</span>
+                Neue Umfrage erstellen
+                <span style={{ fontSize: 12.5, color: 'var(--text-muted)', fontWeight: 600 }}>Auch ohne Projekt möglich</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+</script>
+<script>
+  const code = document.getElementById('app-src').textContent;
+  const out = Babel.transform(code, { presets: [['react', { runtime: 'classic' }]] }).code;
+  const s = document.createElement('script');
+  s.textContent = out;
+  document.body.appendChild(s);
+</script>
+</body>
+</html>

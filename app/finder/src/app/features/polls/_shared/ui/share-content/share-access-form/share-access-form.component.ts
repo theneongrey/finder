@@ -26,6 +26,9 @@ import {
         style({ opacity: 0, transform: 'translateY(6px)' }),
         animate('240ms cubic-bezier(.22,.7,.3,1)', style({ opacity: 1, transform: 'translateY(0)' })),
       ]),
+      transition(':leave', [
+        animate('180ms cubic-bezier(.4,0,1,1)', style({ opacity: 0, transform: 'translateY(-4px)' })),
+      ]),
     ]),
   ],
 })

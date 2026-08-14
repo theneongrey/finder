@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsStatusDotComponent } from '../../common/ui/ds-components/badge/ds-status-dot.component';
 import { DsBadgeComponent } from '../../common/ui/ds-components/badge/ds-badge.component';
 import { DsAvatarComponent } from '../../common/ui/ds-components/avatar/ds-avatar.component';
-import { DEMO, DEMO_SEQ, DEMO_TOTAL_VOTERS, GERMAN_NAMES, PPL, shuffle } from './home.constants';
+import { DEMO, DEMO_SEQ, DEMO_TOTAL_VOTERS, NAMES_TOP_100, PPL } from './home.constants';
+import { HomeService } from './home.service';
 
 @Component({
   selector: 'app-home-demo-card',
@@ -13,6 +14,8 @@ import { DEMO, DEMO_SEQ, DEMO_TOTAL_VOTERS, GERMAN_NAMES, PPL, shuffle } from '.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeDemoCardComponent implements OnInit, OnDestroy {
+  private homeService = inject(HomeService);
+
   readonly demoStep = signal(0);
   readonly floatName = signal('');
   readonly floatVisible = signal(true);
@@ -56,7 +59,7 @@ export class HomeDemoCardComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    this.nameQueue = shuffle(GERMAN_NAMES);
+    this.nameQueue = this.homeService.shuffle(NAMES_TOP_100);
     this.floatName.set(this.nameQueue[0]);
 
     this.nameTimer = setInterval(() => {

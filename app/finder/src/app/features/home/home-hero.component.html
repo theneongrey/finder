@@ -1,0 +1,66 @@
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <ds-badge class="live-badge">
+        <ds-status-dot />
+        <span>{{ 'home.hero.liveBadge' | translate }}</span>
+      </ds-badge>
+
+      <h1 class="hero-h1">{{ 'home.hero.headline' | translate }}</h1>
+
+      <p class="hero-sub">{{ 'home.hero.sub' | translate }}</p>
+
+      <div class="email-form-wrap">
+        <label class="form-label" for="home-email">{{ 'home.hero.formLabel' | translate }}</label>
+        <div class="email-row">
+          <div class="email-field-wrap">
+            <span class="email-icon" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a39e96" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="M4 8l8 5.5L20 8"/>
+              </svg>
+            </span>
+            <input
+              id="home-email"
+              type="email"
+              class="email-input"
+              [class.error]="emailError()"
+              [class.ok]="emailSent()"
+              [placeholder]="'home.hero.emailPlaceholder' | translate"
+              [ngModel]="email()"
+              (ngModelChange)="onEmailChange($event)"
+              (keydown)="onEmailKey($event)"
+              autocomplete="email"
+            />
+          </div>
+          <button type="button" class="cta-btn" (click)="onStart()" [class.sent]="emailSent()">
+            <span>{{ (emailSent() ? 'home.hero.ctaSent' : 'home.hero.ctaSend') | translate }}</span>
+            @if (!emailSent()) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
+              </svg>
+            }
+          </button>
+        </div>
+        <div class="hint-row" [class.hint-error]="emailError()" [class.hint-ok]="emailSent()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" [attr.stroke]="emailError() ? '#c1453f' : (emailSent() ? '#3f7a4e' : '#8a8681')" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4.5 12.5l4.5 4.5L20 5"/>
+          </svg>
+          <span>
+            @if (emailError()) { {{ 'home.hero.hintError' | translate }} }
+            @else if (emailSent()) { {{ 'home.hero.hintSent' | translate }} }
+            @else { {{ 'home.hero.hintDefault' | translate }} }
+          </span>
+        </div>
+      </div>
+
+      <div class="social-proof">
+        <ds-avatar-stack class="avatars" [avatars]="faces" size="sm" />
+        <span class="proof-text">{{ 'home.hero.proof' | translate }}</span>
+        <span class="proof-divider desktop-only"></span>
+        <span class="proof-text desktop-only">{{ 'home.hero.proofNoPassword' | translate }}</span>
+      </div>
+    </div>
+
+    <app-home-demo-card />
+  </div>
+</section>

@@ -1,172 +1,33 @@
 <div class="page-scroll" (scroll)="onScroll($event)">
 
-  <!-- ── Nav ─────────────────────────────────────────────────── -->
-  <nav class="home-nav" [class.scrolled]="scrolled()">
-    <div class="nav-inner">
-      <div class="nav-logo">
-        <img src="logo-icon.svg" alt="" aria-hidden="true" width="23" height="26" class="nav-logo-icon" />
-        <span class="nav-logo-text">Votean</span>
-      </div>
+  <app-home-nav [scrolled]="scrolled()" />
 
-      <!-- Desktop nav links (hidden on mobile) -->
-      <div class="nav-links">
-        <button class="nav-link" (click)="scrollToSection('how-it-works')">{{ 'home.nav.howItWorks' | translate }}</button>
-        <button class="nav-link" (click)="scrollToSection('ideas')">{{ 'home.nav.ideas' | translate }}</button>
-        <button class="nav-link" (click)="scrollToSection('features')">{{ 'home.nav.features' | translate }}</button>
-      </div>
+  <app-home-hero />
 
-      <!-- Desktop tagline (hidden on mobile) -->
-      <span class="nav-tagline">{{ 'home.nav.tagline' | translate }}</span>
-
-      <div class="nav-cta-wrap">
-        <ds-button variant="primary" class="nav-cta" routerLink="/auth/request-email">
-          <!-- Mobile: short label -->
-          <span class="mobile-only">{{ 'home.nav.signInMobile' | translate }}</span>
-          <!-- Desktop: full label + arrow -->
-          <span class="desktop-only">{{ 'home.nav.signInDesktop' | translate }}</span>
-          <svg class="desktop-only" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
-          </svg>
-        </ds-button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- ── Hero ──────────────────────────────────────────────────── -->
-  <section class="hero">
-    <!-- Desktop: two-column grid; mobile: single column -->
-    <div class="hero-inner">
-      <div class="hero-text">
-        <!-- Live badge -->
-        <ds-badge class="live-badge">
-          <ds-status-dot />
-          <span>{{ 'home.hero.liveBadge' | translate }}</span>
-        </ds-badge>
-
-        <h1 class="hero-h1">{{ 'home.hero.headline' | translate }}</h1>
-
-        <p class="hero-sub">{{ 'home.hero.sub' | translate }}</p>
-
-        <!-- Email form -->
-        <div class="email-form-wrap">
-          <label class="form-label" for="home-email">{{ 'home.hero.formLabel' | translate }}</label>
-          <div class="email-row">
-            <div class="email-field-wrap">
-              <span class="email-icon" aria-hidden="true">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a39e96" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="M4 8l8 5.5L20 8"/>
-                </svg>
-              </span>
-              <input
-                id="home-email"
-                type="email"
-                class="email-input"
-                [class.error]="emailError()"
-                [class.ok]="emailSent()"
-                [placeholder]="'home.hero.emailPlaceholder' | translate"
-                [ngModel]="email()"
-                (ngModelChange)="onEmailChange($event)"
-                (keydown)="onEmailKey($event)"
-                autocomplete="email"
-              />
-            </div>
-            <ds-button variant="primary" class="cta-btn" (click)="onStart()" [class.sent]="emailSent()">
-              <span>{{ (emailSent() ? 'home.hero.ctaSent' : 'home.hero.ctaSend') | translate }}</span>
-              @if (!emailSent()) {
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
-                </svg>
-              }
-            </ds-button>
-          </div>
-          <div class="hint-row" [class.hint-error]="emailError()" [class.hint-ok]="emailSent()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" [attr.stroke]="emailError() ? '#c1453f' : (emailSent() ? '#3f7a4e' : '#8a8681')" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4.5 12.5l4.5 4.5L20 5"/>
-            </svg>
-            <span>
-              @if (emailError()) { {{ 'home.hero.hintError' | translate }} }
-              @else if (emailSent()) { {{ 'home.hero.hintSent' | translate }} }
-              @else { {{ 'home.hero.hintDefault' | translate }} }
-            </span>
-          </div>
-        </div>
-
-        <!-- Social proof -->
-        <div class="social-proof">
-          <ds-avatar-stack class="avatars" [avatars]="faces" size="sm" />
-          <span class="proof-text">{{ 'home.hero.proof' | translate }}</span>
-          <span class="proof-divider desktop-only"></span>
-          <span class="proof-text desktop-only">{{ 'home.hero.proofNoPassword' | translate }}</span>
-        </div>
-      </div>
-
-      <!-- Demo card (desktop: right column, mobile: below hero text) -->
-      <app-home-demo-card />
-    </div>
-  </section>
-
-  <!-- ── How it works ───────────────────────────────────────── -->
   <section id="how-it-works" class="section">
     <div class="section-inner">
       <app-home-steps />
     </div>
   </section>
 
-  <!-- ── Ideas ─────────────────────────────────────────────── -->
   <section id="ideas" class="section section-ideas">
     <div class="section-inner">
       <app-home-ideas-section />
     </div>
   </section>
 
-  <!-- ── Auth pitch + Features ─────────────────────────────── -->
   <section id="features" class="section">
     <div class="section-inner">
       <app-home-code-animation />
     </div>
   </section>
 
-  <!-- ── Final CTA ──────────────────────────────────────────── -->
   <section class="section">
     <div class="section-inner">
-      <div class="final-cta-card">
-        <div class="final-glow"></div>
-        <!-- Mobile: single column; Desktop: row with text left, button right -->
-        <div class="final-cta-inner">
-          <div class="final-cta-text">
-            <h2 class="final-h2">{{ 'home.finalCta.heading' | translate }}</h2>
-            <p class="final-sub">{{ 'home.finalCta.sub' | translate }}</p>
-          </div>
-          <div class="final-cta-action">
-            <ds-button variant="primary" class="final-btn" routerLink="/auth/request-email">
-              <span>{{ 'home.finalCta.btn' | translate }}</span>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
-              </svg>
-            </ds-button>
-            <span class="final-note">{{ 'home.finalCta.note' | translate }}</span>
-          </div>
-        </div>
-      </div>
+      <app-home-final-cta />
     </div>
   </section>
 
-  <!-- ── Footer ─────────────────────────────────────────────── -->
-  <footer class="home-footer">
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4.5 12.5l4.5 4.5L20 5"/>
-        </svg>
-        <span class="footer-logo-text">Votean</span>
-      </div>
-      <span class="footer-tagline desktop-only">{{ 'home.footer.tagline' | translate }}</span>
-      <div class="footer-links">
-        <a href="#">{{ 'home.footer.privacy' | translate }}</a>
-        <a href="#">{{ 'home.footer.imprint' | translate }}</a>
-        <a href="#">{{ 'home.footer.help' | translate }}</a>
-      </div>
-    </div>
-  </footer>
+  <app-home-footer />
 
 </div>

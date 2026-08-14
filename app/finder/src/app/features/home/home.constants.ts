@@ -1,4 +1,4 @@
-export const GERMAN_NAMES = [
+export const NAMES_TOP_100 = [
   'Emma','Hannah','Mia','Sofia','Lena','Anna','Laura','Lea','Marie','Julia',
   'Sarah','Lisa','Lara','Jana','Katharina','Sandra','Nina','Sabrina','Melanie','Jessica',
   'Lukas','Felix','Leon','Jonas','Maximilian','Tim','Jan','Nico','Daniel','Thomas',
@@ -10,15 +10,6 @@ export const GERMAN_NAMES = [
   'Petra','Renate','Klaus','Günter','Monika','Helga','Werner','Dieter','Ursula','Gabi',
   'Kilian','Oskar','Leo','Theo','Emil','Frieda','Mathilda','Maren','Svenja','Tanja',
 ];
-
-export function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 export const PPL: Record<string, { i: string; bg: string; fg: string }> = {
   G: { i: 'G', bg: '#d7eef0', fg: '#1f7a8c' },

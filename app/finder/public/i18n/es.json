@@ -220,5 +220,148 @@
       "monthAgo": "hace {{count}} mes",
       "monthsAgo": "hace {{count}} meses"
     }
+  },
+  "home": {
+    "nav": {
+      "howItWorks": "Cómo funciona",
+      "ideas": "Ideas",
+      "features": "Funciones",
+      "tagline": "¿Primera vez o de vuelta? El mismo camino",
+      "signInMobile": "Entrar",
+      "signInDesktop": "Entrar con email"
+    },
+    "hero": {
+      "liveBadge": "Hay encuestas en marcha ahora mismo",
+      "headline": "Encontrad un punto en común, juntos.",
+      "sub": "Votean convierte interminables debates en el chat en decisiones claras. De dos o de doce: haz la pregunta, comparte el enlace, ve el resultado.",
+      "formLabel": "Listo en 20 segundos",
+      "emailPlaceholder": "tu@email.es",
+      "ctaSend": "Empezar",
+      "ctaSent": "Código enviado",
+      "hintDefault": "Sin contraseña. Solo tu email — tu cuenta se crea automáticamente.",
+      "hintError": "Por favor, introduce una dirección de email válida.",
+      "hintSent": "El código está en camino — revisa tu bandeja de entrada.",
+      "proof": "Ya se han tomado un montón de decisiones",
+      "proofNoPassword": "Sin contraseña · sin app"
+    },
+    "demo": {
+      "tagType": "Elección",
+      "tagLive": "En curso",
+      "endsIn": "termina en 2 días",
+      "question": "¿A dónde vamos este fin de semana?",
+      "opt0": "Lago de Garda",
+      "opt1": "Praga",
+      "opt2": "Mar del Norte",
+      "voted": "{{count}} de {{total}} han votado",
+      "floatVoted": "{{name}} ha votado",
+      "floatJustNow": "justo ahora",
+      "floatLinkTitle": "Enlace copiado",
+      "floatLinkSub": "Únete con un email"
+    },
+    "steps": {
+      "0": { "title": "Haz la pregunta", "text": "Cita, elección o sí/no. Escribe las opciones, listo — la encuesta está lista en menos de un minuto." },
+      "1": { "title": "Comparte el enlace", "text": "Un enlace en el chat del grupo. Los votantes no necesitan cuenta ni app." },
+      "2": { "title": "Ve el resultado", "text": "Ve en directo quién ha votado y quién falta. Al final, tienes una decisión." }
+    },
+    "ideas": {
+      "eyebrow": "Ideas para empezar",
+      "heading": "Para qué usa la gente Votean",
+      "sub": "Decorar un salón entre dos o encontrar un destino de viaje entre ocho — la misma encuesta, el mismo esfuerzo de 30 segundos.",
+      "wohnen": {
+        "tab": "Decorar el salón",
+        "short": "Salón",
+        "who": "Solo vosotros dos",
+        "headline": "Dos opiniones, un sofá.",
+        "story": "Piso nuevo, salón vacío. En vez de 40 capturas de pantalla en el chat, creáis una encuesta, cada uno vota con calma — y al final del día la decisión está tomada en blanco y negro.",
+        "cta": "Crear encuesta de hogar",
+        "pollKind": "Elección · 2 personas",
+        "question": "¿Qué sofá compramos?",
+        "opt0": "Sofá de terciopelo, verde azulado",
+        "opt1": "Sofá rinconera de pana, arena",
+        "opt2": "Sofá modular, gris",
+        "votersLine": "Ambos han votado",
+        "pt0": "Fotos, enlaces y precios junto a cada opción",
+        "pt1": "Cada uno decide por su cuenta — sin influencias",
+        "pt2": "Varias encuestas por habitación: sofá, lámpara, alfombra"
+      },
+      "trip": {
+        "tab": "Planear un viaje de fin de semana",
+        "short": "Viaje",
+        "who": "Grupo · 6 personas",
+        "headline": "Seis agendas, un fin de semana.",
+        "story": "Primero la fecha, luego el destino. Dos encuestas, un enlace en el grupo — y nadie tiene que hacer scroll por 200 mensajes.",
+        "cta": "Crear encuesta de viaje",
+        "pollKind": "Elección · 6 personas",
+        "question": "¿A dónde vamos en septiembre?",
+        "opt0": "Lago de Garda",
+        "opt1": "Praga",
+        "opt2": "Mar del Norte",
+        "opt3": "Quedarse en casa",
+        "votersLine": "5 de 6 han votado",
+        "pt0": "La encuesta de fechas encuentra el día en que todos pueden",
+        "pt1": "Únete con un enlace — solo hace falta tu email",
+        "pt2": "Recordatorio para los que aún no han votado"
+      },
+      "geschenk": {
+        "tab": "Regalo en grupo",
+        "short": "Regalo",
+        "who": "Amigos · 5 personas",
+        "headline": "Un regalo, sin duplicados.",
+        "story": "Recopilad cinco ideas, todos votan, se compran las dos más votadas. Y la persona agasajada simplemente no ve la encuesta.",
+        "cta": "Crear encuesta de regalo",
+        "pollKind": "Elección · 5 personas",
+        "question": "¿Qué le regalamos a Yuna?",
+        "opt0": "Entradas de concierto",
+        "opt1": "Fin de semana en el spa",
+        "opt2": "Curso de cocina",
+        "votersLine": "4 de 5 han votado",
+        "pt0": "Las ideas vienen de todos, no solo del organizador",
+        "pt1": "Presupuesto como nota en la encuesta",
+        "pt2": "El resultado queda guardado como referencia"
+      },
+      "team": {
+        "tab": "Decisión de equipo",
+        "short": "Reunión de equipo",
+        "who": "Equipo · 9 personas",
+        "headline": "Decidir en vez de aplazar.",
+        "story": "La fecha del kick-off, la fiesta de verano, la nueva herramienta: encuesta corta, fecha límite clara, resultado visible. Sin bucle de reuniones, sin cadena de emails.",
+        "cta": "Crear encuesta de equipo",
+        "pollKind": "Encuesta de fechas · 9 personas",
+        "question": "¿Cuándo hacemos el offsite?",
+        "opt0": "Jue., 17 de septiembre",
+        "opt1": "Vie., 18 de septiembre",
+        "opt2": "Jue., 24 de septiembre",
+        "votersLine": "8 de 9 han votado",
+        "pt0": "Fija una fecha límite — la encuesta se cierra automáticamente",
+        "pt1": "Los resultados parciales solo se ven tras votar",
+        "pt2": "Comparte el resultado como enlace en Slack o email"
+      }
+    },
+    "authPitch": {
+      "eyebrow": "Accede en segundos",
+      "headline1": "Solo tu email.",
+      "headline2": "Nada más.",
+      "sub": "Sin contraseña, sin perfil, sin tarjeta de crédito. Te enviamos un código de 6 dígitos — introdúcelo una vez y ya estás dentro.",
+      "codeHintDefault": "Introduce el código, listo.",
+      "codeHintDone": "Conectado — sin contraseña."
+    },
+    "features": {
+      "0": { "title": "Cualquier tipo de pregunta", "text": "Cita, elección libre, sí/no o valoración — adaptado a la decisión." },
+      "1": { "title": "Únete con un enlace", "text": "Los invitados abren el enlace, introducen su email — la cuenta se crea automáticamente." },
+      "2": { "title": "Ve quién falta", "text": "Votos pendientes de un vistazo, con un recordatorio amistoso en vez de perseguir a la gente." },
+      "3": { "title": "Todo en un lugar", "text": "Las encuestas se guardan tras la decisión — como la memoria del grupo." }
+    },
+    "finalCta": {
+      "heading": "¿Sobre qué estáis debatiendo ahora?",
+      "sub": "Haz la pregunta ahora — la primera encuesta está lista más rápido que el próximo mensaje de voz.",
+      "btn": "Entrar con email",
+      "note": "Ya sea la primera vez o la centésima: siempre solo email y código."
+    },
+    "footer": {
+      "tagline": "Decidid juntos, sin debate.",
+      "privacy": "Privacidad",
+      "imprint": "Aviso legal",
+      "help": "Ayuda"
+    }
   }
 }

@@ -7,13 +7,29 @@ import { pollsRoutes } from './features/polls/polls.routes';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    loadComponent: () =>
+      import('./features/home/language-redirect.component').then(
+        (m) => m.LanguageRedirectComponent,
+      ),
     pathMatch: 'full',
   },
   {
-    path: 'home',
+    path: 'de',
     loadComponent: () =>
       import('./features/home/home.component').then((m) => m.HomeComponent),
+    data: { lang: 'de' },
+  },
+  {
+    path: 'en',
+    loadComponent: () =>
+      import('./features/home/home.component').then((m) => m.HomeComponent),
+    data: { lang: 'en' },
+  },
+  {
+    path: 'es',
+    loadComponent: () =>
+      import('./features/home/home.component').then((m) => m.HomeComponent),
+    data: { lang: 'es' },
   },
   {
     path: 'auth',
@@ -65,6 +81,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'polls',
+    redirectTo: '',
   },
 ];

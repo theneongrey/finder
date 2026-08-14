@@ -53,15 +53,11 @@ Endpoints are registered in `Program.cs` via extension methods (`WithProjectApi(
 
 ### Frontend — `app/finder/`
 
-Angular 21, fully standalone components (no NgModules), lazy-loaded routes.
-When told to use a primeng component use app\finder\primngllms.txt as reference.
-When calling the backend, don't do it directly in the component. Use a store as a layer inbetween.
+Angular 21, fully standalone components (no NgModules), lazy-loaded routes. UI is Tailwind CSS 4 with a custom ds-* design system (see wiki and `/implement-frontend` skill).
 
-**State:** NgRx Signals (`@ngrx/signals`). There are two stores:
+**State:** NgRx Signals (`@ngrx/signals`). Two stores:
 - `common/data/user.store.ts` — auth state (user, loginMail, redirectUrl)
 - `features/project/_data/project.store.ts` — projects list and current project detail
-
-Store methods use `rxMethod` + `switchMap` + `tapResponse`. All async side effects live in stores, not components.
 
 **Feature layout** (`src/app/features/<feature>/`):
 ```
@@ -71,17 +67,9 @@ _services/  — HttpClient services
 *.component.ts — standalone components
 ```
 
-**UI:** PrimeNG 21 + Tailwind CSS 4.
-Use primngllms.txt for help to primeng components.
-
-**Component file structure:** Every Angular component must have three separate files — never use inline `template` or `styles` in the decorator:
-```
-my-component.component.ts   — class + @Component decorator (templateUrl + styleUrl)
-my-component.component.html — template
-my-component.component.css  — styles
-```
-
 **Auth flow:** email → code → token. The `AuthGuard` (`userAuthentication`) protects routes; the backend issues tokens validated on each request.
+
+For implementation conventions (file structure, component layers, ds-* usage), invoke the `/implement-frontend` skill.
 
 ## Testing
 When testing locally, use testuser1@neongrey.de or testuser2@neongrey.de to log in. Enter the email address, then when asked for the code, navigate to http://localhost:4200/auth/token-login?token=1234 to log in. If you are already logged in when starting the session. Log out first.

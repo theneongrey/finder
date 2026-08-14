@@ -18,6 +18,7 @@ button.ds-btn-primary {
   font-weight: var(--weight-semibold);
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: var(--ds-btn-shadow, none);
 }
 
 button.ds-btn-primary:hover {

@@ -74,8 +74,8 @@
   --ds-btn-height: 36px;
   --ds-btn-radius: 12px;
   --ds-btn-font-size: var(--fs-ui);
+  --ds-btn-shadow: 0 6px 16px rgba(31, 122, 140, 0.28);
   margin-left: auto;
-  box-shadow: 0 6px 16px rgba(31, 122, 140, 0.28);
 }
 
 @media (min-width: 830px) {
@@ -256,7 +256,7 @@
   --ds-btn-height: 52px;
   --ds-btn-radius: 15px;
   --ds-btn-font-size: 16px;
-  box-shadow: 0 10px 24px rgba(31, 122, 140, 0.3);
+  --ds-btn-shadow: 0 10px 24px rgba(31, 122, 140, 0.3);
   white-space: nowrap;
 }
 
@@ -426,7 +426,7 @@
   --ds-btn-height: 54px;
   --ds-btn-radius: 16px;
   --ds-btn-font-size: 16px;
-  box-shadow: 0 12px 28px rgba(31, 122, 140, 0.3);
+  --ds-btn-shadow: 0 12px 28px rgba(31, 122, 140, 0.3);
 }
 
 @media (min-width: 830px) {

@@ -32,7 +32,7 @@
   height: auto !important;
   flex: unset !important;
 }
-.ds-tab[data-active] {
+.ds-tab[data-state="active"] {
   font-weight: var(--weight-bold) !important;
   color: var(--text-primary) !important;
   border-bottom-color: var(--accent) !important;

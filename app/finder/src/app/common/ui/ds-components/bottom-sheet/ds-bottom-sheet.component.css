@@ -1,5 +1,4 @@
 .ds-sheet-panel {
-  width: 100%;
   max-width: var(--mobile-max-width);
   background: var(--bg-sheet);
   border-radius: 26px 26px 0 0;
@@ -10,8 +9,10 @@
   font-family: var(--font-body);
   /* Override SpartanNG sheet content defaults */
   border: none;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Center horizontally without transform so the slide-in-from-bottom animation stays purely vertical */
+  left: max(0px, calc(50% - var(--mobile-max-width) / 2)) !important;
+  right: max(0px, calc(50% - var(--mobile-max-width) / 2)) !important;
+  width: auto !important;
 }
 .ds-sheet-handle {
   width: 38px;

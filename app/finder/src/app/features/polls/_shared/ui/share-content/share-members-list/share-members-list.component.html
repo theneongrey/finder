@@ -41,8 +41,7 @@
 
         @if (pendingRemoveEmail() === member.email) {
           <div
-            class="absolute inset-0 flex items-center justify-end gap-3 px-4 rounded-[inherit]"
-            style="background: rgba(255,255,255,0.92)"
+            class="absolute inset-0 flex items-center justify-end gap-3 px-4 rounded-[inherit] bg-white/92"
             (click)="pendingRemoveEmail.set(undefined)"
           >
             <span class="text-xs text-[var(--text-secondary)]">{{ member.name }} entfernen?</span>

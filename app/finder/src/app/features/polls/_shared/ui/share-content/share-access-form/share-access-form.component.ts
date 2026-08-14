@@ -5,7 +5,6 @@ import {
   input,
   output,
 } from '@angular/core';
-import { animate, style, transition, trigger } from '@angular/animations';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
@@ -20,17 +19,18 @@ import {
   imports: [DsButtonComponent, DsIconComponent, DsSegmentedControlComponent, TranslatePipe],
   templateUrl: './share-access-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('fadeSlide', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(6px)' }),
-        animate('240ms cubic-bezier(.22,.7,.3,1)', style({ opacity: 1, transform: 'translateY(0)' })),
-      ]),
-      transition(':leave', [
-        animate('180ms cubic-bezier(.4,0,1,1)', style({ opacity: 0, transform: 'translateY(-4px)' })),
-      ]),
-    ]),
-  ],
+  styles: [`
+    .link-card-outer {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 340ms cubic-bezier(.4,0,.2,1), opacity 220ms ease;
+    }
+    .link-card-outer--open {
+      max-height: 250px;
+      opacity: 1;
+    }
+  `],
 })
 export class ShareAccessFormComponent {
   private readonly translateService = inject(TranslateService);

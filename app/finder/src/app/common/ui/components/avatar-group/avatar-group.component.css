@@ -1,8 +1,0 @@
-ds-avatar-group {
-  display: inline-flex;
-  align-items: center;
-}
-
-ds-avatar-group > * + * {
-  margin-left: var(--ds-avatar-group-gap, -8px);
-}

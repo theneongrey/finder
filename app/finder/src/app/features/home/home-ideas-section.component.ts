@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsBadgeComponent } from '../../common/ui/components/badge/badge.component';
-import { DsAvatarComponent } from '../../common/ui/components/avatar/avatar.component';
-import { DsAvatarGroupComponent } from '../../common/ui/components/avatar-group/avatar-group.component';
+import { DsBadgeComponent } from '../../common/ui/ds-components/badge/ds-badge.component';
+import { DsAvatarStackComponent } from '../../common/ui/ds-components/avatar-stack/ds-avatar-stack.component';
 import { IDEAS, PPL } from './home.constants';
 
 @Component({
   selector: 'app-home-ideas-section',
-  imports: [TranslatePipe, DsBadgeComponent, DsAvatarComponent, DsAvatarGroupComponent],
+  imports: [TranslatePipe, DsBadgeComponent, DsAvatarStackComponent],
   templateUrl: './home-ideas-section.component.html',
   styleUrl: './home-ideas-section.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +33,7 @@ export class HomeIdeasSectionComponent implements OnInit, OnDestroy {
         weight: o.n === maxN ? '700' : '600',
         numLabel: o.n === 0 ? '–' : String(o.n),
       })),
-      votersFormatted: idea.voters.map(k => PPL[k]),
+      votersFormatted: idea.voters.map(k => ({ initial: PPL[k].i, bg: PPL[k].bg, fg: PPL[k].fg })),
     };
   });
 

@@ -18,7 +18,7 @@
 <!-- Idea card: single column mobile, two-column desktop -->
 <div class="idea-card" [class.idea-card-visible]="ideaVisible()">
   <div class="idea-content">
-    <ds-badge class="idea-who" [bg]="currentIdea().tintBg" [fg]="currentIdea().tintFg">
+    <ds-badge class="idea-who" [tone]="currentIdea().tone">
       {{ currentIdea().whoKey | translate }}
     </ds-badge>
     <div class="idea-headline">{{ currentIdea().headlineKey | translate }}</div>
@@ -58,11 +58,7 @@
         }
       </div>
       <div class="preview-voters">
-        <ds-avatar-group class="preview-avatar-row">
-          @for (v of currentIdea().votersFormatted; track $index) {
-            <ds-avatar [initial]="v.i" [bg]="v.bg" [fg]="v.fg" />
-          }
-        </ds-avatar-group>
+        <ds-avatar-stack class="preview-avatar-row" [avatars]="currentIdea().votersFormatted" size="sm" />
         <span class="preview-voters-line">{{ currentIdea().votersLineKey | translate }}</span>
       </div>
     </div>

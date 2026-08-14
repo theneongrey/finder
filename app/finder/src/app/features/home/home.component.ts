@@ -3,12 +3,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SupportedLanguage, setStoredLanguage } from '../../common/i18n/languages';
-import { DsButtonComponent } from '../../common/ui/components/button/button.component';
-import { DsIconComponent } from '../../common/ui/components/icon/icon.component';
-import { DsStatusDotComponent } from '../../common/ui/components/status-dot/status-dot.component';
-import { DsBadgeComponent } from '../../common/ui/components/badge/badge.component';
-import { DsAvatarComponent } from '../../common/ui/components/avatar/avatar.component';
-import { DsAvatarGroupComponent } from '../../common/ui/components/avatar-group/avatar-group.component';
+import { DsButtonComponent } from '../../common/ui/ds-components/button/ds-button.component';
+import { DsStatusDotComponent } from '../../common/ui/ds-components/badge/ds-status-dot.component';
+import { DsBadgeComponent } from '../../common/ui/ds-components/badge/ds-badge.component';
+import { DsAvatarStackComponent } from '../../common/ui/ds-components/avatar-stack/ds-avatar-stack.component';
 import { HomeDemoCardComponent } from './home-demo-card.component';
 import { HomeStepsComponent } from './home-steps.component';
 import { HomeIdeasSectionComponent } from './home-ideas-section.component';
@@ -22,11 +20,9 @@ import { PPL } from './home.constants';
     RouterLink,
     TranslatePipe,
     DsButtonComponent,
-    DsIconComponent,
     DsStatusDotComponent,
     DsBadgeComponent,
-    DsAvatarComponent,
-    DsAvatarGroupComponent,
+    DsAvatarStackComponent,
     HomeDemoCardComponent,
     HomeStepsComponent,
     HomeIdeasSectionComponent,
@@ -46,7 +42,7 @@ export class HomeComponent implements OnInit {
   readonly emailSent = signal(false);
   readonly scrolled = signal(false);
 
-  readonly faces = ['G', 'F', 'M', 'L', 'N'].map(k => PPL[k]);
+  readonly faces = ['G', 'F', 'M', 'L', 'N'].map(k => ({ initial: PPL[k].i, bg: PPL[k].bg, fg: PPL[k].fg }));
 
   ngOnInit(): void {
     const lang = this.route.snapshot.data['lang'] as SupportedLanguage;

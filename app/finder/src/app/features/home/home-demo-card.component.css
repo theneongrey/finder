@@ -36,20 +36,12 @@
   gap: 8px;
 }
 
-/* Tag pills — ds-badge context */
+/* Tag pills */
 .tag-type,
 .tag-live {
-  --ds-badge-height: 23px;
-  --ds-badge-padding: 0 9px;
-  --ds-badge-radius: 8px;
-  --ds-badge-font-size: var(--fs-micro);
-  --ds-badge-gap: 5px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
 }
-
-.tag-type { background: #f1eee9; color: #6f6b66; }
-.tag-live { background: #e2ede1; color: #3f7a4e; }
 
 .demo-time { margin-left: auto; font-size: var(--fs-caption-sm); color: var(--text-muted); }
 
@@ -96,12 +88,9 @@
 
 .demo-option-label { flex: 1; font-size: var(--fs-body-xs); color: var(--text-primary); }
 
-/* demo-chips: ds-avatar context */
 .demo-chips {
   display: flex;
   gap: 3px;
-  --ds-avatar-size: 20px;
-  --ds-avatar-font-size: 10px;
 }
 
 .demo-count { width: 26px; text-align: right; font-size: var(--fs-ui); font-weight: var(--weight-bold); }

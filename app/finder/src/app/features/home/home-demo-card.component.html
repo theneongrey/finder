@@ -1,8 +1,8 @@
 <div class="hero-demo">
   <div class="demo-card">
     <div class="demo-tags">
-      <ds-badge class="tag-type">{{ 'home.demo.tagType' | translate }}</ds-badge>
-      <ds-badge class="tag-live">
+      <ds-badge class="tag-type" tone="neutral" size="sm">{{ 'home.demo.tagType' | translate }}</ds-badge>
+      <ds-badge class="tag-live" tone="success" size="sm">
         <ds-status-dot />{{ 'home.demo.tagLive' | translate }}
       </ds-badge>
       <span class="demo-time">{{ 'home.demo.endsIn' | translate }}</span>
@@ -16,7 +16,7 @@
             <span class="demo-option-label" [style.font-weight]="o.weight">{{ o.labelKey | translate }}</span>
             <div class="demo-chips">
               @for (c of o.chips; track c.i) {
-                <ds-avatar [initial]="c.i" [bg]="c.bg" [fg]="c.fg" />
+                <ds-avatar [initial]="c.i" [bg]="c.bg" [fg]="c.fg" [size]="20" />
               }
             </div>
             <span class="demo-count" [style.color]="o.numColor">{{ o.numLabel }}</span>

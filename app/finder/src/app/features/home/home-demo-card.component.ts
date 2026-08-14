@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsStatusDotComponent } from '../../common/ui/components/status-dot/status-dot.component';
-import { DsBadgeComponent } from '../../common/ui/components/badge/badge.component';
-import { DsAvatarComponent } from '../../common/ui/components/avatar/avatar.component';
+import { DsStatusDotComponent } from '../../common/ui/ds-components/badge/ds-status-dot.component';
+import { DsBadgeComponent } from '../../common/ui/ds-components/badge/ds-badge.component';
+import { DsAvatarComponent } from '../../common/ui/ds-components/avatar/ds-avatar.component';
 import { DEMO, DEMO_SEQ, DEMO_TOTAL_VOTERS, GERMAN_NAMES, PPL, shuffle } from './home.constants';
 
 @Component({

@@ -120,11 +120,8 @@
   transform: none;
 }
 
-/* idea-who: ds-badge context — bg/fg set via input */
-.idea-who {
-  --ds-badge-height: 26px;
-  --ds-badge-padding: 0 11px;
-}
+/* idea-who: tone-based ds-badge */
+.idea-who { }
 
 .idea-headline {
   margin-top: 13px;
@@ -280,12 +277,7 @@
   border-top: 1px solid rgba(20, 24, 28, 0.055);
 }
 
-/* preview-avatar-row: ds-avatar-group context */
-.preview-avatar-row {
-  --ds-avatar-size: 24px;
-  --ds-avatar-border: 2px solid #fff;
-  --ds-avatar-font-size: 10.5px;
-  --ds-avatar-group-gap: -8px;
-}
+/* .preview-avatar-row wraps ds-avatar-stack */
+.preview-avatar-row { }
 
 .preview-voters-line { font-size: var(--fs-caption-sm); color: var(--ink-350); }

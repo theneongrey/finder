@@ -15,12 +15,12 @@
 .ds-btn:disabled { cursor: default; opacity: 0.5; }
 
 /* Variant overrides — override SpartanNG Tailwind defaults */
-.ds-btn.ds-btn--primary   { background: var(--accent); color: var(--text-on-accent); box-shadow: var(--shadow-accent-btn); border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
-.ds-btn.ds-btn--dark      { background: var(--ink-900); color: #fff; border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
-.ds-btn.ds-btn--outline   { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
-.ds-btn.ds-btn--subtle    { background: var(--bg-panel); color: var(--ink-600); border: 1px solid var(--sand-300); border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
-.ds-btn.ds-btn--neutral   { background: #fff; color: var(--ink-600); border: 1px solid var(--border-hairline); border-radius: var(--radius-md); padding: 12px 18px; font-size: var(--fs-body-xs); }
-.ds-btn.ds-btn--ghost     { background: transparent; color: var(--accent); padding: 0; border-radius: 0; font-size: var(--fs-ui-sm); box-shadow: none; }
+.ds-btn.ds-btn--primary   { background: var(--accent); color: var(--text-on-accent); box-shadow: var(--ds-btn-shadow, var(--shadow-accent-btn)); border-radius: var(--ds-btn-radius, var(--radius-md)); padding: var(--ds-btn-padding, 12px 18px); font-size: var(--ds-btn-font-size, var(--fs-body-xs)); height: var(--ds-btn-height, auto); }
+.ds-btn.ds-btn--dark      { background: var(--ink-900); color: #fff; border-radius: var(--ds-btn-radius, var(--radius-md)); padding: var(--ds-btn-padding, 12px 18px); font-size: var(--ds-btn-font-size, var(--fs-body-xs)); height: var(--ds-btn-height, auto); }
+.ds-btn.ds-btn--outline   { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); border-radius: var(--ds-btn-radius, var(--radius-md)); padding: var(--ds-btn-padding, 12px 18px); font-size: var(--ds-btn-font-size, var(--fs-body-xs)); height: var(--ds-btn-height, auto); }
+.ds-btn.ds-btn--subtle    { background: var(--bg-panel); color: var(--ink-600); border: 1px solid var(--sand-300); border-radius: var(--ds-btn-radius, var(--radius-md)); padding: var(--ds-btn-padding, 12px 18px); font-size: var(--ds-btn-font-size, var(--fs-body-xs)); height: var(--ds-btn-height, auto); }
+.ds-btn.ds-btn--neutral   { background: #fff; color: var(--ink-600); border: 1px solid var(--border-hairline); border-radius: var(--ds-btn-radius, var(--radius-md)); padding: var(--ds-btn-padding, 12px 18px); font-size: var(--ds-btn-font-size, var(--fs-body-xs)); height: var(--ds-btn-height, auto); }
+.ds-btn.ds-btn--ghost     { background: transparent; color: var(--accent); padding: 0; border-radius: 0; font-size: var(--ds-btn-font-size, var(--fs-ui-sm)); box-shadow: none; }
 
 /* Small size modifier */
 .ds-btn.ds-btn--sm { padding: 6px 12px; border-radius: var(--radius-xs); font-size: var(--fs-ui-sm); }

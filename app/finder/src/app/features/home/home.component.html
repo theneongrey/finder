@@ -4,7 +4,7 @@
   <nav class="home-nav" [class.scrolled]="scrolled()">
     <div class="nav-inner">
       <div class="nav-logo">
-        <ds-icon name="logo" class="nav-logo-icon" />
+        <img src="logo-icon.svg" alt="" aria-hidden="true" width="23" height="26" class="nav-logo-icon" />
         <span class="nav-logo-text">Votean</span>
       </div>
 
@@ -18,15 +18,17 @@
       <!-- Desktop tagline (hidden on mobile) -->
       <span class="nav-tagline">{{ 'home.nav.tagline' | translate }}</span>
 
-      <ds-button variant="primary" class="nav-cta" routerLink="/auth/request-email">
-        <!-- Mobile: short label -->
-        <span class="mobile-only">{{ 'home.nav.signInMobile' | translate }}</span>
-        <!-- Desktop: full label + arrow -->
-        <span class="desktop-only">{{ 'home.nav.signInDesktop' | translate }}</span>
-        <svg class="desktop-only" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
-        </svg>
-      </ds-button>
+      <div class="nav-cta-wrap">
+        <ds-button variant="primary" class="nav-cta" routerLink="/auth/request-email">
+          <!-- Mobile: short label -->
+          <span class="mobile-only">{{ 'home.nav.signInMobile' | translate }}</span>
+          <!-- Desktop: full label + arrow -->
+          <span class="desktop-only">{{ 'home.nav.signInDesktop' | translate }}</span>
+          <svg class="desktop-only" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
+          </svg>
+        </ds-button>
+      </div>
     </div>
   </nav>
 
@@ -91,11 +93,7 @@
 
         <!-- Social proof -->
         <div class="social-proof">
-          <ds-avatar-group class="avatars">
-            @for (f of faces; track f.i) {
-              <ds-avatar [initial]="f.i" [bg]="f.bg" [fg]="f.fg" />
-            }
-          </ds-avatar-group>
+          <ds-avatar-stack class="avatars" [avatars]="faces" size="sm" />
           <span class="proof-text">{{ 'home.hero.proof' | translate }}</span>
           <span class="proof-divider desktop-only"></span>
           <span class="proof-text desktop-only">{{ 'home.hero.proofNoPassword' | translate }}</span>

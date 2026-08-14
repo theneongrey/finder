@@ -63,7 +63,7 @@ export const FEATURES = [
 export const IDEAS = [
   {
     id: 'wohnen', tabKey: 'home.ideas.wohnen.tab', shortKey: 'home.ideas.wohnen.short',
-    whoKey: 'home.ideas.wohnen.who', tintBg: '#f4dfe2', tintFg: '#a8566a',
+    whoKey: 'home.ideas.wohnen.who', tone: 'neutral' as const, tintFg: '#a8566a',
     headlineKey: 'home.ideas.wohnen.headline',
     storyKey: 'home.ideas.wohnen.story',
     ctaKey: 'home.ideas.wohnen.cta',
@@ -79,7 +79,7 @@ export const IDEAS = [
   },
   {
     id: 'trip', tabKey: 'home.ideas.trip.tab', shortKey: 'home.ideas.trip.short',
-    whoKey: 'home.ideas.trip.who', tintBg: '#d7eef0', tintFg: '#1f7a8c',
+    whoKey: 'home.ideas.trip.who', tone: 'accent' as const, tintFg: '#1f7a8c',
     headlineKey: 'home.ideas.trip.headline',
     storyKey: 'home.ideas.trip.story',
     ctaKey: 'home.ideas.trip.cta',
@@ -96,7 +96,7 @@ export const IDEAS = [
   },
   {
     id: 'geschenk', tabKey: 'home.ideas.geschenk.tab', shortKey: 'home.ideas.geschenk.short',
-    whoKey: 'home.ideas.geschenk.who', tintBg: '#f6e7cf', tintFg: '#a8742a',
+    whoKey: 'home.ideas.geschenk.who', tone: 'warning' as const, tintFg: '#a8742a',
     headlineKey: 'home.ideas.geschenk.headline',
     storyKey: 'home.ideas.geschenk.story',
     ctaKey: 'home.ideas.geschenk.cta',
@@ -112,7 +112,7 @@ export const IDEAS = [
   },
   {
     id: 'team', tabKey: 'home.ideas.team.tab', shortKey: 'home.ideas.team.short',
-    whoKey: 'home.ideas.team.who', tintBg: '#dcecd9', tintFg: '#4f7a4a',
+    whoKey: 'home.ideas.team.who', tone: 'success' as const, tintFg: '#4f7a4a',
     headlineKey: 'home.ideas.team.headline',
     storyKey: 'home.ideas.team.story',
     ctaKey: 'home.ideas.team.cta',

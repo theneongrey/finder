@@ -58,11 +58,17 @@ export class ShareInviteFormComponent {
   filteredContacts = computed(() => {
     const q = (this.contactEmail() ?? '').toLowerCase();
     const all = this.contacts();
-    if (!q) return all.slice(0, 5);
+    if (!q) return [];
     return all
       .filter(c => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q))
       .slice(0, 5);
   });
+
+  frequentContacts = computed(() =>
+    [...this.contacts()]
+      .sort((a, b) => b.shareCount - a.shareCount)
+      .slice(0, 3),
+  );
 
   constructor() {
     let wasSharingInProgress = false;

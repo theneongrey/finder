@@ -106,6 +106,16 @@ const ICONS: Record<string, IconDef> = {
     circles: [{ cx: 12, cy: 12, r: 8.6 }],
     paths: [{ d: 'M12 11v5.2' }, { d: 'M12 7.9v.1' }],
   },
+  globe: {
+    strokeWidth: 2,
+    circles: [{ cx: 12, cy: 12, r: 8.5 }],
+    paths: [
+      { d: 'M12 3.5c-2 3-3 5.5-3 8.5s1 5.5 3 8.5' },
+      { d: 'M12 3.5c2 3 3 5.5 3 8.5s-1 5.5-3 8.5' },
+      { d: 'M3.5 9h17' },
+      { d: 'M3.5 15h17' },
+    ],
+  },
 };
 
 export const ICON_NAMES = Object.keys(ICONS);

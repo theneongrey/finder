@@ -1,4 +1,4 @@
-<div hlmToggleGroup type="single" [value]="value()" (valueChange)="onValueChange($event)" class="ds-seg-track">
+<div hlmToggleGroup type="single" [value]="value()" (valueChange)="onValueChange($event)" class="ds-seg-track" [style]="pillStyle()">
   @for (opt of options(); track opt.value) {
     <button
       hlmToggleGroupItem
@@ -6,6 +6,11 @@
       [style.padding]="size() === 'sm' ? '8px 4px' : '9px 8px'"
       [style.font-size]="size() === 'sm' ? 'var(--fs-caption)' : 'var(--fs-ui-sm)'"
       class="ds-seg-btn"
-    >{{ opt.label }}</button>
+    >
+      @if (opt.icon) {
+        <ds-icon [name]="opt.icon" [size]="14" />
+      }
+      {{ opt.label }}
+    </button>
   }
 </div>

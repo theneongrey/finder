@@ -201,13 +201,21 @@ input.invalid {
 
 /* ── CDK overlay content (outside component host scope) ─────── */
 /* hlm-dropdown-menu lives in the CDK overlay; ::ng-deep can't reach it */
-[data-slot='dropdown-menu'].ds-menu-panel {
+[data-slot='dropdown-menu'] {
   background: #fff;
   border: 1px solid var(--border-hairline);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
   padding: 6px;
   min-width: 160px;
+}
+
+/* ── Toaster / sonner ────────────────────────────────────────── */
+[data-sonner-toaster] [data-sonner-toast] {
+  background: var(--bg-sheet) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-hairline) !important;
+  box-shadow: var(--shadow-overlay) !important;
 }
 
 /* ── Accessibility ───────────────────────────────────────────── */

@@ -55,8 +55,8 @@ export class ShareContentComponent {
   private readonly accessTabLabel = this.translateService.translate('project.share.tabAccess');
 
   visibilityOptions = computed<SegmentOption[]>(() => [
-    { value: 'invite-only', label: this.inviteOnlyLabel() },
-    { value: 'open', label: this.openLabel() },
+    { value: 'invite-only', label: this.inviteOnlyLabel(), icon: 'lock' },
+    { value: 'open', label: this.openLabel(), icon: 'globe' },
   ]);
 
   selectedVisibilityStr = computed(() =>

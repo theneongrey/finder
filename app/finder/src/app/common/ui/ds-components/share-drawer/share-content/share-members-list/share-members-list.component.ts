@@ -51,6 +51,19 @@ export class ShareMembersListComponent {
     }),
   );
 
+  roleSummaryText = computed(() => {
+    const counts: Record<string, number> = {};
+    for (const m of this.members()) {
+      const key = this.getRoleKey(m.role);
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+    const order = ['creator', 'owner', 'maintainer', 'voter'];
+    return Object.entries(counts)
+      .sort(([a], [b]) => order.indexOf(a) - order.indexOf(b))
+      .map(([key, count]) => `${count} ${this.translateService.instant('project.roles.' + key)}`)
+      .join(' · ');
+  });
+
   voterLabel = this.translateService.translate('project.roles.voter');
   maintainerLabel = this.translateService.translate('project.roles.maintainer');
   ownerLabel = this.translateService.translate('project.roles.owner');

@@ -4,7 +4,7 @@
   background: var(--bg-sheet);
   border-radius: 26px 26px 0 0;
   box-shadow: var(--shadow-sheet);
-  padding: 10px 22px 26px;
+  padding: 10px 18px 26px;
   max-height: 92dvh;
   overflow-y: auto;
   font-family: var(--font-body);
@@ -18,12 +18,13 @@
   height: 4.5px;
   border-radius: 3px;
   background: var(--cream-400);
-  margin: 0 auto 16px;
+  margin: 0 auto;
 }
 .ds-sheet-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
+  padding: 12px 0;
 }
 .ds-sheet-titles { flex: 1; }
 .ds-sheet-title {
@@ -42,5 +43,9 @@
   .ds-sheet-panel {
     border-radius: var(--radius-3xl);
     max-height: 80vh;
+    padding: 12px 28px 32px;
+  }
+  .ds-sheet-handle {
+    display: none;
   }
 }

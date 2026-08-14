@@ -5,7 +5,7 @@
 />
 
 @if (activeTab() === 'invite') {
-  <div class="mt-5">
+  <div class="mt-[18px]">
     <app-share-access-tab
       [visibilityOptions]="visibilityOptions()"
       [selectedVisibility]="selectedVisibilityStr()"
@@ -14,7 +14,7 @@
       (visibilityChange)="onVisibilityChange($event)"
     />
     <app-share-invite-form
-      class="block mt-5"
+      class="block"
       [projectId]="projectId()"
       [contacts]="sharingContacts()"
       [sharingInProgress]="sharingInProgress()"
@@ -23,7 +23,7 @@
 }
 
 @if (activeTab() === 'members') {
-  <div class="mt-5">
+  <div class="mt-[18px]">
     <app-share-members-list
       [projectId]="projectId()"
       [members]="sharedWith()"

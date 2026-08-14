@@ -1,5 +1,8 @@
 @if (members().length > 0) {
-  <p class="label mb-3">{{ 'project.share.alreadyShared' | translate }}</p>
+  <div class="mb-3 flex items-center justify-between">
+    <p class="label">{{ 'project.share.alreadyShared' | translate }}</p>
+    <span class="text-sm font-semibold text-[var(--text-secondary)]">{{ members().length }} {{ 'project.share.persons' | translate }}</span>
+  </div>
 
   <div class="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-hairline-soft)] bg-white">
     @for (member of sortedMembers(); track member.email; let last = $last) {
@@ -63,10 +66,14 @@
       </div>
     }
   </div>
+
+  @if (roleSummaryText()) {
+    <p class="mt-2 text-xs text-[var(--text-muted)]">{{ roleSummaryText() }}</p>
+  }
 }
 
 <ds-empty-state-button
-  class="block mt-4"
+  class="block mt-6"
   layout="row"
   icon="users"
   [label]="'project.share.inviteMore' | translate"

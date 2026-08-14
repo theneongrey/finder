@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   input,
@@ -31,7 +32,11 @@ export class ShareDrawerComponent {
   visibilityType = input.required<VisibilityType>();
   visible = model(false);
 
-  readonly subtitle = this.translateService.translate('project.share.title');
+  private readonly titleLabel = this.translateService.translate('project.share.title');
+  private readonly pollLabel = this.translateService.translate('project.share.pollLabel');
+
+  readonly sharingTitle = this.titleLabel;
+  readonly sharingSubtitle = computed(() => `${this.pollLabel()} · ${this.projectName()}`);
 
   constructor() {
     effect(() => {

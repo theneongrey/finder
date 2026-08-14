@@ -1,7 +1,7 @@
 <ds-bottom-sheet
   [open]="visible()"
-  [title]="projectName()"
-  [subtitle]="subtitle()"
+  [title]="sharingTitle()"
+  [subtitle]="sharingSubtitle()"
   (dismissed)="visible.set(false)"
 >
   <app-share-content

@@ -24,7 +24,7 @@
     <div class="idea-headline">{{ currentIdea().headlineKey | translate }}</div>
     <p class="idea-story">{{ currentIdea().storyKey | translate }}</p>
     <div class="idea-points">
-      @for (pk of currentIdea().pointKeys; track pk) {
+      @for (pk of currentIdea().pointKeys; track $index) {
         <div class="idea-point">
           <span class="point-check">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"/></svg>
@@ -47,7 +47,7 @@
       <div class="preview-kind">{{ currentIdea().pollKindKey | translate }}</div>
       <div class="preview-question">{{ currentIdea().questionKey | translate }}</div>
       <div class="preview-options">
-        @for (o of currentIdea().optionsFormatted; track o.labelKey) {
+        @for (o of currentIdea().optionsFormatted; track $index) {
           <div class="preview-option" [style.border-color]="o.border">
             <div class="preview-bar" [style.width]="o.pct" [style.background]="o.fill"></div>
             <div class="preview-option-row">
@@ -59,7 +59,7 @@
       </div>
       <div class="preview-voters">
         <ds-avatar-group class="preview-avatar-row">
-          @for (v of currentIdea().votersFormatted; track v.i) {
+          @for (v of currentIdea().votersFormatted; track $index) {
             <ds-avatar [initial]="v.i" [bg]="v.bg" [fg]="v.fg" />
           }
         </ds-avatar-group>

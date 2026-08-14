@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmInput } from '@spartan-ng/helm/input';
 import { DsButtonComponent } from '../../../button/ds-button.component';
+import { DsInputComponent } from '../../../input/ds-input.component';
 import { DsSegmentedControlComponent } from '../../../segmented-control/ds-segmented-control.component';
 import { SharingStore } from '../../../../../../features/polls/_shared/data/sharing.store';
 import { SharingContact } from '../../../../../../features/polls/_shared/models/poll-detail.model';
@@ -19,7 +19,7 @@ import { SharingContact } from '../../../../../../features/polls/_shared/models/
   selector: 'app-share-invite-form',
   templateUrl: './share-invite-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HlmInput, FormsModule, TranslatePipe, DsButtonComponent, DsSegmentedControlComponent],
+  imports: [FormsModule, TranslatePipe, DsButtonComponent, DsInputComponent, DsSegmentedControlComponent],
 })
 export class ShareInviteFormComponent {
   private readonly sharingStore = inject(SharingStore);

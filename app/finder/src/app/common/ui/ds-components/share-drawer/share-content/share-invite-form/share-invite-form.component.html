@@ -2,20 +2,19 @@
 
 <div class="relative">
   <div class="flex gap-2">
-    <input
-      hlmInput
-      type="email"
+    <ds-input
+      class="flex-1"
+      type="text"
       autocomplete="off"
-      [ngModel]="contactEmail()"
-      (ngModelChange)="onEmailInput($event)"
       [placeholder]="'project.share.nameOrEmail' | translate"
-      [disabled]="sharingInProgress()"
-      class="flex-1 !bg-white"
+      [ngModel]="contactEmail() ?? ''"
+      (ngModelChange)="onEmailInput($event)"
+      [readonly]="sharingInProgress()"
     />
     <ds-button
+      icon="send"
       variant="primary"
       [size]="44"
-      icon="send"
       [disabled]="!contactEmail()"
       [loading]="sharingInProgress()"
       (click)="invite()"

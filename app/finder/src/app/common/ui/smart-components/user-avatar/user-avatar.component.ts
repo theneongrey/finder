@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
-import { User } from '../../../models/user.model';
 
 const PERSON_PALETTE = [
   { bg: 'var(--person-1-bg)', fg: 'var(--person-1-fg)' },
@@ -27,7 +26,7 @@ function nameHash(name: string): number {
   host: { style: 'display: contents' },
 })
 export class UserAvatarComponent {
-  user = input.required<User>();
+  user = input.required<{ name: string }>();
   size = input<'normal' | 'large' | 'xlarge'>('normal');
 
   protected readonly initial = computed(() => this.user().name?.[0]?.toUpperCase() ?? '');

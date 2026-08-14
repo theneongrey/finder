@@ -8,17 +8,17 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DsTabsComponent, TabItem } from '../../tabs/ds-tabs.component';
-import { SegmentOption } from '../../segmented-control/ds-segmented-control.component';
+import { DsTabsComponent, TabItem } from '@ds/tabs/ds-tabs.component';
+import { SegmentOption } from '@ds/segmented-control/ds-segmented-control.component';
 import { ShareAccessFormComponent } from './share-access-form/share-access-form.component';
 import { ShareInviteFormComponent } from './share-invite-form/share-invite-form.component';
 import { ShareMembersListComponent } from './share-members-list/share-members-list.component';
 import {
   SharedWith,
   VisibilityType,
-} from '../../../../../features/polls/_shared/models/poll-detail.model';
-import { SharingStore } from '../../../../../features/polls/_shared/data/sharing.store';
-import { environment } from '../../../../env/environment';
+} from '../../models/poll-detail.model';
+import { SharingStore } from '../../data/sharing.store';
+import { environment } from '../../../../../common/env/environment';
 
 @Component({
   selector: 'app-share-content',
@@ -75,6 +75,10 @@ export class ShareContentComponent {
   constructor() {
     effect(() => {
       this.selectedVisibility.set(this.visibilityType());
+    });
+
+    effect(() => {
+      this.sharingStore.loadContacts(this.projectId());
     });
 
     let prevProjectId: string | undefined;

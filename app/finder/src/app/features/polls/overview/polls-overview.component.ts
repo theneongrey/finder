@@ -14,6 +14,7 @@ import { TitleBarService } from '../../../common/services/title-bar.service';
 import { StandalonePollTabComponent } from './standalone-poll-tab/standalone-poll-tab.component';
 import { PollItem } from '../_shared/models/poll-item.model';
 import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
+import { ShareContentComponent } from '../_shared/ui/share-content/share-content.component';
 
 @Component({
   selector: 'app-polls-overview',
@@ -23,6 +24,7 @@ import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
     TitleBarComponent,
     StandalonePollTabComponent,
     ShareDrawerComponent,
+    ShareContentComponent,
   ],
   templateUrl: './polls-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +40,13 @@ export class PollsOverviewComponent {
   standalonePolls = this.projectListStore.standalonePolls;
   sharingProjectId = signal<string | undefined>(undefined);
   sharingProject = computed(() => this.getSharingProject());
+
+  private readonly shareTitle = this.translateService.translate('project.share.title');
+  private readonly sharePollLabel = this.translateService.translate('project.share.pollLabel');
+  readonly shareDrawerTitle = this.shareTitle;
+  readonly shareDrawerSubtitle = computed(
+    () => `${this.sharePollLabel()} · ${this.sharingProject()?.projectName ?? ''}`,
+  );
 
   confirmDialogOpen = signal(false);
   confirmTitle = signal('');

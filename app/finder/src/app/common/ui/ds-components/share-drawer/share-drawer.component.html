@@ -1,12 +1,8 @@
 <ds-bottom-sheet
   [open]="visible()"
-  [title]="sharingTitle()"
-  [subtitle]="sharingSubtitle()"
+  [title]="title()"
+  [subtitle]="subtitle()"
   (dismissed)="visible.set(false)"
 >
-  <app-share-content
-    [projectId]="projectId()"
-    [sharedWith]="sharedWith()"
-    [visibilityType]="visibilityType()"
-  />
+  <ng-content />
 </ds-bottom-sheet>

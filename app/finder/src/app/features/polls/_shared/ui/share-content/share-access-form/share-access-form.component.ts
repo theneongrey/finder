@@ -7,15 +7,16 @@ import {
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
-import { DsButtonComponent } from '../../../button/ds-button.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import {
   DsSegmentedControlComponent,
   SegmentOption,
-} from '../../../segmented-control/ds-segmented-control.component';
+} from '@ds/segmented-control/ds-segmented-control.component';
 
 @Component({
   selector: 'app-share-access-tab',
-  imports: [DsButtonComponent, DsSegmentedControlComponent, TranslatePipe],
+  imports: [DsButtonComponent, DsIconComponent, DsSegmentedControlComponent, TranslatePipe],
   templateUrl: './share-access-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

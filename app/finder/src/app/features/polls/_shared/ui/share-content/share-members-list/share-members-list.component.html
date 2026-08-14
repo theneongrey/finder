@@ -22,21 +22,11 @@
           @if (member.role === PollRole.Creator) {
             <ds-badge tone="accent" size="lg">{{ 'project.roles.creator' | translate }}</ds-badge>
           } @else {
-            <button
-              class="shrink-0 cursor-pointer transition-opacity hover:opacity-80"
-              [hlmDropdownMenuTrigger]="roleMenu"
-            >
-              <ds-badge [tone]="getRoleBadgeTone(member.role)" size="lg">
+            <ds-menu [items]="getRoleMenuItems(member)">
+              <ds-badge [tone]="getRoleBadgeTone(member.role)" size="lg" class="cursor-pointer">
                 {{ 'project.roles.' + getRoleKey(member.role) | translate }}
               </ds-badge>
-            </button>
-            <ng-template #roleMenu>
-              <hlm-dropdown-menu>
-                <button hlmDropdownMenuItem [disabled]="member.role === PollRole.Voter" (click)="changeRole(member.email, 0)">{{ voterLabel() }}</button>
-                <button hlmDropdownMenuItem [disabled]="member.role === PollRole.Maintainer" (click)="changeRole(member.email, 1)">{{ maintainerLabel() }}</button>
-                <button hlmDropdownMenuItem [disabled]="member.role === PollRole.Owner" (click)="changeRole(member.email, 2)">{{ ownerLabel() }}</button>
-              </hlm-dropdown-menu>
-            </ng-template>
+            </ds-menu>
           }
 
           @if (!isPublic() && member.role !== PollRole.Creator) {

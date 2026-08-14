@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { HlmButton } from '@spartan-ng/helm/button';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
-export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'subtle' | 'ghost' | 'neutral' | 'surface' | 'teal';
+export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'subtle' | 'ghost' | 'neutral' | 'surface' | 'teal' | 'soft';
 export type ButtonSize = 'sm' | 'md';
 
 @Component({

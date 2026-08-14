@@ -9,17 +9,18 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { DsButtonComponent } from '../../../button/ds-button.component';
-import { DsInputComponent } from '../../../input/ds-input.component';
-import { DsSegmentedControlComponent } from '../../../segmented-control/ds-segmented-control.component';
-import { SharingStore } from '../../../../../../features/polls/_shared/data/sharing.store';
-import { SharingContact } from '../../../../../../features/polls/_shared/models/poll-detail.model';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsSegmentedControlComponent } from '@ds/segmented-control/ds-segmented-control.component';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
+import { SharingStore } from '../../../data/sharing.store';
+import { SharingContact } from '../../../models/poll-detail.model';
 
 @Component({
   selector: 'app-share-invite-form',
   templateUrl: './share-invite-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, TranslatePipe, DsButtonComponent, DsInputComponent, DsSegmentedControlComponent],
+  imports: [FormsModule, TranslatePipe, DsButtonComponent, DsInputComponent, DsSegmentedControlComponent, UserAvatarComponent],
 })
 export class ShareInviteFormComponent {
   private readonly sharingStore = inject(SharingStore);

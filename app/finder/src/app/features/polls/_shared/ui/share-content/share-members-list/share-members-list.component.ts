@@ -8,14 +8,14 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { DsAvatarComponent } from '../../../avatar/ds-avatar.component';
-import { DsBadgeComponent, BadgeTone } from '../../../badge/ds-badge.component';
-import { DsButtonComponent } from '../../../button/ds-button.component';
-import { DsEmptyStateButtonComponent } from '../../../empty-state-button/ds-empty-state-button.component';
-import { SharedWith } from '../../../../../../features/polls/_shared/models/poll-detail.model';
-import { SharingStore } from '../../../../../../features/polls/_shared/data/sharing.store';
-import { PollRole } from '../../../../../../features/polls/_shared/models/poll-role.enum';
+import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
+import { DsBadgeComponent, BadgeTone } from '@ds/badge/ds-badge.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
+import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
+import { SharedWith } from '../../../models/poll-detail.model';
+import { SharingStore } from '../../../data/sharing.store';
+import { PollRole } from '../../../models/poll-role.enum';
 
 @Component({
   selector: 'app-share-members-list',
@@ -26,7 +26,7 @@ import { PollRole } from '../../../../../../features/polls/_shared/models/poll-r
     DsBadgeComponent,
     DsButtonComponent,
     DsEmptyStateButtonComponent,
-    ...HlmDropdownMenuImports,
+    DsMenuComponent,
     TranslatePipe,
   ],
 })
@@ -64,9 +64,23 @@ export class ShareMembersListComponent {
       .join(' · ');
   });
 
-  voterLabel = this.translateService.translate('project.roles.voter');
-  maintainerLabel = this.translateService.translate('project.roles.maintainer');
-  ownerLabel = this.translateService.translate('project.roles.owner');
+  private readonly voterLabel = this.translateService.translate('project.roles.voter');
+  private readonly maintainerLabel = this.translateService.translate('project.roles.maintainer');
+  private readonly ownerLabel = this.translateService.translate('project.roles.owner');
+
+  getRoleMenuItems(member: SharedWith): MenuItem[] {
+    const items: MenuItem[] = [];
+    if (member.role !== PollRole.Voter) {
+      items.push({ icon: 'user', label: this.voterLabel(), onClick: () => this.changeRole(member.email, 0) });
+    }
+    if (member.role !== PollRole.Maintainer) {
+      items.push({ icon: 'user', label: this.maintainerLabel(), onClick: () => this.changeRole(member.email, 1) });
+    }
+    if (member.role !== PollRole.Owner) {
+      items.push({ icon: 'user', label: this.ownerLabel(), onClick: () => this.changeRole(member.email, 2) });
+    }
+    return items;
+  }
 
   getRoleKey(role: PollRole): string {
     switch (role) {

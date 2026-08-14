@@ -1,27 +1,49 @@
+:host {
+  display: inline-flex;
+}
+
 button.ds-btn-primary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: var(--accent);
   color: var(--text-on-accent);
   border: none;
-  border-radius: 10px;
+  border-radius: var(--ds-btn-radius, 10px);
   padding: 0 var(--space-20);
-  height: 48px;
-  font-size: var(--fs-body);
+  height: var(--ds-btn-height, 48px);
+  font-size: var(--ds-btn-font-size, var(--fs-body));
   font-weight: var(--weight-semibold);
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 button.ds-btn-primary:hover {
   filter: brightness(0.93);
 }
 
+button.ds-btn-primary:active {
+  transform: scale(0.985);
+}
+
 button.ds-btn-ghost {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: transparent;
   color: var(--text-body);
   border: 1.5px solid var(--border-hairline-strong);
-  border-radius: 10px;
+  border-radius: var(--ds-btn-radius, 10px);
   padding: 0 var(--space-20);
-  height: 48px;
-  font-size: var(--fs-body);
+  height: var(--ds-btn-height, 48px);
+  font-size: var(--ds-btn-font-size, var(--fs-body));
   font-weight: var(--weight-semibold);
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 button.ds-btn-ghost:hover {

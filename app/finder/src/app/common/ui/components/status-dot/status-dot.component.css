@@ -1,0 +1,15 @@
+:host {
+  display: inline-block;
+  width: var(--ds-dot-size, 6px);
+  height: var(--ds-dot-size, 6px);
+  border-radius: 50%;
+  flex: none;
+  background: var(--ds-dot-color, #5d9a56);
+  animation: ds-status-pulse 2.6s ease-out infinite;
+}
+
+@keyframes ds-status-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(93, 154, 86, 0.5); }
+  70% { box-shadow: 0 0 0 7px rgba(93, 154, 86, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(93, 154, 86, 0); }
+}

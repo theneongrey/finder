@@ -1,0 +1,13 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ds-avatar-size, 28px);
+  height: var(--ds-avatar-size, 28px);
+  border-radius: 50%;
+  border: var(--ds-avatar-border, none);
+  font-size: var(--ds-avatar-font-size, 11.5px);
+  font-weight: var(--weight-bold);
+  flex: none;
+  user-select: none;
+}

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { detectBrowserLanguage, getStoredLanguage } from '../../common/i18n/languages';
+import { LANGUAGE_STORAGE_KEY, detectBrowserLanguage, getStoredLanguage } from '../../common/i18n/languages';
 
 @Component({
   selector: 'app-language-redirect',
@@ -10,8 +10,9 @@ import { detectBrowserLanguage, getStoredLanguage } from '../../common/i18n/lang
 export class LanguageRedirectComponent {
   constructor() {
     const router = inject(Router);
-    const stored = localStorage.getItem('language');
-    const lang = stored ? getStoredLanguage() : detectBrowserLanguage();
+    const lang = localStorage.getItem(LANGUAGE_STORAGE_KEY)
+      ? getStoredLanguage()
+      : detectBrowserLanguage();
     router.navigate([lang], { replaceUrl: true });
   }
 }

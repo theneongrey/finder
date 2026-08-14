@@ -1,0 +1,10 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-badge-gap, 6px);
+  height: var(--ds-badge-height, 26px);
+  padding: var(--ds-badge-padding, 0 11px);
+  border-radius: var(--ds-badge-radius, 999px);
+  font-size: var(--ds-badge-font-size, var(--fs-caption-sm));
+  font-weight: var(--ds-badge-font-weight, var(--weight-bold));
+}

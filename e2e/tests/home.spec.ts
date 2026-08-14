@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Startseite (home / landing page)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/home');
+    await page.goto('/de');
   });
 
   test('renders with cream --bg-app background', async ({ page }) => {
@@ -11,13 +11,10 @@ test.describe('Startseite (home / landing page)', () => {
     expect(bgColor).toBe('rgb(244, 241, 236)');
   });
 
-  test('Votean wordmark is visible — ds-icon logo + Bricolage text', async ({ page }) => {
-    const wordmarkText = page.locator('.wordmark-text');
-    await expect(wordmarkText).toBeVisible();
-    await expect(wordmarkText).toHaveText('Votean');
-
-    const logoSvg = page.locator('ds-icon svg');
-    await expect(logoSvg).toBeVisible();
+  test('Votean logo is visible in nav', async ({ page }) => {
+    const logo = page.locator('.nav-logo');
+    await expect(logo).toBeVisible();
+    await expect(logo).toContainText('Votean');
   });
 
   test('hero h1 heading uses display font', async ({ page }) => {
@@ -28,11 +25,10 @@ test.describe('Startseite (home / landing page)', () => {
     expect(fontFamily.toLowerCase()).toContain('bricolage grotesque');
   });
 
-  test('primary button "Jetzt starten" navigates to /auth/login', async ({ page }) => {
-    const btn = page.getByRole('button', { name: 'Jetzt starten' });
-    await expect(btn).toBeVisible();
-    await btn.click();
-    await page.waitForURL('**/auth/login');
+  test('email CTA navigates to /auth/request-email', async ({ page }) => {
+    await page.fill('#home-email', 'test@example.com');
+    await page.getByRole('button', { name: /Loslegen/i }).click();
+    await page.waitForURL('**/auth/request-email**');
   });
 
   test('no BackgroundAnimationComponent or animation artifacts', async ({ page }) => {
@@ -42,9 +38,9 @@ test.describe('Startseite (home / landing page)', () => {
 
   test('renders correctly at mobile viewport (390×844)', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/home');
+    await page.goto('/de');
 
-    const content = page.locator('.home-content');
+    const content = page.locator('.page-scroll');
     await expect(content).toBeVisible();
 
     const box = await content.boundingBox();
@@ -54,13 +50,13 @@ test.describe('Startseite (home / landing page)', () => {
 
   test('renders correctly at desktop viewport (1280×820)', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
-    await page.goto('/home');
+    await page.goto('/de');
 
-    const content = page.locator('.home-content');
+    const content = page.locator('.page-scroll');
     await expect(content).toBeVisible();
 
-    const ctaGroup = page.locator('.cta-group');
-    const flexDir = await ctaGroup.evaluate((el) => getComputedStyle(el).flexDirection);
+    const emailRow = page.locator('.email-row');
+    const flexDir = await emailRow.evaluate((el) => getComputedStyle(el).flexDirection);
     expect(flexDir).toBe('row');
   });
 });

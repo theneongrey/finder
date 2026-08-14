@@ -5,35 +5,29 @@ import {
   input,
   output,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
-import { VisibilityType } from '../../../../../../features/polls/_shared/models/poll-detail.model';
+import { DsButtonComponent } from '../../../button/ds-button.component';
+import {
+  DsSegmentedControlComponent,
+  SegmentOption,
+} from '../../../segmented-control/ds-segmented-control.component';
 
 @Component({
   selector: 'app-share-access-tab',
-  imports: [HlmButton, ...HlmToggleGroupImports, FormsModule, TranslatePipe],
+  imports: [DsButtonComponent, DsSegmentedControlComponent, TranslatePipe],
   templateUrl: './share-access-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareAccessFormComponent {
   private readonly translateService = inject(TranslateService);
 
-  visibilityOptions =
-    input.required<{ label: string; value: VisibilityType }[]>();
-  selectedVisibility = input.required<VisibilityType>();
+  visibilityOptions = input.required<SegmentOption[]>();
+  selectedVisibility = input.required<string>();
   isPublic = input.required<boolean>();
   shareLink = input.required<string>();
 
-  visibilityChange = output<VisibilityType>();
-
-  onVisibilityChange(value: VisibilityType | VisibilityType[] | null | undefined) {
-    if (typeof value === 'number') {
-      this.visibilityChange.emit(value);
-    }
-  }
+  visibilityChange = output<string>();
 
   copyLink() {
     navigator.clipboard.writeText(this.shareLink()).then(() => {

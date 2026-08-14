@@ -4,12 +4,15 @@ import {
   computed,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmAvatar, HlmAvatarFallback, HlmAvatarImage } from '@spartan-ng/helm/avatar';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { HlmButton } from '@spartan-ng/helm/button';
+import { DsAvatarComponent } from '../../../avatar/ds-avatar.component';
+import { DsBadgeComponent, BadgeTone } from '../../../badge/ds-badge.component';
+import { DsButtonComponent } from '../../../button/ds-button.component';
+import { DsEmptyStateButtonComponent } from '../../../empty-state-button/ds-empty-state-button.component';
 import { SharedWith } from '../../../../../../features/polls/_shared/models/poll-detail.model';
 import { SharingStore } from '../../../../../../features/polls/_shared/data/sharing.store';
 import { PollRole } from '../../../../../../features/polls/_shared/models/poll-role.enum';
@@ -18,7 +21,14 @@ import { PollRole } from '../../../../../../features/polls/_shared/models/poll-r
   selector: 'app-share-members-list',
   templateUrl: './share-members-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HlmAvatar, HlmAvatarFallback, HlmAvatarImage, HlmButton, ...HlmDropdownMenuImports, TranslatePipe],
+  imports: [
+    DsAvatarComponent,
+    DsBadgeComponent,
+    DsButtonComponent,
+    DsEmptyStateButtonComponent,
+    ...HlmDropdownMenuImports,
+    TranslatePipe,
+  ],
 })
 export class ShareMembersListComponent {
   private readonly sharingStore = inject(SharingStore);
@@ -28,15 +38,15 @@ export class ShareMembersListComponent {
   members = input.required<SharedWith[]>();
   isPublic = input.required<boolean>();
 
+  goInvite = output<void>();
+
   readonly PollRole = PollRole;
 
   pendingRemoveEmail = signal<string | undefined>(undefined);
 
   sortedMembers = computed(() =>
     [...this.members()].sort((a, b) => {
-      if (b.role !== a.role) {
-        return b.role - a.role;
-      }
+      if (b.role !== a.role) return b.role - a.role;
       return a.name.localeCompare(b.name);
     }),
   );
@@ -47,33 +57,33 @@ export class ShareMembersListComponent {
 
   getRoleKey(role: PollRole): string {
     switch (role) {
-      case PollRole.Voter: return 'voter';
+      case PollRole.Voter:      return 'voter';
       case PollRole.Maintainer: return 'maintainer';
-      case PollRole.Owner: return 'owner';
-      case PollRole.Creator: return 'creator';
-      default: return 'unknown';
+      case PollRole.Owner:      return 'owner';
+      case PollRole.Creator:    return 'creator';
+      default:                  return 'unknown';
+    }
+  }
+
+  getRoleBadgeTone(role: PollRole): BadgeTone {
+    switch (role) {
+      case PollRole.Creator:    return 'accent';
+      case PollRole.Owner:      return 'manager';
+      case PollRole.Maintainer: return 'contributor';
+      default:                  return 'viewer';
     }
   }
 
   changeRole(email: string, permissionType: number) {
-    this.sharingStore.share({
-      email,
-      permissionType,
-      projectId: this.projectId(),
-    });
+    this.sharingStore.share({ email, permissionType, projectId: this.projectId() });
   }
 
   onRemoveClick(email: string) {
-    this.pendingRemoveEmail.set(
-      this.pendingRemoveEmail() === email ? undefined : email,
-    );
+    this.pendingRemoveEmail.set(this.pendingRemoveEmail() === email ? undefined : email);
   }
 
   confirmRemove(email: string) {
-    this.sharingStore.removePermission({
-      projectId: this.projectId(),
-      email,
-    });
+    this.sharingStore.removePermission({ projectId: this.projectId(), email });
     this.pendingRemoveEmail.set(undefined);
   }
 }

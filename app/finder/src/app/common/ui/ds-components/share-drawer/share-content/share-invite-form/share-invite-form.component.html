@@ -1,45 +1,55 @@
-<p
-  class="text-xs font-semibold uppercase tracking-wide text-gray-500 mt-4 mb-2"
->
-  {{ "project.share.invite" | translate }}
-</p>
+<p class="label mb-2">{{ 'project.share.personInvite' | translate }}</p>
 
-<div class="flex gap-2">
-  <input
-    hlmInput
-    type="email"
-    list="contacts-list"
-    autocomplete="off"
-    [ngModel]="contactEmail()"
-    (ngModelChange)="contactEmail.set($event)"
-    [placeholder]="'project.share.nameOrEmail' | translate"
-    [disabled]="sharingInProgress()"
-    class="flex-1"
-  />
-  <datalist id="contacts-list">
-    @for (c of contacts(); track c.email) {
-      <option [value]="c.email">{{ c.name }}</option>
-    }
-  </datalist>
-  <button hlmBtn icon="fa-solid fa-paper-plane" [disabled]="!contactEmail()" [loading]="sharingInProgress()" (click)="invite()">
-  </button>
+<div class="relative">
+  <div class="flex gap-2">
+    <input
+      hlmInput
+      type="email"
+      autocomplete="off"
+      [ngModel]="contactEmail()"
+      (ngModelChange)="onEmailInput($event)"
+      [placeholder]="'project.share.nameOrEmail' | translate"
+      [disabled]="sharingInProgress()"
+      class="flex-1 !bg-white"
+    />
+    <ds-button
+      variant="primary"
+      [size]="44"
+      icon="send"
+      [disabled]="!contactEmail()"
+      [loading]="sharingInProgress()"
+      (click)="invite()"
+    />
+  </div>
+
+  @if (dropdownVisible() && filteredContacts().length > 0) {
+    <div class="absolute top-full left-0 right-0 z-20 mt-1 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-hairline-soft)] bg-white shadow-lg">
+      @for (c of filteredContacts(); track c.email) {
+        <button
+          class="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-[var(--sand-100)]"
+          type="button"
+          (click)="selectContact(c)"
+        >
+          <span
+            class="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+            style="background: var(--accent-tint); color: var(--accent)"
+          >{{ c.name[0]?.toUpperCase() }}</span>
+          <div class="min-w-0">
+            <p class="truncate text-sm font-medium">{{ c.name }}</p>
+            <p class="truncate text-xs text-[var(--text-muted)]">{{ c.email }}</p>
+          </div>
+        </button>
+      }
+    </div>
+  }
 </div>
 
-<hlm-toggle-group
-  type="single"
-  [nullable]="false"
-  [value]="selectedRole()"
-  (valueChange)="onRoleChange($event)"
-  variant="outline"
-  class="mt-4 w-full"
->
-  @for (opt of roleOptions(); track opt.id) {
-    <button hlmToggleGroupItem [value]="opt.id" class="flex-1">
-      {{ opt.label }}
-    </button>
-  }
-</hlm-toggle-group>
+<p class="label mb-2 mt-5">{{ 'project.share.roleLabel' | translate }}</p>
 
-<p class="text-sm text-gray-500 mt-2">
-  {{ selectedRoleDescription() }}
-</p>
+<ds-segmented-control
+  [options]="roleOptions()"
+  [value]="selectedRole()"
+  (valueChange)="selectedRole.set($event)"
+/>
+
+<p class="mt-1.5 text-sm text-[var(--text-secondary)]">{{ selectedRoleDescription() }}</p>

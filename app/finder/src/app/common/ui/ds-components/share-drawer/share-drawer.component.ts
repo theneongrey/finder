@@ -6,8 +6,8 @@ import {
   input,
   model,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { HlmSheetImports } from '@spartan-ng/helm/sheet';
+import { TranslateService } from '@ngx-translate/core';
+import { DsBottomSheetComponent } from '../bottom-sheet/ds-bottom-sheet.component';
 import { ShareContentComponent } from './share-content/share-content.component';
 import {
   SharedWith,
@@ -17,18 +17,21 @@ import { SharingStore } from '../../../../features/polls/_shared/data/sharing.st
 
 @Component({
   selector: 'app-share-drawer',
-  imports: [...HlmSheetImports, TranslatePipe, ShareContentComponent],
+  imports: [DsBottomSheetComponent, ShareContentComponent],
   templateUrl: './share-drawer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareDrawerComponent {
   private readonly sharingStore = inject(SharingStore);
+  private readonly translateService = inject(TranslateService);
 
   projectId = input.required<string>();
   projectName = input.required<string>();
   sharedWith = input.required<SharedWith[]>();
   visibilityType = input.required<VisibilityType>();
   visible = model(false);
+
+  readonly subtitle = this.translateService.translate('project.share.title');
 
   constructor() {
     effect(() => {

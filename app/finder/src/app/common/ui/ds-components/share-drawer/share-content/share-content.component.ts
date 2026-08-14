@@ -7,13 +7,12 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmSeparator } from '@spartan-ng/helm/separator';
-import { HlmTabsImports } from '@spartan-ng/helm/tabs';
+import { TranslateService } from '@ngx-translate/core';
+import { DsTabsComponent, TabItem } from '../../tabs/ds-tabs.component';
+import { SegmentOption } from '../../segmented-control/ds-segmented-control.component';
 import { ShareAccessFormComponent } from './share-access-form/share-access-form.component';
 import { ShareInviteFormComponent } from './share-invite-form/share-invite-form.component';
 import { ShareMembersListComponent } from './share-members-list/share-members-list.component';
-import { NgTemplateOutlet } from '@angular/common';
 import {
   SharedWith,
   VisibilityType,
@@ -24,13 +23,10 @@ import { environment } from '../../../../env/environment';
 @Component({
   selector: 'app-share-content',
   imports: [
-    HlmSeparator,
-    ...HlmTabsImports,
-    TranslatePipe,
+    DsTabsComponent,
     ShareAccessFormComponent,
     ShareInviteFormComponent,
     ShareMembersListComponent,
-    NgTemplateOutlet,
   ],
   templateUrl: './share-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,47 +39,59 @@ export class ShareContentComponent {
   sharedWith = input.required<SharedWith[]>();
   visibilityType = input.required<VisibilityType>();
 
-  selectedVisibility = signal<VisibilityType>(
-    VisibilityType.VisibleForSelectedOnly,
-  );
-  activeTab = signal('access');
+  selectedVisibility = signal<VisibilityType>(VisibilityType.VisibleForSelectedOnly);
+  activeTab = signal('invite');
 
   sharingContacts = this.sharingStore.sharingContactsSuggestion;
   sharingInProgress = this.sharingStore.sharingInProgress;
 
-  isPublic = computed(
-    () => this.selectedVisibility() === VisibilityType.VisibleForEverybody,
-  );
+  memberCount = computed(() => this.sharedWith().length);
+  isPublic = computed(() => this.selectedVisibility() === VisibilityType.VisibleForEverybody);
   shareLink = computed(() => `${environment.baseUrl}/p/${this.projectId()}`);
 
-  private inviteOnlyLabel = this.translateService.translate(
-    'project.share.inviteOnly',
-  );
-  private openLabel = this.translateService.translate('project.share.open');
+  private readonly inviteOnlyLabel = this.translateService.translate('project.share.inviteOnly');
+  private readonly openLabel = this.translateService.translate('project.share.open');
+  private readonly inviteTabLabel = this.translateService.translate('project.share.invite');
+  private readonly accessTabLabel = this.translateService.translate('project.share.tabAccess');
 
-  visibilityOptions = computed(() => [
+  visibilityOptions = computed<SegmentOption[]>(() => [
+    { value: 'invite-only', label: this.inviteOnlyLabel() },
+    { value: 'open', label: this.openLabel() },
+  ]);
+
+  selectedVisibilityStr = computed(() =>
+    this.selectedVisibility() === VisibilityType.VisibleForEverybody ? 'open' : 'invite-only',
+  );
+
+  tabItems = computed<TabItem[]>(() => [
+    { value: 'invite', label: this.inviteTabLabel() },
     {
-      label: this.inviteOnlyLabel(),
-      value: VisibilityType.VisibleForSelectedOnly,
+      value: 'members',
+      label: this.accessTabLabel(),
+      count: this.memberCount() > 0 ? this.memberCount() : undefined,
     },
-    { label: this.openLabel(), value: VisibilityType.VisibleForEverybody },
   ]);
 
   constructor() {
     effect(() => {
       this.selectedVisibility.set(this.visibilityType());
     });
-  }
 
-  setActiveTab(value: string) {
-    this.activeTab.set(value);
-  }
-
-  onVisibilityChange(value: VisibilityType) {
-    this.selectedVisibility.set(value);
-    this.sharingStore.updateVisibilityType({
-      projectId: this.projectId(),
-      type: value,
+    let prevProjectId: string | undefined;
+    effect(() => {
+      const id = this.projectId();
+      if (prevProjectId !== undefined && prevProjectId !== id) {
+        this.activeTab.set('invite');
+      }
+      prevProjectId = id;
     });
+  }
+
+  onVisibilityChange(value: string) {
+    const vt = value === 'open'
+      ? VisibilityType.VisibleForEverybody
+      : VisibilityType.VisibleForSelectedOnly;
+    this.selectedVisibility.set(vt);
+    this.sharingStore.updateVisibilityType({ projectId: this.projectId(), type: vt });
   }
 }

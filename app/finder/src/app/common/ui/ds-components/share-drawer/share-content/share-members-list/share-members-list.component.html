@@ -1,81 +1,74 @@
 @if (members().length > 0) {
-  <p
-    class="text-xs font-semibold uppercase tracking-wide text-gray-500 mt-6 mb-2"
-  >
-    {{ members().length }} {{ "project.share.persons" | translate }}
-  </p>
+  <p class="label mb-3">{{ 'project.share.alreadyShared' | translate }}</p>
 
-  <div class="overflow-y-auto max-h-[250px]">
-    @for (member of sortedMembers(); track member.email) {
+  <div class="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-hairline-soft)] bg-white">
+    @for (member of sortedMembers(); track member.email; let last = $last) {
       <div class="relative">
-        <div class="flex items-center gap-3 py-2">
-          <hlm-avatar>
-            @if (member.picture) {
-              <img [src]="member.picture" hlmAvatarImage alt="{{ member.name }}" />
-            } @else {
-              <span hlmAvatarFallback>{{ member.name[0].toUpperCase() }}</span>
-            }
-          </hlm-avatar>
-          <div class="flex-1 min-w-0">
-            <p class="font-medium truncate text-sm">
-              {{ member.name }}
-            </p>
-            <p class="text-xs text-gray-400 truncate">
-              {{ member.email }}
-            </p>
+        <div
+          class="flex items-center gap-3 px-4 py-3"
+          [class.border-b]="!last"
+          [style.border-color]="'var(--border-hairline-soft)'"
+        >
+          <ds-avatar [initial]="(member.name[0] || '?').toUpperCase()" size="md" />
+
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-medium">{{ member.name }}</p>
+            <p class="truncate text-xs text-[var(--text-muted)]">{{ member.email }}</p>
           </div>
 
-          @if (member.role !== PollRole.Creator) {
+          @if (member.role === PollRole.Creator) {
+            <ds-badge tone="accent" size="lg">{{ 'project.roles.creator' | translate }}</ds-badge>
+          } @else {
             <button
-              class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 cursor-pointer hover:bg-gray-200 transition-colors"
+              class="shrink-0 cursor-pointer transition-opacity hover:opacity-80"
               [hlmDropdownMenuTrigger]="roleMenu"
             >
-              {{ "project.roles." + getRoleKey(member.role) | translate }}
+              <ds-badge [tone]="getRoleBadgeTone(member.role)" size="lg">
+                {{ 'project.roles.' + getRoleKey(member.role) | translate }}
+              </ds-badge>
             </button>
             <ng-template #roleMenu>
               <hlm-dropdown-menu>
-                <button
-                  hlmDropdownMenuItem
-                  [disabled]="member.role === PollRole.Voter"
-                  (click)="changeRole(member.email, 0)"
-                >{{ voterLabel() }}</button>
-                <button
-                  hlmDropdownMenuItem
-                  [disabled]="member.role === PollRole.Maintainer"
-                  (click)="changeRole(member.email, 1)"
-                >{{ maintainerLabel() }}</button>
-                <button
-                  hlmDropdownMenuItem
-                  [disabled]="member.role === PollRole.Owner"
-                  (click)="changeRole(member.email, 2)"
-                >{{ ownerLabel() }}</button>
+                <button hlmDropdownMenuItem [disabled]="member.role === PollRole.Voter" (click)="changeRole(member.email, 0)">{{ voterLabel() }}</button>
+                <button hlmDropdownMenuItem [disabled]="member.role === PollRole.Maintainer" (click)="changeRole(member.email, 1)">{{ maintainerLabel() }}</button>
+                <button hlmDropdownMenuItem [disabled]="member.role === PollRole.Owner" (click)="changeRole(member.email, 2)">{{ ownerLabel() }}</button>
               </hlm-dropdown-menu>
             </ng-template>
-          } @else {
-            <span
-              class="text-xs px-2 py-1 rounded bg-blue-100 text-blue-700"
-            >
-              {{ "project.roles.creator" | translate }}
-            </span>
           }
 
           @if (!isPublic() && member.role !== PollRole.Creator) {
-            <button hlmBtn variant="ghost" size="sm" icon="fa-solid fa-xmark" (click)="onRemoveClick(member.email)">
-            </button>
+            <ds-button
+              variant="ghost"
+              [size]="28"
+              icon="close"
+              (click)="onRemoveClick(member.email)"
+            />
           }
         </div>
 
         @if (pendingRemoveEmail() === member.email) {
           <div
-            class="absolute inset-0 bg-white/80 flex items-center justify-end gap-2 px-3 rounded"
+            class="absolute inset-0 flex items-center justify-end gap-3 px-4 rounded-[inherit]"
+            style="background: rgba(255,255,255,0.92)"
             (click)="pendingRemoveEmail.set(undefined)"
           >
-            <button hlmBtn variant="destructive" size="sm" (click)="$event.stopPropagation(); confirmRemove(member.email)">
-              {{ 'project.share.remove' | translate }}
-            </button>
+            <span class="text-xs text-[var(--text-secondary)]">{{ member.name }} entfernen?</span>
+            <ds-button
+              variant="primary"
+              size="sm"
+              (click)="$event.stopPropagation(); confirmRemove(member.email)"
+            >{{ 'project.share.remove' | translate }}</ds-button>
           </div>
         }
       </div>
     }
   </div>
 }
+
+<ds-empty-state-button
+  class="block mt-4"
+  layout="row"
+  icon="users"
+  [label]="'project.share.inviteMore' | translate"
+  (clicked)="goInvite.emit()"
+/>

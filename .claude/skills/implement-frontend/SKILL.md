@@ -6,13 +6,14 @@ Rules and reference for implementing Angular frontend files in this project. Fol
 
 ## File Structure
 
-Every Angular component **must** use three separate files. Never use inline `template` or `styles` in the `@Component` decorator:
+Angular components use **two** mandatory files. Never use inline `template` or `styles` in the `@Component` decorator:
 
 ```
-my-component.component.ts   — class + @Component (templateUrl + styleUrl)
+my-component.component.ts   — class + @Component (templateUrl, no styleUrl by default)
 my-component.component.html — template
-my-component.component.css  — styles
 ```
+
+A `.component.css` file is added **only** when Tailwind cannot express the styling (complex animations, `:host` selectors with dynamic behaviour, or unavoidable third-party overrides). Never create a CSS file to replicate what Tailwind utility classes already cover.
 
 All components must use `changeDetection: ChangeDetectionStrategy.OnPush`.
 
@@ -127,7 +128,8 @@ Does it import a domain type (OptionType, PollItem, User, …)?
 - No PrimeNG imports introduced (project has migrated away from it).
 - No inline SVGs that could use `<ds-icon>`.
 - No custom button CSS when `<ds-button>` already covers the variant.
-- CSS classes added to `styles.css` (global) only when used in more than one component — otherwise put in the component's `.component.css`.
+- **Prefer Tailwind utility classes** in the template over custom CSS. Do not create a `.component.css` file if all styles can be expressed with Tailwind.
+- CSS classes added to `styles.css` (global) only when used in more than one component and Tailwind cannot cover the need.
 - No `signal<Foo | null>` — use `| undefined`.
 - `@for` blocks all have `track`.
 - No `*ngIf` / `*ngFor` (use `@if` / `@for`).

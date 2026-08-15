@@ -6,7 +6,7 @@ Based on `/review-pr` but interactive: no batching, no auto-applying fixes.
 
 ---
 
-## Step 1 — Identify the PR
+## Step 1 — Identify the PR and Show Comments
 
 Accept a PR number (`#123`) or URL, or operate on the current branch's open PR if no argument is given.
 
@@ -17,6 +17,20 @@ gh pr view <number> --json files --jq '.files[].path'
 ```
 
 If the PR is closed or merged, tell the user and stop.
+
+**Before doing anything else: fetch and display all existing review comments and PR comments.**
+
+```bash
+# Inline review comments
+gh api repos/<owner>/<repo>/pulls/<number>/comments --jq '.[] | "---\n[\(.path):\(.line // "?")]\n\(.user.login): \(.body)"'
+
+# Top-level PR comments
+gh pr view <number> --json comments --jq '.comments[] | "---\n" + .user.login + ": " + .body'
+```
+
+List every comment to the user — path, line, author, and body — with no analysis or proposed fix yet. Then stop and ask: **"Ready to start fixing? I'll work through them one at a time."**
+
+Wait for the user to confirm before proceeding to Step 2.
 
 ---
 
@@ -40,10 +54,11 @@ For every changed `.component.ts`:
 
 ### B — CSS Quality
 
-- **Global styles bleed** — classes added to `styles.css` used in only one component → move to that component's CSS
+- **Tailwind preference** — new `.component.css` file added when all its styles could be Tailwind utility classes → flag; migrate to Tailwind unless the styling genuinely cannot be expressed that way (complex animations, unavoidable third-party overrides)
+- **Global styles bleed** — classes added to `styles.css` used in only one component → move to that component's CSS (or Tailwind)
 - **Unused CSS** — classes defined in `.component.css` that don't appear in the matching `.component.html`
-- **Hardcoded values** — hex colours or px values repeated more than once that could be design tokens or CSS custom properties
-- **Budget** — `anyComponentStyle` thresholds raised in `angular.json` → flag; right fix is splitting the CSS, not raising the budget
+- **Hardcoded values** — hex colours or px values repeated more than once that could be Tailwind classes or CSS custom properties
+- **Budget** — `anyComponentStyle` thresholds raised in `angular.json` → flag; right fix is splitting the CSS or migrating to Tailwind, not raising the budget
 
 ### C — Dead Code and Orphaned Files
 
@@ -80,14 +95,25 @@ Only report errors/warnings introduced by this PR, not pre-existing failures.
 - Inaccessible interactive elements (`<div (click)="...">`, `<a>` without `href`)
 - Routing changes that leave unauthenticated users on bad URLs with nowhere sensible to land
 
+### G — Backend (ASP.NET Core)
+
+For every changed `.cs` file under `api/Finder/`:
+
+- **Domain structure** — new entity, service, or endpoint outside `Business/<Feature>/` → flag; business logic in endpoint handler instead of a service class
+- **Response mapping** — AutoMapper imported → flag; missing `ToXxxResponse()` on a new response DTO
+- **Migrations** — hand-written migration file → flag (use `dotnet ef migrations add`); `Database.EnsureCreated()` → flag (use `Database.Migrate()`)
+- **Async** — `.Result` or `.Wait()` on a `Task` → blocking call; I/O method that is not `async Task<T>`
+- **Entity conventions** — new entity not inheriting `BaseEntity`; `Created`/`Edited` set manually
+- **DI** — `services.Add*` in `Program.cs` directly instead of a feature `Setup` extension method; `new SomeService()` instead of constructor injection
+- **Nullability** — `#nullable disable` or unexplained `!` null-forgiving operators
+
 ---
 
 ## Step 3 — Triage and Order Findings
 
-After collecting all findings:
+Merge the existing reviewer comments (fetched in Step 1) with any new findings from Step 2 into a single list.
 
 1. Discard findings that are:
-   - Already addressed by an open reviewer comment
    - Style preferences with no grounding in CLAUDE.md or project conventions
    - Trivial (single-character typos, trailing whitespace) unless enforced by lint
 

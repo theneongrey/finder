@@ -99,6 +99,24 @@ git checkout -b <branch-name>
 
 Follow the plan. Adhere to all conventions in `CLAUDE.md` and the project's existing patterns.
 
+### Conventions
+
+#### Frontend (Angular)
+Follow all rules in the `/implement-frontend` skill:
+- **Tailwind utility classes over custom CSS** — prefer inline Tailwind classes in templates; only add a `.component.css` file when Tailwind cannot express the styling (complex animations, unavoidable third-party overrides).
+- Two-file component default (`.ts` + `.html`); no `styleUrl` unless a CSS file is genuinely required.
+- ds-* design system layer, OnPush change detection, `signal<T | undefined>`, Angular 17+ control flow (`@if`/`@for`).
+
+#### Backend (ASP.NET Core)
+- **No business logic in endpoint handlers** — delegate to a service class in `Services/`.
+- **Feature-based layout** — new domain entities, services, and endpoints belong in `api/Finder/Business/<Feature>/` following the established folder structure.
+- **Response mapping** — add a static `ToXxxResponse()` extension method in the `Responses/` file; never use AutoMapper.
+- **Migrations** — always generate with `dotnet ef migrations add <Name>`; never write migration files by hand.
+- **Async all the way** — every I/O method must be `async`/`await`; never call `.Result` or `.Wait()`.
+- **BaseEntity** — new entities should inherit `BaseEntity` so `Created`/`Edited` are set automatically by `AppDbContext`.
+- **DI registration** — register new services in the feature's `Setup/<Feature>Setup.cs` extension method; do not scatter `services.Add*` calls in `Program.cs`.
+- **No magic strings** — bind configuration via strongly-typed options classes (`IOptions<T>`).
+
 ### When you hit a problem
 
 #### Complete blockers (no solution known)

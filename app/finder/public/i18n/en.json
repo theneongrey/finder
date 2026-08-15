@@ -44,9 +44,9 @@
     "roles": {
       "unknown": "Unknown",
       "voter": "Voter",
-      "maintainer": "Maintainer",
+      "maintainer": "Contributor",
       "owner": "Owner",
-      "creator": "Creator"
+      "creator": "Author"
     },
     "pollsTab": {
       "title": "Polls",

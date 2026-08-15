@@ -44,9 +44,9 @@
     "roles": {
       "unknown": "Desconocido",
       "voter": "Votante",
-      "maintainer": "Mantenedor",
+      "maintainer": "Colaborador",
       "owner": "Propietario",
-      "creator": "Creador"
+      "creator": "Autor"
     },
     "pollsTab": {
       "title": "Encuestas",

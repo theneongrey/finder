@@ -44,9 +44,9 @@
     "roles": {
       "unknown": "Unbekannt",
       "voter": "Abstimmen",
-      "maintainer": "Erstellen",
+      "maintainer": "Mitwirkende",
       "owner": "Verwalten",
-      "creator": "Gründer"
+      "creator": "Verfasser"
     },
     "pollsTab": {
       "title": "Umfragen",
@@ -103,7 +103,7 @@
       "nameOrEmail": "Name oder E-Mail",
       "voterDescription": "Kann das Projekt und seine Umfragen ansehen und abstimmen.",
       "maintainerDescription": "Kann Abstimmungen erstellen und bearbeiten sowie selbst abstimmen.",
-      "ownerDescription": "Kann alles was Abstimmende und Ersteller können, und zusätzlich Benutzer einladen und verwalten.",
+      "ownerDescription": "Kann alles was Abstimmende und Mitwirkende können, und zusätzlich Benutzer einladen und verwalten.",
       "remove": "Entfernen",
       "removeConfirm": "{{name}} entfernen?",
       "persons": "Personen",

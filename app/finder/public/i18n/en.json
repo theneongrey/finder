@@ -105,6 +105,7 @@
       "maintainerDescription": "Can manage topics and options and participate in votes.",
       "ownerDescription": "Can manage project settings and user permissions.",
       "remove": "Remove",
+      "removeConfirm": "Remove {{name}}?",
       "persons": "People",
       "whoCanJoin": "Who can join",
       "personInvite": "Invite person",

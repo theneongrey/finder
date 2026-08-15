@@ -105,6 +105,7 @@
       "maintainerDescription": "Kann Abstimmungen erstellen und bearbeiten sowie selbst abstimmen.",
       "ownerDescription": "Kann alles was Abstimmende und Ersteller können, und zusätzlich Benutzer einladen und verwalten.",
       "remove": "Entfernen",
+      "removeConfirm": "{{name}} entfernen?",
       "persons": "Personen",
       "whoCanJoin": "Wer darf beitreten",
       "personInvite": "Person einladen",

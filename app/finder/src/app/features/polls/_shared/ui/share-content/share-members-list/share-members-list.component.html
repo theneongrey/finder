@@ -57,10 +57,10 @@
             (click)="pendingRemoveEmail.set(undefined)"
           >
             <span class="text-xs text-[var(--text-secondary)]"
-              >{{ member.name }} entfernen?</span
+              >{{ "project.share.removeConfirm" | translate: { name: member.name } }}</span
             >
             <ds-button
-              variant="primary"
+              variant="danger"
               size="sm"
               (click)="$event.stopPropagation(); confirmRemove(member.email)"
               >{{ "project.share.remove" | translate }}</ds-button

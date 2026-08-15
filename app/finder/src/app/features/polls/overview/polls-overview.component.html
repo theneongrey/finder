@@ -10,8 +10,7 @@
 
 <!-- FAB — mobile only -->
 <button
-  class="lg:hidden fixed bottom-6 right-5 z-50 w-[58px] h-[58px] rounded-full border-none flex items-center justify-center cursor-pointer"
-  style="background: var(--accent); box-shadow: var(--shadow-accent-btn); color: #fff; transition: transform var(--duration-fast) var(--ease-standard)"
+  class="fixed bottom-6 right-5 z-50 flex h-[58px] w-[58px] cursor-pointer items-center justify-center rounded-full border-none bg-[var(--accent)] text-white shadow-[var(--shadow-accent-btn)] lg:hidden"
   [routerLink]="['/polls/add']"
   title="Neue Umfrage"
   data-testid="fab-add-poll"

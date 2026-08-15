@@ -7,21 +7,18 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionType } from '../../models/poll-detail.model';
 import { PollItem } from '../../models/poll-item.model';
 import { PollRole } from '../../models/poll-role.enum';
 import { PollVotingStatus } from '../../models/standalone-poll-overview.model';
-import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
-import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
-import { DsIconComponent } from '@ds/icon/ds-icon.component';
-import { DsProgressBarComponent } from '@ds/progress-bar/ds-progress-bar.component';
 import { PollTypeBadgeComponent } from '../poll-type-badge/poll-type-badge.component';
+import { PollItemTimeComponent } from './poll-item-time.component';
+import { PollItemProgressComponent } from './poll-item-progress.component';
 
 export interface ParticipantAvatar {
   initial: string;
@@ -37,17 +34,14 @@ export interface ParticipantAvatar {
     '(mouseleave)': 'isHovered.set(false)',
   },
   imports: [
-    DatePipe,
     RouterLink,
     TranslatePipe,
-    TimeSincePipe,
     DsCardComponent,
     DsButtonComponent,
     DsStatusDotComponent,
-    DsAvatarComponent,
-    DsIconComponent,
-    DsProgressBarComponent,
     PollTypeBadgeComponent,
+    PollItemTimeComponent,
+    PollItemProgressComponent,
   ],
   templateUrl: './poll-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

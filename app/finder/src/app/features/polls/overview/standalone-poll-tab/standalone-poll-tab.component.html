@@ -343,7 +343,7 @@
 <!-- ═══════════════════════════════════════════════════════════
      POLL LIST  (1-col mobile, 2-col web)
      ═══════════════════════════════════════════════════════════ -->
-<div data-testid="polls-list" data-vt-stagger class="grid grid-cols-1 min-[830px]:grid-cols-2 min-[1600px]:grid-cols-3 gap-4 lg:-mx-[22px] lg:px-8" [class.pb-8]="!editMode()">
+<div data-testid="polls-list" class="vt-stagger grid grid-cols-1 min-[830px]:grid-cols-2 min-[1600px]:grid-cols-3 gap-4 lg:-mx-[22px] lg:px-8" [class.pb-8]="!editMode()">
   @for (poll of filteredPolls(); track poll.pollId) {
     <app-poll-item
       [poll]="poll"

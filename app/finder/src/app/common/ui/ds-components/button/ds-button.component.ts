@@ -23,7 +23,7 @@ export class DsButtonComponent {
   fullWidth    = input<boolean>(false);
   loading      = input<boolean>(false);
   disabled     = input<boolean>(false);
-  noGlow       = input<boolean>(false);
+  noGlow       = input<boolean>(true);
 
   protected readonly isIconOnly = computed(() => typeof this.size() === 'number');
 

@@ -59,21 +59,16 @@ public static class PermissionApi
                     }
 
                     var project = result.Payload!;
-                    var userId = userService.GetUserId();
 
-                    var sharedWith = project.Permissions.Where(p => p.PersonKey != userId)
-                        .Select(p => p.ToProjectSharedWith());
-
-                    if (userId != project.Creator.Id)
-                    {
-                        sharedWith = sharedWith.Prepend(
-                            new ProjectSharedWith
-                            {
-                                Name = project.Creator.Name ?? project.Creator.Email,
-                                Email = project.Creator.Email,
-                                Role = ProjectRole.Creator
-                            });
-                    }
+                    var sharedWith = project.Permissions
+                        .Where(p => p.PersonKey != project.Creator.Id)
+                        .Select(p => p.ToProjectSharedWith())
+                        .Prepend(new ProjectSharedWith
+                        {
+                            Name = project.Creator.Name ?? project.Creator.Email,
+                            Email = project.Creator.Email,
+                            Role = ProjectRole.Creator
+                        });
 
                     return Results.Ok(sharedWith);
                 })
@@ -89,21 +84,16 @@ public static class PermissionApi
                     if (result.IsSuccess)
                     {
                         var project = result.Payload!;
-                        var userId = userService.GetUserId();
 
-                        var sharedWith = project.Permissions.Where(p => p.PersonKey != userId)
-                            .Select(p => p.ToProjectSharedWith());
-
-                        if (userId != project.Creator.Id)
-                        {
-                            sharedWith = sharedWith.Prepend(
-                                new ProjectSharedWith
-                                {
-                                    Name = project.Creator.Name ?? project.Creator.Email,
-                                    Email = project.Creator.Email,
-                                    Role = ProjectRole.Creator
-                                });
-                        }
+                        var sharedWith = project.Permissions
+                            .Where(p => p.PersonKey != project.Creator.Id)
+                            .Select(p => p.ToProjectSharedWith())
+                            .Prepend(new ProjectSharedWith
+                            {
+                                Name = project.Creator.Name ?? project.Creator.Email,
+                                Email = project.Creator.Email,
+                                Role = ProjectRole.Creator
+                            });
 
                         return Results.Ok(sharedWith);
                     }

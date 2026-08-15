@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
+import { UserAvatarComponent } from '../../../../../../common/ui/smart-components/user-avatar/user-avatar.component';
 import { DsBadgeComponent, BadgeTone } from '@ds/badge/ds-badge.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
@@ -22,7 +22,7 @@ import { PollRole } from '../../../models/poll-role.enum';
   templateUrl: './share-members-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    DsAvatarComponent,
+    UserAvatarComponent,
     DsBadgeComponent,
     DsButtonComponent,
     DsEmptyStateButtonComponent,

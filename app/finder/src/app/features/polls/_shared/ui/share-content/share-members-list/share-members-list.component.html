@@ -29,9 +29,9 @@
             </ds-menu>
           }
 
-          @if (!isPublic() && member.role !== PollRole.Creator) {
+          @if (member.role !== PollRole.Creator) {
             <ds-button
-              variant="ghost"
+              variant="danger"
               [size]="28"
               icon="close"
               (click)="onRemoveClick(member.email)"

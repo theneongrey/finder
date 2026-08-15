@@ -42,6 +42,8 @@
 .ds-btn.ds-btn--icon-only.ds-btn--dark    { background: var(--sand-200); color: var(--ink-500); }
 .ds-btn.ds-btn--icon-only.ds-btn--teal    { background: var(--accent-tint); color: var(--accent); }
 .ds-btn.ds-btn--icon-only.ds-btn--soft    { background: var(--accent-tint); color: var(--accent); }
+.ds-btn.ds-btn--icon-only.ds-btn--danger  { background: transparent; color: var(--negative); border-radius: var(--radius-xs); }
+.ds-btn.ds-btn--icon-only.ds-btn--danger:hover { background: var(--red-hover); opacity: 1; }
 
 .ds-btn.ds-btn--no-glow { box-shadow: none !important; }
 

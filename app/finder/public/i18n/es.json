@@ -70,7 +70,8 @@
       "filterOpenLong": "En curso",
       "filterTodoLong": "Aún no votado",
       "newPoll": "Nueva encuesta",
-      "reload": "Recargar"
+      "reload": "Recargar",
+      "searchClear": "Borrar búsqueda"
     },
     "standaloneItem": {
       "badge": "Sin proyecto",
@@ -107,7 +108,9 @@
         "statusClosed": "Cerrada",
         "openUntil": "Abierta hasta",
         "closedOn": "Cerrada el",
-        "openIndefinite": "Abierta hasta cierre manual"
+        "openIndefinite": "Abierta hasta cierre manual",
+        "favorite": "Añadir a favoritos",
+        "unfavorite": "Eliminar de favoritos"
       }
     },
     "share": {

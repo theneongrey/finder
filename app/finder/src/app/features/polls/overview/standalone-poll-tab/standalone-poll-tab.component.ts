@@ -31,18 +31,20 @@ export class StandalonePollTabComponent {
   shareRequested = output<string>();
 
   readonly query = signal('');
-
-  constructor() {
-    inject(BreakpointObserver)
-      .observe('(min-width: 680px)')
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ matches }) => { if (matches) this.editMode.set(false); });
-  }
   readonly showOpen = signal(true);
   readonly showClosed = signal(true);
   readonly favOnly = signal(false);
   readonly todoOnly = signal(false);
   readonly editMode = signal(false);
+
+  constructor() {
+    inject(BreakpointObserver)
+      .observe('(min-width: 680px)')
+      .pipe(takeUntilDestroyed())
+      .subscribe(({ matches }) => {
+        if (matches) { this.editMode.set(false); }
+      });
+  }
 
   private readonly allPolls = computed(() =>
     this.projectListStore.standalonePolls().map(t => ({
@@ -62,10 +64,10 @@ export class StandalonePollTabComponent {
   readonly filteredPolls = computed(() => {
     let polls = this.allPolls();
 
-    if (!this.showOpen()) polls = polls.filter(p => p.isClosed);
-    if (!this.showClosed()) polls = polls.filter(p => !p.isClosed);
-    if (this.favOnly()) polls = polls.filter(p => p.isFavorite);
-    if (this.todoOnly()) polls = polls.filter(p => !p.isClosed && !p.currentUserVoted);
+    if (!this.showOpen()) { polls = polls.filter(p => p.isClosed); }
+    if (!this.showClosed()) { polls = polls.filter(p => !p.isClosed); }
+    if (this.favOnly()) { polls = polls.filter(p => p.isFavorite); }
+    if (this.todoOnly()) { polls = polls.filter(p => !p.isClosed && !p.currentUserVoted); }
 
     const q = this.query().trim().toLowerCase();
     if (q) {

@@ -70,7 +70,8 @@
       "filterOpenLong": "Running",
       "filterTodoLong": "Not yet voted",
       "newPoll": "New poll",
-      "reload": "Reload"
+      "reload": "Reload",
+      "searchClear": "Clear search"
     },
     "standaloneItem": {
       "badge": "No project",
@@ -107,7 +108,9 @@
         "statusClosed": "Closed",
         "openUntil": "Open until",
         "closedOn": "Closed on",
-        "openIndefinite": "Open until closed manually"
+        "openIndefinite": "Open until closed manually",
+        "favorite": "Add to favorites",
+        "unfavorite": "Remove from favorites"
       }
     },
     "share": {

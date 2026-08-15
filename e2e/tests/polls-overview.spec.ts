@@ -208,9 +208,12 @@ test.describe('Overview redesign (#242)', () => {
   });
 
   test('poll card: delete button is visible for maintainers in edit mode', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/polls');
     await page.locator('[data-testid="edit-mode-btn"]').click();
-    const deleteBtn = page.locator('app-poll-item [data-testid="delete-btn"]').first();
+    const deleteBtn = page.locator('app-poll-item [data-testid="delete-btn"]')
+      .filter({ visible: true })
+      .first();
     await expect(deleteBtn).toBeVisible();
   });
 

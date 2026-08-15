@@ -12,7 +12,7 @@
 <button
   class="fixed bottom-6 right-5 z-50 flex h-[58px] w-[58px] cursor-pointer items-center justify-center rounded-full border-none bg-[var(--accent)] text-white shadow-[var(--shadow-accent-btn)] lg:hidden"
   [routerLink]="['/polls/add']"
-  title="Neue Umfrage"
+  [title]="'project.pollsTab.newPoll' | translate"
   data-testid="fab-add-poll"
 >
   <ds-icon name="plus" [size]="24" color="#fff" />

@@ -70,7 +70,8 @@
       "filterOpenLong": "Läuft noch",
       "filterTodoLong": "Noch nicht abgestimmt",
       "newPoll": "Neue Umfrage",
-      "reload": "Neu laden"
+      "reload": "Neu laden",
+      "searchClear": "Suche löschen"
     },
     "standaloneItem": {
       "badge": "Ohne Projekt",
@@ -107,7 +108,9 @@
         "statusClosed": "Beendet",
         "openUntil": "Offen bis",
         "closedOn": "Beendet am",
-        "openIndefinite": "Offen bis manuell beendet"
+        "openIndefinite": "Offen bis manuell beendet",
+        "favorite": "Zu Favoriten hinzufügen",
+        "unfavorite": "Aus Favoriten entfernen"
       }
     },
     "share": {

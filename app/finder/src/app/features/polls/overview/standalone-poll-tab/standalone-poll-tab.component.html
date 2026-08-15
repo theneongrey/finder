@@ -229,7 +229,7 @@
       class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer border-none"
       style="background: var(--cream-200)"
       (click)="clearQuery()"
-      title="Suche löschen"
+      [title]="'project.pollsTab.searchClear' | translate"
     >
       <ds-icon name="close" [size]="12" color="var(--text-secondary)" />
     </button>

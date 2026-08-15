@@ -44,6 +44,7 @@
           <ds-button
             variant="ghost"
             [size]="32"
+            [label]="(_poll.isFavorite ? 'project.detail.item.unfavorite' : 'project.detail.item.favorite') | translate"
             data-testid="favorite-btn"
             [attr.data-testid-active]="_poll.isFavorite ? 'favorite-active' : null"
             (click)="favoriteToggled.emit(_poll.projectId)"

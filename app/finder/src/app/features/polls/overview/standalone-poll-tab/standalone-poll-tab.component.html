@@ -1,17 +1,10 @@
-<h2 class="mb-0">
-  {{ "project.pollsTab.title" | translate }}
-</h2>
-<p class="mt-1 mb-6 opacity-60">
-  {{ "project.pollsTab.subtitle" | translate }}
-</p>
-
 @if (standalonePolls().length === 0) {
   <p data-testid="polls-empty-state" class="mb-4 opacity-60">
     {{ "project.pollsTab.empty" | translate }}
   </p>
 }
 
-<div data-testid="polls-list" class="grid-cols-auto-fit grid gap-4 pb-8">
+<div data-testid="polls-list" data-vt-stagger class="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-8">
   @for (poll of standalonePolls(); track poll.pollId) {
     <app-poll-item
       [poll]="poll"
@@ -20,10 +13,4 @@
       (favoriteToggled)="projectListStore.toggleFavorite($event)"
     />
   }
-  <app-add-card
-    data-testid="add-poll-card"
-    [cto]="'project.standaloneInput.addNew.cto' | translate"
-    [description]="'project.standaloneInput.addNew.description' | translate"
-    (action)="navigateToAdd()"
-  />
 </div>

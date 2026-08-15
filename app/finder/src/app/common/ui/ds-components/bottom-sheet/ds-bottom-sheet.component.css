@@ -9,6 +9,7 @@
   font-family: var(--font-body);
   /* Override SpartanNG sheet content defaults */
   border: none;
+  gap: 0;
   /* Center horizontally without transform so the slide-in-from-bottom animation stays purely vertical */
   left: max(0px, calc(50% - var(--mobile-max-width) / 2)) !important;
   right: max(0px, calc(50% - var(--mobile-max-width) / 2)) !important;

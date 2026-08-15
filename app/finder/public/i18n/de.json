@@ -51,7 +51,27 @@
     "pollsTab": {
       "title": "Umfragen",
       "subtitle": "Alle deine eigenständigen Umfragen auf einen Blick",
-      "empty": "Du hast noch keine Umfragen. Erstelle eine!"
+      "empty": "Du hast noch keine Umfragen. Erstelle eine!",
+      "subline": "{{open}} laufen · {{todo}} offen für dich",
+      "searchPlaceholder": "Umfrage suchen",
+      "filterOpen": "Läuft",
+      "filterClosed": "Beendet",
+      "filterTodo": "Offen für mich",
+      "filterFav": "Favoriten",
+      "editModeDone": "Fertig",
+      "emptyFiltered": "Keine Umfrage gefunden",
+      "emptyFilteredHint": "Mit diesen Filtern ist gerade nichts dabei.",
+      "emptyFilteredHintSearch": "Für \"{{q}}\" gibt es keine Treffer.",
+      "resetFilters": "Filter zurücksetzen",
+      "allVoted": "Alle haben abgestimmt",
+      "missingVoters": "Fehlt noch: {{names}}",
+      "filterStatusLabel": "Status",
+      "filterShowOnlyLabel": "Nur anzeigen",
+      "filterOpenLong": "Läuft noch",
+      "filterTodoLong": "Noch nicht abgestimmt",
+      "newPoll": "Neue Umfrage",
+      "reload": "Neu laden",
+      "searchClear": "Suche löschen"
     },
     "standaloneItem": {
       "badge": "Ohne Projekt",
@@ -86,7 +106,11 @@
         "viewProgress": "Zwischenstand ansehen",
         "statusOpen": "Läuft",
         "statusClosed": "Beendet",
-        "openUntil": "Offen bis"
+        "openUntil": "Offen bis",
+        "closedOn": "Beendet am",
+        "openIndefinite": "Offen bis manuell beendet",
+        "favorite": "Zu Favoriten hinzufügen",
+        "unfavorite": "Aus Favoriten entfernen"
       }
     },
     "share": {
@@ -217,7 +241,8 @@
     },
     "lastVote": {
       "label": "Letzte Stimme",
-      "none": "Noch keine Stimmen"
+      "none": "Bisher keine Stimmen",
+      "voted": "{{count}} von {{total}} haben abgestimmt"
     },
     "timeAgo": {
       "justNow": "gerade jetzt",

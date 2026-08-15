@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { OptionType } from '../../models/poll-detail.model';
 
-const CONFIG: Record<OptionType, { icon: string; label: string; bg: string; fg: string }> = {
-  [OptionType.YesNo]:  { icon: 'checklist', label: 'Ja / Nein', bg: 'var(--person-1-bg)', fg: 'var(--person-1-fg)' },
-  [OptionType.Rating]: { icon: 'trophy',    label: 'Bewertung', bg: 'var(--person-3-bg)', fg: 'var(--person-3-fg)' },
-  [OptionType.Date]:   { icon: 'calendar',  label: 'Termin',    bg: 'var(--person-4-bg)', fg: 'var(--person-4-fg)' },
+const CONFIG: Record<OptionType, { icon: string; labelKey: string; bg: string; fg: string }> = {
+  [OptionType.YesNo]:  { icon: 'checklist', labelKey: 'project.detail.pollTypes.yesNo',      bg: 'var(--person-1-bg)', fg: 'var(--person-1-fg)' },
+  [OptionType.Rating]: { icon: 'trophy',    labelKey: 'project.detail.pollTypes.rating',      bg: 'var(--person-3-bg)', fg: 'var(--person-3-fg)' },
+  [OptionType.Date]:   { icon: 'calendar',  labelKey: 'project.detail.pollTypes.appointment', bg: 'var(--person-4-bg)', fg: 'var(--person-4-fg)' },
 };
 
 @Component({
   selector: 'app-poll-type-badge',
-  imports: [DsIconComponent],
+  imports: [DsIconComponent, TranslatePipe],
   templateUrl: './poll-type-badge.component.html',
   styleUrl: './poll-type-badge.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

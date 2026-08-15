@@ -51,7 +51,27 @@
     "pollsTab": {
       "title": "Encuestas",
       "subtitle": "Todas tus encuestas independientes de un vistazo",
-      "empty": "Todavía no tienes encuestas. ¡Crea una!"
+      "empty": "Todavía no tienes encuestas. ¡Crea una!",
+      "subline": "{{open}} activas · {{todo}} abiertas para ti",
+      "searchPlaceholder": "Buscar encuesta",
+      "filterOpen": "Activa",
+      "filterClosed": "Finalizada",
+      "filterTodo": "Abierta para mí",
+      "filterFav": "Favoritos",
+      "editModeDone": "Listo",
+      "emptyFiltered": "Sin encuestas",
+      "emptyFilteredHint": "Nada coincide con estos filtros.",
+      "emptyFilteredHintSearch": "Sin resultados para \"{{q}}\".",
+      "resetFilters": "Restablecer filtros",
+      "allVoted": "Todos han votado",
+      "missingVoters": "Faltan: {{names}}",
+      "filterStatusLabel": "Estado",
+      "filterShowOnlyLabel": "Mostrar solo",
+      "filterOpenLong": "En curso",
+      "filterTodoLong": "Aún no votado",
+      "newPoll": "Nueva encuesta",
+      "reload": "Recargar",
+      "searchClear": "Borrar búsqueda"
     },
     "standaloneItem": {
       "badge": "Sin proyecto",
@@ -86,7 +106,11 @@
         "viewProgress": "Ver resultados actuales",
         "statusOpen": "Activa",
         "statusClosed": "Cerrada",
-        "openUntil": "Abierta hasta"
+        "openUntil": "Abierta hasta",
+        "closedOn": "Cerrada el",
+        "openIndefinite": "Abierta hasta cierre manual",
+        "favorite": "Añadir a favoritos",
+        "unfavorite": "Eliminar de favoritos"
       }
     },
     "share": {
@@ -217,7 +241,8 @@
     },
     "lastVote": {
       "label": "Último voto",
-      "none": "Sin votos aún"
+      "none": "Sin votos hasta ahora",
+      "voted": "{{count}} de {{total}} han votado"
     },
     "timeAgo": {
       "justNow": "justo ahora",

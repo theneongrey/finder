@@ -21,6 +21,7 @@ export const PollListStore = signalStore(
   { providedIn: 'root' },
   withState({
     standalonePolls: [] as StandalonePollOverview[],
+    isLoading: true,
   }),
   withProps(() => ({
     loggerService: inject(LoggerService),
@@ -30,8 +31,9 @@ export const PollListStore = signalStore(
   withMethods((store) => ({
     getStandalonePolls: rxMethod<void>(
       pipe(
-        switchMap(() =>
-          store.projectService.getStandalonePolls().pipe(
+        switchMap(() => {
+          patchState(store, { isLoading: true });
+          return store.projectService.getStandalonePolls().pipe(
             tapResponse({
               next: (polls) => {
                 patchState(store, {
@@ -40,17 +42,19 @@ export const PollListStore = signalStore(
                       new Date(b.lastUpdated).getTime() -
                       new Date(a.lastUpdated).getTime(),
                   ),
+                  isLoading: false,
                 });
               },
               error: (error) => {
+                patchState(store, { isLoading: false });
                 store.loggerService.log(
                   '[PollListStore] Error while loading standalone polls',
                   error,
                 );
               },
             }),
-          ),
-        ),
+          );
+        }),
       ),
     ),
 

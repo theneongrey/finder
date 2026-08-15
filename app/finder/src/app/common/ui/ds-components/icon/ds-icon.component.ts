@@ -96,6 +96,11 @@ const ICONS: Record<string, IconDef> = {
       { cx: 12, cy: 12, r: 3.8, filled: true },
     ],
   },
+  search: {
+    strokeWidth: 2.2,
+    circles: [{ cx: 11, cy: 11, r: 6.5 }],
+    paths: [{ d: 'M15.8 15.8l4.4 4.4' }],
+  },
   mail: {
     strokeWidth: 2,
     rects: [{ x: 3, y: 5.5, width: 18, height: 13, rx: 3 }],

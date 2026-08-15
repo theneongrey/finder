@@ -5,57 +5,62 @@ import {
   inject,
   input,
   output,
+  signal,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionType } from '../../models/poll-detail.model';
-import { HlmCardImports } from '@spartan-ng/helm/card';
-import { OptionTypeIconComponent } from './option-type-icon/option-type-icon.component';
 import { PollItem } from '../../models/poll-item.model';
 import { PollRole } from '../../models/poll-role.enum';
 import { PollVotingStatus } from '../../models/standalone-poll-overview.model';
-import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
-import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
+import { PollTypeBadgeComponent } from '../poll-type-badge/poll-type-badge.component';
+import { PollItemTimeComponent } from './poll-item-time.component';
+import { PollItemProgressComponent } from './poll-item-progress.component';
+
+export interface ParticipantAvatar {
+  initial: string;
+  bg: string;
+  fg: string;
+  voted: boolean;
+}
 
 @Component({
   selector: 'app-poll-item',
+  host: {
+    '(mouseenter)': 'isHovered.set(true)',
+    '(mouseleave)': 'isHovered.set(false)',
+  },
   imports: [
-    HlmButton,
-    ...HlmDropdownMenuImports,
-    ...HlmTooltipImports,
-    OptionTypeIconComponent,
     RouterLink,
     TranslatePipe,
-    TimeSincePipe,
-    DatePipe,
-    ...HlmCardImports,
+    DsCardComponent,
     DsButtonComponent,
+    DsStatusDotComponent,
+    PollTypeBadgeComponent,
+    PollItemTimeComponent,
+    PollItemProgressComponent,
   ],
   templateUrl: './poll-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollItemComponent {
   private readonly translateService = inject(TranslateService);
+  private readonly router = inject(Router);
 
   poll = input.required<PollItem>();
+  editMode = input<boolean>(false);
+  isHovered = signal(false);
   deletionRequested = output();
   shareRequested = output();
   favoriteToggled = output<string>();
 
-  editLabel = this.translateService.translate('project.common.edit');
-  deleteLabel = this.translateService.translate('project.common.delete');
-  shareLabel = this.translateService.translate('project.common.share');
+  readonly showActions = computed(() => this.poll().role >= PollRole.Maintainer);
+  readonly canShare    = computed(() => this.poll().role >= PollRole.Owner);
 
-  readonly PollVotingStatus = PollVotingStatus;
-
-  showMenu = computed(() => this.poll().role >= PollRole.Maintainer);
-  canSharePoll = computed(() => this.poll().role >= PollRole.Owner);
-
-  editRoute = computed(() => {
+  readonly editRoute = computed(() => {
     const poll = this.poll();
     if (poll.optionType === OptionType.YesNo) {
       return ['/polls', poll.projectId, 'poll', 'edit', 'yesno', poll.pollId];
@@ -68,4 +73,55 @@ export class PollItemComponent {
     }
     return null;
   });
+
+  readonly ctaRoute = computed(() => {
+    const poll = this.poll();
+    if (!poll.currentUserVoted) {
+      return ['/polls', poll.projectId, 'vote', poll.pollId, poll.nextOpenOptionId];
+    }
+    return ['/polls', poll.projectId, 'results', poll.pollId];
+  });
+
+  readonly ctaLabel = computed(() =>
+    this.poll().currentUserVoted
+      ? this.translateService.instant('project.detail.item.viewProgress')
+      : this.translateService.instant('project.detail.item.voteNow'),
+  );
+
+  readonly progressPercent = computed(() => {
+    const { votedCount, totalParticipants } = this.poll();
+    return totalParticipants > 0 ? Math.round((votedCount / totalParticipants) * 100) : 0;
+  });
+
+  readonly participantAvatars = computed<ParticipantAvatar[]>(() =>
+    this.poll().participants.map((p, i) => ({
+      initial: p.name.charAt(0).toUpperCase(),
+      bg: `var(--person-${(i % 4) + 1}-bg)`,
+      fg: `var(--person-${(i % 4) + 1}-fg)`,
+      voted: p.votingStatus !== PollVotingStatus.None,
+    })),
+  );
+
+  readonly missingVotersText = computed(() => {
+    const missing = this.poll().participants
+      .filter(p => p.votingStatus === PollVotingStatus.None)
+      .map(p => p.name);
+
+    if (missing.length === 0) {
+      return this.translateService.instant('project.pollsTab.allVoted');
+    }
+
+    const names = missing.length > 3
+      ? missing.slice(0, 2).join(', ') + ', +' + (missing.length - 2)
+      : missing.join(', ');
+
+    return this.translateService.instant('project.pollsTab.missingVoters', { names });
+  });
+
+  navigateToEdit(): void {
+    const route = this.editRoute();
+    if (route) {
+      this.router.navigate(route);
+    }
+  }
 }

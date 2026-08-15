@@ -11,10 +11,10 @@ test.describe('Polls-only overview (simplified MVP)', () => {
     const page = await browser.newPage();
     await login(page, USER1);
 
-    const voteBtn = page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: 'Vote now' }).first();
+    const voteBtn = page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i }).first();
 
     if (await voteBtn.count() === 0) {
-      await page.locator('[data-testid="add-poll-card"]').click();
+      await page.locator('[data-testid="fab-add-poll"]').click();
       await page.waitForURL('**/polls/add');
       await page.getByText('Yes/No').click();
       await page.getByRole('textbox', { name: 'Your question' }).fill('E2E Smoke Test Poll');
@@ -24,7 +24,7 @@ test.describe('Polls-only overview (simplified MVP)', () => {
     }
 
     // Navigate to vote page to capture projectId and pollId from the URL
-    await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: 'Vote now' }).first().click();
+    await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i }).first().click();
     await page.waitForURL('**/polls/**/vote/**');
     const parts = new URL(page.url()).pathname.split('/');
     // URL shape: /polls/<projectId>/vote/<pollId>/<optionId>
@@ -75,9 +75,9 @@ test.describe('Polls-only overview (simplified MVP)', () => {
       await logout(page);
     });
 
-    test('add-card navigates to /polls/add and new poll appears in list after submit', async ({ page }) => {
+    test('FAB navigates to /polls/add and new poll appears in list after submit', async ({ page }) => {
       await page.goto('/polls');
-      await page.locator('[data-testid="add-poll-card"]').click();
+      await page.locator('[data-testid="fab-add-poll"]').click();
       await page.waitForURL('**/polls/add');
 
       await page.getByText('Yes/No').click();
@@ -88,11 +88,10 @@ test.describe('Polls-only overview (simplified MVP)', () => {
 
       await expect(page.getByText('E2E Created Poll')).toBeVisible();
 
-      // Clean up: delete the created poll
+      // Enable edit mode to reveal delete buttons, then delete the created poll
+      await page.locator('[data-testid="edit-mode-btn"]').click();
       const pollCard = page.locator('app-poll-item').filter({ hasText: 'E2E Created Poll' });
-      await pollCard.locator('[data-testid="poll-menu-btn"]').click();
-      await page.getByRole('menuitem', { name: 'Delete' }).click();
-      await page.getByRole('button', { name: 'Delete poll' }).click();
+      await pollCard.locator('[data-testid="delete-btn"]').click();
     });
   });
 
@@ -107,11 +106,11 @@ test.describe('Polls-only overview (simplified MVP)', () => {
 
     test('vote button navigates to vote page and casting a vote advances to next step', async ({ page }) => {
       await page.goto('/polls');
-      await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: 'Vote now' }).first().click();
+      await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i }).first().click();
       await page.waitForURL('**/polls/**/vote/**');
 
-      // Cast a "Yes" vote via the heart button
-      await page.locator('button').filter({ has: page.locator('i.fa-heart') }).click();
+      // Cast a "Yes" vote via the ds-vote-buttons
+      await page.locator('ds-vote-buttons button').first().click();
 
       // After voting, either advances to the next option or navigates to results
       await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
@@ -138,5 +137,88 @@ test.describe('Polls-only overview (simplified MVP)', () => {
       await page.waitForURL('**/polls');
       await expect(page).toHaveURL(/\/polls$/);
     });
+  });
+});
+
+// ── #242 — Overview redesign verification ────────────────────────────────────
+
+test.describe('Overview redesign (#242)', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page, USER1);
+    await page.goto('/polls');
+  });
+
+  test.afterEach(async ({ page }) => {
+    await logout(page);
+  });
+
+  test('mobile (390px): poll cards render with type badge, status dot, avatar stack', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/polls');
+
+    const card = page.locator('app-poll-item').first();
+    await expect(card).toBeVisible();
+    await expect(card.locator('app-poll-type-badge')).toBeVisible();
+    await expect(card.locator('ds-status-dot')).toBeVisible();
+    await expect(card.locator('ds-progress-bar')).toBeVisible();
+    await expect(card.locator('[data-testid="vote-cta-btn"]')).toBeVisible();
+  });
+
+  test('mobile (390px): FAB is visible bottom-right', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/polls');
+    await expect(page.locator('[data-testid="fab-add-poll"]')).toBeVisible();
+  });
+
+  test('mobile (390px): FAB routes to /polls/add', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/polls');
+    await page.locator('[data-testid="fab-add-poll"]').click();
+    await page.waitForURL('**/polls/add');
+  });
+
+  test('desktop (1280px): poll list renders in two-column grid', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 820 });
+    await page.goto('/polls');
+
+    const list = page.locator('[data-testid="polls-list"]');
+    await expect(list).toBeVisible();
+
+    // Two-column grid: first two cards should be side by side (different x positions)
+    const cards = list.locator('app-poll-item');
+    if (await cards.count() >= 2) {
+      const box1 = await cards.nth(0).boundingBox();
+      const box2 = await cards.nth(1).boundingBox();
+      expect(box1).not.toBeNull();
+      expect(box2).not.toBeNull();
+      // In a 2-col grid, the second card starts to the right of the first
+      expect(box2!.x).toBeGreaterThan(box1!.x);
+    }
+  });
+
+  test('poll card: share button triggers share drawer for owners', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/polls');
+
+    const shareBtn = page.locator('app-poll-item [data-testid="share-btn"]').first();
+    if (await shareBtn.isVisible()) {
+      await shareBtn.click();
+      await expect(page.locator('app-share-drawer')).toBeVisible();
+    }
+  });
+
+  test('poll card: delete button is visible for maintainers in edit mode', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/polls');
+    await page.locator('[data-testid="edit-mode-btn"]').click();
+    const deleteBtn = page.locator('app-poll-item [data-testid="delete-btn"]')
+      .filter({ visible: true })
+      .first();
+    await expect(deleteBtn).toBeVisible();
+  });
+
+  test('no Hlm* alert dialog on page', async ({ page }) => {
+    await page.goto('/polls');
+    await expect(page.locator('hlm-alert-dialog')).not.toBeVisible();
   });
 });

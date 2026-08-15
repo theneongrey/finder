@@ -1,218 +1,164 @@
 @let _poll = poll();
 
-<div hlmCard>
-  <div hlmCardContent>
-    <div class="mb-4 flex items-start justify-between gap-3">
-      <div>
-        <app-option-type-icon [type]="_poll.optionType" />
-      </div>
-      <div class="flex flex-1 flex-col">
-        <div class="flex items-center gap-2">
-          <h3>{{ _poll.name }}</h3>
-          <span
-            data-testid="poll-status-badge"
-            class="text-xs font-semibold px-2 py-0.5 rounded-full"
-            [class]="
-              _poll.isClosed
-                ? 'bg-gray-200 text-gray-600'
-                : 'bg-green-100 text-green-700'
-            "
-          >
-            {{ (_poll.isClosed ? 'project.detail.item.statusClosed' : 'project.detail.item.statusOpen') | translate }}
-          </span>
-        </div>
-        @if (_poll.description) {
-          <p class="ds-body mt-1">{{ _poll.description }}</p>
-        }
-        @if (_poll.closeDate && !_poll.isClosed) {
-          <p class="ds-body mt-1 text-orange-600 flex items-center gap-1">
-            <i class="fa-regular fa-clock"></i>
-            {{ 'project.detail.item.openUntil' | translate }}: {{ _poll.closeDate | date:'dd.MM.yyyy' }}
-          </p>
-        }
-        <div class="mt-2 flex items-center gap-3">
-          <span
-            [hlmTooltip]="
-              'project.detail.item.options'
-                | translate: { count: _poll.optionCount }
-            "
-            position="top"
-            class="ds-body flex cursor-default items-center gap-1"
-          >
-            <i class="fa-solid fa-list"></i>
-            <span>{{ _poll.optionCount }}</span>
-          </span>
-          <button
-            hlmBtn
-            variant="ghost"
-            size="sm"
-            [hlmTooltip]="
-              'project.detail.item.comments'
-                | translate: { count: _poll.commentCount }
-            "
-            position="top"
-            [routerLink]="[
-              '/polls',
-              _poll.projectId,
-              _poll.nextOpenOptionId ? 'overview' : 'results',
-              _poll.pollId,
-            ]"
-            fragment="comments-section"
-          >
-            <i class="fa-regular fa-comments"></i>{{ _poll.commentCount }}
-          </button>
-        </div>
-        <p class="ds-body mt-2 opacity-60">
-          @if (_poll.lastVoteAt) {
-            <i class="fa-regular fa-clock mr-1"></i
-            >{{ "project.lastVote.label" | translate }}:
-            {{ _poll.lastVoteAt | timeSince }}
-          } @else {
-            {{ "project.lastVote.none" | translate }}
+<ds-card>
+  <!-- ── Header row: type badge · status dot · share · fav (animates out in edit mode) -->
+  <div
+    class="grid overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
+    [style.grid-template-rows]="editMode() ? '0fr' : '1fr'"
+  >
+    <div class="overflow-hidden">
+      <div class="flex items-center gap-2 pb-3">
+        <app-poll-type-badge [type]="_poll.optionType" />
+
+        <ds-status-dot [tone]="_poll.isClosed ? 'muted' : 'positive'">
+          {{ (_poll.isClosed ? "project.detail.item.statusClosed" : "project.detail.item.statusOpen") | translate }}
+        </ds-status-dot>
+
+        <span class="ml-auto flex items-center gap-1">
+          @if (canShare()) {
+            <!-- Mobile: ghost circle share button -->
+            <span class="lg:hidden">
+              <ds-button
+                variant="ghost"
+                [size]="30"
+                icon="share"
+                [color]="'var(--ink-900)'"
+                data-testid="share-btn"
+                (click)="shareRequested.emit()"
+              />
+            </span>
+            <!-- Web: pill share button with label, always visible -->
+            <span class="hidden lg:flex">
+              <ds-button
+                variant="neutral"
+                size="sm"
+                icon="share"
+                data-testid="share-btn"
+                (click)="shareRequested.emit()"
+                [title]="'project.share.title' | translate"
+              >{{ "project.share.title" | translate }}</ds-button>
+            </span>
           }
-        </p>
-      </div>
-      <div class="flex items-center gap-1">
-        @if (canSharePoll()) {
+
+          <!-- Favorite button -->
           <ds-button
             variant="ghost"
-            [size]="36"
-            icon="share"
-            data-testid="share-btn"
-            (click)="shareRequested.emit()"
-          />
-        }
-        <button
-          hlmBtn
-          variant="ghost"
-          size="icon"
-          data-testid="favorite-btn"
-          [attr.data-testid-active]="
-            _poll.isFavorite ? 'favorite-active' : null
-          "
-          (click)="favoriteToggled.emit(_poll.projectId)"
-        >
-          @if (_poll.isFavorite) {
-            <i
-              class="fa-solid fa-heart text-red-500"
-              data-testid="favorite-active"
-            ></i>
-          } @else {
-            <i class="fa-regular fa-heart"></i>
-          }
-        </button>
-        @if (showMenu()) {
-          <button
-            hlmBtn
-            variant="ghost"
-            icon="fa-solid fa-ellipsis-vertical"
-            data-testid="poll-menu-btn"
-            [hlmDropdownMenuTrigger]="pollMenu"
-          ></button>
-          <ng-template #pollMenu>
-            <hlm-dropdown-menu>
+            [size]="32"
+            [label]="(_poll.isFavorite ? 'project.detail.item.unfavorite' : 'project.detail.item.favorite') | translate"
+            data-testid="favorite-btn"
+            [attr.data-testid-active]="_poll.isFavorite ? 'favorite-active' : null"
+            (click)="favoriteToggled.emit(_poll.projectId)"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24"
+              [attr.fill]="_poll.isFavorite ? '#c1453f' : 'none'"
+              [attr.stroke]="_poll.isFavorite ? '#c1453f' : 'var(--text-muted)'"
+              stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20.3s-7.5-4.6-9.7-9C.8 8 2 4.7 5 3.7c2.2-.7 4.3.2 5.6 2 .4.5 1 1.4 1.4 1.4s1-.9 1.4-1.4c1.3-1.8 3.4-2.7 5.6-2 3 1 4.2 4.3 2.7 7.6-2.2 4.4-9.7 9-9.7 9z" />
+            </svg>
+          </ds-button>
+
+          <!-- Web: hover-reveal edit + delete (animated slide-in, ghost circles) -->
+          @if (showActions()) {
+            <span
+              class="hidden items-center gap-1 overflow-hidden lg:flex [transition:max-width_220ms_cubic-bezier(0.4,0,0.2,1),opacity_160ms_ease]"
+              [style.max-width]="isHovered() ? '80px' : '0px'"
+              [style.opacity]="isHovered() ? '1' : '0'"
+            >
+              <span class="mx-[3px] h-[18px] w-px flex-none bg-[rgba(20,24,28,0.1)]"></span>
               @if (editRoute()) {
-                <button hlmDropdownMenuItem [routerLink]="editRoute()">
-                  <i class="fa-solid fa-pen mr-2"></i>{{ editLabel() }}
-                </button>
+                <ds-button
+                  variant="ghost"
+                  [size]="30"
+                  icon="edit"
+                  [color]="'var(--text-secondary)'"
+                  (click)="navigateToEdit()"
+                  [title]="'project.common.edit' | translate"
+                  [label]="'project.common.edit' | translate"
+                  data-testid="edit-btn"
+                />
               }
-              @if (canSharePoll()) {
-                <button hlmDropdownMenuItem (click)="shareRequested.emit()">
-                  <i class="fa-solid fa-share-nodes mr-2"></i>{{ shareLabel() }}
-                </button>
-              }
-              <button hlmDropdownMenuItem (click)="deletionRequested.emit()">
-                <i class="fa-regular fa-trash-can mr-2"></i>{{ deleteLabel() }}
-              </button>
-            </hlm-dropdown-menu>
-          </ng-template>
-        }
-      </div>
-    </div>
-
-    <ul class="mb-3 flex flex-col gap-1">
-      @for (p of _poll.participants; track p.name) {
-        <li class="ds-body flex items-center gap-2">
-          @if (p.votingStatus === PollVotingStatus.Full) {
-            <i
-              class="fa-solid fa-circle-check w-4 text-center text-green-500"
-            ></i>
-          } @else if (p.votingStatus === PollVotingStatus.Partial) {
-            <i
-              class="fa-solid fa-circle-half-stroke w-4 text-center text-yellow-500"
-            ></i>
-          } @else {
-            <i class="fa-regular fa-circle w-4 text-center opacity-40"></i>
+              <ds-button
+                variant="danger"
+                [size]="30"
+                icon="trash"
+                (click)="deletionRequested.emit()"
+                [title]="'project.common.delete' | translate"
+                [label]="'project.common.delete' | translate"
+                data-testid="delete-btn"
+              />
+            </span>
           }
-          <span class="truncate">{{ p.name }}</span>
-        </li>
-      }
-    </ul>
-
-    <div class="ds-body mb-2 flex items-center gap-2 opacity-70">
-      <span>
-        <span data-testid="voted-count">{{ _poll.votedCount }}</span>
-        <span> / </span>
-        <span data-testid="total-participants">{{
-          _poll.totalParticipants
-        }}</span>
-      </span>
-      <div class="bg-muted h-1 flex-1 overflow-hidden rounded-full">
-        <div
-          class="bg-primary h-full rounded-full transition-all"
-          [style.width.%]="
-            _poll.totalParticipants > 0
-              ? (_poll.votedCount / _poll.totalParticipants) * 100
-              : 0
-          "
-        ></div>
+        </span>
       </div>
-    </div>
-    <div class="flex flex-col gap-1">
-      @if (!_poll.currentUserVoted) {
-        <button
-          hlmBtn
-          class="w-full"
-          data-testid="vote-cta-btn"
-          [routerLink]="[
-            '/polls',
-            _poll.projectId,
-            'vote',
-            _poll.pollId,
-            _poll.nextOpenOptionId,
-          ]"
-        >
-          {{ "project.detail.item.voteNow" | translate }}
-        </button>
-        <button
-          hlmBtn
-          variant="ghost"
-          size="sm"
-          class="w-full"
-          [routerLink]="['/polls', _poll.projectId, 'overview', _poll.pollId]"
-        >
-          {{ "project.detail.item.voteOverview" | translate }}
-        </button>
-      } @else {
-        <button
-          hlmBtn
-          class="w-full"
-          data-testid="vote-cta-btn"
-          [routerLink]="['/polls', _poll.projectId, 'results', _poll.pollId]"
-        >
-          {{ "project.detail.item.viewProgress" | translate }}
-        </button>
-        <button
-          hlmBtn
-          variant="ghost"
-          size="sm"
-          class="w-full"
-          [routerLink]="['/polls', _poll.projectId, 'vote', _poll.pollId]"
-          [queryParams]="{ revote: '1' }"
-        >
-          {{ "project.votesOverview.reVote" | translate }}
-        </button>
-      }
     </div>
   </div>
-</div>
+
+  <!-- ── Title row + inline edit/delete in edit mode (mobile only) ─────────── -->
+  <div class="flex items-center gap-2">
+    <h3 class="flex-1 text-pretty">{{ _poll.name }}</h3>
+
+    <!-- Mobile: edit-mode actions -->
+    @if (showActions() && editMode()) {
+      <div class="flex shrink-0 gap-2 lg:hidden">
+        @if (editRoute()) {
+          <ds-button
+            variant="neutral"
+            [size]="36"
+            icon="edit"
+            data-testid="edit-btn"
+            [label]="'project.common.edit' | translate"
+            (click)="navigateToEdit()"
+          />
+        }
+        <ds-button
+          variant="danger"
+          [size]="36"
+          icon="trash"
+          data-testid="delete-btn"
+          [label]="'project.common.delete' | translate"
+          (click)="deletionRequested.emit()"
+        />
+      </div>
+    }
+  </div>
+
+  <!-- ── Body: description, time, progress, CTA (animates out in edit mode) ── -->
+  <div
+    class="grid overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
+    [style.grid-template-rows]="editMode() ? '0fr' : '1fr'"
+  >
+    <div class="overflow-hidden">
+      @if (_poll.description) {
+        <p class="mt-1.5 text-pretty text-[var(--fs-ui)] leading-[1.4] text-[var(--text-secondary)]">
+          {{ _poll.description }}
+        </p>
+      }
+
+      <app-poll-item-time
+        [closeDate]="_poll.closeDate"
+        [isClosed]="_poll.isClosed"
+        [lastVoteAt]="_poll.lastVoteAt"
+      />
+
+      <app-poll-item-progress
+        [progressPercent]="progressPercent()"
+        [votedCount]="_poll.votedCount"
+        [totalParticipants]="_poll.totalParticipants"
+        [participantAvatars]="participantAvatars()"
+        [missingVotersText]="missingVotersText()"
+      />
+
+      <!-- ── CTA ─────────────────────────────────────────────────── -->
+      <div class="mt-4">
+        <ds-button
+          variant="primary"
+          [fullWidth]="true"
+          [attr.aria-label]="ctaLabel()"
+          data-testid="vote-cta-btn"
+          [routerLink]="ctaRoute()"
+          >{{ ctaLabel() }}</ds-button
+        >
+      </div>
+    </div>
+  </div>
+</ds-card>

@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
+import { DsIconComponent } from '../icon/ds-icon.component';
 
 const SIZE_MAP = { sm: 27, md: 34, lg: 38 } as const;
 type AvatarSize = keyof typeof SIZE_MAP;
 
 @Component({
   selector: 'ds-avatar',
-  imports: [...HlmAvatarImports],
+  imports: [...HlmAvatarImports, DsIconComponent],
   templateUrl: './ds-avatar.component.html',
   styleUrl: './ds-avatar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,12 +18,14 @@ export class DsAvatarComponent {
   bg = input<string>('var(--person-1-bg)');
   fg = input<string>('var(--person-1-fg)');
   size = input<AvatarSize | number>('md');
-  ring    = input<boolean>(false);
-  pending = input<boolean>(false);
+  /** undefined = no voting context; true = voted (ring + check badge); false = pending (dashed border) */
+  voted = input<boolean | undefined>(undefined);
 
   protected readonly px = computed(() => {
     const s = this.size();
     return typeof s === 'number' ? s : SIZE_MAP[s] ?? SIZE_MAP['md'];
   });
   protected readonly fontSize = computed(() => Math.round(this.px() * 0.4));
+  protected readonly isPending = computed(() => this.voted() === false);
+  protected readonly hasRing   = computed(() => this.voted() === true);
 }

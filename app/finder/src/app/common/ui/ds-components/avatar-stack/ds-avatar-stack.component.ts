@@ -6,6 +6,8 @@ export interface AvatarItem {
   initial: string;
   bg: string;
   fg: string;
+  /** undefined = no voting context; true = voted; false = pending */
+  voted?: boolean;
 }
 
 @Component({

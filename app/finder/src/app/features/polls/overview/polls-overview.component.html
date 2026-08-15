@@ -1,6 +1,6 @@
 <div class="flex flex-col w-full">
   <app-title-bar />
-  <main class="flex-grow mx-auto w-full max-w-(--mobile-max-width) lg:max-w-5xl rounded-t-2xl px-[22px] pt-5">
+  <main class="flex-grow mx-auto w-full max-w-(--mobile-max-width) lg:max-w-none rounded-t-2xl px-[22px] pt-5 lg:pt-0">
     <app-standalone-poll-tab
       (deletionRequested)="pollDeletionRequested($event)"
       (shareRequested)="pollShareRequested($event)"
@@ -8,18 +8,15 @@
   </main>
 </div>
 
-<hlm-alert-dialog [state]="confirmDialogOpen() ? 'open' : 'closed'" (stateChanged)="confirmDialogOpen.set($event === 'open')">
-  <hlm-alert-dialog-content *hlmAlertDialogPortal>
-    <hlm-alert-dialog-header>
-      <h2 hlmAlertDialogTitle>{{ confirmTitle() }}</h2>
-      <p hlmAlertDialogDescription>{{ confirmMessage() }}</p>
-    </hlm-alert-dialog-header>
-    <hlm-alert-dialog-footer>
-      <button hlmAlertDialogCancel>{{ 'project.common.cancel' | translate }}</button>
-      <button hlmAlertDialogAction (click)="onConfirmAccept()">{{ confirmAcceptLabel() }}</button>
-    </hlm-alert-dialog-footer>
-  </hlm-alert-dialog-content>
-</hlm-alert-dialog>
+<!-- FAB — mobile only -->
+<button
+  class="fixed bottom-6 right-5 z-50 flex h-[58px] w-[58px] cursor-pointer items-center justify-center rounded-full border-none bg-[var(--accent)] text-white shadow-[var(--shadow-accent-btn)] lg:hidden"
+  [routerLink]="['/polls/add']"
+  [title]="'project.pollsTab.newPoll' | translate"
+  data-testid="fab-add-poll"
+>
+  <ds-icon name="plus" [size]="24" color="#fff" />
+</button>
 
 @if (sharingProject(); as project) {
   <app-share-drawer

@@ -215,58 +215,6 @@ export const PollStore = signalStore(
       ),
     ),
 
-    addProject: rxMethod<{ name: string; description: string }>(
-      pipe(
-        switchMap((project) => {
-          return store.projectService
-            .addProject(project.name, project.description)
-            .pipe(
-              tapResponse({
-                next: (project) => {
-                  patchState(store, {
-                    projects: [...store.projects(), project],
-                  });
-                  store.router.navigate([`/polls/${project.id}`]);
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[PollStore] Error adding a project',
-                    error,
-                  );
-                },
-              }),
-            );
-        }),
-      ),
-    ),
-
-    editProject: rxMethod<{ id: string; name: string; description: string }>(
-      pipe(
-        switchMap((project) => {
-          return store.projectService
-            .updateProject(project.id, project.name, project.description)
-            .pipe(
-              tapResponse({
-                next: (updated) => {
-                  patchState(store, {
-                    projects: store
-                      .projects()
-                      .map((p) => (p.id === updated.id ? updated : p)),
-                  });
-                  store.router.navigate([`/polls/${updated.id}`]);
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[PollStore] Error updating project',
-                    error,
-                  );
-                },
-              }),
-            );
-        }),
-      ),
-    ),
-
     deleteProject: rxMethod<string>(
       pipe(
         switchMap((projectId) => {

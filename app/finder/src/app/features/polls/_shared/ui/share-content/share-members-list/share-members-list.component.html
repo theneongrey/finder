@@ -12,9 +12,8 @@
     @for (member of sortedMembers(); track member.email; let last = $last) {
       <div class="relative">
         <div
-          class="flex items-center gap-3 px-4 py-3"
+          class="flex items-center gap-3 px-4 py-3 border-[var(--border-hairline-soft)]"
           [class.border-b]="!last"
-          class="border-[var(--border-hairline-soft)]"
         >
           <app-user-avatar [user]="member" />
 

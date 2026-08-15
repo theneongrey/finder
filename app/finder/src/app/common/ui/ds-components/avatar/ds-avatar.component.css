@@ -1,3 +1,24 @@
+.ds-avatar-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.ds-avatar-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #5d9a56;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
 .ds-avatar-circle {
   border-radius: var(--radius-circle) !important;
   flex-shrink: 0;

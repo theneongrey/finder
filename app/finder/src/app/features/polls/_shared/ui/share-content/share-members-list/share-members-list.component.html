@@ -65,10 +65,11 @@
   }
 }
 
-<ds-empty-state-button
-  class="block mt-6"
-  layout="row"
-  icon="users"
-  [label]="'project.share.inviteMore' | translate"
-  (clicked)="goInvite.emit()"
-/>
+<div class="mt-6">
+  <ds-empty-state-button
+    layout="row"
+    icon="users"
+    [label]="'project.share.inviteMore' | translate"
+    (clicked)="goInvite.emit()"
+  />
+</div>

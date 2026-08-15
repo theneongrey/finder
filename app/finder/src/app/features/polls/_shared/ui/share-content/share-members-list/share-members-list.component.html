@@ -4,7 +4,7 @@
     <span class="text-sm font-semibold text-[var(--text-secondary)]">{{ members().length }} {{ 'project.share.persons' | translate }}</span>
   </div>
 
-  <div class="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-hairline-soft)] bg-white">
+  <div class="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-hairline-soft)] bg-white pb-1">
     @for (member of sortedMembers(); track member.email; let last = $last) {
       <div class="relative">
         <div
@@ -56,8 +56,12 @@
     }
   </div>
 
-  @if (roleSummaryText()) {
-    <p class="mt-2 text-xs text-[var(--text-muted)]">{{ roleSummaryText() }}</p>
+  @if (roleSummary().length > 0) {
+    <div class="mt-3 flex flex-wrap gap-2">
+      @for (item of roleSummary(); track item.label) {
+        <ds-badge [tone]="item.tone" size="lg">{{ item.label }}</ds-badge>
+      }
+    </div>
   }
 }
 

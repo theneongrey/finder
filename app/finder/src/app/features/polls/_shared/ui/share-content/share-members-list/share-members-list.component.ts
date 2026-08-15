@@ -51,7 +51,7 @@ export class ShareMembersListComponent {
     }),
   );
 
-  roleSummaryText = computed(() => {
+  roleSummary = computed(() => {
     const counts: Record<string, number> = {};
     for (const m of this.members()) {
       const key = this.getRoleKey(m.role);
@@ -60,8 +60,10 @@ export class ShareMembersListComponent {
     const order = ['creator', 'owner', 'maintainer', 'voter'];
     return Object.entries(counts)
       .sort(([a], [b]) => order.indexOf(a) - order.indexOf(b))
-      .map(([key, count]) => `${count} ${this.translateService.instant('project.roles.' + key)}`)
-      .join(' · ');
+      .map(([key, count]) => ({
+        label: `${count} ${this.translateService.instant('project.roles.' + key)}`,
+        tone: this.getRoleBadgeToneByKey(key),
+      }));
   });
 
   private readonly voterLabel = this.translateService.translate('project.roles.voter');
@@ -98,6 +100,15 @@ export class ShareMembersListComponent {
       case PollRole.Owner:      return 'manager';
       case PollRole.Maintainer: return 'contributor';
       default:                  return 'viewer';
+    }
+  }
+
+  private getRoleBadgeToneByKey(key: string): BadgeTone {
+    switch (key) {
+      case 'creator':    return 'accent';
+      case 'owner':      return 'manager';
+      case 'maintainer': return 'contributor';
+      default:           return 'viewer';
     }
   }
 

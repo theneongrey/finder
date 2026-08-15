@@ -46,7 +46,7 @@ export class ShareMembersListComponent {
 
   sortedMembers = computed(() =>
     [...this.members()].sort((a, b) => {
-      if (b.role !== a.role) return b.role - a.role;
+      if (b.role !== a.role) { return b.role - a.role; }
       return a.name.localeCompare(b.name);
     }),
   );
@@ -73,13 +73,13 @@ export class ShareMembersListComponent {
   getRoleMenuItems(member: SharedWith): MenuItem[] {
     const items: MenuItem[] = [];
     if (member.role !== PollRole.Voter) {
-      items.push({ icon: 'user', label: this.voterLabel(), onClick: () => this.changeRole(member.email, 0) });
+      items.push({ icon: 'users', label: this.voterLabel(), onClick: () => this.changeRole(member.email, 0) });
     }
     if (member.role !== PollRole.Maintainer) {
-      items.push({ icon: 'user', label: this.maintainerLabel(), onClick: () => this.changeRole(member.email, 1) });
+      items.push({ icon: 'users', label: this.maintainerLabel(), onClick: () => this.changeRole(member.email, 1) });
     }
     if (member.role !== PollRole.Owner) {
-      items.push({ icon: 'user', label: this.ownerLabel(), onClick: () => this.changeRole(member.email, 2) });
+      items.push({ icon: 'users', label: this.ownerLabel(), onClick: () => this.changeRole(member.email, 2) });
     }
     return items;
   }

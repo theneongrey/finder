@@ -59,7 +59,7 @@ export class ShareInviteFormComponent {
   filteredContacts = computed(() => {
     const q = (this.contactEmail() ?? '').toLowerCase();
     const all = this.contacts();
-    if (!q) return [];
+    if (!q) { return []; }
     return all
       .filter(c => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q))
       .slice(0, 5);
@@ -94,7 +94,7 @@ export class ShareInviteFormComponent {
 
   invite() {
     const email = this.contactEmail()?.trim();
-    if (!email || this.sharingInProgress()) return;
+    if (!email || this.sharingInProgress()) { return; }
     this.dropdownVisible.set(false);
     this.sharingStore.share({
       email,

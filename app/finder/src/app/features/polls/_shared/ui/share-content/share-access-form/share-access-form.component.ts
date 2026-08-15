@@ -19,18 +19,7 @@ import {
   imports: [DsButtonComponent, DsIconComponent, DsSegmentedControlComponent, TranslatePipe],
   templateUrl: './share-access-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
-    .link-card-outer {
-      overflow: hidden;
-      max-height: 0;
-      opacity: 0;
-      transition: max-height 340ms cubic-bezier(.4,0,.2,1), opacity 220ms ease;
-    }
-    .link-card-outer--open {
-      max-height: 250px;
-      opacity: 1;
-    }
-  `],
+  styleUrl: './share-access-form.component.css',
 })
 export class ShareAccessFormComponent {
   private readonly translateService = inject(TranslateService);

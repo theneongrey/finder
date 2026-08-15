@@ -34,7 +34,7 @@ export class DsBottomSheetComponent {
   }
 
   protected onHandlePointerMove(event: PointerEvent): void {
-    if (!this.isDragging || !this.panelEl) return;
+    if (!this.isDragging || !this.panelEl) { return; }
     const delta = Math.max(0, event.clientY - this.dragStartY);
     this.panelEl.style.transition = 'none';
     this.panelEl.style.transform = `translateY(${delta}px)`;

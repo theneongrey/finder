@@ -125,20 +125,17 @@ public static class ProjectMapper
     public static ProjectResponse ToProjectResponse(this Entities.Project project, Guid? userId)
     {
         var sharedWith = project.Permissions
-            .Where(p => p.PersonKey != userId && p.PersonKey != project.Creator.Id)
+            .Where(p => p.PersonKey != project.Creator.Id)
             .Select(ToProjectSharedWith);
 
-        if (userId != project.Creator.Id)
-        {
-            sharedWith = sharedWith.Prepend(
-                new ProjectSharedWith
-                {
-                    Name = project.Creator.Name ?? project.Creator.Email,
-                    Email = project.Creator.Email,
-                    Role = ProjectRole.Creator,
-                    Picture = project.Creator.Picture
-                });
-        }
+        sharedWith = sharedWith.Prepend(
+            new ProjectSharedWith
+            {
+                Name = project.Creator.Name ?? project.Creator.Email,
+                Email = project.Creator.Email,
+                Role = ProjectRole.Creator,
+                Picture = project.Creator.Picture
+            });
 
         return new ProjectResponse
         {

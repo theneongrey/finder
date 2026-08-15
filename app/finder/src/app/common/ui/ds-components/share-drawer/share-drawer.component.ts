@@ -1,40 +1,19 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
-  inject,
   input,
   model,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { HlmSheetImports } from '@spartan-ng/helm/sheet';
-import { ShareContentComponent } from './share-content/share-content.component';
-import {
-  SharedWith,
-  VisibilityType,
-} from '../../../../features/polls/_shared/models/poll-detail.model';
-import { SharingStore } from '../../../../features/polls/_shared/data/sharing.store';
+import { DsBottomSheetComponent } from '../bottom-sheet/ds-bottom-sheet.component';
 
 @Component({
   selector: 'app-share-drawer',
-  imports: [...HlmSheetImports, TranslatePipe, ShareContentComponent],
+  imports: [DsBottomSheetComponent],
   templateUrl: './share-drawer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareDrawerComponent {
-  private readonly sharingStore = inject(SharingStore);
-
-  projectId = input.required<string>();
-  projectName = input.required<string>();
-  sharedWith = input.required<SharedWith[]>();
-  visibilityType = input.required<VisibilityType>();
+  title = input.required<string>();
+  subtitle = input.required<string>();
   visible = model(false);
-
-  constructor() {
-    effect(() => {
-      if (this.visible()) {
-        this.sharingStore.loadContacts(this.projectId());
-      }
-    });
-  }
 }

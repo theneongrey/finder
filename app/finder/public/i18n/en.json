@@ -44,9 +44,9 @@
     "roles": {
       "unknown": "Unknown",
       "voter": "Voter",
-      "maintainer": "Maintainer",
+      "maintainer": "Contributor",
       "owner": "Owner",
-      "creator": "Creator"
+      "creator": "Author"
     },
     "pollsTab": {
       "title": "Polls",
@@ -105,7 +105,17 @@
       "maintainerDescription": "Can manage topics and options and participate in votes.",
       "ownerDescription": "Can manage project settings and user permissions.",
       "remove": "Remove",
-      "persons": "People"
+      "removeConfirm": "Remove {{name}}?",
+      "persons": "People",
+      "whoCanJoin": "Who can join",
+      "personInvite": "Invite person",
+      "alreadyShared": "Already shared",
+      "inviteMore": "Invite more",
+      "roleLabel": "Role for new invites",
+      "linkNote": "Anyone joining via link joins as a viewer. You can grant more permissions in the 'Access' tab.",
+      "recentLabel": "Frequently shared",
+      "noContact": "No contact found – invite via email",
+      "pollLabel": "Poll"
     },
     "pollInput": {
       "createPoll": "Create poll",

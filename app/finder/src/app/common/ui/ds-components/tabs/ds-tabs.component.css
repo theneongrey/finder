@@ -10,6 +10,7 @@
   width: 100% !important;
   border-radius: 0 !important;
   padding: 0 !important;
+  justify-content: flex-start !important;
 }
 .ds-tab {
   border: none;
@@ -17,10 +18,10 @@
   font-family: var(--font-body);
   font-weight: var(--weight-semibold);
   cursor: pointer;
-  color: var(--text-muted);
+  color: var(--text-muted) !important;
   padding: 0 0 12px;
   margin-bottom: -1px;
-  border-bottom: 2.5px solid transparent;
+  border-bottom: 2.5px solid transparent !important;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -31,18 +32,23 @@
   height: auto !important;
   flex: unset !important;
 }
-.ds-tab[data-active] {
-  font-weight: var(--weight-bold);
-  color: var(--text-primary);
-  border-bottom-color: var(--accent);
+.ds-tab[data-state="active"] {
+  font-weight: var(--weight-bold) !important;
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--accent) !important;
 }
 .ds-tab-count {
-  font-size: var(--fs-caption-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  font-size: var(--fs-micro);
   font-weight: var(--weight-bold);
-  background: var(--cream-300);
-  color: var(--text-muted);
-  padding: 1px 7px;
-  border-radius: 10px;
+  background: var(--sand-300);
+  color: var(--text-secondary);
+  padding: 0 6px;
+  border-radius: 99px;
 }
 .ds-tab-count--active {
   background: var(--accent-tint);

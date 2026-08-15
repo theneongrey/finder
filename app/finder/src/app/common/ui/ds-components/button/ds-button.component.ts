@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { HlmButton } from '@spartan-ng/helm/button';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
-export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'subtle' | 'ghost' | 'neutral' | 'surface' | 'teal';
+export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'subtle' | 'ghost' | 'neutral' | 'surface' | 'teal' | 'soft' | 'danger';
 export type ButtonSize = 'sm' | 'md';
 
 @Component({
@@ -23,6 +23,7 @@ export class DsButtonComponent {
   fullWidth    = input<boolean>(false);
   loading      = input<boolean>(false);
   disabled     = input<boolean>(false);
+  noGlow       = input<boolean>(true);
 
   protected readonly isIconOnly = computed(() => typeof this.size() === 'number');
 

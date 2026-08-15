@@ -70,7 +70,7 @@ const ICONS: Record<string, IconDef> = {
       { d: 'M10 15h4l.6 4H9.4z' },
     ],
   },
-  close: { strokeWidth: 2.4, paths: [{ d: 'M5 5l14 14' }, { d: 'M19 5L5 19' }] },
+  close: { strokeWidth: 2.6, paths: [{ d: 'M5 5l14 14' }, { d: 'M19 5L5 19' }] },
   check: { strokeWidth: 3, paths: [{ d: 'M4 12.5l5 5L20 6' }] },
   heart: { strokeWidth: 2.1, paths: [{ d: 'M12 20.3s-7.5-4.6-9.7-9C.8 8 2 4.7 5 3.7c2.2-.7 4.3.2 5.6 2 .4.5 1 1.4 1.4 1.4s1-.9 1.4-1.4c1.3-1.8 3.4-2.7 5.6-2 3 1 4.2 4.3 2.7 7.6-2.2 4.4-9.7 9-9.7 9z' }] },
   grid: {
@@ -105,6 +105,16 @@ const ICONS: Record<string, IconDef> = {
     strokeWidth: 2.2,
     circles: [{ cx: 12, cy: 12, r: 8.6 }],
     paths: [{ d: 'M12 11v5.2' }, { d: 'M12 7.9v.1' }],
+  },
+  globe: {
+    strokeWidth: 2,
+    circles: [{ cx: 12, cy: 12, r: 8.5 }],
+    paths: [
+      { d: 'M12 3.5c-2 3-3 5.5-3 8.5s1 5.5 3 8.5' },
+      { d: 'M12 3.5c2 3 3 5.5 3 8.5s-1 5.5-3 8.5' },
+      { d: 'M3.5 9h17' },
+      { d: 'M3.5 15h17' },
+    ],
   },
 };
 

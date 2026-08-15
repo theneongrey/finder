@@ -44,9 +44,9 @@
     "roles": {
       "unknown": "Unbekannt",
       "voter": "Abstimmen",
-      "maintainer": "Erstellen",
+      "maintainer": "Mitwirken",
       "owner": "Verwalten",
-      "creator": "Gründer"
+      "creator": "Verfasser"
     },
     "pollsTab": {
       "title": "Umfragen",
@@ -103,9 +103,19 @@
       "nameOrEmail": "Name oder E-Mail",
       "voterDescription": "Kann das Projekt und seine Umfragen ansehen und abstimmen.",
       "maintainerDescription": "Kann Abstimmungen erstellen und bearbeiten sowie selbst abstimmen.",
-      "ownerDescription": "Kann alles was Abstimmende und Ersteller können, und zusätzlich Benutzer einladen und verwalten.",
+      "ownerDescription": "Kann alles was Abstimmende und Mitwirkende können, und zusätzlich Benutzer einladen und verwalten.",
       "remove": "Entfernen",
-      "persons": "Personen"
+      "removeConfirm": "{{name}} entfernen?",
+      "persons": "Personen",
+      "whoCanJoin": "Wer darf beitreten",
+      "personInvite": "Person einladen",
+      "alreadyShared": "Bereits geteilt",
+      "inviteMore": "Weitere einladen",
+      "roleLabel": "Rolle für neue Einladungen",
+      “linkNote”: “Wer über den Link beitritt, kommt als Abstimmender rein. Mehr Rechte vergibst du im Tab „Zugriff”.”,
+      "recentLabel": "Zuletzt oft geteilt",
+      "noContact": "Kein Kontakt gefunden – per E-Mail einladen",
+      "pollLabel": "Umfrage"
     },
     "pollInput": {
       "createPoll": "Umfrage erstellen",

@@ -73,6 +73,15 @@
         </p>
       </div>
       <div class="flex items-center gap-1">
+        @if (canSharePoll()) {
+          <ds-button
+            variant="ghost"
+            [size]="36"
+            icon="share"
+            data-testid="share-btn"
+            (click)="shareRequested.emit()"
+          />
+        }
         <button
           hlmBtn
           variant="ghost"

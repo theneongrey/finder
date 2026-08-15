@@ -41,19 +41,15 @@ public static class StandalonePollOverviewMapper
         var newestDate = poll.Edited > project.Edited ? poll.Edited : project.Edited;
 
         var sharedWith = project.Permissions
-            .Where(p => p.PersonKey != userId && p.PersonKey != project.Creator.Id)
-            .Select(ProjectMapper.ToProjectSharedWith);
-
-        if (userId != project.Creator.Id)
-        {
-            sharedWith = sharedWith.Prepend(new ProjectSharedWith
+            .Where(p => p.PersonKey != project.Creator.Id)
+            .Select(ProjectMapper.ToProjectSharedWith)
+            .Prepend(new ProjectSharedWith
             {
                 Name = project.Creator.Name ?? project.Creator.Email,
                 Email = project.Creator.Email,
                 Role = ProjectRole.Creator,
                 Picture = project.Creator.Picture
             });
-        }
 
         var nextOption = poll.Options
             .Select(o => new {

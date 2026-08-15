@@ -44,9 +44,9 @@
     "roles": {
       "unknown": "Desconocido",
       "voter": "Votante",
-      "maintainer": "Mantenedor",
+      "maintainer": "Colaborador",
       "owner": "Propietario",
-      "creator": "Creador"
+      "creator": "Autor"
     },
     "pollsTab": {
       "title": "Encuestas",
@@ -105,7 +105,17 @@
       "maintainerDescription": "Puede gestionar temas y opciones y participar en votos.",
       "ownerDescription": "Puede gestionar la configuración del proyecto y los permisos de usuario.",
       "remove": "Eliminar",
-      "persons": "Personas"
+      "removeConfirm": "¿Eliminar a {{name}}?",
+      "persons": "Personas",
+      "whoCanJoin": "Quién puede unirse",
+      "personInvite": "Invitar persona",
+      "alreadyShared": "Ya compartido",
+      "inviteMore": "Invitar más",
+      "roleLabel": "Rol para nuevas invitaciones",
+      "linkNote": "Quien se una mediante el enlace entrará como observador. Puedes otorgar más permisos en la pestaña 'Acceso'.",
+      "recentLabel": "Compartido frecuentemente",
+      "noContact": "Contacto no encontrado – invitar por correo",
+      "pollLabel": "Encuesta"
     },
     "pollInput": {
       "createPoll": "Crear encuesta",

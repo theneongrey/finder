@@ -23,11 +23,15 @@
 
 @if (sharingProject(); as project) {
   <app-share-drawer
-    [projectId]="project.projectId"
-    [projectName]="project.projectName"
-    [sharedWith]="project.sharedWith"
-    [visibilityType]="project.visibilityType"
+    [title]="shareDrawerTitle()"
+    [subtitle]="shareDrawerSubtitle()"
     [visible]="!!sharingProjectId()"
     (visibleChange)="shareDrawerVisibilityChanged($event)"
-  />
+  >
+    <app-share-content
+      [projectId]="project.projectId"
+      [sharedWith]="project.sharedWith"
+      [visibilityType]="project.visibilityType"
+    />
+  </app-share-drawer>
 }

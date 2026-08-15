@@ -19,6 +19,7 @@ import { PollItem } from '../../models/poll-item.model';
 import { PollRole } from '../../models/poll-role.enum';
 import { PollVotingStatus } from '../../models/standalone-poll-overview.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
+import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
 
 @Component({
   selector: 'app-poll-item',
@@ -32,6 +33,7 @@ import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
     TimeSincePipe,
     DatePipe,
     ...HlmCardImports,
+    DsButtonComponent,
   ],
   templateUrl: './poll-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,15 +1,22 @@
-<hlm-avatar
-  class="ds-avatar-circle"
-  [style.width.px]="px()"
-  [style.height.px]="px()"
-  [style.min-width.px]="px()"
-  [style.border]="pending() ? '1.5px dashed var(--sand-400)' : ring() ? '2.5px solid #fff' : 'none'"
->
-  <span
-    hlmAvatarFallback
-    class="ds-avatar-fallback"
-    [style.background]="pending() ? 'var(--cream-50)' : bg()"
-    [style.color]="pending() ? 'var(--sand-500)' : fg()"
-    [style.font-size.px]="fontSize()"
-  >{{ initial() }}</span>
-</hlm-avatar>
+<div class="ds-avatar-wrap">
+  <hlm-avatar
+    class="ds-avatar-circle"
+    [style.width.px]="px()"
+    [style.height.px]="px()"
+    [style.min-width.px]="px()"
+    [style.border]="isPending() ? '1.5px dashed var(--sand-400)' : hasRing() ? '2.5px solid #fff' : 'none'"
+  >
+    <span
+      hlmAvatarFallback
+      class="ds-avatar-fallback"
+      [style.background]="isPending() ? 'var(--cream-50)' : bg()"
+      [style.color]="isPending() ? 'var(--sand-500)' : fg()"
+      [style.font-size.px]="fontSize()"
+    >{{ initial() }}</span>
+  </hlm-avatar>
+  @if (voted() === true) {
+    <span class="ds-avatar-badge">
+      <ds-icon name="check" [size]="7" color="#fff" />
+    </span>
+  }
+</div>

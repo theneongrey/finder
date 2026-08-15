@@ -19,6 +19,7 @@ export class DsButtonComponent {
   size         = input<ButtonSize | number>('md');
   icon         = input<string | undefined>(undefined);
   trailingIcon = input<string | undefined>(undefined);
+  color        = input<string | undefined>(undefined);
   label        = input<string | undefined>(undefined);
   fullWidth    = input<boolean>(false);
   loading      = input<boolean>(false);

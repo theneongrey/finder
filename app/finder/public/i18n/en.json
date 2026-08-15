@@ -51,7 +51,26 @@
     "pollsTab": {
       "title": "Polls",
       "subtitle": "All your standalone polls at a glance",
-      "empty": "You don't have any polls yet. Create one!"
+      "empty": "You don't have any polls yet. Create one!",
+      "subline": "{{open}} running · {{todo}} open for you",
+      "searchPlaceholder": "Search polls",
+      "filterOpen": "Running",
+      "filterClosed": "Ended",
+      "filterTodo": "Open for me",
+      "filterFav": "Favorites",
+      "editModeDone": "Done",
+      "emptyFiltered": "No poll found",
+      "emptyFilteredHint": "Nothing matches these filters.",
+      "emptyFilteredHintSearch": "No results for \"{{q}}\".",
+      "resetFilters": "Reset filters",
+      "allVoted": "Everyone voted",
+      "missingVoters": "Still missing: {{names}}",
+      "filterStatusLabel": "Status",
+      "filterShowOnlyLabel": "Show only",
+      "filterOpenLong": "Running",
+      "filterTodoLong": "Not yet voted",
+      "newPoll": "New poll",
+      "reload": "Reload"
     },
     "standaloneItem": {
       "badge": "No project",
@@ -86,7 +105,9 @@
         "viewProgress": "View current standings",
         "statusOpen": "Open",
         "statusClosed": "Closed",
-        "openUntil": "Open until"
+        "openUntil": "Open until",
+        "closedOn": "Closed on",
+        "openIndefinite": "Open until closed manually"
       }
     },
     "share": {
@@ -217,7 +238,8 @@
     },
     "lastVote": {
       "label": "Last vote",
-      "none": "No votes yet"
+      "none": "No votes so far",
+      "voted": "{{count}} of {{total}} voted"
     },
     "timeAgo": {
       "justNow": "just now",

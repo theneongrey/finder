@@ -1,7 +1,13 @@
 <div class="ds-avatar-stack">
   @for (m of shown(); track $index) {
     <div class="ds-avatar-stack__item">
-      <ds-avatar [initial]="m.initial" [bg]="m.bg" [fg]="m.fg" [size]="px()" [ring]="true" />
+      <ds-avatar
+        [initial]="m.initial"
+        [bg]="m.bg"
+        [fg]="m.fg"
+        [size]="px()"
+        [voted]="m.voted"
+      />
     </div>
   }
   @if (extra() > 0) {

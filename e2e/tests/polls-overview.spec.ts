@@ -88,7 +88,8 @@ test.describe('Polls-only overview (simplified MVP)', () => {
 
       await expect(page.getByText('E2E Created Poll')).toBeVisible();
 
-      // Clean up: delete the created poll directly via the danger button (no confirm dialog)
+      // Enable edit mode to reveal delete buttons, then delete the created poll
+      await page.locator('[data-testid="edit-mode-btn"]').click();
       const pollCard = page.locator('app-poll-item').filter({ hasText: 'E2E Created Poll' });
       await pollCard.locator('[data-testid="delete-btn"]').click();
     });
@@ -206,8 +207,9 @@ test.describe('Overview redesign (#242)', () => {
     }
   });
 
-  test('poll card: delete button is visible for maintainers', async ({ page }) => {
+  test('poll card: delete button is visible for maintainers in edit mode', async ({ page }) => {
     await page.goto('/polls');
+    await page.locator('[data-testid="edit-mode-btn"]').click();
     const deleteBtn = page.locator('app-poll-item [data-testid="delete-btn"]').first();
     await expect(deleteBtn).toBeVisible();
   });

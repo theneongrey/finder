@@ -1,13 +1,335 @@
-@if (standalonePolls().length === 0) {
-  <p data-testid="polls-empty-state" class="mb-4 opacity-60">
-    {{ "project.pollsTab.empty" | translate }}
+<!-- ═══════════════════════════════════════════════════════════
+     WEB FILTER BAR  (lg+ only — sticky below title-bar)
+     ═══════════════════════════════════════════════════════════ -->
+<div
+  class="hidden lg:flex items-center gap-2 flex-wrap -mx-[22px] px-7 py-2.5 sticky z-10"
+  style="top: 60px; background: rgba(255,253,249,.9); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(20,24,28,.06)"
+>
+  <!-- Status label -->
+  <span style="font-size: 12px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--text-muted)">
+    {{ 'project.pollsTab.filterStatusLabel' | translate }}
+  </span>
+
+  <!-- Open / Closed checkbox buttons -->
+  <div class="flex items-center gap-1.5">
+    <button
+      class="flex items-center gap-2.5 h-10 px-3 border-none rounded-xl cursor-pointer transition-colors"
+      [style.background]="showOpen() ? 'var(--cream-100)' : 'transparent'"
+      [style.color]="showOpen() ? 'var(--text-primary)' : 'var(--text-secondary)'"
+      [style.fontWeight]="showOpen() ? '700' : '500'"
+      style="font-size: 14.5px"
+      (click)="showOpen.update(v => !v)"
+      data-testid="filter-open"
+    >
+      <span
+        class="flex items-center justify-center flex-none"
+        style="width:19px;height:19px;border-radius:6px;border-width:1.6px;border-style:solid;transition:background 160ms,border-color 160ms;box-sizing:border-box"
+        [style.border-color]="showOpen() ? 'var(--accent)' : 'var(--sand-400)'"
+        [style.background]="showOpen() ? 'var(--accent)' : '#fff'"
+      >
+        @if (showOpen()) {
+          <ds-icon name="check" [size]="11" color="#fff" />
+        }
+      </span>
+      <span class="flex-1 text-left">{{ 'project.pollsTab.filterOpenLong' | translate }}</span>
+      <span style="font-size: 12.5px; font-weight: 700; opacity: .55">{{ openCount() }}</span>
+    </button>
+
+    <button
+      class="flex items-center gap-2.5 h-10 px-3 border-none rounded-xl cursor-pointer transition-colors"
+      [style.background]="showClosed() ? 'var(--cream-100)' : 'transparent'"
+      [style.color]="showClosed() ? 'var(--text-primary)' : 'var(--text-secondary)'"
+      [style.fontWeight]="showClosed() ? '700' : '500'"
+      style="font-size: 14.5px"
+      (click)="showClosed.update(v => !v)"
+      data-testid="filter-closed"
+    >
+      <span
+        class="flex items-center justify-center flex-none"
+        style="width:19px;height:19px;border-radius:6px;border-width:1.6px;border-style:solid;transition:background 160ms,border-color 160ms;box-sizing:border-box"
+        [style.border-color]="showClosed() ? 'var(--accent)' : 'var(--sand-400)'"
+        [style.background]="showClosed() ? 'var(--accent)' : '#fff'"
+      >
+        @if (showClosed()) {
+          <ds-icon name="check" [size]="11" color="#fff" />
+        }
+      </span>
+      <span class="flex-1 text-left">{{ 'project.pollsTab.filterClosed' | translate }}</span>
+      <span style="font-size: 12.5px; font-weight: 700; opacity: .55">{{ closedCount() }}</span>
+    </button>
+  </div>
+
+  <!-- Separator -->
+  <span style="width: 1px; height: 22px; background: rgba(20,24,28,.1); margin: 0 4px; flex-none"></span>
+
+  <!-- Show only label -->
+  <span style="font-size: 12px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--text-muted)">
+    {{ 'project.pollsTab.filterShowOnlyLabel' | translate }}
+  </span>
+
+  <!-- Todo + Fav toggle buttons -->
+  <div class="flex items-center gap-1.5">
+    <button
+      class="flex items-center gap-2.5 h-10 px-3 border-none rounded-xl cursor-pointer transition-colors"
+      [style.background]="todoOnly() ? 'var(--cream-100)' : 'transparent'"
+      [style.color]="todoOnly() ? 'var(--text-primary)' : 'var(--text-secondary)'"
+      [style.fontWeight]="todoOnly() ? '700' : '500'"
+      style="font-size: 14.5px"
+      (click)="todoOnly.update(v => !v)"
+      data-testid="filter-todo"
+    >
+      <ds-icon name="circle-dot" [size]="18" [color]="todoOnly() ? 'var(--accent)' : 'var(--text-muted)'" class="flex-none" />
+      <span class="flex-1 text-left">{{ 'project.pollsTab.filterTodoLong' | translate }}</span>
+      <!-- Toggle switch -->
+      <span
+        class="relative flex-none rounded-full transition-colors"
+        style="width:32px;height:19px"
+        [style.background]="todoOnly() ? 'var(--accent)' : 'var(--sand-200)'"
+      >
+        <span
+          class="absolute rounded-full"
+          style="top:2.5px;width:14px;height:14px;background:#fff;box-shadow:0 1px 3px rgba(30,35,40,.28);transition:left 160ms ease"
+          [style.left]="todoOnly() ? '15px' : '2.5px'"
+        ></span>
+      </span>
+    </button>
+
+    <button
+      class="flex items-center gap-2.5 h-10 px-3 border-none rounded-xl cursor-pointer transition-colors"
+      [style.background]="favOnly() ? 'var(--cream-100)' : 'transparent'"
+      [style.color]="favOnly() ? 'var(--text-primary)' : 'var(--text-secondary)'"
+      [style.fontWeight]="favOnly() ? '700' : '500'"
+      style="font-size: 14.5px"
+      (click)="favOnly.update(v => !v)"
+      data-testid="filter-fav"
+    >
+      <ds-icon name="heart" [size]="18" [color]="favOnly() ? '#c1453f' : 'var(--text-muted)'" class="flex-none" />
+      <span class="flex-1 text-left">{{ 'project.pollsTab.filterFav' | translate }}</span>
+      <!-- Toggle switch -->
+      <span
+        class="relative flex-none rounded-full transition-colors"
+        style="width:32px;height:19px"
+        [style.background]="favOnly() ? 'var(--accent)' : 'var(--sand-200)'"
+      >
+        <span
+          class="absolute rounded-full"
+          style="top:2.5px;width:14px;height:14px;background:#fff;box-shadow:0 1px 3px rgba(30,35,40,.28);transition:left 160ms ease"
+          [style.left]="favOnly() ? '15px' : '2.5px'"
+        ></span>
+      </span>
+    </button>
+  </div>
+
+  <!-- Reset filters (when dirty) -->
+  @if (isDirty()) {
+    <button
+      class="flex items-center gap-2 ml-auto border-none rounded-xl cursor-pointer transition-colors"
+      style="height:34px;padding:0 12px;background:transparent;color:var(--text-secondary);font-size:13px;font-weight:700;font-family:var(--font-body)"
+      (click)="resetFilters()"
+    >
+      <ds-icon name="close" [size]="14" />
+      <span>{{ 'project.pollsTab.resetFilters' | translate }}</span>
+    </button>
+  }
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WEB HEADING ROW  (lg+ only)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="hidden lg:flex items-end justify-between gap-6 -mx-[22px] px-8 pt-7 pb-5">
+  <div>
+    <h1 style="font-family: var(--font-display); font-size: var(--fs-display-xl); font-weight: 700; letter-spacing: var(--tracking-display-xl); line-height: 1.05; color: var(--text-primary)">
+      {{ 'project.pollsTab.title' | translate }}
+    </h1>
+    <p class="mt-1.5" style="font-size: 15px; color: var(--text-secondary)">
+      {{ 'project.pollsTab.subline' | translate: { open: openCount(), todo: todoCount() } }}
+    </p>
+  </div>
+
+  <div class="flex items-center gap-2.5 flex-none">
+    <!-- Search input -->
+    <div class="relative">
+      <span class="absolute left-3 top-1/2 -translate-y-1/2 flex pointer-events-none">
+        <ds-icon name="search" [size]="16" color="var(--text-muted)" />
+      </span>
+      <input
+        class="h-11 pl-10 pr-9 rounded-[14px] text-[14.5px] outline-none"
+        style="width:268px;border:1px solid var(--border-hairline);background:#fff;color:var(--text-primary);transition:border-color var(--duration-fast),box-shadow var(--duration-fast);font-family:var(--font-body)"
+        [placeholder]="'project.pollsTab.searchPlaceholder' | translate"
+        [value]="query()"
+        (input)="query.set($any($event.target).value)"
+        data-testid="polls-search-web"
+      />
+      @if (query()) {
+        <button
+          class="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer border-none"
+          style="background: var(--cream-200)"
+          (click)="clearQuery()"
+        >
+          <ds-icon name="close" [size]="11" color="var(--text-secondary)" />
+        </button>
+      }
+    </div>
+
+    <!-- New poll button -->
+    <ds-button
+      variant="primary"
+      [noGlow]="false"
+      icon="plus"
+      [label]="'project.pollsTab.newPoll' | translate"
+      [routerLink]="['/polls/add']"
+      data-testid="new-poll-btn-web"
+    />
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MOBILE LAYOUT  (hidden on lg+)
+     ═══════════════════════════════════════════════════════════ -->
+
+<!-- Mobile: Page heading + edit mode toggle -->
+<div class="flex items-end justify-between gap-3 mb-4 lg:hidden">
+  <div>
+    <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 700; letter-spacing: -0.7px; line-height: 1.05; color: var(--text-primary)">
+      {{ 'project.pollsTab.title' | translate }}
+    </h1>
+    <p class="mt-1" style="font-size: var(--fs-body-sm); color: var(--text-secondary)">
+      {{ 'project.pollsTab.subline' | translate: { open: openCount(), todo: todoCount() } }}
+    </p>
+  </div>
+  <ds-button
+    [variant]="editMode() ? 'primary' : 'neutral'"
+    size="sm"
+    icon="edit"
+    [label]="(editMode() ? 'project.pollsTab.editModeDone' : 'project.common.edit') | translate"
+    data-testid="edit-mode-btn"
+    (click)="toggleEditMode()"
+  />
+</div>
+
+<!-- Mobile: Search input -->
+<div class="relative mb-3 lg:hidden">
+  <span class="absolute left-3.5 top-1/2 -translate-y-1/2 flex pointer-events-none">
+    <ds-icon name="search" [size]="17" color="var(--text-muted)" />
+  </span>
+  <input
+    class="w-full h-[46px] pl-10 pr-10 rounded-[15px] text-[15px] outline-none"
+    style="border: 1px solid var(--border-hairline); background: #fff; color: var(--text-primary); box-shadow: 0 3px 14px rgba(35,40,45,.04); transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard); font-family: var(--font-body)"
+    [placeholder]="'project.pollsTab.searchPlaceholder' | translate"
+    [value]="query()"
+    (input)="query.set($any($event.target).value)"
+    data-testid="polls-search"
+  />
+  @if (query()) {
+    <button
+      class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer border-none"
+      style="background: var(--cream-200)"
+      (click)="clearQuery()"
+      title="Suche löschen"
+    >
+      <ds-icon name="close" [size]="12" color="var(--text-secondary)" />
+    </button>
+  }
+</div>
+
+<!-- Mobile: Filter chips -->
+<div class="flex items-center gap-1.5 mb-5 flex-wrap lg:hidden">
+  <button
+    class="flex items-center gap-1 h-[34px] px-3 rounded-full border text-[13px] font-bold cursor-pointer transition-colors"
+    [style.background]="showOpen() ? 'var(--accent)' : '#fff'"
+    [style.color]="showOpen() ? '#fff' : 'var(--text-secondary)'"
+    [style.border-color]="showOpen() ? 'var(--accent)' : 'var(--border-hairline)'"
+    (click)="showOpen.update(v => !v)"
+    data-testid="filter-open"
+  >
+    @if (showOpen()) {
+      <ds-icon name="check" [size]="13" color="#fff" />
+    }
+    {{ 'project.pollsTab.filterOpen' | translate }}
+  </button>
+
+  <button
+    class="flex items-center gap-1 h-[34px] px-3 rounded-full border text-[13px] font-bold cursor-pointer transition-colors"
+    [style.background]="showClosed() ? 'var(--accent)' : '#fff'"
+    [style.color]="showClosed() ? '#fff' : 'var(--text-secondary)'"
+    [style.border-color]="showClosed() ? 'var(--accent)' : 'var(--border-hairline)'"
+    (click)="showClosed.update(v => !v)"
+    data-testid="filter-closed"
+  >
+    @if (showClosed()) {
+      <ds-icon name="check" [size]="13" color="#fff" />
+    }
+    {{ 'project.pollsTab.filterClosed' | translate }}
+  </button>
+
+  <button
+    class="flex items-center gap-1.5 h-[34px] px-3 rounded-full border text-[13px] font-bold cursor-pointer transition-colors whitespace-nowrap"
+    [style.background]="todoOnly() ? 'var(--accent-tint)' : '#fff'"
+    [style.color]="todoOnly() ? 'var(--accent)' : 'var(--text-muted)'"
+    [style.border-color]="todoOnly() ? 'var(--accent)' : 'var(--border-hairline)'"
+    (click)="todoOnly.update(v => !v)"
+    data-testid="filter-todo"
+  >
+    <ds-icon name="circle-dot" [size]="14" [color]="todoOnly() ? 'var(--accent)' : 'var(--text-muted)'" />
+    {{ 'project.pollsTab.filterTodo' | translate }}
+  </button>
+
+  <button
+    class="ml-auto w-[34px] h-[34px] rounded-full border flex items-center justify-center cursor-pointer transition-colors"
+    [style.background]="favOnly() ? '#fdf3f1' : '#fff'"
+    [style.color]="favOnly() ? '#c1453f' : 'var(--text-muted)'"
+    [style.border-color]="favOnly() ? '#f0c3bd' : 'var(--border-hairline)'"
+    [title]="'project.pollsTab.filterFav' | translate"
+    (click)="favOnly.update(v => !v)"
+    data-testid="filter-fav"
+  >
+    <ds-icon name="heart" [size]="15" [color]="favOnly() ? '#c1453f' : 'var(--text-muted)'" />
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     EMPTY STATES  (shared)
+     ═══════════════════════════════════════════════════════════ -->
+@if (isEmpty()) {
+  <p data-testid="polls-empty-state" class="mb-4 opacity-60 lg:px-8 lg:-mx-[22px]">
+    {{ 'project.pollsTab.empty' | translate }}
   </p>
 }
 
-<div data-testid="polls-list" data-vt-stagger class="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-8">
-  @for (poll of standalonePolls(); track poll.pollId) {
+@if (isFilteredEmpty()) {
+  <div
+    data-testid="polls-filtered-empty"
+    class="rounded-[22px] p-8 text-center mb-4 lg:-mx-[22px] lg:mx-8"
+    style="border: 1.5px dashed var(--border-hairline-strong); background: rgba(255,255,255,.5)"
+  >
+    <div style="font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.2px">
+      {{ 'project.pollsTab.emptyFiltered' | translate }}
+    </div>
+    <div class="mt-1.5" style="font-size: var(--fs-body-sm); color: var(--text-secondary)">
+      @if (query()) {
+        {{ 'project.pollsTab.emptyFilteredHintSearch' | translate: { q: query() } }}
+      } @else {
+        {{ 'project.pollsTab.emptyFilteredHint' | translate }}
+      }
+    </div>
+    <button
+      class="mt-4 h-[38px] px-4 rounded-[12px] border cursor-pointer font-bold"
+      style="border-color: var(--border-hairline); background: #fff; font-size: var(--fs-body-sm); color: var(--accent); font-family: var(--font-body)"
+      (click)="resetFilters()"
+    >
+      {{ 'project.pollsTab.resetFilters' | translate }}
+    </button>
+  </div>
+}
+
+<!-- ═══════════════════════════════════════════════════════════
+     POLL LIST  (1-col mobile, 2-col web)
+     ═══════════════════════════════════════════════════════════ -->
+<div data-testid="polls-list" data-vt-stagger class="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-8 lg:-mx-[22px] lg:px-8">
+  @for (poll of filteredPolls(); track poll.pollId) {
     <app-poll-item
       [poll]="poll"
+      [editMode]="editMode()"
       (deletionRequested)="deletionRequested.emit(poll)"
       (shareRequested)="shareRequested.emit(poll.projectId)"
       (favoriteToggled)="projectListStore.toggleFavorite($event)"

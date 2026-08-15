@@ -1,61 +1,160 @@
 @let _poll = poll();
 
 <ds-card>
-  <!-- ── Header row: type badge · status dot · share · fav ─── -->
-  <div class="flex items-center gap-2 pb-3">
-    <app-poll-type-badge [type]="_poll.optionType" />
+  <!-- ── Header row: type badge · status dot · share · fav (hidden in edit mode) -->
+  @if (!editMode()) {
+    <div class="flex items-center gap-2 pb-3">
+      <app-poll-type-badge [type]="_poll.optionType" />
 
-    <ds-status-dot [tone]="_poll.isClosed ? 'muted' : 'positive'">
-      {{ (_poll.isClosed ? 'project.detail.item.statusClosed' : 'project.detail.item.statusOpen') | translate }}
-    </ds-status-dot>
+      <ds-status-dot [tone]="_poll.isClosed ? 'muted' : 'positive'">
+        {{
+          (_poll.isClosed
+            ? "project.detail.item.statusClosed"
+            : "project.detail.item.statusOpen"
+          ) | translate
+        }}
+      </ds-status-dot>
 
-    <ds-badge tone="neutral" size="sm">
-      {{ _poll.totalParticipants }}
-    </ds-badge>
+      <span class="ml-auto flex items-center gap-1">
+        @if (canShare()) {
+          <!-- Mobile: ghost circle share button -->
+          <span class="lg:hidden">
+            <ds-button
+              variant="ghost"
+              [size]="30"
+              icon="share"
+              [color]="'var(--ink-900)'"
+              data-testid="share-btn"
+              (click)="shareRequested.emit()"
+            />
+          </span>
+          <!-- Web: pill share button with label, always visible -->
+          <button
+            class="hidden h-[30px] cursor-pointer items-center gap-[7px] rounded-[10px] border bg-white px-[11px] hover:bg-[#f1eee9] lg:flex"
+            style="
+              border-color: var(--border-hairline);
+              color: var(--text-secondary);
+              font-size: 12.5px;
+              font-weight: 700;
+              transition: background 140ms ease;
+            "
+            (click)="shareRequested.emit()"
+            [title]="'project.share.title' | translate"
+            data-testid="share-btn"
+          >
+            <ds-icon name="share" [size]="14" />
+            <span>{{ "project.share.title" | translate }}</span>
+          </button>
+        }
 
-    <span class="ml-auto flex items-center gap-1">
-      @if (canShare()) {
         <ds-button
           variant="ghost"
           [size]="30"
-          icon="share"
-          data-testid="share-btn"
-          (click)="shareRequested.emit()"
+          icon="heart"
+          data-testid="favorite-btn"
+          [attr.data-testid-active]="
+            _poll.isFavorite ? 'favorite-active' : null
+          "
+          [color]="_poll.isFavorite ? '#c1453f' : undefined"
+          (click)="favoriteToggled.emit(_poll.projectId)"
         />
-      }
-      <ds-button
-        variant="ghost"
-        [size]="30"
-        icon="heart"
-        data-testid="favorite-btn"
-        [attr.data-testid-active]="_poll.isFavorite ? 'favorite-active' : null"
-        (click)="favoriteToggled.emit(_poll.projectId)"
-      />
-    </span>
-  </div>
 
-  <!-- ── Title row + inline edit/delete for maintainers ─────── -->
+        <!-- Web: hover-reveal edit + delete (animated slide-in, ghost circles) -->
+        @if (showActions()) {
+          <span
+            class="hidden items-center gap-1 overflow-hidden lg:flex"
+            [style.max-width]="isHovered() ? '80px' : '0px'"
+            [style.opacity]="isHovered() ? '1' : '0'"
+            style="
+              transition:
+                max-width 220ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 160ms ease;
+            "
+          >
+            <span
+              style="
+                width: 1px;
+                height: 18px;
+                background: rgba(20, 24, 28, 0.1);
+                margin: 0 3px;
+                flex: none;
+              "
+            ></span>
+            @if (editRoute()) {
+              <button
+                class="flex flex-none cursor-pointer items-center justify-center hover:bg-[#f1eee9]"
+                style="
+                  width: 30px;
+                  height: 30px;
+                  border: none;
+                  border-radius: 50%;
+                  background: transparent;
+                  color: var(--text-secondary);
+                  transition: background 140ms ease;
+                "
+                (click)="navigateToEdit()"
+                [title]="'project.common.edit' | translate"
+                data-testid="edit-btn"
+              >
+                <ds-icon name="edit" [size]="15" />
+              </button>
+            }
+            <button
+              class="flex flex-none cursor-pointer items-center justify-center hover:bg-[#fbeeed]"
+              style="
+                width: 30px;
+                height: 30px;
+                border: none;
+                border-radius: 50%;
+                background: transparent;
+                color: var(--negative);
+                transition: background 140ms ease;
+              "
+              (click)="deletionRequested.emit()"
+              [title]="'project.common.delete' | translate"
+              data-testid="delete-btn"
+            >
+              <ds-icon name="trash" [size]="15" />
+            </button>
+          </span>
+        }
+      </span>
+    </div>
+  }
+
+  <!-- ── Title row + inline edit/delete in edit mode (mobile only) ─────────── -->
   <div class="flex items-start gap-2">
     <h3 class="flex-1" style="text-wrap: pretty">{{ _poll.name }}</h3>
 
-    @if (showActions()) {
-      <div class="flex gap-2 shrink-0">
+    <!-- Mobile: edit-mode actions (bordered rectangle buttons) -->
+    @if (showActions() && editMode()) {
+      <div class="flex shrink-0 gap-2 lg:hidden">
         @if (editRoute()) {
           <button
-            class="w-9 h-9 rounded-xl border flex items-center justify-center cursor-pointer transition-colors"
-            style="border-color: var(--border-hairline); background: #fff; color: var(--text-primary); transition: background var(--duration-fast) var(--ease-standard)"
+            class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border"
+            style="
+              border-color: var(--border-hairline);
+              background: #fff;
+              color: var(--text-primary);
+              transition: background var(--duration-fast) var(--ease-standard);
+            "
             (click)="navigateToEdit()"
-            title="Bearbeiten"
+            [title]="'project.common.edit' | translate"
             data-testid="edit-btn"
           >
             <ds-icon name="edit" [size]="16" />
           </button>
         }
         <button
-          class="w-9 h-9 rounded-xl border flex items-center justify-center cursor-pointer"
-          style="border-color: #f0c3bd; background: #fdf3f1; color: var(--negative); transition: background var(--duration-fast) var(--ease-standard)"
+          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border"
+          style="
+            border-color: #f0c3bd;
+            background: #fdf3f1;
+            color: var(--negative);
+            transition: background var(--duration-fast) var(--ease-standard);
+          "
           (click)="deletionRequested.emit()"
-          title="Löschen"
+          [title]="'project.common.delete' | translate"
           data-testid="delete-btn"
         >
           <ds-icon name="trash" [size]="16" />
@@ -64,63 +163,180 @@
     }
   </div>
 
-  <!-- ── Description ─────────────────────────────────────────── -->
-  @if (_poll.description) {
-    <p class="mt-1.5" style="font-size: var(--fs-body-sm); line-height: 1.4; color: var(--text-secondary); text-wrap: pretty">
-      {{ _poll.description }}
-    </p>
-  }
-
-  <!-- ── Time info ───────────────────────────────────────────── -->
-  <div class="flex flex-col gap-1.5 mt-3">
-    @if (_poll.closeDate && !_poll.isClosed) {
-      <div class="flex items-center gap-1.5" style="font-size: var(--fs-body-sm); font-weight: var(--weight-semibold); color: var(--warning)">
-        <ds-icon name="clock" [size]="14" />
-        <span>{{ 'project.detail.item.openUntil' | translate }}: {{ _poll.closeDate | date:'dd.MM.yyyy' }}</span>
-      </div>
-    } @else if (_poll.lastVoteAt) {
-      <div class="flex items-center gap-1.5" style="font-size: var(--fs-body-sm); font-weight: var(--weight-semibold); color: var(--text-secondary)">
-        <ds-icon name="clock" [size]="14" />
-        <span>{{ 'project.lastVote.label' | translate }}: {{ _poll.lastVoteAt | timeSince }}</span>
-      </div>
-    } @else {
-      <div class="flex items-center gap-1.5" style="font-size: var(--fs-body-sm); color: var(--text-tertiary)">
-        <span style="width: 14px; display: flex; justify-content: center">
-          <span style="width: 5px; height: 5px; border-radius: 50%; border: 1.4px solid var(--border-hairline-strong)"></span>
-        </span>
-        <span>{{ 'project.lastVote.none' | translate }}</span>
-      </div>
+  <!-- ── Body: description, time, progress, CTA (hidden in edit mode) ── -->
+  @if (!editMode()) {
+    <!-- ── Description ─────────────────────────────────────────── -->
+    @if (_poll.description) {
+      <p
+        class="mt-1.5"
+        style="
+          font-size: var(--fs-ui);
+          line-height: 1.4;
+          color: var(--text-secondary);
+          text-wrap: pretty;
+        "
+      >
+        {{ _poll.description }}
+      </p>
     }
-  </div>
 
-  <!-- ── Progress ────────────────────────────────────────────── -->
-  <div class="mt-4 pt-4" style="border-top: 1px solid var(--border-hairline)">
-    <div class="flex items-baseline justify-between gap-2 mb-2">
-      <span data-testid="voted-count" style="font-size: var(--fs-body-sm); font-weight: var(--weight-bold); color: var(--text-primary)">
-        {{ 'project.lastVote.voted' | translate: { count: _poll.votedCount, total: _poll.totalParticipants } }}
-      </span>
-      <span style="font-size: var(--fs-caption); font-weight: var(--weight-semibold); color: var(--text-muted)">
-        {{ progressPercent() }}%
-      </span>
+    <!-- ── Time info ───────────────────────────────────────────── -->
+    <div class="mt-[13px] flex flex-col" style="gap: 5px">
+      <!-- Row 1: deadline / status — always a clock icon, only shown when there is something to say -->
+      @if (_poll.closeDate && !_poll.isClosed) {
+        <div
+          class="flex items-center gap-[7px]"
+          style="
+            font-size: var(--fs-ui-sm);
+            font-weight: var(--weight-semibold);
+            color: var(--warning);
+          "
+        >
+          <ds-icon name="clock" [size]="14" />
+          <span
+            >{{ "project.detail.item.openUntil" | translate }}:
+            {{ _poll.closeDate | date: "dd.MM.yyyy" }}</span
+          >
+        </div>
+      } @else if (_poll.closeDate && _poll.isClosed) {
+        <div
+          class="flex items-center gap-[7px]"
+          style="
+            font-size: var(--fs-ui-sm);
+            font-weight: var(--weight-semibold);
+            color: var(--text-secondary);
+          "
+        >
+          <ds-icon name="clock" [size]="14" />
+          <span
+            >{{ "project.detail.item.closedOn" | translate }}:
+            {{ _poll.closeDate | date: "dd.MM.yyyy" }}</span
+          >
+        </div>
+      } @else if (!_poll.isClosed) {
+        <div
+          class="flex items-center gap-[7px]"
+          style="
+            font-size: var(--fs-ui-sm);
+            font-weight: var(--weight-semibold);
+            color: var(--text-secondary);
+          "
+        >
+          <ds-icon name="clock" [size]="14" />
+          <span>{{ "project.detail.item.openIndefinite" | translate }}</span>
+        </div>
+      }
+
+      <!-- Row 2: vote activity — always a dot, always shown -->
+      @if (_poll.lastVoteAt) {
+        <div
+          class="flex items-center gap-[7px]"
+          style="font-size: var(--fs-caption); color: var(--text-muted)"
+        >
+          <span style="width: 14px; display: flex; justify-content: center">
+            <span
+              style="
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                border: 1.4px solid var(--border-hairline-strong);
+              "
+            ></span>
+          </span>
+          <span
+            >{{ "project.lastVote.label" | translate }}:
+            {{ _poll.lastVoteAt | timeSince }}</span
+          >
+        </div>
+      } @else {
+        <div
+          class="flex items-center gap-[7px]"
+          style="font-size: var(--fs-caption); color: var(--text-muted)"
+        >
+          <span style="width: 14px; display: flex; justify-content: center">
+            <span
+              style="
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                border: 1.4px solid var(--border-hairline-strong);
+              "
+            ></span>
+          </span>
+          <span>{{ "project.lastVote.none" | translate }}</span>
+        </div>
+      }
     </div>
-    <ds-progress-bar [percent]="progressPercent()" [height]="6" />
 
-    <!-- Avatar stack -->
-    @if (participantAvatars().length > 0) {
-      <div class="mt-3">
-        <ds-avatar-stack [avatars]="participantAvatars()" size="sm" [max]="5" />
+    <!-- ── Progress ────────────────────────────────────────────── -->
+    <div
+      class="mt-[15px] pt-[14px]"
+      style="border-top: 1px solid var(--border-hairline)"
+    >
+      <div class="flex items-center justify-between gap-[10px]">
+        <span
+          data-testid="voted-count"
+          style="
+            font-size: var(--fs-ui-sm);
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+            line-height: 1;
+          "
+        >
+          {{
+            "project.lastVote.voted"
+              | translate
+                : { count: _poll.votedCount, total: _poll.totalParticipants }
+          }}
+        </span>
+        <span
+          style="
+            font-size: var(--fs-caption);
+            font-weight: var(--weight-semibold);
+            color: var(--text-muted);
+            line-height: 1;
+          "
+        >
+          {{ progressPercent() }}%
+        </span>
       </div>
-    }
-  </div>
+      <ds-progress-bar [percent]="progressPercent()" [height]="6" />
 
-  <!-- ── CTA ─────────────────────────────────────────────────── -->
-  <div class="mt-4">
-    <ds-button
-      variant="primary"
-      [fullWidth]="true"
-      [label]="ctaLabel()"
-      data-testid="vote-cta-btn"
-      [routerLink]="ctaRoute()"
-    />
-  </div>
+      <!-- Individual participant avatars + missing voters inline -->
+      @if (participantAvatars().length > 0) {
+        <div class="mt-1.5 flex flex-wrap items-center gap-[7px]">
+          @for (a of participantAvatars(); track $index) {
+            <ds-avatar
+              [initial]="a.initial"
+              [bg]="a.bg"
+              [fg]="a.fg"
+              size="sm"
+              [voted]="a.voted"
+            />
+          }
+          <span
+            style="
+              margin-left: 2px;
+              font-size: var(--fs-caption);
+              color: var(--text-muted);
+            "
+          >
+            {{ missingVotersText() }}
+          </span>
+        </div>
+      }
+    </div>
+
+    <!-- ── CTA ─────────────────────────────────────────────────── -->
+    <div class="mt-4">
+      <ds-button
+        variant="primary"
+        [fullWidth]="true"
+        [attr.aria-label]="ctaLabel()"
+        data-testid="vote-cta-btn"
+        [routerLink]="ctaRoute()"
+        >{{ ctaLabel() }}</ds-button
+      >
+    </div>
+  }
 </ds-card>

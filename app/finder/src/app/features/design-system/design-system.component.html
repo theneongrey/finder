@@ -308,26 +308,26 @@
         </div>
       </div>
       <div class="ds-section-block">
-        <p class="label mb-3">Avatar — pending (has not voted)</p>
+        <p class="label mb-3">Avatar — voted / pending</p>
         <div class="ds-row-wrap" style="align-items: flex-end">
           <div class="ds-labeled-item">
-            <ds-avatar initial="A" [pending]="true" size="sm" />
-            <span class="ds-mono-xs">sm</span>
+            <ds-avatar initial="A" [voted]="false" size="sm" />
+            <span class="ds-mono-xs">sm pending</span>
           </div>
           <div class="ds-labeled-item">
-            <ds-avatar initial="B" [pending]="true" size="md" />
-            <span class="ds-mono-xs">md</span>
+            <ds-avatar initial="B" [voted]="false" size="md" />
+            <span class="ds-mono-xs">md pending</span>
           </div>
           <div class="ds-labeled-item">
-            <ds-avatar initial="C" [pending]="true" size="lg" />
-            <span class="ds-mono-xs">lg</span>
+            <ds-avatar initial="C" [voted]="false" size="lg" />
+            <span class="ds-mono-xs">lg pending</span>
           </div>
           <div class="ds-labeled-item">
-            <ds-avatar initial="D" bg="var(--person-2-bg)" fg="var(--person-2-fg)" size="md" />
+            <ds-avatar initial="D" bg="var(--person-2-bg)" fg="var(--person-2-fg)" [voted]="true" size="md" />
             <span class="ds-mono-xs">voted</span>
           </div>
           <div class="ds-labeled-item">
-            <ds-avatar initial="D" [pending]="true" size="md" />
+            <ds-avatar initial="D" [voted]="false" size="md" />
             <span class="ds-mono-xs">pending</span>
           </div>
         </div>

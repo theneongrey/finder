@@ -5,6 +5,7 @@ import {
   inject,
   input,
   output,
+  signal,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -12,18 +13,29 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionType } from '../../models/poll-detail.model';
 import { PollItem } from '../../models/poll-item.model';
 import { PollRole } from '../../models/poll-role.enum';
+import { PollVotingStatus } from '../../models/standalone-poll-overview.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
-import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
-import { DsAvatarStackComponent, AvatarItem } from '@ds/avatar-stack/ds-avatar-stack.component';
+import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsProgressBarComponent } from '@ds/progress-bar/ds-progress-bar.component';
 import { PollTypeBadgeComponent } from '../poll-type-badge/poll-type-badge.component';
 
+export interface ParticipantAvatar {
+  initial: string;
+  bg: string;
+  fg: string;
+  voted: boolean;
+}
+
 @Component({
   selector: 'app-poll-item',
+  host: {
+    '(mouseenter)': 'isHovered.set(true)',
+    '(mouseleave)': 'isHovered.set(false)',
+  },
   imports: [
     DatePipe,
     RouterLink,
@@ -32,8 +44,7 @@ import { PollTypeBadgeComponent } from '../poll-type-badge/poll-type-badge.compo
     DsCardComponent,
     DsButtonComponent,
     DsStatusDotComponent,
-    DsBadgeComponent,
-    DsAvatarStackComponent,
+    DsAvatarComponent,
     DsIconComponent,
     DsProgressBarComponent,
     PollTypeBadgeComponent,
@@ -46,6 +57,8 @@ export class PollItemComponent {
   private readonly router = inject(Router);
 
   poll = input.required<PollItem>();
+  editMode = input<boolean>(false);
+  isHovered = signal(false);
   deletionRequested = output();
   shareRequested = output();
   favoriteToggled = output<string>();
@@ -86,13 +99,30 @@ export class PollItemComponent {
     return totalParticipants > 0 ? Math.round((votedCount / totalParticipants) * 100) : 0;
   });
 
-  readonly participantAvatars = computed<AvatarItem[]>(() =>
+  readonly participantAvatars = computed<ParticipantAvatar[]>(() =>
     this.poll().participants.map((p, i) => ({
       initial: p.name.charAt(0).toUpperCase(),
       bg: `var(--person-${(i % 4) + 1}-bg)`,
       fg: `var(--person-${(i % 4) + 1}-fg)`,
+      voted: p.votingStatus !== PollVotingStatus.None,
     })),
   );
+
+  readonly missingVotersText = computed(() => {
+    const missing = this.poll().participants
+      .filter(p => p.votingStatus === PollVotingStatus.None)
+      .map(p => p.name);
+
+    if (missing.length === 0) {
+      return this.translateService.instant('project.pollsTab.allVoted');
+    }
+
+    const names = missing.length > 3
+      ? missing.slice(0, 2).join(', ') + ', +' + (missing.length - 2)
+      : missing.join(', ');
+
+    return this.translateService.instant('project.pollsTab.missingVoters', { names });
+  });
 
   navigateToEdit(): void {
     const route = this.editRoute();

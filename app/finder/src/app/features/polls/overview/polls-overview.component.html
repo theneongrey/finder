@@ -1,6 +1,6 @@
 <div class="flex flex-col w-full">
   <app-title-bar />
-  <main class="flex-grow mx-auto w-full max-w-(--mobile-max-width) lg:max-w-5xl rounded-t-2xl px-[22px] pt-5">
+  <main class="flex-grow mx-auto w-full max-w-(--mobile-max-width) lg:max-w-none rounded-t-2xl px-[22px] pt-5 lg:pt-0">
     <app-standalone-poll-tab
       (deletionRequested)="pollDeletionRequested($event)"
       (shareRequested)="pollShareRequested($event)"
@@ -8,9 +8,9 @@
   </main>
 </div>
 
-<!-- FAB — fixed bottom-right, teal, plus icon -->
+<!-- FAB — mobile only -->
 <button
-  class="fixed bottom-6 right-5 z-50 w-[58px] h-[58px] rounded-full border-none flex items-center justify-center cursor-pointer"
+  class="lg:hidden fixed bottom-6 right-5 z-50 w-[58px] h-[58px] rounded-full border-none flex items-center justify-center cursor-pointer"
   style="background: var(--accent); box-shadow: var(--shadow-fab); color: #fff; transition: transform var(--duration-fast) var(--ease-standard)"
   [routerLink]="['/polls/add']"
   title="Neue Umfrage"

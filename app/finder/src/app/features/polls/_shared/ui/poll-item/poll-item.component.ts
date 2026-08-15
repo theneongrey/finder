@@ -7,55 +7,53 @@ import {
   output,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionType } from '../../models/poll-detail.model';
-import { HlmCardImports } from '@spartan-ng/helm/card';
-import { OptionTypeIconComponent } from './option-type-icon/option-type-icon.component';
 import { PollItem } from '../../models/poll-item.model';
 import { PollRole } from '../../models/poll-role.enum';
-import { PollVotingStatus } from '../../models/standalone-poll-overview.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
-import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
+import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
+import { DsAvatarStackComponent, AvatarItem } from '@ds/avatar-stack/ds-avatar-stack.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { DsProgressBarComponent } from '@ds/progress-bar/ds-progress-bar.component';
+import { PollTypeBadgeComponent } from '../poll-type-badge/poll-type-badge.component';
 
 @Component({
   selector: 'app-poll-item',
   imports: [
-    HlmButton,
-    ...HlmDropdownMenuImports,
-    ...HlmTooltipImports,
-    OptionTypeIconComponent,
+    DatePipe,
     RouterLink,
     TranslatePipe,
     TimeSincePipe,
-    DatePipe,
-    ...HlmCardImports,
+    DsCardComponent,
     DsButtonComponent,
+    DsStatusDotComponent,
+    DsBadgeComponent,
+    DsAvatarStackComponent,
+    DsIconComponent,
+    DsProgressBarComponent,
+    PollTypeBadgeComponent,
   ],
   templateUrl: './poll-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollItemComponent {
   private readonly translateService = inject(TranslateService);
+  private readonly router = inject(Router);
 
   poll = input.required<PollItem>();
   deletionRequested = output();
   shareRequested = output();
   favoriteToggled = output<string>();
 
-  editLabel = this.translateService.translate('project.common.edit');
-  deleteLabel = this.translateService.translate('project.common.delete');
-  shareLabel = this.translateService.translate('project.common.share');
+  readonly showActions = computed(() => this.poll().role >= PollRole.Maintainer);
+  readonly canShare    = computed(() => this.poll().role >= PollRole.Owner);
 
-  readonly PollVotingStatus = PollVotingStatus;
-
-  showMenu = computed(() => this.poll().role >= PollRole.Maintainer);
-  canSharePoll = computed(() => this.poll().role >= PollRole.Owner);
-
-  editRoute = computed(() => {
+  readonly editRoute = computed(() => {
     const poll = this.poll();
     if (poll.optionType === OptionType.YesNo) {
       return ['/polls', poll.projectId, 'poll', 'edit', 'yesno', poll.pollId];
@@ -68,4 +66,38 @@ export class PollItemComponent {
     }
     return null;
   });
+
+  readonly ctaRoute = computed(() => {
+    const poll = this.poll();
+    if (!poll.currentUserVoted) {
+      return ['/polls', poll.projectId, 'vote', poll.pollId, poll.nextOpenOptionId];
+    }
+    return ['/polls', poll.projectId, 'results', poll.pollId];
+  });
+
+  readonly ctaLabel = computed(() =>
+    this.poll().currentUserVoted
+      ? this.translateService.instant('project.detail.item.viewProgress')
+      : this.translateService.instant('project.detail.item.voteNow'),
+  );
+
+  readonly progressPercent = computed(() => {
+    const { votedCount, totalParticipants } = this.poll();
+    return totalParticipants > 0 ? Math.round((votedCount / totalParticipants) * 100) : 0;
+  });
+
+  readonly participantAvatars = computed<AvatarItem[]>(() =>
+    this.poll().participants.map((p, i) => ({
+      initial: p.name.charAt(0).toUpperCase(),
+      bg: `var(--person-${(i % 4) + 1}-bg)`,
+      fg: `var(--person-${(i % 4) + 1}-fg)`,
+    })),
+  );
+
+  navigateToEdit(): void {
+    const route = this.editRoute();
+    if (route) {
+      this.router.navigate(route);
+    }
+  }
 }

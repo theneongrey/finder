@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { PollListStore } from '../_shared/data/poll-list.store';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
@@ -21,7 +21,6 @@ import { DsIconComponent } from '@ds/icon/ds-icon.component';
   selector: 'app-polls-overview',
   imports: [
     RouterLink,
-    TranslatePipe,
     TitleBarComponent,
     StandalonePollTabComponent,
     ShareDrawerComponent,

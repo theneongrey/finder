@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-08-15 — ingest: ds-* component library API sync (issue #236)
+Pages touched: guides/component-library.md (updated — 15→21 components, corrected ds-avatar voted input, ds-button full variant list and icon-only mode, ds-bottom-sheet dismissed output, ds-menu ng-content trigger, ds-vote-buttons showMaybe+maybe, added ds-textarea/ds-input-otp/ds-switch/ds-chip/ds-stepper/ds-poll-card-skeleton, 23→29 icon count), guides/spartan-to-ds-migration.md (updated — import paths ds-components/, added textarea/switch/otp patterns, removed outdated no-replacement entries for HlmTextarea and HlmInputOtp)
+
+---
+
 ## 2026-08-13 — ingest: component architecture — ds-* vs smart vs domain feature layers
 Pages touched: architecture/component-architecture.md (created), architecture/frontend.md (added Component Layers section), index.md (added component-architecture link)
 

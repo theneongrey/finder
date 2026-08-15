@@ -1,9 +1,14 @@
 @let _poll = poll();
 
 <ds-card>
-  <!-- ── Header row: type badge · status dot · share · fav (hidden in edit mode) -->
-  @if (!editMode()) {
-    <div class="flex items-center gap-2 pb-3">
+  <!-- ── Header row: type badge · status dot · share · fav (animates out in edit mode) -->
+  <div
+    class="overflow-hidden"
+    style="display: grid; transition: grid-template-rows 220ms cubic-bezier(0.4, 0, 0.2, 1)"
+    [style.grid-template-rows]="editMode() ? '0fr' : '1fr'"
+  >
+  <div class="overflow-hidden">
+  <div class="flex items-center gap-2 pb-3">
       <app-poll-type-badge [type]="_poll.optionType" />
 
       <ds-status-dot [tone]="_poll.isClosed ? 'muted' : 'positive'">
@@ -47,17 +52,20 @@
           </button>
         }
 
-        <ds-button
-          variant="ghost"
-          [size]="30"
-          icon="heart"
+        <button
+          class="flex flex-none cursor-pointer items-center justify-center rounded-full border-none hover:bg-[#f1eee9]"
+          style="width:32px;height:32px;background:transparent;transition:background 140ms ease"
           data-testid="favorite-btn"
-          [attr.data-testid-active]="
-            _poll.isFavorite ? 'favorite-active' : null
-          "
-          [color]="_poll.isFavorite ? '#c1453f' : undefined"
+          [attr.data-testid-active]="_poll.isFavorite ? 'favorite-active' : null"
           (click)="favoriteToggled.emit(_poll.projectId)"
-        />
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24"
+            [attr.fill]="_poll.isFavorite ? '#c1453f' : 'none'"
+            [attr.stroke]="_poll.isFavorite ? '#c1453f' : 'var(--text-muted)'"
+            stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20.3s-7.5-4.6-9.7-9C.8 8 2 4.7 5 3.7c2.2-.7 4.3.2 5.6 2 .4.5 1 1.4 1.4 1.4s1-.9 1.4-1.4c1.3-1.8 3.4-2.7 5.6-2 3 1 4.2 4.3 2.7 7.6-2.2 4.4-9.7 9-9.7 9z" />
+          </svg>
+        </button>
 
         <!-- Web: hover-reveal edit + delete (animated slide-in, ghost circles) -->
         @if (showActions()) {
@@ -120,51 +128,45 @@
         }
       </span>
     </div>
-  }
+  </div>
+  </div>
 
   <!-- ── Title row + inline edit/delete in edit mode (mobile only) ─────────── -->
-  <div class="flex items-start gap-2">
+  <div class="flex items-center gap-2">
     <h3 class="flex-1" style="text-wrap: pretty">{{ _poll.name }}</h3>
 
-    <!-- Mobile: edit-mode actions (bordered rectangle buttons) -->
+    <!-- Mobile: edit-mode actions -->
     @if (showActions() && editMode()) {
       <div class="flex shrink-0 gap-2 lg:hidden">
         @if (editRoute()) {
-          <button
-            class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border"
-            style="
-              border-color: var(--border-hairline);
-              background: #fff;
-              color: var(--text-primary);
-              transition: background var(--duration-fast) var(--ease-standard);
-            "
-            (click)="navigateToEdit()"
-            [title]="'project.common.edit' | translate"
+          <ds-button
+            variant="neutral"
+            [size]="36"
+            icon="edit"
             data-testid="edit-btn"
-          >
-            <ds-icon name="edit" [size]="16" />
-          </button>
+            [label]="'project.common.edit' | translate"
+            (click)="navigateToEdit()"
+          />
         }
-        <button
-          class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border"
-          style="
-            border-color: #f0c3bd;
-            background: #fdf3f1;
-            color: var(--negative);
-            transition: background var(--duration-fast) var(--ease-standard);
-          "
-          (click)="deletionRequested.emit()"
-          [title]="'project.common.delete' | translate"
+        <ds-button
+          variant="danger"
+          [size]="36"
+          icon="trash"
           data-testid="delete-btn"
-        >
-          <ds-icon name="trash" [size]="16" />
-        </button>
+          [label]="'project.common.delete' | translate"
+          (click)="deletionRequested.emit()"
+        />
       </div>
     }
   </div>
 
-  <!-- ── Body: description, time, progress, CTA (hidden in edit mode) ── -->
-  @if (!editMode()) {
+  <!-- ── Body: description, time, progress, CTA (animates out in edit mode) ── -->
+  <div
+    class="overflow-hidden"
+    style="display: grid; transition: grid-template-rows 220ms cubic-bezier(0.4, 0, 0.2, 1)"
+    [style.grid-template-rows]="editMode() ? '0fr' : '1fr'"
+  >
+  <div class="overflow-hidden">
     <!-- ── Description ─────────────────────────────────────────── -->
     @if (_poll.description) {
       <p
@@ -338,5 +340,6 @@
         >{{ ctaLabel() }}</ds-button
       >
     </div>
-  }
+  </div>
+  </div>
 </ds-card>

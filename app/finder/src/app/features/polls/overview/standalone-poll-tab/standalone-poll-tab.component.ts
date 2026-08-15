@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { OptionType } from '../../_shared/models/poll-detail.model';
 import { PollListStore } from '../../_shared/data/poll-list.store';
 import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.component';
@@ -29,6 +31,13 @@ export class StandalonePollTabComponent {
   shareRequested = output<string>();
 
   readonly query = signal('');
+
+  constructor() {
+    inject(BreakpointObserver)
+      .observe('(min-width: 680px)')
+      .pipe(takeUntilDestroyed())
+      .subscribe(({ matches }) => { if (matches) this.editMode.set(false); });
+  }
   readonly showOpen = signal(true);
   readonly showClosed = signal(true);
   readonly favOnly = signal(false);

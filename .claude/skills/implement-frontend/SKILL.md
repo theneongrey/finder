@@ -4,6 +4,18 @@ Rules and reference for implementing Angular frontend files in this project. Fol
 
 ---
 
+## Design Reference Files
+
+When a reference file is provided (typically `claude_design_handoffs/**/*.dc.html`), **treat it as the ground truth for the visual design**. Match it pixel-by-pixel:
+
+- Extract exact colors, spacing, font sizes, border radii, and SVG paths directly from the reference HTML — do not approximate or substitute.
+- The reference file contains no real Angular logic, store wiring, or backend calls. Your job is to replicate its visual output while adding the correct Angular bindings, i18n keys, and state connections.
+- When the reference renders an SVG inline (e.g. a heart with both `fill` and `stroke` set), reproduce it inline in the Angular template — do not replace it with `<ds-icon>` if `<ds-icon>` cannot express the same visual (see Code Quality Checks for the exception rule).
+- Dynamic values in the reference appear as `{{ m.someVar }}` or `style="{{ ... }}"`. Map these to Angular bindings: `[style.background]`, `[attr.fill]`, `(click)`, etc.
+- Templated hover styles (`style-hover="..."`) become Tailwind `hover:` classes or Angular host-listener patterns.
+
+---
+
 ## File Structure
 
 Angular components use **two** mandatory files. Never use inline `template` or `styles` in the `@Component` decorator:
@@ -126,7 +138,7 @@ Does it import a domain type (OptionType, PollItem, User, …)?
 ## Code Quality Checks (run before reporting done)
 
 - No PrimeNG imports introduced (project has migrated away from it).
-- No inline SVGs that could use `<ds-icon>`.
+- No inline SVGs that could use `<ds-icon>` — **exception:** when the reference file renders an SVG with a combination that `<ds-icon>` cannot express (e.g. simultaneous `fill` + `stroke` with independent colors), reproduce it inline.
 - No custom button CSS when `<ds-button>` already covers the variant.
 - **Prefer Tailwind utility classes** in the template over custom CSS. Do not create a `.component.css` file if all styles can be expressed with Tailwind.
 - CSS classes added to `styles.css` (global) only when used in more than one component and Tailwind cannot cover the need.

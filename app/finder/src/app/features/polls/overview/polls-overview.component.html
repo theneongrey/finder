@@ -8,18 +8,16 @@
   </main>
 </div>
 
-<hlm-alert-dialog [state]="confirmDialogOpen() ? 'open' : 'closed'" (stateChanged)="confirmDialogOpen.set($event === 'open')">
-  <hlm-alert-dialog-content *hlmAlertDialogPortal>
-    <hlm-alert-dialog-header>
-      <h2 hlmAlertDialogTitle>{{ confirmTitle() }}</h2>
-      <p hlmAlertDialogDescription>{{ confirmMessage() }}</p>
-    </hlm-alert-dialog-header>
-    <hlm-alert-dialog-footer>
-      <button hlmAlertDialogCancel>{{ 'project.common.cancel' | translate }}</button>
-      <button hlmAlertDialogAction (click)="onConfirmAccept()">{{ confirmAcceptLabel() }}</button>
-    </hlm-alert-dialog-footer>
-  </hlm-alert-dialog-content>
-</hlm-alert-dialog>
+<!-- FAB — fixed bottom-right, teal, plus icon -->
+<button
+  class="fixed bottom-6 right-5 z-50 w-[58px] h-[58px] rounded-full border-none flex items-center justify-center cursor-pointer"
+  style="background: var(--accent); box-shadow: var(--shadow-fab); color: #fff; transition: transform var(--duration-fast) var(--ease-standard)"
+  [routerLink]="['/polls/add']"
+  title="Neue Umfrage"
+  data-testid="fab-add-poll"
+>
+  <ds-icon name="plus" [size]="24" color="#fff" />
+</button>
 
 @if (sharingProject(); as project) {
   <app-share-drawer

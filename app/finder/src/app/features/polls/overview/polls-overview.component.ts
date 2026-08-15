@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollListStore } from '../_shared/data/poll-list.store';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
@@ -15,16 +15,18 @@ import { StandalonePollTabComponent } from './standalone-poll-tab/standalone-pol
 import { PollItem } from '../_shared/models/poll-item.model';
 import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
 import { ShareContentComponent } from '../_shared/ui/share-content/share-content.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 
 @Component({
   selector: 'app-polls-overview',
   imports: [
-    ...HlmAlertDialogImports,
+    RouterLink,
     TranslatePipe,
     TitleBarComponent,
     StandalonePollTabComponent,
     ShareDrawerComponent,
     ShareContentComponent,
+    DsIconComponent,
   ],
   templateUrl: './polls-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,12 +50,6 @@ export class PollsOverviewComponent {
     () => `${this.sharePollLabel()} · ${this.sharingProject()?.projectName ?? ''}`,
   );
 
-  confirmDialogOpen = signal(false);
-  confirmTitle = signal('');
-  confirmMessage = signal('');
-  confirmAcceptLabel = signal('');
-  private pendingConfirmAction: (() => void) | null = null;
-
   constructor() {
     this.projectListStore.getStandalonePolls();
     this.translateService
@@ -69,43 +65,13 @@ export class PollsOverviewComponent {
   }
 
   pollDeletionRequested(poll: PollItem) {
-    this.showConfirmDialog(
-      this.translateService.instant(
-        'project.overview.deletePollConfirm.header',
-      ),
-      this.translateService.instant(
-        'project.overview.deletePollConfirm.message',
-        { name: poll.name },
-      ),
-      this.translateService.instant(
-        'project.overview.deletePollConfirm.accept',
-      ),
-      () => this.projectListStore.deleteProject(poll.projectId),
-    );
-  }
-
-  onConfirmAccept() {
-    this.pendingConfirmAction?.();
-    this.confirmDialogOpen.set(false);
+    this.projectListStore.deleteProject(poll.projectId);
   }
 
   protected shareDrawerVisibilityChanged(value: boolean) {
     if (!value) {
       this.sharingProjectId.set(undefined);
     }
-  }
-
-  private showConfirmDialog(
-    title: string,
-    message: string,
-    acceptLabel: string,
-    action: () => void,
-  ) {
-    this.confirmTitle.set(title);
-    this.confirmMessage.set(message);
-    this.confirmAcceptLabel.set(acceptLabel);
-    this.pendingConfirmAction = action;
-    this.confirmDialogOpen.set(true);
   }
 
   private getSharingProject() {

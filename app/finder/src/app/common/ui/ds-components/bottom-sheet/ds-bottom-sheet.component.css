@@ -3,7 +3,7 @@
   background: var(--bg-sheet);
   border-radius: 26px 26px 0 0;
   box-shadow: var(--shadow-sheet);
-  padding: 6px 18px 26px;
+  padding: 10px 18px 26px;
   max-height: 92dvh;
   overflow-y: auto;
   font-family: var(--font-body);
@@ -26,9 +26,10 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 12px 0;
 }
-.ds-sheet-titles { flex: 1; }
+.ds-sheet-titles {
+  flex: 1;
+}
 .ds-sheet-title {
   font-size: var(--fs-display-2xs);
   font-family: var(--font-display);

@@ -3,23 +3,32 @@
   side="bottom"
   (stateChanged)="onStateChanged($event)"
 >
-  <hlm-sheet-content *hlmSheetPortal class="ds-sheet-panel" [showCloseButton]="false">
+  <hlm-sheet-content
+    *hlmSheetPortal
+    class="ds-sheet-panel"
+    [showCloseButton]="false"
+  >
     <div
       class="ds-sheet-handle"
-      style="cursor: grab; touch-action: none;"
+      style="cursor: grab; touch-action: none"
       (pointerdown)="onHandlePointerDown($event)"
       (pointermove)="onHandlePointerMove($event)"
       (pointerup)="onHandlePointerUp()"
       (pointercancel)="onHandlePointerUp()"
     ></div>
-    <div class="ds-sheet-header">
+    <div class="ds-sheet-header pb-3 lg:pt-3">
       <div class="ds-sheet-titles">
         <div class="ds-sheet-title">{{ title() }}</div>
         @if (subtitle()) {
           <div class="ds-sheet-subtitle">{{ subtitle() }}</div>
         }
       </div>
-      <ds-button icon="close" variant="dark" [size]="32" (click)="dismissed.emit()" />
+      <ds-button
+        icon="close"
+        variant="dark"
+        [size]="32"
+        (click)="dismissed.emit()"
+      />
     </div>
     <ng-content />
   </hlm-sheet-content>

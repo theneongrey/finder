@@ -1,22 +1,22 @@
 @switch (type()) {
   @case (OptionType.YesNo) {
     <div class="bg-primary/20 p-3 rounded-[8px]">
-      <i class="fa-regular fa-square-check text-primary-dark"></i>
+      <ds-icon name="check" [size]="16" />
     </div>
   }
   @case (OptionType.Date) {
     <div class="bg-secondary/20 p-3 rounded-[8px]">
-      <i class="fa-regular fa-calendar text-secondary"></i>
+      <ds-icon name="calendar" [size]="16" />
     </div>
   }
   @case (OptionType.Rating) {
     <div class="bg-tertiary/20 p-3 rounded-[8px]">
-      <i class="fa-regular fa-star text-tertiary"></i>
+      <ds-icon name="trophy" [size]="16" />
     </div>
   }
   @default {
     <div class="bg-primary/20 p-3 rounded-[8px]">
-      <i class="fa-solid fa-question text-primary-dark"></i>
+      <ds-icon name="check" [size]="16" />
     </div>
   }
 }

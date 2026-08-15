@@ -14,10 +14,11 @@ import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.componen
 import { PollItem } from '../../_shared/models/poll-item.model';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
 
 @Component({
   selector: 'app-standalone-poll-tab',
-  imports: [TranslatePipe, PollItemComponent, DsIconComponent, DsButtonComponent, RouterLink],
+  imports: [TranslatePipe, PollItemComponent, DsIconComponent, DsButtonComponent, RouterLink, DsPollCardSkeletonComponent],
   templateUrl: './standalone-poll-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -67,6 +68,7 @@ export class StandalonePollTabComponent {
     return polls.slice().sort((a, b) => (b.isFavorite ? 1 : 0) - (a.isFavorite ? 1 : 0));
   });
 
+  readonly isLoading = this.projectListStore.isLoading;
   readonly isEmpty = computed(() => this.allPolls().length === 0);
   readonly isFilteredEmpty = computed(() => !this.isEmpty() && this.filteredPolls().length === 0);
 

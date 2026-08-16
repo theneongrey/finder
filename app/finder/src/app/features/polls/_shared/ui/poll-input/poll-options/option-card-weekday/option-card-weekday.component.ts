@@ -7,16 +7,17 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmInput } from '@spartan-ng/helm/input';
+import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmCardImports } from '@spartan-ng/helm/card';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-weekday',
   templateUrl: './option-card-weekday.component.html',
-  imports: [HlmButton, HlmInput, TranslatePipe, ...HlmCardImports],
+  imports: [FormsModule, DsButtonComponent, DsInputComponent, DsCardComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardWeekdayComponent {
@@ -67,11 +68,11 @@ export class OptionCardWeekdayComponent {
     this.showTimeChange.emit(false);
   }
 
-  protected getTimeValue(date: Date | undefined): string {
-    return date ? formatTime(date) : '';
+  get timeValue(): string {
+    return this.option().startTime ? formatTime(this.option().startTime!) : '';
   }
 
-  setStartTime(event: Event): void {
-    this.option().startTime = parseTimeInput((event.target as HTMLInputElement).value);
+  setStartTime(value: string): void {
+    this.option().startTime = parseTimeInput(value);
   }
 }

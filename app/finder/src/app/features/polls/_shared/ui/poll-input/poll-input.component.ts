@@ -26,9 +26,10 @@ import { UrlValidationService } from '../../../../../common/utils/url-validation
 import { TitleBarService } from '../../../../../common/services/title-bar.service';
 import { AppointmentTypeConversionService } from '../../utils/appointment-type-conversion.service';
 import { ActivatedRoute } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { PollTypeSelectionComponent } from './poll-type-selection/poll-type-selection.component';
 import { PollInputFormComponent } from './poll-input-form/poll-input-form.component';
-import { HlmButton } from '@spartan-ng/helm/button';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
 
 export type { OptionEntry, DateOptionEntry, DateOptionType };
 
@@ -36,7 +37,7 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
   selector: 'app-poll-input',
   templateUrl: './poll-input.component.html',
   host: { class: 'block h-full' },
-  imports: [PollTypeSelectionComponent, PollInputFormComponent, HlmButton],
+  imports: [PollTypeSelectionComponent, PollInputFormComponent, DsButtonComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollInputComponent {
@@ -142,6 +143,16 @@ export class PollInputComponent {
         }
       }
     });
+  }
+
+  onTypeSelected(type: OptionType): void {
+    this.optionType.set(type);
+    if (type === OptionType.YesNo) {
+      this.options.set([
+        { text: 'Ja', description: '' },
+        { text: 'Nein', description: '' },
+      ]);
+    }
   }
 
   isValid(): boolean {

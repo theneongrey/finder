@@ -9,8 +9,8 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmCard } from '@spartan-ng/helm/card';
-import { AddCardComponent } from '@smart/add-card/add-card.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionCardWeekdayComponent } from './option-card-weekday/option-card-weekday.component';
@@ -45,9 +45,9 @@ export type { DateOptionEntry, DateOptionType };
   templateUrl: './poll-options.component.html',
   styleUrl: './poll-options.component.css',
   imports: [
-    AddCardComponent,
+    DsCardComponent,
+    DsEmptyStateButtonComponent,
     TranslatePipe,
-    HlmCard,
     OptionCardComponent,
     OptionCardDateComponent,
     OptionCardWeekdayComponent,
@@ -100,6 +100,10 @@ export class PollOptionsComponent {
       this.appointmentDateType();
       this.firstEntryShowsTime.set(false);
     });
+  }
+
+  getStars(index: number): string {
+    return '★'.repeat(index + 1);
   }
 
   onFirstEntryShowTimeChange(value: boolean): void {

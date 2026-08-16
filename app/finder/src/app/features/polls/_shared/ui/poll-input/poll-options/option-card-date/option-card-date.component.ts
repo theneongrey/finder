@@ -6,18 +6,18 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { TranslatePipe } from '@ngx-translate/core';
-import { HlmCardImports } from '@spartan-ng/helm/card';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-date',
   templateUrl: './option-card-date.component.html',
-  imports: [FormsModule, HlmButton, HlmInput, ...HlmDatePickerImports, TranslatePipe, ...HlmCardImports],
+  imports: [FormsModule, DsButtonComponent, DsInputComponent, DsCardComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {
@@ -56,11 +56,22 @@ export class OptionCardDateComponent {
     this.showTimeChange.emit(false);
   }
 
-  protected getTimeValue(date: Date | undefined): string {
-    return date ? formatTime(date) : '';
+  get dateValue(): string {
+    const d = this.option().date;
+    return d ? formatDate(d, 'yyyy-MM-dd', 'en') : '';
   }
 
-  setStartTime(event: Event): void {
-    this.option().startTime = parseTimeInput((event.target as HTMLInputElement).value);
+  setDate(value: string): void {
+    if (!value) { this.option().date = undefined; return; }
+    const [y, m, d] = value.split('-').map(Number);
+    this.option().date = new Date(y, m - 1, d);
+  }
+
+  get timeValue(): string {
+    return this.option().startTime ? formatTime(this.option().startTime!) : '';
+  }
+
+  setStartTime(value: string): void {
+    this.option().startTime = parseTimeInput(value);
   }
 }

@@ -9,17 +9,16 @@ import {
 } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { TranslatePipe } from '@ngx-translate/core';
-import { HlmCardImports } from '@spartan-ng/helm/card';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-date-range',
   templateUrl: './option-card-date-range.component.html',
-  imports: [FormsModule, HlmButton, HlmInput, ...HlmDatePickerImports, TranslatePipe, ...HlmCardImports],
+  imports: [FormsModule, DsButtonComponent, DsInputComponent, DsCardComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateRangeComponent {
@@ -64,14 +63,24 @@ export class OptionCardDateRangeComponent {
     });
   }
 
-  onStartDateChange(date: Date | null): void {
-    const d = date ?? undefined;
+  get startDateValue(): string {
+    const d = this.startDate();
+    return d ? formatDate(d, 'yyyy-MM-dd', 'en') : '';
+  }
+
+  get endDateValue(): string {
+    const d = this.endDate();
+    return d ? formatDate(d, 'yyyy-MM-dd', 'en') : '';
+  }
+
+  setStartDate(value: string): void {
+    const d = value ? this.parseDate(value) : undefined;
     this.startDate.set(d);
     this.option().date = d;
   }
 
-  onEndDateChange(date: Date | null): void {
-    const d = date ?? undefined;
+  setEndDate(value: string): void {
+    const d = value ? this.parseDate(value) : undefined;
     this.endDate.set(d);
     this.option().endDate = d;
   }
@@ -95,15 +104,24 @@ export class OptionCardDateRangeComponent {
     this.showTimeChange.emit(false);
   }
 
-  protected getTimeValue(date: Date | undefined): string {
-    return date ? formatTime(date) : '';
+  get startTimeValue(): string {
+    return this.option().startTime ? formatTime(this.option().startTime!) : '';
   }
 
-  setStartTime(event: Event): void {
-    this.option().startTime = parseTimeInput((event.target as HTMLInputElement).value);
+  get endTimeValue(): string {
+    return this.option().endTime ? formatTime(this.option().endTime!) : '';
   }
 
-  setEndTime(event: Event): void {
-    this.option().endTime = parseTimeInput((event.target as HTMLInputElement).value);
+  setStartTime(value: string): void {
+    this.option().startTime = parseTimeInput(value);
+  }
+
+  setEndTime(value: string): void {
+    this.option().endTime = parseTimeInput(value);
+  }
+
+  private parseDate(value: string): Date {
+    const [y, m, d] = value.split('-').map(Number);
+    return new Date(y, m - 1, d);
   }
 }

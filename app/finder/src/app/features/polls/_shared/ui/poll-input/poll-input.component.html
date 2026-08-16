@@ -1,34 +1,31 @@
 @if (canClosePoll()) {
-  <div class="px-4 pt-4">
-    <button
-      hlmBtn
-      variant="destructive"
-      class="w-full"
+  <div class="px-[18px] pt-4">
+    <ds-button
+      variant="danger"
+      [fullWidth]="true"
+      icon="lock"
       data-testid="close-poll-btn"
       (click)="closePollNow()"
     >
-      <i class="fa-solid fa-lock mr-2"></i>
-      Umfrage jetzt schließen
-    </button>
+      {{ 'project.pollInput.closePollNow' | translate }}
+    </ds-button>
   </div>
 }
 @if (canReopenPoll()) {
-  <div class="px-4 pt-4">
-    <button
-      hlmBtn
+  <div class="px-[18px] pt-4">
+    <ds-button
       variant="outline"
-      class="w-full"
+      [fullWidth]="true"
       data-testid="reopen-poll-btn"
       (click)="reopenPollNow()"
     >
-      <i class="fa-solid fa-lock-open mr-2"></i>
-      Umfrage wieder öffnen
-    </button>
+      {{ 'project.pollInput.reopenPoll' | translate }}
+    </ds-button>
   </div>
 }
 
 @if (optionType() === undefined) {
-  <app-poll-type-selection (typeSelected)="optionType.set($event)" />
+  <app-poll-type-selection (typeSelected)="onTypeSelected($event)" />
 } @else {
   <app-poll-input-form
     [optionType]="optionType()!"

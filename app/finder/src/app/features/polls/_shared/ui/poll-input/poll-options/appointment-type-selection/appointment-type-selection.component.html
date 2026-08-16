@@ -1,44 +1,18 @@
-<div class="flex flex-col gap-3">
-  <span class="text-sm font-semibold px-1">
-    {{ "project.pollInput.date.appointmentTypeLabel" | translate }}
-  </span>
-
-  @if (selectedType() && !isEditing()) {
-    <div
-      class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-gray-200 bg-white"
+<div style="display:flex;gap:7px;overflow-x:auto;padding:1px 2px 3px">
+  @for (t of types; track t.type) {
+    <button
+      type="button"
+      class="flex items-center gap-[6px] cursor-pointer"
+      style="flex-shrink:0;height:38px;padding:0 13px;border-radius:12px;border-width:1.5px;border-style:solid;font-size:var(--fs-ui);font-weight:var(--weight-bold);white-space:nowrap;transition:border-color var(--duration-standard) ease,background var(--duration-standard) ease,color var(--duration-standard) ease"
+      [style.border-color]="t.type === selectedType() ? 'var(--accent-border)' : 'var(--border-hairline-strong)'"
+      [style.background]="t.type === selectedType() ? 'var(--accent-tint)' : 'var(--bg-sheet)'"
+      [style.color]="t.type === selectedType() ? 'var(--accent)' : 'var(--text-secondary)'"
+      (click)="typeSelected.emit(t.type)"
     >
-      <i
-        class="{{
-          selectedTypeInfo()!.icon
-        }} text-primary text-lg w-5 text-center"
-      ></i>
-      <span class="text-sm font-medium text-gray-700 flex-1">
-        {{ selectedTypeInfo()!.labelKey | translate }}
-      </span>
-      <button
-        type="button"
-        class="text-sm text-white bg-primary cursor-pointer border-0 px-3 py-1 rounded-lg hover:opacity-80 transition-opacity"
-        (click)="isEditing.set(true)"
-      >
-        {{ "project.pollInput.date.changeType" | translate }}
-      </button>
-    </div>
-  } @else {
-    <div class="grid grid-cols-3 gap-2">
-      @for (t of types; track t.type) {
-        <button
-          type="button"
-          [class]="
-            t.type === selectedType()
-              ? 'flex flex-col items-center gap-2 p-4 rounded-xl border border-primary bg-app-gradient cursor-pointer transition-colors text-primary text-sm font-medium'
-              : 'flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 bg-white cursor-pointer hover:border-primary hover:text-primary transition-colors text-gray-600 text-sm font-medium'
-          "
-          (click)="onTypeClick(t.type)"
-        >
-          <i class="{{ t.icon }} text-xl"></i>
-          {{ t.labelKey | translate }}
-        </button>
+      @if (t.type === selectedType()) {
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none"></span>
       }
-    </div>
+      {{ t.labelKey | translate }}
+    </button>
   }
 </div>

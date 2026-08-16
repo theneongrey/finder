@@ -221,6 +221,28 @@ After creating the PR, add inline review comments (`gh api`) on any code that ne
 
 ---
 
+## Step 6 — Automated PR Review
+
+After the PR is created, immediately dispatch the `pr-reviewer` subagent to review your changes:
+
+```
+Agent({
+  subagent_type: "pr-reviewer",
+  description: "Review PR #<number>",
+  prompt: "<PR number or URL>"
+})
+```
+
+Wait for the review to finish. Once the subagent returns its findings:
+
+- If there are **blocking issues** (correctness bugs, broken builds, security problems): fix them on the branch, push, and re-run the review.
+- If there are **non-blocking suggestions**: present them to the user and ask whether to address them.
+- If the review is **clean**: report that to the user and consider the task complete.
+
+Do not close the issue or mark the task done until the first clean review pass (or the user explicitly accepts the outstanding findings).
+
+---
+
 ## Escalation Summary
 
 Stop and notify the user whenever:

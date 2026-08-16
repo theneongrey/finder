@@ -11,8 +11,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionType } from '../../../models/poll-detail.model';
 import {
@@ -22,6 +20,9 @@ import {
   DateOptionType,
 } from '../poll-options/poll-options.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 
 export type { OptionEntry, DateOptionEntry, DateOptionType };
 
@@ -30,10 +31,11 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
   templateUrl: './poll-input-form.component.html',
   imports: [
     FormsModule,
-    HlmInput,
-    HlmButton,
     TranslatePipe,
     DsTextareaComponent,
+    DsInputComponent,
+    DsButtonComponent,
+    DsCardComponent,
     PollOptionsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -113,7 +115,6 @@ export class PollInputFormComponent {
   get closeTimePart(): string {
     const cd = this.closeDate();
     if (!cd) { return ''; }
-    const t = cd.substring(11, 16);
-    return t || '';
+    return cd.substring(11, 16) || '';
   }
 }

@@ -94,8 +94,12 @@
       "createNewPoll": "Neue Umfrage erstellen",
       "pollTypes": {
         "appointment": "Termin",
+        "appointmentDesc": "Datum, Uhrzeit oder Wochentag",
         "yesNo": "Ja/Nein",
-        "rating": "Bewertung"
+        "yesNoDesc": "Feste Antwortoptionen: Ja oder Nein",
+        "rating": "Bewertung",
+        "ratingDesc": "Optionen auf einer Skala bewerten",
+        "hint": "Die Art lässt sich später nicht mehr ändern."
       },
       "item": {
         "options": "Auswahlmöglichkeiten: {{count}}",
@@ -144,6 +148,12 @@
     "pollInput": {
       "createPoll": "Umfrage erstellen",
       "updatePoll": "Umfrage aktualisieren",
+      "closePollNow": "Umfrage jetzt schließen",
+      "reopenPoll": "Umfrage wieder öffnen",
+      "typeTitle": "Was soll entschieden werden?",
+      "typeSub": "Wähle die Art der Umfrage — den Rest füllst du im nächsten Schritt aus.",
+      "addDescriptionCta": "Beschreibung hinzufügen",
+      "autoClose": "Automatisch schließen",
       "date": {
         "answerOptions": "Terminoptionen",
         "minOptions": "Mind. 1 Termin",
@@ -153,6 +163,7 @@
         "endTime": "Endzeit",
         "selectDate": "Datum auswählen",
         "addTime": "Uhrzeit hinzufügen",
+        "removeTime": "Uhrzeit entfernen",
         "endBeforeStart": "Das Enddatum muss nach dem {{date}} liegen.",
         "addOption": "Termin hinzufügen",
         "appointmentTypeLabel": "Art der Terminoptionen",
@@ -197,7 +208,9 @@
         "previewImageUrlPlaceholder": "Optionales Vorschaubild (URL)",
         "addDescription": "Beschreibung",
         "addLink": "Link",
-        "addOption": "Option hinzufügen"
+        "addOption": "Option hinzufügen",
+        "ja": "Ja",
+        "nein": "Nein"
       }
     },
     "vote": {

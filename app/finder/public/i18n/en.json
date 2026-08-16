@@ -94,8 +94,12 @@
       "createNewPoll": "Create new poll",
       "pollTypes": {
         "appointment": "Appointment",
+        "appointmentDesc": "Date, time, or weekday",
         "yesNo": "Yes/No",
-        "rating": "Rating"
+        "yesNoDesc": "Fixed answer options: Yes or No",
+        "rating": "Rating",
+        "ratingDesc": "Rate options on a scale",
+        "hint": "The type cannot be changed later."
       },
       "item": {
         "options": "Options: {{count}}",
@@ -144,6 +148,12 @@
     "pollInput": {
       "createPoll": "Create poll",
       "updatePoll": "Update poll",
+      "closePollNow": "Close poll now",
+      "reopenPoll": "Reopen poll",
+      "typeTitle": "What should be decided?",
+      "typeSub": "Choose the poll type — you'll fill in the rest next.",
+      "addDescriptionCta": "Add description",
+      "autoClose": "Auto-close",
       "date": {
         "answerOptions": "Date options",
         "minOptions": "Min. 1 date",
@@ -153,6 +163,7 @@
         "endTime": "End time",
         "selectDate": "Select date",
         "addTime": "Add time",
+        "removeTime": "Remove time",
         "endBeforeStart": "End date must be after {{date}}.",
         "addOption": "Add date",
         "appointmentTypeLabel": "Type of date options",
@@ -197,7 +208,9 @@
         "previewImageUrlPlaceholder": "Optional preview image (URL)",
         "addDescription": "Description",
         "addLink": "Link",
-        "addOption": "Add option"
+        "addOption": "Add option",
+        "ja": "Yes",
+        "nein": "No"
       }
     },
     "vote": {

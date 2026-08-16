@@ -94,8 +94,12 @@
       "createNewPoll": "Crear nueva encuesta",
       "pollTypes": {
         "appointment": "Cita",
+        "appointmentDesc": "Fecha, hora o día de la semana",
         "yesNo": "Sí/No",
-        "rating": "Valoración"
+        "yesNoDesc": "Opciones fijas: Sí o No",
+        "rating": "Valoración",
+        "ratingDesc": "Valora las opciones en una escala",
+        "hint": "El tipo no se puede cambiar después."
       },
       "item": {
         "options": "Opciones: {{count}}",
@@ -144,6 +148,12 @@
     "pollInput": {
       "createPoll": "Crear encuesta",
       "updatePoll": "Actualizar encuesta",
+      "closePollNow": "Cerrar encuesta ahora",
+      "reopenPoll": "Reabrir encuesta",
+      "typeTitle": "¿Qué se debe decidir?",
+      "typeSub": "Elige el tipo de encuesta — el resto lo completas después.",
+      "addDescriptionCta": "Añadir descripción",
+      "autoClose": "Cierre automático",
       "date": {
         "answerOptions": "Opciones de fecha",
         "minOptions": "Mín. 1 fecha",
@@ -153,6 +163,7 @@
         "endTime": "Hora de fin",
         "selectDate": "Seleccionar fecha",
         "addTime": "Añadir hora",
+        "removeTime": "Eliminar hora",
         "endBeforeStart": "La fecha de fin debe ser posterior al {{date}}.",
         "addOption": "Añadir fecha",
         "appointmentTypeLabel": "Tipo de opciones de fecha",
@@ -197,7 +208,9 @@
         "previewImageUrlPlaceholder": "Imagen de vista previa opcional (URL)",
         "addDescription": "Descripción",
         "addLink": "Enlace",
-        "addOption": "Añadir opción"
+        "addOption": "Añadir opción",
+        "ja": "Sí",
+        "nein": "No"
       }
     },
     "vote": {

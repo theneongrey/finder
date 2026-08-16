@@ -7,6 +7,7 @@
       [style.border-color]="t.type === selectedType() ? 'var(--accent-border)' : 'var(--border-hairline-strong)'"
       [style.background]="t.type === selectedType() ? 'var(--accent-tint)' : 'var(--bg-sheet)'"
       [style.color]="t.type === selectedType() ? 'var(--accent)' : 'var(--text-secondary)'"
+      [attr.data-testid]="'appt-type-' + t.type"
       (click)="typeSelected.emit(t.type)"
     >
       @if (t.type === selectedType()) {

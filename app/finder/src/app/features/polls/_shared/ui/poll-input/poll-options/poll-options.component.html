@@ -115,6 +115,7 @@
 
       @if (appointmentDateType() !== 'weekday' || weekdayShowsTime()) {
         <ds-empty-state-button
+          data-testid="add-date-option-btn"
           [class.add-card-nudge]="addCardAnimating()"
           [label]="'project.pollInput.date.addOption' | translate"
           (clicked)="onAdd()"
@@ -123,7 +124,7 @@
     }
 
   } @else if (optionType() === OptionType.YesNo) {
-    <div class="flex flex-col gap-2 mt-1">
+    <div data-testid="yesno-options" class="flex flex-col gap-2 mt-1">
       <ds-card [accentBorder]="false" [padding]="14">
         <span style="font-size:var(--fs-body-xs);font-weight:var(--weight-bold);color:var(--text-primary)">
           {{ 'project.pollInput.yesNo.ja' | translate }}
@@ -150,7 +151,7 @@
     <div class="flex flex-col gap-2">
       @for (option of options(); track $index) {
         <div class="flex flex-col gap-[5px]">
-          <span class="px-1" style="font-size:var(--fs-caption);letter-spacing:1.5px;color:var(--accent)">
+          <span data-testid="star-indicator" class="px-1" style="font-size:var(--fs-caption);letter-spacing:1.5px;color:var(--accent)">
             {{ getStars($index) }}
           </span>
           <app-option-card
@@ -164,6 +165,7 @@
     </div>
 
     <ds-empty-state-button
+      data-testid="add-option-btn"
       [class.add-card-nudge]="addCardAnimating()"
       [label]="'project.pollInput.yesNo.addOption' | translate"
       (clicked)="onAdd()"

@@ -7,6 +7,7 @@
     </p>
     <ds-input
       class="block mt-2"
+      data-testid="question-input"
       [placeholder]="'project.pollInput.yesNo.questionPlaceholder' | translate"
       [ngModel]="question()"
       (ngModelChange)="questionChange.emit($event)"
@@ -115,7 +116,7 @@
 </div>
 
 <!-- Sticky submit -->
-<div class="fixed bottom-0 left-0 w-full z-50 flex justify-center"
+<div data-testid="submit-bar" class="fixed bottom-0 left-0 w-full z-50 flex justify-center"
   style="padding:14px 18px 22px;background:linear-gradient(to top,var(--bg-app) 46%,rgba(244,241,236,0) 100%)">
   <ds-button
     variant="primary"

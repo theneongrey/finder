@@ -12,50 +12,25 @@
               [ngModel]="dateValue"
               (ngModelChange)="setDate($event)"
               [name]="'date-' + index()"
+              [readonly]="readonly()"
             />
           </div>
 
           @if (showTime()) {
             <div class="flex flex-col gap-1 flex-1">
-              <div class="flex items-center justify-between">
-                <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
-                  {{ 'project.pollInput.date.startTime' | translate }}
-                </label>
-                <button
-                  type="button"
-                  class="cursor-pointer"
-                  style="background:none;border:none;padding:0;color:var(--text-muted)"
-                  (click)="removeTime()"
-                  [attr.aria-label]="'project.pollInput.date.removeTime' | translate"
-                >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                    <path d="M5 5l14 14"/><path d="M19 5L5 19"/>
-                  </svg>
-                </button>
-              </div>
+              <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
+                {{ 'project.pollInput.date.startTime' | translate }}
+              </label>
               <ds-input
                 type="time"
                 [ngModel]="timeValue"
                 (ngModelChange)="setStartTime($event)"
                 [name]="'date-time-' + index()"
+                [readonly]="readonly()"
               />
             </div>
           }
         </div>
-
-        @if (!showTime()) {
-          <button
-            type="button"
-            class="flex items-center gap-1 self-start cursor-pointer"
-            style="border:none;background:none;padding:0;font-size:var(--fs-ui-sm);color:var(--text-muted)"
-            (click)="addTime()"
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <path d="M12 5v14"/><path d="M5 12h14"/>
-            </svg>
-            {{ 'project.pollInput.date.addTime' | translate }}
-          </button>
-        }
       </div>
 
       @if (canRemove()) {

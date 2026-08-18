@@ -37,6 +37,12 @@ export class PermissionService {
     );
   }
 
+  getContactsGeneral() {
+    return this.httpClient.get<SharingContact[]>(
+      `${this.baseUrl}/api/permission/contacts`,
+    );
+  }
+
   removePermission(projectId: string, email: string) {
     return this.httpClient.delete<SharedWith[]>(
       `${this.baseUrl}/api/permission/${projectId}/${encodeURIComponent(email)}`,

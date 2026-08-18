@@ -1,10 +1,14 @@
 <div class="flex flex-col gap-2 mt-4">
 
   @if (optionType() === OptionType.Date) {
-    <app-appointment-type-selection
-      [selectedType]="appointmentDateType()"
-      (typeSelected)="appointmentDateTypeSelected.emit($event)"
-    />
+    @if (!readonly()) {
+      <app-appointment-type-selection
+        [selectedType]="appointmentDateType()"
+        [showTime]="weekdayShowsTime()"
+        (typeSelected)="appointmentDateTypeSelected.emit($event)"
+        (showTimeChange)="onToggleTime($event)"
+      />
+    }
 
     @if (appointmentDateType()) {
       <div class="flex justify-between items-center px-1 mt-4">
@@ -21,37 +25,24 @@
           @case ('weekday') {
             @if (!weekdayShowsTime()) {
               <ds-card [accentBorder]="false" [padding]="14">
-                <div class="flex flex-col gap-2">
-                  <div class="flex gap-1">
-                    @for (day of weekdayButtons; track day.value) {
-                      <button
-                        type="button"
-                        class="flex-1 cursor-pointer"
-                        style="padding:6px 2px;border-radius:8px;font-size:var(--fs-caption-sm);font-weight:var(--weight-bold);border:none;transition:background var(--duration-fast) ease,color var(--duration-fast) ease"
-                        [style.background]="selectedWeekdays().includes(day.value) ? 'var(--accent)' : 'var(--bg-panel)'"
-                        [style.color]="selectedWeekdays().includes(day.value) ? 'white' : 'var(--text-secondary)'"
-                        (click)="weekdayToggle.emit(day.value)"
-                        [attr.aria-label]="day.ariaLabel"
-                        [attr.aria-pressed]="selectedWeekdays().includes(day.value)"
-                      >
-                        {{ day.label }}
-                      </button>
-                    }
-                  </div>
-                  <button
-                    type="button"
-                    class="flex items-center gap-1 self-start cursor-pointer"
-                    style="border:none;background:none;padding:0;font-size:var(--fs-ui-sm)"
-                    [style.color]="selectedWeekdays().length > 0 ? 'var(--text-muted)' : 'var(--border-hairline-strong)'"
-                    [style.cursor]="selectedWeekdays().length > 0 ? 'pointer' : 'default'"
-                    [disabled]="selectedWeekdays().length === 0"
-                    (click)="onGroupedAddTime()"
-                  >
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                      <path d="M12 5v14"/><path d="M5 12h14"/>
-                    </svg>
-                    {{ 'project.pollInput.date.addTime' | translate }}
-                  </button>
+                <div class="flex gap-1">
+                  @for (day of weekdayButtons; track day.value) {
+                    <button
+                      type="button"
+                      class="flex-1"
+                      [class.cursor-pointer]="!readonly()"
+                      [class.cursor-default]="readonly()"
+                      style="padding:6px 2px;border-radius:8px;font-size:var(--fs-caption-sm);font-weight:var(--weight-bold);border:none;transition:background var(--duration-fast) ease,color var(--duration-fast) ease"
+                      [style.background]="selectedWeekdays().includes(day.value) ? 'var(--accent)' : 'var(--bg-panel)'"
+                      [style.color]="selectedWeekdays().includes(day.value) ? 'white' : 'var(--text-secondary)'"
+                      [disabled]="readonly()"
+                      (click)="!readonly() && weekdayToggle.emit(day.value)"
+                      [attr.aria-label]="day.ariaLabel"
+                      [attr.aria-pressed]="selectedWeekdays().includes(day.value)"
+                    >
+                      {{ day.label }}
+                    </button>
+                  }
                 </div>
               </ds-card>
             } @else {
@@ -59,10 +50,9 @@
                 <app-option-card-weekday
                   [option]="option"
                   [index]="$index"
-                  [canRemove]="dateOptions().length > 1"
-                  [canRemoveTime]="$index === 0"
+                  [canRemove]="!readonly() && dateOptions().length > 1"
                   [initialShowTime]="weekdayShowsTime()"
-                  (showTimeChange)="$index === 0 && onFirstEntryShowTimeChange($event)"
+                  [readonly]="readonly()"
                   (remove)="remove.emit($index)"
                 />
               }
@@ -75,9 +65,9 @@
                   <app-option-card-date
                     [option]="option"
                     [index]="$index"
-                    [canRemove]="dateOptions().length > 1"
-                    [initialShowTime]="$index > 0 && firstEntryShowsTime()"
-                    (showTimeChange)="$index === 0 && onFirstEntryShowTimeChange($event)"
+                    [canRemove]="!readonly() && dateOptions().length > 1"
+                    [initialShowTime]="weekdayShowsTime()"
+                    [readonly]="readonly()"
                     (remove)="remove.emit($index)"
                   />
                 }
@@ -85,9 +75,9 @@
                   <app-option-card-date-range
                     [option]="option"
                     [index]="$index"
-                    [canRemove]="dateOptions().length > 1"
-                    [initialShowTime]="$index > 0 && firstEntryShowsTime()"
-                    (showTimeChange)="$index === 0 && onFirstEntryShowTimeChange($event)"
+                    [canRemove]="!readonly() && dateOptions().length > 1"
+                    [initialShowTime]="weekdayShowsTime()"
+                    [readonly]="readonly()"
                     (remove)="remove.emit($index)"
                   />
                 }
@@ -95,7 +85,8 @@
                   <app-option-card-time
                     [option]="option"
                     [index]="$index"
-                    [canRemove]="dateOptions().length > 1"
+                    [canRemove]="!readonly() && dateOptions().length > 1"
+                    [readonly]="readonly()"
                     (remove)="remove.emit($index)"
                   />
                 }
@@ -103,7 +94,8 @@
                   <app-option-card-time-range
                     [option]="option"
                     [index]="$index"
-                    [canRemove]="dateOptions().length > 1"
+                    [canRemove]="!readonly() && dateOptions().length > 1"
+                    [readonly]="readonly()"
                     (remove)="remove.emit($index)"
                   />
                 }
@@ -113,7 +105,7 @@
         }
       </div>
 
-      @if (appointmentDateType() !== 'weekday' || weekdayShowsTime()) {
+      @if (!readonly() && (appointmentDateType() !== 'weekday' || weekdayShowsTime())) {
         <ds-empty-state-button
           data-testid="add-date-option-btn"
           [class.add-card-nudge]="addCardAnimating()"
@@ -123,22 +115,7 @@
       }
     }
 
-  } @else if (optionType() === OptionType.YesNo) {
-    <div data-testid="yesno-options" class="flex flex-col gap-2 mt-1">
-      <ds-card [accentBorder]="false" [padding]="14">
-        <span style="font-size:var(--fs-body-xs);font-weight:var(--weight-bold);color:var(--text-primary)">
-          {{ 'project.pollInput.yesNo.ja' | translate }}
-        </span>
-      </ds-card>
-      <ds-card [accentBorder]="false" [padding]="14">
-        <span style="font-size:var(--fs-body-xs);font-weight:var(--weight-bold);color:var(--text-primary)">
-          {{ 'project.pollInput.yesNo.nein' | translate }}
-        </span>
-      </ds-card>
-    </div>
-
   } @else {
-    <!-- Rating -->
     <div class="flex justify-between items-center px-1">
       <span style="font-size:var(--fs-body-xs);font-weight:var(--weight-bold);color:var(--text-primary)">
         {{ titleKey() | translate }}
@@ -148,27 +125,25 @@
       </span>
     </div>
 
-    <div class="flex flex-col gap-2">
+    <div data-testid="yesno-options" class="flex flex-col gap-2">
       @for (option of options(); track $index) {
-        <div class="flex flex-col gap-[5px]">
-          <span data-testid="star-indicator" class="px-1" style="font-size:var(--fs-caption);letter-spacing:1.5px;color:var(--accent)">
-            {{ getStars($index) }}
-          </span>
-          <app-option-card
-            [option]="option"
-            [index]="$index"
-            [canRemove]="options().length > 1"
-            (remove)="remove.emit($index)"
-          />
-        </div>
+        <app-option-card
+          [option]="option"
+          [index]="$index"
+          [canRemove]="!readonly() && options().length > 1"
+          [readonly]="readonly()"
+          (remove)="remove.emit($index)"
+        />
       }
     </div>
 
-    <ds-empty-state-button
-      data-testid="add-option-btn"
-      [class.add-card-nudge]="addCardAnimating()"
-      [label]="'project.pollInput.yesNo.addOption' | translate"
-      (clicked)="onAdd()"
-    />
+    @if (!readonly()) {
+      <ds-empty-state-button
+        data-testid="add-option-btn"
+        [class.add-card-nudge]="addCardAnimating()"
+        [label]="'project.pollInput.yesNo.addOption' | translate"
+        (clicked)="onAdd()"
+      />
+    }
   }
 </div>

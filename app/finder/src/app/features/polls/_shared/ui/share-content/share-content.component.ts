@@ -18,6 +18,7 @@ import {
   VisibilityType,
 } from '../../models/poll-detail.model';
 import { SharingStore } from '../../data/sharing.store';
+import { UserStore } from '../../../../../common/data/user.store';
 import { environment } from '../../../../../common/env/environment';
 
 @Component({
@@ -33,11 +34,13 @@ import { environment } from '../../../../../common/env/environment';
 })
 export class ShareContentComponent {
   private readonly sharingStore = inject(SharingStore);
+  private readonly userStore = inject(UserStore);
   private readonly translateService = inject(TranslateService);
 
   projectId = input.required<string>();
   sharedWith = input.required<SharedWith[]>();
   visibilityType = input.required<VisibilityType>();
+  inCard = input<boolean>(true);
 
   selectedVisibility = signal<VisibilityType>(VisibilityType.VisibleForSelectedOnly);
   activeTab = signal('invite');
@@ -45,7 +48,13 @@ export class ShareContentComponent {
   sharingContacts = this.sharingStore.sharingContactsSuggestion;
   sharingInProgress = this.sharingStore.sharingInProgress;
 
-  memberCount = computed(() => this.sharedWith().length);
+  private readonly otherMembers = computed(() => {
+    const myEmail = this.userStore.user()?.email;
+    return this.sharedWith().filter(m => m.email !== myEmail);
+  });
+
+  memberCount = computed(() => this.otherMembers().length);
+  hasOtherMembers = computed(() => this.otherMembers().length > 0);
   isPublic = computed(() => this.selectedVisibility() === VisibilityType.VisibleForEverybody);
   shareLink = computed(() => `${environment.baseUrl}/p/${this.projectId()}`);
 
@@ -63,14 +72,17 @@ export class ShareContentComponent {
     this.selectedVisibility() === VisibilityType.VisibleForEverybody ? 'open' : 'invite-only',
   );
 
-  tabItems = computed<TabItem[]>(() => [
-    { value: 'invite', label: this.inviteTabLabel() },
-    {
-      value: 'members',
-      label: this.accessTabLabel(),
-      count: this.memberCount() > 0 ? this.memberCount() : undefined,
-    },
-  ]);
+  tabItems = computed<TabItem[]>(() => {
+    const tabs: TabItem[] = [{ value: 'invite', label: this.inviteTabLabel() }];
+    if (this.hasOtherMembers()) {
+      tabs.push({
+        value: 'members',
+        label: this.accessTabLabel(),
+        count: this.memberCount(),
+      });
+    }
+    return tabs;
+  });
 
   constructor() {
     effect(() => {
@@ -89,6 +101,12 @@ export class ShareContentComponent {
       }
       prevProjectId = id;
     });
+
+    effect(() => {
+      if (!this.hasOtherMembers() && this.activeTab() === 'members') {
+        this.activeTab.set('invite');
+      }
+    }, { allowSignalWrites: true });
   }
 
   onVisibilityChange(value: string) {

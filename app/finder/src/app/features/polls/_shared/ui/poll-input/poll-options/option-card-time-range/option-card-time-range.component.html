@@ -10,6 +10,7 @@
           [ngModel]="startTimeValue"
           (ngModelChange)="onStartTimeChange($event)"
           [name]="'time-range-start-' + index()"
+          [readonly]="readonly()"
         />
       </div>
 
@@ -22,6 +23,7 @@
           [ngModel]="endTimeValue"
           (ngModelChange)="setEndTime($event)"
           [name]="'time-range-end-' + index()"
+          [readonly]="readonly()"
         />
       </div>
     </div>

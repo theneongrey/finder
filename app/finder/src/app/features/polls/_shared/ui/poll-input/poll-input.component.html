@@ -1,49 +1,306 @@
-@if (canClosePoll()) {
-  <div class="px-[18px] pt-4">
-    <ds-button
-      variant="danger"
-      [fullWidth]="true"
-      icon="lock"
-      data-testid="close-poll-btn"
-      (click)="closePollNow()"
-    >
-      {{ 'project.pollInput.closePollNow' | translate }}
-    </ds-button>
-  </div>
-}
-@if (canReopenPoll()) {
-  <div class="px-[18px] pt-4">
-    <ds-button
-      variant="outline"
-      [fullWidth]="true"
-      data-testid="reopen-poll-btn"
-      (click)="reopenPollNow()"
-    >
-      {{ 'project.pollInput.reopenPoll' | translate }}
-    </ds-button>
-  </div>
-}
+@if (mode() === 'standalone' || mode() === 'edit') {
 
-@if (optionType() === undefined) {
-  <app-poll-type-selection (typeSelected)="onTypeSelected($event)" />
+  @if (isDesktop()) {
+    <!-- ═══════════════════════════════════════════
+         WEB WIZARD
+    ═══════════════════════════════════════════ -->
+
+    @if (mode() === 'standalone') {
+      <!-- Step indicator bar -->
+      <div class="flex items-center gap-2.5 flex-wrap px-7 py-2.5 bg-[rgba(255,253,249,.45)] border-b border-[rgba(20,24,28,.06)]">
+        <div class="flex items-center gap-1.5">
+          @for (s of webSteps(); track s.num) {
+            <div
+              class="flex items-center gap-2.5 px-1.5 py-2 rounded-[10px]"
+              [class.bg-[#f7f5f1]]="s.isCurrent"
+            >
+              <span
+                class="flex-none w-6 h-6 rounded-full border-[1.6px] flex items-center justify-center text-[12px] font-bold transition-[background,border-color] duration-[180ms]"
+                [class.bg-transparent]="!s.isCurrent && !s.isDone"
+                [class.border-[rgba(20,24,28,.18)]]="!s.isCurrent && !s.isDone"
+                [class.text-[#a39e96]]="!s.isCurrent && !s.isDone"
+                [style.background]="s.isCurrent ? 'var(--accent)' : (s.isDone ? 'transparent' : undefined)"
+                [style.border-color]="s.isCurrent ? 'var(--accent)' : undefined"
+                [style.color]="s.isCurrent ? '#fff' : undefined"
+              >
+                @if (s.isDone) {
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4.5 12.5l4.5 4.5L20 5"/>
+                  </svg>
+                } @else {
+                  <span>{{ s.num }}</span>
+                }
+              </span>
+              <span class="flex-1 min-w-0">
+                <span
+                  class="block text-[13.5px] font-bold"
+                  [style.color]="s.isCurrent ? '#1d2227' : '#79756f'"
+                >{{ s.title }}</span>
+                @if (s.sub) {
+                  <span class="block text-[11.5px] mt-px" style="color:#a39e96">{{ s.sub }}</span>
+                }
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if (mode() === 'edit' && optionType() !== undefined) {
+      <!-- Poll type bar -->
+      <div class="flex items-center gap-4 px-7 py-2.5 bg-[rgba(255,253,249,.45)] border-b border-[rgba(20,24,28,.06)]">
+        <span class="text-[11.5px] font-bold tracking-[.7px] uppercase" style="color:#a39e96">{{ 'project.pollInput.stepArt' | translate }}</span>
+        <app-poll-type-badge [type]="optionType()!" />
+      </div>
+    }
+    <!-- Scrollable content + content header -->
+    <div class="flex-1 min-h-0 flex flex-col overflow-hidden">
+
+      <!-- Content header: back + big title | discard + CTA -->
+      <div class="flex items-end justify-between gap-6 px-8 pt-6 pb-0 flex-none">
+        <div>
+          <div class="flex items-center gap-2.5">
+            @if (wizardStep() === 2 && mode() === 'standalone') {
+              <button
+                class="w-[34px] h-[34px] rounded-[11px] border border-[rgba(20,24,28,.08)] bg-white text-[color:var(--accent)] flex items-center justify-center cursor-pointer transition-[background] duration-[140ms] hover:bg-[#f1eee9]"
+                (click)="prevStep()"
+                title="Zurück"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 5l-7 7 7 7"/>
+                </svg>
+              </button>
+            }
+            <h1 class="font-display text-[30px] font-bold tracking-[-0.8px] leading-[1.05] text-[#1d2227]">
+              {{ webContentTitle() }}
+            </h1>
+          </div>
+          <p class="text-[14.5px] text-[#79756f] mt-1.5">
+            {{ webContentSubtitle() }}
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 flex-none">
+          @if ((mode() === 'standalone' && wizardStep() !== 3) || mode() === 'edit') {
+            <button
+              class="h-[42px] px-[15px] rounded-[13px] border border-[rgba(20,24,28,.08)] bg-white text-[#5a5650] text-[14px] font-bold cursor-pointer transition-[background] duration-[140ms] hover:bg-[#f1eee9]"
+              (click)="discard()"
+            >{{ 'project.pollInput.discard' | translate }}</button>
+          }
+          <ds-button
+            variant="primary"
+            [disabled]="!canProceed"
+            data-testid="wizard-cta"
+            (click)="onCta()"
+          >{{ ctaLabel() }}</ds-button>
+        </div>
+      </div>
+
+      <!-- Scrollable page area -->
+      <div class="flex-1 min-h-0 overflow-y-auto px-8 pb-8">
+
+        @if (wizardStep() === 1) {
+          <!-- Step 1: type grid -->
+          <div class="pt-5">
+            <app-poll-type-selection
+              layout="grid"
+              [selectedType]="optionType()"
+              (typeSelected)="onTypeSelected($event)"
+            />
+          </div>
+        } @else if (wizardStep() === 2) {
+          <!-- Step 2: poll details, max-w 1000px -->
+          <div class="max-w-[1000px]">
+            <app-poll-input-form
+              [optionType]="optionType()!"
+              [mode]="mode()"
+              [isValid]="isValid()"
+              [question]="question()"
+              (questionChange)="question.set($event)"
+              [description]="description()"
+              (descriptionChange)="description.set($event)"
+              [closeDate]="closeDate()"
+              (closeDateChange)="closeDate.set($event)"
+              [isClosed]="canReopenPoll()"
+              [closedAt]="pollClosedAt()"
+              (closePollNow)="closePollNow()"
+              (reopenPoll)="reopenPollNow()"
+              [options]="options()"
+              [dateOptions]="dateOptions()"
+              [appointmentDateType]="appointmentDateType()"
+              (appointmentDateTypeChange)="onAppointmentDateTypeChange($event)"
+              (add)="addOption()"
+              (remove)="removeOption($event)"
+              (weekdayToggle)="toggleWeekday($event)"
+              (formSubmit)="onCta()"
+              [hideCta]="true"
+            />
+          </div>
+        } @else {
+          <!-- Step 3: sharing -->
+          <div class="pt-1.5">
+            <div class="flex gap-8 items-start">
+              <div class="max-w-[640px] flex-1 min-w-0">
+                @if (createdProject()) {
+                  <app-share-content
+                    [projectId]="createdProject()!.projectId"
+                    [sharedWith]="createdProject()!.sharedWith"
+                    [visibilityType]="createdProject()!.visibilityType"
+                  />
+                } @else if (mode() === 'edit' && projectId() && currentProject()) {
+                  <app-share-content
+                    [projectId]="projectId()!"
+                    [sharedWith]="currentProject()!.sharedWith"
+                    [visibilityType]="currentProject()!.visibilityType"
+                  />
+                }
+              </div>
+              @if (pollPreview(); as preview) {
+                <div class="w-[520px] shrink-0 mt-3.5">
+                  <app-poll-item [poll]="preview" [previewMode]="true" />
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+      </div>
+    </div>
+
+  } @else {
+    <!-- ═══════════════════════════════════════════
+         MOBILE WIZARD
+    ═══════════════════════════════════════════ -->
+
+    <!-- Scrollable content area (fills space above sticky CTA) -->
+    <div class="pb-[110px]">
+
+      @switch (wizardStep()) {
+        @case (1) {
+          <div class="px-[18px] pt-5 pb-4">
+            <h1 class="font-display text-[27px] font-bold tracking-[-0.7px] leading-[1.1] text-[#1d2227] text-wrap-pretty">
+              {{ 'project.pollInput.typeTitle' | translate }}
+            </h1>
+            <p class="text-[14px] text-[#79756f] mt-1.5 text-wrap-pretty">
+              {{ 'project.pollInput.typeSub' | translate }}
+            </p>
+          </div>
+          <div class="px-[18px]">
+            <app-poll-type-selection
+              layout="list"
+              [selectedType]="optionType()"
+              (typeSelected)="onTypeSelected($event)"
+            />
+          </div>
+        }
+
+        @case (2) {
+          <div class="px-[18px]">
+            <app-poll-input-form
+              [optionType]="optionType()!"
+              [mode]="mode()"
+              [isValid]="isValid()"
+              [question]="question()"
+              (questionChange)="question.set($event)"
+              [description]="description()"
+              (descriptionChange)="description.set($event)"
+              [closeDate]="closeDate()"
+              (closeDateChange)="closeDate.set($event)"
+              [isClosed]="canReopenPoll()"
+              [closedAt]="pollClosedAt()"
+              (closePollNow)="closePollNow()"
+              (reopenPoll)="reopenPollNow()"
+              [options]="options()"
+              [dateOptions]="dateOptions()"
+              [appointmentDateType]="appointmentDateType()"
+              (appointmentDateTypeChange)="onAppointmentDateTypeChange($event)"
+              (add)="addOption()"
+              (remove)="removeOption($event)"
+              (weekdayToggle)="toggleWeekday($event)"
+              (formSubmit)="onCta()"
+              [hideCta]="true"
+            />
+            @if (mode() === 'edit' && projectId() && currentProject()) {
+              <app-share-content
+                [projectId]="projectId()!"
+                [sharedWith]="currentProject()!.sharedWith"
+                [visibilityType]="currentProject()!.visibilityType"
+              />
+            }
+          </div>
+        }
+
+        @case (3) {
+          <div class="px-[18px] pt-5">
+            <h2 class="font-display text-[24px] font-bold tracking-[-0.6px] leading-[1.12] text-[#1d2227] text-wrap-pretty">
+              {{ 'project.pollInput.shareTitle' | translate }}
+            </h2>
+            <p class="text-[14px] text-[#79756f] mt-1.5 text-wrap-pretty">
+              {{ 'project.pollInput.shareSub' | translate }}
+            </p>
+            @if (createdProject()) {
+              <app-share-content
+                [projectId]="createdProject()!.projectId"
+                [sharedWith]="createdProject()!.sharedWith"
+                [visibilityType]="createdProject()!.visibilityType"
+              />
+            }
+          </div>
+        }
+      }
+
+    </div>
+
+    <!-- Sticky CTA -->
+    <div class="fixed left-0 right-0 bottom-0 z-10 px-5 pt-3.5 pb-[22px] bg-gradient-to-t from-[var(--bg-page)] from-46% to-transparent">
+      @if (mode() === 'edit') {
+        <ds-button
+          variant="primary"
+          [fullWidth]="true"
+          [disabled]="!canProceed"
+          data-testid="wizard-cta"
+          (click)="onCta()"
+        >{{ ctaLabel() }}</ds-button>
+      } @else {
+        <ds-button
+          variant="primary"
+          [fullWidth]="true"
+          [disabled]="!canProceed"
+          data-testid="wizard-cta"
+          (click)="onCta()"
+        >{{ ctaLabel() }}</ds-button>
+      }
+    </div>
+
+  }
+
 } @else {
-  <app-poll-input-form
-    [optionType]="optionType()!"
-    [mode]="mode()"
-    [isValid]="isValid()"
-    [question]="question()"
-    (questionChange)="question.set($event)"
-    [description]="description()"
-    (descriptionChange)="description.set($event)"
-    [closeDate]="closeDate()"
-    (closeDateChange)="closeDate.set($event)"
-    [options]="options()"
-    [dateOptions]="dateOptions()"
-    [appointmentDateType]="appointmentDateType()"
-    (appointmentDateTypeChange)="onAppointmentDateTypeChange($event)"
-    (add)="addOption()"
-    (remove)="removeOption($event)"
-    (weekdayToggle)="toggleWeekday($event)"
-    (formSubmit)="submit()"
-  />
+  <!-- ═══════════════════════════════════════════
+       ADD WITHIN PROJECT
+  ═══════════════════════════════════════════ -->
+
+  @if (optionType() === undefined) {
+    <app-poll-type-selection (typeSelected)="onTypeSelected($event)" />
+  } @else {
+    <div class="px-[18px]">
+      <app-poll-input-form
+        [optionType]="optionType()!"
+        [mode]="mode()"
+        [isValid]="isValid()"
+        [question]="question()"
+        (questionChange)="question.set($event)"
+        [description]="description()"
+        (descriptionChange)="description.set($event)"
+        [closeDate]="closeDate()"
+        (closeDateChange)="closeDate.set($event)"
+        [options]="options()"
+        [dateOptions]="dateOptions()"
+        [appointmentDateType]="appointmentDateType()"
+        (appointmentDateTypeChange)="onAppointmentDateTypeChange($event)"
+        (add)="addOption()"
+        (remove)="removeOption($event)"
+        (weekdayToggle)="toggleWeekday($event)"
+        (formSubmit)="onCta()"
+      />
+    </div>
+  }
 }

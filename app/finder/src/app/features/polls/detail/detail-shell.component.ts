@@ -5,8 +5,10 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map, startWith } from 'rxjs';
 import { PollDetailStore } from '../_shared/data/poll-detail.store';
 
 @Component({
@@ -19,6 +21,15 @@ import { PollDetailStore } from '../_shared/data/poll-detail.store';
 export class PollDetailShellComponent {
   private readonly projectDetailStore = inject(PollDetailStore);
   private readonly router = inject(Router);
+
+  isFullWidth = toSignal(
+    this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      startWith(null),
+      map(() => this.router.url.includes('/edit/')),
+    ),
+    { initialValue: false },
+  );
   id = input<string>();
 
   constructor() {

@@ -6,11 +6,13 @@
           @for (day of weekdayButtons; track day.value) {
             <button
               type="button"
-              class="flex-1 cursor-pointer"
-              style="padding:6px 2px;border-radius:8px;font-size:var(--fs-caption-sm);font-weight:var(--weight-bold);border:none;transition:background var(--duration-fast) ease,color var(--duration-fast) ease"
+              [class.cursor-pointer]="!readonly()"
+              [class.cursor-default]="readonly()"
+              style="flex:1;padding:6px 2px;border-radius:8px;font-size:var(--fs-caption-sm);font-weight:var(--weight-bold);border:none;transition:background var(--duration-fast) ease,color var(--duration-fast) ease"
               [style.background]="option().weekday === day.value ? 'var(--accent)' : 'var(--bg-panel)'"
               [style.color]="option().weekday === day.value ? 'white' : 'var(--text-secondary)'"
-              (click)="selectWeekday(day.value)"
+              [disabled]="readonly()"
+              (click)="!readonly() && selectWeekday(day.value)"
               [attr.aria-label]="day.ariaLabel"
               [attr.aria-pressed]="option().weekday === day.value"
             >
@@ -21,43 +23,17 @@
 
         @if (showTime()) {
           <div class="flex flex-col gap-1">
-            <div class="flex items-center justify-between">
-              <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
-                {{ 'project.pollInput.date.startTime' | translate }}
-              </label>
-              @if (canRemoveTime()) {
-                <button
-                  type="button"
-                  class="cursor-pointer"
-                  style="background:none;border:none;padding:0;color:var(--text-muted)"
-                  (click)="removeTime()"
-                  [attr.aria-label]="'project.pollInput.date.removeTime' | translate"
-                >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                    <path d="M5 5l14 14"/><path d="M19 5L5 19"/>
-                  </svg>
-                </button>
-              }
-            </div>
+            <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
+              {{ 'project.pollInput.date.startTime' | translate }}
+            </label>
             <ds-input
               type="time"
               [ngModel]="timeValue"
               (ngModelChange)="setStartTime($event)"
               [name]="'weekday-time-' + index()"
+              [readonly]="readonly()"
             />
           </div>
-        } @else {
-          <button
-            type="button"
-            class="flex items-center gap-1 self-start cursor-pointer"
-            style="border:none;background:none;padding:0;font-size:var(--fs-ui-sm);color:var(--text-muted)"
-            (click)="addTime()"
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-              <path d="M12 5v14"/><path d="M5 12h14"/>
-            </svg>
-            {{ 'project.pollInput.date.addTime' | translate }}
-          </button>
         }
       </div>
 

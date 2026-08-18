@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { login, logout, USER1 } from './helpers';
 
+// Helper: navigate past type selection into the form step
+async function selectTypeAndNext(page: any, testid: string) {
+  await page.locator(`[data-testid="${testid}"]`).click();
+  await page.locator('[data-testid="wizard-cta"]').click();
+}
+
 test.describe('CreatePoll', () => {
   test.beforeEach(async ({ page }) => {
     await login(page, USER1);
@@ -12,36 +18,49 @@ test.describe('CreatePoll', () => {
     await logout(page);
   });
 
-  // ── Type selection ──────────────────────────────────────────────────────────
+  // ── Step 1: Type selection ──────────────────────────────────────────────────
 
-  test('type selection: shows three type buttons and no submit bar', async ({ page }) => {
+  test('step 1: shows three type cards', async ({ page }) => {
     await expect(page.locator('[data-testid="type-btn-date"]')).toBeVisible();
     await expect(page.locator('[data-testid="type-btn-yesno"]')).toBeVisible();
     await expect(page.locator('[data-testid="type-btn-rating"]')).toBeVisible();
-    await expect(page.locator('[data-testid="submit-bar"]')).not.toBeVisible();
   });
 
-  // ── Ja/Nein poll ───────────────────────────────────────────────────────────
+  test('step 1: wizard CTA is disabled until a type is selected', async ({ page }) => {
+    await expect(page.locator('[data-testid="wizard-cta"] button').first()).toBeDisabled();
+    await page.locator('[data-testid="type-btn-yesno"]').click();
+    await expect(page.locator('[data-testid="wizard-cta"] button').first()).not.toBeDisabled();
+  });
+
+  test('step 1: clicking a type card shows selected state', async ({ page }) => {
+    const card = page.locator('[data-testid="type-btn-yesno"]');
+    await card.click();
+    await expect(card).toHaveClass(/type-btn--selected/);
+  });
+
+  // ── YesNo poll ─────────────────────────────────────────────────────────────
 
   test.describe('YesNo poll', () => {
     test.beforeEach(async ({ page }) => {
-      await page.locator('[data-testid="type-btn-yesno"]').click();
+      await selectTypeAndNext(page, 'type-btn-yesno');
     });
 
-    test('shows two fixed read-only option cards', async ({ page }) => {
+    test('shows two pre-seeded editable option cards', async ({ page }) => {
       const options = page.locator('[data-testid="yesno-options"]');
       await expect(options).toBeVisible();
-      await expect(options).toContainText('Ja');
-      await expect(options).toContainText('Nein');
+      const cards = options.locator('app-option-card');
+      await expect(cards).toHaveCount(2);
+      await expect(cards.nth(0).locator('input').first()).toHaveValue('Ja');
+      await expect(cards.nth(1).locator('input').first()).toHaveValue('Nein');
     });
 
-    test('submit is disabled without a question', async ({ page }) => {
-      await expect(page.locator('[data-testid="submit-bar"] button')).toBeDisabled();
+    test('CTA is disabled without a question', async ({ page }) => {
+      await expect(page.locator('[data-testid="wizard-cta"] button').first()).toBeDisabled();
     });
 
-    test('submit becomes enabled once a question is entered', async ({ page }) => {
+    test('CTA becomes enabled once a question is entered', async ({ page }) => {
       await page.locator('[data-testid="question-input"] input').fill('Wer soll kochen?');
-      await expect(page.locator('[data-testid="submit-bar"] button')).not.toBeDisabled();
+      await expect(page.locator('[data-testid="wizard-cta"] button').first()).not.toBeDisabled();
     });
   });
 
@@ -49,7 +68,7 @@ test.describe('CreatePoll', () => {
 
   test.describe('Rating poll', () => {
     test.beforeEach(async ({ page }) => {
-      await page.locator('[data-testid="type-btn-rating"]').click();
+      await selectTypeAndNext(page, 'type-btn-rating');
     });
 
     test('shows one option card with a single-star indicator', async ({ page }) => {
@@ -66,21 +85,20 @@ test.describe('CreatePoll', () => {
 
     test('remove button appears when multiple cards exist', async ({ page }) => {
       await page.locator('[data-testid="add-option-btn"] button').click();
-      // ds-button[size=32] renders a <button> for removal
       const removeButtons = page.locator('app-option-card ds-button[icon="close"] button');
       await expect(removeButtons).toHaveCount(2);
       await removeButtons.first().click();
       await expect(page.locator('app-option-card')).toHaveCount(1);
     });
 
-    test('submit is disabled without a question', async ({ page }) => {
-      await expect(page.locator('[data-testid="submit-bar"] button')).toBeDisabled();
+    test('CTA is disabled without a question', async ({ page }) => {
+      await expect(page.locator('[data-testid="wizard-cta"] button').first()).toBeDisabled();
     });
 
-    test('submit becomes enabled with question and at least one option text', async ({ page }) => {
+    test('CTA becomes enabled with question and at least one option text', async ({ page }) => {
       await page.locator('[data-testid="question-input"] input').fill('Wie gut ist das?');
       await page.locator('app-option-card ds-input input').first().fill('Gut');
-      await expect(page.locator('[data-testid="submit-bar"] button')).not.toBeDisabled();
+      await expect(page.locator('[data-testid="wizard-cta"] button').first()).not.toBeDisabled();
     });
   });
 
@@ -88,7 +106,7 @@ test.describe('CreatePoll', () => {
 
   test.describe('Date poll', () => {
     test.beforeEach(async ({ page }) => {
-      await page.locator('[data-testid="type-btn-date"]').click();
+      await selectTypeAndNext(page, 'type-btn-date');
     });
 
     test('shows all five appointment type chips', async ({ page }) => {
@@ -131,14 +149,13 @@ test.describe('CreatePoll', () => {
       await expect(page.locator('app-option-card-weekday').or(page.locator('ds-card'))).toBeTruthy();
     });
 
-    test('submit is disabled without question and valid date option', async ({ page }) => {
+    test('CTA is disabled without question and valid date option', async ({ page }) => {
       await page.locator('[data-testid="appt-type-date"]').click();
-      await expect(page.locator('[data-testid="submit-bar"] button')).toBeDisabled();
+      await expect(page.locator('[data-testid="wizard-cta"] button').first()).toBeDisabled();
     });
 
     test('selected chip gets visual indicator dot', async ({ page }) => {
       await page.locator('[data-testid="appt-type-date"]').click();
-      // After selection, the chip shows a filled dot (span child)
       const chip = page.locator('[data-testid="appt-type-date"]');
       await expect(chip.locator('span')).toBeVisible();
     });
@@ -149,24 +166,40 @@ test.describe('CreatePoll', () => {
   test.describe('mobile viewport (390 × 844)', () => {
     test.use({ viewport: { width: 390, height: 844 } });
 
-    test('type selection visible; YesNo flow works end-to-end', async ({ page }) => {
+    test('3-step wizard: type → form → share', async ({ page }) => {
+      // Step 1: type selection
       await expect(page.locator('[data-testid="type-btn-yesno"]')).toBeVisible();
       await page.locator('[data-testid="type-btn-yesno"]').click();
+
+      // Advance to step 2 (form)
+      await page.locator('[data-testid="wizard-cta"] button').click();
       await expect(page.locator('[data-testid="yesno-options"]')).toBeVisible();
+
+      // Fill form and create poll
       await page.locator('[data-testid="question-input"] input').fill('Mobile test');
-      await expect(page.locator('[data-testid="submit-bar"] button')).not.toBeDisabled();
+      await page.locator('[data-testid="wizard-cta"] button').click();
+
+      // Step 3: share panel visible
+      await expect(page.locator('app-share-content')).toBeVisible();
     });
   });
 
   test.describe('desktop viewport (1280 × 800)', () => {
     test.use({ viewport: { width: 1280, height: 800 } });
 
-    test('type selection visible; YesNo flow works end-to-end', async ({ page }) => {
+    test('2-step wizard: type grid → form+share sidebar', async ({ page }) => {
+      // Step 1: type grid
       await expect(page.locator('[data-testid="type-btn-yesno"]')).toBeVisible();
       await page.locator('[data-testid="type-btn-yesno"]').click();
-      await expect(page.locator('[data-testid="yesno-options"]')).toBeVisible();
+
+      // Advance to step 2 (form + share sidebar)
+      await page.locator('[data-testid="wizard-cta"] button').click();
+      await expect(page.locator('[data-testid="question-input"]')).toBeVisible();
+
+      // Fill form and create poll → share sidebar appears
       await page.locator('[data-testid="question-input"] input').fill('Desktop test');
-      await expect(page.locator('[data-testid="submit-bar"] button')).not.toBeDisabled();
+      await page.locator('[data-testid="wizard-cta"] button').click();
+      await expect(page.locator('app-share-content')).toBeVisible();
     });
   });
 });

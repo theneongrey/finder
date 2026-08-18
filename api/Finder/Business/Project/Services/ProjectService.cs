@@ -247,6 +247,11 @@ public class ProjectService
             return Result<Poll>.Fail(404);
         }
 
+        if (poll.CloseDate.HasValue && poll.CloseDate <= DateTime.UtcNow)
+        {
+            return Result<Poll>.Fail(409);
+        }
+
         poll.Name = name;
         poll.Description = description;
         poll.CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null;
@@ -316,6 +321,11 @@ public class ProjectService
             return Result<Option>.Fail(404);
         }
 
+        if (poll.CloseDate.HasValue && poll.CloseDate <= DateTime.UtcNow)
+        {
+            return Result<Option>.Fail(409);
+        }
+
         var option = new Option
         {
             Id = SlugHelper.GenerateId(),
@@ -348,6 +358,7 @@ public class ProjectService
     public async Task<Result<Option>> UpdateOption(string slug, UpdateOptionRequest request)
     {
         var option = await _dbContext.Options
+            .Include(o => o.Poll)
             .Include(o => o.Meta)
             .Include(o => o.Votes)
             .ThenInclude(v => v.Person)
@@ -360,6 +371,11 @@ public class ProjectService
         if (option is null)
         {
             return Result<Option>.Fail(404);
+        }
+
+        if (option.Poll.CloseDate.HasValue && option.Poll.CloseDate <= DateTime.UtcNow)
+        {
+            return Result<Option>.Fail(409);
         }
 
         option.Text = request.Text;
@@ -401,18 +417,25 @@ public class ProjectService
 
     public async Task<Result> DeleteOption(string slug)
     {
-        var deletedOption = await _dbContext.Options
+        var option = await _dbContext.Options
+            .Include(o => o.Poll)
             .Where(o => o.Id == SlugHelper.ExtractId(slug) && (o.Poll.Project.Creator.Id == UserId ||
                                              o.Poll.Project.Permissions.Any(permission =>
                                                  permission.Person.Id == UserId &&
                                                  permission.PermissionType >= PermissionType.Maintainer)))
-            .ExecuteDeleteAsync();
+            .FirstOrDefaultAsync();
 
-        if (deletedOption == 0)
+        if (option is null)
         {
             return Result.Fail(404);
         }
 
+        if (option.Poll.CloseDate.HasValue && option.Poll.CloseDate <= DateTime.UtcNow)
+        {
+            return Result.Fail(409);
+        }
+
+        _dbContext.Options.Remove(option);
         await _dbContext.SaveChangesAsync();
         return Result.Success();
     }

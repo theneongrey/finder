@@ -69,6 +69,7 @@ export class PollOptionsComponent {
   options = input.required<OptionEntry[]>();
   dateOptions = input.required<DateOptionEntry[]>();
   appointmentDateType = input<DateOptionType | undefined>(undefined);
+  readonly = input<boolean>(false);
   add = output<void>();
   remove = output<number>();
   appointmentDateTypeSelected = output<DateOptionType>();
@@ -106,18 +107,27 @@ export class PollOptionsComponent {
     return '★'.repeat(index + 1);
   }
 
-  onFirstEntryShowTimeChange(value: boolean): void {
-    this.firstEntryShowsTime.set(value);
-    if (!value) {
-      this.dateOptions().forEach((o) => (o.startTime = undefined));
+  onToggleTime(value: boolean): void {
+    if (value) {
+      const start = nextFullHour();
+      this.dateOptions().forEach((o) => {
+        if (!o.startTime) {
+          o.startTime = start;
+          if (this.appointmentDateType() === 'date-range' && !o.endTime) {
+            const end = new Date(start);
+            end.setHours(end.getHours() + 1);
+            o.endTime = end;
+          }
+        }
+      });
+      this.firstEntryShowsTime.set(true);
+    } else {
+      this.dateOptions().forEach((o) => {
+        o.startTime = undefined;
+        o.endTime = undefined;
+      });
+      this.firstEntryShowsTime.set(false);
     }
-  }
-
-  onGroupedAddTime(): void {
-    if (this.dateOptions().length === 0) { return; }
-    const start = nextFullHour();
-    this.dateOptions().forEach((o) => { if (!o.startTime) { o.startTime = start; } });
-    this.firstEntryShowsTime.set(true);
   }
 
   onAdd() {

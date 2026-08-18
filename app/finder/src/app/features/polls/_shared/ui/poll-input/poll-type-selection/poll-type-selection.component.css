@@ -10,6 +10,7 @@
   cursor: pointer;
   transition: border-color var(--duration-standard) ease,
     background var(--duration-standard) ease,
+    box-shadow var(--duration-standard) ease,
     transform var(--duration-fast) ease;
 }
 .type-btn:hover {
@@ -17,6 +18,26 @@
 }
 .type-btn:active {
   transform: scale(0.985);
+}
+
+.type-btn--selected {
+  border-color: var(--accent-border);
+  background: var(--accent-tint-light, rgba(31, 122, 140, 0.06));
+  box-shadow: 0 0 0 3px rgba(31, 122, 140, 0.08);
+}
+
+/* Grid card layout (web step 1) */
+.type-btn--grid {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px 22px 24px;
+}
+.type-btn--grid:hover {
+  transform: translateY(-2px);
+}
+.type-btn--grid:active {
+  transform: scale(0.985) translateY(0);
 }
 
 .type-icon {
@@ -29,6 +50,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background var(--duration-standard) ease, color var(--duration-standard) ease;
+}
+
+.type-btn--grid .type-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 17px;
+}
+
+.type-icon--selected {
+  background: var(--accent);
+  color: #fff;
 }
 
 .type-name {
@@ -40,11 +73,23 @@
   color: var(--text-primary);
 }
 
+.type-btn--grid .type-name {
+  font-size: 21px;
+  letter-spacing: -0.3px;
+}
+
 .type-desc {
   display: block;
   font-size: var(--fs-ui-sm);
   color: var(--text-secondary);
   margin-top: 3px;
+}
+
+.type-desc--grid {
+  font-size: 14px;
+  line-height: 1.45;
+  margin-top: 6px;
+  text-wrap: pretty;
 }
 
 .type-radio {
@@ -53,4 +98,30 @@
   height: 24px;
   border-radius: 50%;
   border: 1.6px solid var(--border-hairline-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--duration-standard) ease, border-color var(--duration-standard) ease;
+}
+
+.type-btn--grid .type-radio {
+  width: 26px;
+  height: 26px;
+}
+
+.type-radio--selected {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.type-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: rgba(20, 24, 28, 0.045);
+  color: var(--text-body);
+  font-size: 12px;
+  font-weight: var(--weight-bold);
 }

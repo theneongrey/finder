@@ -1,4 +1,16 @@
-<div class="flex flex-col gap-4 px-[18px] pt-5 pb-32">
+<div class="flex flex-col gap-4 pt-5 pb-32 lg:pb-6 max-w-[800px] w-full">
+
+  <!-- Closed poll info banner -->
+  @if (isClosed() && mode() === 'edit') {
+    <div class="flex items-start gap-3 px-4 py-3 rounded-[14px]" style="background:rgba(20,24,28,.05);border:1px solid rgba(20,24,28,.08)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:2px">
+        <circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p class="text-[13.5px] leading-[1.45]" style="color:var(--text-muted)">
+        {{ 'project.pollInput.closedPollEditInfo' | translate }}
+      </p>
+    </div>
+  }
 
   <!-- Question card -->
   <ds-card [accentBorder]="false" [padding]="16">
@@ -12,6 +24,7 @@
       [ngModel]="question()"
       (ngModelChange)="questionChange.emit($event)"
       name="question"
+      [readonly]="isClosed()"
     />
 
     @if (showDescription()) {
@@ -40,11 +53,12 @@
           [ngModel]="description()"
           (ngModelChange)="descriptionChange.emit($event)"
           (blurred)="onDescriptionBlur()"
+          [disabled]="isClosed()"
         />
       </div>
     }
 
-    @if (!showDescription()) {
+    @if (!showDescription() && !isClosed()) {
       <button
         type="button"
         class="flex items-center gap-[6px] mt-[11px] cursor-pointer"
@@ -64,7 +78,9 @@
     [titleKey]="
       optionType() === OptionType.Date
         ? 'project.pollInput.date.answerOptions'
-        : 'project.pollInput.yesNo.answerOptions'
+        : optionType() === OptionType.Rating
+          ? 'project.pollInput.rating.answerOptions'
+          : 'project.pollInput.yesNo.answerOptions'
     "
     [subtitleKey]="
       optionType() === OptionType.Date
@@ -75,56 +91,149 @@
     [options]="options()"
     [dateOptions]="dateOptions()"
     [appointmentDateType]="appointmentDateType()"
+    [readonly]="isClosed()"
     (appointmentDateTypeSelected)="appointmentDateTypeChange.emit($event)"
     (add)="add.emit()"
     (remove)="remove.emit($event)"
     (weekdayToggle)="weekdayToggle.emit($event)"
   />
 
-  <!-- Close date -->
+  <!-- Auto-close card -->
   <ds-card [accentBorder]="false" [padding]="16">
-    <label class="flex items-center gap-2 cursor-pointer" style="font-size:var(--fs-body-xs);font-weight:var(--weight-bold);color:var(--text-primary)">
-      <input
-        type="checkbox"
-        data-testid="close-date-toggle"
-        [checked]="showCloseDate()"
-        (change)="toggleCloseDate($any($event.target).checked)"
-        class="w-4 h-4"
-        style="accent-color:var(--accent)"
-      />
-      {{ 'project.pollInput.autoClose' | translate }}
-    </label>
-    @if (showCloseDate()) {
-      <div class="flex gap-2 mt-3" data-testid="close-date-input">
-        <ds-input
-          class="flex-1"
-          type="date"
-          [ngModel]="closeDatePart"
-          (ngModelChange)="onCloseDateChange($event, closeTimePart)"
-          name="close-date"
-        />
-        <ds-input
-          class="w-28"
-          type="time"
-          [ngModel]="closeTimePart"
-          (ngModelChange)="onCloseDateChange(closeDatePart, $event)"
-          name="close-time"
-        />
+    @if (!isClosed()) {
+      <!-- Label + chips + custom date — stacked on mobile, one row on desktop -->
+      <div class="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:gap-4 lg:flex-wrap">
+        <p class="label flex-none" style="color:var(--text-muted);letter-spacing:var(--tracking-eyebrow-lg)">
+          {{ 'project.pollInput.autoClose' | translate }}
+        </p>
+        <div class="flex flex-col gap-2.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-[7px]">
+          <!-- Quick preset chips -->
+          <div class="flex flex-wrap gap-[7px]">
+            @for (preset of deadlinePresets; track preset.id) {
+              <button
+                type="button"
+                class="h-[34px] px-3 rounded-[11px] border text-[13px] font-bold cursor-pointer transition-[background,color,border-color] duration-[160ms]"
+                [style.border-color]="selectedDeadline() === preset.id ? '#9fc2cf' : 'rgba(20,24,28,.12)'"
+                [style.background]="selectedDeadline() === preset.id ? 'rgba(31,122,140,.08)' : '#fff'"
+                [style.color]="selectedDeadline() === preset.id ? 'var(--accent)' : 'var(--text-body)'"
+                (click)="onDeadlinePreset(preset.id)"
+              >{{ preset.labelKey | translate }}</button>
+            }
+          </div>
+          <!-- "oder" + datetime-local -->
+          <span class="flex items-center gap-2.5">
+            <span class="text-[12.5px] font-bold flex-none" style="color:var(--text-muted)">
+              {{ 'project.pollInput.autoCloseOr' | translate }}
+            </span>
+            <input
+              type="datetime-local"
+              data-testid="close-date-input"
+              [value]="customEndValue"
+              (change)="onCustomEndChange($any($event.target).value)"
+              [title]="'project.pollInput.autoCloseCustomHint' | translate"
+              class="h-[42px] lg:h-[34px] flex-1 lg:flex-none rounded-[12px] lg:rounded-[11px] border px-3 lg:px-2.5 text-[14px] lg:text-[13px] font-semibold outline-none transition-[border-color,box-shadow] duration-[160ms] focus:shadow-[0_0_0_3px_rgba(31,122,140,.1)]"
+              style="min-width:0;color:var(--text-primary)"
+              [style.border-color]="customEndValue ? '#9fc2cf' : 'rgba(20,24,28,.12)'"
+              [style.background]="customEndValue ? 'rgba(31,122,140,.04)' : '#fdfcfa'"
+            />
+          </span>
+        </div>
+      </div>
+      <!-- Hint (mobile only; desktop relies on title attr) -->
+      <p class="text-[12px] mt-[7px] lg:hidden" style="color:var(--text-muted)">
+        {{ 'project.pollInput.autoCloseCustomHint' | translate }}
+      </p>
+    }
+
+    @if (false) {
+      <!-- Anonymous voting — hidden, keeping code for later -->
+      <button
+        type="button"
+        class="flex items-center gap-3 w-full py-[11px] border-none bg-transparent text-left cursor-pointer"
+        (click)="toggleAnonymousVoting()"
+      >
+        <span class="flex-1 min-w-0">
+          <span class="block text-[14.5px] font-bold" style="color:var(--text-primary)">
+            {{ 'project.pollInput.anonymousVoting' | translate }}
+          </span>
+          <span class="block text-[12.5px] mt-0.5 leading-[1.4] text-wrap-pretty" style="color:var(--text-muted)">
+            {{ 'project.pollInput.anonymousVotingHint' | translate }}
+          </span>
+        </span>
+        <span
+          class="relative flex-none w-11 h-[26px] rounded-full transition-[background] duration-[180ms]"
+          [style.background]="anonymousVoting() ? 'var(--accent)' : 'rgba(20,24,28,.15)'"
+        >
+          <span
+            class="absolute top-[3px] w-5 h-5 rounded-full bg-white shadow-[0_1px_4px_rgba(30,35,40,.28)] transition-[left] duration-200"
+            [style.left]="anonymousVoting() ? '21px' : '3px'"
+          ></span>
+        </span>
+      </button>
+    }
+
+    @if (mode() === 'edit') {
+      <div [class]="isClosed() ? 'pt-0' : 'pt-3 mt-2 border-t border-[rgba(20,24,28,.055)]'">
+        <div class="lg:flex lg:items-center lg:gap-4">
+          <div class="flex-1 min-w-0">
+            <p class="text-[14.5px] lg:text-[14px] font-bold" style="color:var(--text-primary)">
+              @if (isClosed()) {
+                {{ 'project.pollInput.pollClosedAt' | translate: { date: (closedAt() | date:'medium') } }}
+              } @else {
+                {{ 'project.pollInput.closePollNowTitle' | translate }}
+              }
+            </p>
+            <p class="text-[12.5px] mt-0.5 leading-[1.4] text-wrap-pretty" style="color:var(--text-muted)">
+              {{ 'project.pollInput.closePollNowHint' | translate }}
+            </p>
+          </div>
+          @if (isClosed()) {
+            <button
+              type="button"
+              data-testid="reopen-poll-btn"
+              class="w-full lg:w-auto mt-3 lg:mt-0 h-[44px] lg:h-[40px] px-4 rounded-[14px] lg:rounded-[13px] border border-[rgba(20,24,28,.12)] text-[var(--text-body)] text-[14px] lg:text-[13.5px] font-bold cursor-pointer flex items-center justify-center gap-2 transition-[background] duration-[140ms] hover:bg-[#f1eee9]"
+              style="background:#fff"
+              (click)="reopenPoll.emit()"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="8.5"/>
+                <path d="M8.5 12h7"/><path d="M12 8.5v7"/>
+              </svg>
+              <span>{{ 'project.pollInput.reopenPollBtn' | translate }}</span>
+            </button>
+          } @else {
+            <button
+              type="button"
+              data-testid="close-poll-btn"
+              class="w-full lg:w-auto mt-3 lg:mt-0 h-[44px] lg:h-[40px] px-4 rounded-[14px] lg:rounded-[13px] border border-[#f0c3bd] text-[#c1453f] text-[14px] lg:text-[13.5px] font-bold cursor-pointer flex items-center justify-center gap-2 transition-[background] duration-[140ms] hover:bg-[#fbeeed]"
+              style="background:#fdf3f1"
+              (click)="closePollNow.emit()"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="8.5"/>
+                <path d="M8.5 12h7"/>
+              </svg>
+              <span>{{ 'project.pollInput.closePollNowBtn' | translate }}</span>
+            </button>
+          }
+        </div>
       </div>
     }
   </ds-card>
 </div>
 
-<!-- Sticky submit -->
-<div data-testid="submit-bar" class="fixed bottom-0 left-0 w-full z-50 flex justify-center"
-  style="padding:14px 18px 22px;background:linear-gradient(to top,var(--bg-app) 46%,rgba(244,241,236,0) 100%)">
-  <ds-button
-    variant="primary"
-    [fullWidth]="true"
-    [disabled]="!isValid()"
-    [icon]="mode() !== 'edit' ? 'send' : undefined"
-    (click)="formSubmit.emit()"
-  >
-    {{ mode() !== 'edit' ? ('project.pollInput.createPoll' | translate) : ('project.pollInput.updatePoll' | translate) }}
-  </ds-button>
-</div>
+@if (!hideCta()) {
+  <!-- Sticky submit -->
+  <div data-testid="submit-bar" class="fixed bottom-0 left-0 w-full z-50 flex justify-center"
+    style="padding:14px 18px 22px;background:linear-gradient(to top,var(--bg-app) 46%,rgba(244,241,236,0) 100%)">
+    <ds-button
+      variant="primary"
+      [fullWidth]="true"
+      [disabled]="!isValid()"
+      [icon]="mode() !== 'edit' ? 'send' : undefined"
+      (click)="formSubmit.emit()"
+    >
+      {{ mode() !== 'edit' ? ('project.pollInput.createPoll' | translate) : ('project.pollInput.updatePoll' | translate) }}
+    </ds-button>
+  </div>
+}

@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  ElementRef,
   Injector,
   afterNextRender,
   inject,
@@ -20,31 +19,33 @@ import { UrlValidationService } from '../../../../../../../common/utils/url-vali
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { PreviewData, PreviewService } from '../../../../data/preview.service';
 
 @Component({
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
   styleUrl: './option-card.component.css',
-  imports: [FormsModule, DsInputComponent, DsButtonComponent, DsCardComponent, TranslatePipe],
+  imports: [FormsModule, DsInputComponent, DsButtonComponent, DsCardComponent, DsTextareaComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {
   option = input.required<OptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);
+  readonly = input<boolean>(false);
   remove = output<void>();
 
   showDescription = signal(false);
   showLink = signal(false);
   urlError = signal(false);
   previewLoading = signal(false);
+  urlLoading = signal(false);
   previewData = signal<PreviewData | undefined>(undefined);
+  _linkUrl = signal('');
 
-  private descriptionInput =
-    viewChild.required<ElementRef<HTMLInputElement>>('descriptionInput');
-  private linkInput =
-    viewChild.required<ElementRef<HTMLInputElement>>('linkInput');
+  private descriptionInput = viewChild.required<DsTextareaComponent>('descriptionInput');
+  private linkInput = viewChild.required<DsInputComponent>('linkInput');
   private initialUrl?: string = undefined;
 
   private injector = inject(Injector);
@@ -58,6 +59,7 @@ export class OptionCardComponent {
       if (option) {
         this.showDescription.set(!!option.description);
         this.showLink.set(!!option.meta?.url);
+        this._linkUrl.set(option.meta?.url ?? '');
         if (option.meta?.title) {
           this.previewData.set({
             title: option.meta.title,
@@ -73,7 +75,7 @@ export class OptionCardComponent {
 
   toggleDescription() {
     this.showDescription.set(true);
-    afterNextRender(() => this.descriptionInput().nativeElement.focus(), {
+    afterNextRender(() => this.descriptionInput().focus(), {
       injector: this.injector,
     });
   }
@@ -82,16 +84,57 @@ export class OptionCardComponent {
     if (!this.option().meta) {
       this.option().meta = { url: '' };
     }
+    this._linkUrl.set(this.option().meta!.url);
     this.showLink.set(true);
-    afterNextRender(() => this.linkInput().nativeElement.focus(), {
+    afterNextRender(() => this.linkInput().focus(), {
       injector: this.injector,
     });
+  }
+
+  onLinkUrlChange(value: string) {
+    if (!this.option().meta) { this.option().meta = { url: '' }; }
+    this.option().meta!.url = value;
+    this._linkUrl.set(value);
   }
 
   onDescriptionBlur() {
     if (!this.option().description) {
       this.showDescription.set(false);
     }
+  }
+
+  onTitleBlur() {
+    const text = this.option().text.trim();
+    if (!text || !this.urlValidation.isValid(text) || this.urlLoading()) { return; }
+
+    this.urlLoading.set(true);
+    const normalized = this.urlValidation.normalize(text);
+
+    this.previewService
+      .getPreview(normalized)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (preview) => {
+          const entry = this.option();
+          if (preview.title) { entry.text = preview.title; }
+          if (preview.description && !entry.description) {
+            entry.description = preview.description;
+            this.showDescription.set(true);
+          }
+          if (!entry.meta) {
+            entry.meta = { url: normalized };
+          }
+          entry.meta = { url: normalized, ...preview };
+          this._linkUrl.set(normalized);
+          this.previewData.set(preview);
+          this.showLink.set(true);
+          this.initialUrl = normalized;
+          this.urlLoading.set(false);
+        },
+        error: () => {
+          this.urlLoading.set(false);
+        },
+      });
   }
 
   onUrlBlur() {
@@ -111,7 +154,7 @@ export class OptionCardComponent {
     const normalized = this.urlValidation.normalize(url);
     if (normalized !== url) {
       this.option().meta!.url = normalized;
-      this.linkInput().nativeElement.value = normalized;
+      this._linkUrl.set(normalized);
     }
 
     if (normalized === this.initialUrl) {

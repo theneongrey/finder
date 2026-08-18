@@ -21,6 +21,7 @@ export class OptionCardTimeComponent {
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);
+  readonly = input<boolean>(false);
   remove = output<void>();
 
   get timeValue(): string {

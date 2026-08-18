@@ -22,6 +22,7 @@ export const PollListStore = signalStore(
   withState({
     standalonePolls: [] as StandalonePollOverview[],
     isLoading: true,
+    lastCreatedProject: undefined as StandalonePollOverview | undefined,
   }),
   withProps(() => ({
     loggerService: inject(LoggerService),
@@ -163,8 +164,8 @@ export const PollListStore = signalStore(
                 next: (responsePoll) => {
                   patchState(store, {
                     standalonePolls: [responsePoll, ...store.standalonePolls()],
+                    lastCreatedProject: responsePoll,
                   });
-                  store.router.navigate(['/polls']);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -177,6 +178,10 @@ export const PollListStore = signalStore(
         ),
       ),
     ),
+
+    clearCreatedProject(): void {
+      patchState(store, { lastCreatedProject: undefined });
+    },
   })),
   withReducer(
     on(

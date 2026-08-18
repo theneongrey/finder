@@ -106,7 +106,7 @@ public static class ProjectApi
                     if (request.CloseDate.HasValue && request.CloseDate.Value <= DateTime.UtcNow)
                         return Results.BadRequest("closeDate must be in the future");
                     var result = await projectService.UpdatePoll(slug, request.Name, request.Description, request.CloseDate);
-                    return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
+                    return !result.IsSuccess ? Results.StatusCode(result.Code) : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
 
@@ -125,7 +125,7 @@ public static class ProjectApi
                 {
                     var result = await projectService.AddOptionToPoll(request);
                     return !result.IsSuccess
-                        ? Results.BadRequest()
+                        ? Results.StatusCode(result.Code)
                         : Results.Ok(result.Payload!.ToProjectResponseOption(userService.GetUserId()));
                 })
             .RequireAuthorization();
@@ -136,7 +136,7 @@ public static class ProjectApi
                 {
                     var result = await projectService.UpdateOption(slug, request);
                     return !result.IsSuccess
-                        ? Results.NotFound()
+                        ? Results.StatusCode(result.Code)
                         : Results.Ok(result.Payload!.ToPollResponseOption(userService.GetUserId()));
                 })
             .RequireAuthorization();
@@ -146,7 +146,7 @@ public static class ProjectApi
                 async (string slug, ProjectService projectService) =>
                 {
                     var result = await projectService.DeleteOption(slug);
-                    return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
+                    return !result.IsSuccess ? Results.StatusCode(result.Code) : Results.NoContent();
                 })
             .RequireAuthorization();
 

@@ -1,19 +1,51 @@
-<div style="display:flex;gap:7px;overflow-x:auto;padding:1px 2px 3px">
-  @for (t of types; track t.type) {
+<ds-card [accentBorder]="false" [padding]="16">
+  <p class="label" style="color:var(--text-muted);letter-spacing:var(--tracking-eyebrow-lg)">
+    {{ 'project.pollInput.date.appointmentTypeLabel' | translate }}
+  </p>
+  <div style="display:flex;flex-wrap:wrap;gap:7px;padding:1px 0;margin-top:11px">
+    @for (t of types; track t.type) {
+      <button
+        type="button"
+        class="flex items-center gap-[6px] cursor-pointer"
+        style="height:38px;padding:0 13px;border-radius:12px;border-width:1.5px;border-style:solid;font-size:var(--fs-ui);font-weight:var(--weight-bold);white-space:nowrap;transition:border-color var(--duration-standard) ease,background var(--duration-standard) ease,color var(--duration-standard) ease"
+        [style.border-color]="t.type === selectedType() ? 'var(--accent-border)' : 'var(--border-hairline-strong)'"
+        [style.background]="t.type === selectedType() ? 'var(--accent-tint)' : 'var(--bg-sheet)'"
+        [style.color]="t.type === selectedType() ? 'var(--accent)' : 'var(--text-secondary)'"
+        [attr.data-testid]="'appt-type-' + t.type"
+        (click)="typeSelected.emit(t.type)"
+      >
+        @if (t.type === selectedType()) {
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none"></span>
+        }
+        {{ t.labelKey | translate }}
+      </button>
+    }
+  </div>
+
+  @if (canHaveTime()) {
     <button
       type="button"
-      class="flex items-center gap-[6px] cursor-pointer"
-      style="flex-shrink:0;height:38px;padding:0 13px;border-radius:12px;border-width:1.5px;border-style:solid;font-size:var(--fs-ui);font-weight:var(--weight-bold);white-space:nowrap;transition:border-color var(--duration-standard) ease,background var(--duration-standard) ease,color var(--duration-standard) ease"
-      [style.border-color]="t.type === selectedType() ? 'var(--accent-border)' : 'var(--border-hairline-strong)'"
-      [style.background]="t.type === selectedType() ? 'var(--accent-tint)' : 'var(--bg-sheet)'"
-      [style.color]="t.type === selectedType() ? 'var(--accent)' : 'var(--text-secondary)'"
-      [attr.data-testid]="'appt-type-' + t.type"
-      (click)="typeSelected.emit(t.type)"
+      class="flex items-center gap-3 w-full text-left cursor-pointer"
+      style="margin-top:10px;padding:12px 14px;border-radius:14px;border:1px solid rgba(20,24,28,.06);background:#fdfcfa"
+      (click)="showTimeChange.emit(!showTime())"
     >
-      @if (t.type === selectedType()) {
-        <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none"></span>
-      }
-      {{ t.labelKey | translate }}
+      <span class="flex-1 min-w-0">
+        <span class="block text-[14px] font-bold" style="color:var(--text-primary)">
+          {{ 'project.pollInput.date.timePerOption' | translate }}
+        </span>
+        <span class="block text-[12.5px] mt-0.5" style="color:var(--text-muted)">
+          {{ 'project.pollInput.date.timePerOptionHint' | translate }}
+        </span>
+      </span>
+      <span
+        class="relative flex-none w-11 h-[26px] rounded-full transition-[background] duration-[180ms]"
+        [style.background]="showTime() ? 'var(--accent)' : 'rgba(20,24,28,.15)'"
+      >
+        <span
+          class="absolute top-[3px] w-5 h-5 rounded-full bg-white shadow-[0_1px_4px_rgba(30,35,40,.28)] transition-[left] duration-200"
+          [style.left]="showTime() ? '21px' : '3px'"
+        ></span>
+      </span>
     </button>
   }
-</div>
+</ds-card>

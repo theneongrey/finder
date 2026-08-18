@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionType } from '../../../models/poll-detail.model';
 
@@ -12,5 +12,8 @@ import { OptionType } from '../../../models/poll-detail.model';
 })
 export class PollTypeSelectionComponent {
   readonly OptionType = OptionType;
+
+  selectedType = input<OptionType | undefined>(undefined);
+  layout = input<'list' | 'grid'>('list');
   typeSelected = output<OptionType>();
 }

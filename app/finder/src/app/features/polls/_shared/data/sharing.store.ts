@@ -53,6 +53,28 @@ export const SharingStore = signalStore(
       ),
     ),
 
+    loadGeneralContacts: rxMethod<void>(
+      pipe(
+        switchMap(() =>
+          store.permissionService.getContactsGeneral().pipe(
+            tapResponse({
+              next: (sharingContacts) => {
+                patchState(store, {
+                  sharingContactsSuggestion: sharingContacts,
+                });
+              },
+              error: (error) => {
+                store.loggerService.log(
+                  '[SharingStore] Error loading general contacts',
+                  error,
+                );
+              },
+            }),
+          ),
+        ),
+      ),
+    ),
+
     share: rxMethod<{
       email: string;
       permissionType: number;

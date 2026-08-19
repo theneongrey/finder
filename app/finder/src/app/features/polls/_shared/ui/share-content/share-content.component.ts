@@ -89,9 +89,7 @@ export class ShareContentComponent {
       this.selectedVisibility.set(this.visibilityType());
     });
 
-    effect(() => {
-      this.sharingStore.loadContacts(this.projectId());
-    });
+    this.sharingStore.loadGeneralContacts();
 
     let prevProjectId: string | undefined;
     effect(() => {

@@ -27,19 +27,17 @@
               <ds-card [accentBorder]="false" [padding]="14">
                 <div class="flex gap-1">
                   @for (day of weekdayButtons; track day.value) {
-                    <button
-                      type="button"
-                      class="flex-1 py-[6px] px-0.5 rounded-[8px] border-0 font-bold text-[length:var(--fs-caption-sm)] transition-[background,color]"
-                      [class.cursor-pointer]="!readonly()"
-                      [class.cursor-default]="readonly()"
-                      [ngClass]="selectedWeekdays().includes(day.value) ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-panel)] text-[color:var(--text-secondary)]'"
-                      [disabled]="readonly()"
-                      (click)="!readonly() && weekdayToggle.emit(day.value)"
-                      [attr.aria-label]="day.ariaLabel"
-                      [attr.aria-pressed]="selectedWeekdays().includes(day.value)"
-                    >
-                      {{ day.label }}
-                    </button>
+                    <div class="flex-1">
+                      <ds-button
+                        size="sm"
+                        [fullWidth]="true"
+                        [variant]="selectedWeekdays().includes(day.value) ? 'soft' : 'neutral'"
+                        [disabled]="readonly()"
+                        [attr.aria-label]="day.ariaLabel"
+                        [attr.aria-pressed]="selectedWeekdays().includes(day.value)"
+                        (click)="weekdayToggle.emit(day.value)"
+                      >{{ day.label }}</ds-button>
+                    </div>
                   }
                 </div>
               </ds-card>
@@ -115,7 +113,7 @@
 
   } @else {
     <div class="flex justify-between items-center px-1">
-      <span style="font-size:var(--fs-body-xs);font-weight:var(--weight-bold);color:var(--text-primary)">
+      <span class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]">
         {{ titleKey() | translate }}
       </span>
       <span class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]">

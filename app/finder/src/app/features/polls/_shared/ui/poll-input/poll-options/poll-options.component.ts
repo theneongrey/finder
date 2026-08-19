@@ -8,8 +8,8 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
 import { OptionCardComponent } from './option-card/option-card.component';
@@ -46,7 +46,7 @@ export type { DateOptionEntry, DateOptionType };
   templateUrl: './poll-options.component.html',
   styleUrl: './poll-options.component.css',
   imports: [
-    NgClass,
+    DsButtonComponent,
     DsCardComponent,
     DsEmptyStateButtonComponent,
     TranslatePipe,

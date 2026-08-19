@@ -24,8 +24,8 @@ export class PollTypeButtonComponent {
   protected readonly isSelected = computed(() => this.selectedType() === this.type());
   protected readonly btnClass = computed(() => {
     let cls = 'type-btn';
-    if (this.isSelected()) cls += ' type-btn--selected';
-    if (this.layout() === 'grid') cls += ' type-btn--grid';
+    if (this.isSelected()) { cls += ' type-btn--selected'; }
+    if (this.layout() === 'grid') { cls += ' type-btn--grid'; }
     return cls;
   });
 }

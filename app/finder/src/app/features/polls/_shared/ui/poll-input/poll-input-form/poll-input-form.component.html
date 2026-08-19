@@ -1,62 +1,13 @@
 <div class="flex flex-col gap-4 pt-5 pb-32 lg:pb-6 max-w-[800px] w-full">
+  <app-poll-question-card
+    [mode]="mode()"
+    [question]="question()"
+    (questionChange)="questionChange.emit($event)"
+    [description]="description()"
+    (descriptionChange)="descriptionChange.emit($event)"
+    [isClosed]="isClosed()"
+  />
 
-  <!-- Closed poll info banner -->
-  @if (isClosed() && mode() === 'edit') {
-    <div class="flex items-start gap-3 px-4 py-3 rounded-[14px] bg-[rgba(20,24,28,.05)] border border-[rgba(20,24,28,.08)]">
-      <span class="mt-[2px]"><ds-icon name="info" [size]="16" [color]="'var(--text-muted)'" /></span>
-      <p class="text-[13.5px] leading-[1.45] text-[color:var(--text-muted)]">
-        {{ 'project.pollInput.closedPollEditInfo' | translate }}
-      </p>
-    </div>
-  }
-
-  <!-- Question card -->
-  <ds-card [accentBorder]="false" [padding]="16">
-    <p class="label text-[color:var(--text-muted)] tracking-[var(--tracking-eyebrow-lg)]">
-      {{ 'project.pollInput.yesNo.question' | translate }}
-    </p>
-    <ds-input
-      class="block mt-2"
-      data-testid="question-input"
-      [placeholder]="'project.pollInput.yesNo.questionPlaceholder' | translate"
-      [ngModel]="question()"
-      (ngModelChange)="questionChange.emit($event)"
-      name="question"
-      [readonly]="isClosed()"
-    />
-
-    @if (showDescription()) {
-      <div class="mt-3">
-        <div class="flex items-center justify-between mb-[7px]">
-          <p class="label text-[color:var(--text-muted)] tracking-[var(--tracking-eyebrow-lg)]">
-            {{ 'project.pollInput.yesNo.description' | translate }}
-          </p>
-          <ds-button [size]="24" variant="ghost" icon="close" (click)="onDescriptionBlur()" />
-        </div>
-        <ds-textarea
-          #descriptionTextarea
-          name="description"
-          [autoResize]="true"
-          [maxlength]="200"
-          [placeholder]="'project.pollInput.yesNo.descriptionPlaceholder' | translate"
-          [ngModel]="description()"
-          (ngModelChange)="descriptionChange.emit($event)"
-          (blurred)="onDescriptionBlur()"
-          [disabled]="isClosed()"
-        />
-      </div>
-    }
-
-    @if (!showDescription() && !isClosed()) {
-      <div class="mt-2">
-        <ds-button variant="ghost" size="sm" icon="plus" (click)="toggleDescription()">
-          {{ 'project.pollInput.addDescriptionCta' | translate }}
-        </ds-button>
-      </div>
-    }
-  </ds-card>
-
-  <!-- Options -->
   <app-poll-options
     [titleKey]="
       optionType() === OptionType.Date
@@ -81,119 +32,18 @@
     (weekdayToggle)="weekdayToggle.emit($event)"
   />
 
-  <!-- Auto-close card -->
-  <ds-card [accentBorder]="false" [padding]="16">
-    @if (!isClosed()) {
-      <!-- Label + chips + custom date — stacked on mobile, one row on desktop -->
-      <div class="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:gap-4 lg:flex-wrap">
-        <p class="label flex-none text-[color:var(--text-muted)] tracking-[var(--tracking-eyebrow-lg)]">
-          {{ 'project.pollInput.autoClose' | translate }}
-        </p>
-        <div class="flex flex-col gap-2.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-[7px]">
-          <!-- Quick preset chips -->
-          <div class="flex flex-wrap gap-[7px]">
-            @for (preset of deadlinePresets; track preset.id) {
-              <button
-                type="button"
-                class="h-[34px] px-3 rounded-[11px] border text-[13px] font-bold cursor-pointer transition-[background,color,border-color] duration-[160ms]"
-                [ngClass]="selectedDeadline() === preset.id
-                  ? 'border-[#9fc2cf] bg-[rgba(31,122,140,.08)] text-[color:var(--accent)]'
-                  : 'border-[rgba(20,24,28,.12)] bg-white text-[color:var(--text-body)]'"
-                (click)="onDeadlinePreset(preset.id)"
-              >{{ preset.labelKey | translate }}</button>
-            }
-          </div>
-          <!-- "oder" + datetime-local -->
-          <span class="flex items-center gap-2.5">
-            <span class="text-[12.5px] font-bold flex-none text-[color:var(--text-muted)]">
-              {{ 'project.pollInput.autoCloseOr' | translate }}
-            </span>
-            <ds-input
-              type="datetime-local"
-              name="close-date"
-              data-testid="close-date-input"
-              [ngModel]="customEndValue"
-              (ngModelChange)="onCustomEndChange($event)"
-              [title]="'project.pollInput.autoCloseCustomHint' | translate"
-              [background]="customEndValue ? 'rgba(31,122,140,.04)' : '#fdfcfa'"
-              class="flex-1 lg:flex-none"
-            />
-          </span>
-        </div>
-      </div>
-      <!-- Hint (mobile only; desktop relies on title attr) -->
-      <p class="text-[12px] mt-[7px] lg:hidden text-[color:var(--text-muted)]">
-        {{ 'project.pollInput.autoCloseCustomHint' | translate }}
-      </p>
-    }
-
-    @if (false) {
-      <!-- Anonymous voting — hidden, keeping code for later -->
-      <button
-        type="button"
-        class="flex items-center gap-3 w-full py-[11px] border-none bg-transparent text-left cursor-pointer"
-        (click)="toggleAnonymousVoting()"
-      >
-        <span class="flex-1 min-w-0">
-          <span class="block text-[14.5px] font-bold text-[color:var(--text-primary)]">
-            {{ 'project.pollInput.anonymousVoting' | translate }}
-          </span>
-          <span class="block text-[12.5px] mt-0.5 leading-[1.4] text-wrap-pretty text-[color:var(--text-muted)]">
-            {{ 'project.pollInput.anonymousVotingHint' | translate }}
-          </span>
-        </span>
-        <span
-          class="relative flex-none w-11 h-[26px] rounded-full transition-[background] duration-[180ms]"
-          [class.bg-[var(--accent)]]="anonymousVoting()"
-          [class.bg-[rgba(20,24,28,.15)]]="!anonymousVoting()"
-        >
-          <span
-            class="absolute top-[3px] w-5 h-5 rounded-full bg-white shadow-[0_1px_4px_rgba(30,35,40,.28)] transition-[left] duration-200"
-            [class.left-[21px]]="anonymousVoting()"
-            [class.left-[3px]]="!anonymousVoting()"
-          ></span>
-        </span>
-      </button>
-    }
-
-    @if (mode() === 'edit') {
-      <div [class]="isClosed() ? 'pt-0' : 'pt-3 mt-2 border-t border-[rgba(20,24,28,.055)]'">
-        <div class="lg:flex lg:items-center lg:gap-4">
-          <div class="flex-1 min-w-0">
-            <p class="text-[14.5px] lg:text-[14px] font-bold text-[color:var(--text-primary)]">
-              @if (isClosed()) {
-                {{ 'project.pollInput.pollClosedAt' | translate: { date: (closedAt() | date:'medium') } }}
-              } @else {
-                {{ 'project.pollInput.closePollNowTitle' | translate }}
-              }
-            </p>
-            <p class="text-[12.5px] mt-0.5 leading-[1.4] text-wrap-pretty text-[color:var(--text-muted)]">
-              {{ 'project.pollInput.closePollNowHint' | translate }}
-            </p>
-          </div>
-          @if (isClosed()) {
-            <ds-button
-              variant="neutral"
-              icon="refresh"
-              data-testid="reopen-poll-btn"
-              (click)="reopenPoll.emit()"
-            >{{ 'project.pollInput.reopenPollBtn' | translate }}</ds-button>
-          } @else {
-            <ds-button
-              variant="danger"
-              icon="circle-minus"
-              data-testid="close-poll-btn"
-              (click)="closePollNow.emit()"
-            >{{ 'project.pollInput.closePollNowBtn' | translate }}</ds-button>
-          }
-        </div>
-      </div>
-    }
-  </ds-card>
+  <app-poll-close-settings
+    [mode]="mode()"
+    [closeDate]="closeDate()"
+    (closeDateChange)="closeDateChange.emit($event)"
+    [isClosed]="isClosed()"
+    [closedAt]="closedAt()"
+    (closePollNow)="closePollNow.emit()"
+    (reopenPoll)="reopenPoll.emit()"
+  />
 </div>
 
 @if (!hideCta()) {
-  <!-- Sticky submit -->
   <div data-testid="submit-bar" class="fixed bottom-0 left-0 w-full z-50 flex justify-center pt-[14px] px-[18px] pb-[22px] bg-[linear-gradient(to_top,var(--bg-app)_46%,rgba(244,241,236,0)_100%)]">
     <ds-button
       variant="primary"

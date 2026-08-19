@@ -1,3 +1,8 @@
+---
+name: wiki
+description: Open Knowledge Format (OKF) wiki maintenance, relative markdown linking, and ingest/query/lint workflows. Use when maintaining or querying the Votean project wiki.
+---
+
 # Wiki Skill
 
 You maintain the Votean project wiki at `wiki/votean-wiki/`. The wiki is an LLM-maintained knowledge base modeled after the Karpathy LLM-Wiki pattern and stored in Open Knowledge Format (OKF).

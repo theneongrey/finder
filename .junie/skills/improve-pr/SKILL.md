@@ -1,3 +1,8 @@
+---
+name: improve-pr
+description: Categorize pull request review feedback (Apply / Argue / Explain) and execute the resulting changes and replies. Use when the user asks to respond to or improve a PR based on review comments.
+---
+
 # Improve PR Skill
 
 Read review comments on an open pull request, apply requested changes, argue against ones that don't make sense, and answer explanation requests — all with a plan shown to the user before any code is touched.

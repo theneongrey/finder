@@ -1,3 +1,8 @@
+---
+name: implement-issue
+description: Implement a GitHub issue or sub-issue end-to-end (plan, branch, code, commits, pull request). Use when the user asks to implement, work on, or open a PR for an issue.
+---
+
 # Implement Issue Skill
 
 Implement a GitHub issue or sub-issue end-to-end: plan → branch → code → commits → pull request.

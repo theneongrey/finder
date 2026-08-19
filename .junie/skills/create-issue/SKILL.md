@@ -1,3 +1,8 @@
+---
+name: create-issue
+description: Author or update GitHub issues structured as implementation plans with sub-issue breakdowns. Use when the user asks to create, write, draft, or update an issue or its sub-issues.
+---
+
 # Create / Update Issue Skill
 
 Create or update GitHub issues, structured as implementation plans with sub-issues where appropriate.

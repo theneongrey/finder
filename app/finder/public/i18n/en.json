@@ -163,6 +163,7 @@
       "stepOptions": "Options",
       "stepShare": "Share",
       "stepOptionsAndShare": "Options & Share",
+      "mobileStepSubtitle": "Step {{step}} of {{total}} · {{name}}",
       "webStep1Title": "Step 1 of 3: Choose the poll type",
       "webStep2TitleGeneric": "Step 2 of 3: Fill in the details",
       "webStep2TitleDate": "Step 2 of 3: Appointment options",

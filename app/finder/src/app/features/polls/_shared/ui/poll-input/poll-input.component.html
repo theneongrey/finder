@@ -252,23 +252,13 @@
 
     <!-- Sticky CTA -->
     <div class="fixed left-0 right-0 bottom-0 z-10 px-5 pt-3.5 pb-[22px] bg-gradient-to-t from-[var(--bg-page)] from-46% to-transparent">
-      @if (mode() === 'edit') {
-        <ds-button
-          variant="primary"
-          [fullWidth]="true"
-          [disabled]="!canProceed"
-          data-testid="wizard-cta"
-          (click)="onCta()"
-        >{{ ctaLabel() }}</ds-button>
-      } @else {
-        <ds-button
-          variant="primary"
-          [fullWidth]="true"
-          [disabled]="!canProceed"
-          data-testid="wizard-cta"
-          (click)="onCta()"
-        >{{ ctaLabel() }}</ds-button>
-      }
+      <ds-button
+        variant="primary"
+        [fullWidth]="true"
+        [disabled]="!canProceed"
+        data-testid="wizard-cta"
+        (click)="onCta()"
+      >{{ ctaLabel() }}</ds-button>
     </div>
 
   }

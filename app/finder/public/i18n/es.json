@@ -163,6 +163,7 @@
       "stepOptions": "Opciones",
       "stepShare": "Compartir",
       "stepOptionsAndShare": "Opciones y compartir",
+      "mobileStepSubtitle": "Paso {{step}} de {{total}} · {{name}}",
       "webStep1Title": "Paso 1 de 3: Elige el tipo de encuesta",
       "webStep2TitleGeneric": "Paso 2 de 3: Completa los detalles",
       "webStep2TitleDate": "Paso 2 de 3: Opciones de cita",

@@ -36,11 +36,11 @@
       </div>
       @if (subtitle()) {
         <span class="title-bar__sep" aria-hidden="true"></span>
-        <a
+        <button
           class="title-bar__web-label title-bar__web-label--breadcrumb"
           (click)="onBack()"
-          style="cursor:pointer"
-          >{{ subtitle() }}</a
+          style="cursor:pointer;background:none;border:none;padding:0"
+          >{{ subtitle() }}</button
         >
         <span class="title-bar__sep" aria-hidden="true"></span>
         <span class="title-bar__web-label">{{ title() }}</span>

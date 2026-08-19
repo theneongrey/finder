@@ -323,7 +323,6 @@ export class PollInputComponent {
       const mode = this.mode();
       if (mode !== 'standalone' && mode !== 'edit') { return; }
       const step = this.wizardStep();
-      const type = this.optionType();
       const desktop = this.isDesktop();
 
       if (desktop) {
@@ -355,7 +354,9 @@ export class PollInputComponent {
       ];
 
       this.titleService.setTitle(titles[step - 1]);
-      this.titleService.setSubtitle(`Schritt ${step} von 3 · ${stepNames[step - 1]}`);
+      this.titleService.setSubtitle(
+        this.translateService.instant('project.pollInput.mobileStepSubtitle', { step, total: 3, name: stepNames[step - 1] }),
+      );
       this.titleService.setProgress(Math.round((step / 3) * 100));
       this.titleService.setBackFn(
         mode === 'standalone' && step === 2 ? () => this.prevStep() : undefined,

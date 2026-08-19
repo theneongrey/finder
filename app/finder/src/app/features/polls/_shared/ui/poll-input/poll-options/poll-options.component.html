@@ -12,10 +12,10 @@
 
     @if (appointmentDateType()) {
       <div class="flex justify-between items-center px-1 mt-4">
-        <span style="font-size:var(--fs-body-xs);font-weight:var(--weight-bold);color:var(--text-primary)">
+        <span class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]">
           {{ titleKey() | translate }}
         </span>
-        <span style="font-size:var(--fs-caption);color:var(--text-muted)">
+        <span class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]">
           {{ subtitleKey() | translate }}
         </span>
       </div>
@@ -29,12 +29,10 @@
                   @for (day of weekdayButtons; track day.value) {
                     <button
                       type="button"
-                      class="flex-1"
+                      class="flex-1 py-[6px] px-0.5 rounded-[8px] border-0 font-bold text-[length:var(--fs-caption-sm)] transition-[background,color]"
                       [class.cursor-pointer]="!readonly()"
                       [class.cursor-default]="readonly()"
-                      style="padding:6px 2px;border-radius:8px;font-size:var(--fs-caption-sm);font-weight:var(--weight-bold);border:none;transition:background var(--duration-fast) ease,color var(--duration-fast) ease"
-                      [style.background]="selectedWeekdays().includes(day.value) ? 'var(--accent)' : 'var(--bg-panel)'"
-                      [style.color]="selectedWeekdays().includes(day.value) ? 'white' : 'var(--text-secondary)'"
+                      [ngClass]="selectedWeekdays().includes(day.value) ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-panel)] text-[color:var(--text-secondary)]'"
                       [disabled]="readonly()"
                       (click)="!readonly() && weekdayToggle.emit(day.value)"
                       [attr.aria-label]="day.ariaLabel"
@@ -120,7 +118,7 @@
       <span style="font-size:var(--fs-body-xs);font-weight:var(--weight-bold);color:var(--text-primary)">
         {{ titleKey() | translate }}
       </span>
-      <span style="font-size:var(--fs-caption);color:var(--text-muted)">
+      <span class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]">
         {{ subtitleKey() | translate }}
       </span>
     </div>

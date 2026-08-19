@@ -1,0 +1,36 @@
+<button
+  type="button"
+  [class]="btnClass()"
+  [attr.data-testid]="testId()"
+  (click)="typeSelected.emit(type())"
+>
+  @if (layout() === 'grid') {
+    <span class="flex items-center justify-between w-full">
+      <span class="type-icon" [class.type-icon--selected]="isSelected()">
+        <ds-icon [name]="iconName()" [size]="25" />
+      </span>
+      <span class="type-radio" [class.type-radio--selected]="isSelected()">
+        @if (isSelected()) {
+          <ds-icon name="check" [size]="13" [color]="'#fff'" />
+        }
+      </span>
+    </span>
+    <span>
+      <span class="type-name">{{ nameKey() | translate }}</span>
+      <span class="type-desc type-desc--grid">{{ descKey() | translate }}</span>
+    </span>
+  } @else {
+    <span class="type-icon" [class.type-icon--selected]="isSelected()">
+      <ds-icon [name]="iconName()" [size]="22" />
+    </span>
+    <span class="flex flex-col flex-1 min-w-0 text-left">
+      <span class="type-name">{{ nameKey() | translate }}</span>
+      <span class="type-desc">{{ descKey() | translate }}</span>
+    </span>
+    <span class="type-radio" [class.type-radio--selected]="isSelected()">
+      @if (isSelected()) {
+        <ds-icon name="check" [size]="12" [color]="'#fff'" />
+      }
+    </span>
+  }
+</button>

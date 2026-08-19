@@ -7,6 +7,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
@@ -17,7 +18,7 @@ import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../..
 @Component({
   selector: 'app-option-card-weekday',
   templateUrl: './option-card-weekday.component.html',
-  imports: [FormsModule, DsButtonComponent, DsInputComponent, DsCardComponent, TranslatePipe],
+  imports: [NgClass, FormsModule, DsButtonComponent, DsInputComponent, DsCardComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardWeekdayComponent {

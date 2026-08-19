@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionEntry } from '../poll-options.component';
 import { UrlValidationService } from '../../../../../../../common/utils/url-validation.service';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
@@ -26,7 +27,7 @@ import { PreviewData, PreviewService } from '../../../../data/preview.service';
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
   styleUrl: './option-card.component.css',
-  imports: [FormsModule, DsInputComponent, DsButtonComponent, DsCardComponent, DsTextareaComponent, TranslatePipe],
+  imports: [FormsModule, DsIconComponent, DsInputComponent, DsButtonComponent, DsCardComponent, DsTextareaComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {

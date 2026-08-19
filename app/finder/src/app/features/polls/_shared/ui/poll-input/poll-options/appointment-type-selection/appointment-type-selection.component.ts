@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DateOptionType } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-appointment-type-selection',
   templateUrl: './appointment-type-selection.component.html',
-  imports: [TranslatePipe, DsCardComponent],
+  imports: [TranslatePipe, DsButtonComponent, DsCardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppointmentTypeSelectionComponent {

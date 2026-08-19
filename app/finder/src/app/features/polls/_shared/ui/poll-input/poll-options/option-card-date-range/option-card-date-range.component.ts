@@ -11,6 +11,7 @@ import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
@@ -18,7 +19,7 @@ import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../..
 @Component({
   selector: 'app-option-card-date-range',
   templateUrl: './option-card-date-range.component.html',
-  imports: [FormsModule, DsButtonComponent, DsInputComponent, DsCardComponent, TranslatePipe],
+  imports: [FormsModule, DsButtonComponent, DsIconComponent, DsInputComponent, DsCardComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateRangeComponent {

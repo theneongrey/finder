@@ -14,6 +14,7 @@
       [style.background]="background()"
       [style.paddingRight]="loading() ? '36px' : null"
       [class.ds-input--error]="!!error()"
+      [attr.title]="title() ?? null"
       [class.ds-input--readonly]="readonly()"
       class="ds-input"
       (input)="handleInput($event)"

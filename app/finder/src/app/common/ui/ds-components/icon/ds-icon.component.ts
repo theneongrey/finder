@@ -106,6 +106,34 @@ const ICONS: Record<string, IconDef> = {
     rects: [{ x: 3, y: 5.5, width: 18, height: 13, rx: 3 }],
     paths: [{ d: 'M4 8l8 5 8-5' }],
   },
+  'circle-minus': {
+    strokeWidth: 2.2,
+    circles: [{ cx: 12, cy: 12, r: 8.5 }],
+    paths: [{ d: 'M8.5 12h7' }],
+  },
+  paragraph: {
+    strokeWidth: 2.1,
+    paths: [{ d: 'M4 6h16' }, { d: 'M4 12h16' }, { d: 'M4 18h10' }],
+  },
+  link: {
+    strokeWidth: 2.1,
+    paths: [
+      { d: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71' },
+      { d: 'M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71' },
+    ],
+  },
+  star: {
+    strokeWidth: 2,
+    paths: [{ d: 'M12 3.8l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.9l5.9-.8z' }],
+  },
+  warning: {
+    strokeWidth: 2.2,
+    paths: [
+      { d: 'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z' },
+      { d: 'M12 9v4' },
+      { d: 'M12 17v.01' },
+    ],
+  },
   info: {
     strokeWidth: 2.2,
     circles: [{ cx: 12, cy: 12, r: 8.6 }],

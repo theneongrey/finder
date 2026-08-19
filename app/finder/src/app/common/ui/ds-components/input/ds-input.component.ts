@@ -26,7 +26,8 @@ import { HlmInput } from '@spartan-ng/helm/input';
   ],
 })
 export class DsInputComponent implements ControlValueAccessor {
-  type = input<'text' | 'date' | 'time'>('text');
+  type = input<'text' | 'date' | 'time' | 'datetime-local'>('text');
+  title = input<string | undefined>(undefined);
   background = input<string>('var(--bg-input)');
   label = input<string | undefined>(undefined);
   error = input<string | undefined>(undefined);

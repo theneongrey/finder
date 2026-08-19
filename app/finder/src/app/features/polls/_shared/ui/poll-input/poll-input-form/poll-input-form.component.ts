@@ -10,7 +10,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionType } from '../../../models/poll-detail.model';
@@ -20,6 +20,7 @@ import {
   DateOptionEntry,
   DateOptionType,
 } from '../poll-options/poll-options.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
@@ -32,8 +33,10 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
   templateUrl: './poll-input-form.component.html',
   imports: [
     DatePipe,
+    NgClass,
     FormsModule,
     TranslatePipe,
+    DsIconComponent,
     DsTextareaComponent,
     DsInputComponent,
     DsButtonComponent,

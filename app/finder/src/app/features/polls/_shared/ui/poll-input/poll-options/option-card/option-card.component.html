@@ -18,9 +18,7 @@
     <div class="ml-0.5">
       @if (showDescription()) {
         <div class="flex items-start gap-2 mt-1">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:13px">
-            <path d="M4 6h16M4 12h16M4 18h10"/>
-          </svg>
+          <span class="mt-[13px]"><ds-icon name="paragraph" [size]="13" [color]="'var(--accent)'" /></span>
           <ds-textarea
             #descriptionInput
             class="flex-1"
@@ -38,10 +36,7 @@
       @if (showLink()) {
         <div class="flex flex-col gap-1 mt-1">
           <div class="flex items-center gap-2">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="flex:none">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-            </svg>
+            <ds-icon name="link" [size]="13" [color]="'var(--accent)'" />
             <ds-input
               #linkInput
               class="flex-1"
@@ -54,10 +49,8 @@
             />
           </div>
           @if (urlError()) {
-            <p class="flex items-center gap-1 ml-5" style="margin:0;font-size:var(--fs-caption);color:var(--color-danger,#ef4444)">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="flex:none">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-              </svg>
+            <p class="flex items-center gap-1 m-0 text-[length:var(--fs-caption)] text-[color:var(--color-danger,#ef4444)]">
+              <ds-icon name="warning" [size]="12" />
               {{ 'project.pollInput.yesNo.urlError' | translate }}
             </p>
           }
@@ -67,7 +60,7 @@
             </div>
           }
           @if (previewData() && !previewLoading()) {
-            <div class="flex gap-3 mt-1 p-2 rounded-lg" style="background:var(--bg-panel);border:1px solid var(--border-hairline-soft)">
+            <div class="flex gap-3 mt-1 p-2 rounded-lg bg-[var(--bg-panel)] border border-[var(--border-hairline-soft)]">
               @if (previewData()!.imageUrl) {
                 <img
                   [src]="previewData()!.imageUrl"
@@ -77,13 +70,13 @@
               }
               <div class="flex flex-col gap-0.5 min-w-0 justify-center">
                 @if (previewData()!.title) {
-                  <span class="truncate" style="font-size:var(--fs-ui-sm);font-weight:var(--weight-bold);color:var(--text-primary)">{{ previewData()!.title }}</span>
+                  <span class="truncate text-[length:var(--fs-ui-sm)] font-bold text-[color:var(--text-primary)]">{{ previewData()!.title }}</span>
                 }
                 @if (previewData()!.description) {
-                  <span class="line-clamp-2" style="font-size:var(--fs-caption);color:var(--text-secondary)">{{ previewData()!.description }}</span>
+                  <span class="line-clamp-2 text-[length:var(--fs-caption)] text-[color:var(--text-secondary)]">{{ previewData()!.description }}</span>
                 }
                 @if (previewData()!.siteName) {
-                  <span style="font-size:var(--fs-caption-sm);color:var(--text-muted)">{{ previewData()!.siteName }}</span>
+                  <span class="text-[length:var(--fs-caption-sm)] text-[color:var(--text-muted)]">{{ previewData()!.siteName }}</span>
                 }
               </div>
             </div>
@@ -94,34 +87,16 @@
       @if (!readonly() && (!showDescription() || !showLink())) {
         <div class="flex items-center gap-3" [class.mt-2]="showDescription() || showLink()">
           @if (!showDescription()) {
-            <button
-              type="button"
-              class="flex items-center gap-1 cursor-pointer"
-              style="border:none;background:none;padding:0;font-size:var(--fs-ui-sm);color:var(--text-muted)"
-              [disabled]="urlLoading()"
-              (click)="toggleDescription()"
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <path d="M12 5v14"/><path d="M5 12h14"/>
-              </svg>
+            <ds-button variant="ghost" size="sm" icon="plus" [disabled]="urlLoading()" (click)="toggleDescription()">
               {{ 'project.pollInput.yesNo.addDescription' | translate }}
-            </button>
+            </ds-button>
           }
           @if (!showLink()) {
-            <button
-              type="button"
-              class="flex items-center gap-1 cursor-pointer"
-              style="border:none;background:none;padding:0;font-size:var(--fs-ui-sm);color:var(--text-muted)"
-              [disabled]="urlLoading()"
-              (click)="toggleLink()"
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-                <path d="M12 5v14"/><path d="M5 12h14"/>
-              </svg>
+            <ds-button variant="ghost" size="sm" icon="plus" [disabled]="urlLoading()" (click)="toggleLink()">
               {{ 'project.pollInput.yesNo.addLink' | translate }}
-            </button>
+            </ds-button>
           }
-          <span class="ml-auto text-right" style="font-size:var(--fs-caption);color:var(--text-muted)">
+          <span class="ml-auto text-right text-[length:var(--fs-caption)] text-[color:var(--text-muted)]">
             {{ 'project.pollInput.yesNo.linkHint' | translate }}
           </span>
         </div>

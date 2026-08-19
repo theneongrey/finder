@@ -1,0 +1,114 @@
+.type-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-2xl);
+  border: 1.5px solid var(--border-hairline-strong);
+  background: var(--bg-sheet);
+  cursor: pointer;
+  transition: border-color var(--duration-standard) ease,
+    background var(--duration-standard) ease,
+    box-shadow var(--duration-standard) ease,
+    transform var(--duration-fast) ease;
+}
+.type-btn:hover {
+  border-color: var(--accent-border);
+}
+.type-btn:active {
+  transform: scale(0.985);
+}
+
+.type-btn--selected {
+  border-color: var(--accent-border);
+  background: var(--accent-tint-light, rgba(31, 122, 140, 0.06));
+  box-shadow: 0 0 0 3px rgba(31, 122, 140, 0.08);
+}
+
+.type-btn--grid {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px 22px 24px;
+}
+.type-btn--grid:hover {
+  transform: translateY(-2px);
+}
+.type-btn--grid:active {
+  transform: scale(0.985) translateY(0);
+}
+
+.type-icon {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--duration-standard) ease, color var(--duration-standard) ease;
+}
+
+.type-btn--grid .type-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 17px;
+}
+
+.type-icon--selected {
+  background: var(--accent);
+  color: #fff;
+}
+
+.type-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-display-3xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-display-3xs);
+  color: var(--text-primary);
+}
+
+.type-btn--grid .type-name {
+  font-size: 21px;
+  letter-spacing: -0.3px;
+}
+
+.type-desc {
+  display: block;
+  font-size: var(--fs-ui-sm);
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+.type-desc--grid {
+  font-size: 14px;
+  line-height: 1.45;
+  margin-top: 6px;
+  text-wrap: pretty;
+}
+
+.type-radio {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.6px solid var(--border-hairline-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--duration-standard) ease, border-color var(--duration-standard) ease;
+}
+
+.type-btn--grid .type-radio {
+  width: 26px;
+  height: 26px;
+}
+
+.type-radio--selected {
+  background: var(--accent);
+  border-color: var(--accent);
+}

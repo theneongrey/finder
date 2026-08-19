@@ -37,9 +37,8 @@
       @if (subtitle()) {
         <span class="title-bar__sep" aria-hidden="true"></span>
         <button
-          class="title-bar__web-label title-bar__web-label--breadcrumb"
+          class="title-bar__web-label title-bar__web-label--breadcrumb cursor-pointer bg-transparent border-none p-0"
           (click)="onBack()"
-          style="cursor:pointer;background:none;border:none;padding:0"
           >{{ subtitle() }}</button
         >
         <span class="title-bar__sep" aria-hidden="true"></span>
@@ -66,7 +65,7 @@
     @if (user()?.isAuthenticated) {
       <div class="title-bar__user">
         <ds-menu [items]="menuItems()">
-          <app-user-avatar [user]="user()!" style="cursor: pointer" />
+          <app-user-avatar [user]="user()!" class="cursor-pointer" />
         </ds-menu>
       </div>
     }

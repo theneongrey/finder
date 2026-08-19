@@ -6,11 +6,10 @@
           @for (day of weekdayButtons; track day.value) {
             <button
               type="button"
+              class="flex-1 py-[6px] px-0.5 rounded-[8px] border-0 font-bold text-[length:var(--fs-caption-sm)] transition-[background,color]"
               [class.cursor-pointer]="!readonly()"
               [class.cursor-default]="readonly()"
-              style="flex:1;padding:6px 2px;border-radius:8px;font-size:var(--fs-caption-sm);font-weight:var(--weight-bold);border:none;transition:background var(--duration-fast) ease,color var(--duration-fast) ease"
-              [style.background]="option().weekday === day.value ? 'var(--accent)' : 'var(--bg-panel)'"
-              [style.color]="option().weekday === day.value ? 'white' : 'var(--text-secondary)'"
+              [ngClass]="option().weekday === day.value ? 'bg-[var(--accent)] text-white' : 'bg-[var(--bg-panel)] text-[color:var(--text-secondary)]'"
               [disabled]="readonly()"
               (click)="!readonly() && selectWeekday(day.value)"
               [attr.aria-label]="day.ariaLabel"
@@ -23,7 +22,7 @@
 
         @if (showTime()) {
           <div class="flex flex-col gap-1">
-            <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
+            <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
               {{ 'project.pollInput.date.startTime' | translate }}
             </label>
             <ds-input

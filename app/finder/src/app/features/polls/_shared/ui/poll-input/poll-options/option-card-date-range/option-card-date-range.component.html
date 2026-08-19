@@ -4,7 +4,7 @@
       <div class="flex flex-col gap-2 flex-1">
         <div class="flex gap-2">
           <div class="flex flex-col gap-1 flex-1">
-            <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
+            <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
               {{ 'project.pollInput.date.startDate' | translate }}
             </label>
             <ds-input
@@ -18,7 +18,7 @@
 
           @if (showTime()) {
             <div class="flex flex-col gap-1 flex-1">
-              <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
+              <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
                 {{ 'project.pollInput.date.startTime' | translate }}
               </label>
               <ds-input
@@ -34,7 +34,7 @@
 
         <div class="flex gap-2">
           <div class="flex flex-col gap-1 flex-1">
-            <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
+            <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
               {{ 'project.pollInput.date.endDate' | translate }}
             </label>
             <ds-input
@@ -48,7 +48,7 @@
 
           @if (showTime()) {
             <div class="flex flex-col gap-1 flex-1">
-              <label style="font-size:var(--fs-caption);font-weight:var(--weight-bold);color:var(--text-secondary)">
+              <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
                 {{ 'project.pollInput.date.endTime' | translate }}
               </label>
               <ds-input
@@ -63,10 +63,8 @@
         </div>
 
         @if (endBeforeStart()) {
-          <p class="flex items-center gap-1" style="margin:0;font-size:var(--fs-caption);color:var(--color-danger,#ef4444)">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="flex:none">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
+          <p class="flex items-center gap-1 m-0 text-[length:var(--fs-caption)] text-[color:var(--color-danger,#ef4444)]">
+            <ds-icon name="warning" [size]="12" />
             {{ 'project.pollInput.date.endBeforeStart' | translate: { date: formattedStartDate() } }}
           </p>
         }

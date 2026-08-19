@@ -143,7 +143,7 @@
       "alreadyShared": "Bereits geteilt",
       "inviteMore": "Weitere einladen",
       "roleLabel": "Rolle für neue Einladungen",
-      “linkNote”: “Wer über den Link beitritt, kommt als Abstimmender rein. Mehr Rechte vergibst du im Tab „Zugriff”.”,
+      "linkNote": "Wer über den Link beitritt, kommt als Abstimmender rein. Mehr Rechte vergibst du im Tab „Zugriff”.",
       "recentLabel": "Zuletzt oft geteilt",
       "noContact": "Kein Kontakt gefunden – per E-Mail einladen",
       "pollLabel": "Umfrage"
@@ -265,7 +265,6 @@
       "addComment": "Kommentieren",
       "commentPlaceholder": "Dein Kommentar...",
       "submitComment": "Hinzufügen",
-      "skip": "Überspringen",
       "ratingMax": "5 Sterne",
       "ratingMin": "1 Stern",
       "openLink": "Link öffnen"

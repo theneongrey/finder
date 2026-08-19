@@ -27,6 +27,7 @@ import { DsIconComponent } from '@ds/icon/ds-icon.component';
     ShareDrawerComponent,
     ShareContentComponent,
     DsIconComponent,
+    TranslatePipe,
   ],
   templateUrl: './polls-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

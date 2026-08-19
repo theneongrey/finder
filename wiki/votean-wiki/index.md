@@ -66,6 +66,6 @@ Developer how-to pages.
 - [Testing](guides/testing.md) — unit tests, integration tests, e2e tests
 - [Adding a Feature](guides/adding-a-feature.md) — step-by-step walkthrough
 - [Design System](guides/design-system.md) — live component and token reference at /ux (dev only)
-- [Component Library (ds-*)](guides/component-library.md) — API reference for all 15 custom ds-* Angular components
+- [Component Library (ds-*)](guides/component-library.md) — API reference for all 21 ds-* Angular components
 - [Spartan → ds-* Migration](guides/spartan-to-ds-migration.md) — import mapping and pattern guide for migrating from Hlm* to ds-*
 - [Adding Spartan Components](guides/adding-spartan-components.md) — *(deprecated)* Spartan UI install guide; superseded by ds-*

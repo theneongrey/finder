@@ -6,13 +6,13 @@ tags: [frontend, ui, angular, spartan-ui, design-system, migration]
 status: stable
 generated:
   actor: claude-sonnet-4-6
-  date: 2026-08-10
-stale_after: 2027-02-10
+  date: 2026-08-15
+stale_after: 2027-02-15
 sources:
   - title: ds-* component library implementation — issue #237
     resource: https://github.com/theneongrey/finder/issues/237
   - title: Component source directory
-    resource: app/finder/src/app/common/ui/components/
+    resource: app/finder/src/app/common/ui/ds-components/
 ---
 
 # Spartan → ds-* Migration Guide
@@ -29,18 +29,24 @@ This page is the canonical reference for the one-to-one mapping.
 
 ## Import mapping
 
+All ds-* imports use the `ds-components/` directory:
+
 | Old Spartan import | New ds-* import |
 |---|---|
-| `HlmButtonDirective` from `@spartan-ng/helm/button` | `DsButtonComponent` from `common/ui/components/button/ds-button.component` |
-| `HlmBadgeDirective` from `@spartan-ng/helm/badge` | `DsBadgeComponent` from `common/ui/components/badge/ds-badge.component` |
-| `HlmCardImports` from `@spartan-ng/helm/card` | `DsCardComponent` from `common/ui/components/card/ds-card.component` |
-| `HlmInputDirective` from `@spartan-ng/helm/input` | `DsInputComponent` from `common/ui/components/input/ds-input.component` |
-| `HlmTabsImports` from `@spartan-ng/helm/tabs` | `DsTabsComponent` from `common/ui/components/tabs/ds-tabs.component` |
-| `HlmAvatarImports` from `@spartan-ng/helm/avatar` | `DsAvatarComponent` from `common/ui/components/avatar/ds-avatar.component` |
-| `HlmSkeletonImports` from `@spartan-ng/helm/skeleton` | Native `<div class="ds-skeleton">` (see CSS below) |
-| `HlmProgressImports` from `@spartan-ng/helm/progress` | `DsProgressBarComponent` from `common/ui/components/progress-bar/ds-progress-bar.component` |
-| `HlmDropdownMenuImports` from `@spartan-ng/helm/dropdown-menu` | `DsMenuComponent` from `common/ui/components/menu/ds-menu.component` |
-| `HlmSheet*` from `@spartan-ng/helm/sheet` | `DsBottomSheetComponent` from `common/ui/components/bottom-sheet/ds-bottom-sheet.component` |
+| `HlmButtonDirective` from `@spartan-ng/helm/button` | `DsButtonComponent` from `common/ui/ds-components/button/ds-button.component` |
+| `HlmBadgeDirective` from `@spartan-ng/helm/badge` | `DsBadgeComponent` from `common/ui/ds-components/badge/ds-badge.component` |
+| `HlmCardImports` from `@spartan-ng/helm/card` | `DsCardComponent` from `common/ui/ds-components/card/ds-card.component` |
+| `HlmInputDirective` from `@spartan-ng/helm/input` | `DsInputComponent` from `common/ui/ds-components/input/ds-input.component` |
+| `HlmTextarea` from `@spartan-ng/helm/textarea` | `DsTextareaComponent` from `common/ui/ds-components/textarea/ds-textarea.component` |
+| `HlmTabsImports` from `@spartan-ng/helm/tabs` | `DsTabsComponent` from `common/ui/ds-components/tabs/ds-tabs.component` |
+| `HlmAvatarImports` from `@spartan-ng/helm/avatar` | `DsAvatarComponent` from `common/ui/ds-components/avatar/ds-avatar.component` |
+| `HlmSkeletonImports` from `@spartan-ng/helm/skeleton` | `DsPollCardSkeletonComponent` or native `<div class="ds-skeleton">` |
+| `HlmProgressImports` from `@spartan-ng/helm/progress` | `DsProgressBarComponent` from `common/ui/ds-components/progress-bar/ds-progress-bar.component` |
+| `HlmDropdownMenuImports` from `@spartan-ng/helm/dropdown-menu` | `DsMenuComponent` from `common/ui/ds-components/menu/ds-menu.component` |
+| `HlmSheetImports` from `@spartan-ng/helm/sheet` | `DsBottomSheetComponent` from `common/ui/ds-components/bottom-sheet/ds-bottom-sheet.component` |
+| `HlmSwitch` from `@spartan-ng/helm/switch` | `DsSwitchComponent` from `common/ui/ds-components/switch/ds-switch.component` |
+| `HlmToggleGroupImports` from `@spartan-ng/helm/toggle-group` | `DsSegmentedControlComponent` from `common/ui/ds-components/segmented-control/ds-segmented-control.component` |
+| `HlmInputOtpImports` + `BrnInputOtp` | `DsInputOtpComponent` from `common/ui/ds-components/input-otp/ds-input-otp.component` |
 
 ---
 
@@ -61,14 +67,20 @@ import { HlmButtonDirective } from '@spartan-ng/helm/button';
 
 **After:**
 ```typescript
-import { DsButtonComponent } from '../../common/ui/components/button/ds-button.component';
+import { DsButtonComponent } from '../../common/ui/ds-components/button/ds-button.component';
 
 @Component({ imports: [DsButtonComponent] })
 ```
 ```html
 <ds-button>Weiter</ds-button>
 <ds-button variant="outline">Abbrechen</ds-button>
+
+<!-- Icon-only circular button (no separate ds-icon-button component) -->
+<ds-button variant="dark" icon="close" [size]="32" />
 ```
+
+Note: There is no separate `ds-icon-button` component. Pass a pixel number to
+`size` on `ds-button` to get a round icon-only button.
 
 ---
 
@@ -88,7 +100,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 
 **After:**
 ```typescript
-import { DsCardComponent } from '../../common/ui/components/card/ds-card.component';
+import { DsCardComponent } from '../../common/ui/ds-components/card/ds-card.component';
 
 @Component({ imports: [DsCardComponent] })
 ```
@@ -113,7 +125,7 @@ import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 
 **After:**
 ```typescript
-import { DsAvatarComponent } from '../../common/ui/components/avatar/ds-avatar.component';
+import { DsAvatarComponent } from '../../common/ui/ds-components/avatar/ds-avatar.component';
 // colour from 8-slot person palette via deterministic nameHash()
 ```
 ```html
@@ -121,6 +133,86 @@ import { DsAvatarComponent } from '../../common/ui/components/avatar/ds-avatar.c
 ```
 
 The `nameHash()` function (`user-avatar.component.ts`) maps a user's display name to one of the 8 `--person-{n}-bg/fg` pairs deterministically. The palette is defined in `_colors.css`.
+
+---
+
+### Input
+
+**Before:**
+```typescript
+import { HlmInput } from '@spartan-ng/helm/input';
+```
+```html
+<input hlmInput type="text" placeholder="…" />
+```
+
+**After:**
+```typescript
+import { DsInputComponent } from '../../common/ui/ds-components/input/ds-input.component';
+```
+```html
+<ds-input type="text" label="Titel" placeholder="…" [formControl]="ctrl" />
+```
+
+---
+
+### Textarea
+
+**Before:**
+```typescript
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
+```
+```html
+<textarea hlmTextarea rows="3"></textarea>
+```
+
+**After:**
+```typescript
+import { DsTextareaComponent } from '../../common/ui/ds-components/textarea/ds-textarea.component';
+```
+```html
+<ds-textarea label="Beschreibung" [rows]="3" [formControl]="ctrl" />
+```
+
+---
+
+### Switch
+
+**Before:**
+```typescript
+import { HlmSwitch } from '@spartan-ng/helm/switch';
+```
+```html
+<hlm-switch [checked]="value" (checkedChange)="value = $event" />
+```
+
+**After:**
+```typescript
+import { DsSwitchComponent } from '../../common/ui/ds-components/switch/ds-switch.component';
+```
+```html
+<ds-switch [(checked)]="value" />
+<!-- or with reactive forms -->
+<ds-switch [formControl]="ctrl" />
+```
+
+---
+
+### OTP input
+
+**Before:**
+```typescript
+import { BrnInputOtp } from '@spartan-ng/brain/input-otp';
+import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
+```
+
+**After:**
+```typescript
+import { DsInputOtpComponent } from '../../common/ui/ds-components/input-otp/ds-input-otp.component';
+```
+```html
+<ds-input-otp [length]="6" [groupSize]="3" [formControl]="codeControl" />
+```
 
 ---
 
@@ -136,15 +228,20 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 <hlm-skeleton class="h-4 w-full" />
 ```
 
-**After:**
+**After (poll card skeleton):**
+```typescript
+import { DsPollCardSkeletonComponent } from '../../common/ui/ds-components/poll-card-skeleton/ds-poll-card-skeleton.component';
+```
+```html
+<ds-poll-card-skeleton [count]="3" />
+```
+
+**After (generic inline skeleton):**
 
 No component import needed. Use a plain `<div>` styled with the `ds-skeleton` class:
 ```html
 <div class="ds-skeleton" style="height: 16px; width: 100%;"></div>
 ```
-
-The `ds-skeleton` class and its shimmer animation are defined in `loading.component.css`
-(and can be extracted to a shared utility sheet if needed).
 
 ---
 
@@ -166,14 +263,14 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 
 **After:**
 ```typescript
-import { DsMenuComponent } from '../../common/ui/components/menu/ds-menu.component';
-import { MenuItem } from '../../common/ui/components/menu/ds-menu.component';
+import { DsMenuComponent } from '../../common/ui/ds-components/menu/ds-menu.component';
+import { MenuItem } from '../../common/ui/ds-components/menu/ds-menu.component';
 ```
 ```html
-<div style="position: relative">
-  <ds-icon-button icon="kebab" (click)="menuOpen.set(!menuOpen())" />
-  <ds-menu [open]="menuOpen()" [items]="menuItems()" (closed)="menuOpen.set(false)" />
-</div>
+<!-- The element inside ds-menu becomes the trigger automatically -->
+<ds-menu [items]="menuItems()">
+  <ds-button variant="dark" icon="kebab" [size]="32" />
+</ds-menu>
 ```
 
 Items are data-driven (`MenuItem[]`) instead of projected content:
@@ -201,7 +298,7 @@ import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 
 **After:**
 ```typescript
-import { DsBottomSheetComponent } from '../../common/ui/components/bottom-sheet/ds-bottom-sheet.component';
+import { DsBottomSheetComponent } from '../../common/ui/ds-components/bottom-sheet/ds-bottom-sheet.component';
 
 sheetOpen = signal(false);
 ```
@@ -209,13 +306,19 @@ sheetOpen = signal(false);
 <ds-button (click)="sheetOpen.set(true)">Teilen</ds-button>
 
 @if (sheetOpen()) {
-  <ds-bottom-sheet title="Teilen" (close)="sheetOpen.set(false)">
-    <!-- sheet content -->
+  <ds-bottom-sheet
+    title="Teilen"
+    [open]="sheetOpen()"
+    (dismissed)="sheetOpen.set(false)"
+  >
+    <!-- sheet content via ng-content -->
   </ds-bottom-sheet>
 }
 ```
 
 Use `@if` so Angular removes the element from the DOM when hidden — not `[hidden]` or `display: none`.
+
+Note: The output is named `dismissed` (not `close`).
 
 ---
 
@@ -231,30 +334,13 @@ import { HlmProgressImports } from '@spartan-ng/helm/progress';
 
 **After:**
 ```typescript
-import { DsProgressBarComponent } from '../../common/ui/components/progress-bar/ds-progress-bar.component';
+import { DsProgressBarComponent } from '../../common/ui/ds-components/progress-bar/ds-progress-bar.component';
 ```
 ```html
 <ds-progress-bar [percent]="60" />
 ```
 
 Note the input name changed from `value` to `percent`.
-
----
-
-## No-replacement patterns
-
-Some Spartan primitives have no direct ds-* equivalent yet because they are not used in current designs:
-
-| Spartan component | Status |
-|---|---|
-| `HlmSelect` | No design-system equivalent yet — use PrimeNG `p-dropdown` if needed |
-| `HlmTextarea` | Use native `<textarea>` with `ds-input`-style CSS |
-| `HlmToggleGroup` | Replaced by `ds-segmented-control` in current usage |
-| `HlmAlert` | Not currently used |
-| `HlmTooltip` | Not currently used |
-| `HlmSonner` | Toast system not yet migrated |
-| `HlmInputOtp` | OTP input on the auth screen still uses Spartan |
-| `HlmDatePicker` / `HlmCalendar` | Not currently used |
 
 ---
 
@@ -277,7 +363,7 @@ Use `.ds-menu-item` class + locale-agnostic text filter for all future menu-item
 
 ## Related Pages
 
-- [Component Library (ds-*)](component-library.md) — full API reference for all 15 ds-* components
+- [Component Library (ds-*)](component-library.md) — full API reference for all 21 ds-* components
 - [Design System](design-system.md) — live `/ux` showcase
 - [PrimeNG → Spartan migration history](../architecture/primeng-to-spartan-migration.md)
 - [Adding Spartan Components (deprecated)](adding-spartan-components.md)

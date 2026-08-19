@@ -33,16 +33,7 @@
           <p class="label" style="color:var(--text-muted);letter-spacing:var(--tracking-eyebrow-lg)">
             {{ 'project.pollInput.yesNo.description' | translate }}
           </p>
-          <button
-            type="button"
-            class="flex items-center justify-center cursor-pointer"
-            style="width:24px;height:24px;border:none;border-radius:50%;background:var(--bg-panel)"
-            (click)="onDescriptionBlur()"
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-body)" stroke-width="2.8" stroke-linecap="round">
-              <path d="M5 5l14 14"></path><path d="M19 5L5 19"></path>
-            </svg>
-          </button>
+          <ds-button [size]="24" variant="ghost" icon="close" (click)="onDescriptionBlur()" />
         </div>
         <ds-textarea
           #descriptionTextarea
@@ -59,17 +50,13 @@
     }
 
     @if (!showDescription() && !isClosed()) {
-      <button
-        type="button"
-        class="flex items-center gap-[6px] mt-[11px] cursor-pointer"
-        style="border:none;background:none;color:var(--accent);font-size:var(--fs-ui);font-weight:var(--weight-bold)"
+      <ds-button
+        variant="ghost"
+        size="sm"
+        icon="plus"
+        class="mt-[11px]"
         (click)="toggleDescription()"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-          <path d="M12 5v14"></path><path d="M5 12h14"></path>
-        </svg>
-        <span>{{ 'project.pollInput.addDescriptionCta' | translate }}</span>
-      </button>
+      >{{ 'project.pollInput.addDescriptionCta' | translate }}</ds-button>
     }
   </ds-card>
 
@@ -188,19 +175,12 @@
             </p>
           </div>
           @if (isClosed()) {
-            <button
-              type="button"
+            <ds-button
+              variant="neutral"
+              icon="refresh"
               data-testid="reopen-poll-btn"
-              class="w-full lg:w-auto mt-3 lg:mt-0 h-[44px] lg:h-[40px] px-4 rounded-[14px] lg:rounded-[13px] border border-[rgba(20,24,28,.12)] text-[var(--text-body)] text-[14px] lg:text-[13.5px] font-bold cursor-pointer flex items-center justify-center gap-2 transition-[background] duration-[140ms] hover:bg-[#f1eee9]"
-              style="background:#fff"
               (click)="reopenPoll.emit()"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="8.5"/>
-                <path d="M8.5 12h7"/><path d="M12 8.5v7"/>
-              </svg>
-              <span>{{ 'project.pollInput.reopenPollBtn' | translate }}</span>
-            </button>
+            >{{ 'project.pollInput.reopenPollBtn' | translate }}</ds-button>
           } @else {
             <button
               type="button"

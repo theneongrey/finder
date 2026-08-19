@@ -60,15 +60,13 @@
         <div>
           <div class="flex items-center gap-2.5">
             @if (wizardStep() === 2 && mode() === 'standalone') {
-              <button
-                class="w-[34px] h-[34px] rounded-[11px] border border-[rgba(20,24,28,.08)] bg-white text-[color:var(--accent)] flex items-center justify-center cursor-pointer transition-[background] duration-[140ms] hover:bg-[#f1eee9]"
+              <ds-button
+                [size]="34"
+                variant="ghost"
+                icon="chevron-left"
+                [label]="'common.back' | translate"
                 (click)="prevStep()"
-                title="Zurück"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M15 5l-7 7 7 7"/>
-                </svg>
-              </button>
+              />
             }
             <h1 class="font-display text-[30px] font-bold tracking-[-0.8px] leading-[1.05] text-[#1d2227]">
               {{ webContentTitle() }}
@@ -81,10 +79,9 @@
 
         <div class="flex items-center gap-2.5 flex-none">
           @if ((mode() === 'standalone' && wizardStep() !== 3) || mode() === 'edit') {
-            <button
-              class="h-[42px] px-[15px] rounded-[13px] border border-[rgba(20,24,28,.08)] bg-white text-[#5a5650] text-[14px] font-bold cursor-pointer transition-[background] duration-[140ms] hover:bg-[#f1eee9]"
-              (click)="discard()"
-            >{{ 'project.pollInput.discard' | translate }}</button>
+            <ds-button variant="neutral" (click)="discard()">
+              {{ 'project.pollInput.discard' | translate }}
+            </ds-button>
           }
           <ds-button
             variant="primary"

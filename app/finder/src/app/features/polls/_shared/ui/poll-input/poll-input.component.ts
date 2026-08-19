@@ -310,10 +310,7 @@ export class PollInputComponent {
     // Load sharing contacts
     effect(() => {
       const mode = this.mode();
-      const id = this.projectId();
-      if (mode === 'edit' && id) {
-        this.sharingStore.loadContacts(id);
-      } else if (mode === 'standalone') {
+      if (mode === 'edit' || mode === 'standalone') {
         this.sharingStore.loadGeneralContacts();
       }
     });

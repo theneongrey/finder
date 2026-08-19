@@ -35,6 +35,7 @@
   },
   "project": {
     "common": {
+      "back": "Zurück",
       "cancel": "Abbrechen",
       "edit": "Bearbeiten",
       "delete": "Löschen",

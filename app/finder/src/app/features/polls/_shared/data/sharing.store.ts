@@ -31,28 +31,6 @@ export const SharingStore = signalStore(
     dispatcher: inject(Dispatcher),
   })),
   withMethods((store) => ({
-    loadContacts: rxMethod<string>(
-      pipe(
-        switchMap((projectId) =>
-          store.permissionService.getContacts(projectId).pipe(
-            tapResponse({
-              next: (sharingContacts) => {
-                patchState(store, {
-                  sharingContactsSuggestion: sharingContacts,
-                });
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[SharingStore] Error loading contacts',
-                  error,
-                );
-              },
-            }),
-          ),
-        ),
-      ),
-    ),
-
     loadGeneralContacts: rxMethod<void>(
       pipe(
         switchMap(() =>

@@ -7,7 +7,7 @@
 
     @if (mode() === 'standalone') {
       <!-- Step indicator bar -->
-      <div class="flex items-center gap-2.5 flex-wrap px-7 py-2.5 bg-[rgba(255,253,249,.45)] border-b border-[rgba(20,24,28,.06)]">
+      <ds-sub-header class="flex items-center gap-2.5 flex-wrap">
         <div class="flex items-center gap-1.5">
           @for (s of webSteps(); track s.num) {
             <div
@@ -42,14 +42,14 @@
             </div>
           }
         </div>
-      </div>
+      </ds-sub-header>
     }
     @if (mode() === 'edit' && state.optionType() !== undefined) {
       <!-- Poll type bar -->
-      <div class="flex items-center gap-4 px-7 py-2.5 bg-[rgba(255,253,249,.45)] border-b border-[rgba(20,24,28,.06)]">
+      <ds-sub-header class="flex items-center gap-4">
         <span class="text-[11.5px] font-bold tracking-[.7px] uppercase text-[#a39e96]">{{ 'project.pollInput.stepArt' | translate }}</span>
         <app-poll-type-badge [type]="state.optionType()!" />
-      </div>
+      </ds-sub-header>
     }
     <!-- Scrollable content + content header -->
     <div class="flex-1 min-h-0 flex flex-col overflow-hidden">

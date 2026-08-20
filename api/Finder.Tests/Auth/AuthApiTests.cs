@@ -67,6 +67,49 @@ public class AuthApiTests : IClassFixture<FinderApiFactory>
     }
 
     [Fact]
+    public async Task RequestLoginMail_CalledTwice_ReturnsOk()
+    {
+        var user = await _factory.SeedUser();
+        using var client = _factory.CreateClient();
+
+        var first = await client.PostAsJsonAsync("/api/auth/requestLoginMail",
+            new { email = user.Email, redirectUrl = (string?)null });
+        var second = await client.PostAsJsonAsync("/api/auth/requestLoginMail",
+            new { email = user.Email, redirectUrl = (string?)null });
+
+        Assert.Equal(HttpStatusCode.OK, first.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, second.StatusCode);
+    }
+
+    [Fact]
+    public async Task RequestLoginMail_WithExistingToken_ReturnsOk()
+    {
+        var user = await _factory.SeedUser();
+        var token = Guid.NewGuid().ToString("N").ToLower();
+        await _factory.SeedLoginToken(user.Id, token, "123456");
+        using var client = _factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync("/api/auth/requestLoginMail",
+            new { email = user.Email, redirectUrl = (string?)null });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task RequestLoginMail_WithMultipleExistingTokens_ReturnsOk()
+    {
+        var user = await _factory.SeedUser();
+        await _factory.SeedLoginToken(user.Id, Guid.NewGuid().ToString("N").ToLower(), "111111");
+        await _factory.SeedLoginToken(user.Id, Guid.NewGuid().ToString("N").ToLower(), "222222");
+        using var client = _factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync("/api/auth/requestLoginMail",
+            new { email = user.Email, redirectUrl = (string?)null });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
     public async Task RequestLoginMail_WithUnknownEmail_ReturnsForbid()
     {
         using var client = _factory.CreateClient();

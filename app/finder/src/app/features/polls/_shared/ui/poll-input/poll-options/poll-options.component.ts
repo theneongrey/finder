@@ -76,6 +76,8 @@ export class PollOptionsComponent {
   remove = output<number>();
   appointmentDateTypeSelected = output<DateOptionType>();
   weekdayToggle = output<number>();
+  dateOptionsChange = output<DateOptionEntry[]>();
+  optionsChange = output<OptionEntry[]>();
 
   addCardAnimating = signal(false);
   firstEntryShowsTime = signal(false);
@@ -109,25 +111,34 @@ export class PollOptionsComponent {
     return '★'.repeat(index + 1);
   }
 
+  updateDateOption(index: number, entry: DateOptionEntry): void {
+    const updated = this.dateOptions().map((o, i) => i === index ? entry : o);
+    this.dateOptionsChange.emit(updated);
+  }
+
+  updateOption(index: number, entry: OptionEntry): void {
+    const updated = this.options().map((o, i) => i === index ? entry : o);
+    this.optionsChange.emit(updated);
+  }
+
   onToggleTime(value: boolean): void {
     if (value) {
       const start = nextFullHour();
-      this.dateOptions().forEach((o) => {
-        if (!o.startTime) {
-          o.startTime = start;
-          if (this.appointmentDateType() === 'date-range' && !o.endTime) {
-            const end = new Date(start);
-            end.setHours(end.getHours() + 1);
-            o.endTime = end;
-          }
+      const updated = this.dateOptions().map((o) => {
+        if (o.startTime) { return o; }
+        const changes: Partial<DateOptionEntry> = { startTime: start };
+        if (this.appointmentDateType() === 'date-range' && !o.endTime) {
+          const end = new Date(start);
+          end.setHours(end.getHours() + 1);
+          changes.endTime = end;
         }
+        return { ...o, ...changes };
       });
+      this.dateOptionsChange.emit(updated);
       this.firstEntryShowsTime.set(true);
     } else {
-      this.dateOptions().forEach((o) => {
-        o.startTime = undefined;
-        o.endTime = undefined;
-      });
+      const updated = this.dateOptions().map((o) => ({ ...o, startTime: undefined, endTime: undefined }));
+      this.dateOptionsChange.emit(updated);
       this.firstEntryShowsTime.set(false);
     }
   }

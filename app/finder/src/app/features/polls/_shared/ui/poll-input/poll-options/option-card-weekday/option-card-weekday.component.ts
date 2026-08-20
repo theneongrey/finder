@@ -30,6 +30,7 @@ export class OptionCardWeekdayComponent {
   initialShowTime = input<boolean>(false);
   readonly = input<boolean>(false);
   remove = output<void>();
+  optionChange = output<DateOptionEntry>();
 
   showTime = signal(false);
 
@@ -41,10 +42,11 @@ export class OptionCardWeekdayComponent {
 
   constructor() {
     effect(() => {
-      const shouldShow = !!(this.option().startTime) || this.initialShowTime();
+      const opt = this.option();
+      const shouldShow = !!(opt.startTime) || this.initialShowTime();
       if (shouldShow) {
-        if (this.initialShowTime() && !this.option().startTime) {
-          this.option().startTime = nextFullHour();
+        if (this.initialShowTime() && !opt.startTime) {
+          this.optionChange.emit({ ...opt, startTime: nextFullHour() });
         }
         this.showTime.set(true);
       } else {
@@ -54,7 +56,7 @@ export class OptionCardWeekdayComponent {
   }
 
   selectWeekday(value: number): void {
-    this.option().weekday = value;
+    this.optionChange.emit({ ...this.option(), weekday: value });
   }
 
   get timeValue(): string {
@@ -62,6 +64,6 @@ export class OptionCardWeekdayComponent {
   }
 
   setStartTime(value: string): void {
-    this.option().startTime = parseTimeInput(value);
+    this.optionChange.emit({ ...this.option(), startTime: parseTimeInput(value) });
   }
 }

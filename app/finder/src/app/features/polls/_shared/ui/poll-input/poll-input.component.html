@@ -24,9 +24,7 @@
                 [class.text-white]="s.isCurrent"
               >
                 @if (s.isDone) {
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4.5 12.5l4.5 4.5L20 5"/>
-                  </svg>
+                  <ds-icon name="check" [size]="11" color="#1f7a8c" />
                 } @else {
                   <span>{{ s.num }}</span>
                 }
@@ -129,6 +127,8 @@
               (add)="addOption()"
               (remove)="removeOption($event)"
               (weekdayToggle)="toggleWeekday($event)"
+              (optionsChange)="onOptionsChange($event)"
+              (dateOptionsChange)="onDateOptionsChange($event)"
               (formSubmit)="onCta()"
               [hideCta]="true"
             />
@@ -214,6 +214,8 @@
               (add)="addOption()"
               (remove)="removeOption($event)"
               (weekdayToggle)="toggleWeekday($event)"
+              (optionsChange)="onOptionsChange($event)"
+              (dateOptionsChange)="onDateOptionsChange($event)"
               (formSubmit)="onCta()"
               [hideCta]="true"
             />
@@ -287,6 +289,8 @@
         (add)="addOption()"
         (remove)="removeOption($event)"
         (weekdayToggle)="toggleWeekday($event)"
+        (optionsChange)="onOptionsChange($event)"
+        (dateOptionsChange)="onDateOptionsChange($event)"
         (formSubmit)="onCta()"
       />
     </div>

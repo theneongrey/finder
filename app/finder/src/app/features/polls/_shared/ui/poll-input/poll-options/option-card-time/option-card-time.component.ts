@@ -23,12 +23,13 @@ export class OptionCardTimeComponent {
   canRemove = input<boolean>(false);
   readonly = input<boolean>(false);
   remove = output<void>();
+  optionChange = output<DateOptionEntry>();
 
   get timeValue(): string {
     return this.option().startTime ? formatTime(this.option().startTime!) : '';
   }
 
   setStartTime(value: string): void {
-    this.option().startTime = parseTimeInput(value);
+    this.optionChange.emit({ ...this.option(), startTime: parseTimeInput(value) });
   }
 }

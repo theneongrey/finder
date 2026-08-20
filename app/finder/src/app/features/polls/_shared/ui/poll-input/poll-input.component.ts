@@ -39,6 +39,7 @@ import { PollItemComponent } from '../poll-item/poll-item.component';
 import { PollTypeBadgeComponent } from '../poll-type-badge/poll-type-badge.component';
 import { PollItem } from '../../models/poll-item.model';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 
 export type { OptionEntry, DateOptionEntry, DateOptionType };
 export type { PendingInvite };
@@ -54,6 +55,7 @@ export type { PendingInvite };
     PollItemComponent,
     PollTypeBadgeComponent,
     DsButtonComponent,
+    DsIconComponent,
     TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -568,6 +570,14 @@ export class PollInputComponent {
       }
       this.options.update((opts) => opts.filter((_, i) => i !== index));
     }
+  }
+
+  onOptionsChange(updated: OptionEntry[]): void {
+    this.options.set(updated);
+  }
+
+  onDateOptionsChange(updated: DateOptionEntry[]): void {
+    this.dateOptions.set(updated);
   }
 
   closePollNow(): void {

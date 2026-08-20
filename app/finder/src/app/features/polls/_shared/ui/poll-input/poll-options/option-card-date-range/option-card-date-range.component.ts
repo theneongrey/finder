@@ -30,6 +30,7 @@ export class OptionCardDateRangeComponent {
   initialShowTime = input<boolean>(false);
   readonly = input<boolean>(false);
   remove = output<void>();
+  optionChange = output<DateOptionEntry>();
 
   showTime = signal(false);
   startDate = signal<Date | undefined>(undefined);
@@ -57,8 +58,7 @@ export class OptionCardDateRangeComponent {
           const start = nextFullHour();
           const end = new Date(start);
           end.setHours(end.getHours() + 1);
-          opt.startTime = start;
-          opt.endTime = end;
+          this.optionChange.emit({ ...opt, startTime: start, endTime: end });
         }
         this.showTime.set(true);
       } else {
@@ -80,13 +80,13 @@ export class OptionCardDateRangeComponent {
   setStartDate(value: string): void {
     const d = value ? this.parseDate(value) : undefined;
     this.startDate.set(d);
-    this.option().date = d;
+    this.optionChange.emit({ ...this.option(), date: d });
   }
 
   setEndDate(value: string): void {
     const d = value ? this.parseDate(value) : undefined;
     this.endDate.set(d);
-    this.option().endDate = d;
+    this.optionChange.emit({ ...this.option(), endDate: d });
   }
 
   get startTimeValue(): string {
@@ -98,11 +98,11 @@ export class OptionCardDateRangeComponent {
   }
 
   setStartTime(value: string): void {
-    this.option().startTime = parseTimeInput(value);
+    this.optionChange.emit({ ...this.option(), startTime: parseTimeInput(value) });
   }
 
   setEndTime(value: string): void {
-    this.option().endTime = parseTimeInput(value);
+    this.optionChange.emit({ ...this.option(), endTime: parseTimeInput(value) });
   }
 
   private parseDate(value: string): Date {

@@ -36,6 +36,7 @@ export class OptionCardComponent {
   canRemove = input<boolean>(false);
   readonly = input<boolean>(false);
   remove = output<void>();
+  optionChange = output<OptionEntry>();
 
   showDescription = signal(false);
   showLink = signal(false);
@@ -83,9 +84,9 @@ export class OptionCardComponent {
 
   toggleLink() {
     if (!this.option().meta) {
-      this.option().meta = { url: '' };
+      this.optionChange.emit({ ...this.option(), meta: { url: '' } });
     }
-    this._linkUrl.set(this.option().meta!.url);
+    this._linkUrl.set(this.option().meta?.url ?? '');
     this.showLink.set(true);
     afterNextRender(() => this.linkInput().focus(), {
       injector: this.injector,
@@ -93,8 +94,7 @@ export class OptionCardComponent {
   }
 
   onLinkUrlChange(value: string) {
-    if (!this.option().meta) { this.option().meta = { url: '' }; }
-    this.option().meta!.url = value;
+    this.optionChange.emit({ ...this.option(), meta: { ...this.option().meta, url: value } });
     this._linkUrl.set(value);
   }
 
@@ -117,15 +117,16 @@ export class OptionCardComponent {
       .subscribe({
         next: (preview) => {
           const entry = this.option();
-          if (preview.title) { entry.text = preview.title; }
+          const updatedEntry: OptionEntry = {
+            ...entry,
+            meta: { url: normalized, ...preview },
+          };
+          if (preview.title) { updatedEntry.text = preview.title; }
           if (preview.description && !entry.description) {
-            entry.description = preview.description;
+            updatedEntry.description = preview.description;
             this.showDescription.set(true);
           }
-          if (!entry.meta) {
-            entry.meta = { url: normalized };
-          }
-          entry.meta = { url: normalized, ...preview };
+          this.optionChange.emit(updatedEntry);
           this._linkUrl.set(normalized);
           this.previewData.set(preview);
           this.showLink.set(true);
@@ -154,7 +155,7 @@ export class OptionCardComponent {
     this.urlError.set(false);
     const normalized = this.urlValidation.normalize(url);
     if (normalized !== url) {
-      this.option().meta!.url = normalized;
+      this.optionChange.emit({ ...this.option(), meta: { ...this.option().meta!, url: normalized } });
       this._linkUrl.set(normalized);
     }
 
@@ -170,13 +171,11 @@ export class OptionCardComponent {
         next: (preview) => {
           if (preview.imageUrl) {
             const entry = this.option();
-            entry.meta = { url: entry.meta!.url, ...preview };
+            const updatedEntry: OptionEntry = { ...entry, meta: { url: entry.meta!.url, ...preview } };
+            if (!entry.text) { updatedEntry.text = preview.title ?? ''; }
+            this.optionChange.emit(updatedEntry);
             this.previewData.set(preview);
             this.previewLoading.set(false);
-
-            if (!this.option().text) {
-              this.option().text = preview.title ?? '';
-            }
             this.initialUrl = normalized;
           }
         },

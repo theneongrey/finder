@@ -23,6 +23,7 @@ export class OptionCardTimeRangeComponent {
   canRemove = input<boolean>(false);
   readonly = input<boolean>(false);
   remove = output<void>();
+  optionChange = output<DateOptionEntry>();
 
   get startTimeValue(): string {
     return this.option().startTime ? formatTime(this.option().startTime!) : '';
@@ -33,16 +34,16 @@ export class OptionCardTimeRangeComponent {
   }
 
   onStartTimeChange(value: string): void {
-    const entry = this.option();
-    entry.startTime = parseTimeInput(value);
-    if (entry.startTime && !entry.endTime) {
-      const endTime = new Date(entry.startTime);
+    const startTime = parseTimeInput(value);
+    let endTime = this.option().endTime;
+    if (startTime && !endTime) {
+      endTime = new Date(startTime);
       endTime.setHours(endTime.getHours() + 1);
-      entry.endTime = endTime;
     }
+    this.optionChange.emit({ ...this.option(), startTime, endTime });
   }
 
   setEndTime(value: string): void {
-    this.option().endTime = parseTimeInput(value);
+    this.optionChange.emit({ ...this.option(), endTime: parseTimeInput(value) });
   }
 }

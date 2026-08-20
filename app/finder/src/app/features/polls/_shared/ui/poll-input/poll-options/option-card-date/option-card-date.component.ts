@@ -28,15 +28,17 @@ export class OptionCardDateComponent {
   initialShowTime = input<boolean>(false);
   readonly = input<boolean>(false);
   remove = output<void>();
+  optionChange = output<DateOptionEntry>();
 
   showTime = signal(false);
 
   constructor() {
     effect(() => {
-      const shouldShow = !!(this.option().startTime) || this.initialShowTime();
+      const opt = this.option();
+      const shouldShow = !!(opt.startTime) || this.initialShowTime();
       if (shouldShow) {
-        if (this.initialShowTime() && !this.option().startTime) {
-          this.option().startTime = nextFullHour();
+        if (this.initialShowTime() && !opt.startTime) {
+          this.optionChange.emit({ ...opt, startTime: nextFullHour() });
         }
         this.showTime.set(true);
       } else {
@@ -51,9 +53,9 @@ export class OptionCardDateComponent {
   }
 
   setDate(value: string): void {
-    if (!value) { this.option().date = undefined; return; }
+    if (!value) { this.optionChange.emit({ ...this.option(), date: undefined }); return; }
     const [y, m, d] = value.split('-').map(Number);
-    this.option().date = new Date(y, m - 1, d);
+    this.optionChange.emit({ ...this.option(), date: new Date(y, m - 1, d) });
   }
 
   get timeValue(): string {
@@ -61,6 +63,6 @@ export class OptionCardDateComponent {
   }
 
   setStartTime(value: string): void {
-    this.option().startTime = parseTimeInput(value);
+    this.optionChange.emit({ ...this.option(), startTime: parseTimeInput(value) });
   }
 }

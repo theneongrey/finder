@@ -54,5 +54,7 @@ export class PollInputFormComponent {
   add = output<void>();
   remove = output<number>();
   weekdayToggle = output<number>();
+  optionsChange = output<OptionEntry[]>();
+  dateOptionsChange = output<DateOptionEntry[]>();
   formSubmit = output<void>();
 }

@@ -6,8 +6,10 @@
   height: 100%;
   padding: 16px;
   border-radius: var(--radius-2xl);
-  border: 1.5px solid var(--border-hairline-strong);
-  background: var(--bg-sheet);
+  border: 1px solid rgba(20, 24, 28, 0.06);
+  background: #fff;
+  box-shadow: 0 10px 28px -22px rgba(20, 24, 28, 0.45);
+  text-align: left;
   cursor: pointer;
   transition: border-color var(--duration-standard) ease,
     background var(--duration-standard) ease,
@@ -15,16 +17,17 @@
     transform var(--duration-fast) ease;
 }
 .type-btn:hover {
-  border-color: var(--accent-border);
+  border-color: rgba(20, 24, 28, 0.14);
+  box-shadow: 0 14px 34px -22px rgba(20, 24, 28, 0.5);
 }
 .type-btn:active {
   transform: scale(0.985);
 }
 
 .type-btn--selected {
-  border-color: var(--accent-border);
-  background: var(--accent-tint-light, rgba(31, 122, 140, 0.06));
-  box-shadow: 0 0 0 3px rgba(31, 122, 140, 0.08);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 6.4%, var(--white));
+  box-shadow: 0 0 0 2px rgba(31, 122, 140, 0.12), 0 12px 30px -22px rgba(31, 122, 140, 0.45);
 }
 
 .type-btn--grid {

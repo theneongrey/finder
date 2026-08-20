@@ -8,7 +8,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsInputComponent } from '@ds/input/ds-input.component';
@@ -18,9 +18,9 @@ import { DsCardComponent } from '@ds/card/ds-card.component';
 @Component({
   selector: 'app-poll-close-settings',
   templateUrl: './poll-close-settings.component.html',
+  styleUrl: './poll-close-settings.component.css',
   imports: [
     DatePipe,
-    NgClass,
     FormsModule,
     TranslatePipe,
     DsInputComponent,

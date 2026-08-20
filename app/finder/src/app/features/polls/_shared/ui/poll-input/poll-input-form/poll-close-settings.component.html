@@ -7,14 +7,11 @@
       <div class="flex flex-col gap-2.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-[7px]">
         <div class="flex flex-wrap gap-[7px]">
           @for (preset of deadlinePresets; track preset.id) {
-            <button
-              type="button"
-              class="h-[34px] px-3 rounded-[11px] border text-[13px] font-bold cursor-pointer transition-[background,color,border-color] duration-[160ms]"
-              [ngClass]="selectedDeadline() === preset.id
-                ? 'border-[#9fc2cf] bg-[rgba(31,122,140,.08)] text-[color:var(--accent)]'
-                : 'border-[rgba(20,24,28,.12)] bg-white text-[color:var(--text-body)]'"
+            <ds-button
+              size="sm"
+              [variant]="selectedDeadline() === preset.id ? 'soft' : 'neutral'"
               (click)="onDeadlinePreset(preset.id)"
-            >{{ preset.labelKey | translate }}</button>
+            >{{ preset.labelKey | translate }}</ds-button>
           }
         </div>
         <span class="flex items-center gap-2.5">

@@ -123,14 +123,16 @@ public class LoginService
 
     private async Task<LoginToken> CreateLoginTokenForPerson(Person person, string? redirectUrl)
     {
-        var loginToken = await _dbContext.LoginTokens.SingleOrDefaultAsync(t => t.Person.Id == person.Id);
-        if (loginToken is not null)
+        var existingTokens = await _dbContext.LoginTokens
+            .Where(t => t.Person.Id == person.Id)
+            .ToListAsync();
+        if (existingTokens.Count > 0)
         {
-            _dbContext.LoginTokens.Remove(loginToken);
+            _dbContext.LoginTokens.RemoveRange(existingTokens);
             await _dbContext.SaveChangesAsync();
         }
         
-        loginToken = new LoginToken
+        var loginToken = new LoginToken
         {
             Id = Guid.NewGuid(),
             Person = person,

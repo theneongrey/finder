@@ -165,8 +165,7 @@
     box-shadow: none;
   }
 
-  /* Back button and title replaced by logo + breadcrumb */
-  .title-bar__back-btn,
+  /* Title replaced by logo + breadcrumb; back button stays visible */
   .title-bar__info,
   .title-bar__mobile-label {
     display: none;
@@ -176,6 +175,7 @@
     display: flex;
     align-items: center;
     margin-left: 5px;
+    order: 1;
   }
 
   /* Logo always visible when scrolled */
@@ -190,6 +190,20 @@
     height: 20px;
     background: rgba(20, 24, 28, 0.1);
     flex-shrink: 0;
+    order: 5;
+  }
+
+  /* Web ordering: logo | back breadcrumb | title | user menu */
+  .title-bar__sep--lead {
+    order: 2;
+  }
+
+  .title-bar__back-btn {
+    order: 3;
+  }
+
+  .title-bar__user {
+    order: 7;
   }
 
   .title-bar__web-label {
@@ -199,12 +213,14 @@
     color: var(--text-primary);
     white-space: nowrap;
     text-decoration: none;
+    order: 6;
   }
 
   .title-bar__web-label--breadcrumb {
     color: var(--accent);
     cursor: pointer;
     transition: color var(--duration-fast) var(--ease-standard);
+    order: 4;
   }
 
   .title-bar__web-label--breadcrumb:hover {

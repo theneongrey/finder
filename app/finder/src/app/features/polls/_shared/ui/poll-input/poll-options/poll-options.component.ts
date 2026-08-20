@@ -9,8 +9,9 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmCard } from '@spartan-ng/helm/card';
-import { AddCardComponent } from '@smart/add-card/add-card.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionCardWeekdayComponent } from './option-card-weekday/option-card-weekday.component';
@@ -45,9 +46,10 @@ export type { DateOptionEntry, DateOptionType };
   templateUrl: './poll-options.component.html',
   styleUrl: './poll-options.component.css',
   imports: [
-    AddCardComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateButtonComponent,
     TranslatePipe,
-    HlmCard,
     OptionCardComponent,
     OptionCardDateComponent,
     OptionCardWeekdayComponent,
@@ -69,10 +71,13 @@ export class PollOptionsComponent {
   options = input.required<OptionEntry[]>();
   dateOptions = input.required<DateOptionEntry[]>();
   appointmentDateType = input<DateOptionType | undefined>(undefined);
+  readonly = input<boolean>(false);
   add = output<void>();
   remove = output<number>();
   appointmentDateTypeSelected = output<DateOptionType>();
   weekdayToggle = output<number>();
+  dateOptionsChange = output<DateOptionEntry[]>();
+  optionsChange = output<OptionEntry[]>();
 
   addCardAnimating = signal(false);
   firstEntryShowsTime = signal(false);
@@ -102,18 +107,40 @@ export class PollOptionsComponent {
     });
   }
 
-  onFirstEntryShowTimeChange(value: boolean): void {
-    this.firstEntryShowsTime.set(value);
-    if (!value) {
-      this.dateOptions().forEach((o) => (o.startTime = undefined));
-    }
+  getStars(index: number): string {
+    return '★'.repeat(index + 1);
   }
 
-  onGroupedAddTime(): void {
-    if (this.dateOptions().length === 0) { return; }
-    const start = nextFullHour();
-    this.dateOptions().forEach((o) => { if (!o.startTime) { o.startTime = start; } });
-    this.firstEntryShowsTime.set(true);
+  updateDateOption(index: number, entry: DateOptionEntry): void {
+    const updated = this.dateOptions().map((o, i) => i === index ? entry : o);
+    this.dateOptionsChange.emit(updated);
+  }
+
+  updateOption(index: number, entry: OptionEntry): void {
+    const updated = this.options().map((o, i) => i === index ? entry : o);
+    this.optionsChange.emit(updated);
+  }
+
+  onToggleTime(value: boolean): void {
+    if (value) {
+      const start = nextFullHour();
+      const updated = this.dateOptions().map((o) => {
+        if (o.startTime) { return o; }
+        const changes: Partial<DateOptionEntry> = { startTime: start };
+        if (this.appointmentDateType() === 'date-range' && !o.endTime) {
+          const end = new Date(start);
+          end.setHours(end.getHours() + 1);
+          changes.endTime = end;
+        }
+        return { ...o, ...changes };
+      });
+      this.dateOptionsChange.emit(updated);
+      this.firstEntryShowsTime.set(true);
+    } else {
+      const updated = this.dateOptions().map((o) => ({ ...o, startTime: undefined, endTime: undefined }));
+      this.dateOptionsChange.emit(updated);
+      this.firstEntryShowsTime.set(false);
+    }
   }
 
   onAdd() {

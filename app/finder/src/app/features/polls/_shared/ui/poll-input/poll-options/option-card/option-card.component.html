@@ -1,98 +1,68 @@
-<div hlmCard>
-  <div hlmCardContent>
+<ds-card [accentBorder]="false" [padding]="14">
   <div class="flex flex-col gap-2">
     <div class="flex items-center gap-2">
-      <input
-        hlmInput
-        class="flex-1 bg-gray-50 rounded-lg"
-        maxlength="100"
-        [placeholder]="
-          'project.pollInput.yesNo.optionPlaceholder'
-            | translate: { number: index() + 1 }
-        "
-        [(ngModel)]="option().text"
+      <ds-input
+        class="flex-1"
+        [placeholder]="'project.pollInput.yesNo.optionPlaceholder' | translate"
+        [ngModel]="option().text"
+        (ngModelChange)="optionChange.emit({ ...option(), text: $event })"
         [name]="'option-text-' + index()"
+        [loading]="urlLoading()"
+        [readonly]="readonly()"
+        (inputBlur)="onTitleBlur()"
       />
-      @if (canRemove()) {
-        <button hlmBtn type="button" variant="ghost" icon="fa-solid fa-xmark" (click)="remove.emit()">
-        </button>
+      @if (canRemove() && !readonly()) {
+        <ds-button [size]="32" variant="ghost" icon="close" [disabled]="urlLoading()" (click)="remove.emit()" />
       }
     </div>
 
     <div class="ml-0.5">
       @if (showDescription()) {
-        <div
-          animate.enter="slide-enter"
-          animate.leave="slide-leave"
-          class="flex items-center gap-2"
-        >
-          <i class="fa-solid fa-align-left text-primary text-sm"></i>
-          <input
-            hlmInput
-            class="flex-1 bg-transparent ml-1 h-6 text-sm"
-            style="
-              border: none;
-              border-bottom: 1px solid #cbd5e1;
-              border-radius: 0;
-              box-shadow: none;
-              padding-left: 0;
-            "
-            maxlength="100"
-            [placeholder]="
-              'project.pollInput.yesNo.optionDescriptionPlaceholder' | translate
-            "
+        <div class="flex items-start gap-2 mt-1">
+          <span class="mt-[13px]"><ds-icon name="paragraph" [size]="13" [color]="'var(--accent)'" /></span>
+          <ds-textarea
             #descriptionInput
-            [(ngModel)]="option().description"
+            class="flex-1"
+            [autoResize]="true"
+            [maxlength]="100"
+            [placeholder]="'project.pollInput.yesNo.optionDescriptionPlaceholder' | translate"
+            [ngModel]="option().description"
+            (ngModelChange)="optionChange.emit({ ...option(), description: $event })"
             [name]="'option-description-' + index()"
-            (blur)="onDescriptionBlur()"
+            [disabled]="urlLoading()"
+            (blurred)="onDescriptionBlur()"
           />
         </div>
       }
 
       @if (showLink()) {
-        <div
-          animate.enter="slide-enter"
-          animate.leave="slide-leave"
-          class="flex flex-col gap-1"
-        >
+        <div class="flex flex-col gap-1 mt-1">
           <div class="flex items-center gap-2">
-            <i class="fa-solid fa-link text-primary text-sm"></i>
-            <input
-              hlmInput
-              class="flex-1 bg-transparent ml-1 h-6 text-sm"
-              style="
-                border: none;
-                border-bottom: 1px solid #cbd5e1;
-                border-radius: 0;
-                box-shadow: none;
-                padding-left: 0;
-              "
-              maxlength="2048"
-              [placeholder]="
-                'project.pollInput.yesNo.urlPlaceholder' | translate
-              "
+            <ds-icon name="link" [size]="13" [color]="'var(--accent)'" />
+            <ds-input
               #linkInput
-              [(ngModel)]="option().meta!.url"
+              class="flex-1"
+              [placeholder]="'project.pollInput.yesNo.urlPlaceholder' | translate"
+              [ngModel]="_linkUrl()"
+              (ngModelChange)="onLinkUrlChange($event)"
               [name]="'option-url-' + index()"
-              (blur)="onUrlBlur()"
+              [disabled]="urlLoading()"
+              (inputBlur)="onUrlBlur()"
             />
           </div>
           @if (urlError()) {
-            <hlm-alert variant="destructive" class="ml-5">
-              <p hlmAlertDescription>{{
-                "project.pollInput.yesNo.urlError" | translate
-              }}</p>
-            </hlm-alert>
+            <p class="flex items-center gap-1 m-0 text-[length:var(--fs-caption)] text-[color:var(--color-danger,#ef4444)]">
+              <ds-icon name="warning" [size]="12" />
+              {{ 'project.pollInput.yesNo.urlError' | translate }}
+            </p>
           }
           @if (previewLoading()) {
             <div class="flex items-center justify-center py-2">
-              <i class="fa-solid fa-spinner fa-spin text-primary"></i>
+              <div class="preview-spinner"></div>
             </div>
           }
           @if (previewData() && !previewLoading()) {
-            <div
-              class="flex gap-3 mt-1 p-2 bg-gray-50 rounded-lg border border-gray-200"
-            >
+            <div class="flex gap-3 mt-1 p-2 rounded-lg bg-[var(--bg-panel)] border border-[var(--border-hairline-soft)]">
               @if (previewData()!.imageUrl) {
                 <img
                   [src]="previewData()!.imageUrl"
@@ -100,23 +70,15 @@
                   class="w-14 h-14 object-cover rounded flex-shrink-0"
                 />
               }
-              <div
-                class="flex flex-col gap-0.5 min-w-0 justify-center"
-              >
+              <div class="flex flex-col gap-0.5 min-w-0 justify-center">
                 @if (previewData()!.title) {
-                  <span class="text-sm font-medium truncate">{{
-                    previewData()!.title
-                  }}</span>
+                  <span class="truncate text-[length:var(--fs-ui-sm)] font-bold text-[color:var(--text-primary)]">{{ previewData()!.title }}</span>
                 }
                 @if (previewData()!.description) {
-                  <span class="text-xs text-gray-500 line-clamp-2">{{
-                    previewData()!.description
-                  }}</span>
+                  <span class="line-clamp-2 text-[length:var(--fs-caption)] text-[color:var(--text-secondary)]">{{ previewData()!.description }}</span>
                 }
                 @if (previewData()!.siteName) {
-                  <span class="text-xs text-gray-400">{{
-                    previewData()!.siteName
-                  }}</span>
+                  <span class="text-[length:var(--fs-caption-sm)] text-[color:var(--text-muted)]">{{ previewData()!.siteName }}</span>
                 }
               </div>
             </div>
@@ -124,36 +86,23 @@
         </div>
       }
 
-      @if (!showDescription() || !showLink()) {
-        <div
-          animate.enter="slide-enter"
-          animate.leave="slide-leave"
-          class="flex items-center gap-3"
-          [class.mt-2]="showDescription() || showLink()"
-        >
+      @if (!readonly() && (!showDescription() || !showLink())) {
+        <div class="flex items-center gap-3" [class.mt-2]="showDescription() || showLink()">
           @if (!showDescription()) {
-            <button
-              type="button"
-              class="flex items-center gap-1 text-sm text-gray-400 cursor-pointer hover:text-primary transition-colors bg-transparent border-0 p-0"
-              (click)="toggleDescription()"
-            >
-              <i class="fa-solid fa-plus" style="font-size: 11px"></i>
-              {{ "project.pollInput.yesNo.addDescription" | translate }}
-            </button>
+            <ds-button variant="ghost" size="sm" icon="plus" [disabled]="urlLoading()" (click)="toggleDescription()">
+              {{ 'project.pollInput.yesNo.addDescription' | translate }}
+            </ds-button>
           }
           @if (!showLink()) {
-            <button
-              type="button"
-              class="flex items-center gap-1 text-sm text-gray-400 cursor-pointer hover:text-primary transition-colors bg-transparent border-0 p-0"
-              (click)="toggleLink()"
-            >
-              <i class="fa-solid fa-plus" style="font-size: 11px"></i>
-              {{ "project.pollInput.yesNo.addLink" | translate }}
-            </button>
+            <ds-button variant="ghost" size="sm" icon="plus" [disabled]="urlLoading()" (click)="toggleLink()">
+              {{ 'project.pollInput.yesNo.addLink' | translate }}
+            </ds-button>
           }
+          <span class="ml-auto text-right text-[length:var(--fs-caption)] text-[color:var(--text-muted)]">
+            {{ 'project.pollInput.yesNo.linkHint' | translate }}
+          </span>
         </div>
       }
     </div>
   </div>
-  </div>
-</div>
+</ds-card>

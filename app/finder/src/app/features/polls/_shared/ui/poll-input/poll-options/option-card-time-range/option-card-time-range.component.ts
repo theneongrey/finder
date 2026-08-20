@@ -4,39 +4,46 @@ import {
   input,
   output,
 } from '@angular/core';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmInput } from '@spartan-ng/helm/input';
+import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { HlmCardImports } from '@spartan-ng/helm/card';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DateOptionEntry, formatTime, parseTimeInput } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-time-range',
   templateUrl: './option-card-time-range.component.html',
-  imports: [HlmButton, HlmInput, TranslatePipe, ...HlmCardImports],
+  imports: [FormsModule, DsButtonComponent, DsInputComponent, DsCardComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardTimeRangeComponent {
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);
+  readonly = input<boolean>(false);
   remove = output<void>();
+  optionChange = output<DateOptionEntry>();
 
-  protected getTimeValue(date: Date | undefined): string {
-    return date ? formatTime(date) : '';
+  get startTimeValue(): string {
+    return this.option().startTime ? formatTime(this.option().startTime!) : '';
   }
 
-  onStartTimeChange(event: Event): void {
-    const entry = this.option();
-    entry.startTime = parseTimeInput((event.target as HTMLInputElement).value);
-    if (entry.startTime && !entry.endTime) {
-      const endTime = new Date(entry.startTime);
+  get endTimeValue(): string {
+    return this.option().endTime ? formatTime(this.option().endTime!) : '';
+  }
+
+  onStartTimeChange(value: string): void {
+    const startTime = parseTimeInput(value);
+    let endTime = this.option().endTime;
+    if (startTime && !endTime) {
+      endTime = new Date(startTime);
       endTime.setHours(endTime.getHours() + 1);
-      entry.endTime = endTime;
     }
+    this.optionChange.emit({ ...this.option(), startTime, endTime });
   }
 
-  setEndTime(event: Event): void {
-    this.option().endTime = parseTimeInput((event.target as HTMLInputElement).value);
+  setEndTime(value: string): void {
+    this.optionChange.emit({ ...this.option(), endTime: parseTimeInput(value) });
   }
 }

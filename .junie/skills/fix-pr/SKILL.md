@@ -1,3 +1,8 @@
+---
+name: fix-pr
+description: Interactive, one-by-one resolution of pull request review findings with explicit user approval before each change. Use when the user asks to fix or address PR review comments.
+---
+
 # Fix PR Skill
 
 Review a pull request for quality issues and fix them **one at a time**, with explicit user approval before each change and confirmation that it worked before moving on.

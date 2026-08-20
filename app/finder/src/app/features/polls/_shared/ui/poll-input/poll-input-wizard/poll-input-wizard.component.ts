@@ -1,0 +1,293 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { OptionType } from '../../../models/poll-detail.model';
+import { TitleBarService } from '../../../../../../common/services/title-bar.service';
+import { PollInputStateService } from '../poll-input-state.service';
+import { PollTypeSelectionComponent } from '../poll-type-selection/poll-type-selection.component';
+import { PollInputFormComponent } from '../poll-input-form/poll-input-form.component';
+import { ShareContentComponent } from '../../share-content/share-content.component';
+import { PollItemComponent } from '../../poll-item/poll-item.component';
+import { PollTypeBadgeComponent } from '../../poll-type-badge/poll-type-badge.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
+
+@Component({
+  selector: 'app-poll-input-wizard',
+  templateUrl: './poll-input-wizard.component.html',
+  imports: [
+    PollTypeSelectionComponent,
+    PollInputFormComponent,
+    ShareContentComponent,
+    PollItemComponent,
+    PollTypeBadgeComponent,
+    DsButtonComponent,
+    DsIconComponent,
+    TranslatePipe,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PollInputWizardComponent {
+  protected readonly state = inject(PollInputStateService);
+  private readonly titleService = inject(TitleBarService);
+  private readonly translateService = inject(TranslateService);
+
+  readonly OptionType = OptionType;
+
+  mode = input<'add' | 'edit' | 'standalone'>('add');
+  pollId = input<string | undefined>(undefined);
+
+  readonly wizardStep = signal(1);
+
+  readonly isDesktop = toSignal(
+    inject(BreakpointObserver)
+      .observe('(min-width: 680px)')
+      .pipe(map(({ matches }) => matches)),
+    { initialValue: false },
+  );
+
+  readonly optionTypeLabel = computed(() => {
+    const type = this.state.optionType();
+    if (type === OptionType.YesNo) { return 'project.detail.pollTypes.yesNo'; }
+    if (type === OptionType.Date) { return 'project.detail.pollTypes.appointment'; }
+    if (type === OptionType.Rating) { return 'project.detail.pollTypes.rating'; }
+    return '';
+  });
+
+  readonly step2Label = computed(() => {
+    const type = this.state.optionType();
+    if (type === OptionType.Date) { return 'project.pollInput.stepOptionsDate'; }
+    if (type === OptionType.Rating) { return 'project.pollInput.stepOptionsRating'; }
+    return 'project.pollInput.stepOptions';
+  });
+
+  readonly ctaLabel = computed((): string => {
+    const mode = this.mode();
+    if (mode === 'edit') { return 'project.pollInput.updatePoll'; }
+    if (mode === 'add') { return 'project.pollInput.createPoll'; }
+
+    // standalone
+    const step = this.wizardStep();
+    if (step === 1) { return 'project.pollInput.next'; }
+    if (step === 2) { return 'project.pollInput.createPoll'; }
+    return 'project.pollInput.done'; // step 3: finish
+  });
+
+  readonly canProceed = computed((): boolean => {
+    const mode = this.mode();
+    if (mode === 'edit') { return !this.state.pollIsClosed() && this.state.isValid(); }
+    if (mode !== 'standalone') { return this.state.isValid(); }
+    const step = this.wizardStep();
+    if (step === 1) { return this.state.optionType() !== undefined; }
+    if (step === 2) { return this.state.isValid() && !this.state.isPollCreating(); }
+    if (step === 3) { return true; }
+    return true;
+  });
+
+  readonly webSteps = computed(() => {
+    const step = this.wizardStep();
+    return [
+      {
+        num: '1',
+        titleKey: 'project.pollInput.stepArt',
+        subKey: this.optionTypeLabel(),
+        isDone: step > 1,
+        isCurrent: step === 1,
+      },
+      {
+        num: '2',
+        titleKey: this.step2Label(),
+        subKey: '',
+        isDone: step > 2,
+        isCurrent: step === 2,
+      },
+      {
+        num: '3',
+        titleKey: 'project.pollInput.stepShare',
+        subKey: '',
+        isDone: false,
+        isCurrent: step === 3,
+      },
+    ];
+  });
+
+  readonly webContentTitleKey = computed((): string => {
+    if (this.mode() === 'edit') { return 'project.pollInput.editPollTitle'; }
+    const step = this.wizardStep();
+    if (step === 1) { return 'project.pollInput.typeTitle'; }
+    if (step === 2) { return this.step2Label(); }
+    return 'project.pollInput.shareTitle';
+  });
+
+  readonly webContentSubtitle = computed((): string => {
+    if (this.mode() === 'edit') { return this.state.currentProject()?.name ?? ''; }
+    const step = this.wizardStep();
+    if (step === 1) { return this.translateService.instant('project.pollInput.webStep1Title'); }
+    if (step === 2) {
+      return this.state.optionType() === OptionType.Date
+        ? this.translateService.instant('project.pollInput.webStep2TitleDate')
+        : this.translateService.instant('project.pollInput.webStep2TitleGeneric');
+    }
+    return this.translateService.instant('project.pollInput.webStep3Title');
+  });
+
+  constructor() {
+    // Reset standalone state on init
+    effect(() => {
+      if (this.mode() === 'standalone') {
+        this.state.initStandaloneMode();
+      }
+    });
+
+    // Edit mode: skip type-selection step, start at step 2
+    effect(() => {
+      if (this.mode() === 'edit') {
+        this.wizardStep.set(2);
+      }
+    }, { allowSignalWrites: true });
+
+    // Preselect Yes/No in standalone mode
+    effect(() => {
+      if (this.mode() === 'standalone') {
+        this.state.preselectYesNo();
+      }
+    }, { allowSignalWrites: true });
+
+    // After standalone poll creation: apply shares and advance to step 3
+    effect(() => {
+      if (this.mode() !== 'standalone') { return; }
+      if (this.state.tryApplySharesAfterCreation()) {
+        this.wizardStep.set(3);
+      }
+    }, { allowSignalWrites: true });
+
+    // Load sharing contacts
+    effect(() => {
+      const mode = this.mode();
+      if (mode === 'edit' || mode === 'standalone') {
+        this.state.loadSharingContacts();
+      }
+    });
+
+    // Load poll data in edit mode
+    effect(() => {
+      const pollId = this.pollId();
+      if (this.mode() === 'edit' && pollId) {
+        this.state.initEditMode(pollId);
+        this.state.loadEditData(pollId);
+      }
+    }, { allowSignalWrites: true });
+
+    // Update title bar for standalone and edit
+    effect(() => {
+      const mode = this.mode();
+      if (mode !== 'standalone' && mode !== 'edit') { return; }
+      const step = this.wizardStep();
+      const desktop = this.isDesktop();
+
+      if (desktop) {
+        this.titleService.setProgress(undefined);
+        if (mode === 'standalone') {
+          this.titleService.setTitle(this.translateService.instant('project.standaloneInput.addNew.cto'));
+          this.titleService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
+        } else if (mode === 'edit') {
+          this.titleService.setTitle(this.translateService.instant('project.pollInput.editPollTitle'));
+          this.titleService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
+        }
+        return;
+      }
+
+      if (mode === 'edit') {
+        this.titleService.setTitle(this.translateService.instant('project.pollInput.editPollTitle'));
+        this.titleService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
+        this.titleService.setProgress(undefined);
+        this.titleService.setBackFn(undefined);
+        return;
+      }
+
+      const step2Name = this.translateService.instant(this.step2Label());
+      const step1Name = this.translateService.instant('project.pollInput.stepArt');
+      const step3Name = this.translateService.instant('project.pollInput.stepShare');
+      const stepNames = [step1Name, step2Name, step3Name];
+      const titles = [
+        this.translateService.instant('project.standaloneInput.addNew.cto'),
+        step2Name,
+        step3Name,
+      ];
+
+      this.titleService.setTitle(titles[step - 1]);
+      this.titleService.setSubtitle(
+        this.translateService.instant('project.pollInput.mobileStepSubtitle', { step, total: 3, name: stepNames[step - 1] }),
+      );
+      this.titleService.setProgress(Math.round((step / 3) * 100));
+      this.titleService.setBackFn(
+        mode === 'standalone' && step === 2 ? () => this.prevStep() : undefined,
+      );
+    });
+
+    // 'add' mode title (within a project)
+    effect(() => {
+      if (this.mode() === 'add') {
+        this.titleService.setTitle(this.state.currentProject()?.name ?? '');
+      }
+    });
+  }
+
+  onTypeSelected(type: OptionType): void {
+    this.state.onTypeSelected(type, this.wizardStep);
+  }
+
+  onCta(): void {
+    const mode = this.mode();
+
+    if (mode === 'edit') {
+      this.state.submitEdit(this.state.projectId(), this.pollId());
+      return;
+    }
+
+    if (mode === 'add') {
+      this.state.submitAdd(this.state.projectId());
+      return;
+    }
+
+    // standalone
+    const step = this.wizardStep();
+
+    if (step === 1) {
+      this.wizardStep.set(2);
+      return;
+    }
+
+    if (step === 2) {
+      this.state.submitStandalone();
+      return;
+    }
+
+    // step 3: finish
+    this.state.finishAndNavigate();
+  }
+
+  prevStep(): void {
+    if (this.wizardStep() > 1) {
+      this.wizardStep.update(s => s - 1);
+    }
+  }
+
+  discard(): void {
+    if (this.mode() === 'edit') {
+      this.state.navigateAfterDiscard(this.state.projectId(), this.pollId());
+      return;
+    }
+    this.state.finishAndNavigate();
+  }
+}

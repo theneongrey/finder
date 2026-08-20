@@ -52,6 +52,7 @@ export class PollItemComponent {
 
   poll = input.required<PollItem>();
   editMode = input<boolean>(false);
+  previewMode = input<boolean>(false);
   isHovered = signal(false);
   deletionRequested = output();
   shareRequested = output();

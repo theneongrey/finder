@@ -31,9 +31,9 @@ export class PermissionService {
     );
   }
 
-  getContacts(projectId: string) {
+  getContactsGeneral() {
     return this.httpClient.get<SharingContact[]>(
-      `${this.baseUrl}/api/permission/contacts/${projectId}`,
+      `${this.baseUrl}/api/permission/contacts`,
     );
   }
 

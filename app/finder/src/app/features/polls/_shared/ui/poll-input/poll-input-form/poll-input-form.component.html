@@ -1,87 +1,20 @@
-<div class="pb-28 flex flex-col gap-3 mx-4">
-  <div class="flex flex-col gap-1">
-    <label class="text-sm font-semibold px-1" for="question">
-      {{ "project.pollInput.yesNo.question" | translate }}
-    </label>
-    <div
-      class="bg-gray-50 rounded-xl border border-transparent transition-all duration-300"
-    >
-      <input
-        hlmInput
-        id="question"
-        name="question"
-        class="w-full bg-transparent"
-        autocomplete="off"
-        [placeholder]="
-          'project.pollInput.yesNo.questionPlaceholder' | translate
-        "
-        [ngModel]="question()"
-        (ngModelChange)="questionChange.emit($event)"
-      />
-    </div>
-  </div>
-
-  @if (showDescription()) {
-    <ds-textarea
-      #descriptionTextarea
-      name="description"
-      [autoResize]="true"
-      [maxlength]="200"
-      [placeholder]="
-        'project.pollInput.yesNo.descriptionPlaceholder' | translate
-      "
-      [ngModel]="description()"
-      (ngModelChange)="descriptionChange.emit($event)"
-      (blurred)="onDescriptionBlur()"
-    />
-  }
-  @if (!showDescription()) {
-    <button
-      type="button"
-      class="flex items-center gap-1 text-sm text-gray-400 cursor-pointer hover:text-primary transition-colors bg-transparent border-0 p-0"
-      (click)="toggleDescription()"
-    >
-      <i class="fa-solid fa-plus" style="font-size: 11px"></i>
-      {{ "project.pollInput.yesNo.addDescription" | translate }}
-    </button>
-  }
-
-  <div class="flex flex-col gap-2">
-    <label class="flex items-center gap-2 cursor-pointer text-sm font-semibold px-1">
-      <input
-        type="checkbox"
-        data-testid="close-date-toggle"
-        [checked]="showCloseDate()"
-        (change)="toggleCloseDate($any($event.target).checked)"
-        class="accent-primary w-4 h-4"
-      />
-      Umfrage automatisch schließen
-    </label>
-    @if (showCloseDate()) {
-      <div class="flex gap-2" data-testid="close-date-input">
-        <input
-          hlmInput
-          type="date"
-          class="flex-1 bg-gray-50 border border-transparent rounded-xl"
-          [value]="closeDatePart"
-          (change)="onCloseDateChange($any($event.target).value, closeTimePart)"
-        />
-        <input
-          hlmInput
-          type="time"
-          class="w-32 bg-gray-50 border border-transparent rounded-xl"
-          [value]="closeTimePart"
-          (change)="onCloseDateChange(closeDatePart, $any($event.target).value)"
-        />
-      </div>
-    }
-  </div>
+<div class="flex flex-col gap-4 pt-5 pb-32 lg:pb-6 max-w-[800px] w-full">
+  <app-poll-question-card
+    [mode]="mode()"
+    [question]="question()"
+    (questionChange)="questionChange.emit($event)"
+    [description]="description()"
+    (descriptionChange)="descriptionChange.emit($event)"
+    [isClosed]="isClosed()"
+  />
 
   <app-poll-options
     [titleKey]="
       optionType() === OptionType.Date
         ? 'project.pollInput.date.answerOptions'
-        : 'project.pollInput.yesNo.answerOptions'
+        : optionType() === OptionType.Rating
+          ? 'project.pollInput.rating.answerOptions'
+          : 'project.pollInput.yesNo.answerOptions'
     "
     [subtitleKey]="
       optionType() === OptionType.Date
@@ -92,18 +25,36 @@
     [options]="options()"
     [dateOptions]="dateOptions()"
     [appointmentDateType]="appointmentDateType()"
+    [readonly]="isClosed()"
     (appointmentDateTypeSelected)="appointmentDateTypeChange.emit($event)"
     (add)="add.emit()"
     (remove)="remove.emit($event)"
     (weekdayToggle)="weekdayToggle.emit($event)"
+    (optionsChange)="optionsChange.emit($event)"
+    (dateOptionsChange)="dateOptionsChange.emit($event)"
+  />
+
+  <app-poll-close-settings
+    [mode]="mode()"
+    [closeDate]="closeDate()"
+    (closeDateChange)="closeDateChange.emit($event)"
+    [isClosed]="isClosed()"
+    [closedAt]="closedAt()"
+    (closePollNow)="closePollNow.emit()"
+    (reopenPoll)="reopenPoll.emit()"
   />
 </div>
 
-<div
-  class="fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md p-4 flex justify-center"
->
-  <button hlmBtn class="w-full max-w-md" [disabled]="!isValid()" (click)="formSubmit.emit()">
-    <i [class]="mode() !== 'edit' ? 'fa-regular fa-paper-plane' : 'fa-regular fa-floppy-disk'"></i>
-    {{ mode() !== 'edit' ? ('project.pollInput.createPoll' | translate) : ('project.pollInput.updatePoll' | translate) }}
-  </button>
-</div>
+@if (!hideCta()) {
+  <div data-testid="submit-bar" class="fixed bottom-0 left-0 w-full z-50 flex justify-center pt-[14px] px-[18px] pb-[22px] bg-[linear-gradient(to_top,var(--bg-app)_46%,rgba(244,241,236,0)_100%)]">
+    <ds-button
+      variant="primary"
+      [fullWidth]="true"
+      [disabled]="!isValid()"
+      [icon]="mode() !== 'edit' ? 'send' : undefined"
+      (click)="formSubmit.emit()"
+    >
+      {{ mode() !== 'edit' ? ('project.pollInput.createPoll' | translate) : ('project.pollInput.updatePoll' | translate) }}
+    </ds-button>
+  </div>
+}

@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +16,12 @@ import { DsSegmentedControlComponent } from '@ds/segmented-control/ds-segmented-
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { SharingStore } from '../../../data/sharing.store';
 import { SharingContact } from '../../../models/poll-detail.model';
+
+export interface PendingInvite {
+  email: string;
+  role: number;
+  name?: string;
+}
 
 @Component({
   selector: 'app-share-invite-form',
@@ -29,6 +36,11 @@ export class ShareInviteFormComponent {
   projectId = input.required<string>();
   contacts = input.required<SharingContact[]>();
   sharingInProgress = input.required<boolean>();
+  deferred = input<boolean>(false);
+  pendingInvites = input<PendingInvite[]>([]);
+
+  pendingInvite = output<PendingInvite>();
+  removeInvite = output<string>();
 
   selectedRole = signal('0');
   contactEmail = signal<string | undefined>(undefined);
@@ -96,6 +108,12 @@ export class ShareInviteFormComponent {
     const email = this.contactEmail()?.trim();
     if (!email || this.sharingInProgress()) { return; }
     this.dropdownVisible.set(false);
+    if (this.deferred()) {
+      const contact = this.contacts().find(c => c.email === email);
+      this.pendingInvite.emit({ email, role: parseInt(this.selectedRole(), 10), name: contact?.name });
+      this.contactEmail.set(undefined);
+      return;
+    }
     this.sharingStore.share({
       email,
       permissionType: parseInt(this.selectedRole(), 10),

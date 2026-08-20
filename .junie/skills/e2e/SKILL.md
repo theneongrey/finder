@@ -1,3 +1,8 @@
+---
+name: e2e
+description: Playwright test conventions, authentication helpers, and data-testid template tagging for the Finder app. Use when writing or updating end-to-end tests.
+---
+
 # E2E Test Skill
 
 You are writing Playwright e2e tests for the Finder app.

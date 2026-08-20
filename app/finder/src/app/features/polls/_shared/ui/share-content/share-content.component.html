@@ -1,34 +1,41 @@
-<ds-tabs
-  [items]="tabItems()"
-  [value]="activeTab()"
-  (valueChange)="activeTab.set($event)"
-/>
+<div
+  [class]="inCard() ? 'mt-3.5 rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4' : 'mt-2'"
+  [style.box-shadow]="inCard() ? 'var(--shadow-card-soft)' : null"
+>
+  @if (tabItems().length > 1) {
+    <ds-tabs
+      [items]="tabItems()"
+      [value]="activeTab()"
+      (valueChange)="activeTab.set($event)"
+    />
+  }
 
-@if (activeTab() === 'invite') {
-  <div class="mt-[18px]">
-    <app-share-access-tab
-      [visibilityOptions]="visibilityOptions()"
-      [selectedVisibility]="selectedVisibilityStr()"
-      [isPublic]="isPublic()"
-      [shareLink]="shareLink()"
-      (visibilityChange)="onVisibilityChange($event)"
-    />
-    <app-share-invite-form
-      class="block"
-      [projectId]="projectId()"
-      [contacts]="sharingContacts()"
-      [sharingInProgress]="sharingInProgress()"
-    />
-  </div>
-}
+  @if (activeTab() === 'invite') {
+    <div [class.mt-[18px]]="tabItems().length > 1">
+      <app-share-access-tab
+        [visibilityOptions]="visibilityOptions()"
+        [selectedVisibility]="selectedVisibilityStr()"
+        [isPublic]="isPublic()"
+        [shareLink]="shareLink()"
+        (visibilityChange)="onVisibilityChange($event)"
+      />
+      <app-share-invite-form
+        class="mt-3.5 block"
+        [projectId]="projectId()"
+        [contacts]="sharingContacts()"
+        [sharingInProgress]="sharingInProgress()"
+      />
+    </div>
+  }
 
-@if (activeTab() === 'members') {
-  <div class="mt-[18px]">
-    <app-share-members-list
-      [projectId]="projectId()"
-      [members]="sharedWith()"
-      [isPublic]="isPublic()"
-      (goInvite)="activeTab.set('invite')"
-    />
-  </div>
-}
+  @if (activeTab() === 'members') {
+    <div class="mt-[18px]">
+      <app-share-members-list
+        [projectId]="projectId()"
+        [members]="sharedWith()"
+        [isPublic]="isPublic()"
+        (goInvite)="activeTab.set('invite')"
+      />
+    </div>
+  }
+</div>

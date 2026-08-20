@@ -25,13 +25,14 @@ export class DsButtonComponent {
   loading      = input<boolean>(false);
   disabled     = input<boolean>(false);
   noGlow       = input<boolean>(true);
+  square        = input<boolean>(false);
 
   protected readonly isIconOnly = computed(() => typeof this.size() === 'number');
 
   protected readonly variantClass = computed(() => {
     const v = this.variant();
     const s = this.size();
-    if (typeof s === 'number') { return `ds-btn--${v} ds-btn--icon-only`; }
+    if (typeof s === 'number') { return `ds-btn--${v} ds-btn--icon-only${this.square() ? ' ds-btn--square' : ''}`; }
     return s === 'sm' ? `ds-btn--${v} ds-btn--sm` : `ds-btn--${v}`;
   });
 

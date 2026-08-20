@@ -7,7 +7,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { UserStore } from '../../../data/user.store';
@@ -20,7 +20,6 @@ import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
 @Component({
   selector: 'app-title-bar',
   imports: [
-    RouterLink,
     NgOptimizedImage,
     LoadingComponent,
     UserAvatarComponent,
@@ -42,7 +41,10 @@ export class TitleBarComponent {
   subtitle = this.titleService.subtitle;
   titleDisabled = computed(() => this.title() === null);
   backRoute = this.titleService.backRoute;
+  backFn = this.titleService.backFn;
+  progress = this.titleService.progress;
   isHidden = this.titleService.isHidden;
+  hasBack = computed(() => !!(this.backRoute() || this.backFn()));
 
   isScrolled = toSignal(
     fromEvent(window, 'scroll', { passive: true }).pipe(
@@ -70,6 +72,15 @@ export class TitleBarComponent {
       onClick: () => this.navigateTo('/logout'),
     },
   ]);
+
+  onBack(): void {
+    const fn = this.backFn();
+    if (fn) {
+      fn();
+    } else if (this.backRoute()) {
+      this.router.navigate([this.backRoute()!]);
+    }
+  }
 
   private navigateTo(path: string): void {
     this.router.navigate([path]);

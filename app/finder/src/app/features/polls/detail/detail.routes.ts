@@ -14,8 +14,7 @@ export const detailRoutes: Routes = [
       import('./edit/edit-poll.component').then((m) => m.EditPollComponent),
     data: {
       optionType: OptionType.YesNo,
-      backRoute: (s: ActivatedRouteSnapshot) =>
-        `/polls/${s.parent?.params['id']}/overview/${s.params['pollId']}`,
+      backRoute: '/polls',
     },
   },
   {
@@ -24,8 +23,7 @@ export const detailRoutes: Routes = [
       import('./edit/edit-poll.component').then((m) => m.EditPollComponent),
     data: {
       optionType: OptionType.Rating,
-      backRoute: (s: ActivatedRouteSnapshot) =>
-        `/polls/${s.parent?.params['id']}/overview/${s.params['pollId']}`,
+      backRoute: '/polls',
     },
   },
   {
@@ -34,8 +32,7 @@ export const detailRoutes: Routes = [
       import('./edit/edit-poll.component').then((m) => m.EditPollComponent),
     data: {
       optionType: OptionType.Date,
-      backRoute: (s: ActivatedRouteSnapshot) =>
-        `/polls/${s.parent?.params['id']}/overview/${s.params['pollId']}`,
+      backRoute: '/polls',
     },
   },
   {

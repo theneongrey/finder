@@ -1,9 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   forwardRef,
   input,
+  output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HlmInput } from '@spartan-ng/helm/input';
@@ -23,16 +26,21 @@ import { HlmInput } from '@spartan-ng/helm/input';
   ],
 })
 export class DsInputComponent implements ControlValueAccessor {
-  type = input<'text' | 'date' | 'time'>('text');
+  type = input<'text' | 'date' | 'time' | 'datetime-local'>('text');
+  title = input<string | undefined>(undefined);
   background = input<string>('var(--bg-input)');
   label = input<string | undefined>(undefined);
   error = input<string | undefined>(undefined);
   placeholder = input<string>('');
   readonly = input(false);
+  loading = input(false);
+
+  readonly inputBlur = output<void>();
 
   protected readonly value = signal('');
   protected readonly isDisabled = signal(false);
 
+  private readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('inputEl');
   private onChange: (value: string) => void = () => { /* do nothing */ };
   private onTouched: () => void = () => { /* do nothing */ };
 
@@ -52,6 +60,10 @@ export class DsInputComponent implements ControlValueAccessor {
     this.isDisabled.set(isDisabled);
   }
 
+  focus(): void {
+    this.inputEl()?.nativeElement.focus();
+  }
+
   protected handleInput(event: Event): void {
     const v = (event.target as HTMLInputElement).value;
     this.value.set(v);
@@ -60,5 +72,6 @@ export class DsInputComponent implements ControlValueAccessor {
 
   protected handleBlur(): void {
     this.onTouched();
+    this.inputBlur.emit();
   }
 }

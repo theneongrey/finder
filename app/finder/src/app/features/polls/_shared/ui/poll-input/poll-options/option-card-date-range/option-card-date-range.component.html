@@ -1,43 +1,32 @@
-<div hlmCard>
-  <div hlmCardContent>
+<ds-card [accentBorder]="false" [padding]="14">
   <div class="flex flex-col gap-3">
     <div class="flex items-start gap-2">
       <div class="flex flex-col gap-2 flex-1">
         <div class="flex gap-2">
           <div class="flex flex-col gap-1 flex-1">
-            <label class="text-xs font-semibold text-gray-600">
-              {{ "project.pollInput.date.startDate" | translate }}
+            <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
+              {{ 'project.pollInput.date.startDate' | translate }}
             </label>
-            <hlm-date-picker
-              [date]="startDate()"
-              (dateChange)="onStartDateChange($event)"
-              autoCloseOnSelect
-            >
-              <hlm-date-picker-input [placeholder]="'project.pollInput.date.selectDate' | translate" openOnClick />
-            </hlm-date-picker>
+            <ds-input
+              type="date"
+              [ngModel]="startDateValue"
+              (ngModelChange)="setStartDate($event)"
+              [name]="'date-range-start-' + index()"
+              [readonly]="readonly()"
+            />
           </div>
 
           @if (showTime()) {
             <div class="flex flex-col gap-1 flex-1">
-              <div class="flex items-center justify-between">
-                <label class="text-xs font-semibold text-gray-600">
-                  {{ "project.pollInput.date.startTime" | translate }}
-                </label>
-                <button
-                  type="button"
-                  class="text-xs text-gray-400 hover:text-red-500 transition-colors bg-transparent border-0 cursor-pointer p-0"
-                  (click)="removeTime()"
-                >
-                  <i class="fa-solid fa-xmark"></i>
-                </button>
-              </div>
-              <input
-                hlmInput
+              <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
+                {{ 'project.pollInput.date.startTime' | translate }}
+              </label>
+              <ds-input
                 type="time"
-                step="900"
-                [value]="getTimeValue(option().startTime)"
-                (change)="setStartTime($event)"
+                [ngModel]="startTimeValue"
+                (ngModelChange)="setStartTime($event)"
                 [name]="'date-range-start-time-' + index()"
+                [readonly]="readonly()"
               />
             </div>
           }
@@ -45,62 +34,45 @@
 
         <div class="flex gap-2">
           <div class="flex flex-col gap-1 flex-1">
-            <label class="text-xs font-semibold text-gray-600">
-              {{ "project.pollInput.date.endDate" | translate }}
+            <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
+              {{ 'project.pollInput.date.endDate' | translate }}
             </label>
-            <hlm-date-picker
-              [date]="endDate()"
-              (dateChange)="onEndDateChange($event)"
-              autoCloseOnSelect
-            >
-              <hlm-date-picker-input [placeholder]="'project.pollInput.date.selectDate' | translate" openOnClick />
-            </hlm-date-picker>
+            <ds-input
+              type="date"
+              [ngModel]="endDateValue"
+              (ngModelChange)="setEndDate($event)"
+              [name]="'date-range-end-' + index()"
+              [readonly]="readonly()"
+            />
           </div>
 
           @if (showTime()) {
             <div class="flex flex-col gap-1 flex-1">
-              <label class="text-xs font-semibold text-gray-600">
-                {{ "project.pollInput.date.endTime" | translate }}
+              <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
+                {{ 'project.pollInput.date.endTime' | translate }}
               </label>
-              <input
-                hlmInput
+              <ds-input
                 type="time"
-                step="900"
-                [value]="getTimeValue(option().endTime)"
-                (change)="setEndTime($event)"
+                [ngModel]="endTimeValue"
+                (ngModelChange)="setEndTime($event)"
                 [name]="'date-range-end-time-' + index()"
+                [readonly]="readonly()"
               />
             </div>
           }
         </div>
 
-        @if (!showTime()) {
-          <button
-            type="button"
-            class="flex items-center gap-1 text-sm text-gray-400 cursor-pointer hover:text-primary transition-colors bg-transparent border-0 p-0 self-start"
-            (click)="addTime()"
-          >
-            <i class="fa-solid fa-plus" style="font-size: 11px"></i>
-            {{ "project.pollInput.date.addTime" | translate }}
-          </button>
-        }
-
         @if (endBeforeStart()) {
-          <p class="text-xs text-red-500 m-0">
-            <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-            {{
-              "project.pollInput.date.endBeforeStart"
-                | translate: { date: formattedStartDate() }
-            }}
+          <p class="flex items-center gap-1 m-0 text-[length:var(--fs-caption)] text-[color:var(--color-danger,#ef4444)]">
+            <ds-icon name="warning" [size]="12" />
+            {{ 'project.pollInput.date.endBeforeStart' | translate: { date: formattedStartDate() } }}
           </p>
         }
       </div>
 
       @if (canRemove()) {
-        <button hlmBtn type="button" variant="ghost" icon="fa-solid fa-xmark" (click)="remove.emit()">
-        </button>
+        <ds-button [size]="32" variant="ghost" icon="close" (click)="remove.emit()" />
       }
     </div>
   </div>
-  </div>
-</div>
+</ds-card>

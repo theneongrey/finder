@@ -43,6 +43,33 @@ public class PermissionService
         return Result<List<Person>>.Success(invitedPersons);
     }
 
+    public async Task<List<Api.Responses.SharingContactResponse>> GetGeneralSharingContacts()
+    {
+        if (!UserId.HasValue)
+        {
+            return [];
+        }
+
+        var contacts = await _dbContext.Permissions
+            .Where(p =>
+                p.PersonKey != UserId &&
+                (p.Project.Creator.Id == UserId ||
+                 p.Project.Permissions.Any(pp => pp.PersonKey == UserId)))
+            .GroupBy(p => new { p.Person.Id, p.Person.Email, p.Person.Name, p.Person.Picture })
+            .Select(g => new Api.Responses.SharingContactResponse
+            {
+                Name = g.Key.Name ?? g.Key.Email,
+                Email = g.Key.Email,
+                Picture = g.Key.Picture,
+                ShareCount = g.Count()
+            })
+            .OrderByDescending(c => c.ShareCount)
+            .Take(5)
+            .ToListAsync();
+
+        return contacts;
+    }
+
     public async Task<List<Api.Responses.SharingContactResponse>> GetSharingContacts(string projectSlug)
     {
         if (!UserId.HasValue)

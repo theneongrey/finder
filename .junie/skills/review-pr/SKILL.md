@@ -1,3 +1,8 @@
+---
+name: review-pr
+description: Automated structural review of a pull request across Angular, CSS, backend domains, and tests, posting comment-only feedback. Use when the user asks to review a PR.
+---
+
 # Review PR Skill
 
 Review a pull request for quality issues, structural problems, and future risks. Post inline comments for specific code locations and general comments for broader concerns. Never approve or request changes — always use `COMMENT` event so the author decides what to act on.

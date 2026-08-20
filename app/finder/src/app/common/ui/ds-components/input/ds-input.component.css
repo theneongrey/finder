@@ -4,6 +4,26 @@
   gap: 6px;
   width: 100%;
 }
+.ds-input-field-wrap {
+  position: relative;
+  width: 100%;
+}
+.ds-input-spinner {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border-hairline-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: ds-input-spin 0.6s linear infinite;
+  pointer-events: none;
+}
+@keyframes ds-input-spin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
 .ds-input-label {
   font-family: var(--font-body);
   font-size: var(--fs-ui-sm);

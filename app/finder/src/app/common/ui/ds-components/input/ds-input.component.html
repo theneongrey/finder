@@ -2,20 +2,28 @@
   @if (label()) {
     <label class="ds-input-label">{{ label() }}</label>
   }
-  <input
-    hlmInput
-    [type]="type()"
-    [value]="value()"
-    [placeholder]="placeholder()"
-    [disabled]="isDisabled()"
-    [readOnly]="readonly()"
-    [style.background]="background()"
-    [class.ds-input--error]="!!error()"
-    [class.ds-input--readonly]="readonly()"
-    class="ds-input"
-    (input)="handleInput($event)"
-    (blur)="handleBlur()"
-  />
+  <div class="ds-input-field-wrap">
+    <input
+      #inputEl
+      hlmInput
+      [type]="type()"
+      [value]="value()"
+      [placeholder]="placeholder()"
+      [disabled]="isDisabled() || loading()"
+      [readOnly]="readonly()"
+      [style.background]="background()"
+      [style.paddingRight]="loading() ? '36px' : null"
+      [class.ds-input--error]="!!error()"
+      [attr.title]="title() ?? null"
+      [class.ds-input--readonly]="readonly()"
+      class="ds-input"
+      (input)="handleInput($event)"
+      (blur)="handleBlur()"
+    />
+    @if (loading()) {
+      <div class="ds-input-spinner" aria-hidden="true"></div>
+    }
+  </div>
   @if (error()) {
     <span class="ds-input-error">{{ error() }}</span>
   }

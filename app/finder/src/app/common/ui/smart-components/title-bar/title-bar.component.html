@@ -1,17 +1,18 @@
 @if (!isHidden()) {
   <header class="title-bar" [class.title-bar--scrolled]="isScrolled()">
-    @if (backRoute()) {
+    @if (hasBack()) {
       <!-- Mobile: back button -->
       <div class="title-bar__back-btn">
         <ds-button
           icon="chevron-left"
-          variant="ghost"
+          variant="surface"
+          [square]="true"
           [size]="36"
-          [routerLink]="[backRoute()]"
+          (click)="onBack()"
         />
       </div>
 
-      <!-- Mobile: single-line title -->
+      <!-- Mobile: title + optional subtitle -->
       @if (!titleDisabled()) {
         <div class="title-bar__info">
           <app-loading
@@ -22,6 +23,9 @@
           >
             <h1 class="title-bar__title">{{ title() }}</h1>
           </app-loading>
+          @if (subtitle()) {
+            <p class="title-bar__subtitle">{{ subtitle() }}</p>
+          }
         </div>
       }
 
@@ -32,16 +36,16 @@
         </a>
       </div>
       @if (subtitle()) {
-        <span class="title-bar__sep" aria-hidden="true"></span>
-        <a
-          [routerLink]="[backRoute()]"
-          class="title-bar__web-label title-bar__web-label--breadcrumb"
-          >{{ subtitle() }}</a
+        <span class="title-bar__sep title-bar__sep--lead" aria-hidden="true"></span>
+        <button
+          class="title-bar__web-label title-bar__web-label--breadcrumb cursor-pointer bg-transparent border-none p-0"
+          (click)="onBack()"
+          >{{ subtitle() }}</button
         >
         <span class="title-bar__sep" aria-hidden="true"></span>
         <span class="title-bar__web-label">{{ title() }}</span>
       } @else if (!titleDisabled()) {
-        <span class="title-bar__sep" aria-hidden="true"></span>
+        <span class="title-bar__sep title-bar__sep--lead" aria-hidden="true"></span>
         <span class="title-bar__web-label">{{ title() }}</span>
       }
     } @else {
@@ -62,8 +66,14 @@
     @if (user()?.isAuthenticated) {
       <div class="title-bar__user">
         <ds-menu [items]="menuItems()">
-          <app-user-avatar [user]="user()!" style="cursor: pointer" />
+          <app-user-avatar [user]="user()!" class="cursor-pointer" />
         </ds-menu>
+      </div>
+    }
+
+    @if (progress() !== undefined) {
+      <div class="title-bar__progress-track">
+        <div class="title-bar__progress-fill" [style.width]="progress() + '%'"></div>
       </div>
     }
   </header>

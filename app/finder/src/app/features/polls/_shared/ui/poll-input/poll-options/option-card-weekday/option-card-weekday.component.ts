@@ -7,16 +7,18 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmInput } from '@spartan-ng/helm/input';
+import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { HlmCardImports } from '@spartan-ng/helm/card';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
 
 @Component({
   selector: 'app-option-card-weekday',
   templateUrl: './option-card-weekday.component.html',
-  imports: [HlmButton, HlmInput, TranslatePipe, ...HlmCardImports],
+  imports: [NgClass, FormsModule, DsButtonComponent, DsInputComponent, DsCardComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardWeekdayComponent {
@@ -25,10 +27,10 @@ export class OptionCardWeekdayComponent {
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);
-  canRemoveTime = input<boolean>(true);
   initialShowTime = input<boolean>(false);
+  readonly = input<boolean>(false);
   remove = output<void>();
-  showTimeChange = output<boolean>();
+  optionChange = output<DateOptionEntry>();
 
   showTime = signal(false);
 
@@ -40,38 +42,28 @@ export class OptionCardWeekdayComponent {
 
   constructor() {
     effect(() => {
-      if (this.option().startTime || this.initialShowTime()) {
-        if (this.initialShowTime() && !this.option().startTime) {
-          this.option().startTime = nextFullHour();
+      const opt = this.option();
+      const shouldShow = !!(opt.startTime) || this.initialShowTime();
+      if (shouldShow) {
+        if (this.initialShowTime() && !opt.startTime) {
+          this.optionChange.emit({ ...opt, startTime: nextFullHour() });
         }
         this.showTime.set(true);
+      } else {
+        this.showTime.set(false);
       }
     });
   }
 
   selectWeekday(value: number): void {
-    this.option().weekday = value;
+    this.optionChange.emit({ ...this.option(), weekday: value });
   }
 
-  addTime(): void {
-    if (!this.option().startTime) {
-      this.option().startTime = nextFullHour();
-    }
-    this.showTime.set(true);
-    this.showTimeChange.emit(true);
+  get timeValue(): string {
+    return this.option().startTime ? formatTime(this.option().startTime!) : '';
   }
 
-  removeTime(): void {
-    this.option().startTime = undefined;
-    this.showTime.set(false);
-    this.showTimeChange.emit(false);
-  }
-
-  protected getTimeValue(date: Date | undefined): string {
-    return date ? formatTime(date) : '';
-  }
-
-  setStartTime(event: Event): void {
-    this.option().startTime = parseTimeInput((event.target as HTMLInputElement).value);
+  setStartTime(value: string): void {
+    this.optionChange.emit({ ...this.option(), startTime: parseTimeInput(value) });
   }
 }

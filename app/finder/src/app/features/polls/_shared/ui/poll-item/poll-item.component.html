@@ -14,6 +14,7 @@
           {{ (_poll.isClosed ? "project.detail.item.statusClosed" : "project.detail.item.statusOpen") | translate }}
         </ds-status-dot>
 
+        @if (!previewMode()) {
         <span class="ml-auto flex items-center gap-1">
           @if (canShare()) {
             <!-- Mobile: ghost circle share button -->
@@ -89,6 +90,7 @@
             </span>
           }
         </span>
+        } <!-- /previewMode -->
       </div>
     </div>
   </div>
@@ -98,7 +100,7 @@
     <h3 class="flex-1 text-pretty">{{ _poll.name }}</h3>
 
     <!-- Mobile: edit-mode actions -->
-    @if (showActions() && editMode()) {
+    @if (!previewMode() && showActions() && editMode()) {
       <div class="flex shrink-0 gap-2 lg:hidden">
         @if (editRoute()) {
           <ds-button

@@ -1,3 +1,8 @@
+---
+name: implement-frontend
+description: Angular 21 component rules, the @ds/* design system, signal conventions, Tailwind styling, and design handoff matching. Use when implementing or styling Angular frontend components in this project.
+---
+
 # Implement Frontend Skill
 
 Rules and reference for implementing Angular frontend files in this project. Follow these conventions exactly — do not deviate unless explicitly told to.

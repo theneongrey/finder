@@ -21,6 +21,7 @@ import { DsIconComponent } from '@ds/icon/ds-icon.component';
   selector: 'app-polls-overview',
   imports: [
     RouterLink,
+    TranslatePipe,
     TitleBarComponent,
     StandalonePollTabComponent,
     ShareDrawerComponent,

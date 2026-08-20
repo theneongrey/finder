@@ -25,11 +25,11 @@ public static class PermissionApi
                 })
             .RequireAuthorization();
 
-        // Get frequent sharing contacts for a project (excluding existing members)
-        app.MapGet("/api/permission/contacts/{projectSlug}",
-                async (string projectSlug, PermissionService permissionService) =>
+        // Get frequent sharing contacts (general, no project — for new poll creation)
+        app.MapGet("/api/permission/contacts",
+                async (PermissionService permissionService) =>
                 {
-                    var contacts = await permissionService.GetSharingContacts(projectSlug);
+                    var contacts = await permissionService.GetGeneralSharingContacts();
                     return Results.Ok(contacts);
                 })
             .RequireAuthorization();

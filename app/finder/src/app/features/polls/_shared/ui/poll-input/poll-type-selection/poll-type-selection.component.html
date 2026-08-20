@@ -1,20 +1,26 @@
-<h2 class="mb-4 mx-4">
-  {{ "project.detail.createNewPoll" | translate }}
-</h2>
-<div class="flex flex-col gap-4 mx-4">
-  <app-add-card
-    [description]="'project.detail.pollTypes.appointment' | translate"
-    icon="fa-calendar"
-    (action)="typeSelected.emit(OptionType.Date)"
-  />
-  <app-add-card
-    [description]="'project.detail.pollTypes.yesNo' | translate"
-    icon="fa-square-check"
-    (action)="typeSelected.emit(OptionType.YesNo)"
-  />
-  <app-add-card
-    [description]="'project.detail.pollTypes.rating' | translate"
-    icon="fa-star"
-    (action)="typeSelected.emit(OptionType.Rating)"
-  />
+<div>
+  <div [class]="layout() === 'grid'
+    ? 'grid grid-cols-3 gap-4 mt-0 max-w-[940px]'
+    : 'grid grid-cols-1 gap-3 mt-0'">
+    @for (pt of pollTypes; track pt.type) {
+      <app-poll-type-button
+        [type]="pt.type"
+        [selectedType]="selectedType()"
+        [layout]="layout()"
+        [iconName]="pt.iconName"
+        [nameKey]="pt.nameKey"
+        [descKey]="pt.descKey"
+        [testId]="pt.testId"
+        (typeSelected)="typeSelected.emit($event)"
+      />
+    }
+  </div>
+
+  <div class="flex items-start gap-[9px] mt-[18px] px-[14px] py-[13px] rounded-[var(--radius-lg)] bg-[rgba(255,255,255,.6)] border border-[var(--border-hairline-soft)]"
+    [class]="layout() === 'grid' ? 'max-w-[940px]' : ''">
+    <span class="mt-px"><ds-icon name="info" [size]="16" [color]="'var(--text-muted)'" /></span>
+    <span class="text-[length:var(--fs-caption)] leading-[var(--leading-normal)] text-[color:var(--text-secondary)]">
+      {{ 'project.detail.pollTypes.hint' | translate }}
+    </span>
+  </div>
 </div>

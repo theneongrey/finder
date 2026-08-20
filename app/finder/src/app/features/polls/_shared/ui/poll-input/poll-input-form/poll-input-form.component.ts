@@ -1,18 +1,9 @@
 import {
-  afterNextRender,
   ChangeDetectionStrategy,
   Component,
-  effect,
-  Injector,
-  inject,
   input,
   output,
-  signal,
-  viewChild,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionType } from '../../../models/poll-detail.model';
 import {
@@ -21,7 +12,9 @@ import {
   DateOptionEntry,
   DateOptionType,
 } from '../poll-options/poll-options.component';
-import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { PollQuestionCardComponent } from './poll-question-card.component';
+import { PollCloseSettingsComponent } from './poll-close-settings.component';
 
 export type { OptionEntry, DateOptionEntry, DateOptionType };
 
@@ -29,12 +22,11 @@ export type { OptionEntry, DateOptionEntry, DateOptionType };
   selector: 'app-poll-input-form',
   templateUrl: './poll-input-form.component.html',
   imports: [
-    FormsModule,
-    HlmInput,
-    HlmButton,
     TranslatePipe,
-    DsTextareaComponent,
+    DsButtonComponent,
     PollOptionsComponent,
+    PollQuestionCardComponent,
+    PollCloseSettingsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -42,6 +34,7 @@ export class PollInputFormComponent {
   readonly OptionType = OptionType;
 
   mode = input.required<'add' | 'edit' | 'standalone'>();
+  hideCta = input<boolean>(false);
   isValid = input.required<boolean>();
   optionType = input.required<OptionType>();
   question = input.required<string>();
@@ -54,66 +47,14 @@ export class PollInputFormComponent {
   appointmentDateTypeChange = output<DateOptionType>();
   closeDate = input<string | undefined>(undefined);
   closeDateChange = output<string | undefined>();
+  isClosed = input<boolean>(false);
+  closedAt = input<string | undefined>(undefined);
+  closePollNow = output<void>();
+  reopenPoll = output<void>();
   add = output<void>();
   remove = output<number>();
   weekdayToggle = output<number>();
+  optionsChange = output<OptionEntry[]>();
+  dateOptionsChange = output<DateOptionEntry[]>();
   formSubmit = output<void>();
-
-  showDescription = signal(false);
-  showCloseDate = signal(false);
-
-  private injector = inject(Injector);
-  private descriptionTextarea =
-    viewChild<DsTextareaComponent>('descriptionTextarea');
-
-  constructor() {
-    effect(() => {
-      if (this.description()) {
-        this.showDescription.set(true);
-      }
-    });
-    effect(() => {
-      if (this.closeDate()) {
-        this.showCloseDate.set(true);
-      }
-    });
-  }
-
-  toggleDescription(): void {
-    this.showDescription.set(true);
-    afterNextRender(() => this.descriptionTextarea()?.focus(), {
-      injector: this.injector,
-    });
-  }
-
-  onDescriptionBlur(): void {
-    if (!this.description()) {
-      this.showDescription.set(false);
-    }
-  }
-
-  toggleCloseDate(enabled: boolean): void {
-    this.showCloseDate.set(enabled);
-    if (!enabled) {
-      this.closeDateChange.emit(undefined);
-    }
-  }
-
-  onCloseDateChange(date: string, time: string): void {
-    if (!date) { return; }
-    const iso = time ? `${date}T${time}:00.000Z` : `${date}T00:00:00.000Z`;
-    this.closeDateChange.emit(iso);
-  }
-
-  get closeDatePart(): string {
-    const cd = this.closeDate();
-    return cd ? cd.substring(0, 10) : '';
-  }
-
-  get closeTimePart(): string {
-    const cd = this.closeDate();
-    if (!cd) { return ''; }
-    const t = cd.substring(11, 16);
-    return t || '';
-  }
 }

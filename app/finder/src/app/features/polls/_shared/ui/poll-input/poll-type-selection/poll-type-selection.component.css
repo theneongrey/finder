@@ -1,0 +1,11 @@
+.type-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: rgba(20, 24, 28, 0.045);
+  color: var(--text-body);
+  font-size: 12px;
+  font-weight: var(--weight-bold);
+}

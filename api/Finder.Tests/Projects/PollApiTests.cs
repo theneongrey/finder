@@ -233,7 +233,7 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
     }
 
     [Fact]
-    public async Task AddOption_WhenPollNotFound_ReturnsBadRequest()
+    public async Task AddOption_WhenPollNotFound_ReturnsNotFound()
     {
         var user = await _factory.SeedUser();
         using var client = _factory.CreateAuthenticatedClient(user.Id);
@@ -241,7 +241,7 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
         var response = await client.PostAsJsonAsync("/api/project/poll/option",
             new { pollId = Guid.NewGuid(), text = "Option A" });
 
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]

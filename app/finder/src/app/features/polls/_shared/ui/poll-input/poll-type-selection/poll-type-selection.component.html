@@ -1,7 +1,7 @@
 <div>
   <div [class]="layout() === 'grid'
     ? 'grid grid-cols-3 gap-4 mt-0 max-w-[940px]'
-    : 'flex flex-col gap-3 mt-0'">
+    : 'grid grid-cols-1 gap-3 mt-0'">
     @for (pt of pollTypes; track pt.type) {
       <app-poll-type-button
         [type]="pt.type"

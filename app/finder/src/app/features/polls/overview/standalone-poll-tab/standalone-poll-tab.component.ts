@@ -17,10 +17,11 @@ import { PollItem } from '../../_shared/models/poll-item.model';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
+import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
 
 @Component({
   selector: 'app-standalone-poll-tab',
-  imports: [TranslatePipe, PollItemComponent, DsIconComponent, DsButtonComponent, RouterLink, DsPollCardSkeletonComponent],
+  imports: [TranslatePipe, PollItemComponent, DsIconComponent, DsButtonComponent, RouterLink, DsPollCardSkeletonComponent, DsSubHeaderComponent],
   templateUrl: './standalone-poll-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

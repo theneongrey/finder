@@ -21,6 +21,7 @@ import { PollItemComponent } from '../../poll-item/poll-item.component';
 import { PollTypeBadgeComponent } from '../../poll-type-badge/poll-type-badge.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
 
 @Component({
   selector: 'app-poll-input-wizard',
@@ -33,6 +34,7 @@ import { DsIconComponent } from '@ds/icon/ds-icon.component';
     PollTypeBadgeComponent,
     DsButtonComponent,
     DsIconComponent,
+    DsSubHeaderComponent,
     TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -23,6 +23,7 @@ import { DsStepperComponent } from '@ds/stepper/ds-stepper.component';
 import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
 import { DsSwitchComponent } from '@ds/switch/ds-switch.component';
 import { DsChipComponent } from '@ds/chip/ds-chip.component';
+import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
 
 @Component({
   selector: 'app-design-system',
@@ -49,6 +50,7 @@ import { DsChipComponent } from '@ds/chip/ds-chip.component';
     DsPollCardSkeletonComponent,
     DsSwitchComponent,
     DsChipComponent,
+    DsSubHeaderComponent,
     FormsModule,
   ],
   templateUrl: './design-system.component.html',

@@ -29,6 +29,7 @@
         ['vote-buttons', 'VoteButtons'],
         ['chips', 'Chips'],
         ['switch', 'Switch'],
+        ['sub-header', 'SubHeader'],
         ['loading', 'Loading'],
       ]; track link[0]) {
         <a href="javascript:void(0)" (click)="scrollTo(link[0])" class="ds-page__nav-link">{{ link[1] }}</a>
@@ -653,6 +654,43 @@
             <ds-switch size="md" [(ngModel)]="switchB" />
             <span class="ds-mono-xs">md {{ switchB() ? 'on' : 'off' }}</span>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="ds-divider" />
+
+    <!-- ── 19d. SUB HEADER ────────────────────────────────────────── -->
+    <section id="sub-header" data-testid="section-sub-header">
+      <h2>SubHeader</h2>
+      <p class="ds-section-desc">Selector: <code>ds-sub-header</code> — shared secondary title-bar chrome (cream translucent background, <code>blur(8px)</code>, bottom border, sticky at <code>top: 60px</code>) exposing a single <code>ng-content</code>. The poll overview filter bar is the canonical reference.</p>
+
+      <div class="ds-section-block">
+        <p class="label mb-3">Simple label + trailing action (under a mock title bar)</p>
+        <div style="border: 1px solid rgba(20,24,28,.1); border-radius: 12px; overflow: hidden">
+          <div style="height: 60px; display: flex; align-items: center; padding: 0 28px; background: var(--cream-100); border-bottom: 1px solid rgba(20,24,28,.06); font-weight: 700; color: var(--text-primary)">Mock title bar</div>
+          <ds-sub-header class="flex items-center justify-between" data-testid="ds-sub-header-simple">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--text-muted)">Section label</span>
+            <ds-button variant="subtle" icon="plus">Action</ds-button>
+          </ds-sub-header>
+        </div>
+      </div>
+
+      <div class="ds-section-block">
+        <p class="label mb-3">Filter-style row (mirrors poll overview)</p>
+        <div style="border: 1px solid rgba(20,24,28,.1); border-radius: 12px; overflow: hidden">
+          <div style="height: 60px; display: flex; align-items: center; padding: 0 28px; background: var(--cream-100); border-bottom: 1px solid rgba(20,24,28,.06); font-weight: 700; color: var(--text-primary)">Mock title bar</div>
+          <ds-sub-header class="flex items-center gap-2 flex-wrap" data-testid="ds-sub-header-filter">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--text-muted)">Status</span>
+            <ds-chip label="Läuft" icon="circle-dot" [(active)]="chipLauft" />
+            <ds-chip label="Beendet" icon="close" [(active)]="chipBeendet" />
+            <span style="width: 1px; height: 22px; background: rgba(20,24,28,.1); margin: 0 4px"></span>
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; color: var(--text-muted)">Show only</span>
+            <div class="ds-labeled-item">
+              <ds-switch size="sm" [(ngModel)]="switchA" />
+              <span class="ds-mono-xs">Todo</span>
+            </div>
+          </ds-sub-header>
         </div>
       </div>
     </section>

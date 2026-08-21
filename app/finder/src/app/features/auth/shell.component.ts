@@ -10,15 +10,21 @@ import { UserStore } from '../../common/data/user.store';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { LoggerService } from '../../common/services/logger.service';
 import { DsButtonComponent } from '../../common/ui/ds-components/button/ds-button.component';
+import { DsIconComponent } from '../../common/ui/ds-components/icon/ds-icon.component';
 
 @Component({
   selector: 'app-auth-shell',
-  imports: [RouterOutlet, RouterLink, NgOptimizedImage, DsButtonComponent],
+  imports: [RouterOutlet, RouterLink, NgOptimizedImage, DsButtonComponent, DsIconComponent],
   templateUrl: './shell.component.html',
   host: { class: 'flex flex-col h-full lg:h-dvh bg-app-gradient' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthShellComponent {
+  readonly features = [
+    'Kein Passwort, kein Zurücksetzen',
+    'Auf allen Geräten mit derselben E-Mail',
+    'Codes laufen nach 10 Minuten ab',
+  ];
   private userStore = inject(UserStore);
   private loggerService = inject(LoggerService);
 

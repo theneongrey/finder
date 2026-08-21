@@ -16,25 +16,19 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslateService } from '@ngx-translate/core';
-import { NgOptimizedImage } from '@angular/common';
 import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
 import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
 
 @Component({
   selector: 'app-request-email',
-  imports: [ReactiveFormsModule, NgOptimizedImage, DsButtonComponent, DsInputComponent],
+  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent],
   templateUrl: './request-email.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex flex-1 flex-col lg:flex-row w-full',
+    class: 'flex flex-col',
   },
 })
 export class RequestEmailComponent implements OnInit {
-  protected readonly bulletPoints = [
-    'Kein Passwort, kein Zurücksetzen',
-    'Auf allen Geräten mit derselben E-Mail',
-    'Codes laufen nach 10 Minuten ab',
-  ];
 
   private userStore = inject(UserStore);
   private translateService = inject(TranslateService);

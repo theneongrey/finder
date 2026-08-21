@@ -8,8 +8,8 @@ import { LoggerService } from '../../../common/services/logger.service';
   imports: [],
   template: `
     <div
-      class="flex flex-col items-center justify-center gap-4"
-      style="color: var(--text-secondary); font-size: var(--fs-body-sm)"
+      class="flex flex-col items-center gap-4"
+      style="padding: 12px 0; color: var(--text-secondary); font-size: var(--fs-body-sm)"
     >
       <div class="token-login-spinner"></div>
       <span>Anmeldung läuft …</span>
@@ -30,7 +30,7 @@ import { LoggerService } from '../../../common/services/logger.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex flex-1 items-center justify-center',
+    class: 'block',
   },
 })
 export class TokenLoginComponent {

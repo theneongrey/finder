@@ -24,7 +24,7 @@ import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.c
   templateUrl: './code-login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex flex-1 flex-col lg:flex-row w-full',
+    class: 'flex flex-col',
   },
 })
 export class CodeLoginComponent {

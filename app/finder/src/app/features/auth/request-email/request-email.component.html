@@ -1,197 +1,78 @@
-<!-- Desktop branding panel (hidden on mobile) -->
-<div
-  class="hidden lg:flex flex-col justify-between flex-1 border-r border-[var(--border-hairline-soft)] py-10 px-11"
-  style="max-width: 520px; background: rgba(250, 253, 249, 0.5)"
->
-  <img alt="Votean" ngSrc="logo-primary.svg" width="87" height="23" />
-
-  <div class="flex flex-col" style="gap: 16px">
-    <div
-      style="
-        font-family: var(--font-display);
-        font-size: 42px;
-        font-weight: var(--weight-bold);
-        letter-spacing: -1.2px;
-        line-height: 1.08;
-        color: var(--text-primary);
-        max-width: 400px;
-        text-wrap: pretty;
-      "
-    >
-      Entscheidet gemeinsam – ohne Passwortchaos.
-    </div>
-    <p
-      style="
-        font-size: var(--fs-body-lg);
-        line-height: var(--leading-relaxed);
-        color: var(--text-secondary);
-        max-width: 400px;
-        text-wrap: pretty;
-        margin: 0;
-      "
-    >
-      Ein Code per E-Mail genügt. Danach siehst du sofort, welche Umfragen auf
-      deine Stimme warten.
-    </p>
-
-    <div class="flex flex-col" style="gap: 13px; margin-top: 12px">
-      @for (item of bulletPoints; track item) {
-        <div class="flex items-center" style="gap: 11px; font-size: 14.5px; color: var(--text-body)">
-          <span
-            class="flex items-center justify-center flex-none"
-            style="width: 26px; height: 26px; border-radius: 50%; background: #d7eef0"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4.5 12.5l4.5 4.5L20 5" />
-            </svg>
-          </span>
-          <span>{{ item }}</span>
-        </div>
-      }
-    </div>
-  </div>
-
-  <div class="flex items-center" style="gap: 8px; font-size: 13px; color: var(--text-muted)">
-    <span>Probleme beim Anmelden?</span>
-    <a href="#" class="ds-link">Hilfe</a>
-  </div>
+<!-- Progress dots: step 1 active -->
+<div class="flex" style="gap: 7px; margin-bottom: 16px">
+  <span
+    style="height: 4px; flex: 1; border-radius: 99px; background: var(--accent)"
+  ></span>
+  <span
+    style="height: 4px; flex: 1; border-radius: 99px; background: var(--sand-200)"
+  ></span>
+  <span
+    style="height: 4px; flex: 1; border-radius: 99px; background: var(--sand-200)"
+  ></span>
 </div>
 
-<!-- Form area -->
-<div
-  class="flex flex-1 items-center justify-center px-[var(--screen-padding)] py-8 lg:py-0"
+<form
+  [formGroup]="form"
+  (ngSubmit)="sendLoginMail()"
+  class="flex flex-col"
+  style="gap: 0"
 >
-  <div class="w-full" style="max-width: 400px">
-    <div
-      style="
-        background: var(--surface-card);
-        border: 1px solid var(--border-hairline-soft);
-        border-radius: var(--radius-4xl);
-        padding: 26px 22px 24px;
-        box-shadow: 0 6px 24px rgba(35, 40, 45, 0.08);
-      "
-    >
-      <!-- Progress dots: step 1 active -->
-      <div class="flex" style="gap: 7px; margin-bottom: 16px">
-        <span
-          style="
-            height: 4px;
-            flex: 1;
-            border-radius: 99px;
-            background: var(--accent);
-          "
-        ></span>
-        <span
-          style="
-            height: 4px;
-            flex: 1;
-            border-radius: 99px;
-            background: var(--sand-200);
-          "
-        ></span>
-        <span
-          style="
-            height: 4px;
-            flex: 1;
-            border-radius: 99px;
-            background: var(--sand-200);
-          "
-        ></span>
-      </div>
-
-      <form
-        [formGroup]="form"
-        (ngSubmit)="sendLoginMail()"
-        class="flex flex-col"
-        style="gap: 0"
-      >
-        <div
-          style="
-            font-family: var(--font-display);
-            font-size: var(--fs-display-md);
-            font-weight: var(--weight-bold);
-            letter-spacing: -0.6px;
-            line-height: 1.1;
-            color: var(--text-primary);
-          "
-        >
-          Schön, dass du da bist
-        </div>
-        <p
-          style="
-            margin: 8px 0 0;
-            font-size: var(--fs-body-sm);
-            line-height: 1.45;
-            color: var(--text-secondary);
-            text-wrap: pretty;
-          "
-        >
-          Gib deine E-Mail-Adresse ein – wir schicken dir einen Anmeldecode.
-          Kein Passwort nötig.
-        </p>
-
-        <div style="margin-top: 20px">
-          <ds-input
-            formControlName="email"
-            label="E-Mail-Adresse"
-            placeholder="name@beispiel.de"
-            [error]="errorMessage()"
-          />
-        </div>
-
-        <div style="margin-top: 18px">
-          <ds-button
-            variant="primary"
-            [fullWidth]="true"
-            trailingIcon="arrow-right"
-            [disabled]="form.invalid"
-            [loading]="isLoading()"
-          >
-            Code senden
-          </ds-button>
-        </div>
-
-        <p
-          style="
-            margin: 14px 0 0;
-            font-size: var(--fs-caption);
-            line-height: 1.5;
-            color: var(--text-muted);
-            text-align: center;
-            text-wrap: pretty;
-          "
-        >
-          Neu hier? Mit der E-Mail wird automatisch dein Konto angelegt.
-        </p>
-      </form>
-    </div>
-
-    <p
-      style="
-        margin: 16px 6px 0;
-        font-size: var(--fs-caption-sm);
-        line-height: 1.5;
-        color: var(--text-muted);
-        text-align: center;
-        text-wrap: pretty;
-      "
-    >
-      Mit der Anmeldung stimmst du den
-      <a href="#" class="ds-link">Nutzungsbedingungen</a> und dem
-      <a href="#" class="ds-link">Datenschutz</a> zu.
-    </p>
-
-    <p
-      class="lg:hidden"
-      style="
-        margin: 10px 0 0;
-        font-size: var(--fs-caption-sm);
-        line-height: 1.5;
-        color: var(--text-muted);
-        text-align: center;
-      "
-    >
-      Probleme beim Anmelden? <a href="#" class="ds-link">Hilfe</a>
-    </p>
+  <div
+    style="
+      font-family: var(--font-display);
+      font-size: var(--fs-display-md);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.6px;
+      line-height: 1.1;
+      color: var(--text-primary);
+    "
+  >
+    Schön, dass du da bist
   </div>
-</div>
+  <p
+    style="
+      margin: 8px 0 0;
+      font-size: var(--fs-body-sm);
+      line-height: 1.45;
+      color: var(--text-secondary);
+      text-wrap: pretty;
+    "
+  >
+    Gib deine E-Mail-Adresse ein – wir schicken dir einen Anmeldecode.
+    Kein Passwort nötig.
+  </p>
+
+  <div style="margin-top: 20px">
+    <ds-input
+      formControlName="email"
+      label="E-Mail-Adresse"
+      placeholder="name@beispiel.de"
+      [error]="errorMessage()"
+    />
+  </div>
+
+  <div style="margin-top: 18px">
+    <ds-button
+      variant="primary"
+      [fullWidth]="true"
+      trailingIcon="arrow-right"
+      [disabled]="form.invalid"
+      [loading]="isLoading()"
+    >
+      Code senden
+    </ds-button>
+  </div>
+
+  <p
+    style="
+      margin: 14px 0 0;
+      font-size: var(--fs-caption);
+      line-height: 1.5;
+      color: var(--text-muted);
+      text-align: center;
+      text-wrap: pretty;
+    "
+  >
+    Neu hier? Mit der E-Mail wird automatisch dein Konto angelegt.
+  </p>
+</form>

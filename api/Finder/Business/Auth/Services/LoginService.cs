@@ -123,6 +123,8 @@ public class LoginService
 
     private async Task<LoginToken> CreateLoginTokenForPerson(Person person, string? redirectUrl)
     {
+        var newTokenValue = _loginOptions.AuthToken ?? Guid.NewGuid().ToString("N").ToLower();
+
         var existingTokens = await _dbContext.LoginTokens
             .Where(t => t.Person.Id == person.Id)
             .ToListAsync();
@@ -131,18 +133,19 @@ public class LoginService
             _dbContext.LoginTokens.RemoveRange(existingTokens);
             await _dbContext.SaveChangesAsync();
         }
-        
+
+        await DeleteStaticDevTokenConflict(newTokenValue);
+
         var loginToken = new LoginToken
         {
             Id = Guid.NewGuid(),
             Person = person,
+            RedirectUrl = redirectUrl,
+            Token = newTokenValue,
+            Code = GetRandomSixDigitCode(),
+            Retries = 0,
         };
         _dbContext.LoginTokens.Add(loginToken);
-
-        loginToken.RedirectUrl = redirectUrl;
-        loginToken.Token = _loginOptions.AuthToken ?? Guid.NewGuid().ToString("N").ToLower();
-        loginToken.Code = GetRandomSixDigitCode();
-        loginToken.Retries = 0;
 
         if (_loginOptions.AuthToken != null)
         {
@@ -150,6 +153,27 @@ public class LoginService
         }
 
         return loginToken;
+    }
+
+    // In dev mode, AuthToken is a fixed static value shared across all users.
+    // If another user holds a token with that value, inserting a new one would violate
+    // the unique index. This method clears any such conflict before insertion.
+    private async Task DeleteStaticDevTokenConflict(string tokenValue)
+    {
+        // the static auth token is set on dev mode only to test the login flow.
+        if (_loginOptions.AuthToken == null)
+        {
+            return;
+        }
+
+        var conflict = await _dbContext.LoginTokens
+            .Where(t => t.Token == tokenValue)
+            .ToListAsync();
+        if (conflict.Count > 0)
+        {
+            _dbContext.LoginTokens.RemoveRange(conflict);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
     private string GetRandomSixDigitCode()

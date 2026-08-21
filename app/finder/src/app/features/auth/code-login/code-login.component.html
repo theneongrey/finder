@@ -10,15 +10,15 @@
   (ngSubmit)="verifyCode()"
   class="flex flex-col gap-0"
 >
-  <div class="[font-family:var(--font-display)] text-[var(--fs-display-md)] font-bold tracking-[-0.6px] leading-[1.1] text-[var(--text-primary)]">
+  <div class="[font-family:var(--font-display)] text-[27px] lg:text-[30px] font-bold tracking-[-0.6px] lg:tracking-[-0.7px] leading-[1.1] text-[var(--text-primary)]">
     {{ 'auth.codeLogin.heading' | translate }}
   </div>
-  <p class="mt-[8px] text-[var(--fs-body-sm)] leading-[1.45] text-[var(--text-secondary)] text-pretty">
+  <p class="mt-[8px] text-[var(--fs-body-sm)] lg:text-[var(--fs-body)] leading-[1.45] text-[var(--text-secondary)] text-pretty">
     {{ 'auth.codeLogin.codeSentBefore' | translate }}
     <strong class="text-[var(--text-body)] font-bold">{{ email() }}</strong>{{ 'auth.codeLogin.codeSentAfter' | translate }}
   </p>
 
-  <div class="flex justify-center mt-[22px]">
+  <div class="mt-[22px]">
     <ds-input-otp formControlName="code" [length]="6" [groupSize]="3" />
   </div>
 
@@ -41,7 +41,11 @@
 </form>
 
 <div class="mt-[14px]">
-  <ds-button variant="ghost" size="sm" (click)="editEmail()">
+  <button
+    type="button"
+    class="border-none bg-transparent px-[2px] py-[4px] text-[var(--fs-ui)] font-bold text-[var(--text-secondary)] cursor-pointer hover:text-[var(--text-primary)] transition-colors duration-[140ms]"
+    (click)="editEmail()"
+  >
     {{ 'auth.codeLogin.changeEmail' | translate }}
-  </ds-button>
+  </button>
 </div>

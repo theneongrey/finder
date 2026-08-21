@@ -10,7 +10,9 @@
       routerLink="/"
     />
   </div>
-  <img alt="Votean" ngSrc="logo-primary.svg" width="87" height="23" />
+  <a routerLink="/">
+    <img alt="Votean" ngSrc="logo-primary.svg" width="87" height="23" />
+  </a>
 </header>
 
 <main class="flex flex-1 items-center justify-center lg:items-stretch">
@@ -18,10 +20,10 @@
   <div
     class="hidden lg:flex flex-col justify-between flex-none border-r border-[var(--border-hairline-soft)] py-10 px-11 w-[520px] bg-[rgba(250,253,249,0.5)]"
   >
-    <div class="flex items-center gap-2">
+    <a routerLink="/" class="flex items-center gap-2 no-underline">
       <ds-icon name="logo" [size]="24" color="var(--accent)" />
       <span class="[font-family:var(--font-display)] text-[22px] font-bold tracking-[-0.3px] text-[var(--accent)]">Votean</span>
-    </div>
+    </a>
 
     <div class="flex flex-col gap-[16px]">
       <div class="[font-family:var(--font-display)] text-[42px] font-bold tracking-[-1.2px] leading-[1.08] text-[var(--text-primary)] max-w-[400px] text-pretty">
@@ -43,9 +45,9 @@
       </div>
     </div>
 
-    <p class="text-[var(--fs-ui-sm)] leading-[var(--leading-relaxed)] text-[var(--text-muted)] m-0">
-      Votean &middot; <a href="#" class="ds-link">{{ 'auth.shell.terms' | translate }}</a> &middot;
-      <a href="#" class="ds-link">{{ 'auth.shell.privacy' | translate }}</a>
+    <p class="text-[13px] leading-[var(--leading-relaxed)] text-[var(--text-muted)] m-0">
+      {{ 'auth.shell.helpText' | translate }}
+      <a href="#" class="ds-link">{{ 'auth.shell.helpLink' | translate }}</a>
     </p>
   </div>
 
@@ -61,7 +63,7 @@
       </div>
 
       <p
-        class="mt-[16px] mx-[6px] text-[var(--fs-caption-sm)] leading-[1.5] text-[var(--text-muted)] text-center text-pretty"
+        class="mt-[16px] mx-[6px] text-[12px] lg:text-[12.5px] leading-[1.5] text-[var(--text-muted)] text-center text-pretty"
       >
         {{ 'auth.shell.legalConsentPrefix' | translate }}
         <a href="#" class="ds-link">{{ 'auth.shell.terms' | translate }}</a>
@@ -71,7 +73,7 @@
       </p>
 
       <p
-        class="lg:hidden mt-[10px] text-[var(--fs-caption-sm)] leading-[1.5] text-[var(--text-muted)] text-center"
+        class="lg:hidden mt-[10px] text-[12px] leading-[1.5] text-[var(--text-muted)] text-center"
       >
         {{ 'auth.shell.helpText' | translate }}
         <a href="#" class="ds-link">{{ 'auth.shell.helpLink' | translate }}</a>

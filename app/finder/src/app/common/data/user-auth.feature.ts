@@ -186,16 +186,34 @@ export function withAuthFeature() {
           ),
         ),
 
-        clearUserState(): void {
-          patchState(store, {
-            user: undefined,
-            loginMail: {
-              email: undefined,
-              state: 'init',
-            },
-            redirectUrl: undefined,
-          });
-        },
+        logout: rxMethod<void>(
+          pipe(
+            switchMap(() =>
+              store.userService.logout().pipe(
+                tapResponse({
+                  next: () => {
+                    patchState(store, {
+                      user: undefined,
+                      loginMail: { email: undefined, state: 'init' },
+                      redirectUrl: undefined,
+                    });
+                  },
+                  error: (error) => {
+                    patchState(store, {
+                      user: undefined,
+                      loginMail: { email: undefined, state: 'init' },
+                      redirectUrl: undefined,
+                    });
+                    store.loggerService.error(
+                      '[UserStore] Error while logging out',
+                      error,
+                    );
+                  },
+                }),
+              ),
+            ),
+          ),
+        ),
       };
     }),
   );

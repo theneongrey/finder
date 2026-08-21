@@ -29,4 +29,11 @@ export const authRoutes: Routes = [
         (m) => m.TokenLoginComponent,
       ),
   },
+  {
+    path: 'login-success',
+    loadComponent: () =>
+      import('./login-success/login-success.component').then(
+        (m) => m.LoginSuccessComponent,
+      ),
+  },
 ];

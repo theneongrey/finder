@@ -15,22 +15,56 @@
   },
   "auth": {
     "login": {
-      "loggingIn": "Logging in"
+      "loggingIn": "Logging in …",
+      "title": "Welcome back",
+      "subtitle": "Enter your email address – we'll send you a login code. No password needed.",
+      "email": "Email Address",
+      "emailPlaceholder": "name@example.com",
+      "submit": "Continue",
+      "newUserHint": "New here? An account will be created automatically with your email."
     },
     "requestEmail": {
+      "heading": "Great to have you here",
       "title": "Sign In",
-      "subtitle": "Enter your email address to receive a login code.",
+      "subtitle": "Enter your email address – we'll send you a login code. No password needed.",
       "email": "Email Address",
+      "emailPlaceholder": "name@example.com",
+      "sendCode": "Send Code",
+      "newUserHint": "New here? An account will be created automatically with your email.",
       "requestCode": "Request Code",
       "errorSending": "Error while sending the mail. Please check your email and try again.",
       "errorForbidden": "This email is not allowed. Please contact the admin for an invitation.",
       "errorRateLimiter": "Too many requests. Please wait a moment and try again."
     },
     "codeLogin": {
+      "heading": "Enter Code",
+      "codeSentBefore": "We've sent a 6-digit code to",
+      "codeSentAfter": ".",
+      "invalidCode": "Invalid code – please try again.",
+      "submit": "Confirm",
+      "changeEmail": "Change email",
       "title": "Verify Code",
       "subtitle": "Enter the login code sent to your email address.",
       "code": "Login Code",
       "verify": "Verify Code"
+    },
+    "loginSuccess": {
+      "heading": "Signed in",
+      "redirect": "Taking you to your polls."
+    },
+    "shell": {
+      "tagline": "Decide together – no password chaos.",
+      "description": "One code by email is all it takes. Then you'll instantly see which polls are waiting for your vote.",
+      "feature1": "No password, no resets",
+      "feature2": "On all devices with the same email",
+      "feature3": "Codes expire after 10 minutes",
+      "terms": "Terms of Use",
+      "privacy": "Privacy Policy",
+      "legalConsentPrefix": "By signing in you agree to the",
+      "legalConsentMid": "and",
+      "legalConsentSuffix": ".",
+      "helpText": "Problems signing in?",
+      "helpLink": "Help"
     }
   },
   "project": {

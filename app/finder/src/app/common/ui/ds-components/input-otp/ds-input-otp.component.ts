@@ -19,7 +19,7 @@ import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
   styleUrl: './ds-input-otp.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsInputOtpComponent), multi: true }],
-  host: { style: 'display: inline-block; cursor: text', '(click)': 'focus()' },
+  host: { style: 'display: block; cursor: text', '(click)': 'focus()' },
 })
 export class DsInputOtpComponent implements ControlValueAccessor {
   length    = input(6);

@@ -1,0 +1,33 @@
+<app-auth-step-indicator [step]="1" />
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-0">
+  <div class="[font-family:var(--font-display)] text-[var(--fs-display-md)] font-bold tracking-[-0.6px] leading-[1.1] text-[var(--text-primary)]">
+    {{ 'auth.login.title' | translate }}
+  </div>
+  <p class="mt-[8px] text-[var(--fs-body-sm)] leading-[1.45] text-[var(--text-secondary)] text-pretty">
+    {{ 'auth.login.subtitle' | translate }}
+  </p>
+
+  <div class="mt-[20px]">
+    <ds-input
+      formControlName="email"
+      [label]="'auth.login.email' | translate"
+      [placeholder]="'auth.login.emailPlaceholder' | translate"
+    />
+  </div>
+
+  <div class="mt-[18px]">
+    <ds-button
+      variant="primary"
+      [fullWidth]="true"
+      trailingIcon="arrow-right"
+      [disabled]="form.invalid"
+    >
+      {{ 'auth.login.submit' | translate }}
+    </ds-button>
+  </div>
+
+  <p class="mt-[14px] text-[var(--fs-caption)] leading-[1.5] text-[var(--text-muted)] text-center text-pretty">
+    {{ 'auth.login.newUserHint' | translate }}
+  </p>
+</form>

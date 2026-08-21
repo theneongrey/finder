@@ -1,4 +1,83 @@
-<app-title-bar />
-<main class="flex flex-1 items-center justify-center">
-  <router-outlet />
+<header
+  class="relative flex items-center justify-center lg:hidden h-[56px] shrink-0 px-[16px]"
+>
+  <div class="absolute left-4">
+    <ds-button
+      icon="chevron-left"
+      variant="surface"
+      [square]="true"
+      [size]="36"
+      routerLink="/"
+    />
+  </div>
+  <a routerLink="/">
+    <img alt="Votean" ngSrc="logo-primary.svg" width="87" height="23" />
+  </a>
+</header>
+
+<main class="flex flex-1 items-center justify-center lg:items-stretch">
+  <!-- Desktop branding panel -->
+  <div
+    class="hidden lg:flex flex-col justify-between flex-none border-r border-[var(--border-hairline-soft)] py-10 px-11 w-[520px] bg-[rgba(250,253,249,0.5)]"
+  >
+    <a routerLink="/" class="flex items-center gap-2 no-underline">
+      <ds-icon name="logo" [size]="24" color="var(--accent)" />
+      <span class="[font-family:var(--font-display)] text-[22px] font-bold tracking-[-0.3px] text-[var(--accent)]">Votean</span>
+    </a>
+
+    <div class="flex flex-col gap-[16px]">
+      <div class="[font-family:var(--font-display)] text-[42px] font-bold tracking-[-1.2px] leading-[1.08] text-[var(--text-primary)] max-w-[400px] text-pretty">
+        {{ 'auth.shell.tagline' | translate }}
+      </div>
+      <p class="text-[var(--fs-body-lg)] leading-[var(--leading-relaxed)] text-[var(--text-secondary)] max-w-[400px] text-pretty m-0">
+        {{ 'auth.shell.description' | translate }}
+      </p>
+
+      <div class="flex flex-col gap-[13px] mt-[12px]">
+        @for (feature of features; track feature) {
+          <div class="flex items-center gap-[11px] text-[var(--fs-body-sm)] text-[var(--ink-600)]">
+            <span class="flex items-center justify-center flex-none w-[26px] h-[26px] rounded-full bg-[var(--teal-100)]">
+              <ds-icon name="check" [size]="14" color="var(--accent)" />
+            </span>
+            <span>{{ feature | translate }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <p class="text-[13px] leading-[var(--leading-relaxed)] text-[var(--text-muted)] m-0">
+      {{ 'auth.shell.helpText' | translate }}
+      <a href="#" class="ds-link">{{ 'auth.shell.helpLink' | translate }}</a>
+    </p>
+  </div>
+
+  <!-- Form area -->
+  <div
+    class="flex flex-1 items-center justify-center px-[var(--screen-padding)] py-8 lg:py-0"
+  >
+    <div class="w-full max-w-[400px]">
+      <div
+        class="bg-[var(--surface-card)] border border-[var(--border-hairline-soft)] rounded-[var(--radius-4xl)] px-[22px] pt-[26px] pb-[24px] shadow-[0_6px_24px_rgba(35,40,45,0.08)]"
+      >
+        <router-outlet />
+      </div>
+
+      <p
+        class="mt-[16px] mx-[6px] text-[12px] lg:text-[12.5px] leading-[1.5] text-[var(--text-muted)] text-center text-pretty"
+      >
+        {{ 'auth.shell.legalConsentPrefix' | translate }}
+        <a href="#" class="ds-link">{{ 'auth.shell.terms' | translate }}</a>
+        {{ 'auth.shell.legalConsentMid' | translate }}
+        <a href="#" class="ds-link">{{ 'auth.shell.privacy' | translate }}</a>
+        {{ 'auth.shell.legalConsentSuffix' | translate }}
+      </p>
+
+      <p
+        class="lg:hidden mt-[10px] text-[12px] leading-[1.5] text-[var(--text-muted)] text-center"
+      >
+        {{ 'auth.shell.helpText' | translate }}
+        <a href="#" class="ds-link">{{ 'auth.shell.helpLink' | translate }}</a>
+      </p>
+    </div>
+  </div>
 </main>

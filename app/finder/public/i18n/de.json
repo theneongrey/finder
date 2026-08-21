@@ -15,22 +15,56 @@
   },
   "auth": {
     "login": {
-      "loggingIn": "Anmeldung läuft"
+      "loggingIn": "Anmeldung läuft …",
+      "title": "Willkommen zurück",
+      "subtitle": "Gib deine E-Mail-Adresse ein – wir schicken dir einen Anmeldecode. Kein Passwort nötig.",
+      "email": "E-Mail-Adresse",
+      "emailPlaceholder": "name@beispiel.de",
+      "submit": "Weiter",
+      "newUserHint": "Neu hier? Mit der E-Mail wird automatisch dein Konto angelegt."
     },
     "requestEmail": {
+      "heading": "Schön, dass du da bist",
       "title": "Anmelden",
-      "subtitle": "Gib deine E-Mail-Adresse ein, um einen Anmeldecode zu erhalten.",
+      "subtitle": "Gib deine E-Mail-Adresse ein – wir schicken dir einen Anmeldecode. Kein Passwort nötig.",
       "email": "E-Mail-Adresse",
+      "emailPlaceholder": "name@beispiel.de",
+      "sendCode": "Code senden",
+      "newUserHint": "Neu hier? Mit der E-Mail wird automatisch dein Konto angelegt.",
       "requestCode": "Code anfordern",
       "errorSending": "Fehler beim Senden der E-Mail. Bitte überprüfe deine E-Mail-Adresse und versuche es erneut.",
       "errorForbidden": "Diese E-Mail-Adresse ist nicht zugelassen. Bitte kontaktiere den Administrator für eine Einladung.",
       "errorRateLimiter": "Zu viele Anfragen. Bitte warte einen Moment und versuche es erneut."
     },
     "codeLogin": {
+      "heading": "Code eingeben",
+      "codeSentBefore": "Wir haben einen 6-stelligen Code an",
+      "codeSentAfter": " geschickt.",
+      "invalidCode": "Code ungültig – bitte erneut versuchen.",
+      "submit": "Bestätigen",
+      "changeEmail": "E-Mail ändern",
       "title": "Code bestätigen",
       "subtitle": "Gib den Anmeldecode ein, der an deine E-Mail-Adresse gesendet wurde.",
       "code": "Anmeldecode",
       "verify": "Code bestätigen"
+    },
+    "loginSuccess": {
+      "heading": "Angemeldet",
+      "redirect": "Wir bringen dich zu deinen Umfragen."
+    },
+    "shell": {
+      "tagline": "Entscheidet gemeinsam – ohne Passwortchaos.",
+      "description": "Ein Code per E-Mail genügt. Danach siehst du sofort, welche Umfragen auf deine Stimme warten.",
+      "feature1": "Kein Passwort, kein Zurücksetzen",
+      "feature2": "Auf allen Geräten mit derselben E-Mail",
+      "feature3": "Codes laufen nach 10 Minuten ab",
+      "terms": "Nutzungsbedingungen",
+      "privacy": "Datenschutz",
+      "legalConsentPrefix": "Mit der Anmeldung stimmst du den",
+      "legalConsentMid": "und dem",
+      "legalConsentSuffix": "zu.",
+      "helpText": "Probleme beim Anmelden?",
+      "helpLink": "Hilfe"
     }
   },
   "project": {

@@ -488,5 +488,15 @@
       "imprint": "Aviso legal",
       "help": "Ayuda"
     }
+  },
+  "publicPoll": {
+    "heading": "Inicia sesión y vota",
+    "invite": "Has sido invitado a participar en una votación. Inicia sesión para emitir tu voto.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "nombre@ejemplo.com",
+    "loginButton": "Iniciar sesión y votar",
+    "requestCodeButton": "Solicitar código",
+    "cancelButton": "Cancelar",
+    "hint": "Sin contraseña – te enviaremos un código de 6 dígitos."
   }
 }

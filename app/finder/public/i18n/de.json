@@ -488,5 +488,15 @@
       "imprint": "Impressum",
       "help": "Hilfe"
     }
+  },
+  "publicPoll": {
+    "heading": "Anmelden und mitentscheiden",
+    "invite": "Du wurdest eingeladen, an einer Abstimmung teilzunehmen. Melde dich an, um deine Stimme abzugeben.",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "name@beispiel.de",
+    "loginButton": "Anmelden und abstimmen",
+    "requestCodeButton": "Code anfordern",
+    "cancelButton": "Abbrechen",
+    "hint": "Kein Passwort nötig – wir schicken dir einen 6-stelligen Code."
   }
 }

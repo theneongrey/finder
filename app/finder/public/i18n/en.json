@@ -488,5 +488,15 @@
       "imprint": "Imprint",
       "help": "Help"
     }
+  },
+  "publicPoll": {
+    "heading": "Sign in and vote",
+    "invite": "You've been invited to take part in a poll. Sign in to cast your vote.",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "name@example.com",
+    "loginButton": "Sign in and vote",
+    "requestCodeButton": "Request code",
+    "cancelButton": "Cancel",
+    "hint": "No password needed – we'll send you a 6-digit code."
   }
 }

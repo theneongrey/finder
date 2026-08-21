@@ -15,22 +15,56 @@
   },
   "auth": {
     "login": {
-      "loggingIn": "Iniciando sesión"
+      "loggingIn": "Iniciando sesión …",
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Introduce tu correo electrónico – te enviaremos un código de acceso. Sin contraseña.",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "nombre@ejemplo.es",
+      "submit": "Continuar",
+      "newUserHint": "¿Nuevo por aquí? Se creará una cuenta automáticamente con tu correo."
     },
     "requestEmail": {
+      "heading": "Qué bueno tenerte aquí",
       "title": "Iniciar sesión",
-      "subtitle": "Introduce tu dirección de correo electrónico para recibir un código de acceso.",
+      "subtitle": "Introduce tu correo electrónico – te enviaremos un código de acceso. Sin contraseña.",
       "email": "Correo electrónico",
+      "emailPlaceholder": "nombre@ejemplo.es",
+      "sendCode": "Enviar código",
+      "newUserHint": "¿Nuevo por aquí? Se creará una cuenta automáticamente con tu correo.",
       "requestCode": "Solicitar código",
       "errorSending": "Error al enviar el correo. Por favor, comprueba tu correo electrónico e inténtalo de nuevo.",
       "errorForbidden": "Este correo electrónico no está permitido. Por favor, contacta con el administrador para una invitación.",
       "errorRateLimiter": "Demasiadas solicitudes. Por favor, espera un momento e inténtalo de nuevo."
     },
     "codeLogin": {
+      "heading": "Introduce el código",
+      "codeSentBefore": "Hemos enviado un código de 6 dígitos a",
+      "codeSentAfter": ".",
+      "invalidCode": "Código inválido – por favor inténtalo de nuevo.",
+      "submit": "Confirmar",
+      "changeEmail": "Cambiar correo",
       "title": "Verificar código",
       "subtitle": "Introduce el código de acceso enviado a tu correo electrónico.",
       "code": "Código de acceso",
       "verify": "Verificar código"
+    },
+    "loginSuccess": {
+      "heading": "Sesión iniciada",
+      "redirect": "Te llevamos a tus encuestas."
+    },
+    "shell": {
+      "tagline": "Decidid juntos – sin caos de contraseñas.",
+      "description": "Un código por correo es suficiente. Luego verás inmediatamente qué encuestas esperan tu voto.",
+      "feature1": "Sin contraseña, sin restablecimientos",
+      "feature2": "En todos los dispositivos con el mismo correo",
+      "feature3": "Los códigos expiran a los 10 minutos",
+      "terms": "Términos de uso",
+      "privacy": "Política de privacidad",
+      "legalConsentPrefix": "Al iniciar sesión aceptas los",
+      "legalConsentMid": "y la",
+      "legalConsentSuffix": ".",
+      "helpText": "¿Problemas al iniciar sesión?",
+      "helpLink": "Ayuda"
     }
   },
   "project": {

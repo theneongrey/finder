@@ -9,10 +9,11 @@ import { Router } from '@angular/router';
 import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
 import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auth-login',
-  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent],
+  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, TranslatePipe],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

@@ -15,13 +15,13 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleBarService } from '../../../common/services/title-bar.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
 import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
 
 @Component({
   selector: 'app-request-email',
-  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent],
+  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, TranslatePipe],
   templateUrl: './request-email.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

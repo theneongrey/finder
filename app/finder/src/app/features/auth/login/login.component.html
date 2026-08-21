@@ -1,71 +1,38 @@
 <!-- Progress dots: step 1 active -->
-<div class="flex" style="gap: 7px; margin-bottom: 16px">
-  <span
-    style="height: 4px; flex: 1; border-radius: 99px; background: var(--accent)"
-  ></span>
-  <span
-    style="height: 4px; flex: 1; border-radius: 99px; background: var(--sand-200)"
-  ></span>
-  <span
-    style="height: 4px; flex: 1; border-radius: 99px; background: var(--sand-200)"
-  ></span>
+<div class="flex gap-[7px] mb-[16px]">
+  <span class="h-[4px] flex-1 rounded-full bg-[var(--accent)]"></span>
+  <span class="h-[4px] flex-1 rounded-full bg-[var(--sand-200)]"></span>
+  <span class="h-[4px] flex-1 rounded-full bg-[var(--sand-200)]"></span>
 </div>
 
-<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col" style="gap: 0">
-  <div
-    style="
-      font-family: var(--font-display);
-      font-size: var(--fs-display-md);
-      font-weight: var(--weight-bold);
-      letter-spacing: -0.6px;
-      line-height: 1.1;
-      color: var(--text-primary);
-    "
-  >
-    Willkommen zurück
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-0">
+  <div class="[font-family:var(--font-display)] text-[var(--fs-display-md)] font-bold tracking-[-0.6px] leading-[1.1] text-[var(--text-primary)]">
+    {{ 'auth.login.title' | translate }}
   </div>
-  <p
-    style="
-      margin: 8px 0 0;
-      font-size: var(--fs-body-sm);
-      line-height: 1.45;
-      color: var(--text-secondary);
-      text-wrap: pretty;
-    "
-  >
-    Gib deine E-Mail-Adresse ein – wir schicken dir einen Anmeldecode.
-    Kein Passwort nötig.
+  <p class="mt-[8px] text-[var(--fs-body-sm)] leading-[1.45] text-[var(--text-secondary)] text-pretty">
+    {{ 'auth.login.subtitle' | translate }}
   </p>
 
-  <div style="margin-top: 20px">
+  <div class="mt-[20px]">
     <ds-input
       formControlName="email"
-      label="E-Mail-Adresse"
-      placeholder="name@beispiel.de"
+      [label]="'auth.login.email' | translate"
+      [placeholder]="'auth.login.emailPlaceholder' | translate"
     />
   </div>
 
-  <div style="margin-top: 18px">
+  <div class="mt-[18px]">
     <ds-button
       variant="primary"
       [fullWidth]="true"
       trailingIcon="arrow-right"
       [disabled]="form.invalid"
     >
-      Weiter
+      {{ 'auth.login.submit' | translate }}
     </ds-button>
   </div>
 
-  <p
-    style="
-      margin: 14px 0 0;
-      font-size: var(--fs-caption);
-      line-height: 1.5;
-      color: var(--text-muted);
-      text-align: center;
-      text-wrap: pretty;
-    "
-  >
-    Neu hier? Mit der E-Mail wird automatisch dein Konto angelegt.
+  <p class="mt-[14px] text-[var(--fs-caption)] leading-[1.5] text-[var(--text-muted)] text-center text-pretty">
+    {{ 'auth.login.newUserHint' | translate }}
   </p>
 </form>

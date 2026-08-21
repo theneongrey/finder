@@ -17,10 +17,11 @@ import { TitleBarService } from '../../../common/services/title-bar.service';
 import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
 import { DsInputOtpComponent } from '../../../common/ui/ds-components/input-otp/ds-input-otp.component';
 import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule, DsInputOtpComponent, DsButtonComponent, DsIconComponent],
+  imports: [ReactiveFormsModule, DsInputOtpComponent, DsButtonComponent, DsIconComponent, TranslatePipe],
   templateUrl: './code-login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

@@ -1,83 +1,47 @@
 <!-- Progress dots: steps 1 + 2 active -->
-<div class="flex" style="gap: 7px; margin-bottom: 16px">
-  <span
-    style="height: 4px; flex: 1; border-radius: 99px; background: var(--accent)"
-  ></span>
-  <span
-    style="height: 4px; flex: 1; border-radius: 99px; background: var(--accent)"
-  ></span>
-  <span
-    style="height: 4px; flex: 1; border-radius: 99px; background: var(--sand-200)"
-  ></span>
+<div class="flex gap-[7px] mb-[16px]">
+  <span class="h-[4px] flex-1 rounded-full bg-[var(--accent)]"></span>
+  <span class="h-[4px] flex-1 rounded-full bg-[var(--accent)]"></span>
+  <span class="h-[4px] flex-1 rounded-full bg-[var(--sand-200)]"></span>
 </div>
 
 <form
   [formGroup]="form"
   (ngSubmit)="verifyCode()"
-  class="flex flex-col"
-  style="gap: 0"
+  class="flex flex-col gap-0"
 >
-  <div
-    style="
-      font-family: var(--font-display);
-      font-size: var(--fs-display-md);
-      font-weight: var(--weight-bold);
-      letter-spacing: -0.6px;
-      line-height: 1.1;
-      color: var(--text-primary);
-    "
-  >
-    Code eingeben
+  <div class="[font-family:var(--font-display)] text-[var(--fs-display-md)] font-bold tracking-[-0.6px] leading-[1.1] text-[var(--text-primary)]">
+    {{ 'auth.codeLogin.heading' | translate }}
   </div>
-  <p
-    style="
-      margin: 8px 0 0;
-      font-size: var(--fs-body-sm);
-      line-height: 1.45;
-      color: var(--text-secondary);
-      text-wrap: pretty;
-    "
-  >
-    Wir haben einen 6-stelligen Code an
-    <strong style="color: var(--text-body); font-weight: var(--weight-bold)">{{
-      email()
-    }}</strong>
-    geschickt.
+  <p class="mt-[8px] text-[var(--fs-body-sm)] leading-[1.45] text-[var(--text-secondary)] text-pretty">
+    {{ 'auth.codeLogin.codeSentBefore' | translate }}
+    <strong class="text-[var(--text-body)] font-bold">{{ email() }}</strong>{{ 'auth.codeLogin.codeSentAfter' | translate }}
   </p>
 
-  <div class="flex justify-center" style="margin-top: 22px">
+  <div class="flex justify-center mt-[22px]">
     <ds-input-otp formControlName="code" [length]="6" [groupSize]="3" />
   </div>
 
   @if (hasError()) {
-    <div
-      class="flex items-center"
-      style="
-        gap: 6px;
-        padding-top: 10px;
-        font-size: var(--fs-ui-sm);
-        font-weight: var(--weight-semibold);
-        color: var(--negative);
-      "
-    >
+    <div class="flex items-center gap-[6px] pt-[10px] text-[var(--fs-ui-sm)] font-semibold text-[var(--negative)]">
       <ds-icon name="warning" [size]="14" color="var(--negative)" />
-      <span>Code ungültig – bitte erneut versuchen.</span>
+      <span>{{ 'auth.codeLogin.invalidCode' | translate }}</span>
     </div>
   }
 
-  <div style="margin-top: 16px">
+  <div class="mt-[16px]">
     <ds-button
       variant="primary"
       [fullWidth]="true"
       [disabled]="form.invalid"
     >
-      Bestätigen
+      {{ 'auth.codeLogin.submit' | translate }}
     </ds-button>
   </div>
 </form>
 
-<div style="margin-top: 14px">
+<div class="mt-[14px]">
   <ds-button variant="ghost" size="sm" (click)="editEmail()">
-    E-Mail ändern
+    {{ 'auth.codeLogin.changeEmail' | translate }}
   </ds-button>
 </div>

@@ -153,6 +153,9 @@ public class ProjectService
     {
         var project = await _dbContext.Projects
             .Include(p => p.Polls)
+            .ThenInclude(poll => poll.Options)
+            .ThenInclude(option => option.Votes)
+            .ThenInclude(vote => vote.Person)
             .Where(p => p.Id == SlugHelper.ExtractId(slug))
             .SingleOrDefaultAsync();
 

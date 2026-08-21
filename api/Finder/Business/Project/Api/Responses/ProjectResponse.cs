@@ -2,11 +2,33 @@ using Finder.Business.Shared;
 
 namespace Finder.Business.Project.Api.Responses;
 
+public class PublicPollOptionPreview
+{
+    public required string Id { get; set; }
+    public required string Text { get; set; }
+    public required string Description { get; set; }
+    public required int VoteCount { get; set; }
+}
+
+public class PublicPollPreview
+{
+    public required string Id { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public required int OptionType { get; set; }
+    public DateTime? CloseDate { get; set; }
+    public required bool IsClosed { get; set; }
+    public required PublicPollOptionPreview[] Options { get; set; }
+    public required int ParticipantCount { get; set; }
+    public required int TotalVotes { get; set; }
+}
+
 public class PublicProjectResponse
 {
     public required string ProjectId { get; set; }
     public required bool IsStandalone { get; set; }
     public string? PollId { get; set; }
+    public PublicPollPreview? PollPreview { get; set; }
 }
 
 public class ProjectResponseOption
@@ -52,6 +74,31 @@ public class ProjectResponse
 
 public static class ProjectMapper
 {
+    public static PublicPollPreview ToPublicPollPreview(this Entities.Poll poll)
+    {
+        return new PublicPollPreview
+        {
+            Id = SlugHelper.ToSlug(poll.Name, poll.Id),
+            Name = poll.Name,
+            Description = poll.Description,
+            OptionType = (int)poll.OptionType,
+            CloseDate = poll.CloseDate.HasValue ? DateTime.SpecifyKind(poll.CloseDate.Value, DateTimeKind.Utc) : null,
+            IsClosed = poll.CloseDate != null && poll.CloseDate <= DateTime.UtcNow,
+            Options = poll.Options
+                .OrderBy(o => o.Created)
+                .Select(o => new PublicPollOptionPreview
+                {
+                    Id = SlugHelper.ToSlug(SlugHelper.OptionSlugName(o.Text), o.Id),
+                    Text = o.Text,
+                    Description = o.Description,
+                    VoteCount = o.Votes.Count
+                })
+                .ToArray(),
+            ParticipantCount = poll.Options.SelectMany(o => o.Votes).Select(v => v.Person.Id).Distinct().Count(),
+            TotalVotes = poll.Options.Sum(o => o.Votes.Count)
+        };
+    }
+
     public static PublicProjectResponse ToPublicProjectResponse(this Entities.Project project)
     {
         var firstPoll = project.IsStandalone ? project.Polls.FirstOrDefault() : null;
@@ -59,7 +106,8 @@ public static class ProjectMapper
         {
             ProjectId = SlugHelper.ToSlug(project.Name, project.Id),
             IsStandalone = project.IsStandalone,
-            PollId = firstPoll is null ? null : SlugHelper.ToSlug(firstPoll.Name, firstPoll.Id)
+            PollId = firstPoll is null ? null : SlugHelper.ToSlug(firstPoll.Name, firstPoll.Id),
+            PollPreview = firstPoll?.ToPublicPollPreview()
         };
     }
 

@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   inject,
+  OnInit,
 } from '@angular/core';
 import { UserStore } from '../../../common/data/user.store';
 import {
@@ -12,34 +13,26 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { HlmCardImports } from '@spartan-ng/helm/card';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmAlertImports } from '@spartan-ng/helm/alert';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TitleBarService } from '../../../common/services/title-bar.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
+import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
+import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
 
 @Component({
   selector: 'app-request-email',
-  imports: [
-    ReactiveFormsModule,
-    ...HlmAlertImports,
-    ...HlmCardImports,
-    HlmButton,
-    HlmInput,
-    TranslatePipe,
-  ],
+  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, DsIconComponent],
   templateUrl: './request-email.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class:
-      'flex items-center justify-center flex-1 w-full px-4 py-8',
+    class: 'flex flex-1 flex-col lg:flex-row w-full',
   },
 })
-export class RequestEmailComponent {
+export class RequestEmailComponent implements OnInit {
   private userStore = inject(UserStore);
   private translateService = inject(TranslateService);
+  private route = inject(ActivatedRoute);
 
   isLoading = computed(() => this.userStore.loginMail.state() === 'sent');
 
@@ -85,7 +78,14 @@ export class RequestEmailComponent {
     });
   }
 
-  sendLoginMail() {
+  ngOnInit(): void {
+    const emailParam = this.route.snapshot.queryParams['email'];
+    if (emailParam) {
+      this.form.get('email')!.setValue(emailParam);
+    }
+  }
+
+  sendLoginMail(): void {
     if (this.form.valid) {
       this.userStore.requestLoginMail(this.form.get('email')!.value!);
     }

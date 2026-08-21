@@ -1,33 +1,289 @@
-<div class="flex flex-col min-h-dvh bg-app-gradient px-[var(--screen-padding)] py-8 lg:py-10">
-  <main class="flex-grow flex flex-col items-center justify-center lg:items-start lg:justify-start">
+<div class="relative flex flex-col min-h-dvh bg-app-gradient overflow-hidden">
 
-    @if (isLoading()) {
-      <div class="w-full max-w-[var(--mobile-max-width)] lg:max-w-[400px]">
+  @if (isLoading()) {
+    <div class="flex-1 flex items-start px-(--screen-padding) pt-4 pb-8 lg:px-[34px] lg:pt-[30px]">
+      <div class="w-full lg:max-w-[1080px] lg:mx-auto lg:grid lg:grid-cols-[1fr_352px] lg:gap-[18px]">
         <ds-poll-card-skeleton [count]="1" />
       </div>
-    } @else {
-      <div class="w-full max-w-[var(--mobile-max-width)] lg:max-w-[400px]">
-        <ds-card>
-          <h2
-            class="[font-family:var(--font-display)] text-[19px] lg:text-[22px] font-bold tracking-[-0.4px] leading-[1.2] text-[var(--text-primary)] text-pretty m-0"
-            data-testid="public-poll-heading"
-          >
-            {{ 'publicPoll.heading' | translate }}
-          </h2>
+    </div>
 
-          <p class="text-[var(--fs-body-sm)] leading-[1.5] text-[var(--text-secondary)] text-pretty m-0 mt-[8px]">
-            {{ 'publicPoll.invite' | translate }}
+  } @else {
+
+    <!-- ═══ MOBILE layout (<lg) ══════════════════════════════ -->
+    <div class="flex flex-col gap-3.5 overflow-y-auto px-(--screen-padding) py-3 pb-[172px] lg:hidden">
+
+      <!-- Invite banner -->
+      <div class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-white border border-[rgba(20,24,28,.055)]">
+        <span class="w-[30px] h-[30px] flex-none rounded-full bg-[#f1eee9] flex items-center justify-center">
+          <ds-icon name="link" [size]="15" color="#79756f" />
+        </span>
+        <div class="flex-1 min-w-0">
+          <div
+            class="text-[13.5px] font-bold text-[#1d2227] leading-[1.25]"
+            data-testid="public-poll-mobile-heading"
+          >{{ 'publicPoll.inviteTitle' | translate }}</div>
+          <div class="text-[12.5px] text-[#79756f] mt-0.5">{{ 'publicPoll.inviteSub' | translate }}</div>
+        </div>
+      </div>
+
+      <!-- Poll card (mobile) -->
+      @if (pollPreview(); as poll) {
+        <div class="bg-white border border-[rgba(20,24,28,.055)] rounded-[22px] px-5 pt-5 pb-[22px] shadow-[0_3px_14px_rgba(35,40,45,.05)]">
+
+          <div class="flex items-center gap-2">
+            <app-poll-type-badge [type]="poll.optionType" />
+            @if (!poll.isClosed) {
+              <span class="inline-flex items-center gap-1.5 h-[23px] px-2.5 pl-2 rounded-lg bg-[#e2ede1] text-[#3f7a4e] text-[12px] font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#5d9a56] pp-dot-pulse"></span>
+                {{ 'publicPoll.statusRunning' | translate }}
+              </span>
+            } @else {
+              <span class="inline-flex items-center h-[23px] px-2.5 rounded-lg bg-[#f1eee9] text-[#6f6b66] text-[11.5px] font-bold tracking-[.3px] uppercase">
+                {{ 'publicPoll.statusClosed' | translate }}
+              </span>
+            }
+          </div>
+
+          <div class="[font-family:var(--font-display)] text-[24px] font-bold tracking-[-0.5px] leading-[1.15] text-[#1d2227] mt-[13px] text-pretty">
+            {{ poll.name }}
+          </div>
+
+          <p class="m-0 mt-[7px] text-[14px] leading-[1.45] text-[#79756f] text-pretty">
+            {{ poll.description || ('publicPoll.guestDescription' | translate) }}
           </p>
 
-          <div class="flex flex-col gap-3 mt-5">
-            <ds-input
-              [formControl]="emailControl"
-              [label]="'publicPoll.emailLabel' | translate"
-              [placeholder]="'publicPoll.emailPlaceholder' | translate"
-              data-testid="public-poll-email"
-            />
+          @if (poll.closeDate && !poll.isClosed) {
+            <div class="flex items-center gap-1.5 mt-[13px] text-[13px] font-semibold text-[#5a5650]">
+              <ds-icon name="clock" [size]="14" color="currentColor" />
+              <span>{{ 'publicPoll.openUntil' | translate }} {{ poll.closeDate | date:'d. MMM., HH:mm' }}</span>
+            </div>
+          }
+
+          <div class="flex items-center gap-2.5 mt-[14px] pt-[14px] border-t border-[rgba(20,24,28,.055)]">
+            <div class="flex pl-[7px]">
+              @for (_ of participantSlots(); track $index) {
+                <div class="w-[30px] h-[30px] rounded-full -ml-[7px] border-[2.5px] border-white bg-[#ece8e1]"></div>
+              }
+            </div>
+            <span class="text-[12.5px] text-[#8a8681] leading-[1.35] text-pretty">
+              {{ poll.participantCount }} {{ 'publicPoll.peopleCount' | translate }}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between mt-[18px]">
+            <span class="text-[12px] font-bold tracking-[.7px] uppercase text-[#a39e96]">{{ 'publicPoll.optionsLabel' | translate }}</span>
+            <span class="text-[12.5px] text-[#a39e96]">
+              {{ poll.totalVotes }} {{ poll.totalVotes === 1 ? ('publicPoll.voteSingular' | translate) : ('publicPoll.votePlural' | translate) }}
+            </span>
+          </div>
+
+          <div class="flex flex-col gap-[9px] mt-[11px]">
+            @for (opt of optionDisplays(); track opt.id) {
+              <div
+                class="relative px-3.5 py-3 rounded-2xl border overflow-hidden"
+                [class]="opt.isLead ? 'border-[rgba(31,122,140,.28)] bg-[#f4f9fa]' : 'border-[rgba(20,24,28,.075)] bg-[#fdfcfa]'"
+              >
+                <div class="flex items-center gap-2.5">
+                  <span class="flex-1 min-w-0">
+                    <span class="block text-[15px] font-bold text-[#1d2227] leading-[1.25]">{{ opt.text }}</span>
+                    @if (opt.description) {
+                      <span class="block text-[12.5px] text-[#8a8681] mt-0.5">{{ opt.description }}</span>
+                    }
+                  </span>
+                  <span class="flex-none text-right">
+                    <span
+                      class="block text-[16px] font-bold leading-[1.1] tabular-nums"
+                      [style.color]="opt.isLead ? 'var(--accent)' : '#5a5650'"
+                    >{{ opt.voteCount }}</span>
+                    <span class="block text-[11.5px] text-[#a39e96] mt-px">
+                      {{ opt.voteCount === 1 ? ('publicPoll.vote' | translate) : ('publicPoll.votes' | translate) }}
+                    </span>
+                  </span>
+                </div>
+                <span class="block h-[5px] rounded-full bg-[#efece7] mt-[10px] overflow-hidden">
+                  <span
+                    class="block h-full rounded-full"
+                    [style.width]="opt.pct"
+                    [style.background]="opt.isLead ? 'var(--accent)' : '#cfd9d2'"
+                  ></span>
+                </span>
+              </div>
+            }
+          </div>
+
+          <button
+            disabled
+            class="w-full h-[52px] mt-4 rounded-2xl border-none bg-[var(--accent)] text-white text-[15.5px] font-bold flex items-center justify-center gap-2 opacity-90 cursor-default"
+          >
+            {{ 'publicPoll.loginButton' | translate }}
+          </button>
+
+          <div class="flex items-center gap-2 mt-[11px] justify-center">
+            <ds-icon name="lock" [size]="13" color="#a39e96" />
+            <span class="text-[12.5px] leading-[1.4] text-[#8a8681] text-pretty">{{ 'publicPoll.lockNote' | translate }}</span>
+          </div>
+        </div>
+      } @else {
+        <ds-poll-card-skeleton [count]="1" />
+      }
+
+      <!-- Privacy note -->
+      <div class="flex items-start gap-2 px-1">
+        <ds-icon name="lock" [size]="14" color="#a39e96" />
+        <span class="flex-1 text-[12px] leading-[1.4] text-[#a39e96] text-pretty">{{ 'publicPoll.privacyNote' | translate }}</span>
+      </div>
+    </div>
+
+    <!-- Mobile bottom nudge bar -->
+    <div class="absolute bottom-0 left-0 right-0 z-10 px-(--screen-padding) pb-5 pt-10 bg-gradient-to-t from-[#e7efef] from-[46%] to-transparent lg:hidden">
+      <div class="flex items-center gap-3 rounded-[20px] bg-[#1d2227] px-4 py-3 shadow-[0_12px_30px_rgba(30,35,40,.26)]">
+        <div class="flex-1 min-w-0">
+          <div class="text-[14px] font-bold text-white leading-[1.2]">{{ 'publicPoll.nudgeTitle' | translate }}</div>
+          <div class="text-[12px] text-[#b9b5ad] mt-0.5">{{ 'publicPoll.barSub' | translate }}</div>
+        </div>
+        <ds-button
+          variant="primary"
+          (click)="login()"
+          data-testid="public-poll-nudge-btn"
+        >
+          {{ 'publicPoll.nudgeBtn' | translate }}
+        </ds-button>
+      </div>
+    </div>
+
+    <!-- ═══ DESKTOP layout (≥lg) ══════════════════════════════ -->
+    <div class="hidden lg:flex flex-1 flex-col overflow-y-auto px-[34px] py-[30px]">
+      <div class="max-w-[1080px] mx-auto w-full grid grid-cols-[1fr_352px] gap-[18px] items-start">
+
+        <!-- Left: poll card -->
+        @if (pollPreview(); as poll) {
+          <div class="bg-white border border-[rgba(20,24,28,.055)] rounded-[22px] px-[30px] py-7 shadow-[0_3px_14px_rgba(35,40,45,.05)]">
+
+            <div class="flex items-center gap-2">
+              <app-poll-type-badge [type]="poll.optionType" />
+              @if (!poll.isClosed) {
+                <span class="inline-flex items-center gap-1.5 h-[25px] px-[11px] pl-[9px] rounded-lg bg-[#e2ede1] text-[#3f7a4e] text-[12px] font-bold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#5d9a56] pp-dot-pulse"></span>
+                  {{ 'publicPoll.statusRunning' | translate }}
+                </span>
+              } @else {
+                <span class="inline-flex items-center h-[25px] px-2.5 rounded-lg bg-[#f1eee9] text-[#6f6b66] text-[11.5px] font-bold tracking-[.3px] uppercase">
+                  {{ 'publicPoll.statusClosed' | translate }}
+                </span>
+              }
+              @if (poll.closeDate && !poll.isClosed) {
+                <span class="ml-auto flex items-center gap-1.5 text-[13.5px] font-semibold text-[#5a5650]">
+                  <ds-icon name="clock" [size]="15" color="currentColor" />
+                  {{ 'publicPoll.openUntil' | translate }} {{ poll.closeDate | date:'d. MMM., HH:mm' }}
+                </span>
+              }
+            </div>
+
+            <div class="[font-family:var(--font-display)] text-[34px] font-bold tracking-[-0.9px] leading-[1.08] text-[#1d2227] mt-4 text-pretty">
+              {{ poll.name }}
+            </div>
+
+            <p class="m-0 mt-[9px] text-[15.5px] leading-[1.5] text-[#79756f] text-pretty max-w-[60ch]">
+              {{ poll.description || ('publicPoll.guestDescription' | translate) }}
+            </p>
+
+            <div class="flex items-center gap-[11px] mt-5 pt-[18px] border-t border-[rgba(20,24,28,.055)]">
+              <div class="flex pl-[7px]">
+                @for (_ of participantSlots(); track $index) {
+                  <div class="w-[34px] h-[34px] rounded-full -ml-[7px] border-[2.5px] border-white bg-[#ece8e1]"></div>
+                }
+              </div>
+              <span class="text-[13.5px] text-[#8a8681]">
+                {{ poll.participantCount }} {{ 'publicPoll.peopleCount' | translate }}
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between mt-6">
+              <span class="text-[12px] font-bold tracking-[.7px] uppercase text-[#a39e96]">{{ 'publicPoll.optionsLabel' | translate }}</span>
+              <span class="text-[13px] text-[#a39e96]">
+                {{ poll.totalVotes }}
+                {{ poll.totalVotes === 1 ? ('publicPoll.voteSingular' | translate) : ('publicPoll.votePlural' | translate) }}
+                {{ 'publicPoll.sofar' | translate }}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-[11px] mt-[13px]">
+              @for (opt of optionDisplays(); track opt.id) {
+                <div
+                  class="px-4 py-[15px] rounded-[18px] border"
+                  [class]="opt.isLead ? 'border-[rgba(31,122,140,.28)] bg-[#f4f9fa]' : 'border-[rgba(20,24,28,.075)] bg-[#fdfcfa]'"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="flex-1 min-w-0">
+                      <span class="block text-[16px] font-bold text-[#1d2227] leading-[1.25]">{{ opt.text }}</span>
+                      @if (opt.description) {
+                        <span class="block text-[13px] text-[#8a8681] mt-0.5">{{ opt.description }}</span>
+                      }
+                    </span>
+                    <span class="flex-none text-right">
+                      <span
+                        class="block text-[18px] font-bold leading-[1.1] tabular-nums"
+                        [style.color]="opt.isLead ? 'var(--accent)' : '#5a5650'"
+                      >{{ opt.voteCount }}</span>
+                      <span class="block text-[12px] text-[#a39e96] mt-px">
+                        {{ opt.voteCount === 1 ? ('publicPoll.vote' | translate) : ('publicPoll.votes' | translate) }}
+                      </span>
+                    </span>
+                  </div>
+                  <span class="block h-[5px] rounded-full bg-[#efece7] mt-3 overflow-hidden">
+                    <span
+                      class="block h-full rounded-full"
+                      [style.width]="opt.pct"
+                      [style.background]="opt.isLead ? 'var(--accent)' : '#cfd9d2'"
+                    ></span>
+                  </span>
+                </div>
+              }
+            </div>
+
+            <div class="flex items-center gap-3.5 mt-[22px]">
+              <button
+                disabled
+                class="h-[52px] px-[30px] rounded-2xl border-none bg-[var(--accent)] text-white text-[15.5px] font-bold flex items-center justify-center gap-2 opacity-90 cursor-default"
+              >
+                {{ 'publicPoll.loginButton' | translate }}
+              </button>
+              <span class="text-[13px] text-[#8a8681] leading-[1.4] text-pretty">{{ 'publicPoll.voteHint' | translate }}</span>
+            </div>
+          </div>
+        } @else {
+          <ds-poll-card-skeleton [count]="1" />
+        }
+
+        <!-- Right: dark sign-in card + perks -->
+        <div class="flex flex-col gap-4">
+
+          <!-- Dark sign-in card -->
+          <div class="rounded-[22px] bg-[#1d2227] px-[22px] py-6 shadow-[0_10px_30px_rgba(30,35,40,.2)]">
+            <h2
+              class="[font-family:var(--font-display)] text-[22px] font-bold tracking-[-0.4px] leading-[1.15] text-white text-pretty m-0"
+              data-testid="public-poll-heading"
+            >
+              {{ 'publicPoll.heading' | translate }}
+            </h2>
+            <p class="m-0 mt-2 text-[13.5px] leading-[1.5] text-[#b9b5ad] text-pretty">
+              {{ 'publicPoll.barSub' | translate }}
+            </p>
+
+            <label class="block text-[12px] font-bold tracking-[.7px] uppercase text-[#87837c] mt-5">
+              {{ 'publicPoll.emailLabel' | translate }}
+            </label>
+            <div class="mt-2" data-testid="public-poll-email">
+              <input
+                type="email"
+                [formControl]="emailControl"
+                placeholder="{{ 'publicPoll.emailPlaceholder' | translate }}"
+                class="block w-full h-[50px] box-border px-[14px] rounded-[15px] border border-[rgba(255,255,255,.14)] bg-[#2a2e33] text-[15px] text-white outline-none transition-[border-color,box-shadow] duration-[160ms] placeholder:text-[#87837c] focus:border-[rgba(31,122,140,.6)] focus:shadow-[0_0_0_4px_rgba(31,122,140,.25)]"
+              />
+            </div>
 
             <ds-button
+              class="mt-3 block"
               variant="primary"
               [fullWidth]="true"
               (click)="login()"
@@ -40,22 +296,34 @@
               }
             </ds-button>
 
-            <ds-button
-              variant="ghost"
-              [fullWidth]="true"
-              (click)="back()"
-              data-testid="public-poll-cancel-btn"
-            >
-              {{ 'publicPoll.cancelButton' | translate }}
-            </ds-button>
+            <p class="m-0 mt-3 text-[12px] text-[#87837c] text-center leading-[1.45]">
+              {{ 'publicPoll.hint' | translate }}
+            </p>
           </div>
 
-          <p class="text-[12px] leading-[1.45] text-[var(--text-muted)] text-center text-pretty m-0 mt-[14px]">
-            {{ 'publicPoll.hint' | translate }}
-          </p>
-        </ds-card>
-      </div>
-    }
+          <!-- Perks card -->
+          <div class="rounded-[22px] bg-white border border-[rgba(20,24,28,.055)] px-[22px] py-[22px] shadow-[0_3px_14px_rgba(35,40,45,.05)]">
+            <div class="text-[12px] font-bold tracking-[.7px] uppercase text-[#a39e96]">{{ 'publicPoll.perksHeading' | translate }}</div>
+            <div class="flex flex-col gap-[13px] mt-3.5">
+              @for (perk of perks; track perk) {
+                <div class="flex items-start gap-[11px]">
+                  <span class="w-6 h-6 flex-none rounded-full bg-[#e7f2f3] flex items-center justify-center mt-0.5">
+                    <ds-icon name="check" [size]="12" color="var(--accent)" />
+                  </span>
+                  <span class="flex-1 text-[14px] leading-[1.45] text-[#3a3833] text-pretty">{{ perk | translate }}</span>
+                </div>
+              }
+            </div>
+            <div class="flex items-start gap-2.5 mt-[18px] pt-4 border-t border-[rgba(20,24,28,.055)]">
+              <ds-icon name="lock" [size]="15" color="#a39e96" />
+              <span class="flex-1 text-[12.5px] leading-[1.45] text-[#a39e96] text-pretty">{{ 'publicPoll.privacyNote' | translate }}</span>
+            </div>
+          </div>
 
-  </main>
+        </div>
+      </div>
+    </div>
+
+  }
+
 </div>

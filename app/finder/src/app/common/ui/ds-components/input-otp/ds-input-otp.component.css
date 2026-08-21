@@ -17,7 +17,7 @@
 }
 
 :host ::ng-deep hlm-input-otp-separator.ds-otp-sep::before {
-  content: '—';
+  content: "—";
 }
 
 /* Group: strip SpartanNG ring/border-radius defaults */
@@ -36,35 +36,42 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
-  border: 1.5px solid var(--border-hairline-strong) !important;
-  background: var(--bg-input);
+  border: 1.5px solid rgba(20, 24, 28, 0.1) !important;
+  background: var(--cream-50);
   font-size: var(--fs-display-xs);
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--text-primary);
   position: relative;
-  transition: border-color var(--duration-fast) var(--ease-standard);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    background var(--duration-fast) var(--ease-standard);
   box-shadow: none !important;
   ring: none !important;
 }
 
-/* Active slot: accent border */
-:host ::ng-deep hlm-input-otp-slot.ds-otp-slot brn-input-otp-slot[data-active='true'] {
-  border-color: var(--accent);
-}
-
-:host ::ng-deep hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot[data-active='true']) {
+/* Active slot: accent border + glow ring */
+:host
+  ::ng-deep
+  hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot[data-active="true"]) {
   border-color: var(--accent) !important;
+  background: var(--surface-card);
 }
 
-/* Filled slot: accent tint background */
-:host ::ng-deep hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot:not([data-active='true'])) {
-  background: var(--accent-tint);
+/* Filled slot: white background, slightly stronger border */
+:host
+  ::ng-deep
+  hlm-input-otp-slot.ds-otp-slot:has(
+    brn-input-otp-slot:not([data-active="true"])
+  ) {
+  background: var(--surface-card);
+  border-color: rgba(20, 24, 28, 0.16) !important;
 }
 
-/* Fake caret styling */
-:host ::ng-deep hlm-input-otp-fake-caret {
-  position: absolute;
+/* Fake caret: Spartan's host is the centering wrapper (absolute inset-0 flex center).
+   Style the inner div — not the host — so centering stays intact. */
+:host ::ng-deep hlm-input-otp-fake-caret div {
   width: 2px;
   height: 22px;
   background: var(--accent);
@@ -73,6 +80,11 @@
 }
 
 @keyframes ds-otp-blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }

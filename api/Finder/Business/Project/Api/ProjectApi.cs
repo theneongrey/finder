@@ -71,7 +71,10 @@ public static class ProjectApi
                 async ([FromBody] AddStandalonePollRequest request, ProjectService projectService, UserService userService) =>
                 {
                     if (request.CloseDate.HasValue && request.CloseDate.Value <= DateTime.UtcNow)
+                    {
                         return Results.BadRequest("closeDate must be in the future");
+                    }
+
                     var result = await projectService.CreateStandalonePoll(request.Name, request.Description, request.OptionType, request.CloseDate);
                     return !result.IsSuccess
                         ? Results.BadRequest()
@@ -104,7 +107,10 @@ public static class ProjectApi
                 async (string slug, [FromBody] UpdatePollRequest request, ProjectService projectService, UserService userService) =>
                 {
                     if (request.CloseDate.HasValue && request.CloseDate.Value <= DateTime.UtcNow)
+                    {
                         return Results.BadRequest("closeDate must be in the future");
+                    }
+
                     var result = await projectService.UpdatePoll(slug, request.Name, request.Description, request.CloseDate);
                     return !result.IsSuccess ? Results.StatusCode(result.Code) : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
                 })
@@ -186,7 +192,11 @@ public static class ProjectApi
                 async (string projectSlug, ProjectService projectService, UserService userService) =>
                 {
                     var userId = userService.GetUserId();
-                    if (userId is null) return Results.Unauthorized();
+                    if (userId is null)
+                    {
+                        return Results.Unauthorized();
+                    }
+
                     var result = await projectService.ToggleFavoriteAsync(projectSlug, userId.Value);
                     return !result.IsSuccess
                         ? Results.StatusCode(result.Code)

@@ -1,97 +1,87 @@
+using Finder.Business.Preview.Services.PreviewHelper;
 using Finder.Business.Shared;
 using HtmlAgilityPack;
 
 namespace Finder.Business.Preview.Services;
 
-public record Preview
-{
-    public string Title { get; init; }
-    public string Description { get; init; }
-    public string ImageUrl { get; init; }
-    public string SiteName { get; init; }
-
-    public Preview(string title, string description, string imageUrl, string siteName)
-    {
-        Title = title;
-        Description = description;
-        ImageUrl = imageUrl;
-        SiteName = siteName;
-    }
-}
-    
 public class PreviewService
 {
-    private readonly IHttpClientFactory _clientFactory;
+    private readonly PreviewGrabberMetaService _previewGrabberMetaService;
+    private readonly HtmlGrabberPlaywrightService _htmlGrabberPlaywrightService;
+    private readonly PreviewGrabberQueryService _previewGrabberQueryService;
+    private readonly PreviewGrabberClaudeService _previewGrabberClaudeService;
+    private readonly HtmlGrabberHttpClientService _htmlGrabberHttpClientService;
 
-    public PreviewService(IHttpClientFactory clientFactory)
+    public PreviewService(HtmlGrabberHttpClientService htmlGrabberHttpClientService,
+        PreviewGrabberMetaService previewGrabberMetaService,
+        HtmlGrabberPlaywrightService htmlGrabberPlaywrightService,
+        PreviewGrabberQueryService previewGrabberQueryService,
+        PreviewGrabberClaudeService previewGrabberClaudeService)
     {
-        _clientFactory = clientFactory;
+        _htmlGrabberHttpClientService = htmlGrabberHttpClientService;
+        _previewGrabberMetaService = previewGrabberMetaService;
+        _htmlGrabberPlaywrightService = htmlGrabberPlaywrightService;
+        _previewGrabberQueryService = previewGrabberQueryService;
+        _previewGrabberClaudeService = previewGrabberClaudeService;
     }
-    public async Task<Result<Preview>> GetPreviewAsync(string url)
+
+    public async Task<Result<Models.Preview>> GetPreviewAsync(string url)
     {
-        if(string.IsNullOrWhiteSpace(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
+        if (string.IsNullOrWhiteSpace(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
         {
-            return Result<Preview>.Fail(400, "Invalid URL");
+            return Result<Models.Preview>.Fail(400, "Invalid URL");
         }
 
-        try
+        // 1. Try the plain HTTP client first and try to find out if you can get the image via the meta tags
+        var httpHtmlResult = await _htmlGrabberHttpClientService.GetHtmlContent(url);
+        if (!httpHtmlResult.IsSuccess)
         {
-            var client = _clientFactory.CreateClient("PreviewClient");
-            // Fetch HTML content from the target site
-            var html = await client.GetStringAsync(url);
+            Result<Models.Preview>.Fail(500, "Failed to fetch from url");
+        }
 
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html);
+        var httpClientHtmlContent = httpHtmlResult.Payload!;
 
-            // 1. Extract Title(check OG, then twitter, fallback to standard <title> tag)
-            var title = GetMetaContent(doc, "og:title", "twitter:title");
-            if(string.IsNullOrWhiteSpace(title))
+        var metaResult = _previewGrabberMetaService.GetPreview(httpClientHtmlContent, new Uri(url));
+        if (metaResult.IsSuccess && metaResult.Payload!.HasImage)
+        {
+            return metaResult;
+        }
+
+        // 2. If the plain HTTP client does not work, maybe it's an SPA, try it with playwright
+        var htmlPlaywrightResult = await _htmlGrabberPlaywrightService.GetHtmlContent(url);
+        if (!htmlPlaywrightResult.IsSuccess)
+        {
+            Result<Models.Preview>.Fail(500, "Failed to fetch from url");
+        }
+
+        var playwrightHtmlContent = htmlPlaywrightResult.Payload!;
+        if (httpClientHtmlContent.Length != playwrightHtmlContent.Length)
+        {
+            // Even if the content changed after calling it with playwright, it's most likely the metadata will
+            // not change, but since it's a low-cost operation, try it again.
+
+            var metaPlaywrightResult = _previewGrabberMetaService.GetPreview(httpHtmlResult.Payload!, new Uri(url));
+            if (metaPlaywrightResult.IsSuccess && metaPlaywrightResult.Payload!.HasImage)
             {
-                var titleNode = doc.DocumentNode.SelectSingleNode("//title");
-                title = System.Web.HttpUtility.HtmlDecode(titleNode.InnerText);
+                return metaPlaywrightResult;
             }
-                
-            // 2. Extract Description
-            var description = GetMetaContent(doc, "og:description", "twitter:description", "description");
-
-            // 3. Extract Image
-            var imageUrl = GetMetaContent(doc, "og:image", "twitter:image");
-
-            // Resolve relative image URLs if necessary
-            if(!string.IsNullOrWhiteSpace(imageUrl) && !imageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-            {
-                var baseUrl = new Uri(url);
-                imageUrl = new Uri(baseUrl, imageUrl).ToString();
-            }
-
-            // 4. Extract Site name
-            var siteName = GetMetaContent(doc, "og:site_name");
-
-            return Result<Preview>.Success(new Preview(title, description, imageUrl, siteName));
         }
-        catch(Exception)
+
+        // 3. Let's see first if we have any query to grab the info from the HTML content 
+        var queryResult = _previewGrabberQueryService.GetPreview(playwrightHtmlContent, new Uri(url));
+        if (queryResult.IsSuccess && queryResult.Payload!.HasImage)
         {
-            return Result<Preview>.Fail(500, "Failed to fetch preview");
+            return queryResult;
         }
-    }
+
+        // 4. If we don't have any preview picture so far, let's ask the AI for a suggestion 
+        var claudeResult = _previewGrabberClaudeService.GetPreview(playwrightHtmlContent, new Uri(url));
+        if (claudeResult.IsSuccess && claudeResult.Payload!.HasImage)
+        {
+            
+        }
         
-    private string GetMetaContent(HtmlDocument doc, params string[] propertyOrNames)
-    {
-        foreach(var key in propertyOrNames)
-        {
-            var node = doc.DocumentNode.SelectSingleNode($"//meta[@property='{key}'] | //meta[@name='{key}']");
 
-            // node CAN be null
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            if (node != null)
-            {
-                var content = node.GetAttributeValue("content", string.Empty);
-                if (content.Trim().Length > 0)
-                {
-                    return System.Web.HttpUtility.HtmlDecode(content);
-                }
-            }
-        }
-        return string.Empty;
+        return metaResult;
     }
 }

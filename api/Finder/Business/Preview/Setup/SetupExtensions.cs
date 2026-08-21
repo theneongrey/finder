@@ -1,5 +1,6 @@
 using System.Threading.RateLimiting;
 using Finder.Business.Preview.Services;
+using Finder.Business.Preview.Services.PreviewHelper;
 
 namespace Finder.Business.Preview.Setup;
 
@@ -7,6 +8,9 @@ public static class SetupExtensions
 {
     public static IServiceCollection AddPreviewServices(this IServiceCollection services)
     {
+        services.AddScoped<HtmlGrabberPlaywrightService>();
+        services.AddScoped<HtmlGrabberHttpClientService>();
+        services.AddScoped<PreviewGrabberMetaService>();
         services.AddScoped<PreviewService>();
         
         services.AddRateLimiter(options =>

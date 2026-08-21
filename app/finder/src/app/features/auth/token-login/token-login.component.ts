@@ -3,10 +3,11 @@ import { UserStore } from '../../../common/data/user.store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '../../../common/services/logger.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.component';
 
 @Component({
   selector: 'app-auth-token-login',
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, AuthStepIndicatorComponent],
   templateUrl: './token-login.component.html',
   styleUrl: './token-login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

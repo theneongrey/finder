@@ -10,10 +10,11 @@ import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-bu
 import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.component';
 
 @Component({
   selector: 'app-auth-login',
-  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, TranslatePipe],
+  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, TranslatePipe, AuthStepIndicatorComponent],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

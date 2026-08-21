@@ -18,10 +18,11 @@ import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-bu
 import { DsInputOtpComponent } from '../../../common/ui/ds-components/input-otp/ds-input-otp.component';
 import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.component';
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule, DsInputOtpComponent, DsButtonComponent, DsIconComponent, TranslatePipe],
+  imports: [ReactiveFormsModule, DsInputOtpComponent, DsButtonComponent, DsIconComponent, TranslatePipe, AuthStepIndicatorComponent],
   templateUrl: './code-login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

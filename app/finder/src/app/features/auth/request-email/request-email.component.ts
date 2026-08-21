@@ -18,10 +18,11 @@ import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
 import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
+import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.component';
 
 @Component({
   selector: 'app-request-email',
-  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, TranslatePipe],
+  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, TranslatePipe, AuthStepIndicatorComponent],
   templateUrl: './request-email.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

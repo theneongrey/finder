@@ -12,10 +12,6 @@
     auth-success-ring 1.4s ease-out 0.3s;
 }
 
-.auth-success-check {
-  animation: auth-success-draw 0.5s cubic-bezier(0.22, 0.7, 0.3, 1) 0.18s both;
-}
-
 @keyframes auth-success-pop {
   0% { transform: scale(0.4); opacity: 0; }
   60% { transform: scale(1.12); opacity: 1; }
@@ -28,7 +24,3 @@
   100% { box-shadow: 0 0 0 0 rgba(93, 154, 86, 0); }
 }
 
-@keyframes auth-success-draw {
-  from { stroke-dashoffset: 34; }
-  to { stroke-dashoffset: 0; }
-}

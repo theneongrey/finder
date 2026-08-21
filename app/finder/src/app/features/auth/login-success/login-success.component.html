@@ -1,28 +1,8 @@
-<!-- Progress dots: all steps complete -->
-<div class="flex gap-[7px] mb-[16px]">
-  <span class="h-[4px] flex-1 rounded-full bg-[var(--accent)]"></span>
-  <span class="h-[4px] flex-1 rounded-full bg-[var(--accent)]"></span>
-  <span class="h-[4px] flex-1 rounded-full bg-[#5d9a56]"></span>
-</div>
+<app-auth-step-indicator [step]="3" />
 
 <div class="text-center pt-[6px] pb-[4px]">
   <div class="auth-success-circle">
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#5d9a56"
-      stroke-width="3.2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path
-        d="M4.5 12.5l4.5 4.5L20 5"
-        stroke-dasharray="34"
-        class="auth-success-check"
-      ></path>
-    </svg>
+    <ds-icon name="check" [size]="30" color="#5d9a56" />
   </div>
 
   <div class="[font-family:var(--font-display)] text-[var(--fs-display-md)] lg:text-[28px] font-bold tracking-[-0.6px] leading-[1.1] text-[var(--text-primary)] mt-[18px]">

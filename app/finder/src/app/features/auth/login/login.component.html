@@ -1,9 +1,4 @@
-<!-- Progress dots: step 1 active -->
-<div class="flex gap-[7px] mb-[16px]">
-  <span class="h-[4px] flex-1 rounded-full bg-[var(--accent)]"></span>
-  <span class="h-[4px] flex-1 rounded-full bg-[var(--sand-200)]"></span>
-  <span class="h-[4px] flex-1 rounded-full bg-[var(--sand-200)]"></span>
-</div>
+<app-auth-step-indicator [step]="1" />
 
 <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-0">
   <div class="[font-family:var(--font-display)] text-[var(--fs-display-md)] font-bold tracking-[-0.6px] leading-[1.1] text-[var(--text-primary)]">

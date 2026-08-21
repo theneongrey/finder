@@ -5,16 +5,17 @@ import {
   inject,
   untracked,
 } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { UserStore } from '../../common/data/user.store';
-import { Router, RouterOutlet } from '@angular/router';
-import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { LoggerService } from '../../common/services/logger.service';
+import { DsButtonComponent } from '../../common/ui/ds-components/button/ds-button.component';
 
 @Component({
   selector: 'app-auth-shell',
-  imports: [RouterOutlet, TitleBarComponent],
+  imports: [RouterOutlet, RouterLink, NgOptimizedImage, DsButtonComponent],
   templateUrl: './shell.component.html',
-  host: { class: 'flex flex-col h-full' },
+  host: { class: 'flex flex-col h-full lg:h-dvh bg-app-gradient' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthShellComponent {

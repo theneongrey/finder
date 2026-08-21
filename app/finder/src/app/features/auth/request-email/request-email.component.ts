@@ -16,13 +16,13 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NgOptimizedImage } from '@angular/common';
 import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
 import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
-import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
 
 @Component({
   selector: 'app-request-email',
-  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, DsIconComponent],
+  imports: [ReactiveFormsModule, NgOptimizedImage, DsButtonComponent, DsInputComponent],
   templateUrl: './request-email.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -30,6 +30,12 @@ import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.c
   },
 })
 export class RequestEmailComponent implements OnInit {
+  protected readonly bulletPoints = [
+    'Kein Passwort, kein Zurücksetzen',
+    'Auf allen Geräten mit derselben E-Mail',
+    'Codes laufen nach 10 Minuten ab',
+  ];
+
   private userStore = inject(UserStore);
   private translateService = inject(TranslateService);
   private route = inject(ActivatedRoute);

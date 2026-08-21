@@ -1,4 +1,18 @@
-<app-title-bar />
+<header
+  class="relative flex items-center justify-center lg:hidden"
+  style="height: 56px; flex-shrink: 0; padding: 0 16px"
+>
+  <div class="absolute left-4">
+    <ds-button
+      icon="chevron-left"
+      variant="surface"
+      [square]="true"
+      [size]="36"
+      routerLink="/"
+    />
+  </div>
+  <img alt="Votean" ngSrc="logo-primary.svg" width="87" height="23" />
+</header>
 <main class="flex flex-1 items-center justify-center lg:items-stretch">
   <router-outlet />
 </main>

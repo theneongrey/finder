@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { LoggerService } from '../../../common/services/logger.service';
 import { UserService } from '../../../common/services/user.service';
 import { UserStore } from '../../../common/data/user.store';
 import { TitleBarComponent } from '../../../common/ui/smart-components/title-bar/title-bar.component';
@@ -16,25 +16,16 @@ import { TitleBarService } from '../../../common/services/title-bar.service';
 import { PollService } from '../_shared/data/poll.service';
 import { OptionType, PublicParticipant, PublicProjectInfo, PublicPollPreview } from '../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../_shared/utils/date-option-format.service';
+import { DsCardComponent } from '../../../common/ui/ds-components/card/ds-card.component';
+import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
 import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
 import { DsPollCardSkeletonComponent } from '../../../common/ui/ds-components/poll-card-skeleton/ds-poll-card-skeleton.component';
 import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
-import { DsStatusDotComponent } from '../../../common/ui/ds-components/badge/ds-status-dot.component';
-import { AvatarStackComponent } from '../../../common/ui/smart-components/avatar-stack/avatar-stack.component';
-import { PollTypeBadgeComponent } from '../_shared/ui/poll-type-badge/poll-type-badge.component';
 import { UserAvatarComponent } from '../../../common/ui/smart-components/user-avatar/user-avatar.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
 import { User } from '../../../common/models/user.model';
-
-interface OptionDisplay {
-  id: string;
-  text: string;
-  description: string;
-  voteCount: number;
-  pct: string;
-  isLead: boolean;
-}
+import { PublicPollCardComponent, OptionDisplay } from './public-poll-card.component';
 
 interface ParticipantDisplay extends PublicParticipant {
   user: { name: string };
@@ -45,16 +36,15 @@ interface ParticipantDisplay extends PublicParticipant {
   standalone: true,
   imports: [
     TitleBarComponent,
+    DsCardComponent,
+    DsInputComponent,
     DsButtonComponent,
     DsPollCardSkeletonComponent,
     DsIconComponent,
-    DsStatusDotComponent,
-    AvatarStackComponent,
-    PollTypeBadgeComponent,
     UserAvatarComponent,
+    PublicPollCardComponent,
     ReactiveFormsModule,
     TranslatePipe,
-    DatePipe,
   ],
   templateUrl: 'public-poll.component.html',
   styleUrl: 'public-poll.component.css',
@@ -67,6 +57,7 @@ export class PublicPollComponent implements OnInit {
   private readonly userStore = inject(UserStore);
   private readonly titleBarService = inject(TitleBarService);
   private readonly translateService = inject(TranslateService);
+  private readonly logger = inject(LoggerService);
   private readonly pollService = inject(PollService);
   private readonly dateFormatService = inject(DateOptionFormatService);
 
@@ -82,7 +73,7 @@ export class PublicPollComponent implements OnInit {
 
   protected readonly optionDisplays = computed<OptionDisplay[]>(() => {
     const preview = this.pollPreview();
-    if (!preview) return [];
+    if (!preview) { return []; }
     const isDate = preview.optionType === OptionType.Date;
     const maxVotes = Math.max(...preview.options.map((o) => o.voteCount), 1);
     return preview.options.map((o) => ({
@@ -108,13 +99,13 @@ export class PublicPollComponent implements OnInit {
 
   protected readonly currentUserHasVoted = computed(() => {
     const name = this.currentUser()?.name;
-    if (!name) return false;
+    if (!name) { return false; }
     return this.projectInfo()?.participants?.find(p => p.name === name)?.hasVoted ?? false;
   });
 
   protected readonly participantDisplays = computed<ParticipantDisplay[]>(() => {
     const info = this.projectInfo();
-    if (!info) return [];
+    if (!info) { return []; }
     return (info.participants ?? []).map((p) => ({ ...p, user: { name: p.name } }));
   });
 
@@ -122,7 +113,7 @@ export class PublicPollComponent implements OnInit {
 
   ngOnInit() {
     this.projectId = this.route.snapshot.paramMap.get('projectId')!;
-    this.userStore.setRedirectUrl(`/u/${this.projectId}`);
+    this.userStore.setRedirectUrl(this.router.url);
     this.titleBarService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
     this.titleBarService.setBackRoute('/polls');
     this.titleBarService.clearTitle();
@@ -133,7 +124,12 @@ export class PublicPollComponent implements OnInit {
         this.titleBarService.setTitle(info.pollPreview?.name ?? info.projectName);
       },
       error: (err) => {
-        if (err?.status === 403) this.router.navigate(['/']);
+        if (err?.status === 403) { this.router.navigate(['/']); }
+        else {
+          this.logger.error('Failed to load public project info', err);
+          this.router.navigate(['/']);
+        }
+        this.isLoading.set(false);
       },
     });
 
@@ -145,6 +141,11 @@ export class PublicPollComponent implements OnInit {
       },
       error: () => this.isLoading.set(false),
     });
+  }
+
+  protected loginFromCard(): void {
+    this.userStore.setRedirectUrl(this.router.url);
+    this.router.navigate(['/auth/request-email']);
   }
 
   protected login(): void {
@@ -168,6 +169,6 @@ export class PublicPollComponent implements OnInit {
   protected copyShareLink(): void {
     navigator.clipboard.writeText(window.location.href)
       .then(() => toast.success(this.translateService.instant('project.share.linkCopied')))
-      .catch(() => {});
+      .catch(() => { /* clipboard write failed silently */ });
   }
 }

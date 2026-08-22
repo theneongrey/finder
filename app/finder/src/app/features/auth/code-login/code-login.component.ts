@@ -68,6 +68,7 @@ export class CodeLoginComponent {
   }
 
   editEmail(): void {
+    this.userStore.resetLoginMail();
     void this.router.navigate(['/auth/request-email']);
   }
 }

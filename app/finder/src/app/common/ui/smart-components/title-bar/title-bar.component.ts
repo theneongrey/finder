@@ -85,6 +85,7 @@ export class TitleBarComponent {
   }
 
   login(): void {
+    this.userStore.setRedirectUrl(this.router.url);
     this.router.navigate(['/auth/request-email']);
   }
 

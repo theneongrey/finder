@@ -70,6 +70,10 @@ export function withAuthFeature() {
           patchState(store, { redirectUrl });
         },
 
+        resetLoginMail() {
+          patchState(store, { loginMail: { email: undefined, state: 'init' } });
+        },
+
         getUser: rxMethod<void>(pipe(switchMap(() => handleGetUser))),
 
         requestLoginMail: rxMethod<string>(

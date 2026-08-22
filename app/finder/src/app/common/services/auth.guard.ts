@@ -25,7 +25,7 @@ export function userAuthentication(): CanActivateFn {
           loggerService.debug(
             '[UserAuthentication] User is not authenticated. Redirecting to login page.',
           );
-          return router.parseUrl('/auth/login');
+          return router.parseUrl('/auth/request-email');
         }
       }),
     );

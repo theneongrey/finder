@@ -13,6 +13,7 @@
 
   /* Shadows */
   --shadow-card-soft: 0 3px 14px rgba(35, 40, 45, 0.05);
+  --shadow-card-dark: 0 10px 30px rgba(30, 35, 40, 0.2);
   --shadow-overlay: 0 10px 30px rgba(30, 35, 40, 0.16);
   --shadow-sheet: 0 -12px 40px rgba(20, 24, 28, 0.22);
   --shadow-fab: 0 1px 4px rgba(20, 24, 28, 0.06);

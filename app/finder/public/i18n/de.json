@@ -507,6 +507,7 @@
     "statusRunning": "Läuft",
     "statusClosed": "Beendet",
     "openUntil": "Offen bis",
+    "closedAt": "Beendet am",
     "peopleCount": "Personen nehmen teil",
     "optionsLabel": "Zur Auswahl",
     "voteSingular": "Stimme bisher",

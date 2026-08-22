@@ -37,9 +37,9 @@ export class UserAvatarComponent {
   });
   protected readonly avatarSize = computed(() => {
     const s = this.size();
-    if (typeof s === 'number') return s;
-    if (s === 'normal') return 34;
-    if (s === 'large') return 40;
+    if (typeof s === 'number') { return s; }
+    if (s === 'normal') { return 34; }
+    if (s === 'large') { return 40; }
     return 64;
   });
 }

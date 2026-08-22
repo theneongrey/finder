@@ -90,10 +90,38 @@ export interface SharingContact {
   shareCount: number;
 }
 
+export interface PublicOptionPreview {
+  id: string;
+  text: string;
+  description: string;
+  voteCount: number;
+}
+
+export interface PublicPollPreview {
+  id: string;
+  name: string;
+  description: string;
+  optionType: OptionType;
+  closeDate: string | null;
+  isClosed: boolean;
+  options: PublicOptionPreview[];
+  participantCount: number;
+  totalVotes: number;
+}
+
+export interface PublicParticipant {
+  name: string;
+  hasVoted: boolean;
+}
+
 export interface PublicProjectInfo {
   projectId: string;
   isStandalone: boolean;
   pollId?: string;
+  pollPreview?: PublicPollPreview;
+  projectName: string;
+  projectDescription?: string;
+  participants: PublicParticipant[];
 }
 
 export interface Project {

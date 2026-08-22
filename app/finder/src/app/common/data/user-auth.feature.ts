@@ -70,6 +70,10 @@ export function withAuthFeature() {
           patchState(store, { redirectUrl });
         },
 
+        resetLoginMail() {
+          patchState(store, { loginMail: { email: undefined, state: 'init' } });
+        },
+
         getUser: rxMethod<void>(pipe(switchMap(() => handleGetUser))),
 
         requestLoginMail: rxMethod<string>(
@@ -188,28 +192,30 @@ export function withAuthFeature() {
 
         logout: rxMethod<void>(
           pipe(
-            switchMap(() => {
-              return store.userService.logout().pipe(
+            switchMap(() =>
+              store.userService.logout().pipe(
                 tapResponse({
                   next: () => {
                     patchState(store, {
                       user: undefined,
-                      loginMail: {
-                        email: undefined,
-                        state: 'init',
-                      },
+                      loginMail: { email: undefined, state: 'init' },
                       redirectUrl: undefined,
                     });
                   },
                   error: (error) => {
+                    patchState(store, {
+                      user: undefined,
+                      loginMail: { email: undefined, state: 'init' },
+                      redirectUrl: undefined,
+                    });
                     store.loggerService.error(
                       '[UserStore] Error while logging out',
                       error,
                     );
                   },
                 }),
-              );
-            }),
+              ),
+            ),
           ),
         ),
       };

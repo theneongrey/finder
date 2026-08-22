@@ -11,10 +11,7 @@ import { HlmBadge } from '@spartan-ng/helm/badge';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionDetail } from '../../../../_shared/models/poll-detail.model';
-import {
-  parseDateOptionText,
-  DateOptionEntry,
-} from '../../../../_shared/utils/date-option.utils';
+import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
 
 @Component({
   selector: 'app-option-card-date',
@@ -24,6 +21,7 @@ import {
 })
 export class OptionCardDateComponent {
   private readonly translateService = inject(TranslateService);
+  private readonly dateFormatService = inject(DateOptionFormatService);
 
   option = input.required<OptionDetail>();
   isMostVoted = input(false);
@@ -31,64 +29,16 @@ export class OptionCardDateComponent {
   pollId = input('');
   hideResults = input(false);
 
-  parsed = computed<DateOptionEntry>(() =>
-    parseDateOptionText(this.option().text),
+  private readonly parsed = computed(() =>
+    this.dateFormatService.parse(this.option().text),
   );
 
-  formatDate(date: Date): string {
-    return date.toLocaleDateString(
-      this.translateService.currentLang() ?? undefined,
-      {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      },
-    );
-  }
-
-  formatTime(date: Date): string {
-    return date.toLocaleTimeString(
-      this.translateService.currentLang() ?? undefined,
-      { hour: '2-digit', minute: '2-digit' },
-    );
-  }
-
-  weekdayName(day: number): string {
-    return this.translateService.instant(
-      `project.pollInput.date.weekdays.${day}`,
-    );
-  }
-
   label(): string {
-    const p = this.parsed();
-    switch (p.type) {
-      case 'weekday':
-        return this.weekdayName(p.weekday!);
-      case 'date':
-        return this.formatDate(p.date!);
-      case 'date-range':
-        if (p.startTime) {
-          return `${this.formatDate(p.date!)} – ${this.formatTime(p.startTime)}`;
-        }
-        return `${this.formatDate(p.date!)} → ${this.formatDate(p.endDate!)}`;
-      case 'time':
-        return this.formatTime(p.startTime!);
-      case 'time-range':
-        return `${this.formatTime(p.startTime!)} → ${this.formatTime(p.endTime!)}`;
-    }
+    return this.dateFormatService.labelFromEntry(this.parsed());
   }
 
   subLabel(): string | null {
-    const p = this.parsed();
-    if ((p.type === 'weekday' || p.type === 'date') && p.startTime) {
-      return this.formatTime(p.startTime);
-    }
-    if (p.type === 'date-range' && p.startTime) {
-      const endDateStr = this.formatDate(p.endDate!);
-      return p.endTime ? `${endDateStr} – ${this.formatTime(p.endTime)}` : endDateStr;
-    }
-    return null;
+    return this.dateFormatService.subLabelFromEntry(this.parsed());
   }
 
   voteIcon(choice: string | null): string {

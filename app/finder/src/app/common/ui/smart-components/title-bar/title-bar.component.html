@@ -69,6 +69,12 @@
           <app-user-avatar [user]="user()!" class="cursor-pointer" />
         </ds-menu>
       </div>
+    } @else if (user() !== undefined) {
+      <div class="title-bar__user">
+        <ds-button variant="primary" (click)="login()">
+          {{ 'titleBar.login' | translate }}
+        </ds-button>
+      </div>
     }
 
     @if (progress() !== undefined) {

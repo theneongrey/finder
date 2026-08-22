@@ -11,13 +11,13 @@ export const NAMES_TOP_100 = [
   'Kilian','Oskar','Leo','Theo','Emil','Frieda','Mathilda','Maren','Svenja','Tanja',
 ];
 
-export const PPL: Record<string, { i: string; bg: string; fg: string }> = {
-  G: { i: 'G', bg: '#d7eef0', fg: '#1f7a8c' },
-  F: { i: 'F', bg: '#f4dfe2', fg: '#b56374' },
-  M: { i: 'M', bg: '#f6e7cf', fg: '#b3863a' },
-  L: { i: 'L', bg: '#e6e0f3', fg: '#6f5aa6' },
-  N: { i: 'N', bg: '#dcecd9', fg: '#4f7a4a' },
-  S: { i: 'S', bg: '#d9e4f2', fg: '#4a6da6' },
+export const PPL: Record<string, { i: string; name: string; bg: string; fg: string }> = {
+  G: { i: 'G', name: 'Greta', bg: '#d7eef0', fg: '#1f7a8c' },
+  F: { i: 'F', name: 'Felix', bg: '#f4dfe2', fg: '#b56374' },
+  M: { i: 'M', name: 'Mia', bg: '#f6e7cf', fg: '#b3863a' },
+  L: { i: 'L', name: 'Lena', bg: '#e6e0f3', fg: '#6f5aa6' },
+  N: { i: 'N', name: 'Noah', bg: '#dcecd9', fg: '#4f7a4a' },
+  S: { i: 'S', name: 'Sara', bg: '#d9e4f2', fg: '#4a6da6' },
 };
 
 export const DEMO = [

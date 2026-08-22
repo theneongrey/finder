@@ -1,7 +1,8 @@
 {
   "titleBar": {
     "logout": "Logout",
-    "settings": "Settings"
+    "settings": "Settings",
+    "login": "Sign in"
   },
   "settings": {
     "title": "Settings",
@@ -15,22 +16,56 @@
   },
   "auth": {
     "login": {
-      "loggingIn": "Logging in"
+      "loggingIn": "Logging in …",
+      "title": "Welcome back",
+      "subtitle": "Enter your email address – we'll send you a login code. No password needed.",
+      "email": "Email Address",
+      "emailPlaceholder": "name@example.com",
+      "submit": "Continue",
+      "newUserHint": "New here? An account will be created automatically with your email."
     },
     "requestEmail": {
+      "heading": "Great to have you here",
       "title": "Sign In",
-      "subtitle": "Enter your email address to receive a login code.",
+      "subtitle": "Enter your email address – we'll send you a login code. No password needed.",
       "email": "Email Address",
+      "emailPlaceholder": "name@example.com",
+      "sendCode": "Send Code",
+      "newUserHint": "New here? An account will be created automatically with your email.",
       "requestCode": "Request Code",
       "errorSending": "Error while sending the mail. Please check your email and try again.",
       "errorForbidden": "This email is not allowed. Please contact the admin for an invitation.",
       "errorRateLimiter": "Too many requests. Please wait a moment and try again."
     },
     "codeLogin": {
+      "heading": "Enter Code",
+      "codeSentBefore": "We've sent a 6-digit code to",
+      "codeSentAfter": ".",
+      "invalidCode": "Invalid code – please try again.",
+      "submit": "Confirm",
+      "changeEmail": "Change email",
       "title": "Verify Code",
       "subtitle": "Enter the login code sent to your email address.",
       "code": "Login Code",
       "verify": "Verify Code"
+    },
+    "loginSuccess": {
+      "heading": "Signed in",
+      "redirect": "Taking you to your polls."
+    },
+    "shell": {
+      "tagline": "Decide together – no password chaos.",
+      "description": "One code by email is all it takes. Then you'll instantly see which polls are waiting for your vote.",
+      "feature1": "No password, no resets",
+      "feature2": "On all devices with the same email",
+      "feature3": "Codes expire after 10 minutes",
+      "terms": "Terms of Use",
+      "privacy": "Privacy Policy",
+      "legalConsentPrefix": "By signing in you agree to the",
+      "legalConsentMid": "and",
+      "legalConsentSuffix": ".",
+      "helpText": "Problems signing in?",
+      "helpLink": "Help"
     }
   },
   "project": {
@@ -454,5 +489,52 @@
       "imprint": "Imprint",
       "help": "Help"
     }
+  },
+  "publicPoll": {
+    "heading": "Sign in and vote",
+    "invite": "You've been invited to take part in a poll. Sign in to cast your vote.",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "name@example.com",
+    "loginButton": "Sign in and vote",
+    "requestCodeButton": "Request code",
+    "cancelButton": "Cancel",
+    "hint": "No password needed – we'll send you a 6-digit code.",
+    "inviteTitle": "You've been invited to a poll",
+    "inviteSub": "Vote now – no password needed.",
+    "nudgeTitle": "Want to vote?",
+    "nudgeBtn": "Sign in",
+    "barSub": "Ready in 20 seconds – no password.",
+    "statusRunning": "Running",
+    "statusClosed": "Closed",
+    "openUntil": "Open until",
+    "closedAt": "Closed on",
+    "peopleCount": "people participating",
+    "optionsLabel": "Options",
+    "voteSingular": "vote so far",
+    "votePlural": "votes so far",
+    "vote": "vote",
+    "votes": "votes",
+    "sofar": "so far",
+    "guestDescription": "See what it's about – you can vote after signing in.",
+    "lockNote": "Who voted for what is visible after signing in.",
+    "voteHint": "After signing in, this poll opens directly.",
+    "privacyNote": "This link shows only this one poll – no other polls, names, or contact details.",
+    "perksHeading": "What you'll see after",
+    "perk1": "The current standings of all answers",
+    "perk2": "Your own vote – changeable at any time",
+    "perk3": "A notification once the poll is decided",
+    "sharedLinkTitle": "Shared poll",
+    "memberWelcomeTitle": "Welcome back, {{name}}",
+    "memberWelcomeSub": "You're part of \"{{projectName}}\"",
+    "memberVoteButton": "Vote now",
+    "memberVoteHint": "Multiple choice – you can change your vote at any time.",
+    "projectHeading": "Project",
+    "statusHeading": "Your Status",
+    "statusMissing": "Your vote is still missing",
+    "statusVoted": "You've voted",
+    "shareButton": "Share link",
+    "shareNudge": "Missing someone? Share the link so everyone can join in.",
+    "votedState": "voted",
+    "openState": "pending"
   }
 }

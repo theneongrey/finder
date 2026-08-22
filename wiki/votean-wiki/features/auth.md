@@ -65,6 +65,22 @@ after submitting any allowed email. This works because the backend sets a fixed 
 
 Test accounts: `testuser1@neongrey.de`, `testuser2@neongrey.de`.
 
+## Frontend Routes
+
+The auth shell (`AuthShellComponent`) wraps all `/auth/*` routes. On mount it calls `UserStore.getUser()` and reacts to the result:
+
+- **Authenticated user** → redirects to `/auth/login-success`, which forwards to `UserStore.redirectUrl` (or `/settings` for first-time users with no name set).
+- **Unauthenticated user** → stays at the current route so email entry can proceed.
+
+| Route | Component | Purpose |
+|-------|-----------|---------|
+| `/auth/request-email` | `RequestEmailComponent` | Email entry; sends login code; optionally pre-fills email from `?email=` query param |
+| `/auth/code-login` | `CodeLoginComponent` | 6-digit OTP entry |
+| `/auth/token-login` | `TokenLoginComponent` | Magic-link click handler |
+| `/auth/login-success` | `LoginSuccessComponent` | Post-login redirect hub |
+
+> **Note:** The `/auth/login` route was removed. `AuthGuard` previously redirected unauthenticated users there, but the shell immediately bounced them to `/auth/request-email`, making it a pointless double redirect. The guard now targets `/auth/request-email` directly. Navigating to `/auth/login` falls through to the `**` wildcard and lands on the home page.
+
 ## Related
 
 - [Login Token](../concepts/login-token.md) — the short-lived record that backs each login attempt

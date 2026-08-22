@@ -1,6 +1,8 @@
 .ds-status-dot-wrap {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
+  text-align: left;
   gap: 6px;
   height: 23px;
   padding: 0 10px 0 8px;

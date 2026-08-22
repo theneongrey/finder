@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsBadgeComponent } from '../../common/ui/ds-components/badge/ds-badge.component';
-import { DsAvatarStackComponent } from '../../common/ui/ds-components/avatar-stack/ds-avatar-stack.component';
+import { AvatarStackComponent } from '../../common/ui/smart-components/avatar-stack/avatar-stack.component';
 import { IDEAS, PPL } from './home.constants';
 
 @Component({
   selector: 'app-home-ideas-section',
-  imports: [TranslatePipe, DsBadgeComponent, DsAvatarStackComponent],
+  imports: [TranslatePipe, DsBadgeComponent, AvatarStackComponent],
   templateUrl: './home-ideas-section.component.html',
   styleUrl: './home-ideas-section.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +33,7 @@ export class HomeIdeasSectionComponent implements OnInit, OnDestroy {
         weight: o.n === maxN ? '700' : '600',
         numLabel: o.n === 0 ? '–' : String(o.n),
       })),
-      votersFormatted: idea.voters.map(k => ({ initial: PPL[k].i, bg: PPL[k].bg, fg: PPL[k].fg })),
+      votersFormatted: idea.voters.map(k => ({ name: PPL[k].name })),
     };
   });
 

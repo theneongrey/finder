@@ -84,6 +84,12 @@
   --bg-panel: var(--cream-100);
   --bg-input: var(--white);
   --surface-card: var(--white);
+  --surface-card-dark: var(--ink-900);
+  --surface-input-on-dark: #2a2e33;
+  --border-on-dark: rgba(255, 255, 255, 0.14);
+  --text-on-dark-primary: var(--white);
+  --text-on-dark-secondary: var(--ink-150);
+  --text-on-dark-muted: #87837c;
 
   --border-hairline: rgba(20, 24, 28, 0.08);
   --border-hairline-soft: rgba(20, 24, 28, 0.055);
@@ -92,6 +98,7 @@
 
   /* Semantic text aliases */
   --text-primary: var(--ink-900);
+  --text-body-strong: var(--ink-700);
   --text-body: var(--ink-600);
   --text-secondary: var(--ink-400);
   --text-tertiary: var(--ink-350);
@@ -138,4 +145,18 @@
   --person-7-fg: var(--peach-fg);
   --person-8-bg: var(--lime-bg);
   --person-8-fg: var(--lime-fg);
+}
+
+/* Dark surface context — groundwork for a future full dark mode.
+   Any element with class="dark" gets these overrides, so ds-card and
+   other token-aware components automatically render in dark style. */
+.dark {
+  --surface-card: var(--surface-card-dark);
+  --shadow-card-soft: var(--shadow-card-dark);
+  --border-hairline-soft: transparent;
+  --border-hairline-strong: var(--border-on-dark);
+  --bg-input: var(--surface-input-on-dark);
+  --text-primary: var(--text-on-dark-primary);
+  --text-secondary: var(--text-on-dark-secondary);
+  --text-muted: var(--text-on-dark-muted);
 }

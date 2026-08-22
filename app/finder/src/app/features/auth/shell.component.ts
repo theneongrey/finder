@@ -5,19 +5,27 @@ import {
   inject,
   untracked,
 } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { UserStore } from '../../common/data/user.store';
-import { Router, RouterOutlet } from '@angular/router';
-import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { LoggerService } from '../../common/services/logger.service';
+import { DsButtonComponent } from '../../common/ui/ds-components/button/ds-button.component';
+import { DsIconComponent } from '../../common/ui/ds-components/icon/ds-icon.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auth-shell',
-  imports: [RouterOutlet, TitleBarComponent],
+  imports: [RouterOutlet, RouterLink, NgOptimizedImage, DsButtonComponent, DsIconComponent, TranslatePipe],
   templateUrl: './shell.component.html',
-  host: { class: 'flex flex-col h-full' },
+  host: { class: 'flex flex-col h-dvh bg-app-gradient' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthShellComponent {
+  readonly features = [
+    'auth.shell.feature1',
+    'auth.shell.feature2',
+    'auth.shell.feature3',
+  ];
   private userStore = inject(UserStore);
   private loggerService = inject(LoggerService);
 
@@ -33,23 +41,22 @@ export class AuthShellComponent {
       if (user.isAuthenticated) {
         this.loggerService.log('user is authenticated');
 
-        if (!user.name) {
-          this.loggerService.log('first time user. redirect to set name');
-          router.navigate(['/settings']);
-        } else {
-          untracked(() => {
-            const redirectUrl = this.userStore.redirectUrl();
-            if (redirectUrl) {
-              this.loggerService.log(`redirect to ${redirectUrl}`);
+        const target = untracked((): string => {
+          if (!user.name) {
+            this.loggerService.log('first time user. redirect to set name');
+            return '/settings';
+          }
+          const redirectUrl = this.userStore.redirectUrl();
+          if (redirectUrl) {
+            this.loggerService.log(`redirect to ${redirectUrl}`);
+            this.userStore.setRedirectUrl(undefined);
+            return redirectUrl;
+          }
+          this.loggerService.log('redirect to project overview');
+          return '/project';
+        });
 
-              this.userStore.setRedirectUrl(undefined);
-              router.navigate([redirectUrl]);
-            } else {
-              this.loggerService.log(`redirect to project overview`);
-              router.navigate(['/project']);
-            }
-          });
-        }
+        router.navigate(['/auth/login-success'], { state: { target } });
       } else {
         router.navigate(['/auth/request-email']);
       }

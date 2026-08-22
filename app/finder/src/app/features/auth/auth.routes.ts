@@ -2,11 +2,6 @@ import { Routes } from '@angular/router';
 
 export const authRoutes: Routes = [
   {
-    path: 'login',
-    loadComponent: () =>
-      import('./login/login.component').then((m) => m.LoginComponent),
-  },
-  {
     path: 'request-email',
     loadComponent: () =>
       import('./request-email/request-email.component').then(
@@ -27,6 +22,13 @@ export const authRoutes: Routes = [
     loadComponent: () =>
       import('./token-login/token-login.component').then(
         (m) => m.TokenLoginComponent,
+      ),
+  },
+  {
+    path: 'login-success',
+    loadComponent: () =>
+      import('./login-success/login-success.component').then(
+        (m) => m.LoginSuccessComponent,
       ),
   },
 ];

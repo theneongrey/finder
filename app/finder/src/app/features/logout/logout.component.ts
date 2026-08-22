@@ -10,12 +10,11 @@ import { UserStore } from '../../common/data/user.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogoutComponent {
-  private userStore = inject(UserStore);
-
   constructor() {
     const router = inject(Router);
+    const userStore = inject(UserStore);
 
-    this.userStore.logout();
+    userStore.logout();
     void router.navigate(['/']);
   }
 }

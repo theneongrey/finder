@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
+using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Tests.Infrastructure;
@@ -186,10 +187,10 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
     // --- GET /api/project/public/{slug} ---
 
     [Fact]
-    public async Task GetPublicProject_WhenValidSlug_Returns200()
+    public async Task GetPublicProject_WhenOpenAndUnauthenticated_Returns200()
     {
         var user = await _factory.SeedUser();
-        var project = await _factory.SeedProject(user.Id, "Public Poll");
+        var project = await _factory.SeedProject(user.Id, "Public Poll", visibilityType: VisibilityType.VisibleForEverbody);
         using var client = _factory.CreateClient();
 
         var response = await client.GetAsync($"/api/project/public/{project.Id}");
@@ -197,6 +198,57 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
         Assert.Equal(SlugHelper.ToSlug("Public Poll", project.Id), json["projectId"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task GetPublicProject_WhenNotOpen_AndUnauthenticated_Returns403()
+    {
+        var owner = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id, visibilityType: VisibilityType.VisibleForSelectedOnly);
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync($"/api/project/public/{project.Id}");
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetPublicProject_WhenNotOpen_AndIsOwner_Returns200()
+    {
+        var owner = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id, visibilityType: VisibilityType.VisibleForSelectedOnly);
+        using var client = _factory.CreateAuthenticatedClient(owner.Id);
+
+        var response = await client.GetAsync($"/api/project/public/{project.Id}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetPublicProject_WhenNotOpen_AndHasPermission_Returns200()
+    {
+        var owner = await _factory.SeedUser();
+        var member = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id, visibilityType: VisibilityType.VisibleForSelectedOnly);
+        await _factory.SeedPermission(project.Id, member.Id, PermissionType.Voter);
+        using var client = _factory.CreateAuthenticatedClient(member.Id);
+
+        var response = await client.GetAsync($"/api/project/public/{project.Id}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetPublicProject_WhenNotOpen_AndNoPermission_Returns403()
+    {
+        var owner = await _factory.SeedUser();
+        var stranger = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id, visibilityType: VisibilityType.VisibleForSelectedOnly);
+        using var client = _factory.CreateAuthenticatedClient(stranger.Id);
+
+        var response = await client.GetAsync($"/api/project/public/{project.Id}");
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     // --- GET /api/project/standalone-polls ---

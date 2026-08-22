@@ -9,7 +9,7 @@ public class HtmlGrabberPlaywrightService
     {
         var cancellationToken = new CancellationTokenSource();
         // try to avoid waiting for more than 3 seconds in total
-        cancellationToken.CancelAfter(TimeSpan.FromSeconds(3));
+        cancellationToken.CancelAfter(TimeSpan.FromSeconds(5));
         
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new()
@@ -24,7 +24,7 @@ public class HtmlGrabberPlaywrightService
             Timeout = 3
         });
         // wait for a redirect
-        await page.WaitForTimeoutAsync(1000);
+        await page.WaitForTimeoutAsync(500);
         
         if (cancellationToken.IsCancellationRequested)
         {
@@ -37,6 +37,11 @@ public class HtmlGrabberPlaywrightService
         });
         
         var html = await page.ContentAsync();
+        if (!html.Contains("html"))
+        {
+            return Result<string>.Fail(500, "Failed to fetch from url");
+        }
+        
         return Result<string>.Success(html);
     }
 }

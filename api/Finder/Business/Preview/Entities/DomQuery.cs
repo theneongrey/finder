@@ -8,7 +8,7 @@ public enum QueryType
     Description
 }
 
-public class HtmlQuery : BaseEntity
+public class DomQuery : BaseEntity
 {
     public required Guid Id { get; init; }
     public required string BaseUrl { get; init; }

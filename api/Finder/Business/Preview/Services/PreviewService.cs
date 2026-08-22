@@ -34,17 +34,15 @@ public class PreviewService
 
         // 1. Try the plain HTTP client first and try to find out if you can get the image via the meta tags
         var httpHtmlResult = await _htmlGrabberHttpClientService.GetHtmlContent(url);
-        if (!httpHtmlResult.IsSuccess)
-        {
-            Result<Models.Preview>.Fail(500, "Failed to fetch from url");
-        }
-
         var httpClientHtmlContent = httpHtmlResult.Payload!;
 
-        var metaResult = _previewGrabberMetaService.GetPreview(httpClientHtmlContent, new Uri(url));
-        if (metaResult.IsSuccess && metaResult.Payload!.HasImage)
+        if (httpHtmlResult.IsSuccess)
         {
-            return metaResult;
+            var metaResult = _previewGrabberMetaService.GetPreview(httpClientHtmlContent, new Uri(url));
+            if (metaResult.IsSuccess && metaResult.Payload!.HasImage)
+            {
+                return metaResult;
+            }
         }
 
         // 2. If the plain HTTP client does not work, maybe it's an SPA, try it with playwright
@@ -67,6 +65,7 @@ public class PreviewService
             }
         }
 
+        /*
         // 3. Let's see first if we have any query to grab the info from the HTML content 
         var queryResult = _previewGrabberQueryService.GetPreview(playwrightHtmlContent, new Uri(url));
         if (queryResult.IsSuccess && queryResult.Payload!.HasImage)
@@ -80,8 +79,8 @@ public class PreviewService
         {
             
         }
-        
+        */
 
-        return metaResult;
+        return Result<Models.Preview>.Fail(500, "Failed to fetch from url");
     }
 }

@@ -20,8 +20,8 @@ public static class PreviewApi
                     var result = await previewService.GetPreviewAsync(url);
                     
                     return !result.IsSuccess ? Results.BadRequest(result.ErrorMessasge) : Results.Ok(result.Payload!.ToPreviewResponse());
-                })
-            .RequireAuthorization()
-            .RequireRateLimiting("preview");
+                });
+            // .RequireAuthorization()
+            // .RequireRateLimiting("preview");
     }
 }

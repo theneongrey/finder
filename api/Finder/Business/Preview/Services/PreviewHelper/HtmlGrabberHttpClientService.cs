@@ -1,3 +1,4 @@
+using System.Text;
 using Finder.Business.Shared;
 using Microsoft.Playwright;
 
@@ -19,11 +20,17 @@ public class HtmlGrabberHttpClientService
             var client = _clientFactory.CreateClient("PreviewClient");
             // Fetch HTML content from the target site
             var html = await client.GetStringAsync(url);
-            return Result<string>.Success(html);
+            
+            if (html.Contains("html"))
+            {
+                return Result<string>.Success(html);
+            }
+            
+            return Result<string>.Fail(500, "not a valid html page");
         }
         catch(Exception)
         {
-            return Result<string>.Fail();
+            return Result<string>.Fail(500, "Could not fetch html content");
         }
     }
 }

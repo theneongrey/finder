@@ -11,6 +11,8 @@ public static class SetupExtensions
         services.AddScoped<HtmlGrabberPlaywrightService>();
         services.AddScoped<HtmlGrabberHttpClientService>();
         services.AddScoped<PreviewGrabberMetaService>();
+        services.AddScoped<PreviewGrabberClaudeService>();
+        services.AddScoped<PreviewGrabberQueryService>();
         services.AddScoped<PreviewService>();
         
         services.AddRateLimiter(options =>

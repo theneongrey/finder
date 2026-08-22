@@ -534,8 +534,8 @@
                 />
               </div>
 
+              <div class="mt-3">
               <ds-button
-                class="mt-3 block"
                 variant="primary"
                 [fullWidth]="true"
                 (click)="login()"
@@ -547,6 +547,7 @@
                   {{ "publicPoll.loginButton" | translate }}
                 }
               </ds-button>
+              </div>
 
               <p
                 class="m-0 mt-3 text-center text-[12px] leading-[1.45] text-[#87837c]"
@@ -578,15 +579,6 @@
                     >
                   </div>
                 }
-              </div>
-              <div
-                class="mt-[18px] flex items-start gap-2.5 border-t border-[rgba(20,24,28,.055)] pt-4"
-              >
-                <ds-icon name="lock" [size]="15" color="#a39e96" />
-                <span
-                  class="flex-1 text-[12.5px] leading-[1.45] text-pretty text-[#a39e96]"
-                  >{{ "publicPoll.privacyNote" | translate }}</span
-                >
               </div>
             </div>
           }

@@ -7,7 +7,7 @@
     </div>
   } @else {
     <div class="mt-4">
-      <ds-button variant="primary" [fullWidth]="true" [disabled]="true">
+      <ds-button variant="primary" [fullWidth]="true" (click)="loginClick.emit()">
         {{ "publicPoll.loginButton" | translate }}
       </ds-button>
     </div>

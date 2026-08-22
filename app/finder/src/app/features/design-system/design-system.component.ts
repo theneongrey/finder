@@ -4,7 +4,7 @@ import { DsIconComponent, ICON_NAMES } from '@ds/icon/ds-icon.component';
 import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
-import { DsAvatarStackComponent } from '@ds/avatar-stack/ds-avatar-stack.component';
+import { AvatarStackComponent } from '@smart/avatar-stack/avatar-stack.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
@@ -24,6 +24,7 @@ import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card
 import { DsSwitchComponent } from '@ds/switch/ds-switch.component';
 import { DsChipComponent } from '@ds/chip/ds-chip.component';
 import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
+import { UserAvatarComponent } from '../../common/ui/smart-components/user-avatar/user-avatar.component';
 
 @Component({
   selector: 'app-design-system',
@@ -32,7 +33,7 @@ import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
     DsBadgeComponent,
     DsStatusDotComponent,
     DsAvatarComponent,
-    DsAvatarStackComponent,
+    AvatarStackComponent,
     DsButtonComponent,
     DsCardComponent,
     DsInputComponent,
@@ -51,6 +52,7 @@ import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
     DsSwitchComponent,
     DsChipComponent,
     DsSubHeaderComponent,
+    UserAvatarComponent,
     FormsModule,
   ],
   templateUrl: './design-system.component.html',
@@ -80,12 +82,8 @@ export class DesignSystemComponent {
   ];
 
   readonly avatarStack = [
-    { initial: 'A', bg: 'var(--person-1-bg)', fg: 'var(--person-1-fg)' },
-    { initial: 'B', bg: 'var(--person-2-bg)', fg: 'var(--person-2-fg)' },
-    { initial: 'C', bg: 'var(--person-3-bg)', fg: 'var(--person-3-fg)' },
-    { initial: 'D', bg: 'var(--person-4-bg)', fg: 'var(--person-4-fg)' },
-    { initial: 'E', bg: 'var(--person-5-bg)', fg: 'var(--person-5-fg)' },
-    { initial: 'F', bg: 'var(--person-6-bg)', fg: 'var(--person-6-fg)' },
+    { name: 'Alice' }, { name: 'Ben' }, { name: 'Clara' },
+    { name: 'David' }, { name: 'Eva' }, { name: 'Finn' },
   ];
 
   readonly menuItems = [

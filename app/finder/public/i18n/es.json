@@ -1,7 +1,8 @@
 {
   "titleBar": {
     "logout": "Cerrar sesión",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "login": "Iniciar sesión"
   },
   "settings": {
     "title": "Configuración",
@@ -520,6 +521,19 @@
     "perksHeading": "Lo que verás después",
     "perk1": "El estado actual de todas las respuestas",
     "perk2": "Tu propio voto – modificable en cualquier momento",
-    "perk3": "Una notificación cuando se decida la encuesta"
+    "perk3": "Una notificación cuando se decida la encuesta",
+    "sharedLinkTitle": "Encuesta compartida",
+    "memberWelcomeTitle": "Bienvenido de nuevo, {{name}}",
+    "memberWelcomeSub": "Eres parte de \"{{projectName}}\"",
+    "memberVoteButton": "Votar ahora",
+    "memberVoteHint": "Selección múltiple – puedes cambiar tu voto en cualquier momento.",
+    "projectHeading": "Proyecto",
+    "statusHeading": "Tu Estado",
+    "statusMissing": "Tu voto aún falta",
+    "statusVoted": "Has votado",
+    "shareButton": "Compartir enlace",
+    "shareNudge": "¿Falta alguien? Comparte el enlace para que todos puedan participar.",
+    "votedState": "votado",
+    "openState": "pendiente"
   }
 }

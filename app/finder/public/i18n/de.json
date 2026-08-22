@@ -1,7 +1,8 @@
 {
   "titleBar": {
     "logout": "Abmelden",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "login": "Anmelden"
   },
   "settings": {
     "title": "Einstellungen",
@@ -520,6 +521,19 @@
     "perksHeading": "Was du danach siehst",
     "perk1": "Den Zwischenstand aller Antworten",
     "perk2": "Deine eigene Stimme – jederzeit änderbar",
-    "perk3": "Eine Nachricht, sobald die Umfrage entschieden ist"
+    "perk3": "Eine Nachricht, sobald die Umfrage entschieden ist",
+    "sharedLinkTitle": "Geteilte Umfrage",
+    "memberWelcomeTitle": "Willkommen zurück, {{name}}",
+    "memberWelcomeSub": "Du bist Teil von „{{projectName}}"",
+    "memberVoteButton": "Jetzt abstimmen",
+    "memberVoteHint": "Mehrfachauswahl möglich – du kannst deine Stimme jederzeit ändern.",
+    "projectHeading": "Projekt",
+    "statusHeading": "Dein Status",
+    "statusMissing": "Deine Stimme fehlt noch",
+    "statusVoted": "Du hast abgestimmt",
+    "shareButton": "Link weiterteilen",
+    "shareNudge": "Fehlt noch jemand? Teile den Link, damit alle mitentscheiden können.",
+    "votedState": "abgestimmt",
+    "openState": "offen"
   }
 }

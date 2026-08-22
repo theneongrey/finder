@@ -1,7 +1,8 @@
 {
   "titleBar": {
     "logout": "Logout",
-    "settings": "Settings"
+    "settings": "Settings",
+    "login": "Sign in"
   },
   "settings": {
     "title": "Settings",
@@ -520,6 +521,19 @@
     "perksHeading": "What you'll see after",
     "perk1": "The current standings of all answers",
     "perk2": "Your own vote – changeable at any time",
-    "perk3": "A notification once the poll is decided"
+    "perk3": "A notification once the poll is decided",
+    "sharedLinkTitle": "Shared poll",
+    "memberWelcomeTitle": "Welcome back, {{name}}",
+    "memberWelcomeSub": "You're part of \"{{projectName}}\"",
+    "memberVoteButton": "Vote now",
+    "memberVoteHint": "Multiple choice – you can change your vote at any time.",
+    "projectHeading": "Project",
+    "statusHeading": "Your Status",
+    "statusMissing": "Your vote is still missing",
+    "statusVoted": "You've voted",
+    "shareButton": "Share link",
+    "shareNudge": "Missing someone? Share the link so everyone can join in.",
+    "votedState": "voted",
+    "openState": "pending"
   }
 }

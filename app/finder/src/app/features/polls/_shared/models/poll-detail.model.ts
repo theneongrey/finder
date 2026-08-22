@@ -109,11 +109,19 @@ export interface PublicPollPreview {
   totalVotes: number;
 }
 
+export interface PublicParticipant {
+  name: string;
+  hasVoted: boolean;
+}
+
 export interface PublicProjectInfo {
   projectId: string;
   isStandalone: boolean;
   pollId?: string;
   pollPreview?: PublicPollPreview;
+  projectName: string;
+  projectDescription?: string;
+  participants: PublicParticipant[];
 }
 
 export interface Project {

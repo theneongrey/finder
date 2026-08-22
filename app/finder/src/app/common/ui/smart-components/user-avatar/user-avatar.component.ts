@@ -27,7 +27,8 @@ function nameHash(name: string): number {
 })
 export class UserAvatarComponent {
   user = input.required<{ name: string }>();
-  size = input<'normal' | 'large' | 'xlarge'>('normal');
+  size = input<'normal' | 'large' | 'xlarge' | number>('normal');
+  voted = input<boolean | undefined>(undefined);
 
   protected readonly initial = computed(() => this.user().name?.[0]?.toUpperCase() ?? '');
   protected readonly palette = computed(() => {
@@ -36,8 +37,9 @@ export class UserAvatarComponent {
   });
   protected readonly avatarSize = computed(() => {
     const s = this.size();
-    if (s === 'normal') { return 34 as const; }
-    if (s === 'large') { return 40 as const; }
-    return 64 as const;
+    if (typeof s === 'number') return s;
+    if (s === 'normal') return 34;
+    if (s === 'large') return 40;
+    return 64;
   });
 }

@@ -23,12 +23,21 @@ public class PublicPollPreview
     public required int TotalVotes { get; set; }
 }
 
+public class PublicParticipant
+{
+    public required string Name { get; set; }
+    public required bool HasVoted { get; set; }
+}
+
 public class PublicProjectResponse
 {
     public required string ProjectId { get; set; }
     public required bool IsStandalone { get; set; }
     public string? PollId { get; set; }
     public PublicPollPreview? PollPreview { get; set; }
+    public required string ProjectName { get; set; }
+    public string? ProjectDescription { get; set; }
+    public required PublicParticipant[] Participants { get; set; }
 }
 
 public class ProjectResponseOption
@@ -74,7 +83,7 @@ public class ProjectResponse
 
 public static class ProjectMapper
 {
-    public static PublicPollPreview ToPublicPollPreview(this Entities.Poll poll)
+    public static PublicPollPreview ToPublicPollPreview(this Entities.Poll poll, int participantCount)
     {
         return new PublicPollPreview
         {
@@ -94,20 +103,50 @@ public static class ProjectMapper
                     VoteCount = o.Votes.Count
                 })
                 .ToArray(),
-            ParticipantCount = poll.Options.SelectMany(o => o.Votes).Select(v => v.Person.Id).Distinct().Count(),
+            ParticipantCount = participantCount,
             TotalVotes = poll.Options.Sum(o => o.Votes.Count)
         };
     }
 
-    public static PublicProjectResponse ToPublicProjectResponse(this Entities.Project project)
+    public static PublicProjectResponse ToPublicProjectResponse(this Entities.Project project, Guid? userId = null)
     {
         var firstPoll = project.IsStandalone ? project.Polls.FirstOrDefault() : null;
+
+        PublicParticipant[] participants = [];
+        if (userId.HasValue)
+        {
+            var voterIds = project.Polls
+                .SelectMany(p => p.Options)
+                .SelectMany(o => o.Votes)
+                .Select(v => v.Person.Id)
+                .ToHashSet();
+
+            var creator = new PublicParticipant
+            {
+                Name = project.Creator.Name ?? project.Creator.Email,
+                HasVoted = voterIds.Contains(project.Creator.Id)
+            };
+
+            var permParticipants = project.Permissions
+                .Where(p => p.PersonKey != project.Creator.Id && p.Person != null)
+                .Select(p => new PublicParticipant
+                {
+                    Name = p.Person.Name ?? p.Person.Email,
+                    HasVoted = voterIds.Contains(p.PersonKey)
+                });
+
+            participants = new[] { creator }.Concat(permParticipants).ToArray();
+        }
+
         return new PublicProjectResponse
         {
             ProjectId = SlugHelper.ToSlug(project.Name, project.Id),
             IsStandalone = project.IsStandalone,
             PollId = firstPoll is null ? null : SlugHelper.ToSlug(firstPoll.Name, firstPoll.Id),
-            PollPreview = firstPoll?.ToPublicPollPreview()
+            PollPreview = firstPoll?.ToPublicPollPreview(project.Permissions.Count(p => p.PersonKey != project.Creator.Id) + 1),
+            ProjectName = project.Name,
+            ProjectDescription = project.Description ?? firstPoll?.Description,
+            Participants = participants
         };
     }
 

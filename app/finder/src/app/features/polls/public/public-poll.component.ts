@@ -24,6 +24,7 @@ import { AvatarStackComponent } from '../../../common/ui/smart-components/avatar
 import { PollTypeBadgeComponent } from '../_shared/ui/poll-type-badge/poll-type-badge.component';
 import { UserAvatarComponent } from '../../../common/ui/smart-components/user-avatar/user-avatar.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from '@spartan-ng/brain/sonner';
 import { User } from '../../../common/models/user.model';
 
 interface OptionDisplay {
@@ -122,10 +123,15 @@ export class PublicPollComponent implements OnInit {
   ngOnInit() {
     this.projectId = this.route.snapshot.paramMap.get('projectId')!;
     this.userStore.setRedirectUrl(`/u/${this.projectId}`);
-    this.titleBarService.setTitle(this.translateService.instant('publicPoll.sharedLinkTitle'));
+    this.titleBarService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
+    this.titleBarService.setBackRoute('/polls');
+    this.titleBarService.clearTitle();
 
     this.pollService.getPublicProjectInfo(this.projectId).subscribe({
-      next: (info) => this.projectInfo.set(info),
+      next: (info) => {
+        this.projectInfo.set(info);
+        this.titleBarService.setTitle(info.pollPreview?.name ?? info.projectName);
+      },
       error: (err) => {
         if (err?.status === 403) this.router.navigate(['/']);
       },
@@ -160,6 +166,8 @@ export class PublicPollComponent implements OnInit {
   }
 
   protected copyShareLink(): void {
-    navigator.clipboard.writeText(window.location.href).catch(() => {});
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => toast.success(this.translateService.instant('project.share.linkCopied')))
+      .catch(() => {});
   }
 }

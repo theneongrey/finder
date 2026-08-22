@@ -58,7 +58,7 @@
         }
       </div>
       <div class="preview-voters">
-        <ds-avatar-stack class="preview-avatar-row" [avatars]="currentIdea().votersFormatted" size="sm" />
+        <app-avatar-stack class="preview-avatar-row" [users]="currentIdea().votersFormatted" size="sm" />
         <span class="preview-voters-line">{{ currentIdea().votersLineKey | translate }}</span>
       </div>
     </div>

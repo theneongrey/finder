@@ -32,6 +32,7 @@
       trailingIcon="arrow-right"
       [disabled]="form.invalid"
       [loading]="isLoading()"
+      data-testid="request-email-submit"
     >
       {{ "auth.requestEmail.sendCode" | translate }}
     </ds-button>

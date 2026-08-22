@@ -7,7 +7,7 @@ export async function login(page: Page, email: string) {
   await page.goto('/auth/request-email');
   // ds-input renders a plain <input> inside the component — target it directly
   await page.locator('ds-input input').fill(email);
-  await page.getByRole('button', { name: 'Code senden' }).click();
+  await page.locator('[data-testid="request-email-submit"]').click();
   // Wait for the backend to create the token before navigating to token-login
   await page.waitForURL('**/auth/code-login');
   await page.goto('/auth/token-login?token=1234');

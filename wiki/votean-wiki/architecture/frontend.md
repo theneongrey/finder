@@ -64,7 +64,7 @@ No separate effects layer. No actions/reducers. State is patched directly inside
 
 ## Routing
 
-All protected routes are wrapped by `userAuthentication` (AuthGuard). On failure the guard stores the attempted URL in `UserStore` and redirects to `/auth/login`, so the user is returned there after signing in.
+All protected routes are wrapped by `userAuthentication` (AuthGuard). On failure the guard stores the attempted URL in `UserStore` and redirects to `/auth/request-email`, so the user is returned to the original destination after signing in.
 
 Key route groups:
 - `/auth/*` — unauthenticated; handles all login flows

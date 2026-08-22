@@ -152,13 +152,26 @@ public class ProjectService
     public async Task<Result<Entities.Project>> GetPublicInfo(string slug)
     {
         var project = await _dbContext.Projects
+            .Include(p => p.Creator)
+            .Include(p => p.Permissions)
+            .ThenInclude(p => p.Person)
             .Include(p => p.Polls)
+            .ThenInclude(poll => poll.Options)
+            .ThenInclude(option => option.Votes)
+            .ThenInclude(vote => vote.Person)
             .Where(p => p.Id == SlugHelper.ExtractId(slug))
             .SingleOrDefaultAsync();
 
         if (project == null)
         {
             return Result<Entities.Project>.Fail(404);
+        }
+
+        if (project.VisibilityType != VisibilityType.VisibleForEverbody &&
+            project.Creator.Id != UserId &&
+            project.Permissions.All(p => p.PersonKey != UserId))
+        {
+            return Result<Entities.Project>.Fail(403);
         }
 
         return Result<Entities.Project>.Success(project);

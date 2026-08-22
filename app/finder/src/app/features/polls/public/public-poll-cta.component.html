@@ -1,0 +1,41 @@
+@if (size() === 'sm') {
+  @if (isAuthenticated()) {
+    <div class="mt-4">
+      <ds-button variant="primary" [fullWidth]="true" (click)="voteClick.emit()">
+        {{ "publicPoll.memberVoteButton" | translate }}
+      </ds-button>
+    </div>
+  } @else {
+    <div class="mt-4">
+      <ds-button variant="primary" [fullWidth]="true" (click)="loginClick.emit()">
+        {{ "publicPoll.loginButton" | translate }}
+      </ds-button>
+    </div>
+    <div class="mt-[11px] flex items-center justify-center gap-2">
+      <ds-icon name="lock" [size]="13" color="var(--text-muted)" />
+      <span class="text-[12.5px] leading-[1.4] text-pretty [color:var(--text-tertiary)]">
+        {{ "publicPoll.lockNote" | translate }}
+      </span>
+    </div>
+  }
+} @else {
+  @if (isAuthenticated()) {
+    <div class="mt-[22px] flex items-center gap-3.5">
+      <ds-button variant="primary" (click)="voteClick.emit()">
+        {{ "publicPoll.memberVoteButton" | translate }}
+      </ds-button>
+      <span class="text-[13px] leading-[1.4] text-pretty [color:var(--text-tertiary)]">
+        {{ "publicPoll.memberVoteHint" | translate }}
+      </span>
+    </div>
+  } @else {
+    <div class="mt-[22px] flex items-center gap-3.5">
+      <ds-button variant="primary" (click)="loginClick.emit()">
+        {{ "publicPoll.loginButton" | translate }}
+      </ds-button>
+      <span class="text-[13px] leading-[1.4] text-pretty [color:var(--text-tertiary)]">
+        {{ "publicPoll.voteHint" | translate }}
+      </span>
+    </div>
+  }
+}

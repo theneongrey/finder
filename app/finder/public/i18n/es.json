@@ -1,7 +1,8 @@
 {
   "titleBar": {
     "logout": "Cerrar sesión",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "login": "Iniciar sesión"
   },
   "settings": {
     "title": "Configuración",
@@ -488,5 +489,52 @@
       "imprint": "Aviso legal",
       "help": "Ayuda"
     }
+  },
+  "publicPoll": {
+    "heading": "Inicia sesión y vota",
+    "invite": "Has sido invitado a participar en una votación. Inicia sesión para emitir tu voto.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "nombre@ejemplo.com",
+    "loginButton": "Iniciar sesión y votar",
+    "requestCodeButton": "Solicitar código",
+    "cancelButton": "Cancelar",
+    "hint": "Sin contraseña – te enviaremos un código de 6 dígitos.",
+    "inviteTitle": "Has sido invitado a una encuesta",
+    "inviteSub": "Vota ahora – sin contraseña.",
+    "nudgeTitle": "¿Quieres votar?",
+    "nudgeBtn": "Iniciar sesión",
+    "barSub": "Listo en 20 segundos – sin contraseña.",
+    "statusRunning": "En curso",
+    "statusClosed": "Cerrada",
+    "openUntil": "Abierta hasta",
+    "closedAt": "Cerrada el",
+    "peopleCount": "personas participan",
+    "optionsLabel": "Opciones",
+    "voteSingular": "voto hasta ahora",
+    "votePlural": "votos hasta ahora",
+    "vote": "voto",
+    "votes": "votos",
+    "sofar": "hasta ahora",
+    "guestDescription": "Descubre de qué trata – puedes votar después de iniciar sesión.",
+    "lockNote": "Quién votó qué es visible después de iniciar sesión.",
+    "voteHint": "Después de iniciar sesión, esta encuesta se abre directamente.",
+    "privacyNote": "Este enlace muestra solo esta encuesta – sin otras encuestas, nombres ni datos de contacto.",
+    "perksHeading": "Lo que verás después",
+    "perk1": "El estado actual de todas las respuestas",
+    "perk2": "Tu propio voto – modificable en cualquier momento",
+    "perk3": "Una notificación cuando se decida la encuesta",
+    "sharedLinkTitle": "Encuesta compartida",
+    "memberWelcomeTitle": "Bienvenido de nuevo, {{name}}",
+    "memberWelcomeSub": "Eres parte de \"{{projectName}}\"",
+    "memberVoteButton": "Votar ahora",
+    "memberVoteHint": "Selección múltiple – puedes cambiar tu voto en cualquier momento.",
+    "projectHeading": "Proyecto",
+    "statusHeading": "Tu Estado",
+    "statusMissing": "Tu voto aún falta",
+    "statusVoted": "Has votado",
+    "shareButton": "Compartir enlace",
+    "shareNudge": "¿Falta alguien? Comparte el enlace para que todos puedan participar.",
+    "votedState": "votado",
+    "openState": "pendiente"
   }
 }

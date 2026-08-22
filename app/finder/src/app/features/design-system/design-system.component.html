@@ -282,10 +282,10 @@
       <div class="ds-section-block">
         <p class="label mb-3">Avatar — person palette × sizes</p>
         <div class="ds-row-wrap" style="align-items: flex-end">
-          @for (item of avatarStack; track item.initial) {
+          @for (item of avatarStack; track item.name) {
             <div class="ds-labeled-item">
-              <ds-avatar [initial]="item.initial" [bg]="item.bg" [fg]="item.fg" size="md" />
-              <span class="ds-mono-xs">{{ item.initial }}</span>
+              <app-user-avatar [user]="item" size="normal" />
+              <span class="ds-mono-xs">{{ item.name[0] }}</span>
             </div>
           }
           <div class="ds-labeled-item">
@@ -305,8 +305,8 @@
       <div class="ds-section-block">
         <p class="label mb-3">AvatarStack</p>
         <div class="ds-row-wrap">
-          <ds-avatar-stack [avatars]="avatarStack" [max]="4" data-testid="avatar-stack" />
-          <ds-avatar-stack [avatars]="avatarStack" [max]="3" [showAdd]="true" />
+          <app-avatar-stack [users]="avatarStack" [max]="4" data-testid="avatar-stack" />
+          <app-avatar-stack [users]="avatarStack" [max]="3" [showAdd]="true" />
         </div>
       </div>
       <div class="ds-section-block">

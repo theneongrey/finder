@@ -1,0 +1,66 @@
+<ds-card [padding]="22">
+  <div class="text-[12px] font-bold tracking-[.7px] [color:var(--text-muted)] uppercase">
+    {{ "publicPoll.statusHeading" | translate }}
+  </div>
+
+  @if (hasVoted()) {
+    <div class="mt-2 flex items-center gap-2">
+      <ds-icon name="check" [size]="17" color="var(--positive-strong)" />
+      <span
+        class="[font-family:var(--font-display)] text-[21px] leading-[1.2] font-bold tracking-[-0.4px] [color:var(--positive-strong)]"
+      >
+        {{ "publicPoll.statusVoted" | translate }}
+      </span>
+    </div>
+  } @else {
+    <div class="mt-2 flex items-center gap-2">
+      <ds-icon name="circle-dot" [size]="17" color="var(--ink-200)" />
+      <span
+        class="[font-family:var(--font-display)] text-[21px] leading-[1.2] font-bold tracking-[-0.4px] [color:var(--text-primary)]"
+      >
+        {{ "publicPoll.statusMissing" | translate }}
+      </span>
+    </div>
+  }
+
+  <div
+    class="mt-[18px] flex flex-col gap-[11px] border-t border-[var(--border-hairline-soft)] pt-4"
+  >
+    @for (participant of participants(); track participant.name) {
+      <div class="flex items-center gap-[11px]">
+        <app-user-avatar [user]="participant.user" size="normal" />
+        <span class="min-w-0 flex-1 text-[14px] font-semibold [color:var(--text-body-strong)]">
+          {{ participant.name }}
+        </span>
+        <span
+          class="text-[12.5px] font-bold"
+          [style.color]="participant.hasVoted ? 'var(--positive-strong)' : 'var(--ink-200)'"
+        >
+          {{
+            (participant.hasVoted ? "publicPoll.votedState" : "publicPoll.openState") | translate
+          }}
+        </span>
+      </div>
+    }
+  </div>
+
+  <div class="mt-[18px]">
+    <ds-button
+      variant="neutral"
+      [fullWidth]="true"
+      icon="share"
+      (click)="copyShareLink.emit()"
+    >
+      {{ "publicPoll.shareButton" | translate }}
+    </ds-button>
+  </div>
+
+  <div
+    class="mt-4 flex items-start gap-2 border-t border-[var(--border-hairline-soft)] pt-4"
+  >
+    <ds-icon name="users" [size]="13" color="var(--ink-200)" class="mt-px flex-none" />
+    <span class="flex-1 text-[12px] leading-[1.45] text-pretty [color:var(--text-muted)]">
+      {{ "publicPoll.shareNudge" | translate }}
+    </span>
+  </div>
+</ds-card>

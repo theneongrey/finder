@@ -1,7 +1,8 @@
 {
   "titleBar": {
     "logout": "Abmelden",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "login": "Anmelden"
   },
   "settings": {
     "title": "Einstellungen",
@@ -488,5 +489,52 @@
       "imprint": "Impressum",
       "help": "Hilfe"
     }
+  },
+  "publicPoll": {
+    "heading": "Anmelden und mitentscheiden",
+    "invite": "Du wurdest eingeladen, an einer Abstimmung teilzunehmen. Melde dich an, um deine Stimme abzugeben.",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "name@beispiel.de",
+    "loginButton": "Anmelden und abstimmen",
+    "requestCodeButton": "Code anfordern",
+    "cancelButton": "Abbrechen",
+    "hint": "Kein Passwort nötig – wir schicken dir einen 6-stelligen Code.",
+    "inviteTitle": "Du wurdest zu einer Umfrage eingeladen",
+    "inviteSub": "Stimm mit – kein Passwort nötig.",
+    "nudgeTitle": "Mitentscheiden?",
+    "nudgeBtn": "Anmelden",
+    "barSub": "In 20 Sekunden dabei – ohne Passwort.",
+    "statusRunning": "Läuft",
+    "statusClosed": "Beendet",
+    "openUntil": "Offen bis",
+    "closedAt": "Beendet am",
+    "peopleCount": "Personen nehmen teil",
+    "optionsLabel": "Zur Auswahl",
+    "voteSingular": "Stimme bisher",
+    "votePlural": "Stimmen bisher",
+    "vote": "Stimme",
+    "votes": "Stimmen",
+    "sofar": "bisher",
+    "guestDescription": "Sieh dir an, worum es geht – abstimmen kannst du nach der Anmeldung.",
+    "lockNote": "Wer wofür gestimmt hat, siehst du nach der Anmeldung.",
+    "voteHint": "Nach der Anmeldung öffnet sich direkt diese Umfrage.",
+    "privacyNote": "Dieser Link zeigt nur diese eine Umfrage – keine anderen Umfragen, Namen oder Kontaktdaten.",
+    "perksHeading": "Was du danach siehst",
+    "perk1": "Den Zwischenstand aller Antworten",
+    "perk2": "Deine eigene Stimme – jederzeit änderbar",
+    "perk3": "Eine Nachricht, sobald die Umfrage entschieden ist",
+    "sharedLinkTitle": "Geteilte Umfrage",
+    "memberWelcomeTitle": "Willkommen zurück, {{name}}",
+    "memberWelcomeSub": "Du bist Teil von „{{projectName}}"",
+    "memberVoteButton": "Jetzt abstimmen",
+    "memberVoteHint": "Mehrfachauswahl möglich – du kannst deine Stimme jederzeit ändern.",
+    "projectHeading": "Projekt",
+    "statusHeading": "Dein Status",
+    "statusMissing": "Deine Stimme fehlt noch",
+    "statusVoted": "Du hast abgestimmt",
+    "shareButton": "Link weiterteilen",
+    "shareNudge": "Fehlt noch jemand? Teile den Link, damit alle mitentscheiden können.",
+    "votedState": "abgestimmt",
+    "openState": "offen"
   }
 }

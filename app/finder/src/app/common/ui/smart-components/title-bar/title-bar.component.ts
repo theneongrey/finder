@@ -16,6 +16,7 @@ import { LoadingComponent } from '@ds/loading/loading.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-title-bar',
@@ -25,6 +26,7 @@ import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
     UserAvatarComponent,
     DsButtonComponent,
     DsMenuComponent,
+    TranslatePipe,
   ],
   templateUrl: './title-bar.component.html',
   styleUrl: './title-bar.component.css',
@@ -80,6 +82,11 @@ export class TitleBarComponent {
     } else if (this.backRoute()) {
       this.router.navigate([this.backRoute()!]);
     }
+  }
+
+  login(): void {
+    this.userStore.setRedirectUrl(this.router.url);
+    this.router.navigate(['/auth/request-email']);
   }
 
   private navigateTo(path: string): void {

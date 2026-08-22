@@ -5,7 +5,10 @@
   (ngSubmit)="verifyCode()"
   class="flex flex-col gap-0"
 >
-  <div class="[font-family:var(--font-display)] text-[27px] lg:text-[30px] font-bold tracking-[-0.6px] lg:tracking-[-0.7px] leading-[1.1] [color:var(--text-primary)]">
+  <div
+    data-testid="code-login-heading"
+    class="[font-family:var(--font-display)] text-[27px] lg:text-[30px] font-bold tracking-[-0.6px] lg:tracking-[-0.7px] leading-[1.1] [color:var(--text-primary)]"
+  >
     {{ 'auth.codeLogin.heading' | translate }}
   </div>
   <p class="mt-[8px] text-[14.5px] lg:text-[15px] leading-[1.45] [color:var(--text-secondary)] text-pretty">
@@ -29,6 +32,7 @@
       variant="primary"
       [fullWidth]="true"
       [disabled]="form.invalid"
+      data-testid="code-login-submit"
     >
       {{ 'auth.codeLogin.submit' | translate }}
     </ds-button>
@@ -38,6 +42,7 @@
 <div class="mt-[14px]">
   <button
     type="button"
+    data-testid="code-login-change-email"
     class="border-none bg-transparent px-[2px] py-[4px] text-[13.5px] font-bold [color:var(--text-secondary)] cursor-pointer hover:[color:var(--text-primary)] transition-colors duration-[140ms]"
     (click)="editEmail()"
   >

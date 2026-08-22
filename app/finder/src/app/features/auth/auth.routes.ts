@@ -2,11 +2,6 @@ import { Routes } from '@angular/router';
 
 export const authRoutes: Routes = [
   {
-    path: 'login',
-    loadComponent: () =>
-      import('./login/login.component').then((m) => m.LoginComponent),
-  },
-  {
     path: 'request-email',
     loadComponent: () =>
       import('./request-email/request-email.component').then(

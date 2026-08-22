@@ -1,22 +1,16 @@
 @if (size() === 'sm') {
   @if (isAuthenticated()) {
-    <ds-button
-      variant="primary"
-      [fullWidth]="true"
-      (click)="voteClick.emit()"
-      class="mt-4 block"
-    >
-      {{ "publicPoll.memberVoteButton" | translate }}
-    </ds-button>
+    <div class="mt-4">
+      <ds-button variant="primary" [fullWidth]="true" (click)="voteClick.emit()">
+        {{ "publicPoll.memberVoteButton" | translate }}
+      </ds-button>
+    </div>
   } @else {
-    <ds-button
-      variant="primary"
-      [fullWidth]="true"
-      [disabled]="true"
-      class="mt-4 block"
-    >
-      {{ "publicPoll.loginButton" | translate }}
-    </ds-button>
+    <div class="mt-4">
+      <ds-button variant="primary" [fullWidth]="true" [disabled]="true">
+        {{ "publicPoll.loginButton" | translate }}
+      </ds-button>
+    </div>
     <div class="mt-[11px] flex items-center justify-center gap-2">
       <ds-icon name="lock" [size]="13" color="var(--text-muted)" />
       <span class="text-[12.5px] leading-[1.4] text-pretty [color:var(--text-tertiary)]">

@@ -44,15 +44,16 @@
     }
   </div>
 
-  <ds-button
-    variant="surface"
-    [fullWidth]="true"
-    icon="share"
-    (click)="copyShareLink.emit()"
-    class="mt-[18px] block"
-  >
-    {{ "publicPoll.shareButton" | translate }}
-  </ds-button>
+  <div class="mt-[18px]">
+    <ds-button
+      variant="neutral"
+      [fullWidth]="true"
+      icon="share"
+      (click)="copyShareLink.emit()"
+    >
+      {{ "publicPoll.shareButton" | translate }}
+    </ds-button>
+  </div>
 
   <div
     class="mt-4 flex items-start gap-2 border-t border-[var(--border-hairline-soft)] pt-4"

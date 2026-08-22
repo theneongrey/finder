@@ -1,56 +1,69 @@
-<div
-  class="bg-white rounded-2xl p-6 ds-shadow-card border-l-4 border-primary"
->
-  <div class="flex justify-between items-start mb-3">
-    <div>
-      <h2>
-        {{ poll().name }}
-      </h2>
-      @if (poll().description) {
-        <p class="text-sm text-gray-500 mt-1">
-          {{ poll().description }}
-        </p>
-      }
-      <div class="flex items-center gap-2 mt-1">
-        <span
-          class="w-2 h-2 rounded-full bg-primary animate-pulse inline-block"
-        ></span>
-        <span
-          class="text-xs font-semibold text-primary uppercase tracking-wider"
-          >{{ "project.votesOverview.active" | translate }}</span
-        >
-      </div>
-    </div>
-    <div class="text-right flex flex-col items-end gap-1">
-      <a
-        routerLink="."
-        fragment="comments-section"
-        class="inline-flex items-center gap-1.5 bg-primary/20 text-primary px-3 py-1.5 rounded-full text-sm font-bold no-underline"
+<!-- Stats row — desktop only -->
+<div class="hidden lg:flex gap-3 mb-4">
+  @for (s of stats(); track s.label) {
+    <div
+      class="flex-1 rounded-[18px] p-4"
+      style="background: var(--surface-card); border: 1px solid var(--border-hairline-soft); box-shadow: var(--shadow-card-soft)"
+    >
+      <p
+        class="text-[11.5px] font-bold uppercase"
+        style="letter-spacing: 0.7px; color: var(--text-muted)"
       >
-        <i class="fa-regular fa-comment" style="font-size: 16px"></i>
-        <span>{{ commentsCount() }}</span>
-      </a>
-      <p class="text-xl font-semibold text-primary mt-1">
-        {{ votedCount() }}
-        <span class="text-gray-500 text-base font-normal">{{
-          "project.votesOverview.of" | translate: { total: totalCount() }
-        }}</span>
+        {{ s.label }}
       </p>
-      <p class="ds-body">{{ "project.votesOverview.rated" | translate }}</p>
+      <p
+        class="mt-1.5 text-[27px] font-extrabold"
+        style="letter-spacing: -0.8px; line-height: 1; color: var(--text-primary)"
+      >
+        {{ s.value }}
+      </p>
     </div>
-  </div>
-
-  <!-- Progress Bar -->
-  <hlm-progress [value]="progressPercent()">
-    <hlm-progress-indicator />
-  </hlm-progress>
-
-  <div class="mt-4 flex justify-between items-center">
-    <p class="ds-body">{{ "project.votesOverview.closesIn" | translate }}</p>
-    @if (hasOpenOptions()) {
-      <button hlmBtn size="sm" [routerLink]="['/polls', projectId(), 'vote', pollId()]">
-        <i class="fa-solid fa-arrow-right-arrow-left"></i>{{ 'project.votesOverview.continueVoting' | translate }}
-      </button>
-    }
-  </div>
+  }
 </div>
+
+<!-- Winner hero card -->
+<ds-card [accentBorder]="true" [padding]="18">
+  <div class="flex items-center gap-2 mb-3">
+    <span
+      class="inline-flex items-center h-6 px-2.5 rounded-full text-[11.5px] font-bold uppercase"
+      style="letter-spacing: 0.4px;"
+      [style.background]="badgeIsPositive() ? 'var(--positive-tint, #e2ede1)' : '#f9edd5'"
+      [style.color]="badgeIsPositive() ? 'var(--positive)' : 'var(--warning)'"
+    >
+      {{ badge() }}
+    </span>
+  </div>
+
+  <h2
+    class="text-[22px] leading-[1.2] text-pretty mt-1"
+    style="letter-spacing: -0.5px; color: var(--text-primary)"
+  >
+    {{ heroLabel() }}
+  </h2>
+
+  <div class="flex items-end gap-2.5 mt-3">
+    <span
+      class="text-[38px] font-extrabold leading-none"
+      style="letter-spacing: -1.2px"
+      [style.color]="metricColor()"
+    >
+      {{ bigMetric() }}
+    </span>
+    <span
+      class="text-[13px] pb-1.5"
+      style="color: var(--text-secondary)"
+    >
+      {{ metricSmall() }}
+    </span>
+  </div>
+
+  @if (avatarUsers().length) {
+    <div class="flex items-center gap-2.5 mt-3.5">
+      <app-avatar-stack [users]="avatarUsers()" [max]="4" size="sm" />
+    </div>
+  }
+
+  <div class="mt-4">
+    <ds-progress-bar [percent]="progressPercent()" [height]="8" />
+  </div>
+</ds-card>

@@ -1,40 +1,49 @@
-<div>
-  @if (!hideResults()) {
-    <div class="flex justify-between items-end mb-3">
-      <h3>{{ "project.votesOverview.candidates" | translate }}</h3>
-      <p class="ds-body">
-        {{ "project.votesOverview.sortedByPopularity" | translate }}
-      </p>
-    </div>
-  }
-
-  <div class="grid grid-cols-1 gap-4">
-    @for (option of sortedOptions(); track option.id) {
-      @if (optionType() === OptionType.Date) {
-        <app-option-card-date
-          [option]="option"
-          [isMostVoted]="hasMostVotes(option)"
-          [projectId]="projectId()"
-          [pollId]="pollId()"
-          [hideResults]="hideResults()"
-        />
-      } @else if (optionType() === OptionType.Rating) {
-        <app-option-card-rating
-          [option]="option"
-          [isMostVoted]="hasMostVotes(option)"
-          [projectId]="projectId()"
-          [pollId]="pollId()"
-          [hideResults]="hideResults()"
-        />
-      } @else {
-        <app-option-card
-          [option]="option"
-          [isMostVoted]="hasMostVotes(option)"
-          [projectId]="projectId()"
-          [pollId]="pollId()"
-          [hideResults]="hideResults()"
-        />
-      }
-    }
+@if (!hideResults()) {
+  <div class="flex items-center justify-between mb-3 px-1">
+    <h3 style="color: var(--text-primary)">Alle Optionen</h3>
+    <button
+      class="flex items-center gap-1.5 h-8 px-3 rounded-[11px] text-[12.5px] font-bold transition-colors"
+      style="border: 1px solid var(--border-hairline); background: var(--surface-card); color: var(--text-secondary)"
+      (click)="toggleSort()"
+    >
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 4v16"/><path d="M3.5 16.5L7 20l3.5-3.5"/>
+        <path d="M13.5 6.5h7"/><path d="M13.5 12h5"/><path d="M13.5 17.5h3"/>
+      </svg>
+      {{ sort() === 'top' ? 'Nach Beliebtheit' : 'Original' }}
+    </button>
   </div>
+}
+
+<div class="flex flex-col gap-2.5">
+  @for (option of sortedOptions(); track option.id; let idx = $index) {
+    @if (optionType() === OptionType.Date) {
+      <app-option-card-date
+        [option]="option"
+        [isMostVoted]="hasMostVotes(option)"
+        [projectId]="projectId()"
+        [pollId]="pollId()"
+        [hideResults]="hideResults()"
+        [rank]="idx + 1"
+      />
+    } @else if (optionType() === OptionType.Rating) {
+      <app-option-card-rating
+        [option]="option"
+        [isMostVoted]="hasMostVotes(option)"
+        [projectId]="projectId()"
+        [pollId]="pollId()"
+        [hideResults]="hideResults()"
+        [rank]="idx + 1"
+      />
+    } @else {
+      <app-option-card
+        [option]="option"
+        [isMostVoted]="hasMostVotes(option)"
+        [projectId]="projectId()"
+        [pollId]="pollId()"
+        [hideResults]="hideResults()"
+        [rank]="idx + 1"
+      />
+    }
+  }
 </div>

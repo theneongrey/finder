@@ -1,57 +1,181 @@
-@let _projectId = projectId();
-@if (_projectId) {
-  <div class="flex flex-col gap-6 p-4 pb-8">
-    @if (poll(); as poll) {
-      <app-vote-overview-summary
-        [poll]="poll"
-        [commentsCount]="poll.comments.length"
-        [projectId]="_projectId"
-        [pollId]="pollId()"
-      />
+@if (poll(); as poll) {
+  <!-- ── MOBILE layout (<lg) ─────────────────────────────────── -->
+  <div class="flex flex-col lg:hidden">
+    <!-- Tab bar -->
+    <div
+      class="flex border-b"
+      style="border-color: var(--border-hairline)"
+    >
+      <button
+        class="flex-1 border-b-2 py-3 text-[14.5px] font-bold transition-colors"
+        [style.color]="view() === 'results' ? 'var(--accent)' : 'var(--text-secondary)'"
+        [style.border-color]="view() === 'results' ? 'var(--accent)' : 'transparent'"
+        (click)="view.set('results')"
+      >
+        Ergebnis
+      </button>
+      <button
+        class="flex-1 border-b-2 py-3 text-[14.5px] font-bold transition-colors"
+        [style.color]="view() === 'comments' ? 'var(--accent)' : 'var(--text-secondary)'"
+        [style.border-color]="view() === 'comments' ? 'var(--accent)' : 'transparent'"
+        (click)="view.set('comments')"
+      >
+        Kommentare
+      </button>
+    </div>
+
+    @if (view() === 'results') {
+      <div class="flex flex-col gap-3.5 p-4 pb-8">
+        <app-vote-overview-summary [poll]="poll" [commentsCount]="poll.comments.length" />
+
+        <app-option-list
+          [options]="poll.options"
+          [optionType]="poll.optionType"
+        />
+
+        @if (canManagePoll()) {
+          <div class="mt-2">
+            @if (poll.isClosed) {
+              <ds-button
+                variant="outline"
+                [fullWidth]="true"
+                data-testid="reopen-poll-btn"
+                (click)="reopenPoll()"
+              >
+                Umfrage wieder öffnen
+              </ds-button>
+            } @else if (showCloseConfirm()) {
+              <div
+                class="flex items-center gap-3 rounded-2xl p-4"
+                style="background: var(--bg-sheet); border: 1px solid var(--border-hairline)"
+              >
+                <span
+                  class="flex-1 text-[14px] font-semibold"
+                  style="color: var(--text-primary)"
+                >
+                  Wirklich beenden?
+                </span>
+                <ds-button
+                  variant="danger"
+                  size="sm"
+                  data-testid="close-poll-confirm-btn"
+                  (click)="closePoll()"
+                >
+                  Ja, beenden
+                </ds-button>
+                <ds-button
+                  variant="ghost"
+                  size="sm"
+                  (click)="showCloseConfirm.set(false)"
+                >
+                  Abbrechen
+                </ds-button>
+              </div>
+            } @else {
+              <ds-button
+                variant="outline"
+                [fullWidth]="true"
+                data-testid="close-poll-btn"
+                (click)="showCloseConfirm.set(true)"
+              >
+                Umfrage beenden
+              </ds-button>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="p-4 pb-8">
+        <app-comments-section
+          [comments]="poll.comments"
+          (addComment)="addComment($event)"
+        />
+      </div>
+    }
+  </div>
+
+  <!-- ── DESKTOP layout (≥lg) ─────────────────────────────────── -->
+  <div class="hidden lg:flex lg:gap-6 lg:p-6 lg:items-start">
+    <!-- Main column -->
+    <div class="flex flex-col gap-4 lg:flex-1 lg:min-w-0">
+      <app-vote-overview-summary [poll]="poll" [commentsCount]="poll.comments.length" />
 
       <app-option-list
         [options]="poll.options"
-        [projectId]="_projectId"
-        [pollId]="pollId()"
         [optionType]="poll.optionType"
       />
 
+      @if (canManagePoll()) {
+        <div
+          class="flex items-center gap-4 rounded-[22px] p-5"
+          style="background: var(--surface-card); border: 1px solid var(--border-hairline-soft); box-shadow: var(--shadow-card-soft)"
+        >
+          <div class="flex-1 min-w-0">
+            @if (poll.isClosed) {
+              <p class="text-[15px] font-bold" style="color: var(--text-primary)">
+                Umfrage ist geschlossen
+              </p>
+              <p class="text-[13px] mt-0.5" style="color: var(--text-secondary)">
+                Ergebnisse sind eingefroren. Du kannst sie jederzeit wieder öffnen.
+              </p>
+            } @else {
+              <p class="text-[15px] font-bold" style="color: var(--text-primary)">
+                Umfrage beenden
+              </p>
+              <p class="text-[13px] mt-0.5" style="color: var(--text-secondary)">
+                Keine weiteren Stimmen möglich. Das Ergebnis wird eingefroren.
+              </p>
+            }
+          </div>
+
+          @if (poll.isClosed) {
+            <ds-button
+              variant="outline"
+              data-testid="reopen-poll-btn"
+              (click)="reopenPoll()"
+            >
+              Wieder öffnen
+            </ds-button>
+          } @else if (showCloseConfirm()) {
+            <ds-button
+              variant="ghost"
+              size="sm"
+              (click)="showCloseConfirm.set(false)"
+            >
+              Abbrechen
+            </ds-button>
+            <ds-button
+              variant="danger"
+              data-testid="close-poll-confirm-btn"
+              (click)="closePoll()"
+            >
+              Ja, beenden
+            </ds-button>
+          } @else {
+            <ds-button
+              variant="outline"
+              data-testid="close-poll-btn"
+              (click)="showCloseConfirm.set(true)"
+            >
+              Umfrage beenden
+            </ds-button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Comments sidebar -->
+    <div class="lg:w-[360px] lg:flex-none">
       <app-comments-section
         [comments]="poll.comments"
         (addComment)="addComment($event)"
       />
-
-      @if (canManagePoll()) {
-        @if (poll.isClosed) {
-          <button
-            hlmBtn
-            variant="outline"
-            class="w-full"
-            data-testid="reopen-poll-btn"
-            (click)="reopenPoll()"
-          >
-            <i class="fa-solid fa-lock-open mr-2"></i>
-            Umfrage wieder öffnen
-          </button>
-        } @else {
-          <button
-            hlmBtn
-            variant="destructive"
-            class="w-full"
-            data-testid="close-poll-btn"
-            (click)="closePoll()"
-          >
-            <i class="fa-solid fa-lock mr-2"></i>
-            Umfrage jetzt schließen
-          </button>
-        }
-      }
-    } @else {
-      <div class="flex justify-center items-center h-32">
-        <p class="text-gray-500">
-          {{ "project.votesOverview.loading" | translate }}
-        </p>
-      </div>
-    }
+    </div>
+  </div>
+} @else {
+  <div class="flex h-32 items-center justify-center">
+    <p style="color: var(--text-secondary)">
+      {{ "project.votesOverview.loading" | translate }}
+    </p>
   </div>
 }

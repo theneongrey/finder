@@ -3,8 +3,8 @@ import {
   Component,
   computed,
   input,
+  signal,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 import {
   OptionDetail,
   OptionType,
@@ -13,15 +13,12 @@ import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionCardRatingComponent } from './option-card-rating/option-card-rating.component';
 
+type SortMode = 'top' | 'original';
+
 @Component({
   selector: 'app-option-list',
   templateUrl: './option-list.component.html',
-  imports: [
-    TranslatePipe,
-    OptionCardComponent,
-    OptionCardDateComponent,
-    OptionCardRatingComponent,
-  ],
+  imports: [OptionCardComponent, OptionCardDateComponent, OptionCardRatingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionListComponent {
@@ -33,16 +30,23 @@ export class OptionListComponent {
   optionType = input(OptionType.YesNo);
   hideResults = input(false);
 
+  sort = signal<SortMode>('top');
+
   sortedOptions = computed(() => {
-    if (this.hideResults()) {
-      return [...this.options()];
+    const opts = [...this.options()];
+    if (this.hideResults() || this.sort() !== 'top') {
+      return opts;
     }
-    return [...this.options()].sort((a, b) =>
+    return opts.sort((a, b) =>
       this.optionType() === OptionType.Rating
         ? this.getAverageRating(b) - this.getAverageRating(a)
         : this.getYesVotes(b).length - this.getYesVotes(a).length,
     );
   });
+
+  toggleSort() {
+    this.sort.update(s => (s === 'top' ? 'original' : 'top'));
+  }
 
   getYesVotes(option: OptionDetail) {
     return option.votes.filter((vote) => vote.choice === '1');

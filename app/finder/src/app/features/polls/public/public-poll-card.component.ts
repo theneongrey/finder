@@ -7,32 +7,28 @@ import {
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsCardComponent } from '../../../common/ui/ds-components/card/ds-card.component';
-import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
 import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
 import { DsStatusDotComponent } from '../../../common/ui/ds-components/badge/ds-status-dot.component';
-import { AvatarStackComponent } from '../../../common/ui/smart-components/avatar-stack/avatar-stack.component';
 import { PollTypeBadgeComponent } from '../_shared/ui/poll-type-badge/poll-type-badge.component';
 import { PublicPollPreview } from '../_shared/models/poll-detail.model';
+import { PublicPollParticipantsComponent } from './public-poll-participants.component';
+import { PublicPollOptionsComponent } from './public-poll-options.component';
+import { PublicPollCtaComponent } from './public-poll-cta.component';
+import { OptionDisplay } from './public-poll.models';
 
-export interface OptionDisplay {
-  id: string;
-  text: string;
-  description: string;
-  voteCount: number;
-  pct: string;
-  isLead: boolean;
-}
+export type { OptionDisplay };
 
 @Component({
   selector: 'app-public-poll-card',
   standalone: true,
   imports: [
     DsCardComponent,
-    DsButtonComponent,
     DsIconComponent,
     DsStatusDotComponent,
-    AvatarStackComponent,
     PollTypeBadgeComponent,
+    PublicPollParticipantsComponent,
+    PublicPollOptionsComponent,
+    PublicPollCtaComponent,
     TranslatePipe,
     DatePipe,
   ],

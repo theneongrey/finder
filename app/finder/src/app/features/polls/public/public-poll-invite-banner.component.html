@@ -1,0 +1,40 @@
+@if (isAuthenticated()) {
+  <div
+    class="flex items-center gap-2.5 rounded-2xl border border-[var(--teal-200)] bg-[var(--accent-tint)] px-3.5 py-2.5"
+  >
+    <span
+      class="flex h-[30px] w-[30px] flex-none items-center justify-center rounded-full bg-[var(--accent-tint-strong)]"
+    >
+      <ds-icon name="link" [size]="15" color="var(--accent)" />
+    </span>
+    <div class="min-w-0 flex-1">
+      <div class="text-[13.5px] leading-[1.25] font-bold text-[#17606e]">
+        {{ "publicPoll.memberWelcomeTitle" | translate: { name: userName() } }}
+      </div>
+      <div class="mt-0.5 text-[12.5px] [color:var(--text-secondary)]">
+        {{ "publicPoll.memberWelcomeSub" | translate: { projectName: projectName() } }}
+      </div>
+    </div>
+  </div>
+} @else {
+  <div
+    class="flex items-center gap-2.5 rounded-2xl border border-[var(--border-hairline-soft)] bg-white px-3.5 py-2.5"
+  >
+    <span
+      class="flex h-[30px] w-[30px] flex-none items-center justify-center rounded-full bg-[var(--sand-100)]"
+    >
+      <ds-icon name="link" [size]="15" color="var(--text-secondary)" />
+    </span>
+    <div class="min-w-0 flex-1">
+      <div
+        class="text-[13.5px] leading-[1.25] font-bold [color:var(--text-primary)]"
+        data-testid="public-poll-mobile-heading"
+      >
+        {{ "publicPoll.inviteTitle" | translate }}
+      </div>
+      <div class="mt-0.5 text-[12.5px] [color:var(--text-secondary)]">
+        {{ "publicPoll.inviteSub" | translate }}
+      </div>
+    </div>
+  </div>
+}

@@ -1,242 +1,80 @@
 <ds-card [padding]="0">
-<div [class]="size() === 'sm' ? 'px-5 pt-5 pb-[22px]' : 'px-[30px] py-7'">
-  <!-- Header row: type badge + status (+ close date inline on md) -->
-  <div class="flex items-center gap-2">
-    <app-poll-type-badge [type]="poll().optionType" />
-    @if (!poll().isClosed) {
-      <ds-status-dot tone="positive">{{
-        "publicPoll.statusRunning" | translate
-      }}</ds-status-dot>
-    } @else {
-      <ds-status-dot tone="muted">{{
-        "publicPoll.statusClosed" | translate
-      }}</ds-status-dot>
-    }
-    @if (size() === 'md' && poll().closeDate) {
-      <span
-        class="ml-auto flex items-center gap-1.5 text-[13.5px] font-semibold [color:var(--ink-600)]"
-      >
-        <ds-icon name="clock" [size]="15" color="currentColor" />
-        {{
-          (poll().isClosed ? "publicPoll.closedAt" : "publicPoll.openUntil")
-            | translate
-        }}
-        {{ poll().closeDate | date: "d. MMM., HH:mm" }}
-      </span>
-    }
-  </div>
-
-  <!-- Close date below header (sm only) -->
-  @if (size() === 'sm' && poll().closeDate) {
-    <div
-      class="mt-[13px] flex items-center gap-1.5 text-[13px] font-semibold [color:var(--ink-600)]"
-    >
-      <ds-icon name="clock" [size]="14" color="currentColor" />
-      <span
-        >{{
-          (poll().isClosed ? "publicPoll.closedAt" : "publicPoll.openUntil")
-            | translate
-        }}
-        {{ poll().closeDate | date: "d. MMM., HH:mm" }}</span
-      >
-    </div>
-  }
-
-  <!-- Title -->
-  <div
-    class="[font-family:var(--font-display)] font-bold text-pretty [color:var(--text-primary)]"
-    [class]="
-      size() === 'sm'
-        ? 'mt-[13px] text-[24px] leading-[1.15] tracking-[-0.5px]'
-        : 'mt-4 text-[34px] leading-[1.08] tracking-[-0.9px]'
-    "
-  >
-    {{ poll().name }}
-  </div>
-
-  <!-- Description -->
-  <p
-    class="m-0 text-pretty [color:var(--text-secondary)]"
-    [class]="
-      size() === 'sm'
-        ? 'mt-[7px] text-[14px] leading-[1.45]'
-        : 'mt-[9px] max-w-[60ch] text-[15.5px] leading-[1.5]'
-    "
-  >
-    {{ poll().description || ("publicPoll.guestDescription" | translate) }}
-  </p>
-
-  <!-- Participants -->
-  <div
-    class="flex items-center border-t border-[var(--border-hairline-soft)]"
-    [class]="
-      size() === 'sm'
-        ? 'mt-[14px] gap-2.5 pt-[14px]'
-        : 'mt-5 gap-[11px] pt-[18px]'
-    "
-  >
-    @if (isAuthenticated() && participantAvatarUsers().length > 0) {
-      <app-avatar-stack
-        [users]="participantAvatarUsers()"
-        [max]="5"
-        [size]="size() === 'sm' ? 'sm' : 'md'"
-      />
-    } @else {
-      <div class="flex pl-[7px]">
-        @for (_ of participantSlots(); track $index) {
-          <div
-            class="-ml-[7px] rounded-full border-[2.5px] border-white bg-[var(--sand-300)]"
-            [class]="size() === 'sm' ? 'h-[30px] w-[30px]' : 'h-[34px] w-[34px]'"
-          ></div>
-        }
-      </div>
-    }
-    <span
-      class="text-pretty [color:var(--text-tertiary)]"
-      [class]="size() === 'sm' ? 'text-[12.5px] leading-[1.35]' : 'text-[13.5px]'"
-    >
-      {{ poll().participantCount }}
-      {{ "publicPoll.peopleCount" | translate }}
-    </span>
-  </div>
-
-  <!-- Options header -->
-  <div
-    class="flex items-center justify-between"
-    [class]="size() === 'sm' ? 'mt-[18px]' : 'mt-6'"
-  >
-    <span class="text-[12px] font-bold tracking-[.7px] [color:var(--text-muted)] uppercase">
-      {{ "publicPoll.optionsLabel" | translate }}
-    </span>
-    <span [class]="size() === 'sm' ? 'text-[12.5px] [color:var(--text-muted)]' : 'text-[13px] [color:var(--text-muted)]'">
-      {{ poll().totalVotes }}
-      {{
-        (poll().totalVotes === 1
-          ? "publicPoll.voteSingular"
-          : "publicPoll.votePlural"
-        ) | translate
-      }}
-    </span>
-  </div>
-
-  <!-- Options list -->
-  <div
-    [class]="
-      size() === 'sm'
-        ? 'mt-[11px] flex flex-col gap-[9px]'
-        : 'mt-[13px] grid grid-cols-2 gap-[11px]'
-    "
-  >
-    @for (opt of optionDisplays(); track opt.id) {
-      <div
-        class="border"
-        [class]="
-          (size() === 'sm'
-            ? 'relative overflow-hidden rounded-2xl px-3.5 py-3 '
-            : 'rounded-[18px] px-4 py-[15px] ') +
-          (opt.isLead
-            ? 'border-[rgba(31,122,140,.28)] bg-[#f4f9fa]'
-            : 'border-[rgba(20,24,28,.075)] bg-[#fdfcfa]')
-        "
-      >
-        <div
-          class="flex items-center"
-          [class]="size() === 'sm' ? 'gap-2.5' : 'gap-3'"
-        >
-          <span class="min-w-0 flex-1">
-            <span
-              class="block leading-[1.25] font-bold [color:var(--text-primary)]"
-              [class]="size() === 'sm' ? 'text-[15px]' : 'text-[16px]'"
-              >{{ opt.text }}</span
-            >
-            @if (opt.description) {
-              <span
-                class="mt-0.5 block [color:var(--text-tertiary)]"
-                [class]="size() === 'sm' ? 'text-[12.5px]' : 'text-[13px]'"
-                >{{ opt.description }}</span
-              >
-            }
-          </span>
-          <span class="flex-none text-right">
-            <span
-              class="block leading-[1.1] font-bold tabular-nums"
-              [class]="size() === 'sm' ? 'text-[16px]' : 'text-[18px]'"
-              [style.color]="opt.isLead ? 'var(--accent)' : 'var(--ink-600)'"
-              >{{ opt.voteCount }}</span
-            >
-            <span
-              class="mt-px block [color:var(--text-muted)]"
-              [class]="size() === 'sm' ? 'text-[11.5px]' : 'text-[12px]'"
-            >
-              {{
-                (opt.voteCount === 1 ? "publicPoll.vote" : "publicPoll.votes")
-                  | translate
-              }}
-            </span>
-          </span>
-        </div>
+  <div [class]="size() === 'sm' ? 'px-5 pt-5 pb-[22px]' : 'px-[30px] py-7'">
+    <!-- Header: type badge + status dot (+ close date inline on md) -->
+    <div class="flex items-center gap-2">
+      <app-poll-type-badge [type]="poll().optionType" />
+      @if (!poll().isClosed) {
+        <ds-status-dot tone="positive">{{ "publicPoll.statusRunning" | translate }}</ds-status-dot>
+      } @else {
+        <ds-status-dot tone="muted">{{ "publicPoll.statusClosed" | translate }}</ds-status-dot>
+      }
+      @if (size() === 'md' && poll().closeDate) {
         <span
-          class="block h-[5px] overflow-hidden rounded-full bg-[var(--sand-200)]"
-          [class]="size() === 'sm' ? 'mt-[10px]' : 'mt-3'"
+          class="ml-auto flex items-center gap-1.5 text-[13.5px] font-semibold [color:var(--ink-600)]"
         >
-          <span
-            class="block h-full rounded-full"
-            [style.width]="opt.pct"
-            [style.background]="opt.isLead ? 'var(--accent)' : '#cfd9d2'"
-          ></span>
+          <ds-icon name="clock" [size]="15" color="currentColor" />
+          {{ (poll().isClosed ? "publicPoll.closedAt" : "publicPoll.openUntil") | translate }}
+          {{ poll().closeDate | date: "d. MMM., HH:mm" }}
+        </span>
+      }
+    </div>
+
+    <!-- Close date below header (sm only) -->
+    @if (size() === 'sm' && poll().closeDate) {
+      <div
+        class="mt-[13px] flex items-center gap-1.5 text-[13px] font-semibold [color:var(--ink-600)]"
+      >
+        <ds-icon name="clock" [size]="14" color="currentColor" />
+        <span>
+          {{ (poll().isClosed ? "publicPoll.closedAt" : "publicPoll.openUntil") | translate }}
+          {{ poll().closeDate | date: "d. MMM., HH:mm" }}
         </span>
       </div>
     }
-  </div>
 
-  <!-- CTA -->
-  @if (size() === 'sm') {
-    @if (isAuthenticated()) {
-      <ds-button
-        variant="primary"
-        [fullWidth]="true"
-        (click)="voteClick.emit()"
-        class="mt-4 block"
-      >
-        {{ "publicPoll.memberVoteButton" | translate }}
-      </ds-button>
-    } @else {
-      <ds-button
-        variant="primary"
-        [fullWidth]="true"
-        [disabled]="true"
-        (click)="loginClick.emit()"
-        class="mt-4 block"
-      >
-        {{ "publicPoll.loginButton" | translate }}
-      </ds-button>
-      <div class="mt-[11px] flex items-center justify-center gap-2">
-        <ds-icon name="lock" [size]="13" color="var(--text-muted)" />
-        <span class="text-[12.5px] leading-[1.4] text-pretty [color:var(--text-tertiary)]">{{
-          "publicPoll.lockNote" | translate
-        }}</span>
-      </div>
-    }
-  } @else {
-    @if (isAuthenticated()) {
-      <div class="mt-[22px] flex items-center gap-3.5">
-        <ds-button variant="primary" (click)="voteClick.emit()">
-          {{ "publicPoll.memberVoteButton" | translate }}
-        </ds-button>
-        <span class="text-[13px] leading-[1.4] text-pretty [color:var(--text-tertiary)]">{{
-          "publicPoll.memberVoteHint" | translate
-        }}</span>
-      </div>
-    } @else {
-      <div class="mt-[22px] flex items-center gap-3.5">
-        <ds-button variant="primary" (click)="loginClick.emit()">
-          {{ "publicPoll.loginButton" | translate }}
-        </ds-button>
-        <span class="text-[13px] leading-[1.4] text-pretty [color:var(--text-tertiary)]">{{
-          "publicPoll.voteHint" | translate
-        }}</span>
-      </div>
-    }
-  }
-</div>
+    <!-- Title -->
+    <div
+      class="[font-family:var(--font-display)] font-bold text-pretty [color:var(--text-primary)]"
+      [class]="
+        size() === 'sm'
+          ? 'mt-[13px] text-[24px] leading-[1.15] tracking-[-0.5px]'
+          : 'mt-4 text-[34px] leading-[1.08] tracking-[-0.9px]'
+      "
+    >
+      {{ poll().name }}
+    </div>
+
+    <!-- Description -->
+    <p
+      class="m-0 text-pretty [color:var(--text-secondary)]"
+      [class]="
+        size() === 'sm'
+          ? 'mt-[7px] text-[14px] leading-[1.45]'
+          : 'mt-[9px] max-w-[60ch] text-[15.5px] leading-[1.5]'
+      "
+    >
+      {{ poll().description || ("publicPoll.guestDescription" | translate) }}
+    </p>
+
+    <app-public-poll-participants
+      [participantCount]="poll().participantCount"
+      [participantSlots]="participantSlots()"
+      [participantAvatarUsers]="participantAvatarUsers()"
+      [isAuthenticated]="isAuthenticated()"
+      [size]="size()"
+    />
+
+    <app-public-poll-options
+      [optionDisplays]="optionDisplays()"
+      [totalVotes]="poll().totalVotes"
+      [size]="size()"
+    />
+
+    <app-public-poll-cta
+      [size]="size()"
+      [isAuthenticated]="isAuthenticated()"
+      (loginClick)="loginClick.emit()"
+      (voteClick)="voteClick.emit()"
+    />
+  </div>
 </ds-card>

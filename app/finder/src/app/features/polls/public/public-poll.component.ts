@@ -7,43 +7,39 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { LoggerService } from '../../../common/services/logger.service';
 import { UserService } from '../../../common/services/user.service';
 import { UserStore } from '../../../common/data/user.store';
 import { TitleBarComponent } from '../../../common/ui/smart-components/title-bar/title-bar.component';
 import { TitleBarService } from '../../../common/services/title-bar.service';
 import { PollService } from '../_shared/data/poll.service';
-import { OptionType, PublicParticipant, PublicProjectInfo, PublicPollPreview } from '../_shared/models/poll-detail.model';
+import { OptionType, PublicProjectInfo } from '../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../_shared/utils/date-option-format.service';
-import { DsCardComponent } from '../../../common/ui/ds-components/card/ds-card.component';
-import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
-import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
-import { DsPollCardSkeletonComponent } from '../../../common/ui/ds-components/poll-card-skeleton/ds-poll-card-skeleton.component';
 import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
-import { UserAvatarComponent } from '../../../common/ui/smart-components/user-avatar/user-avatar.component';
+import { DsPollCardSkeletonComponent } from '../../../common/ui/ds-components/poll-card-skeleton/ds-poll-card-skeleton.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
 import { User } from '../../../common/models/user.model';
-import { PublicPollCardComponent, OptionDisplay } from './public-poll-card.component';
-
-interface ParticipantDisplay extends PublicParticipant {
-  user: { name: string };
-}
+import { PublicPollCardComponent } from './public-poll-card.component';
+import { PublicPollInviteBannerComponent } from './public-poll-invite-banner.component';
+import { PublicPollNudgeBarComponent } from './public-poll-nudge-bar.component';
+import { PublicPollMemberSidebarComponent } from './public-poll-member-sidebar.component';
+import { PublicPollGuestSidebarComponent } from './public-poll-guest-sidebar.component';
+import { OptionDisplay, ParticipantDisplay } from './public-poll.models';
 
 @Component({
   selector: 'app-public-poll',
   standalone: true,
   imports: [
     TitleBarComponent,
-    DsCardComponent,
-    DsInputComponent,
-    DsButtonComponent,
-    DsPollCardSkeletonComponent,
     DsIconComponent,
-    UserAvatarComponent,
+    DsPollCardSkeletonComponent,
     PublicPollCardComponent,
-    ReactiveFormsModule,
+    PublicPollInviteBannerComponent,
+    PublicPollNudgeBarComponent,
+    PublicPollMemberSidebarComponent,
+    PublicPollGuestSidebarComponent,
     TranslatePipe,
   ],
   templateUrl: 'public-poll.component.html',
@@ -65,7 +61,7 @@ export class PublicPollComponent implements OnInit {
   protected readonly isAuthenticated = signal(false);
   protected readonly currentUser = signal<User | undefined>(undefined);
   protected readonly projectInfo = signal<PublicProjectInfo | undefined>(undefined);
-  protected readonly pollPreview = computed<PublicPollPreview | undefined>(() => this.projectInfo()?.pollPreview);
+  protected readonly pollPreview = computed(() => this.projectInfo()?.pollPreview);
   protected readonly emailControl = new FormControl('', Validators.email);
   protected readonly OptionType = OptionType;
 
@@ -106,7 +102,7 @@ export class PublicPollComponent implements OnInit {
   protected readonly participantDisplays = computed<ParticipantDisplay[]>(() => {
     const info = this.projectInfo();
     if (!info) { return []; }
-    return (info.participants ?? []).map((p) => ({ ...p, user: { name: p.name } }));
+    return (info.participants ?? []).map((p) => ({ name: p.name, hasVoted: p.hasVoted, user: { name: p.name } }));
   });
 
   private projectId = '';

@@ -308,6 +308,7 @@
       "next": "Weiter",
       "pleaseRate": "Bitte bewerten",
       "stampCan": "Kann",
+      "stampCannot": "Kann nicht",
       "tapToRate": "Tippe auf die Sterne",
       "ratingLabel": {
         "1": "Gar nicht",
@@ -315,7 +316,20 @@
         "3": "Geht so",
         "4": "Gut",
         "5": "Perfekt"
-      }
+      },
+      "optionProgress": "Option {{current}} von {{total}}",
+      "optionType": {
+        "yesno": "Ja / Nein",
+        "rating": "Bewertung",
+        "date": "Terminumfrage"
+      },
+      "back": "Zurück",
+      "keyboard": "oder ziehen",
+      "keyboardRating": "Sterne per Tastatur",
+      "yourAnswers": "Deine Antworten",
+      "answerOpen": "offen",
+      "answerMaybe": "Vielleicht",
+      "closeDate": "Offen bis"
     },
     "votesOverview": {
       "active": "Aktiv",

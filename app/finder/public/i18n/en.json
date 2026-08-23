@@ -308,6 +308,7 @@
       "next": "Next",
       "pleaseRate": "Please rate",
       "stampCan": "Can",
+      "stampCannot": "Can't",
       "tapToRate": "Tap the stars",
       "ratingLabel": {
         "1": "Not at all",
@@ -315,7 +316,20 @@
         "3": "So-so",
         "4": "Good",
         "5": "Perfect"
-      }
+      },
+      "optionProgress": "Option {{current}} of {{total}}",
+      "optionType": {
+        "yesno": "Yes / No",
+        "rating": "Rating",
+        "date": "Date poll"
+      },
+      "back": "Back",
+      "keyboard": "or drag",
+      "keyboardRating": "Stars via keyboard",
+      "yourAnswers": "Your answers",
+      "answerOpen": "open",
+      "answerMaybe": "Maybe",
+      "closeDate": "Open until"
     },
     "votesOverview": {
       "active": "Active",

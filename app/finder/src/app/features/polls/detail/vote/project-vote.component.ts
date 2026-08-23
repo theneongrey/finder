@@ -20,7 +20,6 @@ import { VoteCardRatingComponent } from './vote-card-rating/vote-card-rating.com
 import { VoteCommentButtonComponent } from './vote-comment-button/vote-comment-button.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { OptionType } from '../../_shared/models/poll-detail.model';
-import { DsProgressBarComponent } from '../../../../common/ui/ds-components/progress-bar/ds-progress-bar.component';
 import { DsVoteButtonsComponent } from '../../../../common/ui/ds-components/vote-buttons/ds-vote-buttons.component';
 import { DsButtonComponent } from '../../../../common/ui/ds-components/button/ds-button.component';
 import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-icon.component';
@@ -36,7 +35,6 @@ import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-ico
     VoteCardDateComponent,
     VoteCommentButtonComponent,
     VoteCardRatingComponent,
-    DsProgressBarComponent,
     DsVoteButtonsComponent,
     DsButtonComponent,
     DsIconComponent,
@@ -80,6 +78,75 @@ export class ProjectVoteComponent implements AfterViewInit {
       ? Math.round((this.votedCount() / this.totalCount()) * 100)
       : 0,
   );
+
+  currentOptionIndex = computed(() => {
+    const options = this.poll()?.options ?? [];
+    const idx = options.findIndex((o) => o.id === this.optionId());
+    return idx >= 0 ? idx : 0;
+  });
+
+  optionTypeLabelKey = computed(() => {
+    switch (this.poll()?.optionType) {
+      case OptionType.Rating: return 'project.vote.optionType.rating';
+      case OptionType.Date: return 'project.vote.optionType.date';
+      default: return 'project.vote.optionType.yesno';
+    }
+  });
+
+  progressSegments = computed(() => {
+    const options = this.poll()?.options ?? [];
+    const currentId = this.optionId();
+    return options.map((o) => {
+      if (parseInt(o.choice ?? '0') > 0) return 'var(--accent)';
+      if (o.id === currentId) return '#9fc2cf';
+      return '#e2ded7';
+    });
+  });
+
+  canGoBack = computed(() => this.currentOptionIndex() > 0);
+
+  closeDateDisplay = computed(() => {
+    const d = this.poll()?.closeDate;
+    if (!d) return undefined;
+    try {
+      return new Date(d).toLocaleString();
+    } catch {
+      return d;
+    }
+  });
+
+  answerSummary = computed(() => {
+    const options = this.poll()?.options ?? [];
+    const type = this.poll()?.optionType ?? OptionType.YesNo;
+    const currentId = this.optionId();
+    const isDate = type === OptionType.Date;
+    const isRating = type === OptionType.Rating;
+    return options.map((o) => {
+      const choiceNum = parseInt(o.choice ?? '0');
+      const isPositive = choiceNum > 0;
+      let badgeBg = '#f1eee9', badgeFg = '#8a8681', dotBg = '#d2cdc6';
+      let badgeKey = 'project.vote.answerOpen';
+      let ratingValue = 0;
+      if (isRating && isPositive) {
+        ratingValue = choiceNum;
+        badgeBg = '#f9edd5'; badgeFg = '#a8742a'; dotBg = '#e0a42c';
+      } else if (choiceNum === 1) {
+        badgeKey = isDate ? 'project.vote.stampCan' : 'project.votesOverview.voteLabel.yes';
+        badgeBg = '#e2ede1'; badgeFg = '#3f7a4e'; dotBg = '#5d9a56';
+      } else if (choiceNum === 2) {
+        badgeKey = isDate ? 'project.vote.stampCannot' : 'project.votesOverview.voteLabel.no';
+        badgeBg = '#fdf3f1'; badgeFg = '#c1453f'; dotBg = '#c1453f';
+      }
+      const isCurrent = o.id === currentId;
+      return {
+        id: o.id, label: o.text,
+        badgeBg, badgeFg, dotBg, badgeKey, ratingValue,
+        isCurrent,
+        rowBg: isCurrent && !isPositive ? 'rgba(31,122,140,.06)' : 'transparent',
+        fontWeight: isCurrent ? '700' : '600',
+      };
+    });
+  });
 
   private readonly SWIPE_THRESHOLD = 75;
 
@@ -234,13 +301,16 @@ export class ProjectVoteComponent implements AfterViewInit {
     this.navigateToNextOption(optionId);
   }
 
-  navigateToOverview(): void {
-    void this.router.navigate([
-      '/polls/',
-      this.projectId(),
-      'overview',
-      this.pollId(),
-    ]);
+  goBack(): void {
+    const idx = this.currentOptionIndex();
+    if (idx > 0) {
+      const prev = this.poll()!.options[idx - 1];
+      void this.router.navigate(['/polls/', this.projectId(), 'vote', this.pollId(), prev.id]);
+    }
+  }
+
+  navigateToOption(id: string): void {
+    void this.router.navigate(['/polls/', this.projectId(), 'vote', this.pollId(), id]);
   }
 
   dismissHint(): void {

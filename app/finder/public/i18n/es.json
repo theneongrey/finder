@@ -308,6 +308,7 @@
       "next": "Siguiente",
       "pleaseRate": "Por favor califica",
       "stampCan": "Puedo",
+      "stampCannot": "No puedo",
       "tapToRate": "Toca las estrellas",
       "ratingLabel": {
         "1": "Para nada",
@@ -315,7 +316,20 @@
         "3": "Más o menos",
         "4": "Bien",
         "5": "Perfecto"
-      }
+      },
+      "optionProgress": "Opción {{current}} de {{total}}",
+      "optionType": {
+        "yesno": "Sí / No",
+        "rating": "Valoración",
+        "date": "Encuesta de fecha"
+      },
+      "back": "Atrás",
+      "keyboard": "o deslizar",
+      "keyboardRating": "Estrellas con teclado",
+      "yourAnswers": "Tus respuestas",
+      "answerOpen": "abierto",
+      "answerMaybe": "Quizás",
+      "closeDate": "Abierto hasta"
     },
     "votesOverview": {
       "active": "Activo",

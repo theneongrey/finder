@@ -13,9 +13,15 @@ COPY Finder/. ./Finder/
 WORKDIR /Finder
 RUN dotnet publish -c release -o /app --no-restore
 
-# install playwright browsers (SDK is already here, no extra tools needed)
-RUN dotnet tool install --global Microsoft.Playwright.CLI && \
-    /root/.dotnet/tools/playwright install chromium
+# install pwsh and use the version-locked playwright.ps1 from the published output
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl ca-certificates \
+    && curl -sL https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -o /tmp/ms-prod.deb \
+    && dpkg -i /tmp/ms-prod.deb && rm /tmp/ms-prod.deb \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends powershell \
+    && rm -rf /var/lib/apt/lists/* \
+    && pwsh /app/playwright.ps1 install chromium
 
 ## Final stage — clean image, no build tools
 FROM mcr.microsoft.com/dotnet/aspnet:9.0

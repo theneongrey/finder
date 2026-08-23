@@ -1,56 +1,48 @@
-@if (mode() === 'standalone' || mode() === 'edit') {
+@if (mode() === 'standalone') {
 
   @if (isDesktop()) {
     <!-- ═══════════════════════════════════════════
          WEB WIZARD
     ═══════════════════════════════════════════ -->
 
-    @if (mode() === 'standalone') {
-      <!-- Step indicator bar -->
-      <ds-sub-header class="flex items-center gap-2.5 flex-wrap">
-        <div class="flex items-center gap-1.5">
-          @for (s of webSteps(); track s.num) {
-            <div
-              class="flex items-center gap-2.5 px-1.5 py-2 rounded-[10px]"
-              [class.bg-[#f7f5f1]]="s.isCurrent"
+    <!-- Step indicator bar -->
+    <ds-sub-header class="flex items-center gap-2.5 flex-wrap">
+      <div class="flex items-center gap-1.5">
+        @for (s of webSteps(); track s.num) {
+          <div
+            class="flex items-center gap-2.5 px-1.5 py-2 rounded-[10px]"
+            [class.bg-[#f7f5f1]]="s.isCurrent"
+          >
+            <span
+              class="flex-none w-6 h-6 rounded-full border-[1.6px] flex items-center justify-center text-[12px] font-bold transition-[background,border-color] duration-[180ms]"
+              [class.bg-transparent]="!s.isCurrent && !s.isDone"
+              [class.border-[rgba(20,24,28,.18)]]="!s.isCurrent && !s.isDone"
+              [class.text-[#a39e96]]="!s.isCurrent && !s.isDone"
+              [class.bg-[var(--accent)]]="s.isCurrent"
+              [class.border-[var(--accent)]]="s.isCurrent"
+              [class.text-white]="s.isCurrent"
             >
+              @if (s.isDone) {
+                <ds-icon name="check" [size]="11" color="#1f7a8c" />
+              } @else {
+                <span>{{ s.num }}</span>
+              }
+            </span>
+            <span class="flex-1 min-w-0">
               <span
-                class="flex-none w-6 h-6 rounded-full border-[1.6px] flex items-center justify-center text-[12px] font-bold transition-[background,border-color] duration-[180ms]"
-                [class.bg-transparent]="!s.isCurrent && !s.isDone"
-                [class.border-[rgba(20,24,28,.18)]]="!s.isCurrent && !s.isDone"
-                [class.text-[#a39e96]]="!s.isCurrent && !s.isDone"
-                [class.bg-[var(--accent)]]="s.isCurrent"
-                [class.border-[var(--accent)]]="s.isCurrent"
-                [class.text-white]="s.isCurrent"
-              >
-                @if (s.isDone) {
-                  <ds-icon name="check" [size]="11" color="#1f7a8c" />
-                } @else {
-                  <span>{{ s.num }}</span>
-                }
-              </span>
-              <span class="flex-1 min-w-0">
-                <span
-                  class="block text-[13.5px] font-bold"
-                  [class.text-[#1d2227]]="s.isCurrent"
-                  [class.text-[#79756f]]="!s.isCurrent"
-                >{{ s.titleKey | translate }}</span>
-                @if (s.subKey) {
-                  <span class="block text-[11.5px] mt-px text-[#a39e96]">{{ s.subKey | translate }}</span>
-                }
-              </span>
-            </div>
-          }
-        </div>
-      </ds-sub-header>
-    }
-    @if (mode() === 'edit' && state.optionType() !== undefined) {
-      <!-- Poll type bar -->
-      <ds-sub-header class="flex items-center gap-4">
-        <span class="text-[11.5px] font-bold tracking-[.7px] uppercase text-[#a39e96]">{{ 'project.pollInput.stepArt' | translate }}</span>
-        <app-poll-type-badge [type]="state.optionType()!" />
-      </ds-sub-header>
-    }
+                class="block text-[13.5px] font-bold"
+                [class.text-[#1d2227]]="s.isCurrent"
+                [class.text-[#79756f]]="!s.isCurrent"
+              >{{ s.titleKey | translate }}</span>
+              @if (s.subKey) {
+                <span class="block text-[11.5px] mt-px text-[#a39e96]">{{ s.subKey | translate }}</span>
+              }
+            </span>
+          </div>
+        }
+      </div>
+    </ds-sub-header>
+
     <!-- Scrollable content + content header -->
     <div class="flex-1 min-h-0 flex flex-col overflow-hidden">
 
@@ -58,7 +50,7 @@
       <div class="flex items-end justify-between gap-6 px-8 pt-6 pb-0 flex-none">
         <div>
           <div class="flex items-center gap-2.5">
-            @if (wizardStep() === 2 && mode() === 'standalone') {
+            @if (wizardStep() === 2) {
               <ds-button
                 [size]="34"
                 variant="surface"
@@ -78,7 +70,7 @@
         </div>
 
         <div class="flex items-center gap-2.5 flex-none">
-          @if ((mode() === 'standalone' && wizardStep() !== 3) || mode() === 'edit') {
+          @if (wizardStep() !== 3) {
             <ds-button variant="neutral" (click)="discard()">
               {{ 'project.pollInput.discard' | translate }}
             </ds-button>
@@ -109,7 +101,7 @@
           <div class="max-w-[1000px]">
             <app-poll-input-form
               [optionType]="state.optionType()!"
-              [mode]="mode()"
+              mode="standalone"
               [isValid]="state.isValid()"
               [question]="state.question()"
               (questionChange)="state.question.set($event)"
@@ -117,10 +109,6 @@
               (descriptionChange)="state.description.set($event)"
               [closeDate]="state.closeDate()"
               (closeDateChange)="state.closeDate.set($event)"
-              [isClosed]="state.canReopenPoll()"
-              [closedAt]="state.pollClosedAt()"
-              (closePollNow)="state.closePollNow(pollId())"
-              (reopenPoll)="state.reopenPollNow(pollId())"
               [options]="state.options()"
               [dateOptions]="state.dateOptions()"
               [appointmentDateType]="state.appointmentDateType()"
@@ -144,12 +132,6 @@
                     [projectId]="state.createdProject()!.projectId"
                     [sharedWith]="state.createdProject()!.sharedWith"
                     [visibilityType]="state.createdProject()!.visibilityType"
-                  />
-                } @else if (mode() === 'edit' && state.projectId() && state.currentProject()) {
-                  <app-share-content
-                    [projectId]="state.projectId()!"
-                    [sharedWith]="state.currentProject()!.sharedWith"
-                    [visibilityType]="state.currentProject()!.visibilityType"
                   />
                 }
               </div>
@@ -196,7 +178,7 @@
           <div class="px-[18px]">
             <app-poll-input-form
               [optionType]="state.optionType()!"
-              [mode]="mode()"
+              mode="standalone"
               [isValid]="state.isValid()"
               [question]="state.question()"
               (questionChange)="state.question.set($event)"
@@ -204,10 +186,6 @@
               (descriptionChange)="state.description.set($event)"
               [closeDate]="state.closeDate()"
               (closeDateChange)="state.closeDate.set($event)"
-              [isClosed]="state.canReopenPoll()"
-              [closedAt]="state.pollClosedAt()"
-              (closePollNow)="state.closePollNow(pollId())"
-              (reopenPoll)="state.reopenPollNow(pollId())"
               [options]="state.options()"
               [dateOptions]="state.dateOptions()"
               [appointmentDateType]="state.appointmentDateType()"
@@ -220,13 +198,6 @@
               (formSubmit)="onCta()"
               [hideCta]="true"
             />
-            @if (mode() === 'edit' && state.projectId() && state.currentProject()) {
-              <app-share-content
-                [projectId]="state.projectId()!"
-                [sharedWith]="state.currentProject()!.sharedWith"
-                [visibilityType]="state.currentProject()!.visibilityType"
-              />
-            }
           </div>
         }
 
@@ -275,7 +246,7 @@
     <div class="px-[18px]">
       <app-poll-input-form
         [optionType]="state.optionType()!"
-        [mode]="mode()"
+        mode="add"
         [isValid]="state.isValid()"
         [question]="state.question()"
         (questionChange)="state.question.set($event)"

@@ -21,6 +21,5 @@ export type { PendingInvite } from '../share-content/share-invite-form/share-inv
 export class PollInputComponent {
   protected readonly state = inject(PollInputStateService);
 
-  mode = input<'add' | 'edit' | 'standalone'>('add');
-  pollId = input<string | undefined>(undefined);
+  mode = input<'add' | 'standalone'>('standalone');
 }

@@ -137,13 +137,18 @@ export class PollInputStateService {
 
   readonly isPollCreating = computed(() => this.pollCreating());
 
+  private editDataLoaded = false;
+
   initEditMode(pollId: string): void {
+    this.editDataLoaded = false;
     this.projectDetailStore.getPoll(pollId);
   }
 
   loadEditData(pollId: string): void {
+    if (this.editDataLoaded) { return; }
     const currentPoll = this.projectDetailStore.currentPoll();
     if (!currentPoll || currentPoll.id !== pollId) { return; }
+    this.editDataLoaded = true;
 
     this.question.set(currentPoll.name);
     this.description.set(currentPoll.description);

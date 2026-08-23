@@ -1,13 +1,88 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { PollInputComponent } from '../../_shared/ui/poll-input/poll-input.component';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TitleBarService } from '../../../../common/services/title-bar.service';
+import { PollInputStateService } from '../../_shared/ui/poll-input/poll-input-state.service';
+import { PollInputFormComponent } from '../../_shared/ui/poll-input/poll-input-form/poll-input-form.component';
+import { PollTypeBadgeComponent } from '../../_shared/ui/poll-type-badge/poll-type-badge.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
 
 @Component({
   selector: 'app-edit-poll',
-  imports: [PollInputComponent],
+  imports: [
+    PollInputFormComponent,
+    PollTypeBadgeComponent,
+    DsButtonComponent,
+    DsSubHeaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './edit-poll.component.html',
+  providers: [PollInputStateService],
   host: { class: 'block h-full' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditPollComponent {
+  protected readonly state = inject(PollInputStateService);
+  private readonly titleService = inject(TitleBarService);
+  private readonly translateService = inject(TranslateService);
+
   pollId = input<string | undefined>(undefined);
+
+  readonly isDesktop = toSignal(
+    inject(BreakpointObserver)
+      .observe('(min-width: 680px)')
+      .pipe(map(({ matches }) => matches)),
+    { initialValue: false },
+  );
+
+  readonly canSave = computed(
+    () => !this.state.pollIsClosed() && this.state.isValid(),
+  );
+
+  constructor() {
+    effect(() => {
+      const pollId = this.pollId();
+      if (pollId) {
+        this.state.initEditMode(pollId);
+        this.state.loadSharingContacts();
+      }
+    });
+
+    effect(() => {
+      const pollId = this.pollId();
+      if (pollId) {
+        this.state.loadEditData(pollId);
+      }
+    }, { allowSignalWrites: true });
+
+    effect(() => {
+      const desktop = this.isDesktop();
+      const title = this.translateService.instant('project.pollInput.editPollTitle');
+      const subtitle = this.translateService.instant('project.pollInput.pollsOverviewLabel');
+      this.titleService.setTitle(title);
+      this.titleService.setSubtitle(subtitle);
+      this.titleService.setProgress(undefined);
+      if (!desktop) {
+        this.titleService.setBackFn(undefined);
+      }
+    });
+  }
+
+  save(): void {
+    this.state.submitEdit(this.state.projectId(), this.pollId());
+  }
+
+  discard(): void {
+    this.state.navigateAfterDiscard(this.state.projectId(), this.pollId());
+  }
 }

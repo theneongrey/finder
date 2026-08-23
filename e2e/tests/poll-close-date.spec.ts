@@ -8,7 +8,7 @@ test.describe('Poll close date', () => {
     const page = await browser.newPage();
     await login(page, USER1);
 
-    // Create a poll with a close date one day in the future
+    // Create a standalone poll — the close settings auto-select "1 week" by default
     await page.locator('[data-testid="add-poll-card"]').click();
     await page.waitForURL('**/polls/add');
     await page.getByText('Yes/No').click();
@@ -16,13 +16,6 @@ test.describe('Poll close date', () => {
       .getByRole('textbox', { name: 'Your question' })
       .fill('Close Date E2E Test Poll');
     await page.getByPlaceholder('e.g. Italian restaurant').first().fill('Option A');
-
-    // Enable close date and pick tomorrow
-    await page.locator('[data-testid="close-date-toggle"]').check();
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const dateStr = tomorrow.toISOString().substring(0, 10);
-    await page.locator('[data-testid="close-date-input"] input[type="date"]').fill(dateStr);
 
     await page.getByRole('button', { name: 'Create poll' }).click();
     await page.waitForURL('**/polls');
@@ -68,9 +61,22 @@ test.describe('Poll close date', () => {
     await page.getByRole('menuitem', { name: /edit/i }).click();
     await page.waitForURL('**/edit/**');
 
-    await expect(page.locator('[data-testid="close-date-toggle"]')).toBeChecked();
-    const dateInput = page.locator('[data-testid="close-date-input"] input[type="date"]');
+    const dateInput = page.locator('[data-testid="close-date-input"] input[type="datetime-local"]');
     await expect(dateInput).not.toHaveValue('');
+  });
+
+  test('edit form pre-populates question and options', async ({ page }) => {
+    await page.goto('/polls');
+    const pollCard = page
+      .locator('[data-testid="polls-list"] [hlmCard]')
+      .filter({ hasText: 'Close Date E2E Test Poll' })
+      .first();
+    await pollCard.locator('[data-testid="poll-menu-btn"]').click();
+    await page.getByRole('menuitem', { name: /edit/i }).click();
+    await page.waitForURL('**/edit/**');
+
+    await expect(page.getByRole('textbox', { name: 'Your question' })).toHaveValue('Close Date E2E Test Poll');
+    await expect(page.getByPlaceholder('e.g. Italian restaurant').first()).toHaveValue('Option A');
   });
 
   test('closing poll via API then reloading overview shows Beendet badge', async ({ page }) => {

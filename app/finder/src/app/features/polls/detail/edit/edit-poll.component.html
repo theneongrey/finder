@@ -1,1 +1,95 @@
-<app-poll-input mode="edit" [pollId]="pollId()" />
+@if (isDesktop()) {
+  <!-- ═══════════════════════════════════════════
+       DESKTOP EDIT
+  ═══════════════════════════════════════════ -->
+  @if (state.optionType() !== undefined) {
+    <ds-sub-header class="flex items-center gap-4">
+      <h1 class="font-display text-[22px] font-bold tracking-[-0.5px] text-[#1d2227]">
+        {{ 'project.pollInput.editPollTitle' | translate }}
+      </h1>
+      <app-poll-type-badge [type]="state.optionType()!" />
+    </ds-sub-header>
+  }
+
+  <div class="flex-1 min-h-0 flex flex-col overflow-hidden">
+    <!-- Action buttons row -->
+    <div class="flex items-center justify-end gap-2.5 px-8 pt-5 pb-0 flex-none">
+      <ds-button variant="neutral" (click)="discard()">
+        {{ 'project.pollInput.discard' | translate }}
+      </ds-button>
+      <ds-button
+        variant="primary"
+        [disabled]="!canSave()"
+        data-testid="wizard-cta"
+        (click)="save()"
+      >{{ 'project.pollInput.updatePoll' | translate }}</ds-button>
+    </div>
+
+    <!-- Scrollable form -->
+    <div class="flex-1 min-h-0 overflow-y-auto px-8 pb-8">
+      @if (state.optionType() !== undefined) {
+        <div class="max-w-[1000px]">
+          <app-poll-input-form
+            [optionType]="state.optionType()!"
+            mode="edit"
+            [isValid]="state.isValid()"
+            [question]="state.question()"
+            (questionChange)="state.question.set($event)"
+            [description]="state.description()"
+            (descriptionChange)="state.description.set($event)"
+            [closeDate]="state.closeDate()"
+            (closeDateChange)="state.closeDate.set($event)"
+            [isClosed]="state.canReopenPoll()"
+            [closedAt]="state.pollClosedAt()"
+            (closePollNow)="state.closePollNow(pollId())"
+            (reopenPoll)="state.reopenPollNow(pollId())"
+            [options]="state.options()"
+            [dateOptions]="state.dateOptions()"
+            [appointmentDateType]="state.appointmentDateType()"
+            (appointmentDateTypeChange)="state.onAppointmentDateTypeChange($event)"
+            (add)="state.addOption()"
+            (remove)="state.removeOption($event)"
+            (weekdayToggle)="state.toggleWeekday($event)"
+            (optionsChange)="state.onOptionsChange($event)"
+            (dateOptionsChange)="state.onDateOptionsChange($event)"
+            (formSubmit)="save()"
+            [hideCta]="true"
+          />
+        </div>
+      }
+    </div>
+  </div>
+} @else {
+  <!-- ═══════════════════════════════════════════
+       MOBILE EDIT
+  ═══════════════════════════════════════════ -->
+  @if (state.optionType() !== undefined) {
+    <div class="px-[18px]">
+      <app-poll-input-form
+        [optionType]="state.optionType()!"
+        mode="edit"
+        [isValid]="state.isValid()"
+        [question]="state.question()"
+        (questionChange)="state.question.set($event)"
+        [description]="state.description()"
+        (descriptionChange)="state.description.set($event)"
+        [closeDate]="state.closeDate()"
+        (closeDateChange)="state.closeDate.set($event)"
+        [isClosed]="state.canReopenPoll()"
+        [closedAt]="state.pollClosedAt()"
+        (closePollNow)="state.closePollNow(pollId())"
+        (reopenPoll)="state.reopenPollNow(pollId())"
+        [options]="state.options()"
+        [dateOptions]="state.dateOptions()"
+        [appointmentDateType]="state.appointmentDateType()"
+        (appointmentDateTypeChange)="state.onAppointmentDateTypeChange($event)"
+        (add)="state.addOption()"
+        (remove)="state.removeOption($event)"
+        (weekdayToggle)="state.toggleWeekday($event)"
+        (optionsChange)="state.onOptionsChange($event)"
+        (dateOptionsChange)="state.onDateOptionsChange($event)"
+        (formSubmit)="save()"
+      />
+    </div>
+  }
+}

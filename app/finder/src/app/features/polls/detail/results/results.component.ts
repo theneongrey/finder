@@ -18,6 +18,7 @@ import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
+import { DsTabsComponent, TabItem } from '@ds/tabs/ds-tabs.component';
 import { PollRole } from '../../_shared/models/poll-role.enum';
 import { OptionType } from '../../_shared/models/poll-detail.model';
 
@@ -33,6 +34,7 @@ import { OptionType } from '../../_shared/models/poll-detail.model';
     DsButtonComponent,
     DsBadgeComponent,
     DsStatusDotComponent,
+    DsTabsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -47,6 +49,11 @@ export class ResultsComponent {
   project = this.projectDetailStore.currentProject;
 
   view = signal<'results' | 'comments'>('results');
+
+  readonly tabItems = computed((): TabItem[] => [
+    { value: 'results',  label: 'Ergebnis' },
+    { value: 'comments', label: 'Kommentare', count: this.poll()?.comments.length },
+  ]);
   showCloseConfirm = signal(false);
 
   canManagePoll = computed(() => {

@@ -304,7 +304,9 @@
       "submitComment": "Hinzufügen",
       "ratingMax": "5 Sterne",
       "ratingMin": "1 Stern",
-      "openLink": "Link öffnen"
+      "openLink": "Link öffnen",
+      "next": "Weiter",
+      "pleaseRate": "Bitte bewerten"
     },
     "votesOverview": {
       "active": "Aktiv",

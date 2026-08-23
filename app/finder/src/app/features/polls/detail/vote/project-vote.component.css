@@ -2,6 +2,37 @@
   cursor: grabbing;
 }
 
+/* Swipe stamps — shown inside the card at top corners as the user drags */
+.vote-stamp {
+  position: absolute;
+  top: 20px;
+  z-index: 20;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0.5px;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.vote-stamp--yes {
+  left: 20px;
+  color: var(--positive-strong);
+  border: 2.5px solid var(--positive-strong);
+  transform: rotate(-11deg);
+}
+
+.vote-stamp--no {
+  right: 20px;
+  color: var(--negative);
+  border: 2.5px solid var(--negative);
+  transform: rotate(11deg);
+}
+
+/* Swipe hint overlay inside the card */
 .hint-overlay {
   transition: opacity 0.3s ease-out;
 }

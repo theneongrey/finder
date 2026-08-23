@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HlmButton } from '@spartan-ng/helm/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
@@ -21,19 +20,26 @@ import { VoteCardRatingComponent } from './vote-card-rating/vote-card-rating.com
 import { VoteCommentButtonComponent } from './vote-comment-button/vote-comment-button.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { OptionType } from '../../_shared/models/poll-detail.model';
+import { DsProgressBarComponent } from '../../../../common/ui/ds-components/progress-bar/ds-progress-bar.component';
+import { DsVoteButtonsComponent } from '../../../../common/ui/ds-components/vote-buttons/ds-vote-buttons.component';
+import { DsButtonComponent } from '../../../../common/ui/ds-components/button/ds-button.component';
+import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-icon.component';
 
 @Component({
   selector: 'app-project-vote',
   templateUrl: './project-vote.component.html',
   styleUrl: './project-vote.component.css',
   imports: [
-    HlmButton,
     TranslatePipe,
     VoteCardImageComponent,
     VoteCardTextComponent,
     VoteCardDateComponent,
     VoteCommentButtonComponent,
     VoteCardRatingComponent,
+    DsProgressBarComponent,
+    DsVoteButtonsComponent,
+    DsButtonComponent,
+    DsIconComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -69,6 +75,11 @@ export class ProjectVoteComponent implements AfterViewInit {
   allOptionTexts = computed(
     () => this.poll()?.options.map((o) => o.text) ?? [],
   );
+  progressPercent = computed(() =>
+    this.totalCount() > 0
+      ? Math.round((this.votedCount() / this.totalCount()) * 100)
+      : 0,
+  );
 
   private readonly SWIPE_THRESHOLD = 75;
 
@@ -84,6 +95,7 @@ export class ProjectVoteComponent implements AfterViewInit {
   rightCueOpacity = signal(0);
   showHint = signal(!sessionStorage.getItem('finder_voted_session'));
   hintFading = signal(false);
+  pendingRating = signal<number | undefined>(undefined);
 
   private readonly localSkipCounts = signal(new Map<string, number>());
   private readonly hasVotedInSession = signal(false);
@@ -198,6 +210,13 @@ export class ProjectVoteComponent implements AfterViewInit {
     this.castVote(stars.toString());
   }
 
+  submitRating(): void {
+    const r = this.pendingRating();
+    if (r !== undefined) {
+      this.castRating(r);
+    }
+  }
+
   skip(): void {
     const optionId = this.optionId();
     const currentChoice = parseInt(this.option()?.choice ?? '0') || 0;
@@ -265,6 +284,7 @@ export class ProjectVoteComponent implements AfterViewInit {
     this.leftCueOpacity.set(0);
     this.rightCueOpacity.set(0);
     this.currentDragX = 0;
+    this.pendingRating.set(undefined);
   }
 
   private castVote(choice: string): void {

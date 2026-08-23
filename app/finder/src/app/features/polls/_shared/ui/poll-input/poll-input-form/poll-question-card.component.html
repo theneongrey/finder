@@ -18,6 +18,7 @@
     [ngModel]="question()"
     (ngModelChange)="questionChange.emit($event)"
     name="question"
+    [maxlength]="limits.questionLength"
     [readonly]="isClosed()"
   />
 
@@ -33,7 +34,7 @@
         #descriptionTextarea
         name="description"
         [autoResize]="true"
-        [maxlength]="200"
+        [maxlength]="limits.descriptionLength"
         [placeholder]="'project.pollInput.yesNo.descriptionPlaceholder' | translate"
         [ngModel]="description()"
         (ngModelChange)="descriptionChange.emit($event)"

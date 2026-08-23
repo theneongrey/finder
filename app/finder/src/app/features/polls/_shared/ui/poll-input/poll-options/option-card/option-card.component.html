@@ -7,6 +7,7 @@
         [ngModel]="option().text"
         (ngModelChange)="optionChange.emit({ ...option(), text: $event })"
         [name]="'option-text-' + index()"
+        [maxlength]="limits.optionTextLength"
         [loading]="urlLoading()"
         [readonly]="readonly()"
         (inputBlur)="onTitleBlur()"
@@ -24,7 +25,7 @@
             #descriptionInput
             class="flex-1"
             [autoResize]="true"
-            [maxlength]="100"
+            [maxlength]="limits.optionDescriptionLength"
             [placeholder]="'project.pollInput.yesNo.optionDescriptionPlaceholder' | translate"
             [ngModel]="option().description"
             (ngModelChange)="optionChange.emit({ ...option(), description: $event })"

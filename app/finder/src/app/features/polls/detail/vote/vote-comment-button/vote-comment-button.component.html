@@ -9,6 +9,7 @@
       type="text"
       [(ngModel)]="commentText"
       [placeholder]="'project.vote.commentPlaceholder' | translate"
+      [attr.maxlength]="limits.commentContentLength"
       class="w-full"
     />
     <div class="flex gap-2 justify-end">

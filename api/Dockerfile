@@ -1,4 +1,5 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+## Build stage
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /
 
 # copy csproj and restore as distinct layers
@@ -12,13 +13,14 @@ COPY Finder/. ./Finder/
 WORKDIR /Finder
 RUN dotnet publish -c release -o /app --no-restore
 
+## final stage/image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /app
+COPY --from=build /app ./
+
 # install playwright
 RUN dotnet tool install --global Microsoft.Playwright.CLI
 ENV PATH="${PATH}:/root/.dotnet/tools"
 RUN playwright install chromium
 
-# final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
-WORKDIR /app
-COPY --from=build /app ./
 ENTRYPOINT ["dotnet", "Finder.dll"]

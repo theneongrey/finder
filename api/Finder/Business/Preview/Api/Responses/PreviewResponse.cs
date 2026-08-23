@@ -10,7 +10,7 @@ public class PreviewResponse
 
 public static class PreviewMapper
 {
-    public static PreviewResponse ToPreviewResponse(this Services.Preview preview)
+    public static PreviewResponse ToPreviewResponse(this Models.Preview preview)
     {
         return new PreviewResponse
         {

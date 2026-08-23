@@ -1,7 +1,6 @@
 using System.Web;
 using Finder.Business.Preview.Api.Responses;
 using Finder.Business.Preview.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finder.Business.Preview.Api;

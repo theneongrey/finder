@@ -11,10 +11,10 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Content)
-            .HasMaxLength(2048);
+            .HasMaxLength(512);
 
         builder.Property(p => p.Quote)
-            .HasMaxLength(1024);
+            .HasMaxLength(100);
 
         builder.HasOne(p => p.Person);
     }

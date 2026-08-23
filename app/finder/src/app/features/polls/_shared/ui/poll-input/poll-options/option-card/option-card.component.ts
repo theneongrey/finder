@@ -22,6 +22,7 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { PreviewData, PreviewService } from '../../../../data/preview.service';
+import { POLL_LIMITS } from '../../../../models/poll-limits';
 
 @Component({
   selector: 'app-option-card',
@@ -31,6 +32,8 @@ import { PreviewData, PreviewService } from '../../../../data/preview.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {
+  protected readonly limits = POLL_LIMITS;
+
   option = input.required<OptionEntry>();
   index = input.required<number>();
   canRemove = input<boolean>(false);
@@ -121,9 +124,9 @@ export class OptionCardComponent {
             ...entry,
             meta: { url: normalized, ...preview },
           };
-          if (preview.title) { updatedEntry.text = preview.title; }
+          if (preview.title) { updatedEntry.text = preview.title.substring(0, POLL_LIMITS.optionTextLength); }
           if (preview.description && !entry.description) {
-            updatedEntry.description = preview.description;
+            updatedEntry.description = preview.description.substring(0, POLL_LIMITS.optionDescriptionLength);
             this.showDescription.set(true);
           }
           this.optionChange.emit(updatedEntry);
@@ -172,7 +175,7 @@ export class OptionCardComponent {
           if (preview.imageUrl) {
             const entry = this.option();
             const updatedEntry: OptionEntry = { ...entry, meta: { url: entry.meta!.url, ...preview } };
-            if (!entry.text) { updatedEntry.text = preview.title ?? ''; }
+            if (!entry.text) { updatedEntry.text = (preview.title ?? '').substring(0, POLL_LIMITS.optionTextLength); }
             this.optionChange.emit(updatedEntry);
             this.previewData.set(preview);
             this.previewLoading.set(false);

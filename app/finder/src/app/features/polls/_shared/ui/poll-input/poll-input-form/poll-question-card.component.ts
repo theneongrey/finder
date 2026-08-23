@@ -17,6 +17,7 @@ import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
+import { POLL_LIMITS } from '../../../models/poll-limits';
 
 @Component({
   selector: 'app-poll-question-card',
@@ -33,6 +34,8 @@ import { DsCardComponent } from '@ds/card/ds-card.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollQuestionCardComponent {
+  protected readonly limits = POLL_LIMITS;
+
   mode = input.required<'add' | 'edit' | 'standalone'>();
   question = input.required<string>();
   questionChange = output<string>();

@@ -12,6 +12,7 @@ import { HlmPopoverImports } from '@spartan-ng/helm/popover';
 import { DsIconComponent } from '../../../../../common/ui/ds-components/icon/ds-icon.component';
 import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
 import { PollDetailStore } from '../../../_shared/data/poll-detail.store';
+import { POLL_LIMITS } from '../../../_shared/models/poll-limits';
 
 @Component({
   selector: 'app-vote-comment-button',
@@ -20,6 +21,7 @@ import { PollDetailStore } from '../../../_shared/data/poll-detail.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteCommentButtonComponent {
+  protected readonly limits = POLL_LIMITS;
   private readonly projectDetailStore = inject(PollDetailStore);
 
   pollId = input('');

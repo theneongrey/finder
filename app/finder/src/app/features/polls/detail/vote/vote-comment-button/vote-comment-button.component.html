@@ -1,6 +1,11 @@
 <hlm-popover sideOffset="5" [state]="popoverOpen()" (stateChanged)="popoverOpen.set($event)">
-  <button hlmBtn hlmPopoverTrigger variant="outline" type="button">
-    <i class="fa-regular fa-comment"></i>
+  <button
+    hlmPopoverTrigger
+    type="button"
+    class="inline-flex items-center gap-1.5 cursor-pointer border-none"
+    style="background: transparent; color: var(--text-secondary); font-family: var(--font-body); font-size: var(--fs-ui-sm); font-weight: var(--weight-bold); height: 36px; padding: 0 12px; border-radius: var(--radius-sm);"
+  >
+    <ds-icon name="comment" [size]="15" color="var(--text-secondary)" />
     {{ 'project.vote.addComment' | translate }}
   </button>
   <hlm-popover-content class="flex flex-col gap-3 min-w-64" *hlmPopoverPortal="let ctx">
@@ -12,12 +17,12 @@
       class="w-full"
     />
     <div class="flex gap-2 justify-end">
-      <button hlmBtn variant="ghost" size="sm" (click)="cancelComment()">
+      <ds-button variant="ghost" size="sm" (click)="cancelComment()">
         {{ 'project.common.cancel' | translate }}
-      </button>
-      <button hlmBtn size="sm" (click)="submitComment()">
+      </ds-button>
+      <ds-button variant="primary" size="sm" (click)="submitComment()">
         {{ 'project.vote.submitComment' | translate }}
-      </button>
+      </ds-button>
     </div>
   </hlm-popover-content>
 </hlm-popover>

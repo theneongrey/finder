@@ -1,13 +1,46 @@
-<div
-  class="flex flex-col items-center justify-center gap-4 flex-1 p-6"
->
-  <i class="fa-regular fa-star text-3xl text-yellow-500"></i>
-  <p class="text-2xl font-semibold text-surface-900 text-center leading-snug">
+<div class="flex flex-col justify-center gap-3 flex-1 p-6 md:p-9">
+  <p
+    class="leading-snug"
+    style="font-family: var(--font-display); font-size: var(--fs-display-sm); font-weight: var(--weight-bold); color: var(--text-primary); letter-spacing: -0.5px; text-wrap: pretty;"
+  >
     {{ text() }}
   </p>
   @if (description()) {
-    <p class="text-sm text-surface-500 text-center">
+    <p style="font-size: var(--fs-body); line-height: 1.45; color: var(--text-secondary); text-wrap: pretty;">
       {{ description() }}
     </p>
   }
+
+  <div class="flex gap-1 mt-5">
+    @for (star of stars; track star) {
+      <button
+        type="button"
+        class="flex items-center justify-center rounded-xl cursor-pointer transition-colors"
+        style="width: 48px; height: 48px; border: none; background: transparent;"
+        (click)="onStarClick(star)"
+        (mouseenter)="hoveredStar.set(star)"
+        (mouseleave)="hoveredStar.set(undefined)"
+      >
+        <svg
+          width="36"
+          height="36"
+          viewBox="0 0 24 24"
+          [attr.fill]="isStarFilled(star) ? '#e0a42c' : 'none'"
+          [attr.stroke]="isStarFilled(star) ? '#e0a42c' : 'var(--border-hairline-strong)'"
+          stroke-width="1.8"
+          stroke-linejoin="round"
+        >
+          <path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 16.9 6.7 19.7l1.1-5.9-4.3-4.1 5.9-.8z" />
+        </svg>
+      </button>
+    }
+  </div>
+
+  <div
+    class="h-5 mt-1"
+    style="font-size: var(--fs-body-xs); font-weight: var(--weight-bold); transition: color var(--duration-standard) var(--ease-standard);"
+    [style.color]="ratingLabelColor()"
+  >
+    {{ ratingLabel() }}
+  </div>
 </div>

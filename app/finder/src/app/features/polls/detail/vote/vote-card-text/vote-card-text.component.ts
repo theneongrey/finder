@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { HlmButton } from '@spartan-ng/helm/button';
+import { DsIconComponent } from '../../../../../common/ui/ds-components/icon/ds-icon.component';
 
 @Component({
   selector: 'app-vote-card-text',
   templateUrl: './vote-card-text.component.html',
   styles: [':host { display: contents; }'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HlmButton],
+  imports: [DsIconComponent],
 })
 export class VoteCardTextComponent {
   text = input('');

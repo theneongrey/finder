@@ -15,7 +15,6 @@ import { PollInputStateService } from '../../_shared/ui/poll-input/poll-input-st
 import { PollInputFormComponent } from '../../_shared/ui/poll-input/poll-input-form/poll-input-form.component';
 import { PollTypeBadgeComponent } from '../../_shared/ui/poll-type-badge/poll-type-badge.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
 
 @Component({
   selector: 'app-edit-poll',
@@ -23,7 +22,6 @@ import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
     PollInputFormComponent,
     PollTypeBadgeComponent,
     DsButtonComponent,
-    DsSubHeaderComponent,
     TranslatePipe,
   ],
   templateUrl: './edit-poll.component.html',

@@ -1,3 +1,9 @@
+@media (min-width: 768px) {
+  .vote-card-area {
+    max-height: 620px;
+  }
+}
+
 .vote-card:active {
   cursor: grabbing;
 }

@@ -23,6 +23,7 @@ import { OptionType } from '../../_shared/models/poll-detail.model';
 import { DsVoteButtonsComponent } from '../../../../common/ui/ds-components/vote-buttons/ds-vote-buttons.component';
 import { DsButtonComponent } from '../../../../common/ui/ds-components/button/ds-button.component';
 import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-icon.component';
+import { DsCardComponent } from '../../../../common/ui/ds-components/card/ds-card.component';
 
 @Component({
   selector: 'app-project-vote',
@@ -38,6 +39,7 @@ import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-ico
     DsVoteButtonsComponent,
     DsButtonComponent,
     DsIconComponent,
+    DsCardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

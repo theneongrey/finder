@@ -10,9 +10,9 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { HlmSkeleton } from '@spartan-ng/helm/skeleton';
 import { UserStore } from '../../../data/user.store';
 import { TitleBarService } from '../../../services/title-bar.service';
-import { LoadingComponent } from '@ds/loading/loading.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
@@ -22,7 +22,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'app-title-bar',
   imports: [
     NgOptimizedImage,
-    LoadingComponent,
+    HlmSkeleton,
     UserAvatarComponent,
     DsButtonComponent,
     DsMenuComponent,

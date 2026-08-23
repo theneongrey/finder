@@ -115,6 +115,18 @@ export class ProjectVoteComponent implements AfterViewInit {
     }
   });
 
+  memberVoteStatus = computed(() => {
+    const members = this.projectDetailStore.currentProject()?.sharedWith ?? [];
+    const options = this.poll()?.options ?? [];
+    const votedNames = new Set<string>();
+    for (const opt of options) {
+      for (const v of opt.votes) {
+        if (parseInt(v.choice) > 0) votedNames.add(v.person);
+      }
+    }
+    return members.map((m) => ({ name: m.name, picture: m.picture, hasVoted: votedNames.has(m.name) }));
+  });
+
   answerSummary = computed(() => {
     const options = this.poll()?.options ?? [];
     const type = this.poll()?.optionType ?? OptionType.YesNo;

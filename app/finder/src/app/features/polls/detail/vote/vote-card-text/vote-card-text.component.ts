@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DsIconComponent } from '../../../../../common/ui/ds-components/icon/ds-icon.component';
 
 @Component({
@@ -7,10 +6,15 @@ import { DsIconComponent } from '../../../../../common/ui/ds-components/icon/ds-
   templateUrl: './vote-card-text.component.html',
   styles: [':host { display: contents; }'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DsIconComponent, TranslatePipe],
+  imports: [DsIconComponent],
 })
 export class VoteCardTextComponent {
   text = input('');
   description = input('');
   link = input('');
+
+  linkLabel = computed(() => {
+    const l = this.link();
+    return l.length > 50 ? l.slice(0, 50) + '…' : l;
+  });
 }

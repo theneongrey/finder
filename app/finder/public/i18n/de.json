@@ -329,7 +329,9 @@
       "yourAnswers": "Deine Antworten",
       "answerOpen": "offen",
       "answerMaybe": "Vielleicht",
-      "closeDate": "Offen bis"
+      "closeDate": "Offen bis",
+      "whoVoted": "Wer hat abgestimmt?",
+      "noVotesYet": "Noch niemand hat abgestimmt."
     },
     "votesOverview": {
       "active": "Aktiv",

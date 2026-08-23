@@ -15,14 +15,11 @@
       <!-- Mobile: title + optional subtitle -->
       @if (!titleDisabled()) {
         <div class="title-bar__info">
-          <app-loading
-            [isLoading]="title() === undefined"
-            skeletonWidth="8rem"
-            skeletonHeight="1rem"
-            innercss="my-auto"
-          >
+          @if (title() === undefined) {
+            <hlm-skeleton class="w-32 h-4 my-auto" />
+          } @else {
             <h1 class="title-bar__title">{{ title() }}</h1>
-          </app-loading>
+          }
           @if (subtitle()) {
             <p class="title-bar__subtitle">{{ subtitle() }}</p>
           }
@@ -43,10 +40,18 @@
           >{{ subtitle() }}</button
         >
         <span class="title-bar__sep" aria-hidden="true"></span>
-        <span class="title-bar__web-label">{{ title() }}</span>
+        @if (title() === undefined) {
+          <hlm-skeleton class="w-32 h-4 my-auto" />
+        } @else {
+          <span class="title-bar__web-label">{{ title() }}</span>
+        }
       } @else if (!titleDisabled()) {
         <span class="title-bar__sep title-bar__sep--lead" aria-hidden="true"></span>
-        <span class="title-bar__web-label">{{ title() }}</span>
+        @if (title() === undefined) {
+          <hlm-skeleton class="w-32 h-4 my-auto" />
+        } @else {
+          <span class="title-bar__web-label">{{ title() }}</span>
+        }
       }
     } @else {
       <div class="title-bar__brand">

@@ -306,7 +306,16 @@
       "ratingMin": "1 Stern",
       "openLink": "Link öffnen",
       "next": "Weiter",
-      "pleaseRate": "Bitte bewerten"
+      "pleaseRate": "Bitte bewerten",
+      "stampCan": "Kann",
+      "tapToRate": "Tippe auf die Sterne",
+      "ratingLabel": {
+        "1": "Gar nicht",
+        "2": "Eher nicht",
+        "3": "Geht so",
+        "4": "Gut",
+        "5": "Perfekt"
+      }
     },
     "votesOverview": {
       "active": "Aktiv",

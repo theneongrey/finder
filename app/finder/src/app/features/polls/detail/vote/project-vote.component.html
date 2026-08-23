@@ -41,11 +41,11 @@
         [style.opacity]="rightCueOpacity()"
       >
         @if (poll()?.optionType === OptionType.Date) {
-          Kann
+          {{ 'project.vote.stampCan' | translate }}
         } @else if (poll()?.optionType === OptionType.Rating) {
           <ds-icon name="star" [size]="20" color="var(--positive-strong)" />
         } @else {
-          Ja
+          {{ 'project.votesOverview.voteLabel.yes' | translate }}
         }
       </span>
 
@@ -55,11 +55,11 @@
         [style.opacity]="leftCueOpacity()"
       >
         @if (poll()?.optionType === OptionType.Date) {
-          Nein
+          {{ 'project.votesOverview.voteLabel.no' | translate }}
         } @else if (poll()?.optionType === OptionType.Rating) {
           <ds-icon name="star" [size]="20" color="var(--negative)" />
         } @else {
-          Nein
+          {{ 'project.votesOverview.voteLabel.no' | translate }}
         }
       </span>
 

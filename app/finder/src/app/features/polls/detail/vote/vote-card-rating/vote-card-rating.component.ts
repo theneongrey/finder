@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
-const RATING_LABELS: Record<number, string> = {
-  1: 'Gar nicht',
-  2: 'Eher nicht',
-  3: 'Geht so',
-  4: 'Gut',
-  5: 'Perfekt',
+const RATING_LABEL_KEYS: Record<number, string> = {
+  1: 'project.vote.ratingLabel.1',
+  2: 'project.vote.ratingLabel.2',
+  3: 'project.vote.ratingLabel.3',
+  4: 'project.vote.ratingLabel.4',
+  5: 'project.vote.ratingLabel.5',
 };
 
 @Component({
@@ -13,6 +14,7 @@ const RATING_LABELS: Record<number, string> = {
   templateUrl: './vote-card-rating.component.html',
   styles: [':host { display: contents; }'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TranslatePipe],
 })
 export class VoteCardRatingComponent {
   text = input('');
@@ -27,9 +29,9 @@ export class VoteCardRatingComponent {
     () => this.hoveredStar() ?? this.currentRating(),
   );
 
-  protected readonly ratingLabel = computed(() => {
+  protected readonly ratingLabelKey = computed(() => {
     const r = this.displayedRating();
-    return r ? RATING_LABELS[r] : 'Tippe auf die Sterne';
+    return r ? RATING_LABEL_KEYS[r] : 'project.vote.tapToRate';
   });
 
   protected readonly ratingLabelColor = computed(() =>

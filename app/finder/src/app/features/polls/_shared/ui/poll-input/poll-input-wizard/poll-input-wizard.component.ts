@@ -18,7 +18,6 @@ import { PollTypeSelectionComponent } from '../poll-type-selection/poll-type-sel
 import { PollInputFormComponent } from '../poll-input-form/poll-input-form.component';
 import { ShareContentComponent } from '../../share-content/share-content.component';
 import { PollItemComponent } from '../../poll-item/poll-item.component';
-import { PollTypeBadgeComponent } from '../../poll-type-badge/poll-type-badge.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
@@ -31,7 +30,6 @@ import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
     PollInputFormComponent,
     ShareContentComponent,
     PollItemComponent,
-    PollTypeBadgeComponent,
     DsButtonComponent,
     DsIconComponent,
     DsSubHeaderComponent,
@@ -46,8 +44,7 @@ export class PollInputWizardComponent {
 
   readonly OptionType = OptionType;
 
-  mode = input<'add' | 'edit' | 'standalone'>('add');
-  pollId = input<string | undefined>(undefined);
+  mode = input<'add' | 'standalone'>('standalone');
 
   readonly wizardStep = signal(1);
 
@@ -74,11 +71,6 @@ export class PollInputWizardComponent {
   });
 
   readonly ctaLabel = computed((): string => {
-    const mode = this.mode();
-    if (mode === 'edit') { return 'project.pollInput.updatePoll'; }
-    if (mode === 'add') { return 'project.pollInput.createPoll'; }
-
-    // standalone
     const step = this.wizardStep();
     if (step === 1) { return 'project.pollInput.next'; }
     if (step === 2) { return 'project.pollInput.createPoll'; }
@@ -86,9 +78,6 @@ export class PollInputWizardComponent {
   });
 
   readonly canProceed = computed((): boolean => {
-    const mode = this.mode();
-    if (mode === 'edit') { return !this.state.pollIsClosed() && this.state.isValid(); }
-    if (mode !== 'standalone') { return this.state.isValid(); }
     const step = this.wizardStep();
     if (step === 1) { return this.state.optionType() !== undefined; }
     if (step === 2) { return this.state.isValid() && !this.state.isPollCreating(); }
@@ -124,7 +113,6 @@ export class PollInputWizardComponent {
   });
 
   readonly webContentTitleKey = computed((): string => {
-    if (this.mode() === 'edit') { return 'project.pollInput.editPollTitle'; }
     const step = this.wizardStep();
     if (step === 1) { return 'project.pollInput.typeTitle'; }
     if (step === 2) { return this.step2Label(); }
@@ -132,7 +120,6 @@ export class PollInputWizardComponent {
   });
 
   readonly webContentSubtitle = computed((): string => {
-    if (this.mode() === 'edit') { return this.state.currentProject()?.name ?? ''; }
     const step = this.wizardStep();
     if (step === 1) { return this.translateService.instant('project.pollInput.webStep1Title'); }
     if (step === 2) {
@@ -144,28 +131,18 @@ export class PollInputWizardComponent {
   });
 
   constructor() {
-    // Reset standalone state on init
     effect(() => {
       if (this.mode() === 'standalone') {
         this.state.initStandaloneMode();
       }
     });
 
-    // Edit mode: skip type-selection step, start at step 2
-    effect(() => {
-      if (this.mode() === 'edit') {
-        this.wizardStep.set(2);
-      }
-    }, { allowSignalWrites: true });
-
-    // Preselect Yes/No in standalone mode
     effect(() => {
       if (this.mode() === 'standalone') {
         this.state.preselectYesNo();
       }
     }, { allowSignalWrites: true });
 
-    // After standalone poll creation: apply shares and advance to step 3
     effect(() => {
       if (this.mode() !== 'standalone') { return; }
       if (this.state.tryApplySharesAfterCreation()) {
@@ -173,47 +150,21 @@ export class PollInputWizardComponent {
       }
     }, { allowSignalWrites: true });
 
-    // Load sharing contacts
     effect(() => {
-      const mode = this.mode();
-      if (mode === 'edit' || mode === 'standalone') {
+      if (this.mode() === 'standalone') {
         this.state.loadSharingContacts();
       }
     });
 
-    // Load poll data in edit mode
     effect(() => {
-      const pollId = this.pollId();
-      if (this.mode() === 'edit' && pollId) {
-        this.state.initEditMode(pollId);
-        this.state.loadEditData(pollId);
-      }
-    }, { allowSignalWrites: true });
-
-    // Update title bar for standalone and edit
-    effect(() => {
-      const mode = this.mode();
-      if (mode !== 'standalone' && mode !== 'edit') { return; }
+      if (this.mode() !== 'standalone') { return; }
       const step = this.wizardStep();
       const desktop = this.isDesktop();
 
       if (desktop) {
         this.titleService.setProgress(undefined);
-        if (mode === 'standalone') {
-          this.titleService.setTitle(this.translateService.instant('project.standaloneInput.addNew.cto'));
-          this.titleService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
-        } else if (mode === 'edit') {
-          this.titleService.setTitle(this.translateService.instant('project.pollInput.editPollTitle'));
-          this.titleService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
-        }
-        return;
-      }
-
-      if (mode === 'edit') {
-        this.titleService.setTitle(this.translateService.instant('project.pollInput.editPollTitle'));
+        this.titleService.setTitle(this.translateService.instant('project.standaloneInput.addNew.cto'));
         this.titleService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
-        this.titleService.setProgress(undefined);
-        this.titleService.setBackFn(undefined);
         return;
       }
 
@@ -233,11 +184,10 @@ export class PollInputWizardComponent {
       );
       this.titleService.setProgress(Math.round((step / 3) * 100));
       this.titleService.setBackFn(
-        mode === 'standalone' && step === 2 ? () => this.prevStep() : undefined,
+        step === 2 ? () => this.prevStep() : undefined,
       );
     });
 
-    // 'add' mode title (within a project)
     effect(() => {
       if (this.mode() === 'add') {
         this.titleService.setTitle(this.state.currentProject()?.name ?? '');
@@ -250,14 +200,7 @@ export class PollInputWizardComponent {
   }
 
   onCta(): void {
-    const mode = this.mode();
-
-    if (mode === 'edit') {
-      this.state.submitEdit(this.state.projectId(), this.pollId());
-      return;
-    }
-
-    if (mode === 'add') {
+    if (this.mode() === 'add') {
       this.state.submitAdd(this.state.projectId());
       return;
     }
@@ -286,10 +229,6 @@ export class PollInputWizardComponent {
   }
 
   discard(): void {
-    if (this.mode() === 'edit') {
-      this.state.navigateAfterDiscard(this.state.projectId(), this.pollId());
-      return;
-    }
     this.state.finishAndNavigate();
   }
 }

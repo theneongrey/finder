@@ -3,46 +3,56 @@ import {
   Component,
   computed,
   input,
+  signal,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import {
   OptionDetail,
   OptionType,
+  SharedWith,
 } from '../../../_shared/models/poll-detail.model';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionCardRatingComponent } from './option-card-rating/option-card-rating.component';
 
+type SortMode = 'top' | 'original';
+
 @Component({
   selector: 'app-option-list',
   templateUrl: './option-list.component.html',
-  imports: [
-    TranslatePipe,
-    OptionCardComponent,
-    OptionCardDateComponent,
-    OptionCardRatingComponent,
-  ],
+  imports: [RouterLink, DsButtonComponent, DsIconComponent, OptionCardComponent, OptionCardDateComponent, OptionCardRatingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionListComponent {
   readonly OptionType = OptionType;
 
   options = input.required<OptionDetail[]>();
+  members = input<SharedWith[]>([]);
   projectId = input('');
   pollId = input('');
   optionType = input(OptionType.YesNo);
   hideResults = input(false);
+  isClosed = input(false);
+
+  sort = signal<SortMode>('top');
 
   sortedOptions = computed(() => {
-    if (this.hideResults()) {
-      return [...this.options()];
+    const opts = [...this.options()];
+    if (this.hideResults() || this.sort() !== 'top') {
+      return opts;
     }
-    return [...this.options()].sort((a, b) =>
+    return opts.sort((a, b) =>
       this.optionType() === OptionType.Rating
         ? this.getAverageRating(b) - this.getAverageRating(a)
         : this.getYesVotes(b).length - this.getYesVotes(a).length,
     );
   });
+
+  toggleSort() {
+    this.sort.update(s => (s === 'top' ? 'original' : 'top'));
+  }
 
   getYesVotes(option: OptionDetail) {
     return option.votes.filter((vote) => vote.choice === '1');
@@ -60,15 +70,20 @@ export class OptionListComponent {
     );
   }
 
-  hasMostVotes(option: OptionDetail) {
+  private readonly topScore = computed(() => {
+    const opts = this.options();
     if (this.optionType() === OptionType.Rating) {
-      const avg = this.getAverageRating(option);
-      return avg > 0 && avg === this.getAverageRating(this.sortedOptions()[0]);
+      return Math.max(0, ...opts.map(o => this.getAverageRating(o)));
     }
-    const yesVoteCount = this.getYesVotes(option).length;
-    return (
-      yesVoteCount > 0 &&
-      yesVoteCount == this.getYesVotes(this.sortedOptions()[0]).length
-    );
+    return Math.max(0, ...opts.map(o => this.getYesVotes(o).length));
+  });
+
+  hasMostVotes(option: OptionDetail): boolean {
+    const top = this.topScore();
+    if (!top) { return false; }
+    if (this.optionType() === OptionType.Rating) {
+      return this.getAverageRating(option) === top;
+    }
+    return this.getYesVotes(option).length === top;
   }
 }

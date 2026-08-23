@@ -1,75 +1,100 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
+  computed,
   input,
+  signal,
 } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { HlmBadge } from '@spartan-ng/helm/badge';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { OptionDetail } from '../../../../_shared/models/poll-detail.model';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { ResultsProgressBarComponent, ProgressSegment } from '../results-progress-bar/results-progress-bar.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
+import { OptionDetail, SharedWith } from '../../../../_shared/models/poll-detail.model';
+
+interface VoteGroup {
+  label: string;
+  bg: string;
+  fg: string;
+  names: string;
+}
 
 @Component({
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
-  imports: [NgClass, RouterLink, HlmBadge, HlmButton, TranslatePipe],
+  imports: [RouterLink, DsButtonComponent, ResultsProgressBarComponent, AvatarStackComponent, DsIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {
-  private readonly translateService = inject(TranslateService);
-
   option = input.required<OptionDetail>();
+  members = input<SharedWith[]>([]);
   isMostVoted = input(false);
   projectId = input('');
   pollId = input('');
   hideResults = input(false);
+  rank = input(0);
 
-  voteIcon(choice: string | null): string {
-    if (choice === '1') {
-      return 'fa-circle-check';
-    }
-    if (choice === '2') {
-      return 'fa-circle-xmark';
-    }
-    return 'fa-circle-question';
-  }
+  expanded = signal(false);
 
-  voteLabel(choice: string | null): string {
-    if (choice === '1') {
-      return this.translateService.instant(
-        'project.votesOverview.voteLabel.yes',
-      );
-    }
-    if (choice === '2') {
-      return this.translateService.instant(
-        'project.votesOverview.voteLabel.no',
-      );
-    }
-    return this.translateService.instant(
-      'project.votesOverview.voteLabel.open',
-    );
-  }
+  readonly yesVotes = computed(() =>
+    this.option().votes.filter(v => v.choice === '1'),
+  );
 
-  voteColorClass(choice: string | null): string {
-    if (choice === '1') {
-      return 'text-green-600';
-    }
-    if (choice === '2') {
-      return 'text-red-600';
-    }
-    return 'text-gray-400';
-  }
+  readonly noVotes = computed(() =>
+    this.option().votes.filter(v => v.choice === '2'),
+  );
 
-  votesCountLabel(): string {
-    const option = this.option();
-    const yes = option.votes.filter((vote) => vote.choice === '1').length;
-    const total = option.votes.length;
-    const key =
-      yes === 1
-        ? 'project.votesOverview.votesCount'
-        : 'project.votesOverview.votesCountPlural';
-    return this.translateService.instant(key, { yes, total });
-  }
+  readonly totalVoters = computed(() => this.option().votes.length);
+
+  readonly yesPercent = computed(() => {
+    const total = this.totalVoters();
+    return total > 0 ? Math.round((this.yesVotes().length / total) * 100) : 0;
+  });
+
+  readonly segments = computed((): ProgressSegment[] => {
+    const total = this.totalVoters();
+    if (!total) { return []; }
+    return [
+      { percent: (this.yesVotes().length / total) * 100, color: 'var(--positive-strong)' },
+      { percent: (this.noVotes().length  / total) * 100, color: '#e3a7a2' },
+    ].filter(s => s.percent > 0);
+  });
+
+  readonly voteLine = computed(() => {
+    const yes = this.yesVotes().length;
+    const no = this.noVotes().length;
+    if (!yes && !no) { return 'Keine Stimmen'; }
+    const parts = [`${yes} × Ja`, `${no} × Nein`];
+    return parts.join(' · ');
+  });
+
+  readonly avatarUsers = computed((): AvatarUser[] => {
+    const voted = this.votedNames();
+    const members = this.members();
+    if (members.length) {
+      return members.map(m => ({ name: m.name, voted: voted.has(m.name) }));
+    }
+    return this.option().votes.map(v => ({ name: v.person, voted: true }));
+  });
+
+  private readonly votedNames = computed(() =>
+    new Set(this.option().votes.map(v => v.person)),
+  );
+
+  readonly groups = computed((): VoteGroup[] => {
+    const groups: VoteGroup[] = [];
+    const yes = this.yesVotes();
+    const no  = this.noVotes();
+    if (yes.length) {
+      groups.push({ label: 'Ja',   bg: '#e2ede1', fg: '#3f7a4e', names: yes.map(v => v.person).join(', ') });
+    }
+    if (no.length) {
+      groups.push({ label: 'Nein', bg: '#fdf3f1', fg: '#c1453f', names: no.map(v => v.person).join(', ') });
+    }
+    const open = this.members().filter(m => !this.votedNames().has(m.name));
+    if (open.length) {
+      groups.push({ label: 'Offen', bg: '#f1eee9', fg: '#8a8681', names: open.map(m => m.name).join(', ') });
+    }
+    return groups;
+  });
 }

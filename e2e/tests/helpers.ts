@@ -15,8 +15,8 @@ export async function login(page: Page, email: string) {
 }
 
 export async function logout(page: Page) {
-  await page.locator('app-user-avatar').click();
+  await page.locator('app-user-avatar.cursor-pointer').first().click();
   // ds-menu renders plain <button> elements — match logout label in any locale
   await page.locator('.ds-menu-item').filter({ hasText: /logout|abmelden/i }).click();
-  await page.waitForURL('**/home');
+  await page.waitForURL(/\/(de|en|es)(\/|$)|auth\/request-email/);
 }

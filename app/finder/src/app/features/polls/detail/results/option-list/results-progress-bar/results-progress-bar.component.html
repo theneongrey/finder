@@ -1,0 +1,7 @@
+<div class="rbar-track" [style.height.px]="height()">
+  @for (seg of segments(); track $index) {
+    @if (seg.percent > 0) {
+      <span class="rbar-seg" [style.width]="seg.percent + '%'" [style.background]="seg.color"></span>
+    }
+  }
+</div>

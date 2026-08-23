@@ -27,5 +27,4 @@ export class DsAvatarComponent {
   });
   protected readonly fontSize = computed(() => Math.round(this.px() * 0.4));
   protected readonly isPending = computed(() => this.voted() === false);
-  protected readonly hasRing   = computed(() => this.voted() === true);
 }

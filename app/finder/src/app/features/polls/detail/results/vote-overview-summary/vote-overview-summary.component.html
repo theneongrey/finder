@@ -1,56 +1,112 @@
-<div
-  class="bg-white rounded-2xl p-6 ds-shadow-card border-l-4 border-primary"
->
-  <div class="flex justify-between items-start mb-3">
-    <div>
-      <h2>
-        {{ poll().name }}
-      </h2>
-      @if (poll().description) {
-        <p class="text-sm text-gray-500 mt-1">
-          {{ poll().description }}
-        </p>
-      }
-      <div class="flex items-center gap-2 mt-1">
+<!-- Stats row — desktop only -->
+<div class="hidden lg:flex gap-3 mb-4" data-testid="results-stats-row">
+  @for (s of stats(); track s.label) {
+    <div
+      class="flex-1 rounded-[18px] p-4"
+      style="background: var(--surface-card); border: 1px solid var(--border-hairline-soft); box-shadow: var(--shadow-card-soft)"
+    >
+      <p class="text-[11.5px] font-bold uppercase" style="letter-spacing: 0.7px; color: var(--text-muted)">
+        {{ s.label }}
+      </p>
+      <div class="flex items-baseline gap-1.5 mt-1.5">
         <span
-          class="w-2 h-2 rounded-full bg-primary animate-pulse inline-block"
-        ></span>
-        <span
-          class="text-xs font-semibold text-primary uppercase tracking-wider"
-          >{{ "project.votesOverview.active" | translate }}</span
-        >
+          class="text-[27px] font-extrabold leading-none"
+          style="letter-spacing: -0.8px; font-family: var(--font-display)"
+          [style.color]="s.color"
+        >{{ s.value }}</span>
+        <span class="text-[13px]" style="color: var(--text-secondary)">{{ s.sub }}</span>
       </div>
     </div>
-    <div class="text-right flex flex-col items-end gap-1">
-      <a
-        routerLink="."
-        fragment="comments-section"
-        class="inline-flex items-center gap-1.5 bg-primary/20 text-primary px-3 py-1.5 rounded-full text-sm font-bold no-underline"
+  }
+</div>
+
+<!-- Winner hero card -->
+<ds-card data-testid="results-hero-card" [accentBorder]="true" [padding]="18">
+
+  <!-- First line -->
+  <div class="flex items-center gap-2 mb-3">
+    <!-- Winner badge -->
+    <span
+      class="inline-flex items-center h-6 px-2.5 rounded-full text-[11.5px] font-bold uppercase"
+      style="letter-spacing: 0.4px;"
+      [style.background]="badgeIsPositive() ? '#e2ede1' : '#f9edd5'"
+      [style.color]="badgeIsPositive() ? 'var(--positive-strong)' : '#a8742a'"
+    >{{ badge() }}</span>
+    <!-- Status dot + deadline — mobile only (desktop header shows these) -->
+    <span class="lg:hidden inline-flex items-center gap-1.5 text-[12px] font-semibold" style="color: #8a8681">
+      <span
+        class="w-1.5 h-1.5 rounded-full shrink-0 inline-block"
+        [style.background]="statusDot()"
+        [class.animate-pulse]="statusPulse()"
+      ></span>
+      <span>{{ deadlineText() }}</span>
+    </span>
+  </div>
+
+  <!-- Desktop: horizontal layout (title left | big metric right) -->
+  <div class="hidden lg:flex lg:items-center lg:gap-5">
+    <div class="flex-1 min-w-0">
+      <h2
+        class="text-[28px] font-bold leading-[1.16] text-pretty"
+        style="letter-spacing: -0.7px; color: var(--text-primary)"
       >
-        <i class="fa-regular fa-comment" style="font-size: 16px"></i>
-        <span>{{ commentsCount() }}</span>
-      </a>
-      <p class="text-xl font-semibold text-primary mt-1">
-        {{ votedCount() }}
-        <span class="text-gray-500 text-base font-normal">{{
-          "project.votesOverview.of" | translate: { total: totalCount() }
-        }}</span>
-      </p>
-      <p class="ds-body">{{ "project.votesOverview.rated" | translate }}</p>
+        {{ heroLabel() }}
+      </h2>
+      @if (avatarUsers().length || peopleLine()) {
+        <div class="flex items-center gap-2.5 mt-3">
+          @if (avatarUsers().length) {
+            <app-avatar-stack [users]="avatarUsers()" [max]="4" size="sm" />
+          }
+          @if (peopleLine()) {
+            <span class="text-[13.5px] font-semibold" style="color: #5a5650">{{ peopleLine() }}</span>
+          }
+        </div>
+      }
+    </div>
+    <div class="shrink-0 text-right">
+      <div
+        class="text-[56px] font-extrabold leading-none"
+        style="letter-spacing: -2px; font-family: var(--font-display)"
+        [style.color]="metricColor()"
+      >
+        {{ bigMetric() }}
+      </div>
+      <div class="text-[13.5px] mt-1.5" style="color: var(--text-secondary)">
+        {{ metricSmall() }}
+      </div>
     </div>
   </div>
 
-  <!-- Progress Bar -->
-  <hlm-progress [value]="progressPercent()">
-    <hlm-progress-indicator />
-  </hlm-progress>
-
-  <div class="mt-4 flex justify-between items-center">
-    <p class="ds-body">{{ "project.votesOverview.closesIn" | translate }}</p>
-    @if (hasOpenOptions()) {
-      <button hlmBtn size="sm" [routerLink]="['/polls', projectId(), 'vote', pollId()]">
-        <i class="fa-solid fa-arrow-right-arrow-left"></i>{{ 'project.votesOverview.continueVoting' | translate }}
-      </button>
+  <!-- Mobile: vertical layout -->
+  <div class="lg:hidden">
+    <h2
+      class="text-[25px] font-bold leading-[1.15] text-pretty"
+      style="letter-spacing: -0.6px; color: var(--text-primary)"
+    >
+      {{ heroLabel() }}
+    </h2>
+    <div class="flex items-end gap-2.5 mt-3">
+      <span
+        class="text-[40px] font-extrabold leading-none"
+        style="letter-spacing: -1.4px; font-family: var(--font-display)"
+        [style.color]="metricColor()"
+      >
+        {{ bigMetric() }}
+      </span>
+      <span class="text-[13.5px] pb-1.5" style="color: var(--text-secondary)">
+        {{ metricSmall() }}
+      </span>
+    </div>
+    @if (avatarUsers().length || peopleLine()) {
+      <div class="flex items-center gap-2.5 mt-3.5">
+        @if (avatarUsers().length) {
+          <app-avatar-stack [users]="avatarUsers()" [max]="4" size="sm" />
+        }
+        @if (peopleLine()) {
+          <span class="text-[12.5px] font-semibold" style="color: #5a5650">{{ peopleLine() }}</span>
+        }
+      </div>
     }
   </div>
-</div>
+
+</ds-card>

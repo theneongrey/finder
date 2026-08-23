@@ -4,7 +4,8 @@
     [style.width.px]="px()"
     [style.height.px]="px()"
     [style.min-width.px]="px()"
-    [style.border]="isPending() ? '1.5px dashed var(--sand-400)' : hasRing() ? '2.5px solid #fff' : 'none'"
+    [class.ds-avatar-pending]="isPending()"
+    [class.ds-avatar-ring]="!isPending()"
   >
     <span
       hlmAvatarFallback

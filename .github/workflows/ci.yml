@@ -18,6 +18,11 @@ jobs:
         with:
           dotnet-version: '9.x'
 
+      - name: Install Playwright browsers
+        run: |
+          dotnet build --configuration Release
+          pwsh api/Finder/bin/Release/net9.0/playwright.ps1 install --with-deps chromium
+
       - name: Run backend tests
         run: dotnet test --configuration Release
         working-directory: ./api

@@ -66,15 +66,10 @@ export class EditPollComponent {
     }, { allowSignalWrites: true });
 
     effect(() => {
-      const desktop = this.isDesktop();
-      const title = this.translateService.instant('project.pollInput.editPollTitle');
-      const subtitle = this.translateService.instant('project.pollInput.pollsOverviewLabel');
-      this.titleService.setTitle(title);
-      this.titleService.setSubtitle(subtitle);
+      this.titleService.setTitle(this.translateService.instant('project.pollInput.editPollTitle'));
+      this.titleService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
       this.titleService.setProgress(undefined);
-      if (!desktop) {
-        this.titleService.setBackFn(undefined);
-      }
+      this.titleService.setBackFn(undefined);
     });
   }
 

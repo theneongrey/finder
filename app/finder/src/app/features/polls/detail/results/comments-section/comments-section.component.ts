@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { Comment } from '../../../_shared/models/poll-detail.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 
@@ -18,6 +20,8 @@ import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
     FormsModule,
     TimeSincePipe,
     DsButtonComponent,
+    DsCardComponent,
+    DsIconComponent,
     DsTextareaComponent,
     UserAvatarComponent,
   ],
@@ -37,8 +41,11 @@ export class CommentsSectionComponent {
   }
 
   onEnterKey(event: Event) {
-    event.preventDefault();
-    this.submitComment();
+    const kb = event as KeyboardEvent;
+    if (!kb.shiftKey) {
+      event.preventDefault();
+      this.submitComment();
+    }
   }
 
   authorUser(author: Comment['author']): { name: string } {

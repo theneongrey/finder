@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { OptionType, PollDetail } from '../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 
 interface MatrixPerson {
   name: string;
-  initial: string;
 }
 
 interface MatrixCell {
@@ -41,6 +41,7 @@ function cellFor(choice: string | undefined, type: OptionType): MatrixCell {
 @Component({
   selector: 'app-vote-matrix',
   templateUrl: './vote-matrix.component.html',
+  imports: [UserAvatarComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteMatrixComponent {
@@ -55,7 +56,7 @@ export class VoteMatrixComponent {
       for (const v of opt.votes) {
         if (!seen.has(v.person)) {
           seen.add(v.person);
-          result.push({ name: v.person, initial: v.person[0]?.toUpperCase() ?? '?' });
+          result.push({ name: v.person });
         }
       }
     }

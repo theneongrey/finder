@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import {
   OptionDetail,
   OptionType,
@@ -21,7 +22,7 @@ type SortMode = 'top' | 'original';
 @Component({
   selector: 'app-option-list',
   templateUrl: './option-list.component.html',
-  imports: [RouterLink, DsButtonComponent, OptionCardComponent, OptionCardDateComponent, OptionCardRatingComponent],
+  imports: [RouterLink, DsButtonComponent, DsIconComponent, OptionCardComponent, OptionCardDateComponent, OptionCardRatingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionListComponent {
@@ -79,7 +80,7 @@ export class OptionListComponent {
 
   hasMostVotes(option: OptionDetail): boolean {
     const top = this.topScore();
-    if (!top) return false;
+    if (!top) { return false; }
     if (this.optionType() === OptionType.Rating) {
       return this.getAverageRating(option) === top;
     }

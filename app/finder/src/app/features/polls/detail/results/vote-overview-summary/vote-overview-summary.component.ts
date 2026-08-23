@@ -115,7 +115,7 @@ export class VoteOverviewSummaryComponent {
   });
 
   readonly metricColor = computed(() =>
-    this.poll().optionType === OptionType.Rating ? '#c98f2c' : '#5d9a56',
+    this.poll().optionType === OptionType.Rating ? '#c98f2c' : 'var(--positive-strong)',
   );
 
   readonly peopleLine = computed(() => {
@@ -241,7 +241,7 @@ export class VoteOverviewSummaryComponent {
             ? overallAvg.toFixed(1).replace('.', ',')
             : winnerYesPct + ' %',
         sub: type === OptionType.Rating ? 'von 5' : 'Zustimmung',
-        color: type === OptionType.Rating ? '#c98f2c' : '#3f7a4e',
+        color: type === OptionType.Rating ? '#c98f2c' : 'var(--positive-strong)',
       },
       {
         label: 'Kommentare',

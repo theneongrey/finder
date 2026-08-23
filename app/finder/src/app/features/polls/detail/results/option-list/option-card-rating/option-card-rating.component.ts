@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsResultsProgressBarComponent, ProgressSegment } from '@ds/results-progress-bar/ds-results-progress-bar.component';
+import { ResultsProgressBarComponent, ProgressSegment } from '../results-progress-bar/results-progress-bar.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
 import { OptionDetail, SharedWith } from '../../../../_shared/models/poll-detail.model';
 
@@ -21,7 +22,7 @@ interface RatingGroup {
 @Component({
   selector: 'app-option-card-rating',
   templateUrl: './option-card-rating.component.html',
-  imports: [RouterLink, DsButtonComponent, DsResultsProgressBarComponent, AvatarStackComponent],
+  imports: [RouterLink, DsButtonComponent, ResultsProgressBarComponent, AvatarStackComponent, DsIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardRatingComponent {
@@ -98,7 +99,4 @@ export class OptionCardRatingComponent {
     return groups;
   });
 
-  isStarFilled(star: number): boolean {
-    return star <= Math.round(this.averageRating());
-  }
 }

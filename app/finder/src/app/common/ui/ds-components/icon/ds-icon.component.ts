@@ -149,6 +149,17 @@ const ICONS: Record<string, IconDef> = {
       { d: 'M3.5 15h17' },
     ],
   },
+  'chevron-down': { paths: [{ d: 'M6 9.5l6 6 6-6' }], strokeWidth: 2.4 },
+  sort: {
+    strokeWidth: 2.2,
+    paths: [
+      { d: 'M7 4v16' },
+      { d: 'M3.5 16.5L7 20l3.5-3.5' },
+      { d: 'M13.5 6.5h7' },
+      { d: 'M13.5 12h5' },
+      { d: 'M13.5 17.5h3' },
+    ],
+  },
 };
 
 export const ICON_NAMES = Object.keys(ICONS);

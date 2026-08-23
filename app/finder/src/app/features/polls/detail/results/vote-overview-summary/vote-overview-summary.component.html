@@ -30,7 +30,7 @@
       class="inline-flex items-center h-6 px-2.5 rounded-full text-[11.5px] font-bold uppercase"
       style="letter-spacing: 0.4px;"
       [style.background]="badgeIsPositive() ? '#e2ede1' : '#f9edd5'"
-      [style.color]="badgeIsPositive() ? '#3f7a4e' : '#a8742a'"
+      [style.color]="badgeIsPositive() ? 'var(--positive-strong)' : '#a8742a'"
     >{{ badge() }}</span>
     <!-- Status dot + deadline — mobile only (desktop header shows these) -->
     <span class="lg:hidden inline-flex items-center gap-1.5 text-[12px] font-semibold" style="color: #8a8681">

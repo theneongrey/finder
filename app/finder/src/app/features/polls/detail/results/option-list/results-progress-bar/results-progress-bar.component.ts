@@ -6,13 +6,13 @@ export interface ProgressSegment {
 }
 
 @Component({
-  selector: 'ds-results-progress-bar',
-  templateUrl: './ds-results-progress-bar.component.html',
-  styleUrl: './ds-results-progress-bar.component.css',
+  selector: 'app-results-progress-bar',
+  templateUrl: './results-progress-bar.component.html',
+  styleUrl: './results-progress-bar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { style: 'display: block; width: 100%;' },
 })
-export class DsResultsProgressBarComponent {
+export class ResultsProgressBarComponent {
   segments = input.required<ProgressSegment[]>();
   height = input<number>(8);
 }

@@ -226,6 +226,11 @@ input.invalid {
   to   { opacity: 1; transform: none; }
 }
 
+@keyframes resultsExpand {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
 .vt-stagger > * {
   animation: ds-fade-up 0.42s cubic-bezier(0.22, 0.7, 0.3, 1) both;
 }

@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsResultsProgressBarComponent, ProgressSegment } from '@ds/results-progress-bar/ds-results-progress-bar.component';
+import { ResultsProgressBarComponent, ProgressSegment } from '../results-progress-bar/results-progress-bar.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
 import { OptionDetail, SharedWith } from '../../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
@@ -23,7 +24,7 @@ interface VoteGroup {
 @Component({
   selector: 'app-option-card-date',
   templateUrl: './option-card-date.component.html',
-  imports: [RouterLink, DsButtonComponent, DsResultsProgressBarComponent, AvatarStackComponent],
+  imports: [RouterLink, DsButtonComponent, ResultsProgressBarComponent, AvatarStackComponent, DsIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {
@@ -69,7 +70,7 @@ export class OptionCardDateComponent {
     const total = this.totalVoters();
     if (!total) { return []; }
     return [
-      { percent: (this.yesVotes().length   / total) * 100, color: '#5d9a56' },
+      { percent: (this.yesVotes().length   / total) * 100, color: 'var(--positive-strong)' },
       { percent: (this.maybeVotes().length  / total) * 100, color: '#e0b45c' },
       { percent: (this.noVotes().length     / total) * 100, color: '#e3a7a2' },
     ].filter(s => s.percent > 0);

@@ -11,22 +11,7 @@
       data-testid="results-sort-btn"
       (click)="toggleSort()"
     >
-      <svg
-        width="13"
-        height="13"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M7 4v16" />
-        <path d="M3.5 16.5L7 20l3.5-3.5" />
-        <path d="M13.5 6.5h7" />
-        <path d="M13.5 12h5" />
-        <path d="M13.5 17.5h3" />
-      </svg>
+      <ds-icon name="sort" [size]="13" />
       {{ sort() === "top" ? "Nach Zustimmung" : "Nach Reihenfolge" }}
     </button>
   </div>

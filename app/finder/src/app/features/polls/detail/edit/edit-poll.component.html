@@ -28,7 +28,11 @@
 
     <!-- Scrollable form -->
     <div class="flex-1 min-h-0 overflow-y-auto px-8 pb-8">
-      @if (state.optionType() !== undefined) {
+      @if (state.editLoading()) {
+        <div class="max-w-[1000px] flex flex-col gap-4 pt-5">
+          <ng-container *ngTemplateOutlet="skeletonCards" />
+        </div>
+      } @else if (state.optionType() !== undefined) {
         <div class="max-w-[1000px]">
           <app-poll-input-form
             [optionType]="state.optionType()!"
@@ -64,7 +68,11 @@
   <!-- ═══════════════════════════════════════════
        MOBILE EDIT
   ═══════════════════════════════════════════ -->
-  @if (state.optionType() !== undefined) {
+  @if (state.editLoading()) {
+    <div class="px-[18px] flex flex-col gap-4 pt-5 pb-32">
+      <ng-container *ngTemplateOutlet="skeletonCards" />
+    </div>
+  } @else if (state.optionType() !== undefined) {
     <div class="px-[18px]">
       <app-poll-input-form
         [optionType]="state.optionType()!"
@@ -94,3 +102,33 @@
     </div>
   }
 }
+
+<!-- ═══════════════════════════════════════════
+     SHARED SKELETON TEMPLATE
+═══════════════════════════════════════════ -->
+<ng-template #skeletonCards>
+  <!-- Question card skeleton -->
+  <div class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4" style="box-shadow:var(--shadow-card-soft)">
+    <div class="ds-skeleton h-4 w-24 rounded-sm mb-3"></div>
+    <div class="ds-skeleton h-10 w-full rounded-lg mb-2"></div>
+    <div class="ds-skeleton h-4 w-1/2 rounded-sm"></div>
+  </div>
+  <!-- Options card skeleton -->
+  <div class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4" style="box-shadow:var(--shadow-card-soft)">
+    <div class="ds-skeleton h-4 w-32 rounded-sm mb-3"></div>
+    <div class="flex flex-col gap-2">
+      <div class="ds-skeleton h-10 w-full rounded-lg"></div>
+      <div class="ds-skeleton h-10 w-full rounded-lg"></div>
+      <div class="ds-skeleton h-10 w-3/4 rounded-lg"></div>
+    </div>
+  </div>
+  <!-- Close settings card skeleton -->
+  <div class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4" style="box-shadow:var(--shadow-card-soft)">
+    <div class="ds-skeleton h-4 w-28 rounded-sm mb-3"></div>
+    <div class="flex gap-2">
+      <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
+      <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
+      <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
+    </div>
+  </div>
+</ng-template>

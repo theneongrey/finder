@@ -6,6 +6,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
@@ -19,6 +20,7 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 @Component({
   selector: 'app-edit-poll',
   imports: [
+    NgTemplateOutlet,
     PollInputFormComponent,
     PollTypeBadgeComponent,
     DsButtonComponent,

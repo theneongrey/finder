@@ -40,10 +40,18 @@
           >{{ subtitle() }}</button
         >
         <span class="title-bar__sep" aria-hidden="true"></span>
-        <span class="title-bar__web-label">{{ title() }}</span>
+        @if (title() === undefined) {
+          <hlm-skeleton class="w-32 h-4 my-auto" />
+        } @else {
+          <span class="title-bar__web-label">{{ title() }}</span>
+        }
       } @else if (!titleDisabled()) {
         <span class="title-bar__sep title-bar__sep--lead" aria-hidden="true"></span>
-        <span class="title-bar__web-label">{{ title() }}</span>
+        @if (title() === undefined) {
+          <hlm-skeleton class="w-32 h-4 my-auto" />
+        } @else {
+          <span class="title-bar__web-label">{{ title() }}</span>
+        }
       }
     } @else {
       <div class="title-bar__brand">

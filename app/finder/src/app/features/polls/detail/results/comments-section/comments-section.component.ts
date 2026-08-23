@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Comment } from '../../../_shared/models/poll-detail.model';
 import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 
 @Component({
@@ -18,7 +18,7 @@ import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
     FormsModule,
     TimeSincePipe,
     DsButtonComponent,
-    DsInputComponent,
+    DsTextareaComponent,
     UserAvatarComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

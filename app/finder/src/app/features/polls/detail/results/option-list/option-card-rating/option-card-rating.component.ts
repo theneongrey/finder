@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsResultsProgressBarComponent, ProgressSegment } from '@ds/results-progress-bar/ds-results-progress-bar.component';
 import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
 import { OptionDetail } from '../../../../_shared/models/poll-detail.model';
 
@@ -20,7 +21,7 @@ interface RatingGroup {
 @Component({
   selector: 'app-option-card-rating',
   templateUrl: './option-card-rating.component.html',
-  imports: [RouterLink, DsButtonComponent, AvatarStackComponent],
+  imports: [RouterLink, DsButtonComponent, DsResultsProgressBarComponent, AvatarStackComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardRatingComponent {
@@ -46,6 +47,10 @@ export class OptionCardRatingComponent {
   readonly progressPercent = computed(() =>
     Math.round((this.averageRating() / 5) * 100),
   );
+
+  readonly segments = computed((): ProgressSegment[] => [
+    { percent: this.progressPercent(), color: '#e0a42c' },
+  ]);
 
   readonly avgLabel = computed(() => {
     const avg = this.averageRating();
@@ -84,7 +89,7 @@ export class OptionCardRatingComponent {
       groups.push({
         stars,
         bg: '#f9edd5',
-        fg: 'var(--warning)',
+        fg: '#a8742a',
         names: voters.map(v => v.person).join(', '),
       });
     }

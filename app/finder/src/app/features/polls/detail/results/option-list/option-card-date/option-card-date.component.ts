@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsProgressBarComponent } from '@ds/progress-bar/ds-progress-bar.component';
+import { DsResultsProgressBarComponent, ProgressSegment } from '@ds/results-progress-bar/ds-results-progress-bar.component';
 import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
 import { OptionDetail } from '../../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
@@ -23,7 +23,7 @@ interface VoteGroup {
 @Component({
   selector: 'app-option-card-date',
   templateUrl: './option-card-date.component.html',
-  imports: [RouterLink, DsButtonComponent, DsProgressBarComponent, AvatarStackComponent],
+  imports: [RouterLink, DsButtonComponent, DsResultsProgressBarComponent, AvatarStackComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {
@@ -42,11 +42,15 @@ export class OptionCardDateComponent {
     this.dateFormatService.parse(this.option().text),
   );
 
-  readonly label = computed(() => this.dateFormatService.labelFromEntry(this.parsed()));
+  readonly label    = computed(() => this.dateFormatService.labelFromEntry(this.parsed()));
   readonly subLabel = computed(() => this.dateFormatService.subLabelFromEntry(this.parsed()));
 
   readonly yesVotes = computed(() =>
     this.option().votes.filter(v => v.choice === '1'),
+  );
+
+  readonly maybeVotes = computed(() =>
+    this.option().votes.filter(v => v.choice === '3'),
   );
 
   readonly noVotes = computed(() =>
@@ -60,12 +64,24 @@ export class OptionCardDateComponent {
     return total > 0 ? Math.round((this.yesVotes().length / total) * 100) : 0;
   });
 
+  readonly segments = computed((): ProgressSegment[] => {
+    const total = this.totalVoters();
+    if (!total) { return []; }
+    return [
+      { percent: (this.yesVotes().length   / total) * 100, color: '#5d9a56' },
+      { percent: (this.maybeVotes().length  / total) * 100, color: '#e0b45c' },
+      { percent: (this.noVotes().length     / total) * 100, color: '#e3a7a2' },
+    ].filter(s => s.percent > 0);
+  });
+
   readonly voteLine = computed(() => {
-    const yes = this.yesVotes().length;
-    const no = this.noVotes().length;
+    const yes   = this.yesVotes().length;
+    const maybe = this.maybeVotes().length;
+    const no    = this.noVotes().length;
     const parts: string[] = [];
-    if (yes) { parts.push(`${yes} × kann`); }
-    if (no)  { parts.push(`${no} × kann nicht`); }
+    if (yes)   { parts.push(`${yes} × kann`); }
+    if (maybe) { parts.push(`${maybe} × vielleicht`); }
+    if (no)    { parts.push(`${no} × kann nicht`); }
     return parts.join(' · ') || 'Keine Stimmen';
   });
 
@@ -75,23 +91,17 @@ export class OptionCardDateComponent {
 
   readonly groups = computed((): VoteGroup[] => {
     const groups: VoteGroup[] = [];
-    const yes = this.yesVotes();
-    const no  = this.noVotes();
+    const yes   = this.yesVotes();
+    const maybe = this.maybeVotes();
+    const no    = this.noVotes();
     if (yes.length) {
-      groups.push({
-        label: 'Kann',
-        bg: 'var(--positive-tint, #e2ede1)',
-        fg: 'var(--positive)',
-        names: yes.map(v => v.person).join(', '),
-      });
+      groups.push({ label: 'Kann', bg: '#e2ede1', fg: '#3f7a4e', names: yes.map(v => v.person).join(', ') });
+    }
+    if (maybe.length) {
+      groups.push({ label: 'Vielleicht', bg: '#f6e7cf', fg: '#a8742a', names: maybe.map(v => v.person).join(', ') });
     }
     if (no.length) {
-      groups.push({
-        label: 'Kann nicht',
-        bg: '#fdf3f1',
-        fg: 'var(--negative)',
-        names: no.map(v => v.person).join(', '),
-      });
+      groups.push({ label: 'Kann nicht', bg: '#fdf3f1', fg: '#c1453f', names: no.map(v => v.person).join(', ') });
     }
     return groups;
   });

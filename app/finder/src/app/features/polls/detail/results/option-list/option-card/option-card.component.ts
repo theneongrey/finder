@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsProgressBarComponent } from '@ds/progress-bar/ds-progress-bar.component';
+import { DsResultsProgressBarComponent, ProgressSegment } from '@ds/results-progress-bar/ds-results-progress-bar.component';
 import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
 import { OptionDetail } from '../../../../_shared/models/poll-detail.model';
 
@@ -21,7 +21,7 @@ interface VoteGroup {
 @Component({
   selector: 'app-option-card',
   templateUrl: './option-card.component.html',
-  imports: [RouterLink, DsButtonComponent, DsProgressBarComponent, AvatarStackComponent],
+  imports: [RouterLink, DsButtonComponent, DsResultsProgressBarComponent, AvatarStackComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {
@@ -49,6 +49,15 @@ export class OptionCardComponent {
     return total > 0 ? Math.round((this.yesVotes().length / total) * 100) : 0;
   });
 
+  readonly segments = computed((): ProgressSegment[] => {
+    const total = this.totalVoters();
+    if (!total) { return []; }
+    return [
+      { percent: (this.yesVotes().length / total) * 100, color: '#5d9a56' },
+      { percent: (this.noVotes().length  / total) * 100, color: '#e3a7a2' },
+    ].filter(s => s.percent > 0);
+  });
+
   readonly voteLine = computed(() => {
     const yes = this.yesVotes().length;
     const no = this.noVotes().length;
@@ -69,8 +78,8 @@ export class OptionCardComponent {
     if (yes.length) {
       groups.push({
         label: 'Ja',
-        bg: 'var(--positive-tint, #e2ede1)',
-        fg: 'var(--positive)',
+        bg: '#e2ede1',
+        fg: '#3f7a4e',
         names: yes.map(v => v.person).join(', '),
       });
     }
@@ -78,7 +87,7 @@ export class OptionCardComponent {
       groups.push({
         label: 'Nein',
         bg: '#fdf3f1',
-        fg: 'var(--negative)',
+        fg: '#c1453f',
         names: no.map(v => v.person).join(', '),
       });
     }

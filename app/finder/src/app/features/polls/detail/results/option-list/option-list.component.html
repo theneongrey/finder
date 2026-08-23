@@ -4,18 +4,19 @@
     <button
       class="flex items-center gap-1.5 h-8 px-3 rounded-[11px] text-[12.5px] font-bold transition-colors"
       style="border: 1px solid var(--border-hairline); background: var(--surface-card); color: var(--text-secondary)"
+      data-testid="results-sort-btn"
       (click)="toggleSort()"
     >
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M7 4v16"/><path d="M3.5 16.5L7 20l3.5-3.5"/>
         <path d="M13.5 6.5h7"/><path d="M13.5 12h5"/><path d="M13.5 17.5h3"/>
       </svg>
-      {{ sort() === 'top' ? 'Nach Beliebtheit' : 'Original' }}
+      {{ sort() === 'top' ? 'Nach Zustimmung' : 'Nach Reihenfolge' }}
     </button>
   </div>
 }
 
-<div class="flex flex-col gap-2.5">
+<div class="flex flex-col gap-2.5" data-testid="results-option-list">
   @for (option of sortedOptions(); track option.id; let idx = $index) {
     @if (optionType() === OptionType.Date) {
       <app-option-card-date

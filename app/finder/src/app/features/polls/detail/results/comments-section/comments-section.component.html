@@ -4,7 +4,7 @@
     @if (comments().length) {
       <span
         class="inline-flex items-center h-6 px-2.5 rounded-lg text-[12px] font-bold"
-        style="background: var(--bg-panel, #f1eee9); color: var(--text-secondary)"
+        style="background: #f1eee9; color: var(--text-secondary)"
       >
         {{ comments().length }}
       </span>
@@ -35,10 +35,13 @@
 
             @if (comment.quote) {
               <div
-                class="mt-2 px-2.5 py-1 rounded-lg text-[12px] italic"
-                style="background: var(--bg-panel, #f4f1ec); color: var(--text-secondary); border-left: 2px solid var(--border-hairline)"
+                class="mt-2 inline-flex items-center gap-1.5 max-w-full h-6 px-2.5 rounded-lg text-[11.5px] font-bold overflow-hidden"
+                style="background: #f4f1ec; color: #6f6b66"
               >
-                {{ comment.quote }}
+                <svg width="12" height="12" class="shrink-0" viewBox="0 0 24 24" fill="none" stroke="#5d9a56" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4.5 12.5l4.5 4.5L20 5"/>
+                </svg>
+                <span class="truncate">{{ comment.quote }}</span>
               </div>
             }
 
@@ -57,26 +60,26 @@
     }
 
     <!-- Comment input -->
-    <div
-      class="flex items-center gap-2.5 p-4 pt-3"
-      style="border-top: 1px solid var(--border-hairline)"
-    >
-      <div class="flex-1 min-w-0">
-        <ds-input
-          [placeholder]="'Kommentar schreiben…'"
-          [background]="'var(--bg-app)'"
-          [(ngModel)]="newCommentText"
-          (keydown.enter)="onEnterKey($event)"
-        />
+    <div class="p-4 pt-3" style="border-top: 1px solid var(--border-hairline)">
+      <ds-textarea
+        data-testid="results-comment-input"
+        [placeholder]="'Kommentar schreiben…'"
+        [autoResize]="true"
+        [rows]="1"
+        [(ngModel)]="newCommentText"
+        (keydown.enter)="onEnterKey($event)"
+      />
+      <div class="flex justify-end mt-2">
+        <ds-button
+          data-testid="results-comment-submit"
+          variant="primary"
+          size="sm"
+          [disabled]="!newCommentText.trim()"
+          (click)="submitComment()"
+        >
+          Kommentieren
+        </ds-button>
       </div>
-      <ds-button
-        variant="primary"
-        size="sm"
-        [disabled]="!newCommentText.trim()"
-        (click)="submitComment()"
-      >
-        Kommentieren
-      </ds-button>
     </div>
   </div>
 </div>

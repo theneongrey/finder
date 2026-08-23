@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { OptionType, PollDetail } from '../../../_shared/models/poll-detail.model';
+import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
 
 interface MatrixPerson {
   name: string;
@@ -43,6 +44,8 @@ function cellFor(choice: string | undefined, type: OptionType): MatrixCell {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteMatrixComponent {
+  private readonly dateFormat = inject(DateOptionFormatService);
+
   poll = input.required<PollDetail>();
 
   readonly people = computed((): MatrixPerson[] => {
@@ -64,8 +67,11 @@ export class VoteMatrixComponent {
     const type = this.poll().optionType;
     return this.poll().options.map((opt, idx) => {
       const voteMap = new Map(opt.votes.map(v => [v.person, v.choice]));
+      const label = type === OptionType.Date
+        ? this.dateFormat.formatLabel(opt.text)
+        : opt.text;
       return {
-        label: opt.text,
+        label,
         isEven: idx % 2 === 0,
         cells: people.map(p => cellFor(voteMap.get(p.name), type)),
       };

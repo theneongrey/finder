@@ -140,10 +140,7 @@ export class VoteOverviewSummaryComponent {
     if (maybe) {
       return `${maybe} × vielleicht, ${no} × nein`;
     }
-    if (no) {
-      return `${no} × dagegen`;
-    }
-    return '';
+    return `${no} × dagegen`;
   });
 
   readonly avatarUsers = computed((): AvatarUser[] => {

@@ -11,7 +11,7 @@
       <div class="flex items-baseline gap-1.5 mt-1.5">
         <span
           class="text-[27px] font-extrabold leading-none"
-          style="letter-spacing: -0.8px"
+          style="letter-spacing: -0.8px; font-family: var(--font-display)"
           [style.color]="s.color"
         >{{ s.value }}</span>
         <span class="text-[13px]" style="color: var(--text-secondary)">{{ s.sub }}</span>
@@ -66,7 +66,7 @@
     <div class="shrink-0 text-right">
       <div
         class="text-[56px] font-extrabold leading-none"
-        style="letter-spacing: -2px"
+        style="letter-spacing: -2px; font-family: var(--font-display)"
         [style.color]="metricColor()"
       >
         {{ bigMetric() }}
@@ -88,7 +88,7 @@
     <div class="flex items-end gap-2.5 mt-3">
       <span
         class="text-[40px] font-extrabold leading-none"
-        style="letter-spacing: -1.4px"
+        style="letter-spacing: -1.4px; font-family: var(--font-display)"
         [style.color]="metricColor()"
       >
         {{ bigMetric() }}

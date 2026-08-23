@@ -23,7 +23,7 @@
   <!-- Grid -->
   <div class="overflow-x-auto">
     <!-- Person header row -->
-    <div class="flex items-center gap-1.5" style="padding-left: 244px; min-width: max-content">
+    <div class="flex items-center gap-1.5" style="padding-left: 306px; min-width: max-content">
       @for (p of people(); track p.name) {
         <span
           class="flex-none flex flex-col items-center gap-1"
@@ -51,8 +51,8 @@
           [style.background]="row.isEven ? 'rgba(255,255,255,.75)' : 'transparent'"
         >
           <span
-            class="flex-none text-[13.5px] font-semibold truncate px-3"
-            style="width: 226px; color: #3a3833"
+            class="flex-none text-[13.5px] font-semibold px-3"
+            style="width: 300px; color: #3a3833"
           >{{ row.label }}</span>
           @for (cell of row.cells; track $index) {
             <span

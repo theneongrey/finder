@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsResultsProgressBarComponent, ProgressSegment } from '@ds/results-progress-bar/ds-results-progress-bar.component';
 import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
-import { OptionDetail } from '../../../../_shared/models/poll-detail.model';
+import { OptionDetail, SharedWith } from '../../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
 
 interface VoteGroup {
@@ -30,6 +30,7 @@ export class OptionCardDateComponent {
   private readonly dateFormatService = inject(DateOptionFormatService);
 
   option = input.required<OptionDetail>();
+  members = input<SharedWith[]>([]);
   isMostVoted = input(false);
   projectId = input('');
   pollId = input('');
@@ -78,15 +79,22 @@ export class OptionCardDateComponent {
     const yes   = this.yesVotes().length;
     const maybe = this.maybeVotes().length;
     const no    = this.noVotes().length;
-    const parts: string[] = [];
-    if (yes)   { parts.push(`${yes} × kann`); }
-    if (maybe) { parts.push(`${maybe} × vielleicht`); }
-    if (no)    { parts.push(`${no} × kann nicht`); }
-    return parts.join(' · ') || 'Keine Stimmen';
+    if (!yes && !maybe && !no) { return 'Keine Stimmen'; }
+    const parts = [`${yes} × kann`, `${maybe} × vielleicht`, `${no} × kann nicht`];
+    return parts.join(' · ');
   });
 
-  readonly avatarUsers = computed((): AvatarUser[] =>
-    this.yesVotes().map(v => ({ name: v.person })),
+  readonly avatarUsers = computed((): AvatarUser[] => {
+    const voted = this.votedNames();
+    const members = this.members();
+    if (members.length) {
+      return members.map(m => ({ name: m.name, voted: voted.has(m.name) }));
+    }
+    return this.option().votes.map(v => ({ name: v.person, voted: true }));
+  });
+
+  private readonly votedNames = computed(() =>
+    new Set(this.option().votes.map(v => v.person)),
   );
 
   readonly groups = computed((): VoteGroup[] => {
@@ -95,13 +103,17 @@ export class OptionCardDateComponent {
     const maybe = this.maybeVotes();
     const no    = this.noVotes();
     if (yes.length) {
-      groups.push({ label: 'Kann', bg: '#e2ede1', fg: '#3f7a4e', names: yes.map(v => v.person).join(', ') });
+      groups.push({ label: 'Kann',       bg: '#e2ede1', fg: '#3f7a4e', names: yes.map(v => v.person).join(', ') });
     }
     if (maybe.length) {
       groups.push({ label: 'Vielleicht', bg: '#f6e7cf', fg: '#a8742a', names: maybe.map(v => v.person).join(', ') });
     }
     if (no.length) {
       groups.push({ label: 'Kann nicht', bg: '#fdf3f1', fg: '#c1453f', names: no.map(v => v.person).join(', ') });
+    }
+    const open = this.members().filter(m => !this.votedNames().has(m.name));
+    if (open.length) {
+      groups.push({ label: 'Offen', bg: '#f1eee9', fg: '#8a8681', names: open.map(m => m.name).join(', ') });
     }
     return groups;
   });

@@ -14,7 +14,7 @@
     >
       <div class="flex items-center gap-2.5">
         <span
-          class="shrink-0 flex items-center justify-center w-6 h-6 rounded-lg text-[12px] font-bold"
+          class="shrink-0 flex items-center justify-center w-6 h-6 rounded-[8px] text-[12px] font-bold"
           [style.background]="isMostVoted() ? 'var(--accent)' : '#f1eee9'"
           [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
         >{{ rank() }}</span>
@@ -57,7 +57,7 @@
         [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
       >{{ rank() }}</span>
 
-      <span class="shrink-0 w-[160px] min-w-0">
+      <span class="shrink-0 w-[210px] min-w-0">
         <span class="block text-[15.5px] font-bold truncate" style="color: var(--text-primary)">{{ option().text }}</span>
         @if (option().description) {
           <span class="block text-[12.5px] mt-0.5" style="color: var(--text-secondary)">{{ option().description }}</span>
@@ -94,25 +94,25 @@
       <div class="px-4 pb-4 xl:px-5 xl:pb-5 xl:pl-16">
         <div class="h-px mb-3" style="background: var(--border-hairline)"></div>
         <div class="xl:hidden flex flex-col gap-2">
-          @for (g of groups(); track g.stars) {
+          @for (g of groups(); track g.label) {
             <div class="flex items-start gap-2.5 py-1">
               <span
-                class="shrink-0 inline-flex items-center justify-center min-w-[56px] h-6 px-2 rounded-lg text-[11.5px] font-bold"
+                class="shrink-0 inline-flex items-center justify-center min-w-[56px] h-6 px-2 rounded-[8px] text-[11.5px] font-bold"
                 [style.background]="g.bg"
                 [style.color]="g.fg"
-              >{{ g.stars }} ★</span>
+              >{{ g.label }}</span>
               <span class="text-[13px] leading-[1.5]" style="color: var(--text-secondary)">{{ g.names }}</span>
             </div>
           }
         </div>
         <div class="hidden xl:flex xl:flex-wrap xl:gap-2.5">
-          @for (g of groups(); track g.stars) {
+          @for (g of groups(); track g.label) {
             <div class="flex items-center gap-2 px-3 py-2 rounded-[14px]" [style.background]="g.bg + '40'">
               <span
                 class="inline-flex items-center justify-center h-[22px] px-2 rounded-[7px] text-[11.5px] font-bold"
                 [style.background]="g.bg"
                 [style.color]="g.fg"
-              >{{ g.stars }} ★</span>
+              >{{ g.label }}</span>
               <span class="text-[13px]" style="color: #5a5650">{{ g.names }}</span>
             </div>
           }

@@ -1,19 +1,47 @@
 @if (!hideResults()) {
-  <div class="flex items-center justify-between mb-3 px-1">
+  <div class="mb-3 flex items-center justify-between px-1">
     <h3 style="color: var(--text-primary)">Alle Optionen</h3>
     <button
-      class="flex items-center gap-1.5 h-8 px-3 rounded-[11px] text-[12.5px] font-bold transition-colors"
-      style="border: 1px solid var(--border-hairline); background: var(--surface-card); color: var(--text-secondary)"
+      class="flex h-8 items-center gap-1.5 rounded-[11px] px-3 text-[12.5px] font-bold transition-colors"
+      style="
+        border: 1px solid var(--border-hairline);
+        background: var(--surface-card);
+        color: var(--text-secondary);
+      "
       data-testid="results-sort-btn"
       (click)="toggleSort()"
     >
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M7 4v16"/><path d="M3.5 16.5L7 20l3.5-3.5"/>
-        <path d="M13.5 6.5h7"/><path d="M13.5 12h5"/><path d="M13.5 17.5h3"/>
+      <svg
+        width="13"
+        height="13"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M7 4v16" />
+        <path d="M3.5 16.5L7 20l3.5-3.5" />
+        <path d="M13.5 6.5h7" />
+        <path d="M13.5 12h5" />
+        <path d="M13.5 17.5h3" />
       </svg>
-      {{ sort() === 'top' ? 'Nach Zustimmung' : 'Nach Reihenfolge' }}
+      {{ sort() === "top" ? "Nach Zustimmung" : "Nach Reihenfolge" }}
     </button>
   </div>
+  @if (!isClosed()) {
+    <div class="mb-3">
+      <ds-button
+        variant="subtle"
+        [fullWidth]="true"
+        [routerLink]="['/polls', projectId(), 'vote', pollId()]"
+        [queryParams]="{ revote: true }"
+      >
+        Erneut abstimmen
+      </ds-button>
+    </div>
+  }
 }
 
 <div class="flex flex-col gap-2.5" data-testid="results-option-list">
@@ -21,6 +49,7 @@
     @if (optionType() === OptionType.Date) {
       <app-option-card-date
         [option]="option"
+        [members]="members()"
         [isMostVoted]="hasMostVotes(option)"
         [projectId]="projectId()"
         [pollId]="pollId()"
@@ -30,6 +59,7 @@
     } @else if (optionType() === OptionType.Rating) {
       <app-option-card-rating
         [option]="option"
+        [members]="members()"
         [isMostVoted]="hasMostVotes(option)"
         [projectId]="projectId()"
         [pollId]="pollId()"
@@ -39,6 +69,7 @@
     } @else {
       <app-option-card
         [option]="option"
+        [members]="members()"
         [isMostVoted]="hasMostVotes(option)"
         [projectId]="projectId()"
         [pollId]="pollId()"

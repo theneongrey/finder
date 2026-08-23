@@ -14,7 +14,7 @@
     >
       <div class="flex items-center gap-2.5">
         <span
-          class="shrink-0 flex items-center justify-center w-6 h-6 rounded-lg text-[12px] font-bold"
+          class="shrink-0 flex items-center justify-center w-6 h-6 rounded-[8px] text-[12px] font-bold"
           [style.background]="isMostVoted() ? 'var(--accent)' : '#f1eee9'"
           [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
         >{{ rank() }}</span>
@@ -61,7 +61,7 @@
         [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
       >{{ rank() }}</span>
 
-      <span class="shrink-0 w-[160px] min-w-0">
+      <span class="shrink-0 w-[210px] min-w-0">
         <span class="block text-[15.5px] font-bold truncate" style="color: var(--text-primary)">
           {{ option().text }}
         </span>

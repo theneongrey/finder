@@ -9,10 +9,10 @@ import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsResultsProgressBarComponent, ProgressSegment } from '@ds/results-progress-bar/ds-results-progress-bar.component';
 import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
-import { OptionDetail } from '../../../../_shared/models/poll-detail.model';
+import { OptionDetail, SharedWith } from '../../../../_shared/models/poll-detail.model';
 
 interface RatingGroup {
-  stars: number;
+  label: string;
   bg: string;
   fg: string;
   names: string;
@@ -26,6 +26,7 @@ interface RatingGroup {
 })
 export class OptionCardRatingComponent {
   option = input.required<OptionDetail>();
+  members = input<SharedWith[]>([]);
   isMostVoted = input(false);
   projectId = input('');
   pollId = input('');
@@ -69,15 +70,17 @@ export class OptionCardRatingComponent {
   });
 
   readonly avatarUsers = computed((): AvatarUser[] => {
-    const maxRating = Math.max(
-      ...this.option().votes.map(v => parseInt(v.choice ?? '0')),
-      0,
-    );
-    if (!maxRating) { return []; }
-    return this.option().votes
-      .filter(v => parseInt(v.choice ?? '0') === maxRating)
-      .map(v => ({ name: v.person }));
+    const voted = this.votedNames();
+    const members = this.members();
+    if (members.length) {
+      return members.map(m => ({ name: m.name, voted: voted.has(m.name) }));
+    }
+    return this.option().votes.map(v => ({ name: v.person, voted: true }));
   });
+
+  private readonly votedNames = computed(() =>
+    new Set(this.option().votes.map(v => v.person)),
+  );
 
   readonly groups = computed((): RatingGroup[] => {
     const groups: RatingGroup[] = [];
@@ -86,12 +89,11 @@ export class OptionCardRatingComponent {
         v => parseInt(v.choice ?? '0') === stars,
       );
       if (!voters.length) { continue; }
-      groups.push({
-        stars,
-        bg: '#f9edd5',
-        fg: '#a8742a',
-        names: voters.map(v => v.person).join(', '),
-      });
+      groups.push({ label: `${stars} ★`, bg: '#f9edd5', fg: '#a8742a', names: voters.map(v => v.person).join(', ') });
+    }
+    const open = this.members().filter(m => !this.votedNames().has(m.name));
+    if (open.length) {
+      groups.push({ label: 'Offen', bg: '#f1eee9', fg: '#8a8681', names: open.map(m => m.name).join(', ') });
     }
     return groups;
   });

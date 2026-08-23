@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsResultsProgressBarComponent, ProgressSegment } from '@ds/results-progress-bar/ds-results-progress-bar.component';
 import { AvatarStackComponent, AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
-import { OptionDetail } from '../../../../_shared/models/poll-detail.model';
+import { OptionDetail, SharedWith } from '../../../../_shared/models/poll-detail.model';
 
 interface VoteGroup {
   label: string;
@@ -26,6 +26,7 @@ interface VoteGroup {
 })
 export class OptionCardComponent {
   option = input.required<OptionDetail>();
+  members = input<SharedWith[]>([]);
   isMostVoted = input(false);
   projectId = input('');
   pollId = input('');
@@ -61,14 +62,22 @@ export class OptionCardComponent {
   readonly voteLine = computed(() => {
     const yes = this.yesVotes().length;
     const no = this.noVotes().length;
-    const parts: string[] = [];
-    if (yes) { parts.push(`${yes} × Ja`); }
-    if (no)  { parts.push(`${no} × Nein`); }
-    return parts.join(' · ') || 'Keine Stimmen';
+    if (!yes && !no) { return 'Keine Stimmen'; }
+    const parts = [`${yes} × Ja`, `${no} × Nein`];
+    return parts.join(' · ');
   });
 
-  readonly avatarUsers = computed((): AvatarUser[] =>
-    this.yesVotes().map(v => ({ name: v.person })),
+  readonly avatarUsers = computed((): AvatarUser[] => {
+    const voted = this.votedNames();
+    const members = this.members();
+    if (members.length) {
+      return members.map(m => ({ name: m.name, voted: voted.has(m.name) }));
+    }
+    return this.option().votes.map(v => ({ name: v.person, voted: true }));
+  });
+
+  private readonly votedNames = computed(() =>
+    new Set(this.option().votes.map(v => v.person)),
   );
 
   readonly groups = computed((): VoteGroup[] => {
@@ -76,20 +85,14 @@ export class OptionCardComponent {
     const yes = this.yesVotes();
     const no  = this.noVotes();
     if (yes.length) {
-      groups.push({
-        label: 'Ja',
-        bg: '#e2ede1',
-        fg: '#3f7a4e',
-        names: yes.map(v => v.person).join(', '),
-      });
+      groups.push({ label: 'Ja',   bg: '#e2ede1', fg: '#3f7a4e', names: yes.map(v => v.person).join(', ') });
     }
     if (no.length) {
-      groups.push({
-        label: 'Nein',
-        bg: '#fdf3f1',
-        fg: '#c1453f',
-        names: no.map(v => v.person).join(', '),
-      });
+      groups.push({ label: 'Nein', bg: '#fdf3f1', fg: '#c1453f', names: no.map(v => v.person).join(', ') });
+    }
+    const open = this.members().filter(m => !this.votedNames().has(m.name));
+    if (open.length) {
+      groups.push({ label: 'Offen', bg: '#f1eee9', fg: '#8a8681', names: open.map(m => m.name).join(', ') });
     }
     return groups;
   });

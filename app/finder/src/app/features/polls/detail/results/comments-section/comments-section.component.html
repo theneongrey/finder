@@ -56,6 +56,7 @@
         [placeholder]="'Kommentar schreiben…'"
         [autoResize]="true"
         [rows]="1"
+        [maxlength]="limits.commentContentLength"
         [(ngModel)]="newCommentText"
         (keydown.enter)="onEnterKey($event)"
       />

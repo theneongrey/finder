@@ -12,6 +12,7 @@ import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
+import { POLL_LIMITS } from '../../../_shared/models/poll-limits';
 
 @Component({
   selector: 'app-comments-section',
@@ -28,6 +29,7 @@ import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsSectionComponent {
+  protected readonly limits = POLL_LIMITS;
   comments = input<Comment[]>([]);
   addComment = output<string>();
 

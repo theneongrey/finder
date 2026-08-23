@@ -15,7 +15,7 @@ public class OptionConfiguration : IEntityTypeConfiguration<Option>
             .HasMaxLength(100);
 
         builder.Property(p => p.Description)
-            .HasMaxLength(100);
+            .HasMaxLength(200);
 
         builder.HasMany(p => p.Votes)
             .WithOne(p => p.Option);

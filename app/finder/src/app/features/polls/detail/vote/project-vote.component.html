@@ -1,4 +1,4 @@
-<div class="flex flex-col md:flex-row w-full">
+<div class="flex flex-col md:flex-row w-full" style="min-height: calc(100dvh - 100px);">
 
   <!-- ─── Desktop sidebar ──────────────────────────────────────── -->
   <aside
@@ -84,23 +84,22 @@
   </aside>
 
   <!-- ─── Main content ─────────────────────────────────────────── -->
-  <div class="flex flex-col flex-1 min-w-0">
+  <div class="flex flex-col flex-1 min-w-0 min-h-0">
 
-    <!-- Mobile: type badge + deadline row (hidden on desktop, shown in sidebar) -->
-    <div class="flex items-center justify-between gap-2 px-5 pt-3 pb-0 md:hidden">
-      <span class="vote-type-badge">{{ optionTypeLabelKey() | translate }}</span>
-      @if (closeDateDisplay()) {
-        <span class="flex items-center gap-1.5" style="font-size: 12.5px; font-weight: var(--weight-semibold); color: var(--text-secondary);">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path>
-          </svg>
-          {{ closeDateDisplay() }}
-        </span>
-      }
-    </div>
-
-    <!-- Progress header -->
+    <!-- Progress header (first line: type badge + deadline on mobile) -->
     <div class="px-5 pt-3 md:pt-6 md:px-8">
+      <!-- Type badge + deadline row — mobile only (desktop shows them in sidebar) -->
+      <div class="flex items-center justify-between gap-2 mb-3 md:hidden">
+        <span class="vote-type-badge">{{ optionTypeLabelKey() | translate }}</span>
+        @if (closeDateDisplay()) {
+          <span class="flex items-center gap-1.5" style="font-size: 12.5px; font-weight: var(--weight-semibold); color: var(--text-secondary);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path>
+            </svg>
+            {{ closeDateDisplay() }}
+          </span>
+        }
+      </div>
       <div class="flex items-baseline justify-between gap-2 mb-2">
         <span style="font-size: 13px; font-weight: var(--weight-bold); color: var(--text-primary);">
           {{ 'project.vote.optionProgress' | translate: { current: currentOptionIndex() + 1, total: totalCount() } }}
@@ -123,8 +122,8 @@
 
     <!-- Swipe card -->
     <div
-      class="relative mx-auto w-full px-5 md:px-8 mt-5"
-      style="height: 320px; max-width: 560px;"
+      class="relative mx-auto w-full px-5 md:px-8 mt-5 flex-1"
+      style="min-height: 280px; max-width: 560px;"
     >
       <div
         #voteCard
@@ -288,28 +287,9 @@
           </div>
         }
 
-        <!-- Secondary row: back · (desktop skip) · comment | (desktop keyboard hint) -->
-        <div
-          class="flex items-center mt-3.5"
-          [class.justify-center]="true"
-          [class.md:justify-between]="true"
-        >
+        <!-- Secondary row: (desktop skip) · comment | (desktop keyboard hint) -->
+        <div class="flex items-center justify-center md:justify-between mt-3.5">
           <div class="flex items-center">
-            <!-- Back button -->
-            <button
-              type="button"
-              class="ghost-action-btn"
-              (click)="goBack()"
-              [disabled]="!canGoBack()"
-              [style.color]="canGoBack() ? 'var(--text-secondary)' : '#c8c2b8'"
-              [style.cursor]="canGoBack() ? 'pointer' : 'not-allowed'"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 4L3.5 9.5 9 15"></path><path d="M3.5 9.5H14a6.5 6.5 0 0 1 0 13h-2"></path>
-              </svg>
-              <span>{{ 'project.vote.back' | translate }}</span>
-            </button>
-
             <!-- Skip button (desktop only, non-rating) -->
             @if (poll()?.optionType !== OptionType.Rating) {
               <button

@@ -103,8 +103,6 @@ export class ProjectVoteComponent implements AfterViewInit {
     });
   });
 
-  canGoBack = computed(() => this.currentOptionIndex() > 0);
-
   closeDateDisplay = computed(() => {
     const d = this.poll()?.closeDate;
     if (!d) return undefined;
@@ -299,14 +297,6 @@ export class ProjectVoteComponent implements AfterViewInit {
     }
 
     this.navigateToNextOption(optionId);
-  }
-
-  goBack(): void {
-    const idx = this.currentOptionIndex();
-    if (idx > 0) {
-      const prev = this.poll()!.options[idx - 1];
-      void this.router.navigate(['/polls/', this.projectId(), 'vote', this.pollId(), prev.id]);
-    }
   }
 
   navigateToOption(id: string): void {

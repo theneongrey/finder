@@ -1,7 +1,7 @@
-<div class="flex flex-col h-full w-full relative overflow-hidden">
+<div class="flex flex-col w-full relative">
 
   <!-- Progress header -->
-  <div class="flex-none px-5 pt-4 pb-3">
+  <div class="px-5 pt-4 pb-3">
     <div class="flex items-baseline justify-between gap-2 mb-2">
       <span
         class="text-sm font-semibold"
@@ -19,112 +19,112 @@
     <ds-progress-bar [percent]="progressPercent()" [height]="5" />
   </div>
 
-  <!-- Card area -->
-  <div class="flex-1 flex flex-col items-center justify-center min-h-0 px-5 pb-2">
-    <div class="vote-card-container relative w-full h-full" style="max-width: 520px;">
-
-      <!-- Main swipe card -->
-      <div
-        #voteCard
-        class="vote-card absolute inset-0 flex flex-col overflow-hidden cursor-grab select-none"
-        style="background: var(--surface-card); border-radius: var(--radius-3xl); border: 1px solid var(--border-hairline-soft); box-shadow: var(--shadow-card-soft);"
-        [style.transform]="cardTransform()"
-        [style.transition]="cardTransition()"
-        [style.opacity]="cardOpacity()"
-        (mousedown)="onDragStart($event)"
-        (touchstart)="onDragStart($event)"
+  <!-- Swipe card -->
+  <div
+    class="relative mx-auto w-full px-5"
+    style="height: 320px; max-width: 560px;"
+  >
+    <!-- Main swipe card -->
+    <div
+      #voteCard
+      class="vote-card absolute inset-0 mx-5 flex flex-col overflow-hidden cursor-grab select-none"
+      style="background: var(--surface-card); border-radius: var(--radius-3xl); border: 1px solid var(--border-hairline-soft); box-shadow: var(--shadow-card-soft);"
+      [style.transform]="cardTransform()"
+      [style.transition]="cardTransition()"
+      [style.opacity]="cardOpacity()"
+      (mousedown)="onDragStart($event)"
+      (touchstart)="onDragStart($event)"
+    >
+      <!-- YES stamp (top-left corner of card) -->
+      <span
+        class="vote-stamp vote-stamp--yes pointer-events-none"
+        [style.opacity]="rightCueOpacity()"
       >
-        <!-- YES stamp (top-left corner of card) -->
-        <span
-          class="vote-stamp vote-stamp--yes pointer-events-none"
-          [style.opacity]="rightCueOpacity()"
-        >
-          @if (poll()?.optionType === OptionType.Date) {
-            Kann
-          } @else if (poll()?.optionType === OptionType.Rating) {
-            <ds-icon name="star" [size]="20" color="var(--positive-strong)" />
-          } @else {
-            Ja
-          }
-        </span>
-
-        <!-- NO stamp (top-right corner of card) -->
-        <span
-          class="vote-stamp vote-stamp--no pointer-events-none"
-          [style.opacity]="leftCueOpacity()"
-        >
-          @if (poll()?.optionType === OptionType.Date) {
-            Nein
-          } @else if (poll()?.optionType === OptionType.Rating) {
-            <ds-icon name="star" [size]="20" color="var(--negative)" />
-          } @else {
-            Nein
-          }
-        </span>
-
-        <!-- Card content -->
-        @if (poll()?.optionType === OptionType.Rating) {
-          <app-vote-card-rating
-            [text]="option()?.text ?? ''"
-            [description]="option()?.description ?? ''"
-            [currentRating]="pendingRating()"
-            (rated)="pendingRating.set($event)"
-          />
-        } @else if (poll()?.optionType === OptionType.Date) {
-          <app-vote-card-date [text]="option()?.text ?? ''" [allOptionTexts]="allOptionTexts()" />
-        } @else if (option()?.meta?.imageUrl) {
-          <app-vote-card-image
-            [text]="option()?.text ?? ''"
-            [description]="option()?.description ?? ''"
-            [imageUrl]="option()?.meta?.imageUrl ?? ''"
-            [link]="option()?.meta?.url ?? ''"
-          />
+        @if (poll()?.optionType === OptionType.Date) {
+          Kann
+        } @else if (poll()?.optionType === OptionType.Rating) {
+          <ds-icon name="star" [size]="20" color="var(--positive-strong)" />
         } @else {
-          <app-vote-card-text
-            [text]="option()?.text ?? ''"
-            [description]="option()?.description ?? ''"
-            [link]="option()?.meta?.url ?? ''"
-          />
+          Ja
         }
+      </span>
 
-        <!-- Swipe hint (inside card, bottom) -->
-        @if (showHint()) {
-          <div
-            class="hint-overlay absolute inset-x-4 bottom-4 flex items-center justify-center h-10 rounded-xl pointer-events-none z-10"
-            [class.fading]="hintFading()"
-            style="background: rgba(36,39,43,.88); backdrop-filter: blur(4px);"
-          >
-            @if (poll()?.optionType === OptionType.Rating) {
-              <p class="text-xs font-semibold leading-relaxed" style="color: #fff;">
-                {{ "project.vote.swipeHintPre" | translate
-                }}<span style="color: #e0a42c; font-weight: 700;">{{
-                  "project.vote.ratingMax" | translate
-                }}</span
-                >{{ "project.vote.swipeHintMid" | translate
-                }}<span style="color: var(--negative); font-weight: 700;">{{
-                  "project.vote.ratingMin" | translate
-                }}</span>
-              </p>
-            } @else {
-              <p class="text-xs font-semibold" style="color: #fff;">
-                {{ "project.vote.swipeHintPre" | translate
-                }}<span style="color: var(--positive-strong); font-weight: 700;">{{
-                  "project.votesOverview.voteLabel.yes" | translate
-                }}</span
-                >{{ "project.vote.swipeHintMid" | translate
-                }}<span style="color: var(--negative); font-weight: 700;">{{
-                  "project.votesOverview.voteLabel.no" | translate
-                }}</span>
-              </p>
-            }
-          </div>
+      <!-- NO stamp (top-right corner of card) -->
+      <span
+        class="vote-stamp vote-stamp--no pointer-events-none"
+        [style.opacity]="leftCueOpacity()"
+      >
+        @if (poll()?.optionType === OptionType.Date) {
+          Nein
+        } @else if (poll()?.optionType === OptionType.Rating) {
+          <ds-icon name="star" [size]="20" color="var(--negative)" />
+        } @else {
+          Nein
         }
-      </div>
+      </span>
+
+      <!-- Card content -->
+      @if (poll()?.optionType === OptionType.Rating) {
+        <app-vote-card-rating
+          [text]="option()?.text ?? ''"
+          [description]="option()?.description ?? ''"
+          [currentRating]="pendingRating()"
+          (rated)="pendingRating.set($event)"
+        />
+      } @else if (poll()?.optionType === OptionType.Date) {
+        <app-vote-card-date [text]="option()?.text ?? ''" [allOptionTexts]="allOptionTexts()" />
+      } @else if (option()?.meta?.imageUrl) {
+        <app-vote-card-image
+          [text]="option()?.text ?? ''"
+          [description]="option()?.description ?? ''"
+          [imageUrl]="option()?.meta?.imageUrl ?? ''"
+          [link]="option()?.meta?.url ?? ''"
+        />
+      } @else {
+        <app-vote-card-text
+          [text]="option()?.text ?? ''"
+          [description]="option()?.description ?? ''"
+          [link]="option()?.meta?.url ?? ''"
+        />
+      }
+
+      <!-- Swipe hint (inside card, bottom) -->
+      @if (showHint()) {
+        <div
+          class="hint-overlay absolute inset-x-4 bottom-4 flex items-center justify-center h-10 rounded-xl pointer-events-none z-10"
+          [class.fading]="hintFading()"
+          style="background: rgba(36,39,43,.88); backdrop-filter: blur(4px);"
+        >
+          @if (poll()?.optionType === OptionType.Rating) {
+            <p class="text-xs font-semibold leading-relaxed" style="color: #fff;">
+              {{ "project.vote.swipeHintPre" | translate
+              }}<span style="color: #e0a42c; font-weight: 700;">{{
+                "project.vote.ratingMax" | translate
+              }}</span
+              >{{ "project.vote.swipeHintMid" | translate
+              }}<span style="color: var(--negative); font-weight: 700;">{{
+                "project.vote.ratingMin" | translate
+              }}</span>
+            </p>
+          } @else {
+            <p class="text-xs font-semibold" style="color: #fff;">
+              {{ "project.vote.swipeHintPre" | translate
+              }}<span style="color: var(--positive-strong); font-weight: 700;">{{
+                "project.votesOverview.voteLabel.yes" | translate
+              }}</span
+              >{{ "project.vote.swipeHintMid" | translate
+              }}<span style="color: var(--negative); font-weight: 700;">{{
+                "project.votesOverview.voteLabel.no" | translate
+              }}</span>
+            </p>
+          }
+        </div>
+      }
     </div>
   </div>
 
   <!-- Bottom CTAs -->
-  <div class="flex-none flex flex-col items-center gap-3 px-5 pb-6 pt-2">
+  <div class="flex flex-col items-center gap-3 px-5 pt-4 pb-6">
 
     @if (poll()?.optionType === OptionType.Rating) {
       <ds-button

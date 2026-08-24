@@ -57,6 +57,14 @@ export class DateOptionFormatService {
     return null;
   }
 
+  formatCloseDate(dateString: string): string {
+    const d = new Date(dateString);
+    return d.toLocaleString(
+      this.translateService.currentLang() ?? undefined,
+      { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' },
+    );
+  }
+
   private formatDate(date: Date): string {
     return date.toLocaleDateString(
       this.translateService.currentLang() ?? undefined,

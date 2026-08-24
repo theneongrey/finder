@@ -10,13 +10,21 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+
+const RATING_LABEL_KEYS: Record<number, string> = {
+  1: 'project.vote.ratingLabel.1',
+  2: 'project.vote.ratingLabel.2',
+  3: 'project.vote.ratingLabel.3',
+  4: 'project.vote.ratingLabel.4',
+  5: 'project.vote.ratingLabel.5',
+};
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
+import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
 import { VoteCardDateComponent } from './vote-card-date/vote-card-date.component';
-import { VoteCardRatingComponent } from './vote-card-rating/vote-card-rating.component';
 import { VoteCommentButtonComponent } from './vote-comment-button/vote-comment-button.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { OptionType } from '../../_shared/models/poll-detail.model';
@@ -24,6 +32,8 @@ import { DsVoteButtonsComponent } from '../../../../common/ui/ds-components/vote
 import { DsButtonComponent } from '../../../../common/ui/ds-components/button/ds-button.component';
 import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-icon.component';
 import { DsCardComponent } from '../../../../common/ui/ds-components/card/ds-card.component';
+import { PollTypeBadgeComponent } from '../../_shared/ui/poll-type-badge/poll-type-badge.component';
+import { AvatarStackComponent } from '../../../../common/ui/smart-components/avatar-stack/avatar-stack.component';
 
 @Component({
   selector: 'app-project-vote',
@@ -35,11 +45,12 @@ import { DsCardComponent } from '../../../../common/ui/ds-components/card/ds-car
     VoteCardTextComponent,
     VoteCardDateComponent,
     VoteCommentButtonComponent,
-    VoteCardRatingComponent,
-    DsVoteButtonsComponent,
+DsVoteButtonsComponent,
     DsButtonComponent,
     DsIconComponent,
     DsCardComponent,
+    PollTypeBadgeComponent,
+    AvatarStackComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -47,11 +58,14 @@ import { DsCardComponent } from '../../../../common/ui/ds-components/card/ds-car
     '(window:touchend)': 'onDragEnd()',
     '(window:mousemove)': 'onDragMove($event)',
     '(window:touchmove)': 'onDragMove($event)',
+    '(window:keydown)': 'onKeyDown($event)',
+    '(window:keyup)': 'onKeyUp($event)',
   },
 })
 export class ProjectVoteComponent implements AfterViewInit {
   private readonly titleService = inject(TitleBarService);
   private readonly projectDetailStore = inject(PollDetailStore);
+  private readonly dateFormat = inject(DateOptionFormatService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -87,29 +101,21 @@ export class ProjectVoteComponent implements AfterViewInit {
     return idx >= 0 ? idx : 0;
   });
 
-  optionTypeLabelKey = computed(() => {
-    switch (this.poll()?.optionType) {
-      case OptionType.Rating: return 'project.vote.optionType.rating';
-      case OptionType.Date: return 'project.vote.optionType.date';
-      default: return 'project.vote.optionType.yesno';
-    }
-  });
-
   progressSegments = computed(() => {
     const options = this.poll()?.options ?? [];
     const currentId = this.optionId();
     return options.map((o) => {
-      if (parseInt(o.choice ?? '0') > 0) return 'var(--accent)';
-      if (o.id === currentId) return '#9fc2cf';
+      if (parseInt(o.choice ?? '0') > 0) {return 'var(--accent)';}
+      if (o.id === currentId) {return '#9fc2cf';}
       return '#e2ded7';
     });
   });
 
   closeDateDisplay = computed(() => {
     const d = this.poll()?.closeDate;
-    if (!d) return undefined;
+    if (!d) {return undefined;}
     try {
-      return new Date(d).toLocaleString();
+      return this.dateFormat.formatCloseDate(d);
     } catch {
       return d;
     }
@@ -121,11 +127,19 @@ export class ProjectVoteComponent implements AfterViewInit {
     const votedNames = new Set<string>();
     for (const opt of options) {
       for (const v of opt.votes) {
-        if (parseInt(v.choice) > 0) votedNames.add(v.person);
+        if (parseInt(v.choice) > 0) {votedNames.add(v.person);}
       }
     }
     return members.map((m) => ({ name: m.name, picture: m.picture, hasVoted: votedNames.has(m.name) }));
   });
+
+  memberAvatars = computed(() =>
+    this.memberVoteStatus().map((m) => ({ name: m.name, voted: m.hasVoted })),
+  );
+
+  votedMemberCount = computed(() =>
+    this.memberVoteStatus().filter((m) => m.hasVoted).length,
+  );
 
   answerSummary = computed(() => {
     const options = this.poll()?.options ?? [];
@@ -151,7 +165,7 @@ export class ProjectVoteComponent implements AfterViewInit {
       }
       const isCurrent = o.id === currentId;
       return {
-        id: o.id, label: o.text,
+        id: o.id, label: isDate ? this.dateFormat.formatLabel(o.text) : o.text,
         badgeBg, badgeFg, dotBg, badgeKey, ratingValue,
         isCurrent,
         rowBg: isCurrent && !isPositive ? 'rgba(31,122,140,.06)' : 'transparent',
@@ -175,6 +189,27 @@ export class ProjectVoteComponent implements AfterViewInit {
   showHint = signal(!sessionStorage.getItem('finder_voted_session'));
   hintFading = signal(false);
   pendingRating = signal<number | undefined>(undefined);
+  hoveredRatingStar = signal<number | undefined>(undefined);
+
+  readonly ratingStars = [1, 2, 3, 4, 5];
+
+  protected readonly displayedRating = computed(
+    () => this.hoveredRatingStar() ?? this.pendingRating(),
+  );
+
+  protected readonly ratingLabelKey = computed(() => {
+    const r = this.displayedRating();
+    return r ? RATING_LABEL_KEYS[r] : 'project.vote.tapToRate';
+  });
+
+  protected readonly ratingLabelColor = computed(() =>
+    this.displayedRating() ? 'var(--accent)' : 'var(--text-muted)',
+  );
+
+  isStarFilled(star: number): boolean {
+    const displayed = this.displayedRating();
+    return displayed !== undefined && star <= displayed;
+  }
 
   private readonly localSkipCounts = signal(new Map<string, number>());
   private readonly hasVotedInSession = signal(false);
@@ -285,15 +320,42 @@ export class ProjectVoteComponent implements AfterViewInit {
     this.animateAndVote(false);
   }
 
-  castRating(stars: number): void {
-    this.castVote(stars.toString());
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+      return;
+    }
+    const isRating = this.poll()?.optionType === OptionType.Rating;
+    if (isRating) {
+      const digit = parseInt(event.key);
+      if (digit >= 1 && digit <= 5) {
+        this.hoveredRatingStar.set(digit);
+      }
+    } else {
+      if (event.key === 'ArrowRight') {
+        this.swipeYes();
+      } else if (event.key === 'ArrowLeft') {
+        this.swipeNo();
+      }
+    }
   }
 
-  submitRating(): void {
-    const r = this.pendingRating();
-    if (r !== undefined) {
-      this.castRating(r);
+  onKeyUp(event: KeyboardEvent): void {
+    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+      return;
     }
+    if (this.poll()?.optionType !== OptionType.Rating) {
+      return;
+    }
+    const digit = parseInt(event.key);
+    if (digit >= 1 && digit <= 5) {
+      this.hoveredRatingStar.set(undefined);
+      this.castRating(digit);
+    }
+  }
+
+  castRating(stars: number): void {
+    this.pendingRating.set(stars);
+    this.castVote(stars.toString());
   }
 
   skip(): void {
@@ -354,11 +416,13 @@ export class ProjectVoteComponent implements AfterViewInit {
   private resetCardState(): void {
     this.cardTransition.set('');
     this.cardTransform.set('');
-    this.cardOpacity.set(1);
+    this.cardOpacity.set(0);
     this.leftCueOpacity.set(0);
     this.rightCueOpacity.set(0);
     this.currentDragX = 0;
     this.pendingRating.set(undefined);
+    this.hoveredRatingStar.set(undefined);
+    requestAnimationFrame(() => requestAnimationFrame(() => this.cardOpacity.set(1)));
   }
 
   private castVote(choice: string): void {

@@ -552,7 +552,7 @@
     "perk3": "Eine Nachricht, sobald die Umfrage entschieden ist",
     "sharedLinkTitle": "Geteilte Umfrage",
     "memberWelcomeTitle": "Willkommen zurück, {{name}}",
-    "memberWelcomeSub": "Du bist Teil von „{{projectName}}"",
+    "memberWelcomeSub": "Du bist Teil von „{{projectName}}“",
     "memberVoteButton": "Jetzt abstimmen",
     "memberVoteHint": "Mehrfachauswahl möglich – du kannst deine Stimme jederzeit ändern.",
     "projectHeading": "Projekt",

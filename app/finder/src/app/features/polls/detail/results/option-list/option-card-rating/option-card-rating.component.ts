@@ -40,7 +40,7 @@ export class OptionCardRatingComponent {
 
   readonly averageRating = computed(() => {
     const rated = this.option().votes.filter(
-      v => v.choice && !isNaN(parseInt(v.choice)),
+      v => v.choice && !isNaN(parseInt(v.choice)) && parseInt(v.choice) > 0,
     );
     if (!rated.length) { return 0; }
     return rated.reduce((s, v) => s + parseInt(v.choice!), 0) / rated.length;
@@ -60,7 +60,7 @@ export class OptionCardRatingComponent {
   });
 
   readonly ratingsCount = computed(() =>
-    this.option().votes.filter(v => v.choice && !isNaN(parseInt(v.choice))).length,
+    this.option().votes.filter(v => v.choice && !isNaN(parseInt(v.choice)) && parseInt(v.choice) > 0).length,
   );
 
   readonly voteLine = computed(() => {

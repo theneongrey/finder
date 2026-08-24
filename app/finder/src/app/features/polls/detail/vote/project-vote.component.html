@@ -1,73 +1,144 @@
-<div class="flex flex-col md:flex-row w-full" style="min-height: calc(100dvh - 100px);">
-
+<div
+  class="flex w-full flex-col md:h-[calc(100dvh-60px)] md:flex-row md:overflow-hidden"
+  style="min-height: calc(100dvh - 60px)"
+>
   <!-- ─── Desktop sidebar ──────────────────────────────────────── -->
   <aside
-    class="hidden md:flex flex-col gap-[18px] overflow-y-auto"
-    style="width: 296px; flex: none; padding: 26px 22px; border-right: 1px solid var(--border-hairline-soft);"
+    class="hidden flex-col gap-[18px] overflow-y-auto md:flex"
+    style="
+      width: 296px;
+      flex: none;
+      padding: 26px 22px;
+      border-right: 1px solid var(--border-hairline-soft);
+    "
   >
     <div>
-      <span class="vote-type-badge">{{ optionTypeLabelKey() | translate }}</span>
+      <app-poll-type-badge [type]="poll()?.optionType ?? OptionType.YesNo" />
       <div
-        class="mt-3 leading-snug text-wrap-pretty"
-        style="font-family: var(--font-display); font-size: 26px; font-weight: var(--weight-bold); letter-spacing: -0.6px; line-height: 1.15; color: var(--text-primary);"
+        class="text-wrap-pretty mt-3 leading-snug"
+        style="
+          font-family: var(--font-display);
+          font-size: 26px;
+          font-weight: var(--weight-bold);
+          letter-spacing: -0.6px;
+          line-height: 1.15;
+          color: var(--text-primary);
+        "
       >
         {{ poll()?.name }}
       </div>
       @if (poll()?.description) {
         <p
           class="mt-2"
-          style="font-size: var(--fs-body-sm); line-height: 1.45; color: var(--text-secondary); text-wrap: pretty; margin: 0;"
+          style="
+            font-size: var(--fs-body-sm);
+            line-height: 1.45;
+            color: var(--text-secondary);
+            text-wrap: pretty;
+            margin: 0;
+          "
         >
           {{ poll()?.description }}
         </p>
       }
     </div>
 
-    @if (closeDateDisplay()) {
+    @if (closeDateDisplay() || memberVoteStatus().length > 0) {
       <div
         class="flex flex-col gap-[9px]"
-        style="padding: 14px 15px; border-radius: 16px; background: var(--surface-card); border: 1px solid var(--border-hairline-soft);"
+        style="
+          padding: 14px 15px;
+          border-radius: 16px;
+          background: var(--surface-card);
+          border: 1px solid var(--border-hairline-soft);
+        "
       >
-        <div class="flex items-center gap-2" style="font-size: 13.5px; font-weight: var(--weight-semibold); color: var(--text-secondary);">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path>
-          </svg>
-          <span>{{ 'project.vote.closeDate' | translate }} {{ closeDateDisplay() }}</span>
-        </div>
+        @if (closeDateDisplay()) {
+          <div
+            class="flex items-center gap-2"
+            style="
+              font-size: 13.5px;
+              font-weight: var(--weight-semibold);
+              color: var(--text-secondary);
+            "
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="8.5"></circle>
+              <path d="M12 7.5V12l3 2"></path>
+            </svg>
+            <span>{{ "project.vote.closeDate" | translate }} {{ closeDateDisplay() }}</span>
+          </div>
+        }
+        @if (memberVoteStatus().length > 0) {
+          <div
+            class="flex items-center gap-2"
+            style="font-size: 13px; color: var(--text-secondary);"
+          >
+            <span style="width: 15px; display: flex; justify-content: center;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--positive-strong);"></span>
+            </span>
+            <span>{{ "project.lastVote.voted" | translate: { count: votedMemberCount(), total: memberVoteStatus().length } }}</span>
+          </div>
+          <app-avatar-stack [users]="memberAvatars()" size="sm" [max]="12" />
+        }
       </div>
     }
 
     <div>
       <div
-        class="pb-[9px] px-[2px]"
-        style="font-size: 12px; font-weight: var(--weight-bold); letter-spacing: 0.7px; text-transform: uppercase; color: var(--text-muted);"
+        class="px-[2px] pb-[9px]"
+        style="
+          font-size: 12px;
+          font-weight: var(--weight-bold);
+          letter-spacing: 0.7px;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        "
       >
-        {{ 'project.vote.yourAnswers' | translate }}
+        {{ "project.vote.yourAnswers" | translate }}
       </div>
       <div class="flex flex-col gap-0.5">
         @for (item of answerSummary(); track item.id) {
           <button
             type="button"
             (click)="navigateToOption(item.id)"
-            class="flex items-center gap-[10px] w-full text-left cursor-pointer border-none rounded-[11px] transition-colors"
-            style="padding: 9px 10px; border-radius: 11px; transition: background var(--duration-fast) var(--ease-standard);"
+            class="flex w-full cursor-pointer items-center gap-[10px] rounded-[11px] border-none text-left transition-colors"
+            style="
+              padding: 9px 10px;
+              border-radius: 11px;
+              transition: background var(--duration-fast) var(--ease-standard);
+            "
             [style.background]="item.rowBg"
           >
             <span
               class="flex-none rounded-full"
-              style="width: 6px; height: 6px;"
+              style="width: 6px; height: 6px"
               [style.background]="item.dotBg"
             ></span>
             <span
-              class="flex-1 min-w-0 truncate"
-              style="font-size: 13.5px; color: var(--text-primary);"
+              class="min-w-0 flex-1 truncate"
+              style="font-size: 13.5px; color: var(--text-primary)"
               [style.font-weight]="item.fontWeight"
             >
               {{ item.label }}
             </span>
             <span
-              class="flex-none inline-flex items-center rounded-[8px]"
-              style="height: 23px; padding: 0 8px; font-size: 11.5px; font-weight: var(--weight-bold);"
+              class="inline-flex flex-none items-center rounded-[8px]"
+              style="
+                height: 23px;
+                padding: 0 8px;
+                font-size: 11.5px;
+                font-weight: var(--weight-bold);
+              "
               [style.background]="item.badgeBg"
               [style.color]="item.badgeFg"
             >
@@ -82,99 +153,95 @@
       </div>
     </div>
 
-    <!-- Who has voted -->
-    @if (memberVoteStatus().length > 0) {
-      <div>
-        <div
-          class="pb-[9px] px-[2px]"
-          style="font-size: 12px; font-weight: var(--weight-bold); letter-spacing: 0.7px; text-transform: uppercase; color: var(--text-muted);"
-        >
-          {{ 'project.vote.whoVoted' | translate }}
-        </div>
-        @if (memberVoteStatus().every(m => !m.hasVoted)) {
-          <p style="font-size: 13px; color: var(--text-secondary); padding: 4px 2px; margin: 0;">
-            {{ 'project.vote.noVotesYet' | translate }}
-          </p>
-        } @else {
-          <div class="flex flex-col gap-0.5">
-            @for (m of memberVoteStatus(); track m.name) {
-              <div class="flex items-center gap-[10px]" style="padding: 6px 10px;">
-                <span
-                  class="flex-none inline-flex items-center justify-center rounded-full overflow-hidden"
-                  style="width: 26px; height: 26px; background: var(--surface-secondary); font-size: 11px; font-weight: 700; color: var(--text-secondary); flex-shrink: 0;"
-                >
-                  @if (m.picture) {
-                    <img [src]="m.picture" [alt]="m.name" style="width: 100%; height: 100%; object-fit: cover;" />
-                  } @else {
-                    {{ m.name.charAt(0).toUpperCase() }}
-                  }
-                </span>
-                <span class="flex-1 min-w-0 truncate" style="font-size: 13.5px; color: var(--text-primary); font-weight: var(--weight-semibold);">
-                  {{ m.name }}
-                </span>
-                <span
-                  class="flex-none rounded-full"
-                  style="width: 8px; height: 8px;"
-                  [style.background]="m.hasVoted ? 'var(--positive-strong)' : '#d2cdc6'"
-                ></span>
-              </div>
-            }
-          </div>
-        }
-      </div>
-    }
   </aside>
 
   <!-- ─── Main content ─────────────────────────────────────────── -->
-  <div class="flex flex-col flex-1 min-w-0 min-h-0">
-
+  <div class="flex min-h-0 min-w-0 flex-1 flex-col md:justify-center md:gap-5">
     <!-- Progress header (first line: type badge + deadline on mobile) -->
-    <div class="px-5 pt-3 md:pt-6 md:px-8">
-      <!-- Type badge + deadline row — mobile only (desktop shows them in sidebar) -->
-      <div class="flex items-center justify-between gap-2 mb-3 md:hidden">
-        <span class="vote-type-badge">{{ optionTypeLabelKey() | translate }}</span>
-        @if (closeDateDisplay()) {
-          <span class="flex items-center gap-1.5" style="font-size: 12.5px; font-weight: var(--weight-semibold); color: var(--text-secondary);">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path>
-            </svg>
-            {{ closeDateDisplay() }}
-          </span>
-        }
-      </div>
-      <div class="flex items-baseline justify-between gap-2 mb-2">
-        <span style="font-size: 13px; font-weight: var(--weight-bold); color: var(--text-primary);">
-          {{ 'project.vote.optionProgress' | translate: { current: currentOptionIndex() + 1, total: totalCount() } }}
-        </span>
-        <span style="font-size: 12px; font-weight: var(--weight-semibold); color: var(--text-muted);">
-          {{ progressPercent() }}&thinsp;%
-        </span>
-      </div>
-      <!-- Segmented bar — one segment per option -->
-      <div class="flex gap-1">
-        @for (seg of progressSegments(); track $index) {
+    <div class="px-5 pt-3 md:px-8 md:pt-0">
+      <div class="mx-auto w-full" style="max-width: 560px">
+        <!-- Type badge + deadline row — mobile only (desktop shows them in sidebar) -->
+        <div class="mb-3 flex items-center justify-between gap-2 md:hidden">
+          <app-poll-type-badge
+            [type]="poll()?.optionType ?? OptionType.YesNo"
+          />
+          @if (closeDateDisplay()) {
+            <span
+              class="flex items-center gap-1.5"
+              style="
+                font-size: 12.5px;
+                font-weight: var(--weight-semibold);
+                color: var(--text-secondary);
+              "
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="8.5"></circle>
+                <path d="M12 7.5V12l3 2"></path>
+              </svg>
+              {{ closeDateDisplay() }}
+            </span>
+          }
+        </div>
+        <div class="mb-2 flex items-baseline justify-between gap-2">
           <span
-            class="flex-1 rounded-full"
-            style="height: 5px; transition: background 260ms ease;"
-            [style.background]="seg"
-          ></span>
-        }
+            style="
+              font-size: 13px;
+              font-weight: var(--weight-bold);
+              color: var(--text-primary);
+            "
+          >
+            {{
+              "project.vote.optionProgress"
+                | translate
+                  : { current: currentOptionIndex() + 1, total: totalCount() }
+            }}
+          </span>
+          <span
+            style="
+              font-size: 12px;
+              font-weight: var(--weight-semibold);
+              color: var(--text-muted);
+            "
+          >
+            {{ progressPercent() }}&thinsp;%
+          </span>
+        </div>
+        <!-- Segmented bar — one segment per option -->
+        <div class="flex gap-1">
+          @for (seg of progressSegments(); track $index) {
+            <span
+              class="flex-1 rounded-full"
+              style="height: 5px; transition: background 260ms ease"
+              [style.background]="seg"
+            ></span>
+          }
+        </div>
       </div>
     </div>
 
     <!-- Swipe card -->
     <div
-      class="relative mx-auto w-full px-5 md:px-8 mt-5 flex-1 vote-card-area"
-      style="min-height: 280px; max-width: 560px;"
+      class="vote-card-area relative mx-auto mt-5 w-full flex-1 px-5 md:mt-0 md:px-8"
+      style="max-width: 560px"
     >
       <div
         #voteCard
-        class="vote-card absolute inset-0 mx-5 md:mx-8 cursor-grab select-none"
+        class="vote-card absolute inset-0 mx-5 cursor-grab select-none md:mx-8"
         [style.transform]="cardTransform()"
         [style.transition]="cardTransition()"
         [style.opacity]="cardOpacity()"
         (mousedown)="onDragStart($event)"
         (touchstart)="onDragStart($event)"
+        (dragstart)="$event.preventDefault()"
       >
         <ds-card [padding]="0" [fill]="true">
           <!-- YES stamp -->
@@ -183,11 +250,11 @@
             [style.opacity]="rightCueOpacity()"
           >
             @if (poll()?.optionType === OptionType.Date) {
-              {{ 'project.vote.stampCan' | translate }}
+              {{ "project.vote.stampCan" | translate }}
             } @else if (poll()?.optionType === OptionType.Rating) {
               <ds-icon name="star" [size]="20" color="var(--positive-strong)" />
             } @else {
-              {{ 'project.votesOverview.voteLabel.yes' | translate }}
+              {{ "project.votesOverview.voteLabel.yes" | translate }}
             }
           </span>
 
@@ -197,24 +264,20 @@
             [style.opacity]="leftCueOpacity()"
           >
             @if (poll()?.optionType === OptionType.Date) {
-              {{ 'project.votesOverview.voteLabel.no' | translate }}
+              {{ "project.votesOverview.voteLabel.no" | translate }}
             } @else if (poll()?.optionType === OptionType.Rating) {
               <ds-icon name="star" [size]="20" color="var(--negative)" />
             } @else {
-              {{ 'project.votesOverview.voteLabel.no' | translate }}
+              {{ "project.votesOverview.voteLabel.no" | translate }}
             }
           </span>
 
           <!-- Card content -->
-          @if (poll()?.optionType === OptionType.Rating) {
-            <app-vote-card-rating
+          @if (poll()?.optionType === OptionType.Date) {
+            <app-vote-card-date
               [text]="option()?.text ?? ''"
-              [description]="option()?.description ?? ''"
-              [currentRating]="pendingRating()"
-              (rated)="pendingRating.set($event)"
+              [allOptionTexts]="allOptionTexts()"
             />
-          } @else if (poll()?.optionType === OptionType.Date) {
-            <app-vote-card-date [text]="option()?.text ?? ''" [allOptionTexts]="allOptionTexts()" />
           } @else if (option()?.meta?.imageUrl) {
             <app-vote-card-image
               [text]="option()?.text ?? ''"
@@ -233,29 +296,37 @@
           <!-- Swipe hint -->
           @if (showHint()) {
             <div
-              class="hint-overlay absolute inset-x-4 bottom-4 flex items-center justify-center h-10 rounded-xl pointer-events-none z-10"
+              class="hint-overlay pointer-events-none absolute inset-x-4 bottom-4 z-10 flex h-10 items-center justify-center"
               [class.fading]="hintFading()"
-              style="background: rgba(36,39,43,.88); backdrop-filter: blur(4px);"
+              style="
+                background: rgba(36, 39, 43, 0.88);
+                backdrop-filter: blur(4px);
+              "
             >
               @if (poll()?.optionType === OptionType.Rating) {
-                <p class="text-xs font-semibold leading-relaxed" style="color: #fff; margin: 0;">
+                <p
+                  class="text-xs leading-relaxed font-semibold"
+                  style="color: #fff; margin: 0"
+                >
                   {{ "project.vote.swipeHintPre" | translate
-                  }}<span style="color: #e0a42c; font-weight: 700;">{{
+                  }}<span style="color: #e0a42c; font-weight: 700">{{
                     "project.vote.ratingMax" | translate
                   }}</span
                   >{{ "project.vote.swipeHintMid" | translate
-                  }}<span style="color: var(--negative); font-weight: 700;">{{
+                  }}<span style="color: var(--negative); font-weight: 700">{{
                     "project.vote.ratingMin" | translate
                   }}</span>
                 </p>
               } @else {
-                <p class="text-xs font-semibold" style="color: #fff; margin: 0;">
+                <p class="text-xs font-semibold" style="color: #fff; margin: 0">
                   {{ "project.vote.swipeHintPre" | translate
-                  }}<span style="color: var(--positive-strong); font-weight: 700;">{{
-                    "project.votesOverview.voteLabel.yes" | translate
-                  }}</span
+                  }}<span
+                    style="color: var(--positive-strong); font-weight: 700"
+                    >{{
+                      "project.votesOverview.voteLabel.yes" | translate
+                    }}</span
                   >{{ "project.vote.swipeHintMid" | translate
-                  }}<span style="color: var(--negative); font-weight: 700;">{{
+                  }}<span style="color: var(--negative); font-weight: 700">{{
                     "project.votesOverview.voteLabel.no" | translate
                   }}</span>
                 </p>
@@ -267,104 +338,155 @@
     </div>
 
     <!-- Bottom CTAs -->
-    <div class="px-5 pt-5 pb-6 md:px-8 w-full">
-      <div class="mx-auto w-full" style="max-width: 560px;">
-
-        <!-- Rating: full-width Next button (same on mobile + desktop) -->
+    <div class="w-full px-5 pt-5 pb-6 md:px-8 md:pt-0">
+      <div class="mx-auto w-full" style="max-width: 560px">
         @if (poll()?.optionType === OptionType.Rating) {
-          <ds-button
-            variant="primary"
-            [fullWidth]="true"
-            [disabled]="pendingRating() === undefined"
-            (click)="submitRating()"
-          >
-            {{ pendingRating() !== undefined ? ('project.vote.next' | translate) : ('project.vote.pleaseRate' | translate) }}
-          </ds-button>
+          <!-- Stars -->
+          <div class="flex flex-col items-center gap-2">
+            <div class="flex gap-1.5 md:gap-2">
+              @for (star of ratingStars; track star) {
+                <button
+                  type="button"
+                  class="flex h-12 w-12 cursor-pointer items-center justify-center transition-colors hover:bg-[#f7f5f1] md:h-[58px] md:w-[58px]"
+                  style="
+                    border: none;
+                    background: transparent;
+                    border-radius: var(--radius-md);
+                  "
+                  (click)="castRating(star)"
+                  (mouseenter)="hoveredRatingStar.set(star)"
+                  (mouseleave)="hoveredRatingStar.set(undefined)"
+                >
+                  <svg
+                    class="h-9 w-9 md:h-11 md:w-11"
+                    viewBox="0 0 24 24"
+                    [attr.fill]="isStarFilled(star) ? '#e0a42c' : 'none'"
+                    [attr.stroke]="
+                      isStarFilled(star)
+                        ? '#e0a42c'
+                        : 'var(--border-hairline-strong)'
+                    "
+                    stroke-width="1.8"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 16.9 6.7 19.7l1.1-5.9-4.3-4.1 5.9-.8z"
+                    />
+                  </svg>
+                </button>
+              }
+            </div>
+            <div
+              style="
+                height: 22px;
+                font-size: 14.5px;
+                font-weight: var(--weight-bold);
+                transition: color var(--duration-standard) var(--ease-standard);
+              "
+              [style.color]="ratingLabelColor()"
+            >
+              {{ ratingLabelKey() | translate }}
+            </div>
+          </div>
         } @else {
           <!-- Mobile: circle vote buttons -->
           <div class="flex justify-center md:hidden">
             <ds-vote-buttons
-              [showMaybe]="poll()?.optionType === OptionType.Date"
               (yes)="swipeYes()"
               (no)="swipeNo()"
-              (skip)="skip()"
-              (maybe)="skip()"
             />
           </div>
 
           <!-- Desktop: rectangular vote buttons -->
-          <div class="hidden md:flex gap-3">
-            <button type="button" class="desktop-vote-btn desktop-vote-btn--no" (click)="swipeNo()">
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
-                <path d="M6 6l12 12"></path><path d="M18 6L6 18"></path>
+          <div class="hidden gap-3 md:flex">
+            <button
+              type="button"
+              class="desktop-vote-btn desktop-vote-btn--no"
+              (click)="swipeNo()"
+            >
+              <svg
+                width="19"
+                height="19"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+              >
+                <path d="M6 6l12 12"></path>
+                <path d="M18 6L6 18"></path>
               </svg>
               <span>
                 @if (poll()?.optionType === OptionType.Date) {
-                  {{ 'project.vote.stampCannot' | translate }}
+                  {{ "project.vote.stampCannot" | translate }}
                 } @else {
-                  {{ 'project.votesOverview.voteLabel.no' | translate }}
+                  {{ "project.votesOverview.voteLabel.no" | translate }}
                 }
               </span>
             </button>
-            @if (poll()?.optionType === OptionType.Date) {
-              <button type="button" class="desktop-vote-btn desktop-vote-btn--maybe" (click)="skip()">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M8.5 9a3.5 3.5 0 1 1 4.6 3.3c-.7.3-1.1 1-1.1 1.7v.6"></path>
-                  <circle cx="12" cy="18.3" r="1.15" fill="currentColor" stroke="none"></circle>
-                </svg>
-                <span>{{ 'project.vote.answerMaybe' | translate }}</span>
-              </button>
-            }
-            <button type="button" class="desktop-vote-btn desktop-vote-btn--yes" (click)="swipeYes()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <button
+              type="button"
+              class="desktop-vote-btn desktop-vote-btn--yes"
+              (click)="swipeYes()"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <path d="M4.5 12.5l4.5 4.5L20 5"></path>
               </svg>
               <span>
                 @if (poll()?.optionType === OptionType.Date) {
-                  {{ 'project.vote.stampCan' | translate }}
+                  {{ "project.vote.stampCan" | translate }}
                 } @else {
-                  {{ 'project.votesOverview.voteLabel.yes' | translate }}
+                  {{ "project.votesOverview.voteLabel.yes" | translate }}
                 }
               </span>
             </button>
           </div>
         }
 
-        <!-- Secondary row: (desktop skip) · comment | (desktop keyboard hint) -->
-        <div class="flex items-center justify-center md:justify-between mt-3.5">
-          <div class="flex items-center">
-            <!-- Skip button (desktop only, non-rating) -->
-            @if (poll()?.optionType !== OptionType.Rating) {
-              <button
-                type="button"
-                class="ghost-action-btn hidden md:inline-flex"
-                (click)="skip()"
-              >
-                {{ 'project.vote.skip' | translate }}
-              </button>
-            }
-
-            <!-- Comment button -->
-            <app-vote-comment-button [pollId]="pollId()" [optionText]="option()?.text" />
-          </div>
-
-          <!-- Keyboard hint (desktop only) -->
-          <span class="hidden md:flex items-center gap-1.5" style="font-size: 12.5px; color: var(--text-muted);">
+        <!-- Secondary row: keyboard hint | comment + skip -->
+        <div class="mt-3.5 flex items-center justify-between">
+          <!-- Left: keyboard hint (desktop only) -->
+          <span
+            class="hidden items-center gap-1.5 md:flex"
+            style="font-size: 12.5px; color: var(--text-muted)"
+          >
             <span class="key-badge">
-              @if (poll()?.optionType === OptionType.Rating) { 1–5 } @else { ← → }
+              @if (poll()?.optionType === OptionType.Rating) {
+                1–5
+              } @else {
+                ← →
+              }
             </span>
             <span>
               @if (poll()?.optionType === OptionType.Rating) {
-                {{ 'project.vote.keyboardRating' | translate }}
+                {{ "project.vote.keyboardRating" | translate }}
               } @else {
-                {{ 'project.vote.keyboard' | translate }}
+                {{ "project.vote.keyboard" | translate }}
               }
             </span>
           </span>
-        </div>
 
+          <!-- Right: comment + skip -->
+          <div class="ml-auto flex items-center gap-2">
+            <app-vote-comment-button
+              [pollId]="pollId()"
+              [optionText]="option()?.text"
+            />
+            <ds-button variant="soft" size="sm" (click)="skip()">
+              {{ "project.vote.skip" | translate }}
+            </ds-button>
+          </div>
+        </div>
       </div>
     </div>
-
   </div>
 </div>

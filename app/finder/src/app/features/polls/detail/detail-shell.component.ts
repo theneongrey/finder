@@ -26,7 +26,7 @@ export class PollDetailShellComponent {
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
       startWith(null),
-      map(() => this.router.url.includes('/edit/') || this.router.url.includes('/results/')),
+      map(() => this.router.url.includes('/edit/') || this.router.url.includes('/results/') || this.router.url.includes('/vote/')),
     ),
     { initialValue: false },
   );

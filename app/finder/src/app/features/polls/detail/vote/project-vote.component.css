@@ -1,5 +1,6 @@
 @media (min-width: 768px) {
   .vote-card-area {
+    min-height: 420px;
     max-height: 620px;
   }
 }
@@ -21,7 +22,6 @@
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.9);
   pointer-events: none;
-  transition: opacity var(--duration-fast) var(--ease-standard);
 }
 
 .vote-stamp--yes {
@@ -40,12 +40,21 @@
 
 /* Swipe hint — nudge animation to hint at dragging */
 @keyframes vtNudge {
-  0%, 62%, 100% { transform: translateX(0); }
-  72% { transform: translateX(7px) rotate(1.4deg); }
-  86% { transform: translateX(-7px) rotate(-1.4deg); }
+  0%,
+  62%,
+  100% {
+    transform: translateX(0);
+  }
+  72% {
+    transform: translateX(7px) rotate(1.4deg);
+  }
+  86% {
+    transform: translateX(-7px) rotate(-1.4deg);
+  }
 }
 
 .hint-overlay {
+  border-radius: var(--radius-md);
   transition: opacity 0.3s ease-out;
   animation: vtNudge 4.2s ease-in-out 1.2s infinite;
 }
@@ -53,21 +62,6 @@
 .hint-overlay.fading {
   opacity: 0;
   animation: none;
-}
-
-/* Poll type badge */
-.vote-type-badge {
-  display: inline-flex;
-  align-items: center;
-  height: 23px;
-  padding: 0 9px;
-  border-radius: 8px;
-  background: #f1eee9;
-  color: #6f6b66;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
 }
 
 /* Desktop rectangular vote buttons */
@@ -87,21 +81,27 @@
     background var(--duration-fast) var(--ease-standard),
     transform var(--duration-fast) var(--ease-standard);
 }
-.desktop-vote-btn:active { transform: scale(0.985); }
+.desktop-vote-btn:active {
+  transform: scale(0.985);
+}
 
 .desktop-vote-btn--no {
   border: 1.5px solid #f0c3bd;
   background: #fff;
   color: #c1453f;
 }
-.desktop-vote-btn--no:hover { background: #fdf3f1; }
+.desktop-vote-btn--no:hover {
+  background: #fdf3f1;
+}
 
 .desktop-vote-btn--maybe {
   border: 1.5px solid #e6cfa4;
   background: #fff;
   color: #b3863a;
 }
-.desktop-vote-btn--maybe:hover { background: #fbf4e8; }
+.desktop-vote-btn--maybe:hover {
+  background: #fbf4e8;
+}
 
 .desktop-vote-btn--yes {
   border: none;
@@ -109,7 +109,9 @@
   color: #fff;
   box-shadow: 0 8px 20px rgba(93, 154, 86, 0.3);
 }
-.desktop-vote-btn--yes:hover { filter: brightness(1.05); }
+.desktop-vote-btn--yes:hover {
+  filter: brightness(1.05);
+}
 
 /* Ghost action buttons (back, skip, comment row) */
 .ghost-action-btn {
@@ -127,9 +129,15 @@
   cursor: pointer;
   transition: background var(--duration-fast) var(--ease-standard);
 }
-.ghost-action-btn:hover { background: rgba(255, 255, 255, 0.6); }
-.ghost-action-btn:disabled { cursor: not-allowed; }
-.ghost-action-btn:disabled:hover { background: transparent; }
+.ghost-action-btn:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+.ghost-action-btn:disabled {
+  cursor: not-allowed;
+}
+.ghost-action-btn:disabled:hover {
+  background: transparent;
+}
 
 /* Keyboard shortcut hint badge */
 .key-badge {

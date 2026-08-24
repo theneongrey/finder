@@ -1,23 +1,32 @@
-<hlm-popover sideOffset="5" [state]="popoverOpen()" (stateChanged)="popoverOpen.set($event)">
-  <ds-button hlmPopoverTrigger variant="subtle" size="sm" icon="comment">
-    {{ 'project.vote.addComment' | translate }}
-  </ds-button>
-  <hlm-popover-content class="flex flex-col gap-3 min-w-64" *hlmPopoverPortal="let ctx">
-    <input
-      hlmInput
-      type="text"
-      [(ngModel)]="commentText"
-      [placeholder]="'project.vote.commentPlaceholder' | translate"
-      [attr.maxlength]="limits.commentContentLength"
-      class="w-full"
-    />
-    <div class="flex gap-2 justify-end">
-      <ds-button variant="ghost" size="sm" (click)="cancelComment()">
-        {{ 'project.common.cancel' | translate }}
-      </ds-button>
-      <ds-button variant="primary" size="sm" (click)="submitComment()">
-        {{ 'project.vote.submitComment' | translate }}
-      </ds-button>
+<hlm-popover sideOffset="8" align="end" [state]="popoverOpen()" (stateChanged)="popoverOpen.set($event)">
+  <span hlmPopoverTrigger class="inline-flex">
+    <ds-button variant="subtle" size="sm" icon="comment">
+      {{ 'project.vote.addComment' | translate }}
+    </ds-button>
+  </span>
+  <hlm-popover-content class="!w-80 !p-0 !bg-transparent !shadow-none !ring-0" *hlmPopoverPortal="let ctx">
+    <div
+      class="flex flex-col gap-3 rounded-xl p-4"
+      style="background: var(--surface-card); box-shadow: 0 8px 24px rgba(0,0,0,.12), 0 1px 4px rgba(0,0,0,.06); border: 1px solid var(--border-hairline-soft);"
+    >
+      <p class="text-sm font-semibold" style="margin: 0; color: var(--text-primary)">
+        {{ 'project.vote.commentTitle' | translate }}
+      </p>
+      <ds-textarea
+        [autoResize]="true"
+        [maxHeight]="'160px'"
+        [placeholder]="'project.vote.commentPlaceholder' | translate"
+        [maxlength]="limits.commentContentLength"
+        [(ngModel)]="commentText"
+      />
+      <div class="flex gap-2 justify-end">
+        <ds-button variant="ghost" size="sm" (click)="cancelComment()">
+          {{ 'project.common.cancel' | translate }}
+        </ds-button>
+        <ds-button variant="primary" size="sm" (click)="submitComment()">
+          {{ 'project.vote.submitComment' | translate }}
+        </ds-button>
+      </div>
     </div>
   </hlm-popover-content>
 </hlm-popover>

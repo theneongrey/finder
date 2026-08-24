@@ -55,6 +55,11 @@
   --amber-avatar-bg: #f6e7cf;
   --amber-avatar-fg: #b3863a;
 
+  /* Star / rating gold */
+  --star: #e0a42c;
+  --star-bg: #f9edd5;
+  --star-fg: var(--amber-900);
+
   /* Purple — person / manager role */
   --purple-bg: #e6e0f3;
   --purple-fg: #6f5aa6;

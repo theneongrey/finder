@@ -1,0 +1,107 @@
+<div
+  class="vote-card-area relative mx-auto mt-5 w-full flex-1 px-5 md:mt-0 md:px-8"
+  style="max-width: 560px"
+>
+  <div
+    #voteCard
+    class="vote-card absolute inset-0 mx-5 cursor-grab select-none md:mx-8"
+    [style.transform]="cardTransform()"
+    [style.transition]="cardTransition()"
+    [style.opacity]="cardOpacity()"
+    (mousedown)="onDragStart($event)"
+    (touchstart)="onDragStart($event)"
+    (dragstart)="$event.preventDefault()"
+  >
+    <ds-card [padding]="0" [fill]="true">
+      <!-- YES stamp -->
+      <span
+        class="vote-stamp vote-stamp--yes pointer-events-none"
+        [style.opacity]="rightCueOpacity()"
+      >
+        @if (optionType() === OptionType.Date) {
+          {{ "project.vote.stampCan" | translate }}
+        } @else if (optionType() === OptionType.Rating) {
+          <ds-icon name="star" [size]="20" color="var(--positive-strong)" />
+        } @else {
+          {{ "project.votesOverview.voteLabel.yes" | translate }}
+        }
+      </span>
+
+      <!-- NO stamp -->
+      <span
+        class="vote-stamp vote-stamp--no pointer-events-none"
+        [style.opacity]="leftCueOpacity()"
+      >
+        @if (optionType() === OptionType.Date) {
+          {{ "project.votesOverview.voteLabel.no" | translate }}
+        } @else if (optionType() === OptionType.Rating) {
+          <ds-icon name="star" [size]="20" color="var(--negative)" />
+        } @else {
+          {{ "project.votesOverview.voteLabel.no" | translate }}
+        }
+      </span>
+
+      <!-- Card content -->
+      @if (optionType() === OptionType.Date) {
+        <app-vote-card-date
+          [text]="option()?.text ?? ''"
+          [allOptionTexts]="allOptionTexts()"
+        />
+      } @else if (option()?.meta?.imageUrl) {
+        <app-vote-card-image
+          [text]="option()?.text ?? ''"
+          [description]="option()?.description ?? ''"
+          [imageUrl]="option()?.meta?.imageUrl ?? ''"
+          [link]="option()?.meta?.url ?? ''"
+        />
+      } @else {
+        <app-vote-card-text
+          [text]="option()?.text ?? ''"
+          [description]="option()?.description ?? ''"
+          [link]="option()?.meta?.url ?? ''"
+        />
+      }
+
+      <!-- Swipe hint -->
+      @if (showHint()) {
+        <div
+          class="hint-overlay pointer-events-none absolute inset-x-4 bottom-4 z-10 flex h-10 items-center justify-center"
+          [class.fading]="hintFading()"
+          style="
+            background: rgba(36, 39, 43, 0.88);
+            backdrop-filter: blur(4px);
+          "
+        >
+          @if (optionType() === OptionType.Rating) {
+            <p
+              class="text-xs leading-relaxed font-semibold"
+              style="color: #fff; margin: 0"
+            >
+              {{ "project.vote.swipeHintPre" | translate
+              }}<span class="font-bold text-[var(--star)]">{{
+                "project.vote.ratingMax" | translate
+              }}</span
+              >{{ "project.vote.swipeHintMid" | translate
+              }}<span style="color: var(--negative); font-weight: 700">{{
+                "project.vote.ratingMin" | translate
+              }}</span>
+            </p>
+          } @else {
+            <p class="text-xs font-semibold" style="color: #fff; margin: 0">
+              {{ "project.vote.swipeHintPre" | translate
+              }}<span
+                style="color: var(--positive-strong); font-weight: 700"
+                >{{
+                  "project.votesOverview.voteLabel.yes" | translate
+                }}</span
+              >{{ "project.vote.swipeHintMid" | translate
+              }}<span style="color: var(--negative); font-weight: 700">{{
+                "project.votesOverview.voteLabel.no" | translate
+              }}</span>
+            </p>
+          }
+        </div>
+      }
+    </ds-card>
+  </div>
+</div>

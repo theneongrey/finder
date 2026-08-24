@@ -51,7 +51,7 @@ export class OptionCardRatingComponent {
   );
 
   readonly segments = computed((): ProgressSegment[] => [
-    { percent: this.progressPercent(), color: '#e0a42c' },
+    { percent: this.progressPercent(), color: 'var(--star)' },
   ]);
 
   readonly avgLabel = computed(() => {
@@ -90,7 +90,7 @@ export class OptionCardRatingComponent {
         v => parseInt(v.choice ?? '0') === stars,
       );
       if (!voters.length) { continue; }
-      groups.push({ label: `${stars} ★`, bg: '#f9edd5', fg: '#a8742a', names: voters.map(v => v.person).join(', ') });
+      groups.push({ label: `${stars} ★`, bg: 'var(--star-bg)', fg: 'var(--star-fg)', names: voters.map(v => v.person).join(', ') });
     }
     const open = this.members().filter(m => !this.votedNames().has(m.name));
     if (open.length) {

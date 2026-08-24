@@ -1,0 +1,65 @@
+@media (min-width: 768px) {
+  .vote-card-area {
+    min-height: 420px;
+    max-height: 620px;
+  }
+}
+
+.vote-card:active {
+  cursor: grabbing;
+}
+
+/* Swipe stamps */
+.vote-stamp {
+  position: absolute;
+  top: 20px;
+  z-index: 20;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0.5px;
+  padding: 6px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+
+.vote-stamp--yes {
+  left: 20px;
+  color: var(--positive-strong);
+  border: 2.5px solid var(--positive-strong);
+  transform: rotate(-11deg);
+}
+
+.vote-stamp--no {
+  right: 20px;
+  color: var(--negative);
+  border: 2.5px solid var(--negative);
+  transform: rotate(11deg);
+}
+
+/* Swipe hint — nudge animation to hint at dragging */
+@keyframes vtNudge {
+  0%,
+  62%,
+  100% {
+    transform: translateX(0);
+  }
+  72% {
+    transform: translateX(7px) rotate(1.4deg);
+  }
+  86% {
+    transform: translateX(-7px) rotate(-1.4deg);
+  }
+}
+
+.hint-overlay {
+  border-radius: var(--radius-md);
+  transition: opacity 0.3s ease-out;
+  animation: vtNudge 4.2s ease-in-out 1.2s infinite;
+}
+
+.hint-overlay.fading {
+  opacity: 0;
+  animation: none;
+}

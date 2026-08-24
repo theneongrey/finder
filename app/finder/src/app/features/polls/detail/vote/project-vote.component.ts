@@ -1,68 +1,43 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
-  ElementRef,
   inject,
   input,
+  OnDestroy,
   signal,
   viewChild,
 } from '@angular/core';
-
-const RATING_LABEL_KEYS: Record<number, string> = {
-  1: 'project.vote.ratingLabel.1',
-  2: 'project.vote.ratingLabel.2',
-  3: 'project.vote.ratingLabel.3',
-  4: 'project.vote.ratingLabel.4',
-  5: 'project.vote.ratingLabel.5',
-};
+import { DOCUMENT } from '@angular/common';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
-import { VoteCardImageComponent } from './vote-card-image/vote-card-image.component';
-import { VoteCardTextComponent } from './vote-card-text/vote-card-text.component';
-import { VoteCardDateComponent } from './vote-card-date/vote-card-date.component';
-import { VoteCommentButtonComponent } from './vote-comment-button/vote-comment-button.component';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { OptionType } from '../../_shared/models/poll-detail.model';
-import { DsVoteButtonsComponent } from '../../../../common/ui/ds-components/vote-buttons/ds-vote-buttons.component';
-import { DsButtonComponent } from '../../../../common/ui/ds-components/button/ds-button.component';
-import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-icon.component';
-import { DsCardComponent } from '../../../../common/ui/ds-components/card/ds-card.component';
-import { PollTypeBadgeComponent } from '../../_shared/ui/poll-type-badge/poll-type-badge.component';
-import { AvatarStackComponent } from '../../../../common/ui/smart-components/avatar-stack/avatar-stack.component';
+import { VoteSidebarComponent } from './vote-sidebar/vote-sidebar.component';
+import { VoteProgressHeaderComponent } from './vote-progress-header/vote-progress-header.component';
+import { VoteSwipeCardComponent } from './vote-swipe-card/vote-swipe-card.component';
+import { VoteCtaAreaComponent } from './vote-cta-area/vote-cta-area.component';
 
 @Component({
   selector: 'app-project-vote',
   templateUrl: './project-vote.component.html',
   styleUrl: './project-vote.component.css',
   imports: [
-    TranslatePipe,
-    VoteCardImageComponent,
-    VoteCardTextComponent,
-    VoteCardDateComponent,
-    VoteCommentButtonComponent,
-DsVoteButtonsComponent,
-    DsButtonComponent,
-    DsIconComponent,
-    DsCardComponent,
-    PollTypeBadgeComponent,
-    AvatarStackComponent,
+    VoteSidebarComponent,
+    VoteProgressHeaderComponent,
+    VoteSwipeCardComponent,
+    VoteCtaAreaComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '(window:mouseup)': 'onDragEnd()',
-    '(window:touchend)': 'onDragEnd()',
-    '(window:mousemove)': 'onDragMove($event)',
-    '(window:touchmove)': 'onDragMove($event)',
     '(window:keydown)': 'onKeyDown($event)',
     '(window:keyup)': 'onKeyUp($event)',
   },
 })
-export class ProjectVoteComponent implements AfterViewInit {
+export class ProjectVoteComponent implements OnDestroy {
+  private readonly document = inject(DOCUMENT);
   private readonly titleService = inject(TitleBarService);
   private readonly projectDetailStore = inject(PollDetailStore);
   private readonly dateFormat = inject(DateOptionFormatService);
@@ -71,7 +46,8 @@ export class ProjectVoteComponent implements AfterViewInit {
 
   readonly OptionType = OptionType;
 
-  voteCardRef = viewChild.required<ElementRef<HTMLElement>>('voteCard');
+  swipeCardRef = viewChild.required(VoteSwipeCardComponent);
+  ctaAreaRef = viewChild.required(VoteCtaAreaComponent);
 
   projectId = this.projectDetailStore.projectId;
   pollId = input('');
@@ -105,15 +81,15 @@ export class ProjectVoteComponent implements AfterViewInit {
     const options = this.poll()?.options ?? [];
     const currentId = this.optionId();
     return options.map((o) => {
-      if (parseInt(o.choice ?? '0') > 0) {return 'var(--accent)';}
-      if (o.id === currentId) {return '#9fc2cf';}
+      if (parseInt(o.choice ?? '0') > 0) { return 'var(--accent)'; }
+      if (o.id === currentId) { return '#9fc2cf'; }
       return '#e2ded7';
     });
   });
 
   closeDateDisplay = computed(() => {
     const d = this.poll()?.closeDate;
-    if (!d) {return undefined;}
+    if (!d) { return undefined; }
     try {
       return this.dateFormat.formatCloseDate(d);
     } catch {
@@ -121,102 +97,13 @@ export class ProjectVoteComponent implements AfterViewInit {
     }
   });
 
-  memberVoteStatus = computed(() => {
-    const members = this.projectDetailStore.currentProject()?.sharedWith ?? [];
-    const options = this.poll()?.options ?? [];
-    const votedNames = new Set<string>();
-    for (const opt of options) {
-      for (const v of opt.votes) {
-        if (parseInt(v.choice) > 0) {votedNames.add(v.person);}
-      }
-    }
-    return members.map((m) => ({ name: m.name, picture: m.picture, hasVoted: votedNames.has(m.name) }));
-  });
-
-  memberAvatars = computed(() =>
-    this.memberVoteStatus().map((m) => ({ name: m.name, voted: m.hasVoted })),
-  );
-
-  votedMemberCount = computed(() =>
-    this.memberVoteStatus().filter((m) => m.hasVoted).length,
-  );
-
-  answerSummary = computed(() => {
-    const options = this.poll()?.options ?? [];
-    const type = this.poll()?.optionType ?? OptionType.YesNo;
-    const currentId = this.optionId();
-    const isDate = type === OptionType.Date;
-    const isRating = type === OptionType.Rating;
-    return options.map((o) => {
-      const choiceNum = parseInt(o.choice ?? '0');
-      const isPositive = choiceNum > 0;
-      let badgeBg = '#f1eee9', badgeFg = '#8a8681', dotBg = '#d2cdc6';
-      let badgeKey = 'project.vote.answerOpen';
-      let ratingValue = 0;
-      if (isRating && isPositive) {
-        ratingValue = choiceNum;
-        badgeBg = '#f9edd5'; badgeFg = '#a8742a'; dotBg = '#e0a42c';
-      } else if (choiceNum === 1) {
-        badgeKey = isDate ? 'project.vote.stampCan' : 'project.votesOverview.voteLabel.yes';
-        badgeBg = '#e2ede1'; badgeFg = '#3f7a4e'; dotBg = '#5d9a56';
-      } else if (choiceNum === 2) {
-        badgeKey = isDate ? 'project.vote.stampCannot' : 'project.votesOverview.voteLabel.no';
-        badgeBg = '#fdf3f1'; badgeFg = '#c1453f'; dotBg = '#c1453f';
-      }
-      const isCurrent = o.id === currentId;
-      return {
-        id: o.id, label: isDate ? this.dateFormat.formatLabel(o.text) : o.text,
-        badgeBg, badgeFg, dotBg, badgeKey, ratingValue,
-        isCurrent,
-        rowBg: isCurrent && !isPositive ? 'rgba(31,122,140,.06)' : 'transparent',
-        fontWeight: isCurrent ? '700' : '600',
-      };
-    });
-  });
-
-  private readonly SWIPE_THRESHOLD = 75;
-
-  private startX = 0;
-  private isDragging = false;
-  private currentDragX = 0;
-  private swipeInProgress = false;
-
-  cardTransform = signal('');
-  cardTransition = signal('');
-  cardOpacity = signal(1);
-  leftCueOpacity = signal(0);
-  rightCueOpacity = signal(0);
-  showHint = signal(!sessionStorage.getItem('finder_voted_session'));
-  hintFading = signal(false);
-  pendingRating = signal<number | undefined>(undefined);
-  hoveredRatingStar = signal<number | undefined>(undefined);
-
-  readonly ratingStars = [1, 2, 3, 4, 5];
-
-  protected readonly displayedRating = computed(
-    () => this.hoveredRatingStar() ?? this.pendingRating(),
-  );
-
-  protected readonly ratingLabelKey = computed(() => {
-    const r = this.displayedRating();
-    return r ? RATING_LABEL_KEYS[r] : 'project.vote.tapToRate';
-  });
-
-  protected readonly ratingLabelColor = computed(() =>
-    this.displayedRating() ? 'var(--accent)' : 'var(--text-muted)',
-  );
-
-  isStarFilled(star: number): boolean {
-    const displayed = this.displayedRating();
-    return displayed !== undefined && star <= displayed;
-  }
-
   private readonly localSkipCounts = signal(new Map<string, number>());
   private readonly hasVotedInSession = signal(false);
   private readonly revoteMode = signal(false);
   private readonly visitedInRevote = signal(new Set<string>());
 
   constructor() {
+    this.document.body.style.overflow = 'hidden';
     if (this.route.snapshot.queryParamMap.get('revote')) {
       this.revoteMode.set(true);
     }
@@ -230,10 +117,6 @@ export class ProjectVoteComponent implements AfterViewInit {
       }
     });
     effect(() => {
-      this.optionId();
-      this.resetCardState();
-    });
-    effect(() => {
       if (this.projectId()) {
         if (!this.optionId()) {
           this.navigateToNextOption(undefined, true);
@@ -242,119 +125,17 @@ export class ProjectVoteComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.voteCardRef().nativeElement.addEventListener(
-      'touchmove',
-      (e) => {
-        if (this.isDragging) {
-          e.preventDefault();
-        }
-      },
-      { passive: false },
-    );
+  ngOnDestroy(): void {
+    this.document.body.style.overflow = '';
   }
 
-  onDragStart(event: MouseEvent | TouchEvent): void {
-    if (this.swipeInProgress) {
-      return;
-    }
-    this.isDragging = true;
-    this.startX =
-      event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-    this.cardTransition.set('none');
-  }
-
-  onDragMove(event: MouseEvent | TouchEvent): void {
-    if (!this.isDragging) {
-      return;
-    }
-    const clientX =
-      event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-    this.currentDragX = clientX - this.startX;
-    const rotation = this.currentDragX / 15;
-    this.cardTransform.set(
-      `translateX(${this.currentDragX}px) rotate(${rotation}deg)`,
-    );
-
-    if (Math.abs(this.currentDragX) >= this.SWIPE_THRESHOLD / 2) {
-      this.dismissHint();
-    }
-
-    if (this.currentDragX > 50) {
-      this.rightCueOpacity.set(Math.min((this.currentDragX - 50) / 100, 1));
-      this.leftCueOpacity.set(0);
-    } else if (this.currentDragX < -50) {
-      this.leftCueOpacity.set(
-        Math.min((Math.abs(this.currentDragX) - 50) / 100, 1),
-      );
-      this.rightCueOpacity.set(0);
-    } else {
-      this.leftCueOpacity.set(0);
-      this.rightCueOpacity.set(0);
-    }
-  }
-
-  onDragEnd(): void {
-    if (!this.isDragging) {
-      return;
-    }
-    this.isDragging = false;
-
-    if (Math.abs(this.currentDragX) > this.SWIPE_THRESHOLD) {
-      this.animateAndVote(this.currentDragX > 0);
-    } else {
-      this.cardTransition.set(
-        'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-      );
-      this.cardTransform.set('');
-      this.leftCueOpacity.set(0);
-      this.rightCueOpacity.set(0);
-    }
-  }
-
-  swipeYes(): void {
-    this.animateAndVote(true);
-  }
-
-  swipeNo(): void {
-    this.animateAndVote(false);
-  }
-
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
-      return;
-    }
+  onVoted(goRight: boolean): void {
     const isRating = this.poll()?.optionType === OptionType.Rating;
-    if (isRating) {
-      const digit = parseInt(event.key);
-      if (digit >= 1 && digit <= 5) {
-        this.hoveredRatingStar.set(digit);
-      }
-    } else {
-      if (event.key === 'ArrowRight') {
-        this.swipeYes();
-      } else if (event.key === 'ArrowLeft') {
-        this.swipeNo();
-      }
-    }
+    const choice = isRating ? (goRight ? '5' : '1') : (goRight ? '1' : '2');
+    this.castVote(choice);
   }
 
-  onKeyUp(event: KeyboardEvent): void {
-    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
-      return;
-    }
-    if (this.poll()?.optionType !== OptionType.Rating) {
-      return;
-    }
-    const digit = parseInt(event.key);
-    if (digit >= 1 && digit <= 5) {
-      this.hoveredRatingStar.set(undefined);
-      this.castRating(digit);
-    }
-  }
-
-  castRating(stars: number): void {
-    this.pendingRating.set(stars);
+  onRated(stars: number): void {
     this.castVote(stars.toString());
   }
 
@@ -375,54 +156,35 @@ export class ProjectVoteComponent implements AfterViewInit {
     this.navigateToNextOption(optionId);
   }
 
-  navigateToOption(id: string): void {
-    void this.router.navigate(['/polls/', this.projectId(), 'vote', this.pollId(), id]);
-  }
-
-  dismissHint(): void {
-    if (!this.showHint() || this.hintFading()) {
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
       return;
     }
-    sessionStorage.setItem('finder_voted_session', '1');
-    this.hintFading.set(true);
-    setTimeout(() => this.showHint.set(false), 300);
-  }
-
-  private animateAndVote(goRight: boolean): void {
-    if (this.swipeInProgress) {
-      return;
-    }
-    this.dismissHint();
-    const direction = goRight ? 1 : -1;
-    this.swipeInProgress = true;
-    this.cardTransition.set('transform 0.5s ease-in, opacity 0.5s ease-in');
-    this.cardTransform.set(
-      `translateX(${direction * 1200}px) rotate(${direction * 45}deg)`,
-    );
-    this.cardOpacity.set(0);
-    if (goRight) {
-      this.rightCueOpacity.set(1);
+    const isRating = this.poll()?.optionType === OptionType.Rating;
+    if (isRating) {
+      const digit = parseInt(event.key);
+      if (digit >= 1 && digit <= 5) {
+        this.ctaAreaRef().setHoveredStar(digit);
+      }
     } else {
-      this.leftCueOpacity.set(1);
+      if (event.key === 'ArrowRight') {
+        this.swipeCardRef().swipeYes();
+      } else if (event.key === 'ArrowLeft') {
+        this.swipeCardRef().swipeNo();
+      }
     }
-
-    setTimeout(() => {
-      this.swipeInProgress = false;
-      const isRating = this.poll()?.optionType === OptionType.Rating;
-      this.castVote(isRating ? (goRight ? '5' : '1') : goRight ? '1' : '2');
-    }, 500);
   }
 
-  private resetCardState(): void {
-    this.cardTransition.set('');
-    this.cardTransform.set('');
-    this.cardOpacity.set(0);
-    this.leftCueOpacity.set(0);
-    this.rightCueOpacity.set(0);
-    this.currentDragX = 0;
-    this.pendingRating.set(undefined);
-    this.hoveredRatingStar.set(undefined);
-    requestAnimationFrame(() => requestAnimationFrame(() => this.cardOpacity.set(1)));
+  onKeyUp(event: KeyboardEvent): void {
+    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+      return;
+    }
+    if (this.poll()?.optionType !== OptionType.Rating) { return; }
+    const digit = parseInt(event.key);
+    if (digit >= 1 && digit <= 5) {
+      this.ctaAreaRef().clearHoveredStar();
+      this.ctaAreaRef().castRating(digit);
+    }
   }
 
   private castVote(choice: string): void {

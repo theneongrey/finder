@@ -1,28 +1,15 @@
 <div class="flex flex-col justify-center gap-3 flex-1 p-6 md:p-9">
-  <p
-    class="text-center leading-snug"
-    style="font-family: var(--font-display); font-size: var(--fs-display-sm); font-weight: var(--weight-bold); color: var(--text-primary); letter-spacing: -0.5px; text-wrap: pretty;"
-  >
+  <p class="text-center leading-snug text-wrap-pretty font-[family-name:var(--font-display)] text-[length:var(--fs-display-sm)] font-bold text-[var(--text-primary)] tracking-[-0.5px]">
     {{ text() }}
   </p>
   @if (description()) {
-    <p
-      class="text-center"
-      style="font-size: var(--fs-body); line-height: 1.45; color: var(--text-secondary); text-wrap: pretty;"
-    >
+    <p class="text-center text-wrap-pretty text-[length:var(--fs-body)] leading-[1.45] text-[var(--text-secondary)]">
       {{ description() }}
     </p>
   }
   @if (link()) {
-    <a
-      [href]="link()"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 self-center mt-1"
-      style="height: 34px; padding: 0 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-hairline); background: #fff; font-size: var(--fs-ui-sm); font-weight: var(--weight-bold); color: var(--accent); text-decoration: none;"
-    >
-      <ds-icon name="link" [size]="14" color="var(--accent)" />
-      <span>{{ linkLabel() }}</span>
-    </a>
+    <ds-button variant="outline" icon="link" size="sm" class="self-center mt-1" (click)="openLink(link())">
+      {{ linkLabel() }}
+    </ds-button>
   }
 </div>

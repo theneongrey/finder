@@ -353,6 +353,7 @@
                     background: transparent;
                     border-radius: var(--radius-md);
                   "
+                  [attr.aria-label]="('project.vote.ratingLabel.' + star) | translate"
                   (click)="castRating(star)"
                   (mouseenter)="hoveredRatingStar.set(star)"
                   (mouseleave)="hoveredRatingStar.set(undefined)"

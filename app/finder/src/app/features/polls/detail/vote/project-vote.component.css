@@ -86,21 +86,12 @@
 }
 
 .desktop-vote-btn--no {
-  border: 1.5px solid #f0c3bd;
+  border: 1.5px solid var(--red-200);
   background: #fff;
-  color: #c1453f;
+  color: var(--negative);
 }
 .desktop-vote-btn--no:hover {
-  background: #fdf3f1;
-}
-
-.desktop-vote-btn--maybe {
-  border: 1.5px solid #e6cfa4;
-  background: #fff;
-  color: #b3863a;
-}
-.desktop-vote-btn--maybe:hover {
-  background: #fbf4e8;
+  background: var(--red-100);
 }
 
 .desktop-vote-btn--yes {
@@ -113,32 +104,6 @@
   filter: brightness(1.05);
 }
 
-/* Ghost action buttons (back, skip, comment row) */
-.ghost-action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 36px;
-  padding: 0 12px;
-  border: none;
-  border-radius: 12px;
-  background: transparent;
-  font-family: var(--font-body);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--weight-bold);
-  cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-standard);
-}
-.ghost-action-btn:hover {
-  background: rgba(255, 255, 255, 0.6);
-}
-.ghost-action-btn:disabled {
-  cursor: not-allowed;
-}
-.ghost-action-btn:disabled:hover {
-  background: transparent;
-}
-
 /* Keyboard shortcut hint badge */
 .key-badge {
   display: inline-flex;
@@ -148,8 +113,8 @@
   height: 22px;
   padding: 0 5px;
   border-radius: 7px;
-  border: 1px solid rgba(20, 24, 28, 0.12);
-  background: #fff;
+  border: 1px solid var(--border-hairline-strong);
+  background: var(--surface-card);
   font-size: 11.5px;
   font-weight: 700;
   color: var(--text-secondary);

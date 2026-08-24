@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SupportedLanguage, setStoredLanguage } from '../../common/i18n/languages';
-import { HomeNavComponent } from './home-nav.component';
-import { HomeHeroComponent } from './home-hero.component';
-import { HomeStepsComponent } from './home-steps.component';
-import { HomeIdeasSectionComponent } from './home-ideas-section.component';
-import { HomeCodeAnimationComponent } from './home-code-animation.component';
-import { HomeFinalCtaComponent } from './home-final-cta.component';
-import { HomeFooterComponent } from './home-footer.component';
+import { HomeNavComponent } from './home-nav/home-nav.component';
+import { HomeHeroComponent } from './home-hero/home-hero.component';
+import { HomeStepsComponent } from './home-steps/home-steps.component';
+import { HomeIdeasSectionComponent } from './home-ideas-section/home-ideas-section.component';
+import { HomeCodeAnimationComponent } from './home-code-animation/home-code-animation.component';
+import { HomeFinalCtaComponent } from './home-final-cta/home-final-cta.component';
+import { HomeFooterComponent } from './home-footer/home-footer.component';
 
 @Component({
   selector: 'app-home',

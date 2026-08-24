@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { CODE, FEATURES } from './home.constants';
+import { CODE, FEATURES } from '../home.constants';
 
 @Component({
   selector: 'app-home-code-animation',

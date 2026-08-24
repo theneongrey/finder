@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { STEPS } from './home.constants';
+import { STEPS } from '../home.constants';
 
 @Component({
   selector: 'app-home-steps',

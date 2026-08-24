@@ -6,7 +6,7 @@ import { LoggerService } from './logger.service';
 import { UserStore } from '../data/user.store';
 
 export function userAuthentication(): CanActivateFn {
-  return (route, state) => {
+  return (_route, state) => {
     const userService = inject(UserService);
     const userStore = inject(UserStore);
     const router = inject(Router);

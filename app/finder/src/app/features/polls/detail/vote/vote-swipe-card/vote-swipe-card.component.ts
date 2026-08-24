@@ -143,7 +143,7 @@ export class VoteSwipeCardComponent implements AfterViewInit {
   }
 
   dismissHint(): void {
-    if (!this.showHint() || this.hintFading()) return;
+    if (!this.showHint() || this.hintFading()) { return; }
     sessionStorage.setItem('finder_voted_session', '1');
     this.hintFading.set(true);
     setTimeout(() => this.showHint.set(false), 300);
@@ -160,7 +160,7 @@ export class VoteSwipeCardComponent implements AfterViewInit {
   }
 
   private animateAndVote(goRight: boolean): void {
-    if (this.swipeInProgress) return;
+    if (this.swipeInProgress) { return; }
     this.dismissHint();
     const direction = goRight ? 1 : -1;
     this.swipeInProgress = true;

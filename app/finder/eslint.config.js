@@ -38,7 +38,7 @@ module.exports = defineConfig([
         "error",
         {
           vars: "all",
-          args: "after-used",
+          args: "all",
           argsIgnorePattern: "^_",
           caughtErrors: "all",
           caughtErrorsIgnorePattern: "^_",

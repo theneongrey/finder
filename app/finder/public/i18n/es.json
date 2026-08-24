@@ -299,12 +299,40 @@
       "swipeHintMid": ", a la izquierda para ",
       "tapToDismiss": "Toca para cerrar",
       "addComment": "Comentar",
+      "commentTitle": "Dejar un comentario",
       "commentPlaceholder": "Tu comentario...",
       "submitComment": "Añadir",
       "skip": "Omitir",
       "ratingMax": "5 estrellas",
       "ratingMin": "1 estrella",
-      "openLink": "Abrir enlace"
+      "openLink": "Abrir enlace",
+      "next": "Siguiente",
+      "pleaseRate": "Por favor califica",
+      "stampCan": "Puedo",
+      "stampCannot": "No puedo",
+      "tapToRate": "Toca las estrellas",
+      "ratingLabel": {
+        "1": "Para nada",
+        "2": "Mejor no",
+        "3": "Más o menos",
+        "4": "Bien",
+        "5": "Perfecto"
+      },
+      "optionProgress": "Opción {{current}} de {{total}}",
+      "optionType": {
+        "yesno": "Sí / No",
+        "rating": "Valoración",
+        "date": "Encuesta de fecha"
+      },
+      "back": "Atrás",
+      "keyboard": "o deslizar",
+      "keyboardRating": "Estrellas con teclado",
+      "yourAnswers": "Tus respuestas",
+      "answerOpen": "abierto",
+      "answerMaybe": "Quizás",
+      "closeDate": "Abierto hasta",
+      "whoVoted": "¿Quién votó?",
+      "noVotesYet": "Nadie ha votado todavía."
     },
     "votesOverview": {
       "active": "Activo",

@@ -12,4 +12,5 @@ import { HlmCard } from '@spartan-ng/helm/card';
 export class DsCardComponent {
   padding = input<number>(20);
   accentBorder = input<boolean>(false);
+  fill = input<boolean>(false);
 }

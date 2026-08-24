@@ -7,16 +7,16 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmPopoverImports } from '@spartan-ng/helm/popover';
+import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
+import { DsTextareaComponent } from '../../../../../common/ui/ds-components/textarea/ds-textarea.component';
 import { PollDetailStore } from '../../../_shared/data/poll-detail.store';
 import { POLL_LIMITS } from '../../../_shared/models/poll-limits';
 
 @Component({
   selector: 'app-vote-comment-button',
   templateUrl: './vote-comment-button.component.html',
-  imports: [HlmButton, ...HlmPopoverImports, HlmInput, FormsModule, TranslatePipe],
+  imports: [DsButtonComponent, DsTextareaComponent, ...HlmPopoverImports, FormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteCommentButtonComponent {

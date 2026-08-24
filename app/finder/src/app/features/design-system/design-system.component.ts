@@ -148,6 +148,9 @@ export class DesignSystemComponent {
         { token: '--negative', hex: '#c1453f' },
         { token: '--negative-strong', hex: '#d24a3d' },
         { token: '--warning', hex: '#a8742a' },
+        { token: '--star', hex: '#e0a42c' },
+        { token: '--star-bg', hex: '#f9edd5' },
+        { token: '--star-fg', hex: '#a8742a' },
       ],
     },
     {

@@ -34,17 +34,3 @@
   background: var(--positive-strong);
   box-shadow: 0 8px 20px rgba(93, 154, 86, 0.34);
 }
-.ds-vote-skip {
-  height: 44px;
-  padding: 0 16px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-hairline);
-  background: #fff;
-  color: var(--ink-600);
-  font-family: var(--font-body);
-  font-size: var(--fs-body-xs);
-  font-weight: var(--weight-bold);
-  cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-standard);
-}
-.ds-vote-skip:hover { background: var(--cream-100); }

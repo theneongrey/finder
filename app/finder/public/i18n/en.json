@@ -299,12 +299,40 @@
       "swipeHintMid": ", left for ",
       "tapToDismiss": "Tap to dismiss",
       "addComment": "Comment",
+      "commentTitle": "Leave a comment",
       "commentPlaceholder": "Your comment...",
       "submitComment": "Add",
       "skip": "Skip",
       "ratingMax": "5 stars",
       "ratingMin": "1 star",
-      "openLink": "Open link"
+      "openLink": "Open link",
+      "next": "Next",
+      "pleaseRate": "Please rate",
+      "stampCan": "Can",
+      "stampCannot": "Can't",
+      "tapToRate": "Tap the stars",
+      "ratingLabel": {
+        "1": "Not at all",
+        "2": "Rather not",
+        "3": "So-so",
+        "4": "Good",
+        "5": "Perfect"
+      },
+      "optionProgress": "Option {{current}} of {{total}}",
+      "optionType": {
+        "yesno": "Yes / No",
+        "rating": "Rating",
+        "date": "Date poll"
+      },
+      "back": "Back",
+      "keyboard": "or drag",
+      "keyboardRating": "Stars via keyboard",
+      "yourAnswers": "Your answers",
+      "answerOpen": "open",
+      "answerMaybe": "Maybe",
+      "closeDate": "Open until",
+      "whoVoted": "Who voted?",
+      "noVotesYet": "Nobody has voted yet."
     },
     "votesOverview": {
       "active": "Active",

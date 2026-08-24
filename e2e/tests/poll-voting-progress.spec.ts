@@ -61,7 +61,7 @@ test.describe('Poll voting progress on overview', () => {
   test('CTA reads "View current standings" after casting a vote', async ({ page }) => {
     // Cast a vote
     await page.goto(`/polls/${testProjectId}/vote/${testPollId}/${testOptionId}`);
-    await page.locator('button').filter({ has: page.locator('i.fa-heart') }).first().click();
+    await page.locator('button.ds-vote-btn--yes').first().click();
     await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
 
     // Return to overview and verify CTA changed

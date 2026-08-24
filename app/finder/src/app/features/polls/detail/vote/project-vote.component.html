@@ -1,202 +1,34 @@
 <div
-  class="flex flex-col h-full w-full relative overflow-hidden px-4"
+  class="flex w-full flex-col min-h-[calc(100dvh-60px)] md:h-[calc(100dvh-60px)] md:flex-row md:overflow-hidden"
 >
-  <div
-    class="h-16 flex items-start justify-center gap-4 pt-4"
-  >
-    <button hlmBtn variant="outline" size="sm" (click)="navigateToOverview()">
-      <i class="fa-solid fa-list"></i>{{ 'project.vote.overview' | translate }}
-    </button>
-  </div>
+  <app-vote-sidebar [pollId]="pollId()" [optionId]="optionId()" />
 
-  <div class="flex-1 flex flex-col">
-    <!-- Poll context: always at top -->
-    <div class="text-center flex flex-col items-center pt-4">
-      <h2>
-        {{ poll()?.name }}
-      </h2>
-      @if (poll()?.description) {
-        <p class="text-sm text-surface-500">
-          {{ poll()?.description }}
-        </p>
-      }
-      @if (totalCount() > 0) {
-        <p class="ds-body text-gray-500 mt-1">
-          {{
-            "project.vote.votedProgress"
-              | translate: { voted: votedCount(), total: totalCount() }
-          }}
-        </p>
-      }
-    </div>
+  <div class="flex min-h-0 min-w-0 flex-1 flex-col md:justify-center md:gap-5">
+    <app-vote-progress-header
+      [optionType]="poll()?.optionType ?? OptionType.YesNo"
+      [closeDateDisplay]="closeDateDisplay()"
+      [currentIndex]="currentOptionIndex()"
+      [total]="totalCount()"
+      [progressPercent]="progressPercent()"
+      [progressSegments]="progressSegments()"
+    />
 
-    <!-- Swipe area: vertically centered in remaining space -->
-    <div
-      class="flex-1 flex flex-col items-center justify-center gap-4 mt-4"
-    >
-      <!-- Swipe area -->
-      <div
-        class="vote-card-container w-full h-full max-w-sm h-72 relative"
-      >
-        <!-- Left cue (No / 1 star) -->
-        <div
-          class="absolute opacity-0 -left-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none transition-opacity duration-150"
-          [style.opacity]="leftCueOpacity()"
-        >
-          @if (poll()?.optionType === OptionType.Rating) {
-            <div
-              class="w-16 h-16 rounded-full bg-red-500 text-white flex flex-col items-center justify-center ds-shadow-floating gap-0.5"
-            >
-              <i class="fa-solid fa-star text-lg"></i>
-              <span class="text-xs font-bold leading-none">1</span>
-            </div>
-          } @else {
-            <div
-              class="w-16 h-16 rounded-full bg-red-500 text-white flex items-center justify-center ds-shadow-floating"
-            >
-              <i class="fa-regular fa-thumbs-down text-2xl"></i>
-            </div>
-          }
-        </div>
+    <app-vote-swipe-card
+      [optionType]="poll()?.optionType ?? OptionType.YesNo"
+      [option]="option()"
+      [allOptionTexts]="allOptionTexts()"
+      (voted)="onVoted($event)"
+    />
 
-        <!-- Right cue (Yes / 5 stars) -->
-        <div
-          class="absolute opacity-0 -right-4 top-1/2 -translate-y-1/2 z-20 pointer-events-none transition-opacity duration-150"
-          [style.opacity]="rightCueOpacity()"
-        >
-          @if (poll()?.optionType === OptionType.Rating) {
-            <div
-              class="w-16 h-16 rounded-full bg-yellow-400 text-white flex flex-col items-center justify-center ds-shadow-floating gap-0.5"
-            >
-              <i class="fa-solid fa-star text-lg"></i>
-              <span class="text-xs font-bold leading-none">5</span>
-            </div>
-          } @else {
-            <div
-              class="w-16 h-16 rounded-full bg-green-600 text-white flex items-center justify-center ds-shadow-floating"
-            >
-              <i class="fa-regular fa-thumbs-up text-2xl"></i>
-            </div>
-          }
-        </div>
-
-        <!-- Main swipe card -->
-        <div
-          #voteCard
-          class="vote-card w-full h-full bg-white rounded-2xl ds-shadow-raised flex flex-col overflow-hidden border border-black/10 cursor-grab select-none"
-          [style.transform]="cardTransform()"
-          [style.transition]="cardTransition()"
-          [style.opacity]="cardOpacity()"
-          (mousedown)="onDragStart($event)"
-          (touchstart)="onDragStart($event)"
-        >
-          @if (poll()?.optionType === OptionType.Rating) {
-            <app-vote-card-rating
-              [text]="option()?.text ?? ''"
-              [description]="option()?.description ?? ''"
-            />
-          } @else if (poll()?.optionType === OptionType.Date) {
-            <app-vote-card-date [text]="option()?.text ?? ''" [allOptionTexts]="allOptionTexts()" />
-          } @else if (option()?.meta?.imageUrl) {
-            <app-vote-card-image
-              [text]="option()?.text ?? ''"
-              [description]="option()?.description ?? ''"
-              [imageUrl]="option()?.meta?.imageUrl ?? ''"
-              [link]="option()?.meta?.url ?? ''"
-            />
-          } @else {
-            <app-vote-card-text
-              [text]="option()?.text ?? ''"
-              [description]="option()?.description ?? ''"
-              [link]="option()?.meta?.url ?? ''"
-            />
-          }
-        </div>
-      </div>
-
-      <app-vote-comment-button
-        [pollId]="pollId()"
-        [optionText]="option()?.text"
-      />
-    </div>
-    <!-- /centered card section -->
-
-    <!-- Action buttons: always at bottom -->
-    <div class="flex flex-col items-center pb-6">
-      @if (poll()?.optionType === OptionType.Rating) {
-        <div class="flex flex-col items-center gap-3">
-          <div class="flex items-center gap-2">
-            @for (star of [1, 2, 3, 4, 5]; track star) {
-              <button
-                class="w-11 h-11 rounded-full bg-white border border-yellow-300 text-yellow-500 flex flex-col items-center justify-center hover:bg-yellow-50 transition-all active:scale-90 duration-200 text-xs font-bold gap-0.5"
-                (click)="castRating(star)"
-              >
-                <i class="fa-solid fa-star text-sm"></i>
-                <span>{{ star }}</span>
-              </button>
-            }
-          </div>
-          <button hlmBtn variant="ghost" size="sm" (click)="skip()">
-            {{ 'project.vote.skip' | translate }}
-          </button>
-        </div>
-      } @else {
-        <div class="flex items-center gap-6">
-          <button
-            class="w-16 h-16 rounded-full bg-white text-red-500 border-red-300 border border-surface-200 flex items-center justify-center hover:bg-red-50 transition-all active:scale-90 duration-200"
-            (click)="swipeNo()"
-          >
-            <i class="fa-solid fa-xmark text-2xl"></i>
-          </button>
-
-          <button hlmBtn variant="ghost" size="sm" (click)="skip()">
-            {{ 'project.vote.skip' | translate }}
-          </button>
-
-          <button
-            class="w-16 h-16 rounded-full bg-white border-primary/60 text-primary border border-surface-200 flex items-center justify-center hover:bg-primary-50 transition-all active:scale-90 duration-200"
-            (click)="swipeYes()"
-          >
-            <i class="fa-regular fa-heart text-2xl"></i>
-          </button>
-        </div>
-      }
-    </div>
-    <!-- /action buttons -->
+    <app-vote-cta-area
+      [optionType]="poll()?.optionType ?? OptionType.YesNo"
+      [pollId]="pollId()"
+      [optionId]="optionId()"
+      [optionText]="option()?.text"
+      (yes)="swipeCardRef().swipeYes()"
+      (no)="swipeCardRef().swipeNo()"
+      (skip)="skip()"
+      (rated)="onRated($event)"
+    />
   </div>
 </div>
-
-@if (showHint()) {
-  <div
-    class="hint-overlay fixed inset-x-0 bottom-34 z-40 pointer-events-none flex justify-center"
-    [class.fading]="hintFading()"
-  >
-    <div
-      class="bg-black/75 backdrop-blur-sm text-white rounded-2xl px-6 py-3 text-center ds-shadow-floating mx-6 max-w-sm"
-    >
-      @if (poll()?.optionType === OptionType.Rating) {
-        <p class="text-sm leading-relaxed">
-          {{ "project.vote.swipeHintPre" | translate
-          }}<span class="text-yellow-400 font-bold">{{
-            "project.vote.ratingMax" | translate
-          }}</span
-          >{{ "project.vote.swipeHintMid" | translate
-          }}<span class="text-red-400 font-bold">{{
-            "project.vote.ratingMin" | translate
-          }}</span>
-        </p>
-      } @else {
-        <p class="text-sm leading-relaxed">
-          {{ "project.vote.swipeHintPre" | translate
-          }}<span class="text-green-400 font-bold">{{
-            "project.votesOverview.voteLabel.yes" | translate
-          }}</span
-          >{{ "project.vote.swipeHintMid" | translate
-          }}<span class="text-red-400 font-bold">{{
-            "project.votesOverview.voteLabel.no" | translate
-          }}</span>
-        </p>
-      }
-    </div>
-  </div>
-}

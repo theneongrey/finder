@@ -22,6 +22,9 @@
   background: var(--bg-input);
   outline: none;
   resize: vertical;
+}
+.ds-ta--autoresize {
+  resize: none;
   transition:
     border-color var(--duration-fast) var(--ease-standard),
     height 200ms ease-out;

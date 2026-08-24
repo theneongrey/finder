@@ -119,7 +119,7 @@ export class HlmToaster {
     };
   });
   public readonly offset = input<ToasterProps['offset']>(null);
-  // eslint-disable-next-line @angular-eslint/no-input-rename
+   
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
   public readonly userStyle = input<Record<string, string>>(
     {
@@ -128,7 +128,7 @@ export class HlmToaster {
       '--normal-border': 'var(--border)',
       '--border-radius': 'var(--radius)',
     },
-    // eslint-disable-next-line @angular-eslint/no-input-rename
+     
     { alias: 'style' },
   );
 

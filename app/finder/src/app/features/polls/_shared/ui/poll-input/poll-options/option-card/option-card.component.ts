@@ -86,9 +86,6 @@ export class OptionCardComponent {
   }
 
   toggleLink() {
-    if (!this.option().meta) {
-      this.optionChange.emit({ ...this.option(), meta: { url: '' } });
-    }
     this._linkUrl.set(this.option().meta?.url ?? '');
     this.showLink.set(true);
     afterNextRender(() => this.linkInput().focus(), {

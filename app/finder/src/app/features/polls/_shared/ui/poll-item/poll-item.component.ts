@@ -61,8 +61,10 @@ export class PollItemComponent {
   shareRequested = output();
   favoriteToggled = output<string>();
 
-  readonly showActions = computed(() => this.poll().role >= PollRole.Maintainer);
-  readonly canShare    = computed(() => this.poll().role >= PollRole.Owner);
+  readonly showActions = computed(
+    () => this.poll().role >= PollRole.Maintainer,
+  );
+  readonly canShare = computed(() => this.poll().role >= PollRole.Owner);
 
   readonly editRoute = computed(() => {
     const poll = this.poll();
@@ -78,23 +80,11 @@ export class PollItemComponent {
     return null;
   });
 
-  readonly ctaRoute = computed(() => {
-    const poll = this.poll();
-    if (!poll.currentUserVoted) {
-      return ['/polls', poll.projectId, 'vote', poll.pollId, poll.nextOpenOptionId];
-    }
-    return ['/polls', poll.projectId, 'results', poll.pollId];
-  });
-
-  readonly ctaLabel = computed(() =>
-    this.poll().currentUserVoted
-      ? this.translateService.instant('project.detail.item.viewProgress')
-      : this.translateService.instant('project.detail.item.voteNow'),
-  );
-
   readonly progressPercent = computed(() => {
     const { votedCount, totalParticipants } = this.poll();
-    return totalParticipants > 0 ? Math.round((votedCount / totalParticipants) * 100) : 0;
+    return totalParticipants > 0
+      ? Math.round((votedCount / totalParticipants) * 100)
+      : 0;
   });
 
   readonly participantAvatars = computed<ParticipantAvatar[]>(() =>
@@ -107,19 +97,22 @@ export class PollItemComponent {
   );
 
   readonly missingVotersText = computed(() => {
-    const missing = this.poll().participants
-      .filter(p => p.votingStatus === PollVotingStatus.None)
-      .map(p => p.name);
+    const missing = this.poll()
+      .participants.filter((p) => p.votingStatus === PollVotingStatus.None)
+      .map((p) => p.name);
 
     if (missing.length === 0) {
       return this.translateService.instant('project.pollsTab.allVoted');
     }
 
-    const names = missing.length > 3
-      ? missing.slice(0, 2).join(', ') + ', +' + (missing.length - 2)
-      : missing.join(', ');
+    const names =
+      missing.length > 3
+        ? missing.slice(0, 2).join(', ') + ', +' + (missing.length - 2)
+        : missing.join(', ');
 
-    return this.translateService.instant('project.pollsTab.missingVoters', { names });
+    return this.translateService.instant('project.pollsTab.missingVoters', {
+      names,
+    });
   });
 
   requestDelete(): void {

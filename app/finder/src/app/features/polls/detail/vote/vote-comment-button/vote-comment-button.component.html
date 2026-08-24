@@ -6,10 +6,9 @@
   </span>
   <hlm-popover-content class="!w-80 !p-0 !bg-transparent !shadow-none !ring-0" *hlmPopoverPortal="let ctx">
     <div
-      class="flex flex-col gap-3 rounded-xl p-4"
-      style="background: var(--surface-card); box-shadow: 0 8px 24px rgba(0,0,0,.12), 0 1px 4px rgba(0,0,0,.06); border: 1px solid var(--border-hairline-soft);"
+      class="flex flex-col gap-3 rounded-xl p-4 bg-[var(--surface-card)] shadow-[0_8px_24px_rgba(0,0,0,.12),_0_1px_4px_rgba(0,0,0,.06)] border border-[var(--border-hairline-soft)]"
     >
-      <p class="text-sm font-semibold" style="margin: 0; color: var(--text-primary)">
+      <p class="m-0 text-sm font-semibold text-[var(--text-primary)]">
         {{ 'project.vote.commentTitle' | translate }}
       </p>
       <ds-textarea

@@ -1,0 +1,24 @@
+<div
+  class="flex items-center justify-between"
+  [class]="size() === 'sm' ? 'mt-[18px]' : 'mt-6'"
+>
+  <span class="text-[12px] font-bold tracking-[.7px] [color:var(--text-muted)] uppercase">
+    {{ "publicPoll.optionsLabel" | translate }}
+  </span>
+  <span [class]="size() === 'sm' ? 'text-[12.5px] [color:var(--text-muted)]' : 'text-[13px] [color:var(--text-muted)]'">
+    {{ totalVotes() }}
+    {{ (totalVotes() === 1 ? "publicPoll.voteSingular" : "publicPoll.votePlural") | translate }}
+  </span>
+</div>
+
+<div
+  [class]="
+    size() === 'sm'
+      ? 'mt-[11px] flex flex-col gap-[9px]'
+      : 'mt-[13px] grid grid-cols-2 gap-[11px]'
+  "
+>
+  @for (opt of optionDisplays(); track opt.id) {
+    <app-public-poll-option [opt]="opt" [size]="size()" />
+  }
+</div>

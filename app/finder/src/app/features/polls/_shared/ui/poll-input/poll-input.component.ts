@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
 } from '@angular/core';
 import { PollInputStateService } from './poll-input-state.service';
 import { PollInputWizardComponent } from './poll-input-wizard/poll-input-wizard.component';
@@ -20,6 +19,4 @@ export type { PendingInvite } from '../share-content/share-invite-form/share-inv
 })
 export class PollInputComponent {
   protected readonly state = inject(PollInputStateService);
-
-  mode = input<'add' | 'standalone'>('standalone');
 }

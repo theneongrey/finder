@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
-import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
+import { DsButtonComponent } from '../../../../../../common/ui/ds-components/button/ds-button.component';
+import { DsIconComponent } from '../../../../../../common/ui/ds-components/icon/ds-icon.component';
 
 @Component({
   selector: 'app-public-poll-cta',

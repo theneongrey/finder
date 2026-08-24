@@ -4,7 +4,6 @@ import {
   computed,
   effect,
   inject,
-  input,
   signal,
 } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -43,8 +42,6 @@ export class PollInputWizardComponent {
   private readonly translateService = inject(TranslateService);
 
   readonly OptionType = OptionType;
-
-  mode = input<'add' | 'standalone'>('standalone');
 
   readonly wizardStep = signal(1);
 
@@ -132,32 +129,24 @@ export class PollInputWizardComponent {
 
   constructor() {
     effect(() => {
-      if (this.mode() === 'standalone') {
-        this.state.initStandaloneMode();
-      }
+      this.state.initStandaloneMode();
     });
 
     effect(() => {
-      if (this.mode() === 'standalone') {
-        this.state.preselectYesNo();
-      }
+      this.state.preselectYesNo();
     }, { allowSignalWrites: true });
 
     effect(() => {
-      if (this.mode() !== 'standalone') { return; }
       if (this.state.tryApplySharesAfterCreation()) {
         this.wizardStep.set(3);
       }
     }, { allowSignalWrites: true });
 
     effect(() => {
-      if (this.mode() === 'standalone') {
-        this.state.loadSharingContacts();
-      }
+      this.state.loadSharingContacts();
     });
 
     effect(() => {
-      if (this.mode() !== 'standalone') { return; }
       const step = this.wizardStep();
       const desktop = this.isDesktop();
 
@@ -187,12 +176,6 @@ export class PollInputWizardComponent {
         step === 2 ? () => this.prevStep() : undefined,
       );
     });
-
-    effect(() => {
-      if (this.mode() === 'add') {
-        this.titleService.setTitle(this.state.currentProject()?.name ?? '');
-      }
-    });
   }
 
   onTypeSelected(type: OptionType): void {
@@ -200,12 +183,6 @@ export class PollInputWizardComponent {
   }
 
   onCta(): void {
-    if (this.mode() === 'add') {
-      this.state.submitAdd(this.state.projectId());
-      return;
-    }
-
-    // standalone
     const step = this.wizardStep();
 
     if (step === 1) {

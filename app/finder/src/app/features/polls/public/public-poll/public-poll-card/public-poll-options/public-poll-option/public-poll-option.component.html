@@ -1,0 +1,47 @@
+<div
+  class="border rounded-[18px]"
+  [class]="
+    (size() === 'sm' ? 'px-3.5 py-3' : 'px-4 py-[15px]') + ' ' +
+    (opt().isLead
+      ? 'border-[rgba(31,122,140,.28)] bg-[#f4f9fa]'
+      : 'border-[rgba(20,24,28,.075)] bg-[#fdfcfa]')
+  "
+>
+  <div class="flex items-center" [class]="size() === 'sm' ? 'gap-2.5' : 'gap-3'">
+    <span class="min-w-0 flex-1">
+      <span
+        class="line-clamp-2 leading-[1.25] font-bold [color:var(--text-primary)]"
+        [class]="size() === 'sm' ? 'text-[15px]' : 'text-[16px]'"
+      >{{ opt().text }}</span>
+      @if (opt().description) {
+        <span
+          class="line-clamp-2 mt-0.5 [color:var(--text-tertiary)]"
+          [class]="size() === 'sm' ? 'text-[12.5px]' : 'text-[13px]'"
+        >{{ opt().description }}</span>
+      }
+    </span>
+    <span class="flex-none text-right">
+      <span
+        class="block leading-[1.1] font-bold tabular-nums"
+        [class]="size() === 'sm' ? 'text-[16px]' : 'text-[18px]'"
+        [style.color]="opt().isLead ? 'var(--accent)' : 'var(--ink-600)'"
+      >{{ opt().voteCount }}</span>
+      <span
+        class="mt-px block [color:var(--text-muted)]"
+        [class]="size() === 'sm' ? 'text-[11.5px]' : 'text-[12px]'"
+      >
+        {{ (opt().voteCount === 1 ? "publicPoll.vote" : "publicPoll.votes") | translate }}
+      </span>
+    </span>
+  </div>
+  <span
+    class="block h-[5px] overflow-hidden rounded-full bg-[var(--sand-200)]"
+    [class]="size() === 'sm' ? 'mt-[10px]' : 'mt-3'"
+  >
+    <span
+      class="block h-full rounded-full"
+      [style.width]="opt().pct"
+      [style.background]="opt().isLead ? 'var(--accent)' : '#cfd9d2'"
+    ></span>
+  </span>
+</div>

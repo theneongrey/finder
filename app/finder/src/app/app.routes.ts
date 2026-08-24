@@ -49,7 +49,7 @@ export const routes: Routes = [
   {
     path: 'p/:projectId',
     loadComponent: () =>
-      import('./features/polls/public/public-poll.component').then(
+      import('./features/polls/public/public-poll/public-poll.component').then(
         (m) => m.PublicPollComponent,
       ),
   },

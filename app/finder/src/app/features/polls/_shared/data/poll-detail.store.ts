@@ -158,7 +158,9 @@ export const PollDetailStore = signalStore(
                     });
                   }
 
-                  store.router.navigate([`/polls/${poll.projectId}/overview/${responsePoll.id}`]);
+                  store.router.navigate([
+                    `/polls/${poll.projectId}/overview/${responsePoll.id}`,
+                  ]);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -195,7 +197,12 @@ export const PollDetailStore = signalStore(
       pipe(
         switchMap((poll) =>
           store.projectService
-            .updatePoll(poll.pollId, poll.name, poll.description, poll.closeDate)
+            .updatePoll(
+              poll.pollId,
+              poll.name,
+              poll.description,
+              poll.closeDate,
+            )
             .pipe(
               switchMap(() => {
                 const optionRequests = [
@@ -238,7 +245,7 @@ export const PollDetailStore = signalStore(
                     `[PollDetailStore] Updated poll`,
                     poll.pollId,
                   );
-                  store.router.navigate([`/polls/${poll.projectId}/overview/${poll.pollId}`]);
+                  store.router.navigate(['/polls']);
                 },
                 error: (error) => {
                   store.loggerService.log(
@@ -382,9 +389,7 @@ export const PollDetailStore = signalStore(
                 const currentPoll = store.currentPoll();
                 if (currentPoll) {
                   const updatedOptions = currentPoll.options.map((o) =>
-                    o.id !== vote.optionId
-                      ? o
-                      : { ...o, choice: vote.choice },
+                    o.id !== vote.optionId ? o : { ...o, choice: vote.choice },
                   );
                   patchState(store, {
                     currentPoll: { ...currentPoll, options: updatedOptions },
@@ -395,7 +400,9 @@ export const PollDetailStore = signalStore(
                     const nextUnvoted = updatedOptions.find((o) => !o.choice);
                     const nextSkipped = updatedOptions
                       .filter((o) => o.choice && parseInt(o.choice) < 0)
-                      .sort((a, b) => parseInt(b.choice!) - parseInt(a.choice!))[0];
+                      .sort(
+                        (a, b) => parseInt(b.choice!) - parseInt(a.choice!),
+                      )[0];
                     const nextOpenOptionId = (nextUnvoted ?? nextSkipped)?.id;
                     patchState(store, {
                       currentProject: {
@@ -493,22 +500,32 @@ export const PollDetailStore = signalStore(
     ),
   })),
   withReducer(
-    on(sharingEvents.shared, sharingEvents.permissionRemoved, ({ payload }) =>
-      (state: { currentProject: Project | undefined }) =>
-        state.currentProject?.id === payload.projectId
-          ? { currentProject: { ...state.currentProject, sharedWith: payload.sharedWith } }
-          : {},
+    on(
+      sharingEvents.shared,
+      sharingEvents.permissionRemoved,
+      ({ payload }) =>
+        (state: { currentProject: Project | undefined }) =>
+          state.currentProject?.id === payload.projectId
+            ? {
+                currentProject: {
+                  ...state.currentProject,
+                  sharedWith: payload.sharedWith,
+                },
+              }
+            : {},
     ),
-    on(sharingEvents.visibilityTypeUpdated, ({ payload }) =>
-      (state: { currentProject: Project | undefined }) =>
-        state.currentProject?.id === payload.projectId
-          ? {
-              currentProject: {
-                ...state.currentProject,
-                visibilityType: payload.visibilityType,
-              },
-            }
-          : {},
+    on(
+      sharingEvents.visibilityTypeUpdated,
+      ({ payload }) =>
+        (state: { currentProject: Project | undefined }) =>
+          state.currentProject?.id === payload.projectId
+            ? {
+                currentProject: {
+                  ...state.currentProject,
+                  visibilityType: payload.visibilityType,
+                },
+              }
+            : {},
     ),
   ),
 );

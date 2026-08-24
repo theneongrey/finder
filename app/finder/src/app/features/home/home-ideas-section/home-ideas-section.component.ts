@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsBadgeComponent } from '../../common/ui/ds-components/badge/ds-badge.component';
-import { AvatarStackComponent } from '../../common/ui/smart-components/avatar-stack/avatar-stack.component';
-import { IDEAS, PPL } from './home.constants';
+import { DsBadgeComponent } from '../../../common/ui/ds-components/badge/ds-badge.component';
+import { AvatarStackComponent } from '../../../common/ui/smart-components/avatar-stack/avatar-stack.component';
+import { IDEAS, PPL } from '../home.constants';
 
 @Component({
   selector: 'app-home-ideas-section',

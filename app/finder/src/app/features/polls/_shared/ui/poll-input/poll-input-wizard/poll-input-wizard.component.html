@@ -1,6 +1,4 @@
-@if (mode() === 'standalone') {
-
-  @if (isDesktop()) {
+@if (isDesktop()) {
     <!-- ═══════════════════════════════════════════
          WEB WIZARD
     ═══════════════════════════════════════════ -->
@@ -234,37 +232,3 @@
     </div>
 
   }
-
-} @else {
-  <!-- ═══════════════════════════════════════════
-       ADD WITHIN PROJECT
-  ═══════════════════════════════════════════ -->
-
-  @if (state.optionType() === undefined) {
-    <app-poll-type-selection (typeSelected)="onTypeSelected($event)" />
-  } @else {
-    <div class="px-[18px]">
-      <app-poll-input-form
-        [optionType]="state.optionType()!"
-        mode="add"
-        [isValid]="state.isValid()"
-        [question]="state.question()"
-        (questionChange)="state.question.set($event)"
-        [description]="state.description()"
-        (descriptionChange)="state.description.set($event)"
-        [closeDate]="state.closeDate()"
-        (closeDateChange)="state.closeDate.set($event)"
-        [options]="state.options()"
-        [dateOptions]="state.dateOptions()"
-        [appointmentDateType]="state.appointmentDateType()"
-        (appointmentDateTypeChange)="state.onAppointmentDateTypeChange($event)"
-        (add)="state.addOption()"
-        (remove)="state.removeOption($event)"
-        (weekdayToggle)="state.toggleWeekday($event)"
-        (optionsChange)="state.onOptionsChange($event)"
-        (dateOptionsChange)="state.onDateOptionsChange($event)"
-        (formSubmit)="onCta()"
-      />
-    </div>
-  }
-}

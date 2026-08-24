@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
+import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
 
 @Component({
   selector: 'app-public-poll-nudge-bar',

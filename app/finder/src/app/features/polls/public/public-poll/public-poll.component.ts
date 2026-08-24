@@ -8,24 +8,27 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
-import { LoggerService } from '../../../common/services/logger.service';
-import { UserService } from '../../../common/services/user.service';
-import { UserStore } from '../../../common/data/user.store';
-import { TitleBarComponent } from '../../../common/ui/smart-components/title-bar/title-bar.component';
-import { TitleBarService } from '../../../common/services/title-bar.service';
-import { PollService } from '../_shared/data/poll.service';
-import { OptionType, PublicProjectInfo } from '../_shared/models/poll-detail.model';
-import { DateOptionFormatService } from '../_shared/utils/date-option-format.service';
-import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
-import { DsPollCardSkeletonComponent } from '../../../common/ui/ds-components/poll-card-skeleton/ds-poll-card-skeleton.component';
+import { LoggerService } from '../../../../common/services/logger.service';
+import { UserService } from '../../../../common/services/user.service';
+import { UserStore } from '../../../../common/data/user.store';
+import { TitleBarComponent } from '../../../../common/ui/smart-components/title-bar/title-bar.component';
+import { TitleBarService } from '../../../../common/services/title-bar.service';
+import { PollService } from '../../_shared/data/poll.service';
+import {
+  OptionType,
+  PublicProjectInfo,
+} from '../../_shared/models/poll-detail.model';
+import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
+import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-icon.component';
+import { DsPollCardSkeletonComponent } from '../../../../common/ui/ds-components/poll-card-skeleton/ds-poll-card-skeleton.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
-import { User } from '../../../common/models/user.model';
-import { PublicPollCardComponent } from './public-poll-card.component';
-import { PublicPollInviteBannerComponent } from './public-poll-invite-banner.component';
-import { PublicPollNudgeBarComponent } from './public-poll-nudge-bar.component';
-import { PublicPollMemberSidebarComponent } from './public-poll-member-sidebar.component';
-import { PublicPollGuestSidebarComponent } from './public-poll-guest-sidebar.component';
+import { User } from '../../../../common/models/user.model';
+import { PublicPollCardComponent } from './public-poll-card/public-poll-card.component';
+import { PublicPollInviteBannerComponent } from './public-poll-invite-banner/public-poll-invite-banner.component';
+import { PublicPollNudgeBarComponent } from './public-poll-nudge-bar/public-poll-nudge-bar.component';
+import { PublicPollMemberSidebarComponent } from './public-poll-member-sidebar/public-poll-member-sidebar.component';
+import { PublicPollGuestSidebarComponent } from './public-poll-guest-sidebar/public-poll-guest-sidebar.component';
 import { OptionDisplay, ParticipantDisplay } from './public-poll.models';
 
 @Component({
@@ -60,16 +63,26 @@ export class PublicPollComponent implements OnInit {
   protected readonly isLoading = signal(true);
   protected readonly isAuthenticated = signal(false);
   protected readonly currentUser = signal<User | undefined>(undefined);
-  protected readonly projectInfo = signal<PublicProjectInfo | undefined>(undefined);
-  protected readonly pollPreview = computed(() => this.projectInfo()?.pollPreview);
+  protected readonly projectInfo = signal<PublicProjectInfo | undefined>(
+    undefined,
+  );
+  protected readonly pollPreview = computed(
+    () => this.projectInfo()?.pollPreview,
+  );
   protected readonly emailControl = new FormControl('', Validators.email);
   protected readonly OptionType = OptionType;
 
-  protected readonly perks = ['publicPoll.perk1', 'publicPoll.perk2', 'publicPoll.perk3'];
+  protected readonly perks = [
+    'publicPoll.perk1',
+    'publicPoll.perk2',
+    'publicPoll.perk3',
+  ];
 
   protected readonly optionDisplays = computed<OptionDisplay[]>(() => {
     const preview = this.pollPreview();
-    if (!preview) { return []; }
+    if (!preview) {
+      return [];
+    }
     const isDate = preview.optionType === OptionType.Date;
     const maxVotes = Math.max(...preview.options.map((o) => o.voteCount), 1);
     return preview.options.map((o) => ({
@@ -89,39 +102,61 @@ export class PublicPollComponent implements OnInit {
     return Array.from({ length: Math.min(count, 5) });
   });
 
-  protected readonly participantAvatarUsers = computed(() =>
-    this.projectInfo()?.participants?.map(p => ({ name: p.name, voted: p.hasVoted })) ?? []
+  protected readonly participantAvatarUsers = computed(
+    () =>
+      this.projectInfo()?.participants?.map((p) => ({
+        name: p.name,
+        voted: p.hasVoted,
+      })) ?? [],
   );
 
   protected readonly currentUserHasVoted = computed(() => {
     const name = this.currentUser()?.name;
-    if (!name) { return false; }
-    return this.projectInfo()?.participants?.find(p => p.name === name)?.hasVoted ?? false;
+    if (!name) {
+      return false;
+    }
+    return (
+      this.projectInfo()?.participants?.find((p) => p.name === name)
+        ?.hasVoted ?? false
+    );
   });
 
-  protected readonly participantDisplays = computed<ParticipantDisplay[]>(() => {
-    const info = this.projectInfo();
-    if (!info) { return []; }
-    return (info.participants ?? []).map((p) => ({ name: p.name, hasVoted: p.hasVoted, user: { name: p.name } }));
-  });
+  protected readonly participantDisplays = computed<ParticipantDisplay[]>(
+    () => {
+      const info = this.projectInfo();
+      if (!info) {
+        return [];
+      }
+      return (info.participants ?? []).map((p) => ({
+        name: p.name,
+        hasVoted: p.hasVoted,
+        user: { name: p.name },
+      }));
+    },
+  );
 
   private projectId = '';
 
   ngOnInit() {
     this.projectId = this.route.snapshot.paramMap.get('projectId')!;
     this.userStore.setRedirectUrl(this.router.url);
-    this.titleBarService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
+    this.titleBarService.setSubtitle(
+      this.translateService.instant('project.pollInput.pollsOverviewLabel'),
+    );
     this.titleBarService.setBackRoute('/polls');
     this.titleBarService.clearTitle();
 
     this.pollService.getPublicProjectInfo(this.projectId).subscribe({
       next: (info) => {
         this.projectInfo.set(info);
-        this.titleBarService.setTitle(info.pollPreview?.name ?? info.projectName);
+        this.titleBarService.setTitle(
+          info.pollPreview?.name ?? info.projectName,
+        );
       },
       error: (err) => {
-        if (err?.status === 403) { this.router.navigate(['/']); }
-        else {
+        if (err?.status === 403) {
+          this.router.navigate(['/']);
+        } else {
           this.logger.error('Failed to load public project info', err);
           this.router.navigate(['/']);
         }
@@ -156,15 +191,22 @@ export class PublicPollComponent implements OnInit {
   protected navigateToPoll(): void {
     const info = this.projectInfo();
     if (info?.isStandalone && info.pollId) {
-      this.router.navigate(['/polls', info.projectId, 'overview', info.pollId]);
+      this.router.navigate(['/polls', info.projectId, 'vote', info.pollId]);
     } else {
       this.router.navigate(['/polls']);
     }
   }
 
   protected copyShareLink(): void {
-    navigator.clipboard.writeText(window.location.href)
-      .then(() => toast.success(this.translateService.instant('project.share.linkCopied')))
-      .catch(() => { /* clipboard write failed silently */ });
+    navigator.clipboard
+      .writeText(window.location.href)
+      .then(() =>
+        toast.success(
+          this.translateService.instant('project.share.linkCopied'),
+        ),
+      )
+      .catch(() => {
+        /* clipboard write failed silently */
+      });
   }
 }

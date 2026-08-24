@@ -1,9 +1,4 @@
-import {
-  computed,
-  inject,
-  Injectable,
-  signal,
-} from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PollDetailStore } from '../../data/poll-detail.store';
 import { PollListStore } from '../../data/poll-list.store';
@@ -43,10 +38,14 @@ export class PollInputStateService {
   readonly sharingContacts = this.sharingStore.sharingContactsSuggestion;
   readonly sharingInProgress = this.sharingStore.sharingInProgress;
 
-  readonly createdProject = computed(() => this.projectListStore.lastCreatedProject());
+  readonly createdProject = computed(() =>
+    this.projectListStore.lastCreatedProject(),
+  );
   readonly pollPreview = computed((): PollItem | undefined => {
     const p = this.createdProject();
-    if (!p) { return undefined; }
+    if (!p) {
+      return undefined;
+    }
     return {
       pollId: p.pollId,
       projectId: p.projectId,
@@ -98,7 +97,9 @@ export class PollInputStateService {
     );
   });
 
-  readonly pollClosedAt = computed(() => this.projectDetailStore.currentPoll()?.closeDate);
+  readonly pollClosedAt = computed(
+    () => this.projectDetailStore.currentPoll()?.closeDate,
+  );
 
   readonly question = signal('');
   readonly description = signal('');
@@ -121,7 +122,9 @@ export class PollInputStateService {
     }
     if (type === OptionType.Date) {
       const dateType = this.appointmentDateType();
-      if (!dateType) { return false; }
+      if (!dateType) {
+        return false;
+      }
       return (
         !!this.question() &&
         this.dateOptions().some((o) => isDateOptionEntryValid(o))
@@ -147,9 +150,13 @@ export class PollInputStateService {
   }
 
   loadEditData(pollId: string): void {
-    if (this.editDataLoaded) { return; }
+    if (this.editDataLoaded) {
+      return;
+    }
     const currentPoll = this.projectDetailStore.currentPoll();
-    if (!currentPoll || currentPoll.id !== pollId) { return; }
+    if (!currentPoll || currentPoll.id !== pollId) {
+      return;
+    }
     this.editDataLoaded = true;
     this.editLoading.set(false);
 
@@ -203,7 +210,9 @@ export class PollInputStateService {
 
   tryApplySharesAfterCreation(): boolean {
     const created = this.createdProject();
-    if (!created || this.sharesApplied) { return false; }
+    if (!created || this.sharesApplied) {
+      return false;
+    }
     this.sharesApplied = true;
     this.pollCreating.set(false);
     for (const invite of this.pendingInvites()) {
@@ -220,7 +229,10 @@ export class PollInputStateService {
     this.sharingStore.loadGeneralContacts();
   }
 
-  onTypeSelected(type: OptionType, wizardStep: ReturnType<typeof signal<number>>): void {
+  onTypeSelected(
+    type: OptionType,
+    wizardStep: ReturnType<typeof signal<number>>,
+  ): void {
     this.optionType.set(type);
     if (type === OptionType.YesNo) {
       this.options.set([{ text: '', description: '' }]);
@@ -239,7 +251,11 @@ export class PollInputStateService {
       return;
     }
     if (oldType) {
-      const converted = this.conversionService.convert(this.dateOptions(), oldType, newType);
+      const converted = this.conversionService.convert(
+        this.dateOptions(),
+        oldType,
+        newType,
+      );
       const fallback = newType === 'weekday' ? [] : [{ type: newType }];
       this.dateOptions.set(converted.length > 0 ? converted : fallback);
     } else {
@@ -266,14 +282,22 @@ export class PollInputStateService {
     const type = this.optionType();
     if (type === OptionType.Date) {
       const dateType = this.appointmentDateType();
-      if (!dateType) { return; }
+      if (!dateType) {
+        return;
+      }
       if (dateType === 'time') {
-        this.dateOptions.update((opts) => [...opts, { type: 'time', startTime: nextFullHour() }]);
+        this.dateOptions.update((opts) => [
+          ...opts,
+          { type: 'time', startTime: nextFullHour() },
+        ]);
       } else if (dateType === 'time-range') {
         const start = nextFullHour();
         const end = new Date(start);
         end.setHours(end.getHours() + 1);
-        this.dateOptions.update((opts) => [...opts, { type: 'time-range', startTime: start, endTime: end }]);
+        this.dateOptions.update((opts) => [
+          ...opts,
+          { type: 'time-range', startTime: start, endTime: end },
+        ]);
       } else {
         this.dateOptions.update((opts) => [...opts, { type: dateType }]);
       }
@@ -308,11 +332,11 @@ export class PollInputStateService {
   }
 
   addPendingInvite(invite: PendingInvite): void {
-    this.pendingInvites.update(list => [...list, invite]);
+    this.pendingInvites.update((list) => [...list, invite]);
   }
 
   removePendingInvite(email: string): void {
-    this.pendingInvites.update(list => list.filter(i => i.email !== email));
+    this.pendingInvites.update((list) => list.filter((i) => i.email !== email));
   }
 
   closePollNow(pollId: string | undefined): void {
@@ -460,11 +484,10 @@ export class PollInputStateService {
     this.router.navigate(['/polls']);
   }
 
-  navigateAfterDiscard(projectId: string | undefined, pollId: string | undefined): void {
-    if (projectId && pollId) {
-      this.router.navigate(['/polls', projectId, 'overview', pollId]);
-    } else {
-      this.router.navigate(['/polls']);
-    }
+  navigateAfterDiscard(
+    projectId: string | undefined,
+    pollId: string | undefined,
+  ): void {
+    this.router.navigate(['/polls']);
   }
 }

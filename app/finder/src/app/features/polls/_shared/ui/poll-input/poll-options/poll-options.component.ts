@@ -20,11 +20,8 @@ import { OptionCardTimeComponent } from './option-card-time/option-card-time.com
 import { OptionCardTimeRangeComponent } from './option-card-time-range/option-card-time-range.component';
 import { AppointmentTypeSelectionComponent } from './appointment-type-selection/appointment-type-selection.component';
 import { OptionType } from '../../../models/poll-detail.model';
-import {
-  DateOptionEntry,
-  DateOptionType,
-  nextFullHour,
-} from '../../../utils/date-option.utils';
+import { DateOptionEntry, DateOptionType } from '../../../utils/date-option.utils';
+import { DateOptionFormatService } from '../../../utils/date-option-format.service';
 
 export interface OptionEntry {
   id?: string;
@@ -62,6 +59,7 @@ export type { DateOptionEntry, DateOptionType };
 })
 export class PollOptionsComponent {
   private readonly translate = inject(TranslateService);
+  private readonly dateOptionFormat = inject(DateOptionFormatService);
 
   readonly OptionType = OptionType;
 
@@ -123,7 +121,7 @@ export class PollOptionsComponent {
 
   onToggleTime(value: boolean): void {
     if (value) {
-      const start = nextFullHour();
+      const start = this.dateOptionFormat.nextFullHour();
       const updated = this.dateOptions().map((o) => {
         if (o.startTime) { return o; }
         const changes: Partial<DateOptionEntry> = { startTime: start };

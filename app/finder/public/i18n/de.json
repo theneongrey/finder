@@ -124,6 +124,11 @@
         "header": "Umfrage löschen?",
         "message": "Bist du sicher, dass du die Umfrage \"{{name}}\" löschen möchtest?",
         "accept": "Umfrage löschen"
+      },
+      "deleteOverlay": {
+        "message": "Sicher? Das lässt sich nicht rückgängig machen.",
+        "cancel": "Abbrechen",
+        "confirm": "Ja, löschen"
       }
     },
     "detail": {

@@ -67,10 +67,6 @@ export class TitleBarService {
     this.#title.set(undefined);
   }
 
-  clearSubtitle(): void {
-    this.#subtitle.set(undefined);
-  }
-
   disableTitle(): void {
     this.#title.set(null);
   }

@@ -203,9 +203,9 @@
     </p>
   </div>
   <ds-button
-    variant="neutral"
+    [variant]="editMode() ? 'primary' : 'neutral'"
     size="sm"
-    icon="edit"
+    [icon]="editMode() ? 'check' : 'edit'"
     data-testid="edit-mode-btn"
     (click)="toggleEditMode()"
   >{{ (editMode() ? 'project.pollsTab.editModeDone' : 'project.common.edit') | translate }}</ds-button>

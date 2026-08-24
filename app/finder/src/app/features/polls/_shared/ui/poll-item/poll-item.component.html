@@ -82,7 +82,7 @@
                 variant="danger"
                 [size]="30"
                 icon="trash"
-                (click)="deletionRequested.emit()"
+                (click)="requestDelete()"
                 [title]="'project.common.delete' | translate"
                 [label]="'project.common.delete' | translate"
                 data-testid="delete-btn"
@@ -118,7 +118,7 @@
           icon="trash"
           data-testid="delete-btn"
           [label]="'project.common.delete' | translate"
-          (click)="deletionRequested.emit()"
+          (click)="requestDelete()"
         />
       </div>
     }
@@ -163,4 +163,24 @@
       </div>
     </div>
   </div>
+
+  <!-- ── Delete confirmation overlay ──────────────────────────── -->
+  @if (showDeleteConfirm()) {
+    <div
+      class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 px-6 text-center"
+      style="border-radius: var(--radius-3xl); background: rgba(255,255,255,0.6); backdrop-filter: blur(3px)"
+    >
+      <p style="font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4">
+        {{ 'project.overview.deleteOverlay.message' | translate }}
+      </p>
+      <div class="flex items-center gap-2">
+        <ds-button variant="ghost" (click)="cancelDelete()">
+          {{ 'project.overview.deleteOverlay.cancel' | translate }}
+        </ds-button>
+        <ds-button variant="danger" (click)="confirmDelete()">
+          {{ 'project.overview.deleteOverlay.confirm' | translate }}
+        </ds-button>
+      </div>
+    </div>
+  }
 </ds-card>

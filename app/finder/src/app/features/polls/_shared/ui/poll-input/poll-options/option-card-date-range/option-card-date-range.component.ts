@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   output,
   signal,
@@ -14,7 +15,8 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
-import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
+import { DateOptionEntry } from '../../../../utils/date-option.utils';
+import { DateOptionFormatService } from '../../../../utils/date-option-format.service';
 
 @Component({
   selector: 'app-option-card-date-range',
@@ -23,6 +25,7 @@ import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../..
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateRangeComponent {
+  private readonly dateOptionFormat = inject(DateOptionFormatService);
 
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
@@ -55,7 +58,7 @@ export class OptionCardDateRangeComponent {
       const shouldShow = !!(opt.startTime || opt.endTime) || this.initialShowTime();
       if (shouldShow) {
         if (this.initialShowTime() && !opt.startTime) {
-          const start = nextFullHour();
+          const start = this.dateOptionFormat.nextFullHour();
           const end = new Date(start);
           end.setHours(end.getHours() + 1);
           this.optionChange.emit({ ...opt, startTime: start, endTime: end });
@@ -90,19 +93,19 @@ export class OptionCardDateRangeComponent {
   }
 
   get startTimeValue(): string {
-    return this.option().startTime ? formatTime(this.option().startTime!) : '';
+    return this.option().startTime ? this.dateOptionFormat.formatTimeInput(this.option().startTime!) : '';
   }
 
   get endTimeValue(): string {
-    return this.option().endTime ? formatTime(this.option().endTime!) : '';
+    return this.option().endTime ? this.dateOptionFormat.formatTimeInput(this.option().endTime!) : '';
   }
 
   setStartTime(value: string): void {
-    this.optionChange.emit({ ...this.option(), startTime: parseTimeInput(value) });
+    this.optionChange.emit({ ...this.option(), startTime: this.dateOptionFormat.parseTimeInput(value) });
   }
 
   setEndTime(value: string): void {
-    this.optionChange.emit({ ...this.option(), endTime: parseTimeInput(value) });
+    this.optionChange.emit({ ...this.option(), endTime: this.dateOptionFormat.parseTimeInput(value) });
   }
 
   private parseDate(value: string): Date {

@@ -32,6 +32,7 @@ export interface ParticipantAvatar {
   host: {
     '(mouseenter)': 'isHovered.set(true)',
     '(mouseleave)': 'isHovered.set(false)',
+    '[class.is-confirming]': 'showDeleteConfirm()',
   },
   imports: [
     RouterLink,
@@ -44,6 +45,7 @@ export interface ParticipantAvatar {
     PollItemProgressComponent,
   ],
   templateUrl: './poll-item.component.html',
+  styleUrl: './poll-item.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollItemComponent {
@@ -54,6 +56,7 @@ export class PollItemComponent {
   editMode = input<boolean>(false);
   previewMode = input<boolean>(false);
   isHovered = signal(false);
+  showDeleteConfirm = signal(false);
   deletionRequested = output();
   shareRequested = output();
   favoriteToggled = output<string>();
@@ -118,6 +121,19 @@ export class PollItemComponent {
 
     return this.translateService.instant('project.pollsTab.missingVoters', { names });
   });
+
+  requestDelete(): void {
+    this.showDeleteConfirm.set(true);
+  }
+
+  cancelDelete(): void {
+    this.showDeleteConfirm.set(false);
+  }
+
+  confirmDelete(): void {
+    this.showDeleteConfirm.set(false);
+    this.deletionRequested.emit();
+  }
 
   navigateToEdit(): void {
     const route = this.editRoute();

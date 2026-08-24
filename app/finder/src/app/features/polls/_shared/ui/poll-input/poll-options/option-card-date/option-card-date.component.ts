@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  inject,
   input,
   output,
   signal,
@@ -12,7 +13,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
-import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../../../../utils/date-option.utils';
+import { DateOptionEntry } from '../../../../utils/date-option.utils';
+import { DateOptionFormatService } from '../../../../utils/date-option-format.service';
 
 @Component({
   selector: 'app-option-card-date',
@@ -21,6 +23,7 @@ import { DateOptionEntry, formatTime, nextFullHour, parseTimeInput } from '../..
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {
+  private readonly dateOptionFormat = inject(DateOptionFormatService);
 
   option = input.required<DateOptionEntry>();
   index = input.required<number>();
@@ -38,7 +41,7 @@ export class OptionCardDateComponent {
       const shouldShow = !!(opt.startTime) || this.initialShowTime();
       if (shouldShow) {
         if (this.initialShowTime() && !opt.startTime) {
-          this.optionChange.emit({ ...opt, startTime: nextFullHour() });
+          this.optionChange.emit({ ...opt, startTime: this.dateOptionFormat.nextFullHour() });
         }
         this.showTime.set(true);
       } else {
@@ -59,10 +62,10 @@ export class OptionCardDateComponent {
   }
 
   get timeValue(): string {
-    return this.option().startTime ? formatTime(this.option().startTime!) : '';
+    return this.option().startTime ? this.dateOptionFormat.formatTimeInput(this.option().startTime!) : '';
   }
 
   setStartTime(value: string): void {
-    this.optionChange.emit({ ...this.option(), startTime: parseTimeInput(value) });
+    this.optionChange.emit({ ...this.option(), startTime: this.dateOptionFormat.parseTimeInput(value) });
   }
 }

@@ -124,6 +124,11 @@
         "header": "¿Eliminar encuesta?",
         "message": "¿Estás seguro de que quieres eliminar la encuesta \"{{name}}\"?",
         "accept": "Eliminar encuesta"
+      },
+      "deleteOverlay": {
+        "message": "¿Seguro? Esto no se puede deshacer.",
+        "cancel": "Cancelar",
+        "confirm": "Sí, eliminar"
       }
     },
     "detail": {

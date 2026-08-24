@@ -1,13 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PollOverview } from '../models/poll-overview.model';
 import { StandalonePollOverview } from '../models/standalone-poll-overview.model';
 import {
   Comment,
   Option,
   OptionMeta,
   OptionType,
-  Poll,
   PollDetail,
   Project,
   PublicProjectInfo,
@@ -23,11 +21,6 @@ export class PollService {
   private readonly httpClient = inject(HttpClient);
   private readonly baseUrl = environment.baseUrl;
 
-  getProjects() {
-    this.loggerService.debug('[PollService] fetching projects');
-    return this.httpClient.get<PollOverview[]>(`${this.baseUrl}/api/project`);
-  }
-
   getStandalonePolls() {
     this.loggerService.debug('[PollService] fetching standalone polls');
     return this.httpClient.get<StandalonePollOverview[]>(
@@ -35,7 +28,12 @@ export class PollService {
     );
   }
 
-  addStandalonePoll(name: string, description: string, optionType: OptionType, closeDate?: string) {
+  addStandalonePoll(
+    name: string,
+    description: string,
+    optionType: OptionType,
+    closeDate?: string,
+  ) {
     this.loggerService.debug(`[PollService] adding standalone poll ${name}`);
     return this.httpClient.post<StandalonePollOverview>(
       `${this.baseUrl}/api/project/standalone-poll`,
@@ -67,22 +65,12 @@ export class PollService {
     );
   }
 
-  addPoll(
-    projectId: string,
+  updatePoll(
+    pollId: string,
     name: string,
-    optionType: OptionType,
     description: string,
+    closeDate?: string,
   ) {
-    this.loggerService.debug(`[PollService] adding poll ${name}`);
-    return this.httpClient.post<Poll>(`${this.baseUrl}/api/project/poll`, {
-      name: name,
-      projectId: projectId,
-      optionType: optionType,
-      description: description,
-    });
-  }
-
-  updatePoll(pollId: string, name: string, description: string, closeDate?: string) {
     this.loggerService.debug(`[PollService] updating poll ${pollId}`);
     return this.httpClient.put<PollDetail>(
       `${this.baseUrl}/api/project/poll/${pollId}`,
@@ -104,11 +92,6 @@ export class PollService {
       `${this.baseUrl}/api/polls/${pollSlug}/reopen`,
       {},
     );
-  }
-
-  deletePoll(pollId: string) {
-    this.loggerService.debug(`[PollService] deleting poll ${pollId}`);
-    return this.httpClient.delete(`${this.baseUrl}/api/project/poll/${pollId}`);
   }
 
   addOption(

@@ -10,12 +10,7 @@ import {
   DateOptionEntry,
   DateOptionType,
 } from './poll-input-form/poll-input-form.component';
-import {
-  parseDateOptionText,
-  serializeDateOption,
-  isDateOptionEntryValid,
-  nextFullHour,
-} from '../../utils/date-option.utils';
+import { DateOptionFormatService } from '../../utils/date-option-format.service';
 import { UrlValidationService } from '../../../../../common/utils/url-validation.service';
 import { AppointmentTypeConversionService } from '../../utils/appointment-type-conversion.service';
 import { PendingInvite } from '../share-content/share-invite-form/share-invite-form.component';
@@ -30,17 +25,16 @@ export class PollInputStateService {
   private readonly route = inject(ActivatedRoute);
   private readonly urlValidation = inject(UrlValidationService);
   private readonly conversionService = inject(AppointmentTypeConversionService);
+  private readonly dateOptionFormat = inject(DateOptionFormatService);
 
   readonly OptionType = OptionType;
 
   readonly projectId = this.projectDetailStore.projectId;
-  readonly currentProject = this.projectDetailStore.currentProject;
-  readonly sharingContacts = this.sharingStore.sharingContactsSuggestion;
-  readonly sharingInProgress = this.sharingStore.sharingInProgress;
 
   readonly createdProject = computed(() =>
     this.projectListStore.lastCreatedProject(),
   );
+
   readonly pollPreview = computed((): PollItem | undefined => {
     const p = this.createdProject();
     if (!p) {
@@ -74,17 +68,6 @@ export class PollInputStateService {
   readonly pendingInvites = signal<PendingInvite[]>([]);
 
   private sharesApplied = false;
-
-  readonly canClosePoll = computed(() => {
-    const poll = this.projectDetailStore.currentPoll();
-    const project = this.projectDetailStore.currentProject();
-    return (
-      poll !== undefined &&
-      !poll.isClosed &&
-      project !== undefined &&
-      project.role >= PollRole.Maintainer
-    );
-  });
 
   readonly canReopenPoll = computed(() => {
     const poll = this.projectDetailStore.currentPoll();
@@ -127,7 +110,7 @@ export class PollInputStateService {
       }
       return (
         !!this.question() &&
-        this.dateOptions().some((o) => isDateOptionEntryValid(o))
+        this.dateOptions().some((o) => this.dateOptionFormat.isValid(o))
       );
     }
     const opts = this.options();
@@ -166,7 +149,7 @@ export class PollInputStateService {
 
     if (currentPoll.optionType === OptionType.Date) {
       const entries = currentPoll.options.length
-        ? currentPoll.options.map((o) => parseDateOptionText(o.text, o.id))
+        ? currentPoll.options.map((o) => this.dateOptionFormat.parse(o.text, o.id))
         : [];
 
       if (entries.length > 0) {
@@ -288,10 +271,10 @@ export class PollInputStateService {
       if (dateType === 'time') {
         this.dateOptions.update((opts) => [
           ...opts,
-          { type: 'time', startTime: nextFullHour() },
+          { type: 'time', startTime: this.dateOptionFormat.nextFullHour() },
         ]);
       } else if (dateType === 'time-range') {
-        const start = nextFullHour();
+        const start = this.dateOptionFormat.nextFullHour();
         const end = new Date(start);
         end.setHours(end.getHours() + 1);
         this.dateOptions.update((opts) => [
@@ -331,14 +314,6 @@ export class PollInputStateService {
     this.dateOptions.set(updated);
   }
 
-  addPendingInvite(invite: PendingInvite): void {
-    this.pendingInvites.update((list) => [...list, invite]);
-  }
-
-  removePendingInvite(email: string): void {
-    this.pendingInvites.update((list) => list.filter((i) => i.email !== email));
-  }
-
   closePollNow(pollId: string | undefined): void {
     if (pollId) {
       this.projectDetailStore.closePoll(pollId);
@@ -348,46 +323,6 @@ export class PollInputStateService {
   reopenPollNow(pollId: string | undefined): void {
     if (pollId) {
       this.projectDetailStore.reopenPoll(pollId);
-    }
-  }
-
-  submitAdd(projectId: string | undefined): void {
-    const optionType = this.optionType();
-    if (!projectId || optionType === undefined || !this.isValid()) {
-      return;
-    }
-
-    if (optionType === OptionType.Date) {
-      const options = this.dateOptions()
-        .filter((o) => isDateOptionEntryValid(o))
-        .map((o) => ({
-          text: serializeDateOption(o),
-          description: '',
-        }));
-
-      this.projectDetailStore.addPoll({
-        projectId,
-        name: this.question(),
-        description: this.description(),
-        optionType: OptionType.Date,
-        options,
-      });
-    } else {
-      const options = this.options()
-        .filter((o) => !!o.text)
-        .map((o) => ({
-          text: o.text,
-          description: o.description,
-          meta: o.meta,
-        }));
-
-      this.projectDetailStore.addPoll({
-        projectId,
-        name: this.question(),
-        description: this.description(),
-        optionType,
-        options,
-      });
     }
   }
 
@@ -401,9 +336,9 @@ export class PollInputStateService {
 
     if (optionType === OptionType.Date) {
       const options = this.dateOptions()
-        .filter((o) => isDateOptionEntryValid(o))
+        .filter((o) => this.dateOptionFormat.isValid(o))
         .map((o) => ({
-          text: serializeDateOption(o),
+          text: this.dateOptionFormat.serialize(o),
           description: '',
         }));
 
@@ -441,10 +376,10 @@ export class PollInputStateService {
 
     if (optionType === OptionType.Date) {
       const options = this.dateOptions()
-        .filter((o) => isDateOptionEntryValid(o))
+        .filter((o) => this.dateOptionFormat.isValid(o))
         .map((o) => ({
           id: o.id,
-          text: serializeDateOption(o),
+          text: this.dateOptionFormat.serialize(o),
           description: '',
         }));
 
@@ -485,8 +420,8 @@ export class PollInputStateService {
   }
 
   navigateAfterDiscard(
-    projectId: string | undefined,
-    pollId: string | undefined,
+    _projectId: string | undefined,
+    _pollId: string | undefined,
   ): void {
     this.router.navigate(['/polls']);
   }

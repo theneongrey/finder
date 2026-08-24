@@ -1,0 +1,10 @@
+@media (max-width: 1023px) {
+  :host ::ng-deep .ds-card {
+    min-height: 0px;
+    transition: min-height 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  :host(.is-confirming) ::ng-deep .ds-card {
+    min-height: 180px;
+  }
+}

@@ -29,7 +29,7 @@
 
         @if (canManagePoll()) {
           <div
-            class="mt-2 flex flex-col gap-3 rounded-[22px] p-5"
+            class="relative mt-2 flex flex-col gap-3 rounded-[22px] p-5"
             data-testid="results-manage-card"
             style="
               background: var(--surface-card);
@@ -37,6 +37,9 @@
               box-shadow: var(--shadow-card-soft);
             "
           >
+            @if (showCloseConfirm()) {
+              <div class="pointer-events-none absolute inset-0 rounded-[22px] bg-white/60"></div>
+            }
             <div>
               @if (poll.isClosed) {
                 <p
@@ -73,7 +76,7 @@
                 </p>
               }
             </div>
-            <div class="flex gap-2">
+            <div class="relative z-10 flex gap-2">
               @if (poll.isClosed) {
                 <ds-button
                   variant="neutral"
@@ -180,13 +183,16 @@
 
       @if (canManagePoll()) {
         <div
-          class="flex items-center gap-4 rounded-[22px] p-5"
+          class="relative flex items-center gap-4 rounded-[22px] p-5"
           style="
             background: var(--surface-card);
             border: 1px solid var(--border-hairline-soft);
             box-shadow: var(--shadow-card-soft);
           "
         >
+          @if (showCloseConfirm()) {
+            <div class="pointer-events-none absolute inset-0 rounded-[22px] bg-white/60"></div>
+          }
           <div class="min-w-0 flex-1">
             @if (poll.isClosed) {
               <p
@@ -224,38 +230,42 @@
             }
           </div>
 
-          @if (poll.isClosed) {
-            <ds-button
-              variant="neutral"
-              data-testid="reopen-poll-btn"
-              (click)="reopenPoll()"
-            >
-              Wieder öffnen
-            </ds-button>
-          } @else if (showCloseConfirm()) {
-            <ds-button
-              variant="ghost"
-              size="sm"
-              (click)="showCloseConfirm.set(false)"
-            >
-              Abbrechen
-            </ds-button>
-            <ds-button
-              variant="danger"
-              data-testid="close-poll-confirm-btn"
-              (click)="closePoll()"
-            >
-              Ja, beenden
-            </ds-button>
-          } @else {
-            <ds-button
-              variant="danger"
-              data-testid="close-poll-btn"
-              (click)="showCloseConfirm.set(true)"
-            >
-              Umfrage beenden
-            </ds-button>
-          }
+          <div class="relative z-10 flex items-center gap-2">
+            @if (poll.isClosed) {
+              <ds-button
+                variant="neutral"
+                data-testid="reopen-poll-btn"
+                (click)="reopenPoll()"
+              >
+                Wieder öffnen
+              </ds-button>
+            } @else if (showCloseConfirm()) {
+              <ds-button
+                [@btnEnter]
+                variant="ghost"
+                size="sm"
+                (click)="showCloseConfirm.set(false)"
+              >
+                Abbrechen
+              </ds-button>
+              <ds-button
+                [@btnEnter]
+                variant="danger"
+                data-testid="close-poll-confirm-btn"
+                (click)="closePoll()"
+              >
+                Ja, beenden
+              </ds-button>
+            } @else {
+              <ds-button
+                variant="danger"
+                data-testid="close-poll-btn"
+                (click)="showCloseConfirm.set(true)"
+              >
+                Umfrage beenden
+              </ds-button>
+            }
+          </div>
         </div>
       }
     </div>

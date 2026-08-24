@@ -1,28 +1,24 @@
 using Finder.Business.Preview.Services.PreviewHelper;
 using Finder.Business.Shared;
-using HtmlAgilityPack;
 
 namespace Finder.Business.Preview.Services;
 
 public class PreviewService
 {
     private readonly PreviewGrabberMetaService _previewGrabberMetaService;
-    private readonly HtmlGrabberPlaywrightService _htmlGrabberPlaywrightService;
-    private readonly PreviewGrabberQueryService _previewGrabberQueryService;
-    private readonly PreviewGrabberClaudeService _previewGrabberClaudeService;
-    private readonly HtmlGrabberHttpClientService _htmlGrabberHttpClientService;
+    private readonly IHtmlGrabberPlaywrightService _htmlGrabberPlaywrightService;
+    private readonly IPreviewImageCandidateService _previewImageCandidateService;
+    private readonly IHtmlGrabberHttpClientService _htmlGrabberHttpClientService;
 
-    public PreviewService(HtmlGrabberHttpClientService htmlGrabberHttpClientService,
+    public PreviewService(IHtmlGrabberHttpClientService htmlGrabberHttpClientService,
         PreviewGrabberMetaService previewGrabberMetaService,
-        HtmlGrabberPlaywrightService htmlGrabberPlaywrightService,
-        PreviewGrabberQueryService previewGrabberQueryService,
-        PreviewGrabberClaudeService previewGrabberClaudeService)
+        IHtmlGrabberPlaywrightService htmlGrabberPlaywrightService,
+        IPreviewImageCandidateService previewImageCandidateService)
     {
         _htmlGrabberHttpClientService = htmlGrabberHttpClientService;
         _previewGrabberMetaService = previewGrabberMetaService;
         _htmlGrabberPlaywrightService = htmlGrabberPlaywrightService;
-        _previewGrabberQueryService = previewGrabberQueryService;
-        _previewGrabberClaudeService = previewGrabberClaudeService;
+        _previewImageCandidateService = previewImageCandidateService;
     }
 
     public async Task<Result<Models.Preview>> GetPreviewAsync(string url)
@@ -52,34 +48,50 @@ public class PreviewService
             return Result<Models.Preview>.Fail(500, "Failed to fetch from url");
         }
 
-        var playwrightHtmlContent = htmlPlaywrightResult.Payload!;
+        var playwrightHtmlContent = htmlPlaywrightResult.Payload!.HtmlContent;
+        var playwrightResultUrl = htmlPlaywrightResult.Payload!.Url;
+        Models.Preview? metaPlaywrightPreview = null;
         if (!httpHtmlResult.IsSuccess || httpClientHtmlContent.Length != playwrightHtmlContent.Length)
         {
             // Even if the content changed after calling it with playwright, it's most likely the metadata will
             // not change, but since it's a low-cost operation, try it again.
 
-            var metaPlaywrightResult = _previewGrabberMetaService.GetPreview(playwrightHtmlContent, new Uri(url));
-            if (metaPlaywrightResult.IsSuccess && metaPlaywrightResult.Payload!.HasImage)
+            var metaPlaywrightResult = _previewGrabberMetaService.GetPreview(playwrightHtmlContent, new Uri(playwrightResultUrl));
+            if (metaPlaywrightResult.IsSuccess)
             {
-                return metaPlaywrightResult;
+                metaPlaywrightPreview = metaPlaywrightResult.Payload; 
+                if (metaPlaywrightResult.Payload!.HasImage)
+                {
+                    return metaPlaywrightResult;
+                }
             }
         }
         
         // 3. Let's see first if we have any query to grab the info from the HTML content 
-        var queryResult = _previewGrabberQueryService.GetPreview(playwrightHtmlContent, new Uri(url));
+        /* since we arent saving the xpath by the ai no more, this step can be skipped for now.
+        var queryResult = _previewGrabberQueryService.GetPreview(playwrightHtmlContent, new Uri(playwrightResultUrl));
         if (queryResult.IsSuccess && queryResult.Payload!.HasImage)
         {
             return queryResult;
         }
-
+        */
+        
+        // 4. If we don't have any preview picture so far, let's ask the AI for a suggestion (disabled for now)
         /*
-        // 4. If we don't have any preview picture so far, let's ask the AI for a suggestion 
-        var claudeResult = _previewGrabberClaudeService.GetPreview(playwrightHtmlContent, new Uri(url));
+        var claudeResult = await _previewGrabberClaudeService.GetPreview(playwrightHtmlContent, metaPlaywrightPreview ?? new Models.Preview("", "", "", playwrightResultUrl));
         if (claudeResult.IsSuccess && claudeResult.Payload!.HasImage)
         {
-            
+            return Result<Models.Preview>.Success(claudeResult.Payload!);
         }
         */
+
+        var imageResult = await _previewImageCandidateService.GetPreviewWithValidatedImageAsync(
+            playwrightHtmlContent, metaPlaywrightPreview, playwrightResultUrl);
+
+        if (imageResult.IsSuccess)
+        {
+            return imageResult;
+        }
 
         return Result<Models.Preview>.Fail(500, "Failed to fetch from url");
     }

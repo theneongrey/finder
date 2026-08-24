@@ -32,10 +32,7 @@ public class PreviewGrabberMetaService
                 imageUrl = new Uri(baseUrl, imageUrl).ToString();
             }
 
-            // 4. Extract Site name
-            var siteName = GetMetaContent(doc, "og:site_name");
-
-            return Result<Models.Preview>.Success(new Models.Preview(title, description, imageUrl, siteName));
+            return Result<Models.Preview>.Success(new Models.Preview(title, description, imageUrl, baseUrl.AbsoluteUri));
         }
         catch(Exception)
         {

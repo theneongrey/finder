@@ -9,18 +9,13 @@ import {
 import { on, withReducer } from '@ngrx/signals/events';
 import { computed, inject } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { forkJoin, map, of, pipe, switchMap, tap } from 'rxjs';
+import { forkJoin, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { PollService } from '../../_shared/data/poll.service';
+import { PollService } from './poll.service';
 import { Router } from '@angular/router';
-import {
-  Comment,
-  OptionType,
-  Project,
-  PollDetail,
-} from '../models/poll-detail.model';
+import { Comment, Project, PollDetail } from '../models/poll-detail.model';
 import { sharingEvents } from './sharing.events';
-import { LoggerService } from '../../../../common/services/logger.service';
+import { LoggerService } from '@common/services/logger.service';
 
 export const PollDetailStore = signalStore(
   { providedIn: 'root' },

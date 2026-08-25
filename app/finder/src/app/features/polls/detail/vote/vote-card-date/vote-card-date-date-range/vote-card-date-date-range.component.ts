@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { HlmCalendarRange } from '@spartan-ng/helm/calendar';
-import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
+import { DateOptionEntry } from '../../../../_shared/models/date-option.model';
 
 @Component({
   selector: 'app-vote-card-date-date-range',
@@ -34,7 +34,12 @@ export class VoteCardDateDateRangeComponent {
   readonly isSameMonth = computed(() => {
     const s = this.startDate();
     const e = this.endDate();
-    return !!(s && e && s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth());
+    return !!(
+      s &&
+      e &&
+      s.getFullYear() === e.getFullYear() &&
+      s.getMonth() === e.getMonth()
+    );
   });
 
   formatDate(date: Date): string {

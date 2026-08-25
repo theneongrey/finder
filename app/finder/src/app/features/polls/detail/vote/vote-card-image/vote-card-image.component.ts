@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
 
 @Component({
   selector: 'app-vote-card-image',

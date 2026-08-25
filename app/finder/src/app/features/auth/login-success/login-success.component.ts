@@ -8,7 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.component';
-import { DsIconComponent } from '../../../common/ui/ds-components/icon/ds-icon.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 
 @Component({
   selector: 'app-auth-login-success',

@@ -12,10 +12,10 @@ import {
 } from '@smart/avatar-stack/avatar-stack.component';
 import {
   OptionDetail,
-  OptionType,
   PollDetail,
 } from '../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
+import { OptionType } from '@common/models/option-type.model';
 
 interface StatCard {
   label: string;
@@ -115,7 +115,9 @@ export class VoteOverviewSummaryComponent {
   });
 
   readonly metricColor = computed(() =>
-    this.poll().optionType === OptionType.Rating ? '#c98f2c' : 'var(--positive-strong)',
+    this.poll().optionType === OptionType.Rating
+      ? '#c98f2c'
+      : 'var(--positive-strong)',
   );
 
   readonly peopleLine = computed(() => {
@@ -230,7 +232,9 @@ export class VoteOverviewSummaryComponent {
     return [
       {
         label: 'Beteiligung',
-        value: this.totalMembers() ? `${voters}/${this.totalMembers()}` : String(voters),
+        value: this.totalMembers()
+          ? `${voters}/${this.totalMembers()}`
+          : String(voters),
         sub: 'haben abgestimmt',
         color: '#1f7a8c',
       },
@@ -241,7 +245,8 @@ export class VoteOverviewSummaryComponent {
             ? overallAvg.toFixed(1).replace('.', ',')
             : winnerYesPct + ' %',
         sub: type === OptionType.Rating ? 'von 5' : 'Zustimmung',
-        color: type === OptionType.Rating ? '#c98f2c' : 'var(--positive-strong)',
+        color:
+          type === OptionType.Rating ? '#c98f2c' : 'var(--positive-strong)',
       },
       {
         label: 'Kommentare',

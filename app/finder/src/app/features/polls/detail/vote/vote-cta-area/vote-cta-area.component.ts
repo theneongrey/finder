@@ -8,11 +8,11 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { OptionType } from '../../../_shared/models/poll-detail.model';
-import { DsVoteButtonsComponent } from '../../../../../common/ui/ds-components/vote-buttons/ds-vote-buttons.component';
-import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
-import { DsIconComponent } from '../../../../../common/ui/ds-components/icon/ds-icon.component';
+import { DsVoteButtonsComponent } from '@ds/vote-buttons/ds-vote-buttons.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { VoteCommentButtonComponent } from '../vote-comment-button/vote-comment-button.component';
+import { OptionType } from '@common/models/option-type.model';
 
 const RATING_LABEL_KEYS: Record<number, string> = {
   1: 'project.vote.ratingLabel.1',

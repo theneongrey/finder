@@ -11,18 +11,18 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TitleBarService } from '../../../../common/services/title-bar.service';
-import { PollInputStateService } from '../../_shared/ui/poll-input/poll-input-state.service';
-import { PollInputFormComponent } from '../../_shared/ui/poll-input/poll-input-form/poll-input-form.component';
-import { PollTypeBadgeComponent } from '../../_shared/ui/poll-type-badge/poll-type-badge.component';
+import { TitleBarService } from '@common/services/title-bar.service';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { OptionTypeBadgeComponent } from '@smart/option-type-badge/option-type-badge.component';
+import { PollInputFormComponent } from '../../_shared/ui/poll-input-form/poll-input-form.component';
+import { PollInputStateService } from '../../add/poll-input/poll-input-state.service';
 
 @Component({
   selector: 'app-edit-poll',
   imports: [
     NgTemplateOutlet,
     PollInputFormComponent,
-    PollTypeBadgeComponent,
+    OptionTypeBadgeComponent,
     DsButtonComponent,
     TranslatePipe,
   ],
@@ -58,16 +58,23 @@ export class EditPollComponent {
       }
     });
 
-    effect(() => {
-      const pollId = this.pollId();
-      if (pollId) {
-        this.state.loadEditData(pollId);
-      }
-    }, { allowSignalWrites: true });
+    effect(
+      () => {
+        const pollId = this.pollId();
+        if (pollId) {
+          this.state.loadEditData(pollId);
+        }
+      },
+      { allowSignalWrites: true },
+    );
 
     effect(() => {
-      this.titleService.setTitle(this.translateService.instant('project.pollInput.editPollTitle'));
-      this.titleService.setSubtitle(this.translateService.instant('project.pollInput.pollsOverviewLabel'));
+      this.titleService.setTitle(
+        this.translateService.instant('project.pollInput.editPollTitle'),
+      );
+      this.titleService.setSubtitle(
+        this.translateService.instant('project.pollInput.pollsOverviewLabel'),
+      );
       this.titleService.setProgress(undefined);
       this.titleService.setBackFn(undefined);
     });

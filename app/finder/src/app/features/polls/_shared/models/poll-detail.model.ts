@@ -1,14 +1,9 @@
 import { PollRole } from './poll-role.enum';
+import { OptionType } from '@common/models/option-type.model';
 
 export enum VisibilityType {
   VisibleForSelectedOnly = 0,
   VisibleForEverybody = 1,
-}
-
-export enum OptionType {
-  YesNo,
-  Rating,
-  Date,
 }
 
 export interface Poll {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
-import { PollInputComponent } from '../_shared/ui/poll-input/poll-input.component';
+import { PollInputComponent } from './poll-input/poll-input.component';
 
 @Component({
   selector: 'app-add-poll',

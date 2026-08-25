@@ -1,6 +1,6 @@
-import { OptionType } from './poll-detail.model';
 import { PollRole } from './poll-role.enum';
 import { PollParticipant } from './standalone-poll-overview.model';
+import { OptionType } from '@common/models/option-type.model';
 
 export interface PollItem {
   pollId: string;

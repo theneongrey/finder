@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsIconComponent } from '../../../../../common/ui/ds-components/icon/ds-icon.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 
 @Component({
   selector: 'app-public-poll-invite-banner',

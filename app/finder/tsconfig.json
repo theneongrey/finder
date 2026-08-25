@@ -16,6 +16,7 @@
     "target": "ES2022",
     "module": "ES2022",
     "paths": {
+      "@common/*": ["./src/app/common/*"],
       "@ds/*": ["./src/app/common/ui/ds-components/*"],
       "@smart/*": ["./src/app/common/ui/smart-components/*"],
       "@spartan-ng/helm/skeleton": ["./src/lib/ui/skeleton/src/index.ts"],

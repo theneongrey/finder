@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
+import { DateOptionEntry } from '../../../../_shared/models/date-option.model';
 import { AnalogClockComponent } from '../analog-clock/analog-clock.component';
 
 @Component({

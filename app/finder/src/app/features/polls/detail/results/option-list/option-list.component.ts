@@ -9,20 +9,27 @@ import { RouterLink } from '@angular/router';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import {
   OptionDetail,
-  OptionType,
   SharedWith,
 } from '../../../_shared/models/poll-detail.model';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionCardRatingComponent } from './option-card-rating/option-card-rating.component';
+import { OptionType } from '@common/models/option-type.model';
 
 type SortMode = 'top' | 'original';
 
 @Component({
   selector: 'app-option-list',
   templateUrl: './option-list.component.html',
-  imports: [RouterLink, DsButtonComponent, DsIconComponent, OptionCardComponent, OptionCardDateComponent, OptionCardRatingComponent],
+  imports: [
+    RouterLink,
+    DsButtonComponent,
+    DsIconComponent,
+    OptionCardComponent,
+    OptionCardDateComponent,
+    OptionCardRatingComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionListComponent {
@@ -51,7 +58,7 @@ export class OptionListComponent {
   });
 
   toggleSort() {
-    this.sort.update(s => (s === 'top' ? 'original' : 'top'));
+    this.sort.update((s) => (s === 'top' ? 'original' : 'top'));
   }
 
   getYesVotes(option: OptionDetail) {
@@ -73,14 +80,16 @@ export class OptionListComponent {
   private readonly topScore = computed(() => {
     const opts = this.options();
     if (this.optionType() === OptionType.Rating) {
-      return Math.max(0, ...opts.map(o => this.getAverageRating(o)));
+      return Math.max(0, ...opts.map((o) => this.getAverageRating(o)));
     }
-    return Math.max(0, ...opts.map(o => this.getYesVotes(o).length));
+    return Math.max(0, ...opts.map((o) => this.getYesVotes(o).length));
   });
 
   hasMostVotes(option: OptionDetail): boolean {
     const top = this.topScore();
-    if (!top) { return false; }
+    if (!top) {
+      return false;
+    }
     if (this.optionType() === OptionType.Rating) {
       return this.getAverageRating(option) === top;
     }

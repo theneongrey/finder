@@ -6,7 +6,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { UserStore } from '../../../common/data/user.store';
+import { UserStore } from '@common/data/user.store';
 import {
   FormControl,
   FormGroup,
@@ -14,10 +14,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TitleBarService } from '../../../common/services/title-bar.service';
+import { TitleBarService } from '@common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { DsButtonComponent } from '../../../common/ui/ds-components/button/ds-button.component';
-import { DsInputComponent } from '../../../common/ui/ds-components/input/ds-input.component';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
 import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.component';
 
 @Component({

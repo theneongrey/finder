@@ -5,13 +5,13 @@ import {
   Comment,
   Option,
   OptionMeta,
-  OptionType,
   PollDetail,
   Project,
   PublicProjectInfo,
 } from '../models/poll-detail.model';
-import { environment } from '../../../../common/env/environment';
-import { LoggerService } from '../../../../common/services/logger.service';
+import { environment } from '@common/env/environment';
+import { LoggerService } from '@common/services/logger.service';
+import { OptionType } from '@common/models/option-type.model';
 
 @Injectable({
   providedIn: 'root',

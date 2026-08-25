@@ -15,12 +15,12 @@ import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { TitleBarService } from '../../../../common/services/title-bar.service';
-import { OptionType } from '../../_shared/models/poll-detail.model';
+import { TitleBarService } from '@common/services/title-bar.service';
 import { VoteSidebarComponent } from './vote-sidebar/vote-sidebar.component';
 import { VoteProgressHeaderComponent } from './vote-progress-header/vote-progress-header.component';
 import { VoteSwipeCardComponent } from './vote-swipe-card/vote-swipe-card.component';
 import { VoteCtaAreaComponent } from './vote-cta-area/vote-cta-area.component';
+import { OptionType } from '@common/models/option-type.model';
 
 @Component({
   selector: 'app-project-vote',
@@ -84,15 +84,21 @@ export class ProjectVoteComponent implements OnDestroy {
     const options = this.poll()?.options ?? [];
     const currentId = this.optionId();
     return options.map((o) => {
-      if (parseInt(o.choice ?? '0') > 0) { return 'var(--accent)'; }
-      if (o.id === currentId) { return '#9fc2cf'; }
+      if (parseInt(o.choice ?? '0') > 0) {
+        return 'var(--accent)';
+      }
+      if (o.id === currentId) {
+        return '#9fc2cf';
+      }
       return '#e2ded7';
     });
   });
 
   closeDateDisplay = computed(() => {
     const d = this.poll()?.closeDate;
-    if (!d) { return undefined; }
+    if (!d) {
+      return undefined;
+    }
     try {
       return this.dateFormat.formatCloseDate(d);
     } catch {
@@ -140,7 +146,7 @@ export class ProjectVoteComponent implements OnDestroy {
 
   onVoted(goRight: boolean): void {
     const isRating = this.poll()?.optionType === OptionType.Rating;
-    const choice = isRating ? (goRight ? '5' : '1') : (goRight ? '1' : '2');
+    const choice = isRating ? (goRight ? '5' : '1') : goRight ? '1' : '2';
     this.castVote(choice);
   }
 
@@ -166,7 +172,10 @@ export class ProjectVoteComponent implements OnDestroy {
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+    if (
+      event.target instanceof HTMLInputElement ||
+      event.target instanceof HTMLTextAreaElement
+    ) {
       return;
     }
     const isRating = this.poll()?.optionType === OptionType.Rating;
@@ -185,10 +194,15 @@ export class ProjectVoteComponent implements OnDestroy {
   }
 
   onKeyUp(event: KeyboardEvent): void {
-    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+    if (
+      event.target instanceof HTMLInputElement ||
+      event.target instanceof HTMLTextAreaElement
+    ) {
       return;
     }
-    if (this.poll()?.optionType !== OptionType.Rating) { return; }
+    if (this.poll()?.optionType !== OptionType.Rating) {
+      return;
+    }
     const digit = parseInt(event.key);
     if (digit >= 1 && digit <= 5) {
       this.ctaAreaRef().clearHoveredStar();
@@ -241,13 +255,7 @@ export class ProjectVoteComponent implements OnDestroy {
     const nextUnvoted = options.find((o) => !o.choice && o.id !== ignore);
     if (nextUnvoted) {
       void this.router.navigate(
-        [
-          '/polls/',
-          this.projectId(),
-          'vote',
-          this.pollId()!,
-          nextUnvoted.id,
-        ],
+        ['/polls/', this.projectId(), 'vote', this.pollId()!, nextUnvoted.id],
         { replaceUrl },
       );
       return;
@@ -265,13 +273,7 @@ export class ProjectVoteComponent implements OnDestroy {
       .sort((a, b) => parseInt(b.choice!) - parseInt(a.choice!))[0];
     if (nextSkipped) {
       void this.router.navigate(
-        [
-          '/polls/',
-          this.projectId(),
-          'vote',
-          this.pollId()!,
-          nextSkipped.id,
-        ],
+        ['/polls/', this.projectId(), 'vote', this.pollId()!, nextSkipped.id],
         { replaceUrl },
       );
       return;

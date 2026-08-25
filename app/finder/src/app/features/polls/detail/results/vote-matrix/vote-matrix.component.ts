@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { OptionType, PollDetail } from '../../../_shared/models/poll-detail.model';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
+import { PollDetail } from '../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
+import { OptionType } from '@common/models/option-type.model';
 
 interface MatrixPerson {
   name: string;
@@ -33,8 +40,12 @@ function cellFor(choice: string | undefined, type: OptionType): MatrixCell {
     const shades = ['#f9f2e2', '#f7ebd3', '#f4e2bd', '#efd6a2', '#e9c77f'];
     return { mark: String(v), bg: shades[v - 1] ?? shades[0], fg: '#8a6420' };
   }
-  if (choice === '1') { return { mark: '✓', bg: '#dcecd9', fg: '#3f7a4e' }; }
-  if (choice === '3') { return { mark: '~', bg: '#f6e7cf', fg: '#a8742a' }; }
+  if (choice === '1') {
+    return { mark: '✓', bg: '#dcecd9', fg: '#3f7a4e' };
+  }
+  if (choice === '3') {
+    return { mark: '~', bg: '#f6e7cf', fg: '#a8742a' };
+  }
   return { mark: '✕', bg: '#fae9e6', fg: '#c1453f' };
 }
 
@@ -67,14 +78,15 @@ export class VoteMatrixComponent {
     const people = this.people();
     const type = this.poll().optionType;
     return this.poll().options.map((opt, idx) => {
-      const voteMap = new Map(opt.votes.map(v => [v.person, v.choice]));
-      const label = type === OptionType.Date
-        ? this.dateFormat.formatLabel(opt.text)
-        : opt.text;
+      const voteMap = new Map(opt.votes.map((v) => [v.person, v.choice]));
+      const label =
+        type === OptionType.Date
+          ? this.dateFormat.formatLabel(opt.text)
+          : opt.text;
       return {
         label,
         isEven: idx % 2 === 0,
-        cells: people.map(p => cellFor(voteMap.get(p.name), type)),
+        cells: people.map((p) => cellFor(voteMap.get(p.name), type)),
       };
     });
   });
@@ -91,7 +103,10 @@ export class VoteMatrixComponent {
     return [
       { label: type === OptionType.Date ? 'Kann' : 'Ja', bg: '#dcecd9' },
       { label: 'Vielleicht', bg: '#f6e7cf' },
-      { label: type === OptionType.Date ? 'Kann nicht' : 'Nein', bg: '#fae9e6' },
+      {
+        label: type === OptionType.Date ? 'Kann nicht' : 'Nein',
+        bg: '#fae9e6',
+      },
       { label: 'Offen', bg: '#f4f1ec' },
     ];
   });

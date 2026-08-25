@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { SupportedLanguage, setStoredLanguage } from '../../common/i18n/languages';
+import { SupportedLanguage, setStoredLanguage } from '@common/i18n/languages';
 import { HomeNavComponent } from './home-nav/home-nav.component';
 import { HomeHeroComponent } from './home-hero/home-hero.component';
 import { HomeStepsComponent } from './home-steps/home-steps.component';

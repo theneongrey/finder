@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Events } from '@ngrx/signals/events';
-import { UserStore } from '../../common/data/user.store';
-import { profileUpdateFinished } from '../../common/data/user-profile.feature';
+import { UserStore } from '@common/data/user.store';
+import { profileUpdateFinished } from '@common/data/user-profile.feature';
 import {
   FormControl,
   FormGroup,
@@ -21,13 +21,13 @@ import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
-import { TitleBarService } from '../../common/services/title-bar.service';
+import { TitleBarService } from '@common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   getStoredLanguage,
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
-} from '../../common/i18n/languages';
+} from '@common/i18n/languages';
 
 @Component({
   selector: 'app-settings',
@@ -52,7 +52,11 @@ export class SettingsComponent {
   isSaving = signal(false);
 
   languageToString = (code: string): string => {
-    const labels: Record<string, string> = { en: 'English', de: 'Deutsch', es: 'Español' };
+    const labels: Record<string, string> = {
+      en: 'English',
+      de: 'Deutsch',
+      es: 'Español',
+    };
     return labels[code] ?? code;
   };
 

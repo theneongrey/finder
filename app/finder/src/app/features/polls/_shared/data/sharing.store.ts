@@ -11,10 +11,10 @@ import { Dispatcher } from '@ngrx/signals/events';
 import { pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { SharingContact, VisibilityType } from '../models/poll-detail.model';
-import { PermissionService } from '../../_shared/data/permission.service';
-import { PollService } from '../../_shared/data/poll.service';
+import { PermissionService } from './permission.service';
+import { PollService } from './poll.service';
 import { Router } from '@angular/router';
-import { LoggerService } from '../../../../common/services/logger.service';
+import { LoggerService } from '@common/services/logger.service';
 import { sharingEvents } from './sharing.events';
 
 export const SharingStore = signalStore(

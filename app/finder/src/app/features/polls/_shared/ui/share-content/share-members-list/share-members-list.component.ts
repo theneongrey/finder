@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { UserAvatarComponent } from '../../../../../../common/ui/smart-components/user-avatar/user-avatar.component';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsBadgeComponent, BadgeTone } from '@ds/badge/ds-badge.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
@@ -46,7 +46,9 @@ export class ShareMembersListComponent {
 
   sortedMembers = computed(() =>
     [...this.members()].sort((a, b) => {
-      if (b.role !== a.role) { return b.role - a.role; }
+      if (b.role !== a.role) {
+        return b.role - a.role;
+      }
       return a.name.localeCompare(b.name);
     }),
   );
@@ -66,58 +68,95 @@ export class ShareMembersListComponent {
       }));
   });
 
-  private readonly voterLabel = this.translateService.translate('project.roles.voter');
-  private readonly maintainerLabel = this.translateService.translate('project.roles.maintainer');
-  private readonly ownerLabel = this.translateService.translate('project.roles.owner');
+  private readonly voterLabel = this.translateService.translate(
+    'project.roles.voter',
+  );
+  private readonly maintainerLabel = this.translateService.translate(
+    'project.roles.maintainer',
+  );
+  private readonly ownerLabel = this.translateService.translate(
+    'project.roles.owner',
+  );
 
   getRoleMenuItems(member: SharedWith): MenuItem[] {
     const items: MenuItem[] = [];
     if (member.role !== PollRole.Voter) {
-      items.push({ icon: 'users', label: this.voterLabel(), onClick: () => this.changeRole(member.email, 0) });
+      items.push({
+        icon: 'users',
+        label: this.voterLabel(),
+        onClick: () => this.changeRole(member.email, 0),
+      });
     }
     if (member.role !== PollRole.Maintainer) {
-      items.push({ icon: 'users', label: this.maintainerLabel(), onClick: () => this.changeRole(member.email, 1) });
+      items.push({
+        icon: 'users',
+        label: this.maintainerLabel(),
+        onClick: () => this.changeRole(member.email, 1),
+      });
     }
     if (member.role !== PollRole.Owner) {
-      items.push({ icon: 'users', label: this.ownerLabel(), onClick: () => this.changeRole(member.email, 2) });
+      items.push({
+        icon: 'users',
+        label: this.ownerLabel(),
+        onClick: () => this.changeRole(member.email, 2),
+      });
     }
     return items;
   }
 
   getRoleKey(role: PollRole): string {
     switch (role) {
-      case PollRole.Voter:      return 'voter';
-      case PollRole.Maintainer: return 'maintainer';
-      case PollRole.Owner:      return 'owner';
-      case PollRole.Creator:    return 'creator';
-      default:                  return 'unknown';
+      case PollRole.Voter:
+        return 'voter';
+      case PollRole.Maintainer:
+        return 'maintainer';
+      case PollRole.Owner:
+        return 'owner';
+      case PollRole.Creator:
+        return 'creator';
+      default:
+        return 'unknown';
     }
   }
 
   getRoleBadgeTone(role: PollRole): BadgeTone {
     switch (role) {
-      case PollRole.Creator:    return 'accent';
-      case PollRole.Owner:      return 'manager';
-      case PollRole.Maintainer: return 'contributor';
-      default:                  return 'viewer';
+      case PollRole.Creator:
+        return 'accent';
+      case PollRole.Owner:
+        return 'manager';
+      case PollRole.Maintainer:
+        return 'contributor';
+      default:
+        return 'viewer';
     }
   }
 
   private getRoleBadgeToneByKey(key: string): BadgeTone {
     switch (key) {
-      case 'creator':    return 'accent';
-      case 'owner':      return 'manager';
-      case 'maintainer': return 'contributor';
-      default:           return 'viewer';
+      case 'creator':
+        return 'accent';
+      case 'owner':
+        return 'manager';
+      case 'maintainer':
+        return 'contributor';
+      default:
+        return 'viewer';
     }
   }
 
   changeRole(email: string, permissionType: number) {
-    this.sharingStore.share({ email, permissionType, projectId: this.projectId() });
+    this.sharingStore.share({
+      email,
+      permissionType,
+      projectId: this.projectId(),
+    });
   }
 
   onRemoveClick(email: string) {
-    this.pendingRemoveEmail.set(this.pendingRemoveEmail() === email ? undefined : email);
+    this.pendingRemoveEmail.set(
+      this.pendingRemoveEmail() === email ? undefined : email,
+    );
   }
 
   confirmRemove(email: string) {

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateOptionEntry } from './date-option.utils';
+import { DateOptionEntry } from '../models/date-option.model';
 
 @Injectable({ providedIn: 'root' })
 export class DateOptionFormatService {
@@ -17,11 +17,19 @@ export class DateOptionFormatService {
   isValid(entry: DateOptionEntry): boolean {
     switch (entry.type) {
       case 'weekday':
-        return entry.weekday !== undefined && entry.weekday >= 0 && entry.weekday <= 6;
+        return (
+          entry.weekday !== undefined &&
+          entry.weekday >= 0 &&
+          entry.weekday <= 6
+        );
       case 'date':
         return entry.date !== undefined;
       case 'date-range':
-        return entry.date !== undefined && entry.endDate !== undefined && entry.endDate >= entry.date;
+        return (
+          entry.date !== undefined &&
+          entry.endDate !== undefined &&
+          entry.endDate >= entry.date
+        );
       case 'time':
         return entry.startTime !== undefined;
       case 'time-range':
@@ -40,7 +48,9 @@ export class DateOptionFormatService {
   }
 
   parseTimeInput(value: string): Date | undefined {
-    if (!value) { return undefined; }
+    if (!value) {
+      return undefined;
+    }
     const [h, m] = value.split(':').map(Number);
     const d = new Date(0);
     d.setHours(h, m, 0, 0);
@@ -88,10 +98,14 @@ export class DateOptionFormatService {
 
   formatCloseDate(dateString: string): string {
     const d = new Date(dateString);
-    return d.toLocaleString(
-      this.translateService.currentLang() ?? undefined,
-      { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' },
-    );
+    return d.toLocaleString(this.translateService.currentLang() ?? undefined, {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 
   private formatDate(date: Date): string {

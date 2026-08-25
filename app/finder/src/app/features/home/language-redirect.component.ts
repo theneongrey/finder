@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LANGUAGE_STORAGE_KEY, detectBrowserLanguage, getStoredLanguage } from '../../common/i18n/languages';
-import { UserService } from '../../common/services/user.service';
+import { LANGUAGE_STORAGE_KEY, detectBrowserLanguage, getStoredLanguage } from '@common/i18n/languages';
+import { UserService } from '@common/services/user.service';
 
 @Component({
   selector: 'app-language-redirect',

@@ -11,11 +11,11 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, map, of, pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { StandalonePollOverview } from '../models/standalone-poll-overview.model';
-import { PollService } from '../../_shared/data/poll.service';
+import { PollService } from './poll.service';
 import { Router } from '@angular/router';
-import { OptionType } from '../models/poll-detail.model';
-import { LoggerService } from '../../../../common/services/logger.service';
+import { LoggerService } from '@common/services/logger.service';
 import { sharingEvents } from './sharing.events';
+import { OptionType } from '@common/models/option-type.model';
 
 export const PollListStore = signalStore(
   { providedIn: 'root' },

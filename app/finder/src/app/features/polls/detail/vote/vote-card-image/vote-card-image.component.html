@@ -13,7 +13,7 @@
   }
   @if (link()) {
     <ds-button variant="outline" icon="link" size="sm" (click)="openLink(link())">
-      {{ linkLabel() }}
+      <span class="truncate min-w-0">{{ link() }}</span>
     </ds-button>
   }
 </div>

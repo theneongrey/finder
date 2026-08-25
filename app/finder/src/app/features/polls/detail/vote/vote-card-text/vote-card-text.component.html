@@ -8,8 +8,10 @@
     </p>
   }
   @if (link()) {
-    <ds-button variant="outline" icon="link" size="sm" class="self-center mt-1" (click)="openLink(link())">
-      {{ linkLabel() }}
-    </ds-button>
+    <div class="self-center mt-1 max-w-full overflow-hidden flex flex-col min-w-0">
+      <ds-button variant="outline" icon="link" size="sm" (click)="openLink(link())">
+        <span class="truncate min-w-0">{{ link() }}</span>
+      </ds-button>
+    </div>
   }
 </div>

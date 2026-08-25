@@ -8,6 +8,8 @@
   font-weight: var(--weight-bold);
   cursor: pointer;
   white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
   transition: opacity var(--duration-fast) var(--ease-standard);
   border: none;
   outline: none;

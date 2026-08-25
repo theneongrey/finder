@@ -2,11 +2,12 @@ using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared.Entities;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Finder.Database;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IDataProtectionKeyContext
 {
     public DbSet<Project> Projects { get; set; }
     public DbSet<Poll> Polls { get; set; }
@@ -19,7 +20,8 @@ public class AppDbContext : DbContext
     public DbSet<LoginToken> LoginTokens { get; set; }
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<ProjectFavorite> ProjectFavorites { get; set; }
-    
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

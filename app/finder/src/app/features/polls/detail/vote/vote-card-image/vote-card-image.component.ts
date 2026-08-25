@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { DsButtonComponent } from '../../../../../common/ui/ds-components/button/ds-button.component';
 
 @Component({
@@ -15,11 +15,6 @@ export class VoteCardImageComponent {
   description = input('');
   imageUrl = input('');
   link = input('');
-
-  protected readonly linkLabel = computed(() => {
-    const l = this.link();
-    return l.length > 50 ? l.slice(0, 50) + '…' : l;
-  });
 
   protected openLink(link: string) {
     window.open(link, '_blank', 'noopener noreferrer');

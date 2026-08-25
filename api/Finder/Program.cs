@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.DataProtection;
 using Scalar.AspNetCore;
 using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Setup;
@@ -26,6 +27,9 @@ builder.Services.AddCors();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
+
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<AppDbContext>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

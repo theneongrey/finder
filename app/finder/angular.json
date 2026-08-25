@@ -48,6 +48,7 @@
               "outputHashing": "all"
             },
             "development": {
+              "index": "src/index.dev.html",
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,

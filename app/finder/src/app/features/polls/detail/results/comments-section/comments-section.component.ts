@@ -6,13 +6,13 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Comment } from '../../../_shared/models/poll-detail.model';
-import { TimeSincePipe } from '../../../overview/_pipe/time-ago.pipe';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { POLL_LIMITS } from '../../../_shared/models/poll-limits';
+import { TimeSincePipe } from '@common/ui/pipes/time-ago.pipe';
 
 @Component({
   selector: 'app-comments-section',
@@ -37,7 +37,9 @@ export class CommentsSectionComponent {
 
   submitComment() {
     const content = this.newCommentText.trim();
-    if (!content) { return; }
+    if (!content) {
+      return;
+    }
     this.addComment.emit(content);
     this.newCommentText = '';
   }

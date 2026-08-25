@@ -14,13 +14,13 @@ import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overv
 import { OptionListComponent } from './option-list/option-list.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
 import { VoteMatrixComponent } from './vote-matrix/vote-matrix.component';
-import { TitleBarService } from '../../../../common/services/title-bar.service';
+import { TitleBarService } from '@common/services/title-bar.service';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { DsTabsComponent, TabItem } from '@ds/tabs/ds-tabs.component';
 import { PollRole } from '../../_shared/models/poll-role.enum';
-import { OptionType } from '../../_shared/models/poll-detail.model';
+import { OptionType } from '@common/models/option-type.model';
 
 @Component({
   selector: 'app-results',
@@ -51,8 +51,12 @@ export class ResultsComponent {
   view = signal<'results' | 'comments'>('results');
 
   readonly tabItems = computed((): TabItem[] => [
-    { value: 'results',  label: 'Ergebnis' },
-    { value: 'comments', label: 'Kommentare', count: this.poll()?.comments.length },
+    { value: 'results', label: 'Ergebnis' },
+    {
+      value: 'comments',
+      label: 'Kommentare',
+      count: this.poll()?.comments.length,
+    },
   ]);
   showCloseConfirm = signal(false);
 
@@ -68,38 +72,65 @@ export class ResultsComponent {
 
   readonly typeLabel = computed(() => {
     switch (this.poll()?.optionType) {
-      case OptionType.Rating: return 'Bewertung';
-      case OptionType.Date:   return 'Terminumfrage';
-      default:                return 'Ja / Nein';
+      case OptionType.Rating:
+        return 'Bewertung';
+      case OptionType.Date:
+        return 'Terminumfrage';
+      default:
+        return 'Ja / Nein';
     }
   });
 
-  readonly statusLabel = computed(() => this.poll()?.isClosed ? 'Beendet' : 'Aktiv');
-  readonly statusBg    = computed(() => this.poll()?.isClosed ? '#f1eee9' : '#e2ede1');
-  readonly statusFg    = computed(() => this.poll()?.isClosed ? '#6f6b66' : '#3f7a4e');
-  readonly statusDot   = computed(() => this.poll()?.isClosed ? '#b5b0a8' : '#5d9a56');
+  readonly statusLabel = computed(() =>
+    this.poll()?.isClosed ? 'Beendet' : 'Aktiv',
+  );
+  readonly statusBg = computed(() =>
+    this.poll()?.isClosed ? '#f1eee9' : '#e2ede1',
+  );
+  readonly statusFg = computed(() =>
+    this.poll()?.isClosed ? '#6f6b66' : '#3f7a4e',
+  );
+  readonly statusDot = computed(() =>
+    this.poll()?.isClosed ? '#b5b0a8' : '#5d9a56',
+  );
   readonly statusPulse = computed(() => !this.poll()?.isClosed);
 
   readonly commentsWithContext = computed(() => {
     const poll = this.poll();
-    if (!poll) { return 0; }
-    return poll.comments.filter(c => !!c.quote).length;
+    if (!poll) {
+      return 0;
+    }
+    return poll.comments.filter((c) => !!c.quote).length;
   });
 
-  readonly totalMembers = computed(() => this.project()?.sharedWith.length ?? 0);
+  readonly totalMembers = computed(
+    () => this.project()?.sharedWith.length ?? 0,
+  );
 
   readonly deadlineText = computed(() => {
     const poll = this.poll();
-    if (!poll) { return ''; }
-    if (poll.isClosed) { return 'Beendet'; }
-    if (!poll.closeDate) { return ''; }
+    if (!poll) {
+      return '';
+    }
+    if (poll.isClosed) {
+      return 'Beendet';
+    }
+    if (!poll.closeDate) {
+      return '';
+    }
     const d = new Date(poll.closeDate);
     const now = new Date();
     const diffMs = d.getTime() - now.getTime();
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDays <= 0)  { return 'Endet heute'; }
-    if (diffDays === 1) { return 'Endet morgen'; }
-    if (diffDays <= 7)  { return `Endet in ${diffDays} Tagen`; }
+    if (diffDays <= 0) {
+      return 'Endet heute';
+    }
+    if (diffDays === 1) {
+      return 'Endet morgen';
+    }
+    if (diffDays <= 7) {
+      return `Endet in ${diffDays} Tagen`;
+    }
     return `Endet am ${d.toLocaleDateString('de', { day: 'numeric', month: 'short' })}`;
   });
 

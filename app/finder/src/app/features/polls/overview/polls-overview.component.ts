@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollListStore } from '../_shared/data/poll-list.store';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
-import { TitleBarService } from '../../../common/services/title-bar.service';
+import { TitleBarService } from '@common/services/title-bar.service';
 import { StandalonePollTabComponent } from './standalone-poll-tab/standalone-poll-tab.component';
 import { PollItem } from '../_shared/models/poll-item.model';
 import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
@@ -44,11 +44,16 @@ export class PollsOverviewComponent {
   sharingProjectId = signal<string | undefined>(undefined);
   sharingProject = computed(() => this.getSharingProject());
 
-  private readonly shareTitle = this.translateService.translate('project.share.title');
-  private readonly sharePollLabel = this.translateService.translate('project.share.pollLabel');
+  private readonly shareTitle = this.translateService.translate(
+    'project.share.title',
+  );
+  private readonly sharePollLabel = this.translateService.translate(
+    'project.share.pollLabel',
+  );
   readonly shareDrawerTitle = this.shareTitle;
   readonly shareDrawerSubtitle = computed(
-    () => `${this.sharePollLabel()} · ${this.sharingProject()?.projectName ?? ''}`,
+    () =>
+      `${this.sharePollLabel()} · ${this.sharingProject()?.projectName ?? ''}`,
   );
 
   constructor() {

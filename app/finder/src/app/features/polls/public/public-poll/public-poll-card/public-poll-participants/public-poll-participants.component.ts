@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AvatarStackComponent } from '../../../../../../common/ui/smart-components/avatar-stack/avatar-stack.component';
+import { AvatarStackComponent } from '@smart/avatar-stack/avatar-stack.component';
 
 @Component({
   selector: 'app-public-poll-participants',

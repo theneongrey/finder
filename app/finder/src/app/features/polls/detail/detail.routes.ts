@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { OptionType } from '../_shared/models/poll-detail.model';
+import { OptionType } from '../../../common/models/option-type.model';
 
 export const detailRoutes: Routes = [
   {

@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
+import { DateOptionEntry } from '../../../../_shared/models/date-option.model';
 
 @Component({
   selector: 'app-vote-card-date-weekday',
@@ -21,7 +26,9 @@ export class VoteCardDateWeekdayComponent {
   }
 
   weekdayShortName(day: number): string {
-    return this.translate.instant(`project.pollInput.date.weekdaysShort.${day}`);
+    return this.translate.instant(
+      `project.pollInput.date.weekdaysShort.${day}`,
+    );
   }
 
   formatTimeOnly(date: Date): string {

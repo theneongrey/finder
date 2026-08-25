@@ -15,8 +15,6 @@ import { DsBottomSheetComponent } from '@ds/bottom-sheet/ds-bottom-sheet.compone
 import { DsMenuComponent } from '@ds/menu/ds-menu.component';
 import { DsEmptyStateButtonComponent } from '@ds/empty-state-button/ds-empty-state-button.component';
 import { DsVoteButtonsComponent } from '@ds/vote-buttons/ds-vote-buttons.component';
-import { PollTypeBadgeComponent } from '../polls/_shared/ui/poll-type-badge/poll-type-badge.component';
-import { OptionType } from '../polls/_shared/models/poll-detail.model';
 import { DsInputOtpComponent } from '@ds/input-otp/ds-input-otp.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { DsStepperComponent } from '@ds/stepper/ds-stepper.component';
@@ -24,7 +22,9 @@ import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card
 import { DsSwitchComponent } from '@ds/switch/ds-switch.component';
 import { DsChipComponent } from '@ds/chip/ds-chip.component';
 import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
-import { UserAvatarComponent } from '../../common/ui/smart-components/user-avatar/user-avatar.component';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
+import { OptionType } from '@common/models/option-type.model';
+import { OptionTypeBadgeComponent } from '@smart/option-type-badge/option-type-badge.component';
 
 @Component({
   selector: 'app-design-system',
@@ -44,7 +44,7 @@ import { UserAvatarComponent } from '../../common/ui/smart-components/user-avata
     DsMenuComponent,
     DsEmptyStateButtonComponent,
     DsVoteButtonsComponent,
-    PollTypeBadgeComponent,
+    OptionTypeBadgeComponent,
     DsInputOtpComponent,
     DsTextareaComponent,
     DsStepperComponent,
@@ -82,21 +82,44 @@ export class DesignSystemComponent {
   ];
 
   readonly avatarStack = [
-    { name: 'Alice' }, { name: 'Ben' }, { name: 'Clara' },
-    { name: 'David' }, { name: 'Eva' }, { name: 'Finn' },
+    { name: 'Alice' },
+    { name: 'Ben' },
+    { name: 'Clara' },
+    { name: 'David' },
+    { name: 'Eva' },
+    { name: 'Finn' },
   ];
 
   readonly menuItems = [
-    { icon: 'edit', label: 'Bearbeiten', onClick: () => { /* demo */ } },
-    { icon: 'share', label: 'Teilen', onClick: () => { /* demo */ } },
-    { icon: 'trash', label: 'Löschen', danger: true, onClick: () => { /* demo */ } },
+    {
+      icon: 'edit',
+      label: 'Bearbeiten',
+      onClick: () => {
+        /* demo */
+      },
+    },
+    {
+      icon: 'share',
+      label: 'Teilen',
+      onClick: () => {
+        /* demo */
+      },
+    },
+    {
+      icon: 'trash',
+      label: 'Löschen',
+      danger: true,
+      onClick: () => {
+        /* demo */
+      },
+    },
   ];
 
-  chipLauft   = signal(true);
+  chipLauft = signal(true);
   chipBeendet = signal(false);
-  chipOffen   = signal(false);
-  switchA     = signal(false);
-  switchB     = signal(true);
+  chipOffen = signal(false);
+  switchA = signal(false);
+  switchB = signal(true);
 
   scrollTo(id: string): void {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -206,20 +229,39 @@ export class DesignSystemComponent {
   ];
 
   shadowTokens = [
-    { token: '--shadow-card-soft', shadow: 'var(--shadow-card-soft)', label: 'card-soft' },
-    { token: '--shadow-overlay', shadow: 'var(--shadow-overlay)', label: 'overlay' },
+    {
+      token: '--shadow-card-soft',
+      shadow: 'var(--shadow-card-soft)',
+      label: 'card-soft',
+    },
+    {
+      token: '--shadow-overlay',
+      shadow: 'var(--shadow-overlay)',
+      label: 'overlay',
+    },
     { token: '--shadow-sheet', shadow: 'var(--shadow-sheet)', label: 'sheet' },
     { token: '--shadow-fab', shadow: 'var(--shadow-fab)', label: 'fab' },
-    { token: '--shadow-accent-btn', shadow: 'var(--shadow-accent-btn)', label: 'accent-btn' },
+    {
+      token: '--shadow-accent-btn',
+      shadow: 'var(--shadow-accent-btn)',
+      label: 'accent-btn',
+    },
   ];
 
   spacingScale = [
-    { token: '--space-1', px: 2 }, { token: '--space-2', px: 4 },
-    { token: '--space-3', px: 6 }, { token: '--space-4', px: 8 },
-    { token: '--space-5', px: 10 }, { token: '--space-6', px: 12 },
-    { token: '--space-7', px: 14 }, { token: '--space-8', px: 16 },
-    { token: '--space-9', px: 18 }, { token: '--space-10', px: 20 },
-    { token: '--space-12', px: 24 }, { token: '--space-16', px: 32 },
-    { token: '--space-20', px: 40 }, { token: '--space-24', px: 48 },
+    { token: '--space-1', px: 2 },
+    { token: '--space-2', px: 4 },
+    { token: '--space-3', px: 6 },
+    { token: '--space-4', px: 8 },
+    { token: '--space-5', px: 10 },
+    { token: '--space-6', px: 12 },
+    { token: '--space-7', px: 14 },
+    { token: '--space-8', px: 16 },
+    { token: '--space-9', px: 18 },
+    { token: '--space-10', px: 20 },
+    { token: '--space-12', px: 24 },
+    { token: '--space-16', px: 32 },
+    { token: '--space-20', px: 40 },
+    { token: '--space-24', px: 48 },
   ];
 }

@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { DateOptionEntry } from '../../../_shared/utils/date-option.utils';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
+import { DateOptionEntry } from '../../../_shared/models/date-option.model';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
 import { VoteCardDateWeekdayComponent } from './vote-card-date-weekday/vote-card-date-weekday.component';
 import { VoteCardDateDateComponent } from './vote-card-date-date/vote-card-date-date.component';
@@ -26,14 +32,20 @@ export class VoteCardDateComponent {
   text = input('');
   allOptionTexts = input<string[]>([]);
 
-  parsed = computed<DateOptionEntry>(() => this.dateOptionFormat.parse(this.text()));
+  parsed = computed<DateOptionEntry>(() =>
+    this.dateOptionFormat.parse(this.text()),
+  );
 
   otherWeekdays = computed<Set<number>>(() => {
     const current = this.parsed().weekday;
     const days = new Set<number>();
     for (const t of this.allOptionTexts()) {
       const entry = this.dateOptionFormat.parse(t);
-      if (entry.type === 'weekday' && entry.weekday !== undefined && entry.weekday !== current) {
+      if (
+        entry.type === 'weekday' &&
+        entry.weekday !== undefined &&
+        entry.weekday !== current
+      ) {
         days.add(entry.weekday);
       }
     }
@@ -49,7 +61,11 @@ export class VoteCardDateComponent {
     for (const t of this.allOptionTexts()) {
       const entry = this.dateOptionFormat.parse(t);
       if (entry.type === 'date' && entry.date) {
-        const d = new Date(entry.date.getFullYear(), entry.date.getMonth(), entry.date.getDate());
+        const d = new Date(
+          entry.date.getFullYear(),
+          entry.date.getMonth(),
+          entry.date.getDate(),
+        );
         if (curTs === undefined || d.getTime() !== curTs) {
           days.add(d.getTime());
         }

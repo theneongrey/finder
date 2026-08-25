@@ -10,12 +10,13 @@ import {
   viewChild,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { OptionType, OptionDetail } from '../../../_shared/models/poll-detail.model';
-import { DsCardComponent } from '../../../../../common/ui/ds-components/card/ds-card.component';
-import { DsIconComponent } from '../../../../../common/ui/ds-components/icon/ds-icon.component';
+import { OptionDetail } from '../../../_shared/models/poll-detail.model';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { VoteCardImageComponent } from '../vote-card-image/vote-card-image.component';
 import { VoteCardTextComponent } from '../vote-card-text/vote-card-text.component';
 import { VoteCardDateComponent } from '../vote-card-date/vote-card-date.component';
+import { OptionType } from '../../../../../common/models/option-type.model';
 
 @Component({
   selector: 'app-vote-swipe-card',
@@ -83,7 +84,9 @@ export class VoteSwipeCardComponent implements AfterViewInit {
   }
 
   onDragStart(event: MouseEvent | TouchEvent): void {
-    if (this.swipeInProgress) { return; }
+    if (this.swipeInProgress) {
+      return;
+    }
     this.isDragging = true;
     this.startX =
       event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
@@ -91,7 +94,9 @@ export class VoteSwipeCardComponent implements AfterViewInit {
   }
 
   onDragMove(event: MouseEvent | TouchEvent): void {
-    if (!this.isDragging) { return; }
+    if (!this.isDragging) {
+      return;
+    }
     const clientX =
       event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
     this.currentDragX = clientX - this.startX;
@@ -119,7 +124,9 @@ export class VoteSwipeCardComponent implements AfterViewInit {
   }
 
   onDragEnd(): void {
-    if (!this.isDragging) { return; }
+    if (!this.isDragging) {
+      return;
+    }
     this.isDragging = false;
 
     if (Math.abs(this.currentDragX) > this.SWIPE_THRESHOLD) {
@@ -143,7 +150,9 @@ export class VoteSwipeCardComponent implements AfterViewInit {
   }
 
   dismissHint(): void {
-    if (!this.showHint() || this.hintFading()) { return; }
+    if (!this.showHint() || this.hintFading()) {
+      return;
+    }
     sessionStorage.setItem('finder_voted_session', '1');
     this.hintFading.set(true);
     setTimeout(() => this.showHint.set(false), 300);
@@ -156,11 +165,15 @@ export class VoteSwipeCardComponent implements AfterViewInit {
     this.leftCueOpacity.set(0);
     this.rightCueOpacity.set(0);
     this.currentDragX = 0;
-    requestAnimationFrame(() => requestAnimationFrame(() => this.cardOpacity.set(1)));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => this.cardOpacity.set(1)),
+    );
   }
 
   private animateAndVote(goRight: boolean): void {
-    if (this.swipeInProgress) { return; }
+    if (this.swipeInProgress) {
+      return;
+    }
     this.dismissHint();
     const direction = goRight ? 1 : -1;
     this.swipeInProgress = true;

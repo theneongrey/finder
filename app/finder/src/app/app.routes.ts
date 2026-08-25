@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { userAuthentication } from './common/services/auth.guard';
-import { devOnly } from './common/services/dev-only.guard';
+import { userAuthentication } from '@common/services/auth.guard';
+import { devOnly } from '@common/services/dev-only.guard';
 import { authRoutes } from './features/auth/auth.routes';
 import { pollsRoutes } from './features/polls/polls.routes';
 

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsStatusDotComponent } from '../../../../common/ui/ds-components/badge/ds-status-dot.component';
-import { DsBadgeComponent } from '../../../../common/ui/ds-components/badge/ds-badge.component';
-import { DsAvatarComponent } from '../../../../common/ui/ds-components/avatar/ds-avatar.component';
+import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
+import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
+import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
 import { DEMO, DEMO_SEQ, DEMO_TOTAL_VOTERS, NAMES_TOP_100, PPL } from '../../home.constants';
 import { HomeService } from '../../home.service';
 

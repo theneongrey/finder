@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { OptionType } from '../../../_shared/models/poll-detail.model';
-import { PollTypeBadgeComponent } from '../../../_shared/ui/poll-type-badge/poll-type-badge.component';
-import { DsIconComponent } from '../../../../../common/ui/ds-components/icon/ds-icon.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { OptionType } from '@common/models/option-type.model';
+import { OptionTypeBadgeComponent } from '@smart/option-type-badge/option-type-badge.component';
 
 @Component({
   selector: 'app-vote-progress-header',
   templateUrl: './vote-progress-header.component.html',
-  imports: [TranslatePipe, PollTypeBadgeComponent, DsIconComponent],
+  imports: [TranslatePipe, OptionTypeBadgeComponent, DsIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteProgressHeaderComponent {

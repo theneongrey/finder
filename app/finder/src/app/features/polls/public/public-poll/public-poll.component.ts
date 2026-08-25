@@ -8,28 +8,26 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
-import { LoggerService } from '../../../../common/services/logger.service';
-import { UserService } from '../../../../common/services/user.service';
-import { UserStore } from '../../../../common/data/user.store';
-import { TitleBarComponent } from '../../../../common/ui/smart-components/title-bar/title-bar.component';
-import { TitleBarService } from '../../../../common/services/title-bar.service';
+import { LoggerService } from '@common/services/logger.service';
+import { UserService } from '@common/services/user.service';
+import { UserStore } from '@common/data/user.store';
+import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
+import { TitleBarService } from '@common/services/title-bar.service';
 import { PollService } from '../../_shared/data/poll.service';
-import {
-  OptionType,
-  PublicProjectInfo,
-} from '../../_shared/models/poll-detail.model';
+import { PublicProjectInfo } from '../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
-import { DsIconComponent } from '../../../../common/ui/ds-components/icon/ds-icon.component';
-import { DsPollCardSkeletonComponent } from '../../../../common/ui/ds-components/poll-card-skeleton/ds-poll-card-skeleton.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from '@spartan-ng/brain/sonner';
-import { User } from '../../../../common/models/user.model';
+import { User } from '@common/models/user.model';
 import { PublicPollCardComponent } from './public-poll-card/public-poll-card.component';
 import { PublicPollInviteBannerComponent } from './public-poll-invite-banner/public-poll-invite-banner.component';
 import { PublicPollNudgeBarComponent } from './public-poll-nudge-bar/public-poll-nudge-bar.component';
 import { PublicPollMemberSidebarComponent } from './public-poll-member-sidebar/public-poll-member-sidebar.component';
 import { PublicPollGuestSidebarComponent } from './public-poll-guest-sidebar/public-poll-guest-sidebar.component';
 import { OptionDisplay, ParticipantDisplay } from './public-poll.models';
+import { OptionType } from '@common/models/option-type.model';
 
 @Component({
   selector: 'app-public-poll',

@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsStatusDotComponent } from '../../../common/ui/ds-components/badge/ds-status-dot.component';
-import { DsBadgeComponent } from '../../../common/ui/ds-components/badge/ds-badge.component';
-import { AvatarStackComponent } from '../../../common/ui/smart-components/avatar-stack/avatar-stack.component';
+import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
+import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
+import { AvatarStackComponent } from '@smart/avatar-stack/avatar-stack.component';
 import { HomeDemoCardComponent } from './home-demo-card/home-demo-card.component';
 import { PPL } from '../home.constants';
 

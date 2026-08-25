@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { HlmCalendar } from '@spartan-ng/helm/calendar';
-import { DateOptionEntry } from '../../../../_shared/utils/date-option.utils';
+import { DateOptionEntry } from '../../../../_shared/models/date-option.model';
 
 @Component({
   selector: 'app-vote-card-date-date',

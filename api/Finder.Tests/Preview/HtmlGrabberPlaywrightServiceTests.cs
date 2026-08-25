@@ -18,6 +18,6 @@ public class HtmlGrabberPlaywrightServiceTests
 
         Assert.True(result.IsSuccess, $"Expected success but got code {result.Code}: {result.ErrorMessasge}");
         Assert.NotNull(result.Payload);
-        Assert.Contains("app-home", result.Payload, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("app-home", result.Payload.HtmlContent, StringComparison.OrdinalIgnoreCase);
     }
 }

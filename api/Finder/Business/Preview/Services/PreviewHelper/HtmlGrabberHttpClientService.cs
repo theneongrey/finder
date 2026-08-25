@@ -4,7 +4,12 @@ using Microsoft.Playwright;
 
 namespace Finder.Business.Preview.Services.PreviewHelper;
     
-public class HtmlGrabberHttpClientService
+public interface IHtmlGrabberHttpClientService
+{
+    Task<Result<string>> GetHtmlContent(string url);
+}
+
+public class HtmlGrabberHttpClientService : IHtmlGrabberHttpClientService
 {
     private readonly IHttpClientFactory _clientFactory;
 

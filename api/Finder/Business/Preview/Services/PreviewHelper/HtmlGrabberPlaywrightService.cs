@@ -1,13 +1,26 @@
+using Finder.Business.Preview.Models;
 using Finder.Business.Shared;
 using Microsoft.Playwright;
 
 namespace Finder.Business.Preview.Services.PreviewHelper;
 
-public class HtmlGrabberPlaywrightService(IConfiguration configuration)
+public interface IHtmlGrabberPlaywrightService
 {
-    public async Task<Result<string>> GetHtmlContent(string url)
+    Task<Result<PlaywrightResult>> GetHtmlContent(string url);
+}
+
+public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
+{
+    private readonly IConfiguration _configuration;
+
+    public HtmlGrabberPlaywrightService(IConfiguration configuration)
     {
-        var timeoutSeconds = configuration.GetValue<int?>("Preview:PlaywrightTimeoutSeconds") ?? 5;
+        _configuration = configuration;
+    }
+    
+    public async Task<Result<PlaywrightResult>> GetHtmlContent(string url)
+    {
+        var timeoutSeconds = _configuration.GetValue<int?>("Preview:PlaywrightTimeoutSeconds") ?? 5;
         var cancellationToken = new CancellationTokenSource();
         cancellationToken.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
         
@@ -28,7 +41,7 @@ public class HtmlGrabberPlaywrightService(IConfiguration configuration)
         
         if (cancellationToken.IsCancellationRequested)
         {
-            return Result<string>.Fail();
+            return Result<PlaywrightResult>.Fail();
         }
         
         await page.WaitForLoadStateAsync(LoadState.Load, new ()
@@ -42,9 +55,9 @@ public class HtmlGrabberPlaywrightService(IConfiguration configuration)
         Console.WriteLine("--------------------------------------------");
         if (!html.Contains("html"))
         {
-            return Result<string>.Fail(500, "Failed to fetch from url");
+            return Result<PlaywrightResult>.Fail(500, "Failed to fetch from url");
         }
         
-        return Result<string>.Success(html);
+        return Result<PlaywrightResult>.Success(new PlaywrightResult(html, page.Url));
     }
 }

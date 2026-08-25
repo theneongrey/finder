@@ -15,8 +15,6 @@ public class PreviewGrabberQueryService
     
     public Result<Models.Preview> GetPreview(string htmlContent, Uri baseUrl)
     {
-        // this is a temporary implementation, sites will be configured by claude and read from db
-        
         if (baseUrl.Host.Equals("www.amazon.com", StringComparison.OrdinalIgnoreCase) ||
             baseUrl.Host.StartsWith("www.amazon.", StringComparison.OrdinalIgnoreCase) ||
             baseUrl.Host.StartsWith("amzn.", StringComparison.OrdinalIgnoreCase))

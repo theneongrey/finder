@@ -8,12 +8,15 @@ public static class SetupExtensions
 {
     public static IServiceCollection AddPreviewServices(this IServiceCollection services)
     {
-        services.AddScoped<HtmlGrabberPlaywrightService>();
-        services.AddScoped<HtmlGrabberHttpClientService>();
+        services.AddScoped<IHtmlGrabberPlaywrightService, HtmlGrabberPlaywrightService>();
+        services.AddScoped<IHtmlGrabberHttpClientService, HtmlGrabberHttpClientService>();
         services.AddScoped<PreviewGrabberMetaService>();
         services.AddScoped<PreviewGrabberClaudeService>();
         services.AddScoped<PreviewGrabberQueryService>();
         services.AddScoped<PreviewService>();
+        services.AddScoped<PreviewImageOnlyFinder>();
+        services.AddScoped<IImageSizeService, ImageSizeService>();
+        services.AddScoped<IPreviewImageCandidateService, PreviewImageCandidateService>();
         
         services.AddRateLimiter(options =>
         {

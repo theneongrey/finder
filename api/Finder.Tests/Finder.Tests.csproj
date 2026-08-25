@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="NSubstitute" Version="6.2.0" />
         <PackageReference Include="xunit" Version="2.9.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
             <PrivateAssets>all</PrivateAssets>
@@ -25,6 +26,12 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Finder\Finder.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Preview\Resources\playwright_mock.html">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

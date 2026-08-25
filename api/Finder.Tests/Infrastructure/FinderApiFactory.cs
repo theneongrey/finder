@@ -2,6 +2,7 @@ using System.Data.Common;
 using System.Threading.RateLimiting;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
+using Finder.Business.Preview.Services.PreviewHelper;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Database;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Finder.Tests.Infrastructure;
@@ -28,6 +30,11 @@ public class FinderApiFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
+        builder.ConfigureAppConfiguration((_, config) =>
+        {
+            config.AddUserSecrets<Program>();      // main project secrets (e.g. ClaudeApiKey)
+            config.AddUserSecrets<FinderApiFactory>(); // test-specific overrides
+        });
         builder.ConfigureServices(services =>
         {
             var dbContextDescriptor =
@@ -223,6 +230,26 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             PermissionType = permissionType
         });
         await db.SaveChangesAsync();
+    }
+
+    public WebApplicationFactory<Program> WithMockedHtmlGrabbers(
+        IHtmlGrabberHttpClientService httpGrabber,
+        IHtmlGrabberPlaywrightService playwrightGrabber) =>
+        WithWebHostBuilder(b => b.ConfigureServices(services =>
+        {
+            Replace(services, httpGrabber);
+            Replace(services, playwrightGrabber);
+        }));
+
+    private static void Replace<T>(IServiceCollection services, T instance) where T : class
+    {
+        var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(T));
+        if (descriptor != null)
+        {
+            services.Remove(descriptor);
+        }
+
+        services.AddScoped<T>(_ => instance);
     }
 
     public async Task<LoginToken> SeedLoginToken(Guid userId, string token, string code)

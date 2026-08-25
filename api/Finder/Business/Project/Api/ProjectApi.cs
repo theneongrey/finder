@@ -58,7 +58,10 @@ public static class ProjectApi
         {
             var result = await projectService.GetPublicInfo(slug);
             if (!result.IsSuccess)
+            {
                 return result.Code == 403 ? Results.StatusCode(403) : Results.NotFound();
+            }
+
             return Results.Ok(result.Payload!.ToPublicProjectResponse(userService.GetUserId()));
         });
 

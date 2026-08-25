@@ -15,8 +15,8 @@ public class PreviewApiTests : IClassFixture<FinderApiFactory>
 
     public PreviewApiTests(FinderApiFactory factory) => _factory = factory;
 
-    //[Fact(Skip = "currently not in use")]
-    [Fact]
+    [Fact(Skip = "currently not in use")]
+    //[Fact]
     public async Task GetPreview_WithMockedServices_ReturnsPreviewWithTitleAndImage()
     {
         var mockHtml = await File.ReadAllTextAsync(

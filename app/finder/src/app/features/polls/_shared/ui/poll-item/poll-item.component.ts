@@ -7,6 +7,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionType } from '../../models/poll-detail.model';
@@ -14,6 +15,7 @@ import { PollItem } from '../../models/poll-item.model';
 import { PollRole } from '../../models/poll-role.enum';
 import { PollVotingStatus } from '../../models/standalone-poll-overview.model';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { PollTypeBadgeComponent } from '../poll-type-badge/poll-type-badge.component';
@@ -35,10 +37,12 @@ export interface ParticipantAvatar {
     '[class.is-confirming]': 'showDeleteConfirm()',
   },
   imports: [
+    NgClass,
     RouterLink,
     TranslatePipe,
     DsCardComponent,
     DsButtonComponent,
+    DsIconComponent,
     DsStatusDotComponent,
     PollTypeBadgeComponent,
     PollItemTimeComponent,

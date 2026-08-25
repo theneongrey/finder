@@ -10,9 +10,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { TitleBarService } from '../../../../common/services/title-bar.service';
 import { OptionType } from '../../_shared/models/poll-detail.model';
 import { VoteSidebarComponent } from './vote-sidebar/vote-sidebar.component';
@@ -39,6 +41,7 @@ import { VoteCtaAreaComponent } from './vote-cta-area/vote-cta-area.component';
 export class ProjectVoteComponent implements OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly titleService = inject(TitleBarService);
+  private readonly translateService = inject(TranslateService);
   private readonly projectDetailStore = inject(PollDetailStore);
   private readonly dateFormat = inject(DateOptionFormatService);
   private readonly router = inject(Router);
@@ -107,6 +110,12 @@ export class ProjectVoteComponent implements OnDestroy {
     if (this.route.snapshot.queryParamMap.get('revote')) {
       this.revoteMode.set(true);
     }
+    this.translateService
+      .stream('project.pollsTab.title')
+      .pipe(takeUntilDestroyed())
+      .subscribe((label: string) => {
+        this.titleService.setSubtitle(label);
+      });
     effect(() => {
       this.projectDetailStore.getPoll(this.pollId());
     });

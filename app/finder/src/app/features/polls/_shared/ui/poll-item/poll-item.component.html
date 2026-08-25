@@ -4,93 +4,107 @@
   <!-- ── Header row: type badge · status dot · share · fav (animates out in edit mode) -->
   <div
     class="grid overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
-    [style.grid-template-rows]="editMode() ? '0fr' : '1fr'"
+    [ngClass]="editMode() ? '[grid-template-rows:0fr]' : '[grid-template-rows:1fr]'"
   >
     <div class="overflow-hidden">
       <div class="flex items-center gap-2 pb-3">
         <app-poll-type-badge [type]="_poll.optionType" />
 
         <ds-status-dot [tone]="_poll.isClosed ? 'muted' : 'positive'">
-          {{ (_poll.isClosed ? "project.detail.item.statusClosed" : "project.detail.item.statusOpen") | translate }}
+          {{
+            (_poll.isClosed
+              ? "project.detail.item.statusClosed"
+              : "project.detail.item.statusOpen"
+            ) | translate
+          }}
         </ds-status-dot>
 
         @if (!previewMode()) {
-        <span class="ml-auto flex items-center gap-1">
-          @if (canShare()) {
-            <!-- Mobile: ghost circle share button -->
-            <span class="lg:hidden">
-              <ds-button
-                variant="ghost"
-                [size]="30"
-                icon="share"
-                [color]="'var(--ink-900)'"
-                data-testid="share-btn"
-                (click)="shareRequested.emit()"
-              />
-            </span>
-            <!-- Web: pill share button with label, always visible -->
-            <span class="hidden lg:flex">
-              <ds-button
-                variant="neutral"
-                size="sm"
-                icon="share"
-                data-testid="share-btn"
-                (click)="shareRequested.emit()"
-                [title]="'project.share.title' | translate"
-              >{{ "project.share.title" | translate }}</ds-button>
-            </span>
-          }
-
-          <!-- Favorite button -->
-          <ds-button
-            variant="ghost"
-            [size]="32"
-            [label]="(_poll.isFavorite ? 'project.detail.item.unfavorite' : 'project.detail.item.favorite') | translate"
-            data-testid="favorite-btn"
-            [attr.data-testid-active]="_poll.isFavorite ? 'favorite-active' : null"
-            (click)="favoriteToggled.emit(_poll.projectId)"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24"
-              [attr.fill]="_poll.isFavorite ? '#c1453f' : 'none'"
-              [attr.stroke]="_poll.isFavorite ? '#c1453f' : 'var(--text-muted)'"
-              stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20.3s-7.5-4.6-9.7-9C.8 8 2 4.7 5 3.7c2.2-.7 4.3.2 5.6 2 .4.5 1 1.4 1.4 1.4s1-.9 1.4-1.4c1.3-1.8 3.4-2.7 5.6-2 3 1 4.2 4.3 2.7 7.6-2.2 4.4-9.7 9-9.7 9z" />
-            </svg>
-          </ds-button>
-
-          <!-- Web: hover-reveal edit + delete (animated slide-in, ghost circles) -->
-          @if (showActions()) {
-            <span
-              class="hidden items-center gap-1 overflow-hidden lg:flex [transition:max-width_220ms_cubic-bezier(0.4,0,0.2,1),opacity_160ms_ease]"
-              [style.max-width]="isHovered() ? '80px' : '0px'"
-              [style.opacity]="isHovered() ? '1' : '0'"
-            >
-              <span class="mx-[3px] h-[18px] w-px flex-none bg-[rgba(20,24,28,0.1)]"></span>
-              @if (editRoute()) {
+          <span class="ml-auto flex items-center gap-1">
+            @if (canShare()) {
+              <!-- Mobile: ghost circle share button -->
+              <span class="lg:hidden">
                 <ds-button
                   variant="ghost"
                   [size]="30"
-                  icon="edit"
-                  [color]="'var(--text-secondary)'"
-                  (click)="navigateToEdit()"
-                  [title]="'project.common.edit' | translate"
-                  [label]="'project.common.edit' | translate"
-                  data-testid="edit-btn"
+                  icon="share"
+                  [color]="'var(--ink-900)'"
+                  data-testid="share-btn"
+                  (click)="shareRequested.emit()"
                 />
-              }
-              <ds-button
-                variant="danger"
-                [size]="30"
-                icon="trash"
-                (click)="requestDelete()"
-                [title]="'project.common.delete' | translate"
-                [label]="'project.common.delete' | translate"
-                data-testid="delete-btn"
+              </span>
+              <!-- Web: pill share button with label, always visible -->
+              <span class="hidden lg:flex">
+                <ds-button
+                  variant="neutral"
+                  size="sm"
+                  icon="share"
+                  data-testid="share-btn"
+                  (click)="shareRequested.emit()"
+                  [title]="'project.share.title' | translate"
+                  >{{ "project.share.title" | translate }}</ds-button
+                >
+              </span>
+            }
+
+            <!-- Favorite button -->
+            <ds-button
+              variant="ghost"
+              [size]="32"
+              [label]="
+                (_poll.isFavorite
+                  ? 'project.detail.item.unfavorite'
+                  : 'project.detail.item.favorite'
+                ) | translate
+              "
+              data-testid="favorite-btn"
+              [attr.data-testid-active]="
+                _poll.isFavorite ? 'favorite-active' : null
+              "
+              (click)="favoriteToggled.emit(_poll.projectId)"
+            >
+              <ds-icon
+                name="heart"
+                [size]="18"
+                [color]="_poll.isFavorite ? '#c1453f' : 'var(--text-muted)'"
               />
-            </span>
-          }
-        </span>
-        } <!-- /previewMode -->
+            </ds-button>
+
+            <!-- Web: hover-reveal edit + delete (animated slide-in, ghost circles) -->
+            @if (showActions()) {
+              <span
+                class="hidden items-center gap-1 overflow-hidden [transition:max-width_220ms_cubic-bezier(0.4,0,0.2,1),opacity_160ms_ease] lg:flex"
+                [ngClass]="isHovered() ? 'max-w-[80px] opacity-100' : 'max-w-0 opacity-0'"
+              >
+                <span
+                  class="mx-[3px] h-[18px] w-px flex-none bg-[rgba(20,24,28,0.1)]"
+                ></span>
+                @if (editRoute()) {
+                  <ds-button
+                    variant="ghost"
+                    [size]="30"
+                    icon="edit"
+                    [color]="'var(--text-secondary)'"
+                    (click)="navigateToEdit()"
+                    [title]="'project.common.edit' | translate"
+                    [label]="'project.common.edit' | translate"
+                    data-testid="edit-btn"
+                  />
+                }
+                <ds-button
+                  variant="danger"
+                  [size]="30"
+                  icon="trash"
+                  (click)="requestDelete()"
+                  [title]="'project.common.delete' | translate"
+                  [label]="'project.common.delete' | translate"
+                  data-testid="delete-btn"
+                />
+              </span>
+            }
+          </span>
+        }
+        <!-- /previewMode -->
       </div>
     </div>
   </div>
@@ -127,11 +141,13 @@
   <!-- ── Body: description, time, progress, CTA (animates out in edit mode) ── -->
   <div
     class="grid overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
-    [style.grid-template-rows]="editMode() ? '0fr' : '1fr'"
+    [ngClass]="editMode() ? '[grid-template-rows:0fr]' : '[grid-template-rows:1fr]'"
   >
     <div class="overflow-hidden">
       @if (_poll.description) {
-        <p class="mt-1.5 text-pretty text-[var(--fs-ui)] leading-[1.4] text-[var(--text-secondary)]">
+        <p
+          class="mt-1.5 leading-[1.4] text-pretty text-[var(--fs-ui)] text-[var(--text-secondary)]"
+        >
           {{ _poll.description }}
         </p>
       }
@@ -155,10 +171,10 @@
         <ds-button
           variant="primary"
           [fullWidth]="true"
-          [attr.aria-label]="ctaLabel()"
+          [attr.aria-label]="'project.detail.item.voteNow' | translate"
           data-testid="vote-cta-btn"
-          [routerLink]="ctaRoute()"
-          >{{ ctaLabel() }}</ds-button
+          [routerLink]="['/polls', poll().projectId, 'vote', poll().pollId]"
+          >{{ "project.detail.item.voteNow" | translate }}</ds-button
         >
       </div>
     </div>
@@ -167,18 +183,17 @@
   <!-- ── Delete confirmation overlay ──────────────────────────── -->
   @if (showDeleteConfirm()) {
     <div
-      class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 px-6 text-center"
-      style="border-radius: var(--radius-3xl); background: rgba(255,255,255,0.6); backdrop-filter: blur(3px)"
+      class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 px-6 text-center rounded-[var(--radius-3xl)] bg-white/60 backdrop-blur-[3px]"
     >
-      <p style="font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.4">
-        {{ 'project.overview.deleteOverlay.message' | translate }}
+      <p class="text-[15px] font-semibold text-[var(--text-primary)] leading-[1.4]">
+        {{ "project.overview.deleteOverlay.message" | translate }}
       </p>
       <div class="flex items-center gap-2">
         <ds-button variant="ghost" (click)="cancelDelete()">
-          {{ 'project.overview.deleteOverlay.cancel' | translate }}
+          {{ "project.overview.deleteOverlay.cancel" | translate }}
         </ds-button>
         <ds-button variant="danger" (click)="confirmDelete()">
-          {{ 'project.overview.deleteOverlay.confirm' | translate }}
+          {{ "project.overview.deleteOverlay.confirm" | translate }}
         </ds-button>
       </div>
     </div>

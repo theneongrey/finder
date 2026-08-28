@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { filter, pairwise } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { PollListStore } from '../../_shared/data/poll-list.store';
 import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.component';
@@ -45,6 +46,8 @@ export class StandalonePollTabComponent {
   readonly favOnly = signal(false);
   readonly todoOnly = signal(false);
   readonly editMode = signal(false);
+  readonly removingPollId = signal<string | undefined>(undefined);
+  readonly listSettling = signal(false);
 
   constructor() {
     inject(BreakpointObserver)
@@ -54,6 +57,18 @@ export class StandalonePollTabComponent {
         if (matches) {
           this.editMode.set(false);
         }
+      });
+
+    toObservable(this.projectListStore.standalonePolls)
+      .pipe(
+        pairwise(),
+        filter(([prev, curr]) => curr.length < prev.length),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => {
+        this.removingPollId.set(undefined);
+        this.listSettling.set(true);
+        setTimeout(() => this.listSettling.set(false), 350);
       });
   }
 
@@ -119,6 +134,12 @@ export class StandalonePollTabComponent {
   readonly isFilteredEmpty = computed(
     () => !this.isEmpty() && this.filteredPolls().length === 0,
   );
+
+  startRemoval(poll: PollItem): void {
+    if (this.removingPollId()) return;
+    this.removingPollId.set(poll.projectId);
+    setTimeout(() => this.deletionRequested.emit(poll), 300);
+  }
 
   toggleEditMode(): void {
     this.editMode.update((v) => !v);

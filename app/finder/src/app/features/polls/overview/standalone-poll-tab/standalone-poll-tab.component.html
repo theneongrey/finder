@@ -348,7 +348,9 @@
     <app-poll-item
       [poll]="poll"
       [editMode]="editMode()"
-      (deletionRequested)="deletionRequested.emit(poll)"
+      [isRemoving]="removingPollId() === poll.projectId"
+      [isSettling]="listSettling()"
+      (deletionRequested)="startRemoval(poll)"
       (shareRequested)="shareRequested.emit(poll.projectId)"
       (favoriteToggled)="projectListStore.toggleFavorite($event)"
     />

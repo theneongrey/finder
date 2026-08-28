@@ -35,6 +35,8 @@ export interface ParticipantAvatar {
     '(mouseenter)': 'isHovered.set(true)',
     '(mouseleave)': 'isHovered.set(false)',
     '[class.is-confirming]': 'showDeleteConfirm()',
+    '[class.is-removing]': 'isRemoving()',
+    '[class.is-settling]': 'isSettling()',
   },
   imports: [
     NgClass,
@@ -59,6 +61,8 @@ export class PollItemComponent {
   poll = input.required<PollItem>();
   editMode = input<boolean>(false);
   previewMode = input<boolean>(false);
+  isRemoving = input<boolean>(false);
+  isSettling = input<boolean>(false);
   isHovered = signal(false);
   showDeleteConfirm = signal(false);
   deletionRequested = output();

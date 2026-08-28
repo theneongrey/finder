@@ -160,7 +160,7 @@
 
       <app-poll-item-progress
         [progressPercent]="progressPercent()"
-        [votedCount]="_poll.votedCount"
+        [votedCount]="votedCountByStatus()"
         [totalParticipants]="_poll.totalParticipants"
         [participantAvatars]="participantAvatars()"
         [missingVotersText]="missingVotersText()"
@@ -171,10 +171,10 @@
         <ds-button
           variant="primary"
           [fullWidth]="true"
-          [attr.aria-label]="'project.detail.item.voteNow' | translate"
+          [attr.aria-label]="ctaLabel() | translate"
           data-testid="vote-cta-btn"
-          [routerLink]="['/polls', poll().projectId, 'vote', poll().pollId]"
-          >{{ "project.detail.item.voteNow" | translate }}</ds-button
+          [routerLink]="ctaRoute()"
+          >{{ ctaLabel() | translate }}</ds-button
         >
       </div>
     </div>

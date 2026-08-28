@@ -38,6 +38,7 @@ export class ShareInviteFormComponent {
   sharingInProgress = input.required<boolean>();
   deferred = input<boolean>(false);
   pendingInvites = input<PendingInvite[]>([]);
+  excludedEmails = input<string[]>([]);
 
   pendingInvite = output<PendingInvite>();
   removeInvite = output<string>();
@@ -68,17 +69,21 @@ export class ShareInviteFormComponent {
     }
   });
 
+  private readonly availableContacts = computed(() => {
+    const excluded = new Set(this.excludedEmails());
+    return this.contacts().filter(c => !excluded.has(c.email));
+  });
+
   filteredContacts = computed(() => {
     const q = (this.contactEmail() ?? '').toLowerCase();
-    const all = this.contacts();
     if (!q) { return []; }
-    return all
+    return this.availableContacts()
       .filter(c => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q))
       .slice(0, 5);
   });
 
   frequentContacts = computed(() =>
-    [...this.contacts()]
+    [...this.availableContacts()]
       .sort((a, b) => b.shareCount - a.shareCount)
       .slice(0, 3),
   );

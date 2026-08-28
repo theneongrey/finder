@@ -24,6 +24,12 @@ interface StatCard {
   color: string;
 }
 
+interface TiedOption {
+  title: string;
+  big: string;
+  small: string;
+}
+
 @Component({
   selector: 'app-vote-overview-summary',
   templateUrl: './vote-overview-summary.component.html',
@@ -66,6 +72,7 @@ export class VoteOverviewSummaryComponent {
   });
 
   readonly badge = computed(() => {
+    if (this.isTie()) return 'Unentschieden';
     switch (this.poll().optionType) {
       case OptionType.Rating:
         return 'Beste Bewertung';
@@ -76,9 +83,17 @@ export class VoteOverviewSummaryComponent {
     }
   });
 
-  readonly badgeIsPositive = computed(
-    () => this.poll().optionType !== OptionType.Rating,
-  );
+  readonly badgeBg = computed(() => {
+    if (this.isTie()) return '#ece7f8';
+    return this.poll().optionType !== OptionType.Rating ? '#e2ede1' : '#f9edd5';
+  });
+
+  readonly badgeFg = computed(() => {
+    if (this.isTie()) return '#6f5aac';
+    return this.poll().optionType !== OptionType.Rating
+      ? 'var(--positive-strong)'
+      : '#a8742a';
+  });
 
   readonly bigMetric = computed(() => {
     const w = this.winner();
@@ -257,11 +272,71 @@ export class VoteOverviewSummaryComponent {
     ];
   });
 
+  readonly hasVotes = computed(() => this.uniqueVoters().size > 0);
+
+  private readonly topScore = computed(() => {
+    const w = this.winner();
+    if (!w) return 0;
+    return this.poll().optionType === OptionType.Rating
+      ? this.avgRating(w)
+      : this.yesCount(w);
+  });
+
+  private readonly tiedAll = computed(() => {
+    const top = this.topScore();
+    if (top === 0) return [];
+    const type = this.poll().optionType;
+    return this.poll().options.filter((o) =>
+      type === OptionType.Rating
+        ? this.avgRating(o) === top
+        : this.yesCount(o) === top,
+    );
+  });
+
+  readonly isTie = computed(() => this.tiedAll().length > 1);
+
+  readonly tiedOptions = computed((): TiedOption[] => {
+    if (!this.isTie()) return [];
+    const type = this.poll().optionType;
+    const total = this.uniqueVoters().size;
+    return this.tiedAll()
+      .slice(0, 3)
+      .map((o) => {
+        if (type === OptionType.Rating) {
+          const avg = this.avgRating(o);
+          const big = avg > 0 ? avg.toFixed(1).replace('.', ',') : '—';
+          const count = o.votes.filter(
+            (v) => v.choice && parseInt(v.choice) > 0,
+          ).length;
+          return { title: o.text, big, small: `von 5 · ${count} Bewertungen` };
+        }
+        const yes = this.yesCount(o);
+        const big = total ? Math.round((yes / total) * 100) + ' %' : '0 %';
+        const small = `${yes} von ${total} ${type === OptionType.Date ? 'können' : 'dafür'}`;
+        const title =
+          type === OptionType.Date
+            ? this.dateFormatService.formatLabel(o.text)
+            : o.text;
+        return { title, big, small };
+      });
+  });
+
+  readonly tiedMoreCount = computed(() =>
+    Math.max(0, this.tiedAll().length - 3),
+  );
+
+  readonly tiedPeopleLine = computed(() => {
+    const count = this.tiedAll().length;
+    return count > 0 ? `${count} Optionen liegen gleichauf` : '';
+  });
+
   private readonly uniqueVoters = computed(() => {
     const names = new Set<string>();
     for (const opt of this.poll().options) {
       for (const v of opt.votes) {
-        names.add(v.person);
+        if (parseInt(v.choice ?? '0') > 0) {
+          names.add(v.person);
+        }
       }
     }
     return names;
@@ -273,7 +348,7 @@ export class VoteOverviewSummaryComponent {
 
   private avgRating(option: OptionDetail): number {
     const rated = option.votes.filter(
-      (v) => v.choice && !isNaN(parseInt(v.choice)),
+      (v) => v.choice && !isNaN(parseInt(v.choice)) && parseInt(v.choice) > 0,
     );
     if (!rated.length) {
       return 0;

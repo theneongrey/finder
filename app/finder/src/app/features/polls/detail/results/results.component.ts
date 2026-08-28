@@ -21,6 +21,8 @@ import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { DsTabsComponent, TabItem } from '@ds/tabs/ds-tabs.component';
 import { PollRole } from '../../_shared/models/poll-role.enum';
 import { OptionType } from '@common/models/option-type.model';
+import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
+import { ShareContentComponent } from '../../_shared/ui/share-content/share-content.component';
 
 @Component({
   selector: 'app-results',
@@ -35,11 +37,14 @@ import { OptionType } from '@common/models/option-type.model';
     DsBadgeComponent,
     DsStatusDotComponent,
     DsTabsComponent,
+    ShareDrawerComponent,
+    ShareContentComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResultsComponent {
   private readonly projectDetailStore = inject(PollDetailStore);
+  private readonly translateService = inject(TranslateService);
 
   readonly OptionType = OptionType;
 
@@ -49,6 +54,11 @@ export class ResultsComponent {
   project = this.projectDetailStore.currentProject;
 
   view = signal<'results' | 'comments'>('results');
+  showShareDrawer = signal(false);
+
+  private readonly sharePollLabel = this.translateService.translate('project.share.pollLabel');
+  readonly shareDrawerTitle = this.translateService.translate('project.share.title');
+  readonly shareDrawerSubtitle = computed(() => `${this.sharePollLabel()} · ${this.poll()?.name ?? ''}`);
 
   readonly tabItems = computed((): TabItem[] => [
     { value: 'results', label: 'Ergebnis' },
@@ -136,7 +146,6 @@ export class ResultsComponent {
 
   constructor() {
     const titleService = inject(TitleBarService);
-    const translateService = inject(TranslateService);
 
     effect(() => {
       this.projectDetailStore.getPoll(this.pollId());
@@ -156,7 +165,7 @@ export class ResultsComponent {
       }
     });
 
-    translateService
+    this.translateService
       .stream('project.pollsTab.title')
       .pipe(takeUntilDestroyed())
       .subscribe((label: string) => {
@@ -175,5 +184,9 @@ export class ResultsComponent {
 
   reopenPoll() {
     this.projectDetailStore.reopenPoll(this.pollId());
+  }
+
+  sharePoll() {
+    this.showShareDrawer.set(true);
   }
 }

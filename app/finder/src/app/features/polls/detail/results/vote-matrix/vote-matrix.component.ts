@@ -5,7 +5,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { PollDetail } from '../../../_shared/models/poll-detail.model';
+import { PollDetail, SharedWith } from '../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { OptionType } from '@common/models/option-type.model';
@@ -59,6 +59,7 @@ export class VoteMatrixComponent {
   private readonly dateFormat = inject(DateOptionFormatService);
 
   poll = input.required<PollDetail>();
+  members = input<SharedWith[]>([]);
 
   readonly people = computed((): MatrixPerson[] => {
     const seen = new Set<string>();
@@ -69,6 +70,12 @@ export class VoteMatrixComponent {
           seen.add(v.person);
           result.push({ name: v.person });
         }
+      }
+    }
+    for (const m of this.members()) {
+      if (!seen.has(m.name)) {
+        seen.add(m.name);
+        result.push({ name: m.name });
       }
     }
     return result;

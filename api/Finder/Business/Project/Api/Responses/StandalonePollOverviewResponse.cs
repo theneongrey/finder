@@ -72,7 +72,9 @@ public static class StandalonePollOverviewMapper
 
         var optionCount = poll.Options.Count;
         var votesByPerson = poll.Options
-            .SelectMany(o => o.Votes.Select(v => (PersonId: v.Person.Id, OptionId: o.Id)))
+            .SelectMany(o => o.Votes
+                .Where(v => int.TryParse(v.Choice, out var cv) && cv >= 0)
+                .Select(v => (PersonId: v.Person.Id, OptionId: o.Id)))
             .GroupBy(x => x.PersonId)
             .ToDictionary(g => g.Key, g => g.Select(x => x.OptionId).Distinct().Count());
 

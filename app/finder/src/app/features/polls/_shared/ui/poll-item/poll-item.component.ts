@@ -88,10 +88,29 @@ export class PollItemComponent {
     return null;
   });
 
+  readonly ctaRoute = computed(() => {
+    const poll = this.poll();
+    if (poll.isClosed || !poll.nextOpenOptionId) {
+      return ['/polls', poll.projectId, 'results', poll.pollId];
+    }
+    return ['/polls', poll.projectId, 'vote', poll.pollId];
+  });
+
+  readonly ctaLabel = computed(() => {
+    const poll = this.poll();
+    return poll.isClosed || !poll.nextOpenOptionId
+      ? 'project.detail.item.pollOverview'
+      : 'project.detail.item.voteNow';
+  });
+
+  readonly votedCountByStatus = computed(
+    () => this.poll().participants.filter(p => p.votingStatus !== PollVotingStatus.None).length,
+  );
+
   readonly progressPercent = computed(() => {
-    const { votedCount, totalParticipants } = this.poll();
+    const { totalParticipants } = this.poll();
     return totalParticipants > 0
-      ? Math.round((votedCount / totalParticipants) * 100)
+      ? Math.round((this.votedCountByStatus() / totalParticipants) * 100)
       : 0;
   });
 

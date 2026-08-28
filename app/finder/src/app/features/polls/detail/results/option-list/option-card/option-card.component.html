@@ -18,18 +18,30 @@
           [style.background]="isMostVoted() ? 'var(--accent)' : '#f1eee9'"
           [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
         >{{ rank() }}</span>
-        <span class="flex-1 min-w-0 text-[15px] font-bold truncate" style="color: var(--text-primary)">
-          {{ option().text }}
-        </span>
-        <span class="shrink-0 text-[14.5px] font-bold" style="color: var(--positive-strong)">
-          {{ yesPercent() }} %
-        </span>
+        @if (pollType() === 'rating') {
+          <span class="flex-1 min-w-0">
+            <span class="block text-[15px] font-bold truncate" style="color: var(--text-primary)">{{ option().text }}</span>
+            @if (option().description) {
+              <span class="block text-[12.5px] mt-0.5 truncate" style="color: var(--text-secondary)">{{ option().description }}</span>
+            }
+          </span>
+          @if (ratingsCount()) {
+            <span class="shrink-0 text-[14.5px] font-bold" style="color: var(--star-fg)">{{ avgLabel() }}</span>
+          }
+        } @else {
+          <span class="flex-1 min-w-0 text-[15px] font-bold truncate" style="color: var(--text-primary)">
+            {{ option().text }}
+          </span>
+          <span class="shrink-0 text-[14.5px] font-bold" style="color: var(--positive-strong)">
+            {{ yesPercent() }} %
+          </span>
+        }
         <span
           class="shrink-0 transition-transform"
           [style.transform]="expanded() ? 'rotate(180deg)' : 'rotate(0deg)'"
         ><ds-icon name="chevron-down" [size]="15" color="#c8c2b8" /></span>
       </div>
-      @if (option().description) {
+      @if (pollType() !== 'rating' && option().description) {
         <p class="text-[12.5px] mt-0.5 pl-[34px]" style="color: var(--text-secondary)">
           {{ option().description }}
         </p>
@@ -60,13 +72,9 @@
       >{{ rank() }}</span>
 
       <span class="shrink-0 w-[210px] min-w-0">
-        <span class="block text-[15.5px] font-bold truncate" style="color: var(--text-primary)">
-          {{ option().text }}
-        </span>
+        <span class="block text-[15.5px] font-bold truncate" style="color: var(--text-primary)">{{ option().text }}</span>
         @if (option().description) {
-          <span class="block text-[12.5px] mt-0.5" style="color: var(--text-secondary)">
-            {{ option().description }}
-          </span>
+          <span class="block text-[12.5px] mt-0.5 truncate" style="color: var(--text-secondary)">{{ option().description }}</span>
         }
       </span>
 
@@ -83,9 +91,17 @@
         </span>
       }
 
-      <span class="shrink-0 text-right text-[17px] font-bold" style="width: 60px; color: var(--positive-strong)">
-        {{ yesPercent() }} %
-      </span>
+      @if (pollType() === 'rating') {
+        @if (ratingsCount()) {
+          <span class="shrink-0 text-right text-[17px] font-bold" style="width: 60px; color: var(--star-fg)">
+            {{ avgLabel() }}
+          </span>
+        }
+      } @else {
+        <span class="shrink-0 text-right text-[17px] font-bold" style="width: 60px; color: var(--positive-strong)">
+          {{ yesPercent() }} %
+        </span>
+      }
 
       <span
         class="shrink-0 transition-transform"
@@ -93,16 +109,41 @@
       ><ds-icon name="chevron-down" [size]="16" color="#c8c2b8" /></span>
     </button>
 
-    <!-- Expanded breakdown (shared) -->
+    <!-- ── Expanded breakdown ─────────────────────────────────── -->
     @if (expanded()) {
-      <div class="px-4 pb-4 xl:px-5 xl:pb-5 xl:pl-16" style="animation: resultsExpand 200ms ease both">
-        <div class="h-px mb-3" style="background: var(--border-hairline)"></div>
-        <!-- Mobile: vertical list -->
+      <div class="pt-0.5 px-4 pb-4 xl:pt-0 xl:px-5 xl:pb-[18px] xl:pl-16" style="animation: resultsExpand 200ms ease both">
+        <div class="h-px mb-3 xl:mb-3.5" style="background: var(--border-hairline)"></div>
+        @if (option().meta?.imageUrl) {
+          <img
+            [src]="option().meta!.imageUrl"
+            alt=""
+            class="w-full h-[150px] xl:h-[190px] xl:max-w-[520px] rounded-[14px] xl:rounded-[16px] object-cover mb-3 xl:mb-3.5"
+            style="border: 1px solid rgba(20,24,28,.08)"
+          />
+        }
+        <div
+          class="text-[15.5px] xl:text-[17px] font-bold leading-[1.35] xl:max-w-[600px]"
+          style="color: var(--text-primary); letter-spacing: -0.2px; text-wrap: pretty; font-family: var(--font-display)"
+        >{{ option().text }}</div>
+        @if (option().description) {
+          <p
+            class="mt-1.5 xl:mt-[7px] text-[13px] xl:text-[13.5px] leading-[1.55] xl:leading-[1.6] xl:max-w-[600px]"
+            style="color: #5a5650; text-wrap: pretty; margin-bottom: 0"
+          >{{ option().description }}</p>
+        }
+        @if (option().meta?.url) {
+          <div class="mt-2 xl:max-w-[600px]">
+            <ds-button variant="outline" icon="link" size="sm" [fullWidth]="true" (click)="openUrl(option().meta!.url)">
+              <span class="truncate min-w-0">{{ option().meta!.url }}</span>
+            </ds-button>
+          </div>
+        }
+        <div class="h-px mt-3.5 xl:mt-4 mb-1" style="background: var(--border-hairline)"></div>
         <div class="xl:hidden flex flex-col gap-2">
           @for (g of groups(); track g.label) {
             <div class="flex items-start gap-2.5 py-1">
               <span
-                class="shrink-0 inline-flex items-center justify-center min-w-[56px] h-6 px-2 rounded-lg text-[11.5px] font-bold"
+                class="shrink-0 inline-flex items-center justify-center min-w-[56px] h-6 px-2 rounded-[8px] text-[11.5px] font-bold"
                 [style.background]="g.bg"
                 [style.color]="g.fg"
               >{{ g.label }}</span>
@@ -110,13 +151,9 @@
             </div>
           }
         </div>
-        <!-- Desktop: wrap chips -->
         <div class="hidden xl:flex xl:flex-wrap xl:gap-2.5">
           @for (g of groups(); track g.label) {
-            <div
-              class="flex items-center gap-2 px-3 py-2 rounded-[14px]"
-              [style.background]="g.bg + '40'"
-            >
+            <div class="flex items-center gap-2 px-3 py-2 rounded-[14px]" [style.background]="g.bg + '40'">
               <span
                 class="inline-flex items-center justify-center h-[22px] px-2 rounded-[7px] text-[11.5px] font-bold"
                 [style.background]="g.bg"

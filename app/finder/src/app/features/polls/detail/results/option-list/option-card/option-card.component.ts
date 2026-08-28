@@ -33,9 +33,11 @@ export class OptionCardComponent {
   pollId = input('');
   hideResults = input(false);
   rank = input(0);
+  pollType = input<'yesno' | 'rating'>('yesno');
 
   expanded = signal(false);
 
+  // ── Yes/No ──────────────────────────────────────────────────────
   readonly yesVotes = computed(() =>
     this.option().votes.filter(v => v.choice === '1'),
   );
@@ -44,14 +46,38 @@ export class OptionCardComponent {
     this.option().votes.filter(v => v.choice === '2'),
   );
 
-  readonly totalVoters = computed(() => this.option().votes.length);
+  readonly totalVoters = computed(() =>
+    this.option().votes.filter(v => parseInt(v.choice ?? '0') > 0).length,
+  );
 
   readonly yesPercent = computed(() => {
     const total = this.totalVoters();
     return total > 0 ? Math.round((this.yesVotes().length / total) * 100) : 0;
   });
 
+  // ── Rating ──────────────────────────────────────────────────────
+  readonly averageRating = computed(() => {
+    const rated = this.option().votes.filter(
+      v => v.choice && !isNaN(parseInt(v.choice)) && parseInt(v.choice) > 0,
+    );
+    if (!rated.length) { return 0; }
+    return rated.reduce((s, v) => s + parseInt(v.choice!), 0) / rated.length;
+  });
+
+  readonly ratingsCount = computed(() =>
+    this.option().votes.filter(v => v.choice && !isNaN(parseInt(v.choice)) && parseInt(v.choice) > 0).length,
+  );
+
+  readonly avgLabel = computed(() => {
+    const avg = this.averageRating();
+    return avg > 0 ? avg.toFixed(1).replace('.', ',') : '—';
+  });
+
+  // ── Shared / switched ───────────────────────────────────────────
   readonly segments = computed((): ProgressSegment[] => {
+    if (this.pollType() === 'rating') {
+      return [{ percent: Math.round((this.averageRating() / 5) * 100), color: 'var(--star)' }];
+    }
     const total = this.totalVoters();
     if (!total) { return []; }
     return [
@@ -61,11 +87,15 @@ export class OptionCardComponent {
   });
 
   readonly voteLine = computed(() => {
+    if (this.pollType() === 'rating') {
+      const count = this.ratingsCount();
+      if (!count) { return 'Keine Bewertungen'; }
+      return `${count} Bewertungen · Ø ${this.averageRating().toFixed(1).replace('.', ',')} von 5`;
+    }
     const yes = this.yesVotes().length;
     const no = this.noVotes().length;
     if (!yes && !no) { return 'Keine Stimmen'; }
-    const parts = [`${yes} × Ja`, `${no} × Nein`];
-    return parts.join(' · ');
+    return `${yes} × Ja · ${no} × Nein`;
   });
 
   readonly avatarUsers = computed((): AvatarUser[] => {
@@ -74,22 +104,30 @@ export class OptionCardComponent {
     if (members.length) {
       return members.map(m => ({ name: m.name, voted: voted.has(m.name) }));
     }
-    return this.option().votes.map(v => ({ name: v.person, voted: true }));
+    return this.option().votes.map(v => ({ name: v.person, voted: parseInt(v.choice ?? '0') > 0 }));
   });
 
   private readonly votedNames = computed(() =>
-    new Set(this.option().votes.map(v => v.person)),
+    new Set(
+      this.option().votes
+        .filter(v => parseInt(v.choice ?? '0') > 0)
+        .map(v => v.person),
+    ),
   );
 
   readonly groups = computed((): VoteGroup[] => {
     const groups: VoteGroup[] = [];
-    const yes = this.yesVotes();
-    const no  = this.noVotes();
-    if (yes.length) {
-      groups.push({ label: 'Ja',   bg: '#e2ede1', fg: '#3f7a4e', names: yes.map(v => v.person).join(', ') });
-    }
-    if (no.length) {
-      groups.push({ label: 'Nein', bg: '#fdf3f1', fg: '#c1453f', names: no.map(v => v.person).join(', ') });
+    if (this.pollType() === 'rating') {
+      for (let stars = 5; stars >= 1; stars--) {
+        const voters = this.option().votes.filter(v => parseInt(v.choice ?? '0') === stars);
+        if (!voters.length) { continue; }
+        groups.push({ label: `${stars} ★`, bg: 'var(--star-bg)', fg: 'var(--star-fg)', names: voters.map(v => v.person).join(', ') });
+      }
+    } else {
+      const yes = this.yesVotes();
+      const no  = this.noVotes();
+      if (yes.length) { groups.push({ label: 'Ja',   bg: '#e2ede1', fg: '#3f7a4e', names: yes.map(v => v.person).join(', ') }); }
+      if (no.length)  { groups.push({ label: 'Nein', bg: '#fdf3f1', fg: '#c1453f', names: no.map(v => v.person).join(', ') }); }
     }
     const open = this.members().filter(m => !this.votedNames().has(m.name));
     if (open.length) {
@@ -97,4 +135,8 @@ export class OptionCardComponent {
     }
     return groups;
   });
+
+  protected openUrl(url: string) {
+    window.open(url, '_blank', 'noopener noreferrer');
+  }
 }

@@ -14,7 +14,6 @@ import {
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
-import { OptionCardRatingComponent } from './option-card-rating/option-card-rating.component';
 import { OptionType } from '@common/models/option-type.model';
 
 type SortMode = 'top' | 'original';
@@ -28,7 +27,6 @@ type SortMode = 'top' | 'original';
     DsIconComponent,
     OptionCardComponent,
     OptionCardDateComponent,
-    OptionCardRatingComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

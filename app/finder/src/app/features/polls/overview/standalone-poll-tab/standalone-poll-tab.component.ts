@@ -136,7 +136,7 @@ export class StandalonePollTabComponent {
   );
 
   startRemoval(poll: PollItem): void {
-    if (this.removingPollId()) return;
+    if (this.removingPollId()) { return; }
     this.removingPollId.set(poll.projectId);
     setTimeout(() => this.deletionRequested.emit(poll), 300);
   }

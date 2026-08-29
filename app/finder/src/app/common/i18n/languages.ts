@@ -17,6 +17,12 @@ export function setStoredLanguage(lang: SupportedLanguage): void {
   localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
 }
 
+export const LANGUAGE_OPTIONS: { value: SupportedLanguage; label: string }[] = [
+  { value: 'de', label: 'Deutsch' },
+  { value: 'en', label: 'English' },
+  { value: 'es', label: 'Español' },
+];
+
 export function detectBrowserLanguage(): SupportedLanguage {
   const prefix = (navigator.language ?? '').split('-')[0].toLowerCase();
   if (prefix === 'de') { return 'de'; }

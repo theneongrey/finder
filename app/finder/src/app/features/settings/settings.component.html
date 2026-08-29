@@ -22,41 +22,17 @@
               class="flex min-w-0 flex-col gap-1 lg:mt-[14px] lg:w-full lg:items-center"
             >
               <div
-                style="
-                  font-family: var(--font-display);
-                  font-size: var(--fs-display-2xs);
-                  font-weight: var(--weight-bold);
-                  letter-spacing: var(--tracking-display-3xs);
-                  color: var(--text-primary);
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                  max-width: 100%;
-                "
+                class="max-w-full overflow-hidden text-ellipsis whitespace-nowrap tracking-(--tracking-display-3xs) text-(--text-primary) [font-family:var(--font-display)] [font-size:var(--fs-display-2xs)] [font-weight:var(--weight-bold)]"
               >
                 {{ currentUser.name }}
               </div>
               <div
-                style="
-                  font-size: var(--fs-ui);
-                  color: var(--text-tertiary);
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                  max-width: 100%;
-                "
+                class="max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-(--text-tertiary) [font-size:var(--fs-ui)]"
               >
                 {{ currentUser.email }}
               </div>
               <div
-                class="mt-1 inline-flex items-center gap-1 rounded-[8px] px-2"
-                style="
-                  height: 24px;
-                  background: var(--green-badge-bg);
-                  color: var(--green-badge-fg);
-                  font-size: var(--fs-micro);
-                  font-weight: var(--weight-bold);
-                "
+                class="mt-1 inline-flex h-[24px] items-center gap-1 rounded-[8px] px-2 bg-(--green-badge-bg) text-(--green-badge-fg) [font-size:var(--fs-micro)] [font-weight:var(--weight-bold)]"
               >
                 <svg
                   width="11"
@@ -78,7 +54,7 @@
         }
       </ds-card>
 
-      <!-- Profile form + save button -->
+      <!-- Profile form -->
       <div class="flex flex-col gap-3">
         <ds-card [padding]="24">
           <span class="label mb-4 block">{{
@@ -96,27 +72,12 @@
 
               <div class="flex flex-col gap-[6px]">
                 <span
-                  style="
-                    font-size: var(--fs-ui-sm);
-                    font-weight: var(--weight-semibold);
-                    color: var(--text-secondary);
-                  "
+                  class="text-(--text-secondary) [font-size:var(--fs-ui-sm)] [font-weight:var(--weight-semibold)]"
                 >
                   {{ "settings.email" | translate }}
                 </span>
                 <div
-                  class="flex h-[46px] items-center overflow-hidden"
-                  style="
-                    padding: 0 14px;
-                    border-radius: var(--radius-md);
-                    border: 1px solid var(--border-hairline-soft);
-                    background: var(--cream-100);
-                    font-size: var(--fs-body-xs);
-                    font-family: var(--font-body);
-                    color: var(--text-muted);
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                  "
+                  class="flex h-[46px] items-center overflow-hidden whitespace-nowrap text-ellipsis rounded-(--radius-md) border border-(--border-hairline-soft) bg-(--cream-100) px-[14px] text-(--text-muted) [font-family:var(--font-body)] [font-size:var(--fs-body-xs)]"
                 >
                   {{ user()?.email ?? "" }}
                 </div>
@@ -125,11 +86,7 @@
 
             <div class="flex flex-col gap-2">
               <span
-                style="
-                  font-size: var(--fs-ui-sm);
-                  font-weight: var(--weight-semibold);
-                  color: var(--text-secondary);
-                "
+                class="text-(--text-secondary) [font-size:var(--fs-ui-sm)] [font-weight:var(--weight-semibold)]"
               >
                 {{ "settings.language" | translate }}
               </span>

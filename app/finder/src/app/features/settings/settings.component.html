@@ -1,36 +1,77 @@
-<div class="flex flex-col w-full">
+<div class="flex w-full flex-col">
   <app-title-bar />
 
-  <main class="flex-grow w-full mx-auto max-w-(--mobile-max-width) lg:max-w-none px-[22px] py-5 lg:px-[34px] lg:py-6">
-
-    <div class="mb-4 lg:mb-6 px-0.5">
-      <h1>{{ 'settings.title' | translate }}</h1>
+  <main
+    class="mx-auto w-full max-w-(--mobile-max-width) flex-grow px-[22px] py-5 lg:max-w-none lg:px-[34px] lg:py-6"
+  >
+    <div class="mb-4 px-0.5 lg:mb-6">
+      <h1>{{ "settings.title" | translate }}</h1>
     </div>
 
-    <div class="vt-stagger flex flex-col gap-4 lg:grid lg:grid-cols-[380px_1fr] lg:gap-[18px] lg:items-start lg:max-w-(--web-content-max-width)">
-
+    <div
+      class="vt-stagger flex flex-col gap-4 lg:grid lg:max-w-(--web-content-max-width) lg:grid-cols-[380px_1fr] lg:items-start lg:gap-[18px]"
+    >
       <!-- Identity card -->
       <ds-card [padding]="24">
         @if (user(); as currentUser) {
-          <div class="flex items-center gap-4 lg:flex-col lg:items-center lg:gap-0 lg:text-center">
-            <ds-avatar
-              [initial]="initial()"
-              [bg]="avatarPalette().bg"
-              [fg]="avatarPalette().fg"
-              [size]="76"
-            />
-            <div class="min-w-0 flex flex-col gap-1 lg:mt-[14px] lg:items-center lg:w-full">
-              <div style="font-family: var(--font-display); font-size: var(--fs-display-2xs); font-weight: var(--weight-bold); letter-spacing: var(--tracking-display-3xs); color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">
+          <div
+            class="flex items-center gap-4 lg:flex-col lg:items-center lg:gap-0 lg:text-center"
+          >
+            <app-user-avatar [user]="currentUser" [size]="76" />
+            <div
+              class="flex min-w-0 flex-col gap-1 lg:mt-[14px] lg:w-full lg:items-center"
+            >
+              <div
+                style="
+                  font-family: var(--font-display);
+                  font-size: var(--fs-display-2xs);
+                  font-weight: var(--weight-bold);
+                  letter-spacing: var(--tracking-display-3xs);
+                  color: var(--text-primary);
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  max-width: 100%;
+                "
+              >
                 {{ currentUser.name }}
               </div>
-              <div style="font-size: var(--fs-ui); color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">
+              <div
+                style="
+                  font-size: var(--fs-ui);
+                  color: var(--text-tertiary);
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  max-width: 100%;
+                "
+              >
                 {{ currentUser.email }}
               </div>
-              <div class="inline-flex items-center gap-1 mt-1 px-2 rounded-[8px]" style="height: 24px; background: var(--green-badge-bg); color: var(--green-badge-fg); font-size: var(--fs-micro); font-weight: var(--weight-bold);">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M4.5 12.5l4.5 4.5L20 5"/>
+              <div
+                class="mt-1 inline-flex items-center gap-1 rounded-[8px] px-2"
+                style="
+                  height: 24px;
+                  background: var(--green-badge-bg);
+                  color: var(--green-badge-fg);
+                  font-size: var(--fs-micro);
+                  font-weight: var(--weight-bold);
+                "
+              >
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4.5 12.5l4.5 4.5L20 5" />
                 </svg>
-                <span>{{ 'settings.emailVerified' | translate }}</span>
+                <span>{{ "settings.emailVerified" | translate }}</span>
               </div>
             </div>
           </div>
@@ -40,7 +81,9 @@
       <!-- Profile form + save button -->
       <div class="flex flex-col gap-3">
         <ds-card [padding]="24">
-          <span class="label block mb-4">{{ 'settings.profile' | translate }}</span>
+          <span class="label mb-4 block">{{
+            "settings.profile" | translate
+          }}</span>
 
           <div [formGroup]="form" class="flex flex-col gap-4">
             <div class="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-4">
@@ -48,24 +91,47 @@
                 formControlName="name"
                 [label]="'settings.name' | translate"
                 [placeholder]="'settings.namePlaceholder' | translate"
+                (inputBlur)="onNameBlur()"
               />
 
               <div class="flex flex-col gap-[6px]">
-                <span style="font-size: var(--fs-ui-sm); font-weight: var(--weight-semibold); color: var(--text-secondary);">
-                  {{ 'settings.email' | translate }}
+                <span
+                  style="
+                    font-size: var(--fs-ui-sm);
+                    font-weight: var(--weight-semibold);
+                    color: var(--text-secondary);
+                  "
+                >
+                  {{ "settings.email" | translate }}
                 </span>
                 <div
                   class="flex h-[46px] items-center overflow-hidden"
-                  style="padding: 0 14px; border-radius: var(--radius-md); border: 1px solid var(--border-hairline-soft); background: var(--cream-100); font-size: var(--fs-body-xs); font-family: var(--font-body); color: var(--text-muted); white-space: nowrap; text-overflow: ellipsis;"
+                  style="
+                    padding: 0 14px;
+                    border-radius: var(--radius-md);
+                    border: 1px solid var(--border-hairline-soft);
+                    background: var(--cream-100);
+                    font-size: var(--fs-body-xs);
+                    font-family: var(--font-body);
+                    color: var(--text-muted);
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                  "
                 >
-                  {{ user()?.email ?? '' }}
+                  {{ user()?.email ?? "" }}
                 </div>
               </div>
             </div>
 
             <div class="flex flex-col gap-2">
-              <span style="font-size: var(--fs-ui-sm); font-weight: var(--weight-semibold); color: var(--text-secondary);">
-                {{ 'settings.language' | translate }}
+              <span
+                style="
+                  font-size: var(--fs-ui-sm);
+                  font-weight: var(--weight-semibold);
+                  color: var(--text-secondary);
+                "
+              >
+                {{ "settings.language" | translate }}
               </span>
               <ds-segmented-control
                 [options]="languageOptions"
@@ -75,19 +141,7 @@
             </div>
           </div>
         </ds-card>
-
-        <ds-button
-          variant="primary"
-          [fullWidth]="true"
-          [loading]="isSaving()"
-          [disabled]="form.invalid"
-          icon="check"
-          (click)="save()"
-        >
-          {{ 'settings.save' | translate }}
-        </ds-button>
       </div>
-
     </div>
   </main>
 </div>

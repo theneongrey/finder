@@ -28,7 +28,6 @@ import {
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsSegmentedControlComponent } from '@ds/segmented-control/ds-segmented-control.component';
-import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 
 @Component({
@@ -40,7 +39,6 @@ import { DsCardComponent } from '@ds/card/ds-card.component';
     UserAvatarComponent,
     DsInputComponent,
     DsSegmentedControlComponent,
-    DsButtonComponent,
     DsCardComponent,
   ],
   templateUrl: './settings.component.html',
@@ -52,7 +50,6 @@ export class SettingsComponent {
   private readonly events = inject(Events);
 
   readonly user = this.userStore.user;
-  readonly isSaving = signal(false);
   readonly selectedLanguage = signal<SupportedLanguage>(getStoredLanguage());
 
   protected readonly languageOptions = LANGUAGE_OPTIONS;
@@ -84,7 +81,6 @@ export class SettingsComponent {
       .on(profileUpdateFinished)
       .pipe(takeUntilDestroyed())
       .subscribe(({ payload }) => {
-        this.isSaving.set(false);
         const message = this.translateService.instant(
           payload.success ? 'settings.saveSuccess' : 'settings.saveError',
         );
@@ -100,11 +96,15 @@ export class SettingsComponent {
     const lang = value as SupportedLanguage;
     this.selectedLanguage.set(lang);
     this.translateService.use(lang);
+    this.saveProfile();
   }
 
-  save(): void {
-    if (this.form.valid && !this.isSaving()) {
-      this.isSaving.set(true);
+  onNameBlur(): void {
+    this.saveProfile();
+  }
+
+  private saveProfile(): void {
+    if (this.form.valid) {
       this.userStore.updateProfile({
         name: this.form.controls.name.value ?? '',
         language: this.selectedLanguage(),

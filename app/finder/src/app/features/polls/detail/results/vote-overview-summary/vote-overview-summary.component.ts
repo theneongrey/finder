@@ -72,7 +72,7 @@ export class VoteOverviewSummaryComponent {
   });
 
   readonly badge = computed(() => {
-    if (this.isTie()) return 'Unentschieden';
+    if (this.isTie()) { return 'Unentschieden'; }
     switch (this.poll().optionType) {
       case OptionType.Rating:
         return 'Beste Bewertung';
@@ -84,12 +84,12 @@ export class VoteOverviewSummaryComponent {
   });
 
   readonly badgeBg = computed(() => {
-    if (this.isTie()) return '#ece7f8';
+    if (this.isTie()) { return '#ece7f8'; }
     return this.poll().optionType !== OptionType.Rating ? '#e2ede1' : '#f9edd5';
   });
 
   readonly badgeFg = computed(() => {
-    if (this.isTie()) return '#6f5aac';
+    if (this.isTie()) { return '#6f5aac'; }
     return this.poll().optionType !== OptionType.Rating
       ? 'var(--positive-strong)'
       : '#a8742a';
@@ -276,7 +276,7 @@ export class VoteOverviewSummaryComponent {
 
   private readonly topScore = computed(() => {
     const w = this.winner();
-    if (!w) return 0;
+    if (!w) { return 0; }
     return this.poll().optionType === OptionType.Rating
       ? this.avgRating(w)
       : this.yesCount(w);
@@ -284,7 +284,7 @@ export class VoteOverviewSummaryComponent {
 
   private readonly tiedAll = computed(() => {
     const top = this.topScore();
-    if (top === 0) return [];
+    if (top === 0) { return []; }
     const type = this.poll().optionType;
     return this.poll().options.filter((o) =>
       type === OptionType.Rating
@@ -296,7 +296,7 @@ export class VoteOverviewSummaryComponent {
   readonly isTie = computed(() => this.tiedAll().length > 1);
 
   readonly tiedOptions = computed((): TiedOption[] => {
-    if (!this.isTie()) return [];
+    if (!this.isTie()) { return []; }
     const type = this.poll().optionType;
     const total = this.uniqueVoters().size;
     return this.tiedAll()

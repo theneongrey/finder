@@ -130,7 +130,7 @@
         <p class="text-[13px]" style="color: var(--text-secondary)">{{ sub }}</p>
       }
     </div>
-    @if (option().choice) {
+    @if (option().choice && +option().choice > 0) {
       <div class="flex justify-end">
         <ds-button variant="ghost" size="sm" [routerLink]="['/polls', projectId(), 'vote', pollId(), option().id]">
           Erneut abstimmen

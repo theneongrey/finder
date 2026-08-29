@@ -19,7 +19,7 @@ const CONFIG: Record<
     fg: 'var(--person-1-fg)',
   },
   [OptionType.Rating]: {
-    icon: 'trophy',
+    icon: 'star',
     labelKey: 'project.detail.pollTypes.rating',
     bg: 'var(--person-3-bg)',
     fg: 'var(--person-3-fg)',

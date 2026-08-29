@@ -2,12 +2,25 @@
   <!-- ── MOBILE layout (<lg) ─────────────────────────────────── -->
   <div class="flex flex-col lg:hidden">
     <!-- Tab bar -->
-    <ds-tabs
-      class="px-4"
-      [items]="tabItems()"
-      [value]="view()"
-      (valueChange)="view.set($any($event))"
-    />
+    <div class="relative">
+      <ds-tabs
+        class="px-4"
+        [items]="tabItems()"
+        [value]="view()"
+        (valueChange)="view.set($any($event))"
+      />
+      @if (!poll.isClosed) {
+        <div class="absolute right-3 top-1/2 -translate-y-1/2">
+          <ds-button
+            variant="ghost"
+            [size]="36"
+            icon="share"
+            label="Umfrage teilen"
+            (click)="sharePoll()"
+          />
+        </div>
+      }
+    </div>
 
     @if (view() === "results") {
       <div class="flex flex-col gap-3.5 p-4 pb-8">
@@ -143,6 +156,16 @@
               deadlineText()
             }}</span>
           }
+          @if (!poll.isClosed) {
+            <div class="ml-auto flex items-center">
+              <ds-button
+                variant="ghost"
+                size="sm"
+                icon="share"
+                (click)="sharePoll()"
+              >Teilen</ds-button>
+            </div>
+          }
         </div>
         <h1
           class="text-[32px] leading-[1.14] font-bold text-pretty"
@@ -178,7 +201,7 @@
 
       <!-- Voting matrix -->
       @if (poll.options.length && poll.options[0].votes.length) {
-        <app-vote-matrix [poll]="poll" />
+        <app-vote-matrix [poll]="poll" [members]="project()?.sharedWith ?? []" />
       }
 
       @if (canManagePoll()) {
@@ -284,4 +307,20 @@
       {{ "project.votesOverview.loading" | translate }}
     </p>
   </div>
+}
+
+@if (project(); as project) {
+  <app-share-drawer
+    [title]="shareDrawerTitle()"
+    [subtitle]="shareDrawerSubtitle()"
+    [visible]="showShareDrawer()"
+    (visibleChange)="showShareDrawer.set($event)"
+  >
+    <app-share-content
+      [projectId]="project.id"
+      [sharedWith]="project.sharedWith"
+      [visibilityType]="project.visibilityType"
+      [inCard]="false"
+    />
+  </app-share-drawer>
 }

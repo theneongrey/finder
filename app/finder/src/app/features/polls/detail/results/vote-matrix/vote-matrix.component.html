@@ -44,12 +44,13 @@
       @for (row of rows(); track row.label; let i = $index) {
         <div
           class="flex items-center gap-1.5 rounded-xl"
-          style="height: 40px"
+          style="min-height: 40px"
           [style.background]="row.isEven ? 'rgba(255,255,255,.75)' : 'transparent'"
         >
           <span
-            class="flex-none text-[13.5px] font-semibold px-3"
+            class="flex-none text-[13.5px] font-semibold px-3 line-clamp-2"
             style="width: 300px; color: #3a3833"
+            [title]="row.label"
           >{{ row.label }}</span>
           @for (cell of row.cells; track $index) {
             <span

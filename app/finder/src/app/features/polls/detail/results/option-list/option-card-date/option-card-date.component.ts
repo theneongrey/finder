@@ -59,7 +59,9 @@ export class OptionCardDateComponent {
     this.option().votes.filter(v => v.choice === '2'),
   );
 
-  readonly totalVoters = computed(() => this.option().votes.length);
+  readonly totalVoters = computed(() =>
+    this.option().votes.filter(v => parseInt(v.choice ?? '0') > 0).length,
+  );
 
   readonly yesPercent = computed(() => {
     const total = this.totalVoters();
@@ -91,11 +93,15 @@ export class OptionCardDateComponent {
     if (members.length) {
       return members.map(m => ({ name: m.name, voted: voted.has(m.name) }));
     }
-    return this.option().votes.map(v => ({ name: v.person, voted: true }));
+    return this.option().votes.map(v => ({ name: v.person, voted: parseInt(v.choice ?? '0') > 0 }));
   });
 
   private readonly votedNames = computed(() =>
-    new Set(this.option().votes.map(v => v.person)),
+    new Set(
+      this.option().votes
+        .filter(v => parseInt(v.choice ?? '0') > 0)
+        .map(v => v.person),
+    ),
   );
 
   readonly groups = computed((): VoteGroup[] => {

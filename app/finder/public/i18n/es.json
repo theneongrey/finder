@@ -6,6 +6,8 @@
   },
   "settings": {
     "title": "Configuración",
+    "profile": "Perfil",
+    "emailVerified": "Correo verificado",
     "name": "Nombre",
     "namePlaceholder": "Tu nombre",
     "email": "Correo electrónico",

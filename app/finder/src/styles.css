@@ -219,6 +219,26 @@ input.invalid {
   border: 1px solid var(--border-hairline) !important;
   box-shadow: var(--shadow-overlay) !important;
 }
+[data-sonner-toaster] [data-sonner-toast][data-type='success'] {
+  background: var(--green-badge-bg) !important;
+  color: var(--positive) !important;
+  border-color: var(--green-100) !important;
+}
+[data-sonner-toaster] [data-sonner-toast][data-type='error'] {
+  background: var(--red-100) !important;
+  color: var(--negative) !important;
+  border-color: var(--red-200) !important;
+}
+[data-sonner-toaster] [data-sonner-toast][data-type='info'] {
+  background: var(--accent-tint) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent-border) !important;
+}
+[data-sonner-toaster] [data-sonner-toast][data-type='warning'] {
+  background: var(--amber-100) !important;
+  color: var(--warning) !important;
+  border-color: var(--amber-avatar-bg) !important;
+}
 
 /* ── List entrance stagger ───────────────────────────────────── */
 @keyframes ds-fade-up {

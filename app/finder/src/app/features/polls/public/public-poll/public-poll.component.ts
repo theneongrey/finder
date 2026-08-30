@@ -158,15 +158,18 @@ export class PublicPollComponent implements OnInit {
           this.titleBarService.setTitle(
             info.pollPreview?.name ?? info.projectName,
           );
+          this.isLoading.set(false);
           if (this.isAuthenticated()) {
             this.navigateToPoll();
-          } else {
-            this.isLoading.set(false);
           }
         },
         error: (err) => {
-          this.logger.error('Failed to load public project info', err);
           this.isLoading.set(false);
+          if (err?.status === 403) {
+            this.router.navigate(['/']);
+          } else {
+            this.logger.error('Failed to load public project info', err);
+          }
         },
       });
 

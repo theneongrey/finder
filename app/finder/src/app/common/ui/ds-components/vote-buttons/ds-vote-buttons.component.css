@@ -14,7 +14,9 @@
   flex-shrink: 0;
   transition: transform var(--duration-fast) var(--ease-standard);
 }
-.ds-vote-btn:active { transform: scale(0.92); }
+.ds-vote-btn:active {
+  transform: scale(0.92);
+}
 .ds-vote-btn--no {
   width: 62px;
   height: 62px;

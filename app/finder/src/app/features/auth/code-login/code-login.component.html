@@ -1,19 +1,18 @@
 <app-auth-step-indicator [step]="2" />
 
-<form
-  [formGroup]="form"
-  (ngSubmit)="verifyCode()"
-  class="flex flex-col gap-0"
->
+<form [formGroup]="form" (ngSubmit)="verifyCode()" class="flex flex-col gap-0">
   <div
     data-testid="code-login-heading"
-    class="[font-family:var(--font-display)] text-[27px] lg:text-[30px] font-bold tracking-[-0.6px] lg:tracking-[-0.7px] leading-[1.1] [color:var(--text-primary)]"
+    class="[font-family:var(--font-display)] text-[27px] leading-[1.1] font-bold tracking-[-0.6px] [color:var(--text-primary)] lg:text-[30px] lg:tracking-[-0.7px]"
   >
-    {{ 'auth.codeLogin.heading' | translate }}
+    {{ "auth.codeLogin.heading" | translate }}
   </div>
-  <p class="mt-[8px] text-[14.5px] lg:text-[15px] leading-[1.45] [color:var(--text-secondary)] text-pretty">
-    {{ 'auth.codeLogin.codeSentBefore' | translate }}
-    <strong class="[color:var(--text-body)] font-bold">{{ email() }}</strong>{{ 'auth.codeLogin.codeSentAfter' | translate }}
+  <p
+    class="mt-[8px] text-[14.5px] leading-[1.45] text-pretty [color:var(--text-secondary)] lg:text-[15px]"
+  >
+    {{ "auth.codeLogin.codeSentBefore" | translate }}
+    <strong class="font-bold [color:var(--text-body)]">{{ email() }}</strong
+    >{{ "auth.codeLogin.codeSentAfter" | translate }}
   </p>
 
   <div class="mt-[22px]">
@@ -21,9 +20,11 @@
   </div>
 
   @if (hasError()) {
-    <div class="flex items-center gap-[6px] pt-[10px] text-[13px] font-semibold [color:var(--negative)]">
+    <div
+      class="flex items-center gap-[6px] pt-[10px] text-[13px] font-semibold [color:var(--negative)]"
+    >
       <ds-icon name="warning" [size]="14" color="var(--negative)" />
-      <span>{{ 'auth.codeLogin.invalidCode' | translate }}</span>
+      <span>{{ "auth.codeLogin.invalidCode" | translate }}</span>
     </div>
   }
 
@@ -34,7 +35,7 @@
       [disabled]="form.invalid"
       data-testid="code-login-submit"
     >
-      {{ 'auth.codeLogin.submit' | translate }}
+      {{ "auth.codeLogin.submit" | translate }}
     </ds-button>
   </div>
 </form>
@@ -43,9 +44,9 @@
   <button
     type="button"
     data-testid="code-login-change-email"
-    class="border-none bg-transparent px-[2px] py-[4px] text-[13.5px] font-bold [color:var(--text-secondary)] cursor-pointer hover:[color:var(--text-primary)] transition-colors duration-[140ms]"
+    class="cursor-pointer border-none bg-transparent px-[2px] py-[4px] text-[13.5px] font-bold [color:var(--text-secondary)] transition-colors duration-[140ms] hover:[color:var(--text-primary)]"
     (click)="editEmail()"
   >
-    {{ 'auth.codeLogin.changeEmail' | translate }}
+    {{ "auth.codeLogin.changeEmail" | translate }}
   </button>
 </div>

@@ -5,7 +5,9 @@
   [attr.aria-pressed]="active()"
   [style.background]="active() ? 'var(--teal-150)' : '#fff'"
   [style.color]="active() ? 'var(--accent)' : 'var(--ink-500)'"
-  [style.border]="active() ? '1px solid var(--teal-300)' : '1px solid var(--border-hairline)'"
+  [style.border]="
+    active() ? '1px solid var(--teal-300)' : '1px solid var(--border-hairline)'
+  "
   (click)="toggle()"
 >
   @if (icon()) {

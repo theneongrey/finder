@@ -56,13 +56,19 @@
 }
 
 /* Active slot: accent border */
-:host ::ng-deep hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot[data-active="true"]) {
+:host
+  ::ng-deep
+  hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot[data-active="true"]) {
   border-color: var(--accent) !important;
   background: var(--surface-card);
 }
 
 /* Filled slot: white background */
-:host ::ng-deep hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot:not([data-active="true"])) {
+:host
+  ::ng-deep
+  hlm-input-otp-slot.ds-otp-slot:has(
+    brn-input-otp-slot:not([data-active="true"])
+  ) {
   background: var(--surface-card);
   border-color: var(--border-hairline-strong) !important;
 }

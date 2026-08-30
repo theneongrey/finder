@@ -18,35 +18,49 @@ import { HlmTextarea } from '@spartan-ng/helm/textarea';
   templateUrl: './ds-textarea.component.html',
   styleUrl: './ds-textarea.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsTextareaComponent), multi: true }],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DsTextareaComponent),
+      multi: true,
+    },
+  ],
   host: { style: 'display: block; width: 100%' },
 })
 export class DsTextareaComponent implements ControlValueAccessor {
-  label      = input<string | undefined>(undefined);
-  error      = input<string | undefined>(undefined);
+  label = input<string | undefined>(undefined);
+  error = input<string | undefined>(undefined);
   placeholder = input('');
-  rows       = input(3);
-  maxlength  = input<number | null>(null);
+  rows = input(3);
+  maxlength = input<number | null>(null);
   autoResize = input(false);
-  maxHeight  = input('200px');
+  maxHeight = input('200px');
 
   blurred = output<void>();
 
-  protected readonly value      = signal('');
+  protected readonly value = signal('');
   protected readonly isDisabled = signal(false);
 
   private readonly elRef = viewChild<ElementRef<HTMLTextAreaElement>>('el');
   private minHeight = 40;
   private viewReady = false;
 
-  private onChange: (v: string) => void = () => { /* do nothing */ };
-  protected onTouched: () => void = () => { /* do nothing */ };
+  private onChange: (v: string) => void = () => {
+    /* do nothing */
+  };
+  protected onTouched: () => void = () => {
+    /* do nothing */
+  };
 
   constructor() {
     afterNextRender(() => {
-      if (!this.autoResize()) { return; }
+      if (!this.autoResize()) {
+        return;
+      }
       const el = this.elRef()?.nativeElement;
-      if (!el) { return; }
+      if (!el) {
+        return;
+      }
       this.viewReady = true;
       el.style.setProperty('field-sizing', 'fixed');
       el.style.minHeight = '0';
@@ -55,13 +69,17 @@ export class DsTextareaComponent implements ControlValueAccessor {
     });
   }
 
-  focus(): void { this.elRef()?.nativeElement.focus(); }
+  focus(): void {
+    this.elRef()?.nativeElement.focus();
+  }
 
   protected onInput(event: Event): void {
     const el = event.target as HTMLTextAreaElement;
     this.value.set(el.value);
     this.onChange(el.value);
-    if (this.autoResize()) { this.resizeAnimated(el); }
+    if (this.autoResize()) {
+      this.resizeAnimated(el);
+    }
   }
 
   protected onBlur(): void {
@@ -73,15 +91,23 @@ export class DsTextareaComponent implements ControlValueAccessor {
     this.value.set(val ?? '');
     if (this.viewReady && this.autoResize()) {
       const el = this.elRef()?.nativeElement;
-      if (!el) { return; }
+      if (!el) {
+        return;
+      }
       el.value = val ?? '';
       this.resizeInstant(el);
     }
   }
 
-  registerOnChange(fn: (v: string) => void): void { this.onChange = fn; }
-  registerOnTouched(fn: () => void): void { this.onTouched = fn; }
-  setDisabledState(d: boolean): void { this.isDisabled.set(d); }
+  registerOnChange(fn: (v: string) => void): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+  setDisabledState(d: boolean): void {
+    this.isDisabled.set(d);
+  }
 
   private resizeInstant(el: HTMLTextAreaElement): void {
     el.style.transition = 'none';

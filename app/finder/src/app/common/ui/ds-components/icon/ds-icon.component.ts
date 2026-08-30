@@ -1,8 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 
-interface IconPath { d: string }
-interface IconCircle { cx: number; cy: number; r: number; filled?: boolean }
-interface IconRect { x: number; y: number; width: number; height: number; rx?: number }
+interface IconPath {
+  d: string;
+}
+interface IconCircle {
+  cx: number;
+  cy: number;
+  r: number;
+  filled?: boolean;
+}
+interface IconRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rx?: number;
+}
 interface IconDef {
   paths?: IconPath[];
   circles?: IconCircle[];
@@ -15,19 +33,38 @@ const ICONS: Record<string, IconDef> = {
   logo: { paths: [{ d: 'M4.5 12.5l4.5 4.5L20 5' }], strokeWidth: 3.4 },
   'chevron-left': { paths: [{ d: 'M15 5l-7 7 7 7' }], strokeWidth: 2.6 },
   'chevron-right': { paths: [{ d: 'M9 5l7 7-7 7' }], strokeWidth: 2.6 },
-  'arrow-right': { paths: [{ d: 'M4 12h16' }, { d: 'M14 6l6 6-6 6' }], strokeWidth: 2.4 },
+  'arrow-right': {
+    paths: [{ d: 'M4 12h16' }, { d: 'M14 6l6 6-6 6' }],
+    strokeWidth: 2.4,
+  },
   kebab: {
     fill: true,
-    paths: [{ d: 'M12 3.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 10.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 17.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6z' }],
+    paths: [
+      {
+        d: 'M12 3.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 10.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6zM12 17.2a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6z',
+      },
+    ],
   },
-  comment: { paths: [{ d: 'M20 4H4a1.5 1.5 0 0 0-1.5 1.5V15A1.5 1.5 0 0 0 4 16.5h3V20l4-3.5h9A1.5 1.5 0 0 0 21.5 15V5.5A1.5 1.5 0 0 0 20 4z' }] },
+  comment: {
+    paths: [
+      {
+        d: 'M20 4H4a1.5 1.5 0 0 0-1.5 1.5V15A1.5 1.5 0 0 0 4 16.5h3V20l4-3.5h9A1.5 1.5 0 0 0 21.5 15V5.5A1.5 1.5 0 0 0 20 4z',
+      },
+    ],
+  },
   share: {
     strokeWidth: 2,
-    circles: [{ cx: 18, cy: 5, r: 2.6 }, { cx: 6, cy: 12, r: 2.6 }, { cx: 18, cy: 19, r: 2.6 }],
+    circles: [
+      { cx: 18, cy: 5, r: 2.6 },
+      { cx: 6, cy: 12, r: 2.6 },
+      { cx: 18, cy: 19, r: 2.6 },
+    ],
     paths: [{ d: 'M8.3 10.7l7.4-4.4' }, { d: 'M8.3 13.3l7.4 4.4' }],
   },
   edit: { paths: [{ d: 'M4 20h4L20 8l-4-4L4 16z' }, { d: 'M14 6l4 4' }] },
-  trash: { paths: [{ d: 'M4 7h16' }, { d: 'M9 7V4h6v3' }, { d: 'M6 7l1 13h10l1-13' }] },
+  trash: {
+    paths: [{ d: 'M4 7h16' }, { d: 'M9 7V4h6v3' }, { d: 'M6 7l1 13h10l1-13' }],
+  },
   lock: {
     strokeWidth: 2.2,
     rects: [{ x: 5, y: 10, width: 14, height: 10, rx: 2.5 }],
@@ -47,7 +84,11 @@ const ICONS: Record<string, IconDef> = {
     rects: [{ x: 3.5, y: 5, width: 17, height: 15.5, rx: 2.5 }],
     paths: [{ d: 'M3.5 9.5h17' }, { d: 'M8 3v4' }, { d: 'M16 3v4' }],
   },
-  clock: { strokeWidth: 2.2, circles: [{ cx: 12, cy: 12, r: 8.5 }], paths: [{ d: 'M12 7.5V12l3 2' }] },
+  clock: {
+    strokeWidth: 2.2,
+    circles: [{ cx: 12, cy: 12, r: 8.5 }],
+    paths: [{ d: 'M12 7.5V12l3 2' }],
+  },
   refresh: {
     strokeWidth: 2.2,
     paths: [
@@ -70,9 +111,19 @@ const ICONS: Record<string, IconDef> = {
       { d: 'M10 15h4l.6 4H9.4z' },
     ],
   },
-  close: { strokeWidth: 2.6, paths: [{ d: 'M5 5l14 14' }, { d: 'M19 5L5 19' }] },
+  close: {
+    strokeWidth: 2.6,
+    paths: [{ d: 'M5 5l14 14' }, { d: 'M19 5L5 19' }],
+  },
   check: { strokeWidth: 3, paths: [{ d: 'M4 12.5l5 5L20 6' }] },
-  heart: { strokeWidth: 2.1, paths: [{ d: 'M12 20.3s-7.5-4.6-9.7-9C.8 8 2 4.7 5 3.7c2.2-.7 4.3.2 5.6 2 .4.5 1 1.4 1.4 1.4s1-.9 1.4-1.4c1.3-1.8 3.4-2.7 5.6-2 3 1 4.2 4.3 2.7 7.6-2.2 4.4-9.7 9-9.7 9z' }] },
+  heart: {
+    strokeWidth: 2.1,
+    paths: [
+      {
+        d: 'M12 20.3s-7.5-4.6-9.7-9C.8 8 2 4.7 5 3.7c2.2-.7 4.3.2 5.6 2 .4.5 1 1.4 1.4 1.4s1-.9 1.4-1.4c1.3-1.8 3.4-2.7 5.6-2 3 1 4.2 4.3 2.7 7.6-2.2 4.4-9.7 9-9.7 9z',
+      },
+    ],
+  },
   grid: {
     strokeWidth: 2,
     rects: [
@@ -82,7 +133,14 @@ const ICONS: Record<string, IconDef> = {
       { x: 13.5, y: 13.5, width: 7, height: 7, rx: 1.8 },
     ],
   },
-  folder: { strokeWidth: 2, paths: [{ d: 'M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' }] },
+  folder: {
+    strokeWidth: 2,
+    paths: [
+      {
+        d: 'M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
+      },
+    ],
+  },
   checklist: {
     strokeWidth: 2,
     rects: [{ x: 3.5, y: 3.5, width: 17, height: 17, rx: 4.5 }],
@@ -124,12 +182,18 @@ const ICONS: Record<string, IconDef> = {
   },
   star: {
     strokeWidth: 2,
-    paths: [{ d: 'M12 3.8l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.9l5.9-.8z' }],
+    paths: [
+      {
+        d: 'M12 3.8l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.9l5.9-.8z',
+      },
+    ],
   },
   warning: {
     strokeWidth: 2.2,
     paths: [
-      { d: 'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z' },
+      {
+        d: 'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z',
+      },
       { d: 'M12 9v4' },
       { d: 'M12 17v.01' },
     ],

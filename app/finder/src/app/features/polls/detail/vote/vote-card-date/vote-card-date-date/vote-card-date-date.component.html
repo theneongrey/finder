@@ -1,6 +1,4 @@
-<div
-  class="pointer-events-none flex flex-col items-center gap-2"
->
+<div class="pointer-events-none flex flex-col items-center gap-2">
   <hlm-calendar
     [date]="selectedDate()"
     [highlightDays]="otherDatesArray()"
@@ -8,7 +6,7 @@
     [showNavigation]="false"
   />
   @if (entry().date; as d) {
-    <p class="font-semibold text-center">
+    <p class="text-center font-semibold">
       {{ formatDate(d) }}
       @if (entry().startTime; as t) {
         <span class="mx-1">–</span>{{ formatTimeOnly(t) }}

@@ -104,7 +104,10 @@ export class PollItemComponent {
   });
 
   readonly votedCountByStatus = computed(
-    () => this.poll().participants.filter(p => p.votingStatus !== PollVotingStatus.None).length,
+    () =>
+      this.poll().participants.filter(
+        (p) => p.votingStatus !== PollVotingStatus.None,
+      ).length,
   );
 
   readonly progressPercent = computed(() => {

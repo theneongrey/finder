@@ -15,7 +15,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auth-shell',
-  imports: [RouterOutlet, RouterLink, NgOptimizedImage, DsButtonComponent, DsIconComponent, TranslatePipe],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    NgOptimizedImage,
+    DsButtonComponent,
+    DsIconComponent,
+    TranslatePipe,
+  ],
   templateUrl: './shell.component.html',
   host: { class: 'flex flex-col h-dvh bg-app-gradient' },
   changeDetection: ChangeDetectionStrategy.OnPush,

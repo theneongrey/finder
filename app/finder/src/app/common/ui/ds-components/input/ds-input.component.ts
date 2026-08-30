@@ -42,8 +42,12 @@ export class DsInputComponent implements ControlValueAccessor {
   protected readonly isDisabled = signal(false);
 
   private readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('inputEl');
-  private onChange: (value: string) => void = () => { /* do nothing */ };
-  private onTouched: () => void = () => { /* do nothing */ };
+  private onChange: (value: string) => void = () => {
+    /* do nothing */
+  };
+  private onTouched: () => void = () => {
+    /* do nothing */
+  };
 
   writeValue(value: string): void {
     this.value.set(value ?? '');

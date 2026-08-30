@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  model,
+} from '@angular/core';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
@@ -12,8 +17,8 @@ import { DsIconComponent } from '../icon/ds-icon.component';
 })
 export class DsChipComponent {
   active = model<boolean>(false);
-  label  = input.required<string>();
-  icon   = input<string | undefined>(undefined);
+  label = input.required<string>();
+  icon = input<string | undefined>(undefined);
 
   toggle(): void {
     this.active.set(!this.active());

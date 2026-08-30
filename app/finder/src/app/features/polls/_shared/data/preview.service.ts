@@ -14,6 +14,8 @@ export class PreviewService {
   private http = inject(HttpClient);
 
   getPreview(url: string): Observable<PreviewData> {
-    return this.http.get<PreviewData>(`/api/preview?url=${encodeURIComponent(url)}`);
+    return this.http.get<PreviewData>(
+      `/api/preview?url=${encodeURIComponent(url)}`,
+    );
   }
 }

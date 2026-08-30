@@ -112,7 +112,7 @@ Flag:
 
 Do **not** flag missing tests for purely presentational components (no logic, no signals).
 
-### E — Lint
+### E — Lint and Formatting
 
 Run the linter on the changed files:
 
@@ -123,6 +123,14 @@ cd app/finder && npm run lint 2>&1
 Report any errors or warnings introduced by the PR. If lint was already failing before the PR, note that but don't attribute pre-existing failures to this PR.
 
 If lint fails to run (dependencies not installed, etc.), note that and skip this check.
+
+Also run prettier to check for formatting issues:
+
+```bash
+cd app/finder && npx prettier --check "src/**/*.{ts,html,css}" 2>&1
+```
+
+Report any files that are not formatted. Flag unformatted files as `[should-fix]`.
 
 ### F — General Code Quality
 

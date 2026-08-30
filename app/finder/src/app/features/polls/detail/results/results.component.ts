@@ -56,9 +56,15 @@ export class ResultsComponent {
   view = signal<'results' | 'comments'>('results');
   showShareDrawer = signal(false);
 
-  private readonly sharePollLabel = this.translateService.translate('project.share.pollLabel');
-  readonly shareDrawerTitle = this.translateService.translate('project.share.title');
-  readonly shareDrawerSubtitle = computed(() => `${this.sharePollLabel()} · ${this.poll()?.name ?? ''}`);
+  private readonly sharePollLabel = this.translateService.translate(
+    'project.share.pollLabel',
+  );
+  readonly shareDrawerTitle = this.translateService.translate(
+    'project.share.title',
+  );
+  readonly shareDrawerSubtitle = computed(
+    () => `${this.sharePollLabel()} · ${this.poll()?.name ?? ''}`,
+  );
 
   readonly tabItems = computed((): TabItem[] => [
     { value: 'results', label: 'Ergebnis' },

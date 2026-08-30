@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 
 export type StatusTone = 'positive' | 'muted';
 
@@ -12,10 +17,10 @@ export type StatusTone = 'positive' | 'muted';
 export class DsStatusDotComponent {
   tone = input<StatusTone>('positive');
 
-  protected readonly pillBg  = computed(() =>
+  protected readonly pillBg = computed(() =>
     this.tone() === 'positive' ? 'var(--green-badge-bg)' : 'var(--cream-300)',
   );
-  protected readonly pillFg  = computed(() =>
+  protected readonly pillFg = computed(() =>
     this.tone() === 'positive' ? 'var(--green-badge-fg)' : 'var(--text-muted)',
   );
   protected readonly dotColor = computed(() =>

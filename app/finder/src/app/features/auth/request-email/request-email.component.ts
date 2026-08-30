@@ -22,7 +22,13 @@ import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.compo
 
 @Component({
   selector: 'app-request-email',
-  imports: [ReactiveFormsModule, DsButtonComponent, DsInputComponent, TranslatePipe, AuthStepIndicatorComponent],
+  imports: [
+    ReactiveFormsModule,
+    DsButtonComponent,
+    DsInputComponent,
+    TranslatePipe,
+    AuthStepIndicatorComponent,
+  ],
   templateUrl: './request-email.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -30,7 +36,6 @@ import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.compo
   },
 })
 export class RequestEmailComponent implements OnInit {
-
   private userStore = inject(UserStore);
   private translateService = inject(TranslateService);
   private route = inject(ActivatedRoute);

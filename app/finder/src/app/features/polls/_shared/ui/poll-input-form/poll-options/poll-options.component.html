@@ -1,5 +1,4 @@
-<div class="flex flex-col gap-2 mt-4">
-
+<div class="mt-4 flex flex-col gap-2">
   @if (optionType() === OptionType.Date) {
     @if (!readonly()) {
       <app-appointment-type-selection
@@ -11,18 +10,22 @@
     }
 
     @if (appointmentDateType()) {
-      <div class="flex justify-between items-center px-1 mt-4">
-        <span class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]">
+      <div class="mt-4 flex items-center justify-between px-1">
+        <span
+          class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]"
+        >
           {{ titleKey() | translate }}
         </span>
-        <span class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]">
+        <span
+          class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]"
+        >
           {{ subtitleKey() | translate }}
         </span>
       </div>
 
       <div class="flex flex-col gap-2">
         @switch (appointmentDateType()) {
-          @case ('weekday') {
+          @case ("weekday") {
             @if (!weekdayShowsTime()) {
               <ds-card [accentBorder]="false" [padding]="14">
                 <div class="flex gap-1">
@@ -31,12 +34,19 @@
                       <ds-button
                         size="sm"
                         [fullWidth]="true"
-                        [variant]="selectedWeekdays().includes(day.value) ? 'soft' : 'neutral'"
+                        [variant]="
+                          selectedWeekdays().includes(day.value)
+                            ? 'soft'
+                            : 'neutral'
+                        "
                         [disabled]="readonly()"
                         [attr.aria-label]="day.ariaLabel"
-                        [attr.aria-pressed]="selectedWeekdays().includes(day.value)"
+                        [attr.aria-pressed]="
+                          selectedWeekdays().includes(day.value)
+                        "
                         (click)="weekdayToggle.emit(day.value)"
-                      >{{ day.label }}</ds-button>
+                        >{{ day.label }}</ds-button
+                      >
                     </div>
                   }
                 </div>
@@ -58,7 +68,7 @@
           @default {
             @for (option of dateOptions(); track $index) {
               @switch (appointmentDateType()) {
-                @case ('date') {
+                @case ("date") {
                   <app-option-card-date
                     [option]="option"
                     [index]="$index"
@@ -69,7 +79,7 @@
                     (optionChange)="updateDateOption($index, $event)"
                   />
                 }
-                @case ('date-range') {
+                @case ("date-range") {
                   <app-option-card-date-range
                     [option]="option"
                     [index]="$index"
@@ -80,7 +90,7 @@
                     (optionChange)="updateDateOption($index, $event)"
                   />
                 }
-                @case ('time') {
+                @case ("time") {
                   <app-option-card-time
                     [option]="option"
                     [index]="$index"
@@ -90,7 +100,7 @@
                     (optionChange)="updateDateOption($index, $event)"
                   />
                 }
-                @case ('time-range') {
+                @case ("time-range") {
                   <app-option-card-time-range
                     [option]="option"
                     [index]="$index"
@@ -106,7 +116,10 @@
         }
       </div>
 
-      @if (!readonly() && (appointmentDateType() !== 'weekday' || weekdayShowsTime())) {
+      @if (
+        !readonly() &&
+        (appointmentDateType() !== "weekday" || weekdayShowsTime())
+      ) {
         <ds-empty-state-button
           data-testid="add-date-option-btn"
           [class.add-card-nudge]="addCardAnimating()"
@@ -115,13 +128,16 @@
         />
       }
     }
-
   } @else {
-    <div class="flex justify-between items-center px-1">
-      <span class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]">
+    <div class="flex items-center justify-between px-1">
+      <span
+        class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]"
+      >
         {{ titleKey() | translate }}
       </span>
-      <span class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]">
+      <span
+        class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]"
+      >
         {{ subtitleKey() | translate }}
       </span>
     </div>

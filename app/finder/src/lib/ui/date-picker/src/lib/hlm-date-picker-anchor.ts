@@ -17,7 +17,6 @@ export class HlmDatePickerAnchor {
   public readonly hlmDatePickerAnchorForInput = input<BrnPopover | undefined>(
     undefined,
     {
-       
       alias: 'hlmDatePickerAnchorFor',
     },
   );

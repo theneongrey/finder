@@ -12,7 +12,10 @@
         {{ "publicPoll.memberWelcomeTitle" | translate: { name: userName() } }}
       </div>
       <div class="mt-0.5 text-[12.5px] [color:var(--text-secondary)]">
-        {{ "publicPoll.memberWelcomeSub" | translate: { projectName: projectName() } }}
+        {{
+          "publicPoll.memberWelcomeSub"
+            | translate: { projectName: projectName() }
+        }}
       </div>
     </div>
   </div>

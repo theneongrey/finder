@@ -1,6 +1,4 @@
-<div
-  class="pointer-events-none flex flex-col items-center w-full"
->
+<div class="pointer-events-none flex w-full flex-col items-center">
   @if (isSameMonth()) {
     <hlm-calendar-range
       [startDate]="startDate()"
@@ -9,7 +7,7 @@
       [showNavigation]="false"
     />
   } @else {
-    <div class="flex justify-center w-full origin-top scale-55">
+    <div class="flex w-full origin-top scale-55 justify-center">
       <hlm-calendar-range
         [startDate]="startDate()"
         [endDate]="endDate()"

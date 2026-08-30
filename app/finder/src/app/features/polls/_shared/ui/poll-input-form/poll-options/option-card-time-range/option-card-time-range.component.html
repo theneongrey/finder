@@ -1,9 +1,11 @@
 <ds-card [accentBorder]="false" [padding]="14">
   <div class="flex items-start gap-2">
-    <div class="flex flex-col gap-2 flex-1">
+    <div class="flex flex-1 flex-col gap-2">
       <div class="flex flex-col gap-1">
-        <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
-          {{ 'project.pollInput.date.startTime' | translate }}
+        <label
+          class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+        >
+          {{ "project.pollInput.date.startTime" | translate }}
         </label>
         <ds-input
           type="time"
@@ -15,8 +17,10 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
-          {{ 'project.pollInput.date.endTime' | translate }}
+        <label
+          class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+        >
+          {{ "project.pollInput.date.endTime" | translate }}
         </label>
         <ds-input
           type="time"
@@ -29,7 +33,12 @@
     </div>
 
     @if (canRemove()) {
-      <ds-button [size]="32" variant="ghost" icon="close" (click)="remove.emit()" />
+      <ds-button
+        [size]="32"
+        variant="ghost"
+        icon="close"
+        (click)="remove.emit()"
+      />
     }
   </div>
 </ds-card>

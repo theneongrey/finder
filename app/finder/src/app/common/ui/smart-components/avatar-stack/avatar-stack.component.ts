@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 
@@ -29,6 +35,10 @@ export class AvatarStackComponent {
     return s === 'sm' ? 27 : s === 'lg' ? 38 : 29;
   });
   protected readonly shown = computed(() => this.users().slice(0, this.max()));
-  protected readonly extra = computed(() => this.users().length - this.shown().length);
-  protected readonly overflowFontSize = computed(() => Math.round(this.px() * 0.36));
+  protected readonly extra = computed(
+    () => this.users().length - this.shown().length,
+  );
+  protected readonly overflowFontSize = computed(() =>
+    Math.round(this.px() * 0.36),
+  );
 }

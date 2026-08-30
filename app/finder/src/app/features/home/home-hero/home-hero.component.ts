@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -10,7 +15,14 @@ import { PPL } from '../home.constants';
 
 @Component({
   selector: 'app-home-hero',
-  imports: [FormsModule, TranslatePipe, DsStatusDotComponent, DsBadgeComponent, AvatarStackComponent, HomeDemoCardComponent],
+  imports: [
+    FormsModule,
+    TranslatePipe,
+    DsStatusDotComponent,
+    DsBadgeComponent,
+    AvatarStackComponent,
+    HomeDemoCardComponent,
+  ],
   templateUrl: './home-hero.component.html',
   styleUrl: './home-hero.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +34,9 @@ export class HomeHeroComponent {
   readonly emailError = signal(false);
   readonly emailSent = signal(false);
 
-  readonly faces = ['G', 'F', 'M', 'L', 'N'].map(k => ({ name: PPL[k].name }));
+  readonly faces = ['G', 'F', 'M', 'L', 'N'].map((k) => ({
+    name: PPL[k].name,
+  }));
 
   onStart(): void {
     const v = this.email().trim();
@@ -32,7 +46,9 @@ export class HomeHeroComponent {
     }
     this.emailSent.set(true);
     this.emailError.set(false);
-    this.router.navigate(['/auth/request-email'], { queryParams: { email: v } });
+    this.router.navigate(['/auth/request-email'], {
+      queryParams: { email: v },
+    });
   }
 
   onEmailChange(val: string): void {
@@ -42,6 +58,8 @@ export class HomeHeroComponent {
   }
 
   onEmailKey(e: KeyboardEvent): void {
-    if (e.key === 'Enter') { this.onStart(); }
+    if (e.key === 'Enter') {
+      this.onStart();
+    }
   }
 }

@@ -3,7 +3,10 @@ import { environment } from '../env/environment';
 import { LoggerService } from './logger.service';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
-import { NotificationSetting, NotificationValue } from '../models/notification-setting.model';
+import {
+  NotificationSetting,
+  NotificationValue,
+} from '../models/notification-setting.model';
 
 @Injectable({
   providedIn: 'root',
@@ -56,11 +59,16 @@ export class UserService {
   }
 
   getNotificationSettings() {
-    return this.httpClient.get<NotificationSetting[]>(`${this.baseUrl}/api/user/notifications`);
+    return this.httpClient.get<NotificationSetting[]>(
+      `${this.baseUrl}/api/user/notifications`,
+    );
   }
 
   updateNotificationSetting(id: number, value: NotificationValue) {
-    return this.httpClient.put<NotificationSetting>(`${this.baseUrl}/api/user/notifications/${id}`, { value });
+    return this.httpClient.put<NotificationSetting>(
+      `${this.baseUrl}/api/user/notifications/${id}`,
+      { value },
+    );
   }
 
   logout() {

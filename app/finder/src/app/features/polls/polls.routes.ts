@@ -13,9 +13,7 @@ export const pollsRoutes: Routes = [
   {
     path: 'add',
     loadComponent: () =>
-      import('./add/add-poll.component').then(
-        (m) => m.AddPollComponent,
-      ),
+      import('./add/add-poll.component').then((m) => m.AddPollComponent),
     data: {
       backRoute: '/polls',
     },

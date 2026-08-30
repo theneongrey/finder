@@ -1,6 +1,7 @@
-<div class="flex flex-col w-full">
-  <app-title-bar />
-  <main class="flex-grow mx-auto w-full rounded-t-2xl" [class.lg:max-w-5xl]="!isFullWidth()" [class.lg:max-w-full]="isFullWidth()">
-    <router-outlet />
-  </main>
-</div>
+<main
+  class="mx-auto w-full flex-grow rounded-t-2xl"
+  [class.lg:max-w-5xl]="!isFullWidth()"
+  [class.lg:max-w-full]="isFullWidth()"
+>
+  <router-outlet />
+</main>

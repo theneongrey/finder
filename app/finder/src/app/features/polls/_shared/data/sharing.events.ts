@@ -7,6 +7,9 @@ export const sharingEvents = eventGroup({
   events: {
     shared: type<{ projectId: string; sharedWith: SharedWith[] }>(),
     permissionRemoved: type<{ projectId: string; sharedWith: SharedWith[] }>(),
-    visibilityTypeUpdated: type<{ projectId: string; visibilityType: VisibilityType }>(),
+    visibilityTypeUpdated: type<{
+      projectId: string;
+      visibilityType: VisibilityType;
+    }>(),
   },
 });

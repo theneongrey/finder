@@ -13,7 +13,7 @@ export class HlmSheetOverlay {
     optional: true,
     host: true,
   });
-   
+
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
   protected readonly _computedClass = computed(() =>
     hlm(

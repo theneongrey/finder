@@ -1,7 +1,11 @@
 <div>
-  <div [class]="layout() === 'grid'
-    ? 'grid grid-cols-3 gap-4 mt-0 max-w-[940px]'
-    : 'grid grid-cols-1 gap-3 mt-0'">
+  <div
+    [class]="
+      layout() === 'grid'
+        ? 'mt-0 grid max-w-[940px] grid-cols-3 gap-4'
+        : 'mt-0 grid grid-cols-1 gap-3'
+    "
+  >
     @for (pt of pollTypes; track pt.type) {
       <app-poll-type-button
         [type]="pt.type"
@@ -16,11 +20,17 @@
     }
   </div>
 
-  <div class="flex items-start gap-[9px] mt-[18px] px-[14px] py-[13px] rounded-[var(--radius-lg)] bg-[rgba(255,255,255,.6)] border border-[var(--border-hairline-soft)]"
-    [class]="layout() === 'grid' ? 'max-w-[940px]' : ''">
-    <span class="mt-px"><ds-icon name="info" [size]="16" [color]="'var(--text-muted)'" /></span>
-    <span class="text-[length:var(--fs-caption)] leading-[var(--leading-normal)] text-[color:var(--text-secondary)]">
-      {{ 'project.detail.pollTypes.hint' | translate }}
+  <div
+    class="mt-[18px] flex items-start gap-[9px] rounded-[var(--radius-lg)] border border-[var(--border-hairline-soft)] bg-[rgba(255,255,255,.6)] px-[14px] py-[13px]"
+    [class]="layout() === 'grid' ? 'max-w-[940px]' : ''"
+  >
+    <span class="mt-px"
+      ><ds-icon name="info" [size]="16" [color]="'var(--text-muted)'"
+    /></span>
+    <span
+      class="text-[length:var(--fs-caption)] leading-[var(--leading-normal)] text-[color:var(--text-secondary)]"
+    >
+      {{ "project.detail.pollTypes.hint" | translate }}
     </span>
   </div>
 </div>

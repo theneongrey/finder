@@ -13,9 +13,9 @@ import { UserService } from '@common/services/user.service';
 import { UserStore } from '@common/data/user.store';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { TitleBarService } from '@common/services/title-bar.service';
-import { PollService } from '../../_shared/data/poll.service';
-import { PublicProjectInfo } from '../../_shared/models/poll-detail.model';
-import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
+import { PollService } from '../polls/_shared/data/poll.service';
+import { PublicProjectInfo } from '../polls/_shared/models/poll-detail.model';
+import { DateOptionFormatService } from '../polls/_shared/utils/date-option-format.service';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -150,23 +150,25 @@ export class PublicPollComponent implements OnInit {
         this.titleBarService.setTitle(
           info.pollPreview?.name ?? info.projectName,
         );
+        if (this.isAuthenticated()) {
+          this.navigateToPoll();
+        }
       },
       error: (err) => {
-        if (err?.status === 403) {
-          this.router.navigate(['/']);
-        } else {
-          this.logger.error('Failed to load public project info', err);
-          this.router.navigate(['/']);
-        }
+        this.logger.error('Failed to load public project info', err);
         this.isLoading.set(false);
       },
     });
 
     this.userService.getUser().subscribe({
       next: (user) => {
-        this.isAuthenticated.set(user?.isAuthenticated ?? false);
+        const authenticated = user?.isAuthenticated ?? false;
+        this.isAuthenticated.set(authenticated);
         this.currentUser.set(user ?? undefined);
         this.isLoading.set(false);
+        if (authenticated && this.projectInfo()) {
+          this.navigateToPoll();
+        }
       },
       error: () => this.isLoading.set(false),
     });

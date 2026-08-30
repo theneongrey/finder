@@ -34,7 +34,9 @@
   font-size: var(--fs-ui-sm);
   font-family: var(--font-body);
 }
-.ds-page__nav-link:hover { color: var(--accent); }
+.ds-page__nav-link:hover {
+  color: var(--accent);
+}
 
 .ds-page__main {
   max-width: 960px;
@@ -45,7 +47,9 @@
   padding: 48px 32px;
 }
 
-section h2 { margin: 0 0 4px; }
+section h2 {
+  margin: 0 0 4px;
+}
 
 .ds-section-desc {
   margin: 0 0 24px;
@@ -54,7 +58,9 @@ section h2 { margin: 0 0 4px; }
   font-family: var(--font-body);
 }
 
-.ds-section-block { margin-top: 24px; }
+.ds-section-block {
+  margin-top: 24px;
+}
 
 .ds-divider {
   border: none;
@@ -64,12 +70,12 @@ section h2 { margin: 0 0 4px; }
 
 /* ── Utilities ── */
 .ds-mono {
-  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-family: ui-monospace, "Cascadia Code", monospace;
   font-size: 11.5px;
   color: var(--ink-600);
 }
 .ds-mono-xs {
-  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-family: ui-monospace, "Cascadia Code", monospace;
   font-size: 10.5px;
   color: var(--text-muted);
   text-align: center;
@@ -180,5 +186,9 @@ section h2 { margin: 0 0 4px; }
 }
 
 /* mb-3 / mb-4 helpers */
-.mb-3 { margin-bottom: 12px; }
-.mb-4 { margin-bottom: 16px; }
+.mb-3 {
+  margin-bottom: 12px;
+}
+.mb-4 {
+  margin-bottom: 16px;
+}

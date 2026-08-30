@@ -22,7 +22,14 @@ import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.compo
 
 @Component({
   selector: 'app-auth-code-login',
-  imports: [ReactiveFormsModule, DsInputOtpComponent, DsButtonComponent, DsIconComponent, TranslatePipe, AuthStepIndicatorComponent],
+  imports: [
+    ReactiveFormsModule,
+    DsInputOtpComponent,
+    DsButtonComponent,
+    DsIconComponent,
+    TranslatePipe,
+    AuthStepIndicatorComponent,
+  ],
   templateUrl: './code-login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

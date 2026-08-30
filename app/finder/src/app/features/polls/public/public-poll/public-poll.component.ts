@@ -150,23 +150,25 @@ export class PublicPollComponent implements OnInit {
         this.titleBarService.setTitle(
           info.pollPreview?.name ?? info.projectName,
         );
+        if (this.isAuthenticated()) {
+          this.navigateToPoll();
+        }
       },
       error: (err) => {
-        if (err?.status === 403) {
-          this.router.navigate(['/']);
-        } else {
-          this.logger.error('Failed to load public project info', err);
-          this.router.navigate(['/']);
-        }
+        this.logger.error('Failed to load public project info', err);
         this.isLoading.set(false);
       },
     });
 
     this.userService.getUser().subscribe({
       next: (user) => {
-        this.isAuthenticated.set(user?.isAuthenticated ?? false);
+        const authenticated = user?.isAuthenticated ?? false;
+        this.isAuthenticated.set(authenticated);
         this.currentUser.set(user ?? undefined);
         this.isLoading.set(false);
+        if (authenticated && this.projectInfo()) {
+          this.navigateToPoll();
+        }
       },
       error: () => this.isLoading.set(false),
     });

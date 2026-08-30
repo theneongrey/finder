@@ -1,5 +1,6 @@
 using System.Threading.RateLimiting;
 using Finder.Business.Auth.Services;
+using Finder.Business.Shared.Services;
 
 namespace Finder.Business.Auth.Setup;
 
@@ -11,6 +12,7 @@ public static class SetupExtensions
 
         services.AddScoped<LoginService>();
         services.AddScoped<MailService>();
+        services.AddScoped<SeedingService>();
 
         services.AddAuthorization();
         services.AddAuthentication().AddCookie(o =>

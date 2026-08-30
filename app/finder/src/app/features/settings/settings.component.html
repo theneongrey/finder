@@ -1,76 +1,181 @@
-<div class="flex flex-col w-full">
+<div class="flex w-full flex-col">
   <app-title-bar />
 
   <main
-    class="flex-grow w-full mx-auto px-4 py-6 flex flex-col gap-8 max-w-(--mobile-max-width) lg:max-w-md"
+    class="w-full flex-grow px-[22px] py-5 lg:px-[34px] lg:py-6"
   >
-    <div class="flex flex-col items-center gap-2">
-      @if (user(); as currentUser) {
-        <div class="rounded-full border-4 border-white ds-shadow-raised">
-          <app-user-avatar [user]="currentUser" size="xlarge" />
-        </div>
+    <div class="mb-4 px-0.5 lg:mb-6">
+      <h1>{{ "settings.title" | translate }}</h1>
+    </div>
+
+    <div
+      class="vt-stagger flex flex-col gap-4 lg:grid lg:max-w-(--web-content-max-width) lg:grid-cols-[380px_1fr] lg:items-start lg:gap-[18px] lg:px-[34px]"
+    >
+      <!-- Left column: identity + account actions (desktop only) -->
+      <div class="flex w-full flex-col gap-3">
+        <ds-card [padding]="24">
+          @if (user(); as currentUser) {
+            <div
+              class="flex items-center gap-4 lg:flex-col lg:items-center lg:gap-0 lg:text-center"
+            >
+              <app-user-avatar [user]="currentUser" [size]="76" />
+              <div
+                class="flex min-w-0 flex-col gap-1 lg:mt-[14px] lg:w-full lg:items-center"
+              >
+                <div
+                  class="max-w-full overflow-hidden [font-family:var(--font-display)] [font-size:var(--fs-display-2xs)] [font-weight:var(--weight-bold)] tracking-(--tracking-display-3xs) text-ellipsis whitespace-nowrap text-(--text-primary)"
+                >
+                  {{ currentUser.name }}
+                </div>
+                <div
+                  class="max-w-full overflow-hidden [font-size:var(--fs-ui)] text-ellipsis whitespace-nowrap text-(--text-tertiary)"
+                >
+                  {{ currentUser.email }}
+                </div>
+                <div
+                  class="mt-1 inline-flex h-[24px] items-center gap-1 rounded-[8px] bg-(--green-badge-bg) px-2 [font-size:var(--fs-micro)] [font-weight:var(--weight-bold)] text-(--green-badge-fg)"
+                >
+                  <ds-icon name="logo" [size]="11" />
+                  <span>{{ "settings.emailVerified" | translate }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </ds-card>
+
+        @if (isDesktop()) {
+          <ng-container [ngTemplateOutlet]="accountActionsCard" />
+        }
+      </div>
+
+      <!-- Right column: profile + notifications -->
+      <div class="flex w-full flex-col gap-3">
+        <ds-card [padding]="24">
+          <span class="label mb-4 block">{{
+            "settings.profile" | translate
+          }}</span>
+
+          <div [formGroup]="form" class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-4">
+              <ds-input
+                data-testid="settings-name-input"
+                formControlName="name"
+                [label]="'settings.name' | translate"
+                [placeholder]="'settings.namePlaceholder' | translate"
+                (inputBlur)="onNameBlur()"
+              />
+
+              <div class="flex flex-col gap-[6px]">
+                <span
+                  class="[font-size:var(--fs-ui-sm)] [font-weight:var(--weight-semibold)] text-(--text-secondary)"
+                >
+                  {{ "settings.email" | translate }}
+                </span>
+                <div
+                  class="flex h-[46px] items-center overflow-hidden rounded-(--radius-md) border border-(--border-hairline-soft) bg-(--cream-100) px-[14px] [font-family:var(--font-body)] [font-size:var(--fs-body-xs)] text-ellipsis whitespace-nowrap text-(--text-muted)"
+                >
+                  {{ user()?.email ?? "" }}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <span
+                class="[font-size:var(--fs-ui-sm)] [font-weight:var(--weight-semibold)] text-(--text-secondary)"
+              >
+                {{ "settings.language" | translate }}
+              </span>
+              <ds-segmented-control
+                data-testid="settings-language-control"
+                [options]="languageOptions"
+                [value]="selectedLanguage()"
+                (valueChange)="onLanguageChange($event)"
+              />
+            </div>
+          </div>
+        </ds-card>
+
+        <ds-card [padding]="24">
+          <span class="label mb-5 block">{{
+            "settings.notifications.title" | translate
+          }}</span>
+
+          <div class="flex flex-col divide-y divide-(--border-hairline-soft)">
+            @if (notificationsLoading()) {
+              @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+                <div class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+                  <div class="flex flex-1 flex-col gap-1.5">
+                    <div class="ds-skeleton h-3.5 w-36"></div>
+                    <div class="ds-skeleton h-3 w-48"></div>
+                  </div>
+                  <div class="ds-skeleton h-8 w-[206px] shrink-0"></div>
+                </div>
+              }
+            } @else {
+              @for (notif of notifications(); track notif.id) {
+                <div data-testid="settings-notif-row" class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+                  <div class="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <span
+                      class="[font-size:var(--fs-body-xs)] [font-weight:var(--weight-semibold)] text-(--text-primary)"
+                    >
+                      {{ notif.titleKey | translate }}
+                    </span>
+                    <span
+                      class="[font-size:var(--fs-caption)] text-(--text-tertiary)"
+                    >
+                      {{ notif.descriptionKey | translate }}
+                    </span>
+                  </div>
+                  <ds-segmented-control
+                    data-testid="settings-notif-control"
+                    class="w-[206px] shrink-0"
+                    size="sm"
+                    [options]="notificationOptions()"
+                    [value]="notif.value"
+                    (valueChange)="onNotificationChange(notif.id, $event)"
+                  />
+                </div>
+              }
+            }
+          </div>
+        </ds-card>
+      </div>
+
+      @if (!isDesktop()) {
+        <ng-container [ngTemplateOutlet]="accountActionsCard" />
       }
     </div>
 
-    <form
-      [formGroup]="form"
-      (ngSubmit)="save()"
-      class="flex flex-col gap-6"
-    >
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-sm font-semibold text-on-surface-variant"
-          for="name"
+    <ng-template #accountActionsCard>
+      <ds-card [padding]="0">
+        <button
+          data-testid="settings-logout-btn"
+          type="button"
+          (click)="logout()"
+          class="flex w-full items-center justify-between [border-radius:var(--radius-card)_var(--radius-card)_0_0] px-6 py-4 text-left transition-colors hover:bg-(--cream-100) active:bg-(--cream-100)"
         >
-          {{ "settings.name" | translate }}
-        </label>
-        <input
-          hlmInput
-          id="name"
-          type="text"
-          formControlName="name"
-          [placeholder]="'settings.namePlaceholder' | translate"
-          autocomplete="name"
-        />
-      </div>
+          <span
+            class="[font-size:var(--fs-body-xs)] [font-weight:var(--weight-medium)] text-(--text-primary)"
+          >
+            {{ "settings.logout" | translate }}
+          </span>
+          <ds-icon name="chevron-right" [size]="16" [color]="'var(--text-tertiary)'" />
+        </button>
 
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-sm font-semibold text-on-surface-variant"
-          for="email"
+        <div class="mx-6 border-t border-(--border-hairline-soft)"></div>
+
+        <button
+          type="button"
+          class="flex w-full items-center justify-between [border-radius:0_0_var(--radius-card)_var(--radius-card)] px-6 py-4 text-left transition-colors hover:bg-(--cream-100) active:bg-(--cream-100)"
         >
-          {{ "settings.email" | translate }}
-        </label>
-        <input
-          hlmInput
-          id="email"
-          type="email"
-          formControlName="email"
-        />
-      </div>
-
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-sm font-semibold text-on-surface-variant"
-          for="language"
-        >
-          {{ "settings.language" | translate }}
-        </label>
-        <hlm-select formControlName="language" class="w-full" [itemToString]="languageToString">
-          <hlm-select-trigger class="w-full">
-            <hlm-select-value />
-          </hlm-select-trigger>
-          <hlm-select-content *hlmSelectPortal>
-            <hlm-select-item value="en">English</hlm-select-item>
-            <hlm-select-item value="de">Deutsch</hlm-select-item>
-            <hlm-select-item value="es">Español</hlm-select-item>
-          </hlm-select-content>
-        </hlm-select>
-      </div>
-
-      <button hlmBtn class="mt-2 w-full" type="submit" [disabled]="form.invalid" icon="fa-solid fa-check" [loading]="isSaving()">
-        {{ 'settings.save' | translate }}
-      </button>
-    </form>
+          <span
+            class="[font-size:var(--fs-body-xs)] [font-weight:var(--weight-medium)] text-(--color-error,#c0392b)"
+          >
+            {{ "settings.deleteAccount" | translate }}
+          </span>
+          <ds-icon name="chevron-right" [size]="16" [color]="'var(--color-error, #c0392b)'" />
+        </button>
+      </ds-card>
+    </ng-template>
   </main>
 </div>

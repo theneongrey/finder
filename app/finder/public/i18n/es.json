@@ -6,13 +6,35 @@
   },
   "settings": {
     "title": "Configuración",
+    "profile": "Perfil",
+    "emailVerified": "Correo verificado",
     "name": "Nombre",
     "namePlaceholder": "Tu nombre",
     "email": "Correo electrónico",
     "language": "Idioma",
     "save": "Guardar",
     "saveSuccess": "Tu perfil ha sido actualizado.",
-    "saveError": "No se pudo actualizar tu perfil. Por favor, inténtalo de nuevo."
+    "saveError": "No se pudo actualizar tu perfil. Por favor, inténtalo de nuevo.",
+    "logout": "Cerrar sesión",
+    "deleteAccount": "Eliminar cuenta",
+    "notifications": {
+      "title": "Notificaciones por correo",
+      "off": "No",
+      "favOnly": "Favs",
+      "all": "Todas",
+      "pollClosed": "Encuesta cerrada",
+      "pollClosedSub": "Te avisamos cuando una encuesta termina.",
+      "pollReopened": "Encuesta reabierta",
+      "pollReopenedSub": "Notificación cuando una encuesta vuelve a abrirse.",
+      "newComment": "Nuevo comentario",
+      "newCommentSub": "Alguien dejó un comentario en una encuesta tuya.",
+      "accessChanged": "Acceso actualizado",
+      "accessChangedSub": "Tu rol o acceso en una encuesta fue modificado.",
+      "pollShared": "Invitado a una encuesta",
+      "pollSharedSub": "Alguien te añadió a una de sus encuestas.",
+      "pollUpdated": "Encuesta actualizada",
+      "pollUpdatedSub": "Las opciones o la pregunta de una encuesta cambiaron."
+    }
   },
   "auth": {
     "login": {

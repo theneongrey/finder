@@ -6,13 +6,35 @@
   },
   "settings": {
     "title": "Einstellungen",
+    "profile": "Profil",
+    "emailVerified": "E-Mail bestätigt",
     "name": "Name",
     "namePlaceholder": "Dein Name",
     "email": "E-Mail-Adresse",
     "language": "Sprache",
     "save": "Speichern",
     "saveSuccess": "Dein Profil wurde aktualisiert.",
-    "saveError": "Dein Profil konnte nicht aktualisiert werden. Bitte versuche es erneut."
+    "saveError": "Dein Profil konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+    "logout": "Abmelden",
+    "deleteAccount": "Konto löschen",
+    "notifications": {
+      "title": "E-Mail-Benachrichtigungen",
+      "off": "Aus",
+      "favOnly": "Favs",
+      "all": "Alle",
+      "pollClosed": "Umfrage beendet",
+      "pollClosedSub": "Meldung, wenn eine Umfrage abgeschlossen wird.",
+      "pollReopened": "Wieder geöffnet",
+      "pollReopenedSub": "Bescheid, wenn eine Umfrage nochmal aufgeht.",
+      "newComment": "Neuer Kommentar",
+      "newCommentSub": "Jemand hat in einer deiner Umfragen etwas geschrieben.",
+      "accessChanged": "Zugriff geändert",
+      "accessChangedSub": "Deine Rolle oder dein Zugriff auf eine Umfrage wurde angepasst.",
+      "pollShared": "Zur Umfrage eingeladen",
+      "pollSharedSub": "Jemand hat dich zu einer Umfrage hinzugefügt.",
+      "pollUpdated": "Umfrage aktualisiert",
+      "pollUpdatedSub": "Optionen oder Frage in einer Umfrage haben sich geändert."
+    }
   },
   "auth": {
     "login": {

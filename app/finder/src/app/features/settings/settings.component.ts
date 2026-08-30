@@ -1,69 +1,85 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Events } from '@ngrx/signals/events';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NgTemplateOutlet } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map } from 'rxjs';
+import { Router } from '@angular/router';
 import { UserStore } from '@common/data/user.store';
-import { profileUpdateFinished } from '@common/data/user-profile.feature';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { toast } from '@spartan-ng/brain/sonner';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
-import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { TitleBarService } from '@common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   getStoredLanguage,
+  LANGUAGE_OPTIONS,
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
 } from '@common/i18n/languages';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
+import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsSegmentedControlComponent, SegmentOption } from '@ds/segmented-control/ds-segmented-control.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { NotificationValue } from '@common/models/notification-setting.model';
 
 @Component({
   selector: 'app-settings',
   imports: [
+    NgTemplateOutlet,
     ReactiveFormsModule,
-    HlmButton,
-    HlmInput,
-    ...HlmSelectImports,
     TitleBarComponent,
-    UserAvatarComponent,
     TranslatePipe,
+    UserAvatarComponent,
+    DsInputComponent,
+    DsSegmentedControlComponent,
+    DsCardComponent,
+    DsIconComponent,
   ],
   templateUrl: './settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {
-  private userStore = inject(UserStore);
-  private translateService = inject(TranslateService);
-  private events = inject(Events);
+  private readonly userStore = inject(UserStore);
+  private readonly translateService = inject(TranslateService);
+  private readonly router = inject(Router);
 
-  user = this.userStore.user;
-  isSaving = signal(false);
+  readonly isDesktop = toSignal(
+    inject(BreakpointObserver)
+      .observe('(min-width: 680px)')
+      .pipe(map(r => r.matches)),
+    { initialValue: false },
+  );
 
-  languageToString = (code: string): string => {
-    const labels: Record<string, string> = {
-      en: 'English',
-      de: 'Deutsch',
-      es: 'Español',
-    };
-    return labels[code] ?? code;
-  };
+  readonly user = this.userStore.user;
+  readonly selectedLanguage = signal<SupportedLanguage>(getStoredLanguage());
+  readonly notifications = this.userStore.notifications;
+  readonly notificationsLoading = this.userStore.notificationsLoading;
 
-  form = new FormGroup({
+  protected readonly languageOptions = LANGUAGE_OPTIONS;
+
+  private readonly notifOff = this.translateService.translate('settings.notifications.off');
+  private readonly notifAll = this.translateService.translate('settings.notifications.all');
+
+  readonly notificationOptions = computed<SegmentOption[]>(() => [
+    { value: 'off', label: this.notifOff() },
+    { value: 'favOnly', label: '-only', icon: 'heart' },
+    { value: 'all', label: this.notifAll() },
+  ]);
+
+  readonly form = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl({ value: '', disabled: true }),
-    language: new FormControl<SupportedLanguage>(getStoredLanguage()),
   });
 
   constructor() {
@@ -71,6 +87,8 @@ export class SettingsComponent {
 
     const title = this.translateService.translate('settings.title');
     effect(() => titleService.setTitle(title()));
+
+    this.userStore.loadNotifications();
 
     effect(() => {
       const user = this.user();
@@ -80,40 +98,37 @@ export class SettingsComponent {
         )
           ? (user.language as SupportedLanguage)
           : getStoredLanguage();
-        this.form.patchValue({ name: user.name, email: user.email, language });
+        this.form.patchValue({ name: user.name });
+        this.selectedLanguage.set(language);
       }
     });
 
-    this.form.controls.language.valueChanges
-      .pipe(takeUntilDestroyed())
-      .subscribe((language) => {
-        if (language) {
-          this.translateService.use(language);
-        }
-      });
-
-    this.events
-      .on(profileUpdateFinished)
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ payload }) => {
-        this.isSaving.set(false);
-        const message = this.translateService.instant(
-          payload.success ? 'settings.saveSuccess' : 'settings.saveError',
-        );
-        if (payload.success) {
-          toast.success(message);
-        } else {
-          toast.error(message);
-        }
-      });
   }
 
-  save() {
+  onLanguageChange(value: string): void {
+    const lang = value as SupportedLanguage;
+    this.selectedLanguage.set(lang);
+    this.translateService.use(lang);
+    this.saveProfile();
+  }
+
+  onNameBlur(): void {
+    this.saveProfile();
+  }
+
+  onNotificationChange(id: number, value: string): void {
+    this.userStore.updateNotification({ id, value: value as NotificationValue });
+  }
+
+  logout(): void {
+    void this.router.navigate(['/logout']);
+  }
+
+  private saveProfile(): void {
     if (this.form.valid) {
-      this.isSaving.set(true);
       this.userStore.updateProfile({
         name: this.form.controls.name.value ?? '',
-        language: this.form.controls.language.value ?? getStoredLanguage(),
+        language: this.selectedLanguage(),
       });
     }
   }

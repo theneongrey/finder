@@ -37,7 +37,9 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
   // ── helpers ────────────────────────────────────────────────────────────────
 
   async function openShareDrawer(page: import('@playwright/test').Page) {
-    const shareBtn = page.locator('[data-testid="share-btn"]').first();
+    // :visible filters to the correct button for the current viewport
+    // (poll-item renders both mobile and desktop share-btn; only one is visible)
+    const shareBtn = page.locator('[data-testid="share-btn"]:visible').first();
     await expect(shareBtn).toBeVisible();
     await shareBtn.click();
     await expect(page.locator('.ds-sheet-panel')).toBeVisible();
@@ -46,7 +48,9 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
   async function closeShareDrawer(page: import('@playwright/test').Page) {
     const panel = page.locator('.ds-sheet-panel');
     if (await panel.count() > 0 && await panel.isVisible()) {
-      await page.locator('[data-testid="bottom-sheet-close-btn"] button').click();
+      // ds-button has display:contents so descendant selectors through it don't work;
+      // the close button is the only <button> inside .ds-sheet-header
+      await page.locator('.ds-sheet-panel .ds-sheet-header button').click();
       await expect(panel).not.toBeVisible();
     }
   }
@@ -56,7 +60,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
   async function removeUser2IfMember(page: import('@playwright/test').Page) {
     await page.goto('/polls');
     await page.waitForLoadState('networkidle');
-    await page.locator('[data-testid="share-btn"]').first().click();
+    await page.locator('[data-testid="share-btn"]:visible').first().click();
     await expect(page.locator('.ds-sheet-panel')).toBeVisible();
 
     const membersTab = page.locator('.ds-sheet-panel ds-tabs button.ds-tab')
@@ -67,10 +71,10 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
       const user2Row = page.locator('.ds-sheet-panel app-share-members-list .relative')
         .filter({ hasText: USER2 });
       if (await user2Row.count() > 0) {
-        await user2Row.locator('[data-testid="member-remove-btn"] button').click();
-        // Confirm if the inline confirm row appears
-        const confirmBtn = page.locator('.ds-sheet-panel app-share-members-list ds-button button')
-          .filter({ hasText: /entfernen|remove/i }).first();
+        // ds-button has display:contents; target the last <button> in the row (remove is rightmost)
+        await user2Row.locator('button').last().click();
+        // Confirm inline overlay; scope to user2Row so we don't match other rows
+        const confirmBtn = user2Row.locator('button').filter({ hasText: /entfernen|remove/i });
         if (await confirmBtn.isVisible({ timeout: 2_000 }).catch(() => false)) {
           await confirmBtn.click();
         }
@@ -113,7 +117,11 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
     test('Einladen tab — email input and invite button are visible', async ({ page }) => {
       await openShareDrawer(page);
       await expect(page.locator('.ds-sheet-panel ds-input input')).toBeVisible();
-      await expect(page.locator('[data-testid="share-invite-btn"] button')).toBeVisible();
+      // hlmToggleGroup adds flex to its container too, so .flex button is ambiguous;
+      // use accessible name to target the invite button specifically
+      await expect(
+        page.locator('.ds-sheet-panel app-share-invite-form').getByRole('button', { name: /einladen|invite/i }),
+      ).toBeVisible();
     });
 
     test('Einladen tab — visibility segmented-control and share-link copy button are visible', async ({ page }) => {
@@ -122,13 +130,18 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
       await expect(
         page.locator('.ds-sheet-panel app-share-access-tab ds-segmented-control'),
       ).toBeVisible();
-      // Share-link copy button
-      await expect(page.locator('[data-testid="share-link-copy-btn"] button')).toBeVisible();
+      // The link card is CSS-hidden (max-height: 0) until "Open" ("Offen") is selected.
+      // Scope to ds-segmented-control (display: block, not contents) so traversal works.
+      // The app runs in English in Playwright's headless Chromium; regex covers both locales.
+      await page.locator('.ds-sheet-panel app-share-access-tab ds-segmented-control button.ds-seg-btn')
+        .filter({ hasText: /offen|open/i }).click();
+      // Share-link copy button appears inside .link-card-outer once public is selected
+      await expect(page.locator('.ds-sheet-panel app-share-access-tab .link-card-outer button')).toBeVisible();
     });
 
     test('close button (ds-icon-button) closes the sheet', async ({ page }) => {
       await openShareDrawer(page);
-      await page.locator('[data-testid="bottom-sheet-close-btn"] button').click();
+      await page.locator('.ds-sheet-panel .ds-sheet-header button').click();
       await expect(page.locator('.ds-sheet-panel')).not.toBeVisible();
     });
 
@@ -173,14 +186,16 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
     test('close button closes the drawer on desktop', async ({ page }) => {
       await openShareDrawer(page);
-      await page.locator('[data-testid="bottom-sheet-close-btn"] button').click();
+      await page.locator('.ds-sheet-panel .ds-sheet-header button').click();
       await expect(page.locator('.ds-sheet-panel')).not.toBeVisible();
     });
 
     test('Einladen tab content is accessible on desktop', async ({ page }) => {
       await openShareDrawer(page);
       await expect(page.locator('.ds-sheet-panel ds-input input')).toBeVisible();
-      await expect(page.locator('[data-testid="share-invite-btn"] button')).toBeVisible();
+      await expect(
+        page.locator('.ds-sheet-panel app-share-invite-form').getByRole('button', { name: /einladen|invite/i }),
+      ).toBeVisible();
     });
   });
 
@@ -213,7 +228,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
       // Invite USER2 unconditionally — beforeAll guarantees they are not yet a member
       await page.locator('.ds-sheet-panel ds-input input').fill(USER2);
-      await page.locator('[data-testid="share-invite-btn"] button').click();
+      await page.locator('.ds-sheet-panel app-share-invite-form').getByRole('button', { name: /einladen|invite/i }).click();
 
       // Members tab must appear once the invite succeeds
       const membersTab = page.locator('.ds-sheet-panel ds-tabs button.ds-tab')
@@ -228,14 +243,13 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
         .filter({ hasText: USER2 });
       await expect(user2Row.locator('app-user-avatar').first()).toBeVisible();
 
-      // Clean up — scope to USER2's row to avoid touching other members
-      await user2Row.locator('[data-testid="member-remove-btn"] button').click();
-      const confirmBtn = page.locator('.ds-sheet-panel app-share-members-list ds-button button')
-        .filter({ hasText: /entfernen|remove/i }).first();
-      if (await confirmBtn.isVisible({ timeout: 2_000 }).catch(() => false)) {
-        await confirmBtn.click();
-      }
-      await expect(user2Row).not.toBeVisible({ timeout: 8_000 });
+      // Clean up — scope to USER2's row; remove button is last <button> in the flex row
+      await user2Row.locator('button').last().click();
+      // Confirm overlay: ds-button renders as display:contents; the inner <button> holds the text
+      const confirmBtn = user2Row.locator('button').filter({ hasText: /entfernen|remove/i });
+      await expect(confirmBtn).toBeVisible({ timeout: 5_000 });
+      await confirmBtn.click();
+      await expect(user2Row).not.toBeVisible({ timeout: 10_000 });
     });
   });
 });

@@ -7,6 +7,7 @@ public static class SetupExtensions
     public static IServiceCollection AddUserServices(this IServiceCollection services)
     {
         services.AddScoped<ProfileService>();
+        services.AddScoped<NotificationSettingsService>();
 
         return services;
     }

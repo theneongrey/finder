@@ -1,11 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { NgTemplateOutlet } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map } from 'rxjs';
+import { Router } from '@angular/router';
 import { Events } from '@ngrx/signals/events';
 import { UserStore } from '@common/data/user.store';
 import { profileUpdateFinished } from '@common/data/user-profile.feature';
@@ -27,12 +32,15 @@ import {
 } from '@common/i18n/languages';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
-import { DsSegmentedControlComponent } from '@ds/segmented-control/ds-segmented-control.component';
+import { DsSegmentedControlComponent, SegmentOption } from '@ds/segmented-control/ds-segmented-control.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
+import { HlmSkeleton } from '@spartan-ng/helm/skeleton';
+import { NotificationValue } from '@common/models/notification-setting.model';
 
 @Component({
   selector: 'app-settings',
   imports: [
+    NgTemplateOutlet,
     ReactiveFormsModule,
     TitleBarComponent,
     TranslatePipe,
@@ -40,6 +48,7 @@ import { DsCardComponent } from '@ds/card/ds-card.component';
     DsInputComponent,
     DsSegmentedControlComponent,
     DsCardComponent,
+    HlmSkeleton,
   ],
   templateUrl: './settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,11 +57,30 @@ export class SettingsComponent {
   private readonly userStore = inject(UserStore);
   private readonly translateService = inject(TranslateService);
   private readonly events = inject(Events);
+  private readonly router = inject(Router);
+
+  readonly isDesktop = toSignal(
+    inject(BreakpointObserver)
+      .observe('(min-width: 680px)')
+      .pipe(map(r => r.matches)),
+    { initialValue: false },
+  );
 
   readonly user = this.userStore.user;
   readonly selectedLanguage = signal<SupportedLanguage>(getStoredLanguage());
+  readonly notifications = this.userStore.notifications;
+  readonly notificationsLoading = this.userStore.notificationsLoading;
 
   protected readonly languageOptions = LANGUAGE_OPTIONS;
+
+  private readonly notifOff = this.translateService.translate('settings.notifications.off');
+  private readonly notifAll = this.translateService.translate('settings.notifications.all');
+
+  readonly notificationOptions = computed<SegmentOption[]>(() => [
+    { value: 'off', label: this.notifOff() },
+    { value: 'favOnly', label: '-only', icon: 'heart' },
+    { value: 'all', label: this.notifAll() },
+  ]);
 
   readonly form = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -63,6 +91,8 @@ export class SettingsComponent {
 
     const title = this.translateService.translate('settings.title');
     effect(() => titleService.setTitle(title()));
+
+    this.userStore.loadNotifications();
 
     effect(() => {
       const user = this.user();
@@ -101,6 +131,14 @@ export class SettingsComponent {
 
   onNameBlur(): void {
     this.saveProfile();
+  }
+
+  onNotificationChange(id: number, value: string): void {
+    this.userStore.updateNotification({ id, value: value as NotificationValue });
+  }
+
+  logout(): void {
+    void this.router.navigate(['/logout']);
   }
 
   private saveProfile(): void {

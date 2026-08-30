@@ -14,7 +14,27 @@
     "language": "Language",
     "save": "Save",
     "saveSuccess": "Your profile has been updated.",
-    "saveError": "Your profile could not be updated. Please try again."
+    "saveError": "Your profile could not be updated. Please try again.",
+    "logout": "Log out",
+    "deleteAccount": "Delete account",
+    "notifications": {
+      "title": "Email Notifications",
+      "off": "Off",
+      "favOnly": "Favs",
+      "all": "All",
+      "pollClosed": "Poll ended",
+      "pollClosedSub": "Heads up when a poll you're part of wraps up.",
+      "pollReopened": "Poll back open",
+      "pollReopenedSub": "Know when a closed poll gets another chance.",
+      "newComment": "New comment",
+      "newCommentSub": "Someone dropped a comment on a poll you're in.",
+      "accessChanged": "Access updated",
+      "accessChangedSub": "Your role or access rights on a poll changed.",
+      "pollShared": "Invited to a poll",
+      "pollSharedSub": "Someone added you to one of their polls.",
+      "pollUpdated": "Poll updated",
+      "pollUpdatedSub": "Options or the question on a poll you're in changed."
+    }
   },
   "auth": {
     "login": {

@@ -16,18 +16,20 @@ public class LoginService
 {
     private const int MaxRetries = 3;
     private readonly TimeSpan _loginTimeout = TimeSpan.FromHours(1);
-    
+
     private readonly AppDbContext _dbContext;
     private readonly MailService _mailService;
     private readonly UserService _userService;
+    private readonly SeedingService _seedingService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly LoginOptions _loginOptions;
 
-    public LoginService(AppDbContext dbContext, MailService mailService, UserService userService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions)
+    public LoginService(AppDbContext dbContext, MailService mailService, UserService userService, SeedingService seedingService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions)
     {
         _dbContext = dbContext;
         _mailService = mailService;
         _userService = userService;
+        _seedingService = seedingService;
         _httpContextAccessor = httpContextAccessor;
         _loginOptions = loginOptions.Value;
     }
@@ -91,7 +93,14 @@ public class LoginService
             new AuthenticationProperties { IsPersistent = true });
 
         var redirectUrl = loginToken.RedirectUrl;
-        
+
+        var isFirstLogin = !loginToken.Person.HasLoggedIn;
+        if (isFirstLogin)
+        {
+            await _seedingService.SeedNotificationSettingsForPerson(loginToken.Person.Id);
+        }
+
+        loginToken.Person.HasLoggedIn = true;
         _dbContext.Remove(loginToken);
         await _dbContext.SaveChangesAsync();
 

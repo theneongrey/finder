@@ -116,7 +116,7 @@ public class LoginService
     public async Task<Result> RequestLoginMail(string email, string? redirectUrl)
     {
         var cleanEmail = email.Trim().ToLower();
-        
+
         var person = await _userService.GetOrCreatePersonByEmail(cleanEmail, true);
         if (!person.IsSuccess)
         {

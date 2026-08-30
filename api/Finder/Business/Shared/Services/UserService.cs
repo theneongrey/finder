@@ -9,13 +9,15 @@ public class UserService
 {
     private readonly AppDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly EmailValidationService _emailValidationService;
     private Guid? _cachedId;
     private Result<Person>? _cachedUser;
 
-    public UserService(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public UserService(AppDbContext dbContext, IHttpContextAccessor httpContextAccessor, EmailValidationService emailValidationService)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
+        _emailValidationService = emailValidationService;
     }
     
     public async Task<Result<Person>> GetUser()
@@ -52,7 +54,13 @@ public class UserService
             {
                 return Result<Person>.Fail(403);
             }
-            
+
+            var validationResult = await _emailValidationService.ValidateEmailAsync(email);
+            if (!validationResult.IsSuccess)
+            {
+                return Result<Person>.Fail(validationResult.Code);
+            }
+
             person = new Person
             {
                 Id = Guid.NewGuid(),

@@ -10,7 +10,7 @@ public class EmailValidationService
 
     private static readonly TimeSpan BlocklistTtl = TimeSpan.FromDays(7);
 
-    private record BlocklistSnapshot(HashSet<string> Domains, DateTime LoadedAt);
+    private record BlocklistSnapshot(HashSet<string> Domains, DateTime LoadedAt, bool LoadSucceeded);
 
     private volatile BlocklistSnapshot? _snapshot;
     private readonly SemaphoreSlim _lock = new(1, 1);
@@ -37,6 +37,11 @@ public class EmailValidationService
         var domain = email[(atIndex + 1)..].ToLowerInvariant();
 
         var snapshot = await EnsureBlocklistAsync();
+        if (!snapshot.LoadSucceeded)
+        {
+            return Result.Fail(403);
+        }
+
         if (snapshot.Domains.Contains(domain))
         {
             return Result.Fail(403);
@@ -93,18 +98,19 @@ public class EmailValidationService
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             _logger.LogInformation("Loaded disposable email blocklist with {Count} domains", domains.Count);
-            return new BlocklistSnapshot(domains, DateTime.UtcNow);
+            return new BlocklistSnapshot(domains, DateTime.UtcNow, LoadSucceeded: true);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Failed to load disposable email blocklist; keeping existing data");
 
-            // Return the existing snapshot if available, otherwise an empty one.
-            // Set LoadedAt to now so we don't hammer the URL on every request.
+            // Keep old data if available (refresh failure is silent).
+            // If this is the first ever load, mark as failed so validation rejects emails
+            // until the list can be fetched. Set LoadedAt to now to avoid hammering the URL.
             var existing = _snapshot;
             return existing != null
-                ? new BlocklistSnapshot(existing.Domains, DateTime.UtcNow)
-                : new BlocklistSnapshot([], DateTime.UtcNow);
+                ? new BlocklistSnapshot(existing.Domains, DateTime.UtcNow, LoadSucceeded: true)
+                : new BlocklistSnapshot([], DateTime.UtcNow, LoadSucceeded: false);
         }
     }
 }

@@ -75,6 +75,22 @@ test.describe('CreatePoll', () => {
         await input.fill(longText);
         await expect(input).toHaveValue(longText);
       });
+
+      test('submit button is disabled when an option title exceeds 100 chars', async ({ page }) => {
+        await page.locator('[data-testid="question-input"] input').fill('Test question');
+        const input = page.locator('app-option-card').first().locator('input').first();
+        await input.fill('a'.repeat(101));
+        await expect(page.locator('[data-testid="wizard-cta"] button').first()).toBeDisabled();
+      });
+
+      test('submit button re-enables when title is trimmed back within 100 chars', async ({ page }) => {
+        await page.locator('[data-testid="question-input"] input').fill('Test question');
+        const input = page.locator('app-option-card').first().locator('input').first();
+        await input.fill('a'.repeat(101));
+        await expect(page.locator('[data-testid="wizard-cta"] button').first()).toBeDisabled();
+        await input.fill('a'.repeat(100));
+        await expect(page.locator('[data-testid="wizard-cta"] button').first()).not.toBeDisabled();
+      });
     });
 
     test('shows two pre-seeded editable option cards', async ({ page }) => {

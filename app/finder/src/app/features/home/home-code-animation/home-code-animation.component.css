@@ -23,7 +23,10 @@
 }
 
 @media (min-width: 830px) {
-  .auth-card { border-radius: 26px; padding: 38px 36px; }
+  .auth-card {
+    border-radius: 26px;
+    padding: 38px 36px;
+  }
 }
 
 .auth-glow {
@@ -33,11 +36,17 @@
   width: 240px;
   height: 240px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(31, 122, 140, 0.5), rgba(31, 122, 140, 0) 70%);
+  background: radial-gradient(
+    circle,
+    rgba(31, 122, 140, 0.5),
+    rgba(31, 122, 140, 0) 70%
+  );
   pointer-events: none;
 }
 
-.auth-content { position: relative; }
+.auth-content {
+  position: relative;
+}
 
 .auth-eyebrow {
   font-size: var(--fs-micro);
@@ -57,7 +66,11 @@
 }
 
 @media (min-width: 830px) {
-  .auth-headline { font-size: 34px; letter-spacing: -1px; margin-top: 14px; }
+  .auth-headline {
+    font-size: 34px;
+    letter-spacing: -1px;
+    margin-top: 14px;
+  }
 }
 
 .auth-sub {
@@ -69,7 +82,11 @@
 }
 
 @media (min-width: 830px) {
-  .auth-sub { font-size: 16px; margin-top: 14px; max-width: 400px; }
+  .auth-sub {
+    font-size: 16px;
+    margin-top: 14px;
+    max-width: 400px;
+  }
 }
 
 .code-boxes {
@@ -94,8 +111,17 @@
 }
 
 @media (min-width: 830px) {
-  .code-boxes { gap: 8px; margin-top: 26px; }
-  .code-box { width: 44px; flex: none; height: 54px; border-radius: 13px; font-size: 22px; }
+  .code-boxes {
+    gap: 8px;
+    margin-top: 26px;
+  }
+  .code-box {
+    width: 44px;
+    flex: none;
+    height: 54px;
+    border-radius: 13px;
+    font-size: 22px;
+  }
 }
 
 .code-hint {
@@ -140,7 +166,9 @@
     gap: 0;
     border-radius: 22px;
     padding: 24px;
-    transition: transform 220ms cubic-bezier(0.22, 0.7, 0.3, 1), box-shadow 220ms ease;
+    transition:
+      transform 220ms cubic-bezier(0.22, 0.7, 0.3, 1),
+      box-shadow 220ms ease;
   }
   .feature-card:hover {
     transform: translateY(-4px);
@@ -159,7 +187,11 @@
 }
 
 @media (min-width: 830px) {
-  .feature-icon { width: 40px; height: 40px; border-radius: 13px; }
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+  }
 }
 
 .feature-title {
@@ -171,7 +203,10 @@
 }
 
 @media (min-width: 830px) {
-  .feature-title { font-size: 17.5px; margin-top: 16px; }
+  .feature-title {
+    font-size: 17.5px;
+    margin-top: 16px;
+  }
 }
 
 .feature-text {
@@ -183,5 +218,8 @@
 }
 
 @media (min-width: 830px) {
-  .feature-text { font-size: var(--fs-body-xs); margin-top: 8px; }
+  .feature-text {
+    font-size: var(--fs-body-xs);
+    margin-top: 8px;
+  }
 }

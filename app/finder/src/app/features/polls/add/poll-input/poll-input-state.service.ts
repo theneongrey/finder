@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { PollListStore } from '../../_shared/data/poll-list.store';
@@ -121,7 +121,7 @@ export class PollInputStateService {
     );
   });
 
-  readonly isPollCreating = computed(() => this.pollCreating());
+  readonly isPollCreating: Signal<boolean> = this.pollCreating;
 
   private editDataLoaded = false;
   readonly editLoading = signal(true);

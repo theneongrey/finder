@@ -54,7 +54,7 @@ export class ShareContentComponent {
 
   memberCount = computed(() => this.otherMembers().length);
   hasOtherMembers = computed(() => this.otherMembers().length > 0);
-  sharedWithEmails = computed(() => this.sharedWith().map(m => m.email));
+  sharedWithEmails = computed(() => this.sharedWith().map((m) => m.email));
   isPublic = computed(
     () => this.selectedVisibility() === VisibilityType.VisibleForEverybody,
   );

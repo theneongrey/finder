@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
 
 const PERSON_PALETTE = [
@@ -14,7 +19,9 @@ const PERSON_PALETTE = [
 
 function nameHash(name: string): number {
   let h = 0;
-  for (let i = 0; i < name.length; i++) { h = (h * 31 + name.charCodeAt(i)) >>> 0; }
+  for (let i = 0; i < name.length; i++) {
+    h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  }
   return h;
 }
 
@@ -30,16 +37,24 @@ export class UserAvatarComponent {
   size = input<'normal' | 'large' | 'xlarge' | number>('normal');
   voted = input<boolean | undefined>(undefined);
 
-  protected readonly initial = computed(() => this.user().name?.[0]?.toUpperCase() ?? '');
+  protected readonly initial = computed(
+    () => this.user().name?.[0]?.toUpperCase() ?? '',
+  );
   protected readonly palette = computed(() => {
     const idx = nameHash(this.user().name ?? '') % PERSON_PALETTE.length;
     return PERSON_PALETTE[idx];
   });
   protected readonly avatarSize = computed(() => {
     const s = this.size();
-    if (typeof s === 'number') { return s; }
-    if (s === 'normal') { return 34; }
-    if (s === 'large') { return 40; }
+    if (typeof s === 'number') {
+      return s;
+    }
+    if (s === 'normal') {
+      return 34;
+    }
+    if (s === 'large') {
+      return 40;
+    }
     return 64;
   });
 }

@@ -1,15 +1,23 @@
-<hlm-popover sideOffset="8" align="end" [state]="popoverOpen()" (stateChanged)="popoverOpen.set($event)">
+<hlm-popover
+  sideOffset="8"
+  align="end"
+  [state]="popoverOpen()"
+  (stateChanged)="popoverOpen.set($event)"
+>
   <span hlmPopoverTrigger class="inline-flex">
     <ds-button variant="subtle" size="sm" icon="comment">
-      {{ 'project.vote.addComment' | translate }}
+      {{ "project.vote.addComment" | translate }}
     </ds-button>
   </span>
-  <hlm-popover-content class="!w-80 !p-0 !bg-transparent !shadow-none !ring-0" *hlmPopoverPortal="let ctx">
+  <hlm-popover-content
+    class="!w-80 !bg-transparent !p-0 !shadow-none !ring-0"
+    *hlmPopoverPortal="let ctx"
+  >
     <div
-      class="flex flex-col gap-3 rounded-xl p-4 bg-[var(--surface-card)] shadow-[0_8px_24px_rgba(0,0,0,.12),_0_1px_4px_rgba(0,0,0,.06)] border border-[var(--border-hairline-soft)]"
+      class="flex flex-col gap-3 rounded-xl border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] p-4 shadow-[0_8px_24px_rgba(0,0,0,.12),_0_1px_4px_rgba(0,0,0,.06)]"
     >
       <p class="m-0 text-sm font-semibold text-[var(--text-primary)]">
-        {{ 'project.vote.commentTitle' | translate }}
+        {{ "project.vote.commentTitle" | translate }}
       </p>
       <ds-textarea
         [autoResize]="true"
@@ -18,12 +26,12 @@
         [maxlength]="limits.commentContentLength"
         [(ngModel)]="commentText"
       />
-      <div class="flex gap-2 justify-end">
+      <div class="flex justify-end gap-2">
         <ds-button variant="ghost" size="sm" (click)="cancelComment()">
-          {{ 'project.common.cancel' | translate }}
+          {{ "project.common.cancel" | translate }}
         </ds-button>
         <ds-button variant="primary" size="sm" (click)="submitComment()">
-          {{ 'project.vote.submitComment' | translate }}
+          {{ "project.vote.submitComment" | translate }}
         </ds-button>
       </div>
     </div>

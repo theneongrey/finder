@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-4 pt-5 pb-32 lg:pb-6 max-w-[800px] w-full">
+<div class="flex w-full max-w-[800px] flex-col gap-4 pt-5 pb-32 lg:pb-6">
   <app-poll-question-card
     [mode]="mode()"
     [question]="question()"
@@ -46,7 +46,10 @@
 </div>
 
 @if (!hideCta()) {
-  <div data-testid="submit-bar" class="fixed bottom-0 left-0 w-full z-50 flex justify-center pt-[14px] px-[18px] pb-[22px] bg-[linear-gradient(to_top,var(--bg-app)_46%,rgba(244,241,236,0)_100%)]">
+  <div
+    data-testid="submit-bar"
+    class="fixed bottom-0 left-0 z-50 flex w-full justify-center bg-[linear-gradient(to_top,var(--bg-app)_46%,rgba(244,241,236,0)_100%)] px-[18px] pt-[14px] pb-[22px]"
+  >
     <ds-button
       variant="primary"
       [fullWidth]="true"
@@ -54,7 +57,11 @@
       [icon]="mode() !== 'edit' ? 'send' : undefined"
       (click)="formSubmit.emit()"
     >
-      {{ mode() !== 'edit' ? ('project.pollInput.createPoll' | translate) : ('project.pollInput.updatePoll' | translate) }}
+      {{
+        mode() !== "edit"
+          ? ("project.pollInput.createPoll" | translate)
+          : ("project.pollInput.updatePoll" | translate)
+      }}
     </ds-button>
   </div>
 }

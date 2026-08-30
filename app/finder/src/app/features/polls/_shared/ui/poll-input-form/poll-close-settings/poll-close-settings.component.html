@@ -1,22 +1,31 @@
 <ds-card [accentBorder]="false" [padding]="16">
   @if (!isClosed()) {
-    <div class="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:gap-4 lg:flex-wrap">
-      <p class="label flex-none text-[color:var(--text-muted)] tracking-[var(--tracking-eyebrow-lg)]">
-        {{ 'project.pollInput.autoClose' | translate }}
+    <div
+      class="flex flex-col gap-2.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4"
+    >
+      <p
+        class="label flex-none tracking-[var(--tracking-eyebrow-lg)] text-[color:var(--text-muted)]"
+      >
+        {{ "project.pollInput.autoClose" | translate }}
       </p>
-      <div class="flex flex-col gap-2.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-[7px]">
+      <div
+        class="flex flex-col gap-2.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-[7px]"
+      >
         <div class="flex flex-wrap gap-[7px]">
           @for (preset of deadlinePresets; track preset.id) {
             <ds-button
               size="sm"
               [variant]="selectedDeadline() === preset.id ? 'soft' : 'neutral'"
               (click)="onDeadlinePreset(preset.id)"
-            >{{ preset.labelKey | translate }}</ds-button>
+              >{{ preset.labelKey | translate }}</ds-button
+            >
           }
         </div>
         <span class="flex items-center gap-2.5">
-          <span class="text-[12.5px] font-bold flex-none text-[color:var(--text-muted)]">
-            {{ 'project.pollInput.autoCloseOr' | translate }}
+          <span
+            class="flex-none text-[12.5px] font-bold text-[color:var(--text-muted)]"
+          >
+            {{ "project.pollInput.autoCloseOr" | translate }}
           </span>
           <ds-input
             type="datetime-local"
@@ -31,8 +40,8 @@
         </span>
       </div>
     </div>
-    <p class="text-[12px] mt-[7px] lg:hidden text-[color:var(--text-muted)]">
-      {{ 'project.pollInput.autoCloseCustomHint' | translate }}
+    <p class="mt-[7px] text-[12px] text-[color:var(--text-muted)] lg:hidden">
+      {{ "project.pollInput.autoCloseCustomHint" | translate }}
     </p>
   }
 
@@ -40,24 +49,28 @@
     <!-- Anonymous voting — hidden, keeping code for later -->
     <button
       type="button"
-      class="flex items-center gap-3 w-full py-[11px] border-none bg-transparent text-left cursor-pointer"
+      class="flex w-full cursor-pointer items-center gap-3 border-none bg-transparent py-[11px] text-left"
       (click)="toggleAnonymousVoting()"
     >
-      <span class="flex-1 min-w-0">
-        <span class="block text-[14.5px] font-bold text-[color:var(--text-primary)]">
-          {{ 'project.pollInput.anonymousVoting' | translate }}
+      <span class="min-w-0 flex-1">
+        <span
+          class="block text-[14.5px] font-bold text-[color:var(--text-primary)]"
+        >
+          {{ "project.pollInput.anonymousVoting" | translate }}
         </span>
-        <span class="block text-[12.5px] mt-0.5 leading-[1.4] text-wrap-pretty text-[color:var(--text-muted)]">
-          {{ 'project.pollInput.anonymousVotingHint' | translate }}
+        <span
+          class="text-wrap-pretty mt-0.5 block text-[12.5px] leading-[1.4] text-[color:var(--text-muted)]"
+        >
+          {{ "project.pollInput.anonymousVotingHint" | translate }}
         </span>
       </span>
       <span
-        class="relative flex-none w-11 h-[26px] rounded-full transition-[background] duration-[180ms]"
+        class="relative h-[26px] w-11 flex-none rounded-full transition-[background] duration-[180ms]"
         [class.bg-[var(--accent)]]="anonymousVoting()"
         [class.bg-[rgba(20,24,28,.15)]]="!anonymousVoting()"
       >
         <span
-          class="absolute top-[3px] w-5 h-5 rounded-full bg-white shadow-[0_1px_4px_rgba(30,35,40,.28)] transition-[left] duration-200"
+          class="absolute top-[3px] h-5 w-5 rounded-full bg-white shadow-[0_1px_4px_rgba(30,35,40,.28)] transition-[left] duration-200"
           [class.left-[21px]]="anonymousVoting()"
           [class.left-[3px]]="!anonymousVoting()"
         ></span>
@@ -65,19 +78,30 @@
     </button>
   }
 
-  @if (mode() === 'edit') {
-    <div [class]="isClosed() ? 'pt-0' : 'pt-3 mt-2 border-t border-[rgba(20,24,28,.055)]'">
+  @if (mode() === "edit") {
+    <div
+      [class]="
+        isClosed() ? 'pt-0' : 'mt-2 border-t border-[rgba(20,24,28,.055)] pt-3'
+      "
+    >
       <div class="lg:flex lg:items-center lg:gap-4">
-        <div class="flex-1 min-w-0">
-          <p class="text-[14.5px] lg:text-[14px] font-bold text-[color:var(--text-primary)]">
+        <div class="min-w-0 flex-1">
+          <p
+            class="text-[14.5px] font-bold text-[color:var(--text-primary)] lg:text-[14px]"
+          >
             @if (isClosed()) {
-              {{ 'project.pollInput.pollClosedAt' | translate: { date: (closedAt() | date:'medium') } }}
+              {{
+                "project.pollInput.pollClosedAt"
+                  | translate: { date: (closedAt() | date: "medium") }
+              }}
             } @else {
-              {{ 'project.pollInput.closePollNowTitle' | translate }}
+              {{ "project.pollInput.closePollNowTitle" | translate }}
             }
           </p>
-          <p class="text-[12.5px] mt-0.5 leading-[1.4] text-wrap-pretty text-[color:var(--text-muted)]">
-            {{ 'project.pollInput.closePollNowHint' | translate }}
+          <p
+            class="text-wrap-pretty mt-0.5 text-[12.5px] leading-[1.4] text-[color:var(--text-muted)]"
+          >
+            {{ "project.pollInput.closePollNowHint" | translate }}
           </p>
         </div>
         @if (isClosed()) {
@@ -86,14 +110,16 @@
             icon="refresh"
             data-testid="reopen-poll-btn"
             (click)="reopenPoll.emit()"
-          >{{ 'project.pollInput.reopenPollBtn' | translate }}</ds-button>
+            >{{ "project.pollInput.reopenPollBtn" | translate }}</ds-button
+          >
         } @else {
           <ds-button
             variant="danger"
             icon="circle-minus"
             data-testid="close-poll-btn"
             (click)="closePollNow.emit()"
-          >{{ 'project.pollInput.closePollNowBtn' | translate }}</ds-button>
+            >{{ "project.pollInput.closePollNowBtn" | translate }}</ds-button
+          >
         }
       </div>
     </div>

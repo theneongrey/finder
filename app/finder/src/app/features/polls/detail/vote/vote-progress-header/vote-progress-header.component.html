@@ -4,7 +4,9 @@
     <div class="mb-3 flex items-center justify-between gap-2 md:hidden">
       <app-poll-type-badge [type]="optionType()" />
       @if (closeDateDisplay()) {
-        <span class="flex items-center gap-1.5 text-[12.5px] font-[var(--weight-semibold)] text-[var(--text-secondary)]">
+        <span
+          class="flex items-center gap-1.5 text-[12.5px] font-[var(--weight-semibold)] text-[var(--text-secondary)]"
+        >
           <ds-icon name="clock" [size]="13" />
           {{ closeDateDisplay() }}
         </span>
@@ -12,13 +14,17 @@
     </div>
 
     <div class="mb-2 flex items-baseline justify-between gap-2">
-      <span class="text-[13px] font-[var(--weight-bold)] text-[var(--text-primary)]">
+      <span
+        class="text-[13px] font-[var(--weight-bold)] text-[var(--text-primary)]"
+      >
         {{
           "project.vote.optionProgress"
             | translate: { current: currentIndex() + 1, total: total() }
         }}
       </span>
-      <span class="text-[12px] font-[var(--weight-semibold)] text-[var(--text-muted)]">
+      <span
+        class="text-[12px] font-[var(--weight-semibold)] text-[var(--text-muted)]"
+      >
         {{ progressPercent() }}&thinsp;%
       </span>
     </div>

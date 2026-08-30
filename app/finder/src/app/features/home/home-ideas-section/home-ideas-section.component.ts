@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  signal,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
 import { AvatarStackComponent } from '@smart/avatar-stack/avatar-stack.component';
@@ -21,10 +28,10 @@ export class HomeIdeasSectionComponent implements OnInit, OnDestroy {
 
   readonly currentIdea = computed(() => {
     const idea = IDEAS[this.ideaIdx()];
-    const maxN = Math.max(...idea.options.map(o => o.n)) || 1;
+    const maxN = Math.max(...idea.options.map((o) => o.n)) || 1;
     return {
       ...idea,
-      optionsFormatted: idea.options.map(o => ({
+      optionsFormatted: idea.options.map((o) => ({
         ...o,
         pct: Math.round((o.n / maxN) * 100) + '%',
         fill: o.n === maxN ? 'rgba(31,122,140,.13)' : 'rgba(20,24,28,.045)',
@@ -33,7 +40,7 @@ export class HomeIdeasSectionComponent implements OnInit, OnDestroy {
         weight: o.n === maxN ? '700' : '600',
         numLabel: o.n === 0 ? '–' : String(o.n),
       })),
-      votersFormatted: idea.voters.map(k => ({ name: PPL[k].name })),
+      votersFormatted: idea.voters.map((k) => ({ name: PPL[k].name })),
     };
   });
 
@@ -51,7 +58,7 @@ export class HomeIdeasSectionComponent implements OnInit, OnDestroy {
     this.ideaTimer = setInterval(() => {
       this.ideaVisible.set(false);
       setTimeout(() => {
-        this.ideaIdx.update(i => (i + 1) % IDEAS.length);
+        this.ideaIdx.update((i) => (i + 1) % IDEAS.length);
         this.ideaVisible.set(true);
       }, 300);
     }, delay);

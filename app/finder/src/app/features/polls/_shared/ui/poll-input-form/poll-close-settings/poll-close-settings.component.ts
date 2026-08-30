@@ -39,9 +39,9 @@ export class PollCloseSettingsComponent {
   reopenPoll = output<void>();
 
   readonly deadlinePresets = [
-    { id: 'd3',  labelKey: 'project.pollInput.autoCloseIn3Days' },
-    { id: 'w1',  labelKey: 'project.pollInput.autoCloseIn1Week' },
-    { id: 'w2',  labelKey: 'project.pollInput.autoCloseIn2Weeks' },
+    { id: 'd3', labelKey: 'project.pollInput.autoCloseIn3Days' },
+    { id: 'w1', labelKey: 'project.pollInput.autoCloseIn1Week' },
+    { id: 'w2', labelKey: 'project.pollInput.autoCloseIn2Weeks' },
     { id: 'none', labelKey: 'project.pollInput.autoCloseNoEnd' },
   ];
 
@@ -51,16 +51,21 @@ export class PollCloseSettingsComponent {
   private injector = inject(Injector);
 
   constructor() {
-    afterNextRender(() => {
-      if (this.mode() !== 'edit' && !this.closeDate()) {
-        this.onDeadlinePreset('w1');
-      }
-    }, { injector: this.injector });
+    afterNextRender(
+      () => {
+        if (this.mode() !== 'edit' && !this.closeDate()) {
+          this.onDeadlinePreset('w1');
+        }
+      },
+      { injector: this.injector },
+    );
   }
 
   get customEndValue(): string {
     const cd = this.closeDate();
-    if (!cd) { return ''; }
+    if (!cd) {
+      return '';
+    }
     return cd.substring(0, 16);
   }
 
@@ -89,6 +94,6 @@ export class PollCloseSettingsComponent {
   }
 
   toggleAnonymousVoting(): void {
-    this.anonymousVoting.update(v => !v);
+    this.anonymousVoting.update((v) => !v);
   }
 }

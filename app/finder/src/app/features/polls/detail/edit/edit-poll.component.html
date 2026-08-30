@@ -2,34 +2,39 @@
   <!-- ═══════════════════════════════════════════
        DESKTOP EDIT
   ═══════════════════════════════════════════ -->
-  <div class="flex-1 min-h-0 flex flex-col overflow-hidden">
+  <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
     <!-- Content header: title + type badge | action buttons -->
-    <div class="flex items-center justify-between gap-6 px-8 pt-6 pb-0 flex-none">
+    <div
+      class="flex flex-none items-center justify-between gap-6 px-8 pt-6 pb-0"
+    >
       <div class="flex items-center gap-3">
-        <h1 class="font-display text-[30px] font-bold tracking-[-0.8px] leading-[1.05] text-[#1d2227]">
-          {{ 'project.pollInput.editPollTitle' | translate }}
+        <h1
+          class="font-display text-[30px] leading-[1.05] font-bold tracking-[-0.8px] text-[#1d2227]"
+        >
+          {{ "project.pollInput.editPollTitle" | translate }}
         </h1>
         @if (state.optionType() !== undefined) {
           <app-poll-type-badge [type]="state.optionType()!" />
         }
       </div>
-      <div class="flex items-center gap-2.5 flex-none">
+      <div class="flex flex-none items-center gap-2.5">
         <ds-button variant="neutral" (click)="discard()">
-          {{ 'project.pollInput.discard' | translate }}
+          {{ "project.pollInput.discard" | translate }}
         </ds-button>
         <ds-button
           variant="primary"
           [disabled]="!canSave()"
           data-testid="wizard-cta"
           (click)="save()"
-        >{{ 'project.pollInput.updatePoll' | translate }}</ds-button>
+          >{{ "project.pollInput.updatePoll" | translate }}</ds-button
+        >
       </div>
     </div>
 
     <!-- Scrollable form -->
-    <div class="flex-1 min-h-0 overflow-y-auto px-8 pb-8">
+    <div class="min-h-0 flex-1 overflow-y-auto px-8 pb-8">
       @if (state.editLoading()) {
-        <div class="max-w-[800px] flex flex-col gap-4 pt-5">
+        <div class="flex max-w-[800px] flex-col gap-4 pt-5">
           <ng-container *ngTemplateOutlet="skeletonCards" />
         </div>
       } @else if (state.optionType() !== undefined) {
@@ -51,7 +56,9 @@
             [options]="state.options()"
             [dateOptions]="state.dateOptions()"
             [appointmentDateType]="state.appointmentDateType()"
-            (appointmentDateTypeChange)="state.onAppointmentDateTypeChange($event)"
+            (appointmentDateTypeChange)="
+              state.onAppointmentDateTypeChange($event)
+            "
             (add)="state.addOption()"
             (remove)="state.removeOption($event)"
             (weekdayToggle)="state.toggleWeekday($event)"
@@ -69,7 +76,7 @@
        MOBILE EDIT
   ═══════════════════════════════════════════ -->
   @if (state.editLoading()) {
-    <div class="px-[18px] flex flex-col gap-4 pt-5 pb-32">
+    <div class="flex flex-col gap-4 px-[18px] pt-5 pb-32">
       <ng-container *ngTemplateOutlet="skeletonCards" />
     </div>
   } @else if (state.optionType() !== undefined) {
@@ -108,14 +115,20 @@
 ═══════════════════════════════════════════ -->
 <ng-template #skeletonCards>
   <!-- Question card skeleton -->
-  <div class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4" style="box-shadow:var(--shadow-card-soft)">
-    <div class="ds-skeleton h-4 w-24 rounded-sm mb-3"></div>
-    <div class="ds-skeleton h-10 w-full rounded-lg mb-2"></div>
+  <div
+    class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
+    style="box-shadow: var(--shadow-card-soft)"
+  >
+    <div class="ds-skeleton mb-3 h-4 w-24 rounded-sm"></div>
+    <div class="ds-skeleton mb-2 h-10 w-full rounded-lg"></div>
     <div class="ds-skeleton h-4 w-1/2 rounded-sm"></div>
   </div>
   <!-- Options card skeleton -->
-  <div class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4" style="box-shadow:var(--shadow-card-soft)">
-    <div class="ds-skeleton h-4 w-32 rounded-sm mb-3"></div>
+  <div
+    class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
+    style="box-shadow: var(--shadow-card-soft)"
+  >
+    <div class="ds-skeleton mb-3 h-4 w-32 rounded-sm"></div>
     <div class="flex flex-col gap-2">
       <div class="ds-skeleton h-10 w-full rounded-lg"></div>
       <div class="ds-skeleton h-10 w-full rounded-lg"></div>
@@ -123,8 +136,11 @@
     </div>
   </div>
   <!-- Close settings card skeleton -->
-  <div class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4" style="box-shadow:var(--shadow-card-soft)">
-    <div class="ds-skeleton h-4 w-28 rounded-sm mb-3"></div>
+  <div
+    class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
+    style="box-shadow: var(--shadow-card-soft)"
+  >
+    <div class="ds-skeleton mb-3 h-4 w-28 rounded-sm"></div>
     <div class="flex gap-2">
       <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
       <div class="ds-skeleton h-8 w-20 rounded-lg"></div>

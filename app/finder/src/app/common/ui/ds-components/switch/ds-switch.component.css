@@ -2,12 +2,12 @@
 :host ::ng-deep brn-switch {
   --tw-ring-color: var(--accent);
 }
-:host ::ng-deep brn-switch[data-checked='true'],
-:host ::ng-deep brn-switch[data-state='checked'] {
+:host ::ng-deep brn-switch[data-checked="true"],
+:host ::ng-deep brn-switch[data-state="checked"] {
   background: var(--accent) !important;
 }
-:host ::ng-deep brn-switch[data-checked='false'],
-:host ::ng-deep brn-switch[data-state='unchecked'] {
+:host ::ng-deep brn-switch[data-checked="false"],
+:host ::ng-deep brn-switch[data-state="unchecked"] {
   background: var(--cream-400) !important;
 }
 :host ::ng-deep brn-switch-thumb {

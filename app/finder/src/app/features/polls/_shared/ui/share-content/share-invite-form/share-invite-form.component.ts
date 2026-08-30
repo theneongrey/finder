@@ -27,7 +27,14 @@ export interface PendingInvite {
   selector: 'app-share-invite-form',
   templateUrl: './share-invite-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, TranslatePipe, DsButtonComponent, DsInputComponent, DsSegmentedControlComponent, UserAvatarComponent],
+  imports: [
+    FormsModule,
+    TranslatePipe,
+    DsButtonComponent,
+    DsInputComponent,
+    DsSegmentedControlComponent,
+    UserAvatarComponent,
+  ],
 })
 export class ShareInviteFormComponent {
   private readonly sharingStore = inject(SharingStore);
@@ -47,12 +54,24 @@ export class ShareInviteFormComponent {
   contactEmail = signal<string | undefined>(undefined);
   dropdownVisible = signal(false);
 
-  private readonly voterLabel = this.translateService.translate('project.roles.voter');
-  private readonly maintainerLabel = this.translateService.translate('project.roles.maintainer');
-  private readonly ownerLabel = this.translateService.translate('project.roles.owner');
-  private readonly voterDesc = this.translateService.translate('project.share.voterDescription');
-  private readonly maintainerDesc = this.translateService.translate('project.share.maintainerDescription');
-  private readonly ownerDesc = this.translateService.translate('project.share.ownerDescription');
+  private readonly voterLabel = this.translateService.translate(
+    'project.roles.voter',
+  );
+  private readonly maintainerLabel = this.translateService.translate(
+    'project.roles.maintainer',
+  );
+  private readonly ownerLabel = this.translateService.translate(
+    'project.roles.owner',
+  );
+  private readonly voterDesc = this.translateService.translate(
+    'project.share.voterDescription',
+  );
+  private readonly maintainerDesc = this.translateService.translate(
+    'project.share.maintainerDescription',
+  );
+  private readonly ownerDesc = this.translateService.translate(
+    'project.share.ownerDescription',
+  );
 
   roleOptions = computed(() => [
     { value: '0', label: this.voterLabel() },
@@ -62,23 +81,32 @@ export class ShareInviteFormComponent {
 
   selectedRoleDescription = computed(() => {
     switch (this.selectedRole()) {
-      case '0': return this.voterDesc();
-      case '1': return this.maintainerDesc();
-      case '2': return this.ownerDesc();
-      default:  return '';
+      case '0':
+        return this.voterDesc();
+      case '1':
+        return this.maintainerDesc();
+      case '2':
+        return this.ownerDesc();
+      default:
+        return '';
     }
   });
 
   private readonly availableContacts = computed(() => {
     const excluded = new Set(this.excludedEmails());
-    return this.contacts().filter(c => !excluded.has(c.email));
+    return this.contacts().filter((c) => !excluded.has(c.email));
   });
 
   filteredContacts = computed(() => {
     const q = (this.contactEmail() ?? '').toLowerCase();
-    if (!q) { return []; }
+    if (!q) {
+      return [];
+    }
     return this.availableContacts()
-      .filter(c => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q))
+      .filter(
+        (c) =>
+          c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q),
+      )
       .slice(0, 5);
   });
 
@@ -111,11 +139,17 @@ export class ShareInviteFormComponent {
 
   invite() {
     const email = this.contactEmail()?.trim();
-    if (!email || this.sharingInProgress()) { return; }
+    if (!email || this.sharingInProgress()) {
+      return;
+    }
     this.dropdownVisible.set(false);
     if (this.deferred()) {
-      const contact = this.contacts().find(c => c.email === email);
-      this.pendingInvite.emit({ email, role: parseInt(this.selectedRole(), 10), name: contact?.name });
+      const contact = this.contacts().find((c) => c.email === email);
+      this.pendingInvite.emit({
+        email,
+        role: parseInt(this.selectedRole(), 10),
+        name: contact?.name,
+      });
       this.contactEmail.set(undefined);
       return;
     }

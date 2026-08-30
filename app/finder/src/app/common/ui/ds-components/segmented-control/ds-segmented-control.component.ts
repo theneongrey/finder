@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  model,
+} from '@angular/core';
 import { HlmToggleGroupImports } from '@spartan-ng/helm/toggle-group';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
@@ -22,7 +28,7 @@ export class DsSegmentedControlComponent {
   size = input<'sm' | 'md'>('md');
 
   protected readonly pillIndex = computed(() => {
-    const idx = this.options().findIndex(o => o.value === this.value());
+    const idx = this.options().findIndex((o) => o.value === this.value());
     return Math.max(0, idx);
   });
 
@@ -32,6 +38,8 @@ export class DsSegmentedControlComponent {
   }));
 
   protected onValueChange(v: string | string[] | null | undefined): void {
-    if (typeof v === 'string') { this.value.set(v); }
+    if (typeof v === 'string') {
+      this.value.set(v);
+    }
   }
 }

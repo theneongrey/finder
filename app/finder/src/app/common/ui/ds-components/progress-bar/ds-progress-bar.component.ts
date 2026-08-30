@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import { HlmProgressImports } from '@spartan-ng/helm/progress';
 
 @Component({
@@ -13,5 +18,7 @@ export class DsProgressBarComponent {
   percent = input.required<number>();
   height = input<number>(9);
 
-  protected readonly clamped = computed(() => Math.max(0, Math.min(100, this.percent())));
+  protected readonly clamped = computed(() =>
+    Math.max(0, Math.min(100, this.percent())),
+  );
 }

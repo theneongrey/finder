@@ -24,13 +24,17 @@ export class TimeSincePipe implements PipeTransform {
     }
     if (diffMins < 60) {
       return this.translateService.instant(
-        diffMins === 1 ? 'project.timeAgo.minuteAgo' : 'project.timeAgo.minutesAgo',
+        diffMins === 1
+          ? 'project.timeAgo.minuteAgo'
+          : 'project.timeAgo.minutesAgo',
         { count: diffMins },
       );
     }
     if (diffHours < 24) {
       return this.translateService.instant(
-        diffHours === 1 ? 'project.timeAgo.hourAgo' : 'project.timeAgo.hoursAgo',
+        diffHours === 1
+          ? 'project.timeAgo.hourAgo'
+          : 'project.timeAgo.hoursAgo',
         { count: diffHours },
       );
     }
@@ -42,7 +46,9 @@ export class TimeSincePipe implements PipeTransform {
     }
     if (diffMonths < 12) {
       return this.translateService.instant(
-        diffMonths === 1 ? 'project.timeAgo.monthAgo' : 'project.timeAgo.monthsAgo',
+        diffMonths === 1
+          ? 'project.timeAgo.monthAgo'
+          : 'project.timeAgo.monthsAgo',
         { count: diffMonths },
       );
     }

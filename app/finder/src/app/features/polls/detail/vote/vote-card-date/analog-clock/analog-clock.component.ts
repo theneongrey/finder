@@ -84,7 +84,10 @@ export class AnalogClockComponent implements AfterViewInit {
     const hourAngle = ((hours + minutes / 60) * 30 - 90) * (Math.PI / 180);
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + r * 0.52 * Math.cos(hourAngle), cy + r * 0.52 * Math.sin(hourAngle));
+    ctx.lineTo(
+      cx + r * 0.52 * Math.cos(hourAngle),
+      cy + r * 0.52 * Math.sin(hourAngle),
+    );
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 3;
     ctx.lineCap = 'round';
@@ -94,7 +97,10 @@ export class AnalogClockComponent implements AfterViewInit {
     const minuteAngle = (minutes * 6 - 90) * (Math.PI / 180);
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + r * 0.74 * Math.cos(minuteAngle), cy + r * 0.74 * Math.sin(minuteAngle));
+    ctx.lineTo(
+      cx + r * 0.74 * Math.cos(minuteAngle),
+      cy + r * 0.74 * Math.sin(minuteAngle),
+    );
     ctx.strokeStyle = '#334155';
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';

@@ -17,9 +17,16 @@
   flex-shrink: 0;
 }
 @keyframes ds-status-pulse {
-  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--positive-strong) 50%, transparent); }
-  70%  { box-shadow: 0 0 0 6px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
+  0% {
+    box-shadow: 0 0 0 0
+      color-mix(in srgb, var(--positive-strong) 50%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
 }
 .ds-status-dot--pulse {
   animation: ds-status-pulse 2.6s ease-out infinite;

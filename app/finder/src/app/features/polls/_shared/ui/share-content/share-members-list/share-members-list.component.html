@@ -12,7 +12,7 @@
     @for (member of sortedMembers(); track member.email; let last = $last) {
       <div class="relative">
         <div
-          class="flex items-center gap-3 px-4 py-3 border-[var(--border-hairline-soft)]"
+          class="flex items-center gap-3 border-[var(--border-hairline-soft)] px-4 py-3"
           [class.border-b]="!last"
         >
           <app-user-avatar [user]="member" />
@@ -55,9 +55,9 @@
             class="absolute inset-0 flex items-center justify-end gap-3 rounded-[inherit] bg-white/92 px-4"
             (click)="pendingRemoveEmail.set(undefined)"
           >
-            <span class="text-xs text-[var(--text-secondary)]"
-              >{{ "project.share.removeConfirm" | translate: { name: member.name } }}</span
-            >
+            <span class="text-xs text-[var(--text-secondary)]">{{
+              "project.share.removeConfirm" | translate: { name: member.name }
+            }}</span>
             <ds-button
               variant="danger"
               size="sm"

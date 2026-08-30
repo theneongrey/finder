@@ -1,9 +1,7 @@
 <div class="flex w-full flex-col">
   <app-title-bar />
 
-  <main
-    class="w-full flex-grow px-[22px] py-5 lg:px-[34px] lg:py-6"
-  >
+  <main class="w-full flex-grow px-[22px] py-5 lg:px-[34px] lg:py-6">
     <div class="mb-4 px-0.5 lg:mb-6">
       <h1>{{ "settings.title" | translate }}</h1>
     </div>
@@ -113,7 +111,10 @@
               }
             } @else {
               @for (notif of notifications(); track notif.id) {
-                <div data-testid="settings-notif-row" class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+                <div
+                  data-testid="settings-notif-row"
+                  class="flex items-center gap-4 py-4 first:pt-0 last:pb-0"
+                >
                   <div class="flex min-w-0 flex-1 flex-col gap-0.5">
                     <span
                       class="[font-size:var(--fs-body-xs)] [font-weight:var(--weight-semibold)] text-(--text-primary)"
@@ -159,7 +160,11 @@
           >
             {{ "settings.logout" | translate }}
           </span>
-          <ds-icon name="chevron-right" [size]="16" [color]="'var(--text-tertiary)'" />
+          <ds-icon
+            name="chevron-right"
+            [size]="16"
+            [color]="'var(--text-tertiary)'"
+          />
         </button>
 
         <div class="mx-6 border-t border-(--border-hairline-soft)"></div>
@@ -173,7 +178,11 @@
           >
             {{ "settings.deleteAccount" | translate }}
           </span>
-          <ds-icon name="chevron-right" [size]="16" [color]="'var(--color-error, #c0392b)'" />
+          <ds-icon
+            name="chevron-right"
+            [size]="16"
+            [color]="'var(--color-error, #c0392b)'"
+          />
         </button>
       </ds-card>
     </ng-template>

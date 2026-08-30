@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { DsButtonComponent } from '../button/ds-button.component';
 
@@ -10,9 +15,9 @@ import { DsButtonComponent } from '../button/ds-button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DsBottomSheetComponent {
-  title    = input.required<string>();
+  title = input.required<string>();
   subtitle = input<string | undefined>(undefined);
-  open     = input<boolean>(false);
+  open = input<boolean>(false);
 
   dismissed = output<void>();
 
@@ -27,14 +32,18 @@ export class DsBottomSheetComponent {
   }
 
   protected onHandlePointerDown(event: PointerEvent): void {
-    this.panelEl = (event.target as HTMLElement).closest('.ds-sheet-panel') as HTMLElement | null;
+    this.panelEl = (event.target as HTMLElement).closest(
+      '.ds-sheet-panel',
+    ) as HTMLElement | null;
     this.dragStartY = event.clientY;
     this.isDragging = true;
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
   }
 
   protected onHandlePointerMove(event: PointerEvent): void {
-    if (!this.isDragging || !this.panelEl) { return; }
+    if (!this.isDragging || !this.panelEl) {
+      return;
+    }
     const delta = Math.max(0, event.clientY - this.dragStartY);
     this.panelEl.style.transition = 'none';
     this.panelEl.style.transform = `translateY(${delta}px)`;
@@ -47,7 +56,9 @@ export class DsBottomSheetComponent {
     }
     this.isDragging = false;
 
-    const match = this.panelEl.style.transform.match(/translateY\((\d+(?:\.\d+)?)px\)/);
+    const match = this.panelEl.style.transform.match(
+      /translateY\((\d+(?:\.\d+)?)px\)/,
+    );
     const delta = match ? parseFloat(match[1]) : 0;
     const panel = this.panelEl;
     this.panelEl = null;

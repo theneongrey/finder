@@ -22,7 +22,9 @@
   pointer-events: none;
 }
 @keyframes ds-input-spin {
-  to { transform: translateY(-50%) rotate(360deg); }
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
 }
 .ds-input-label {
   font-family: var(--font-body);
@@ -47,12 +49,28 @@
   shadow: none;
   box-shadow: none;
 }
-.ds-input::placeholder { color: var(--text-muted); opacity: var(--placeholder-opacity, 0.7); }
-.ds-input:focus { border-color: var(--accent); }
-.ds-input--error { border-color: var(--negative); }
-.ds-input:disabled { opacity: 0.5; cursor: default; }
-.ds-input--readonly { background: var(--cream-200) !important; color: var(--text-secondary); cursor: default; }
-.ds-input--readonly:focus { border-color: var(--border-hairline-strong); }
+.ds-input::placeholder {
+  color: var(--text-muted);
+  opacity: var(--placeholder-opacity, 0.7);
+}
+.ds-input:focus {
+  border-color: var(--accent);
+}
+.ds-input--error {
+  border-color: var(--negative);
+}
+.ds-input:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.ds-input--readonly {
+  background: var(--cream-200) !important;
+  color: var(--text-secondary);
+  cursor: default;
+}
+.ds-input--readonly:focus {
+  border-color: var(--border-hairline-strong);
+}
 .ds-input-error {
   font-size: var(--fs-caption-sm);
   color: var(--negative);

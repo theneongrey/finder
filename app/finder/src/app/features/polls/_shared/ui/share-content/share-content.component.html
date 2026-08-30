@@ -1,5 +1,9 @@
 <div
-  [class]="inCard() ? 'mt-3.5 rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4' : 'mt-2'"
+  [class]="
+    inCard()
+      ? 'mt-3.5 rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4'
+      : 'mt-2'
+  "
   [style.box-shadow]="inCard() ? 'var(--shadow-card-soft)' : null"
 >
   @if (tabItems().length > 1) {
@@ -10,7 +14,7 @@
     />
   }
 
-  @if (activeTab() === 'invite') {
+  @if (activeTab() === "invite") {
     <div [class.mt-[18px]]="tabItems().length > 1">
       <app-share-access-tab
         [visibilityOptions]="visibilityOptions()"
@@ -29,7 +33,7 @@
     </div>
   }
 
-  @if (activeTab() === 'members') {
+  @if (activeTab() === "members") {
     <div class="mt-[18px]">
       <app-share-members-list
         [projectId]="projectId()"

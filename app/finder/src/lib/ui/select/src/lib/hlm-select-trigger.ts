@@ -39,7 +39,6 @@ import type { ClassValue } from 'clsx';
 export class HlmSelectTrigger {
   private static _id = 0;
 
-   
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
   protected readonly _computedClass = computed(() =>
     hlm(

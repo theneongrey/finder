@@ -6,14 +6,13 @@ import {
   input,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { PollDetailStore } from '../_shared/data/poll-detail.store';
 
 @Component({
   selector: 'app-poll-detail-shell',
-  imports: [TitleBarComponent, RouterOutlet],
+  imports: [RouterOutlet],
   templateUrl: './detail-shell.component.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +25,12 @@ export class PollDetailShellComponent {
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
       startWith(null),
-      map(() => this.router.url.includes('/edit/') || this.router.url.includes('/results/') || this.router.url.includes('/vote/')),
+      map(
+        () =>
+          this.router.url.includes('/edit/') ||
+          this.router.url.includes('/results/') ||
+          this.router.url.includes('/vote/'),
+      ),
     ),
     { initialValue: false },
   );

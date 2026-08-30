@@ -16,7 +16,7 @@
       @if (!titleDisabled()) {
         <div class="title-bar__info">
           @if (title() === undefined) {
-            <hlm-skeleton class="w-32 h-4 my-auto" />
+            <hlm-skeleton class="my-auto h-4 w-32" />
           } @else {
             <h1 class="title-bar__title">{{ title() }}</h1>
           }
@@ -33,22 +33,29 @@
         </a>
       </div>
       @if (subtitle()) {
-        <span class="title-bar__sep title-bar__sep--lead" aria-hidden="true"></span>
+        <span
+          class="title-bar__sep title-bar__sep--lead"
+          aria-hidden="true"
+        ></span>
         <button
-          class="title-bar__web-label title-bar__web-label--breadcrumb cursor-pointer bg-transparent border-none p-0"
+          class="title-bar__web-label title-bar__web-label--breadcrumb cursor-pointer border-none bg-transparent p-0"
           (click)="onBack()"
-          >{{ subtitle() }}</button
         >
+          {{ subtitle() }}
+        </button>
         <span class="title-bar__sep" aria-hidden="true"></span>
         @if (title() === undefined) {
-          <hlm-skeleton class="w-32 h-4 my-auto" />
+          <hlm-skeleton class="my-auto h-4 w-32" />
         } @else {
           <span class="title-bar__web-label">{{ title() }}</span>
         }
       } @else if (!titleDisabled()) {
-        <span class="title-bar__sep title-bar__sep--lead" aria-hidden="true"></span>
+        <span
+          class="title-bar__sep title-bar__sep--lead"
+          aria-hidden="true"
+        ></span>
         @if (title() === undefined) {
-          <hlm-skeleton class="w-32 h-4 my-auto" />
+          <hlm-skeleton class="my-auto h-4 w-32" />
         } @else {
           <span class="title-bar__web-label">{{ title() }}</span>
         }
@@ -77,14 +84,17 @@
     } @else if (user() !== undefined) {
       <div class="title-bar__user">
         <ds-button variant="primary" (click)="login()">
-          {{ 'titleBar.login' | translate }}
+          {{ "titleBar.login" | translate }}
         </ds-button>
       </div>
     }
 
     @if (progress() !== undefined) {
       <div class="title-bar__progress-track">
-        <div class="title-bar__progress-fill" [style.width]="progress() + '%'"></div>
+        <div
+          class="title-bar__progress-fill"
+          [style.width]="progress() + '%'"
+        ></div>
       </div>
     }
   </header>

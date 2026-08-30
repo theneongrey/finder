@@ -1,7 +1,9 @@
 /* Fonts loaded from npm packages via angular.json — no CDN import */
 :root {
-  --font-display: 'Bricolage Grotesque Variable', 'Hanken Grotesk Variable', system-ui, sans-serif;
-  --font-body: 'Hanken Grotesk Variable', system-ui, -apple-system, sans-serif;
+  --font-display:
+    "Bricolage Grotesque Variable", "Hanken Grotesk Variable", system-ui,
+    sans-serif;
+  --font-body: "Hanken Grotesk Variable", system-ui, -apple-system, sans-serif;
 
   /* Display sizes (Bricolage Grotesque, tight tracking) */
   --fs-display-xl: 33px;

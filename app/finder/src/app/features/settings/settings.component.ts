@@ -29,7 +29,10 @@ import {
 } from '@common/i18n/languages';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
-import { DsSegmentedControlComponent, SegmentOption } from '@ds/segmented-control/ds-segmented-control.component';
+import {
+  DsSegmentedControlComponent,
+  SegmentOption,
+} from '@ds/segmented-control/ds-segmented-control.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { NotificationValue } from '@common/models/notification-setting.model';
@@ -58,7 +61,7 @@ export class SettingsComponent {
   readonly isDesktop = toSignal(
     inject(BreakpointObserver)
       .observe('(min-width: 680px)')
-      .pipe(map(r => r.matches)),
+      .pipe(map((r) => r.matches)),
     { initialValue: false },
   );
 
@@ -69,8 +72,12 @@ export class SettingsComponent {
 
   protected readonly languageOptions = LANGUAGE_OPTIONS;
 
-  private readonly notifOff = this.translateService.translate('settings.notifications.off');
-  private readonly notifAll = this.translateService.translate('settings.notifications.all');
+  private readonly notifOff = this.translateService.translate(
+    'settings.notifications.off',
+  );
+  private readonly notifAll = this.translateService.translate(
+    'settings.notifications.all',
+  );
 
   readonly notificationOptions = computed<SegmentOption[]>(() => [
     { value: 'off', label: this.notifOff() },
@@ -102,7 +109,6 @@ export class SettingsComponent {
         this.selectedLanguage.set(language);
       }
     });
-
   }
 
   onLanguageChange(value: string): void {
@@ -117,7 +123,10 @@ export class SettingsComponent {
   }
 
   onNotificationChange(id: number, value: string): void {
-    this.userStore.updateNotification({ id, value: value as NotificationValue });
+    this.userStore.updateNotification({
+      id,
+      value: value as NotificationValue,
+    });
   }
 
   logout(): void {

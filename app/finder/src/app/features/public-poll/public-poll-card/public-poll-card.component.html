@@ -4,29 +4,39 @@
     <div class="flex items-center gap-2">
       <app-poll-type-badge [type]="poll().optionType" />
       @if (!poll().isClosed) {
-        <ds-status-dot tone="positive">{{ "publicPoll.statusRunning" | translate }}</ds-status-dot>
+        <ds-status-dot tone="positive">{{
+          "publicPoll.statusRunning" | translate
+        }}</ds-status-dot>
       } @else {
-        <ds-status-dot tone="muted">{{ "publicPoll.statusClosed" | translate }}</ds-status-dot>
+        <ds-status-dot tone="muted">{{
+          "publicPoll.statusClosed" | translate
+        }}</ds-status-dot>
       }
-      @if (size() === 'md' && poll().closeDate) {
+      @if (size() === "md" && poll().closeDate) {
         <span
           class="ml-auto flex items-center gap-1.5 text-[13.5px] font-semibold [color:var(--ink-600)]"
         >
           <ds-icon name="clock" [size]="15" color="currentColor" />
-          {{ (poll().isClosed ? "publicPoll.closedAt" : "publicPoll.openUntil") | translate }}
+          {{
+            (poll().isClosed ? "publicPoll.closedAt" : "publicPoll.openUntil")
+              | translate
+          }}
           {{ poll().closeDate | date: "d. MMM., HH:mm" }}
         </span>
       }
     </div>
 
     <!-- Close date below header (sm only) -->
-    @if (size() === 'sm' && poll().closeDate) {
+    @if (size() === "sm" && poll().closeDate) {
       <div
         class="mt-[13px] flex items-center gap-1.5 text-[13px] font-semibold [color:var(--ink-600)]"
       >
         <ds-icon name="clock" [size]="14" color="currentColor" />
         <span>
-          {{ (poll().isClosed ? "publicPoll.closedAt" : "publicPoll.openUntil") | translate }}
+          {{
+            (poll().isClosed ? "publicPoll.closedAt" : "publicPoll.openUntil")
+              | translate
+          }}
           {{ poll().closeDate | date: "d. MMM., HH:mm" }}
         </span>
       </div>

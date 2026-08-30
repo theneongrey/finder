@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
 @Component({
@@ -12,8 +17,8 @@ import { DsIconComponent } from '../icon/ds-icon.component';
 export class DsVoteButtonsComponent {
   showMaybe = input<boolean>(false);
 
-  yes   = output<void>();
-  no    = output<void>();
-  skip  = output<void>();
+  yes = output<void>();
+  no = output<void>();
+  skip = output<void>();
   maybe = output<void>();
 }

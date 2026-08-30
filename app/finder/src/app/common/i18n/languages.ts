@@ -25,7 +25,11 @@ export const LANGUAGE_OPTIONS: { value: SupportedLanguage; label: string }[] = [
 
 export function detectBrowserLanguage(): SupportedLanguage {
   const prefix = (navigator.language ?? '').split('-')[0].toLowerCase();
-  if (prefix === 'de') { return 'de'; }
-  if (prefix === 'es') { return 'es'; }
+  if (prefix === 'de') {
+    return 'de';
+  }
+  if (prefix === 'es') {
+    return 'es';
+  }
   return 'en';
 }

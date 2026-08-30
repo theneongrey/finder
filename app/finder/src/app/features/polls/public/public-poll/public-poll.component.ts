@@ -10,7 +10,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
-import { LoggerService } from '@common/services/logger.service';
 import { UserService } from '@common/services/user.service';
 import { UserStore } from '@common/data/user.store';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
@@ -56,7 +55,6 @@ export class PublicPollComponent implements OnInit {
   private readonly userStore = inject(UserStore);
   private readonly titleBarService = inject(TitleBarService);
   private readonly translateService = inject(TranslateService);
-  private readonly logger = inject(LoggerService);
   private readonly pollService = inject(PollService);
   private readonly dateFormatService = inject(DateOptionFormatService);
   private readonly destroyRef = inject(DestroyRef);
@@ -163,13 +161,9 @@ export class PublicPollComponent implements OnInit {
             this.navigateToPoll();
           }
         },
-        error: (err) => {
+        error: () => {
           this.isLoading.set(false);
-          if (err?.status === 403) {
-            this.router.navigate(['/']);
-          } else {
-            this.logger.error('Failed to load public project info', err);
-          }
+          this.router.navigate(['/']);
         },
       });
 

@@ -1,5 +1,4 @@
 using System.Threading.RateLimiting;
-using DnsClient;
 using Finder.Business.Auth.Services;
 using Finder.Business.Shared.Services;
 
@@ -10,13 +9,6 @@ public static class SetupExtensions
     public static IServiceCollection AddAuthServices(this IServiceCollection services, ConfigurationManager configuration, bool isDevelopment)
     {
         services.Configure<LoginOptions>(configuration.GetSection("Login"));
-
-        services.AddSingleton<EmailValidationService>();
-        services.AddSingleton<ILookupClient, LookupClient>();
-        services.AddHttpClient("EmailValidation", client =>
-        {
-            client.Timeout = TimeSpan.FromSeconds(10);
-        });
 
         services.AddScoped<LoginService>();
         services.AddScoped<MailService>();

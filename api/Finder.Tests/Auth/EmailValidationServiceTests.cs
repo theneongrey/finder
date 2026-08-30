@@ -1,7 +1,7 @@
 using System.Net;
 using DnsClient;
 using DnsClient.Protocol;
-using Finder.Business.Auth.Services;
+using Finder.Business.Shared.Services;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Xunit;

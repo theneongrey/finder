@@ -1,7 +1,7 @@
 using DnsClient;
 using Finder.Business.Shared;
 
-namespace Finder.Business.Auth.Services;
+namespace Finder.Business.Shared.Services;
 
 public class EmailValidationService
 {

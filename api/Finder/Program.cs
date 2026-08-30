@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using DnsClient;
 using Microsoft.AspNetCore.DataProtection;
 using Scalar.AspNetCore;
 using Finder.Business.Auth.Api;
@@ -39,6 +40,12 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddSingleton<ILookupClient, LookupClient>();
+builder.Services.AddSingleton<EmailValidationService>();
+builder.Services.AddHttpClient("EmailValidation", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddAuthServices(builder.Configuration, builder.Environment.IsDevelopment());

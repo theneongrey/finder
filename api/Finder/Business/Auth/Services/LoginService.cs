@@ -23,9 +23,8 @@ public class LoginService
     private readonly SeedingService _seedingService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly LoginOptions _loginOptions;
-    private readonly EmailValidationService _emailValidationService;
 
-    public LoginService(AppDbContext dbContext, MailService mailService, UserService userService, SeedingService seedingService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions, EmailValidationService emailValidationService)
+    public LoginService(AppDbContext dbContext, MailService mailService, UserService userService, SeedingService seedingService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions)
     {
         _dbContext = dbContext;
         _mailService = mailService;
@@ -33,7 +32,6 @@ public class LoginService
         _seedingService = seedingService;
         _httpContextAccessor = httpContextAccessor;
         _loginOptions = loginOptions.Value;
-        _emailValidationService = emailValidationService;
     }
     
     public async Task<Result<string?>> LoginByToken(string token)
@@ -118,12 +116,6 @@ public class LoginService
     public async Task<Result> RequestLoginMail(string email, string? redirectUrl)
     {
         var cleanEmail = email.Trim().ToLower();
-
-        var validationResult = await _emailValidationService.ValidateEmailAsync(cleanEmail);
-        if (!validationResult.IsSuccess)
-        {
-            return Result.Fail(validationResult.Code);
-        }
 
         var person = await _userService.GetOrCreatePersonByEmail(cleanEmail, true);
         if (!person.IsSuccess)

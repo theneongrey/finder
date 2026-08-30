@@ -5,6 +5,7 @@ using Finder.Business.Permission.Entities;
 using Finder.Business.Preview.Services.PreviewHelper;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
+using Finder.Business.User.Entities;
 using Finder.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -250,6 +251,23 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         }
 
         services.AddScoped<T>(_ => instance);
+    }
+
+    public async Task SeedPersonNotificationSettings(Guid userId)
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var definitions = await db.NotificationSettings.ToListAsync();
+        foreach (var def in definitions)
+        {
+            db.PersonNotificationSettings.Add(new PersonNotificationSetting
+            {
+                PersonId = userId,
+                NotificationSettingId = def.Id,
+                Value = def.DefaultValue,
+            });
+        }
+        await db.SaveChangesAsync();
     }
 
     public async Task<LoginToken> SeedLoginToken(Guid userId, string token, string code)

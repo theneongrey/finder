@@ -2,13 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
-import { LoggerService } from '@common/services/logger.service';
 import { UserService } from '@common/services/user.service';
 import { UserStore } from '@common/data/user.store';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
@@ -54,9 +55,11 @@ export class PublicPollComponent implements OnInit {
   private readonly userStore = inject(UserStore);
   private readonly titleBarService = inject(TitleBarService);
   private readonly translateService = inject(TranslateService);
-  private readonly logger = inject(LoggerService);
   private readonly pollService = inject(PollService);
   private readonly dateFormatService = inject(DateOptionFormatService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  private hasNavigated = false;
 
   protected readonly isLoading = signal(true);
   protected readonly isAuthenticated = signal(false);
@@ -144,34 +147,41 @@ export class PublicPollComponent implements OnInit {
     this.titleBarService.setBackRoute('/polls');
     this.titleBarService.clearTitle();
 
-    this.pollService.getPublicProjectInfo(this.projectId).subscribe({
-      next: (info) => {
-        this.projectInfo.set(info);
-        this.titleBarService.setTitle(
-          info.pollPreview?.name ?? info.projectName,
-        );
-        if (this.isAuthenticated()) {
-          this.navigateToPoll();
-        }
-      },
-      error: (err) => {
-        this.logger.error('Failed to load public project info', err);
-        this.isLoading.set(false);
-      },
-    });
+    this.pollService
+      .getPublicProjectInfo(this.projectId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (info) => {
+          this.projectInfo.set(info);
+          this.titleBarService.setTitle(
+            info.pollPreview?.name ?? info.projectName,
+          );
+          this.isLoading.set(false);
+          if (this.isAuthenticated()) {
+            this.navigateToPoll();
+          }
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.router.navigate(['/']);
+        },
+      });
 
-    this.userService.getUser().subscribe({
-      next: (user) => {
-        const authenticated = user?.isAuthenticated ?? false;
-        this.isAuthenticated.set(authenticated);
-        this.currentUser.set(user ?? undefined);
-        this.isLoading.set(false);
-        if (authenticated && this.projectInfo()) {
-          this.navigateToPoll();
-        }
-      },
-      error: () => this.isLoading.set(false),
-    });
+    this.userService
+      .getUser()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user) => {
+          const authenticated = user?.isAuthenticated ?? false;
+          this.isAuthenticated.set(authenticated);
+          this.currentUser.set(user ?? undefined);
+          this.isLoading.set(false);
+          if (authenticated && this.projectInfo()) {
+            this.navigateToPoll();
+          }
+        },
+        error: () => this.isLoading.set(false),
+      });
   }
 
   protected loginFromCard(): void {
@@ -189,12 +199,20 @@ export class PublicPollComponent implements OnInit {
   }
 
   protected navigateToPoll(): void {
-    const info = this.projectInfo();
-    if (info?.isStandalone && info.pollId) {
-      this.router.navigate(['/polls', info.projectId, 'vote', info.pollId]);
-    } else {
-      this.router.navigate(['/polls']);
+    if (this.hasNavigated) {
+      return;
     }
+    this.hasNavigated = true;
+    const info = this.projectInfo();
+    const target: Parameters<Router['navigate']>[0] =
+      info?.isStandalone && info.pollId
+        ? ['/polls', info.projectId, 'vote', info.pollId]
+        : ['/polls'];
+    this.router.navigate(target).then((success) => {
+      if (!success) {
+        this.hasNavigated = false;
+      }
+    });
   }
 
   protected copyShareLink(): void {

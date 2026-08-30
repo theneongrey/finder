@@ -15,6 +15,7 @@ import {
   DateOptionType,
 } from '../../_shared/models/date-option.model';
 import { UrlValidationService } from '../../_shared/utils/url-validation.service';
+import { POLL_LIMITS } from '../../_shared/models/poll-limits';
 
 @Injectable()
 export class PollInputStateService {
@@ -117,7 +118,8 @@ export class PollInputStateService {
     return (
       !!this.question() &&
       opts.filter((o) => !!o.text).length >= 1 &&
-      opts.every((o) => !o.meta?.url || this.urlValidation.isValid(o.meta.url))
+      opts.every((o) => !o.meta?.url || this.urlValidation.isValid(o.meta.url)) &&
+      opts.every((o) => o.text.length <= POLL_LIMITS.optionTextLength)
     );
   });
 

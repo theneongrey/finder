@@ -4,6 +4,7 @@ import {
   DestroyRef,
   Injector,
   afterNextRender,
+  computed,
   inject,
   input,
   output,
@@ -48,6 +49,8 @@ export class OptionCardComponent {
   readonly = input<boolean>(false);
   remove = output<void>();
   optionChange = output<OptionEntry>();
+
+  protected readonly titleOverLimit = computed(() => this.option().text.length > POLL_LIMITS.optionTextLength);
 
   showDescription = signal(false);
   showLink = signal(false);

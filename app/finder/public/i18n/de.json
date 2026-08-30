@@ -317,6 +317,9 @@
       },
       "rating": {
         "answerOptions": "Bewertungsoptionen"
+      },
+      "shared": {
+        "titleLabel": "Titel"
       }
     },
     "vote": {

@@ -13,7 +13,7 @@
       [readOnly]="readonly()"
       [style.background]="background()"
       [style.paddingRight]="loading() ? '36px' : null"
-      [class.ds-input--error]="!!error()"
+      [class.ds-input--error]="!!error() || invalid()"
       [attr.title]="title() ?? null"
       [attr.maxlength]="maxlength() ?? null"
       [class.ds-input--readonly]="readonly()"

@@ -313,7 +313,8 @@
         "addDescription": "Beschreibung",
         "addLink": "Link",
         "linkHint": "Link einfügen und Titel, Text und Bild werden automatisch befüllt.",
-        "addOption": "Option hinzufügen"
+        "addOption": "Option hinzufügen",
+        "titleLabel": "Titel"
       },
       "rating": {
         "answerOptions": "Bewertungsoptionen"

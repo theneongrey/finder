@@ -313,7 +313,8 @@
         "addDescription": "Descripción",
         "addLink": "Enlace",
         "linkHint": "Pega un enlace y el título, texto e imagen se rellenan solos.",
-        "addOption": "Añadir opción"
+        "addOption": "Añadir opción",
+        "titleLabel": "Título"
       },
       "rating": {
         "answerOptions": "Opciones de valoración"

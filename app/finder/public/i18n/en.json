@@ -313,7 +313,8 @@
         "addDescription": "Description",
         "addLink": "Link",
         "linkHint": "Paste a link and the title, text and image fill in for you.",
-        "addOption": "Add option"
+        "addOption": "Add option",
+        "titleLabel": "Title"
       },
       "rating": {
         "answerOptions": "Rating options"

@@ -33,6 +33,7 @@ export class DsInputComponent implements ControlValueAccessor {
   error = input<string | undefined>(undefined);
   placeholder = input<string>('');
   maxlength = input<number | null>(null);
+  invalid = input<boolean>(false);
   readonly = input(false);
   loading = input(false);
 

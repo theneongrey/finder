@@ -15,6 +15,7 @@
       variant="dark"
       [disabled]="!contactEmail()"
       [loading]="sharingInProgress()"
+      data-testid="share-invite-btn"
       (click)="invite()"
       >{{ "project.share.invite" | translate }}</ds-button
     >

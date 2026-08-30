@@ -16,9 +16,11 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
     await page.setViewportSize({ width: 390, height: 844 });
     await login(page, USER1);
     await page.goto('/polls');
+    // Wait for the Angular app to finish loading the polls list before checking
+    await page.waitForLoadState('networkidle');
 
     const shareBtn = page.locator('[data-testid="share-btn"]').first();
-    if (await shareBtn.count() === 0 || !(await shareBtn.isVisible())) {
+    if (await shareBtn.count() === 0) {
       await page.locator('[data-testid="fab-add-poll"]').click();
       await page.waitForURL('**/polls/add');
       await page.getByText('Yes/No').click();
@@ -30,7 +32,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
     await logout(page);
     await page.close();
-  }, 90_000);
+  }, { timeout: 90_000 });
 
   // ── helpers ────────────────────────────────────────────────────────────────
 
@@ -44,7 +46,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
   async function closeShareDrawer(page: import('@playwright/test').Page) {
     const panel = page.locator('.ds-sheet-panel');
     if (await panel.count() > 0 && await panel.isVisible()) {
-      await page.locator('.ds-sheet-header button').click();
+      await page.locator('[data-testid="bottom-sheet-close-btn"] button').click();
       await expect(panel).not.toBeVisible();
     }
   }
@@ -53,6 +55,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
   // Used in beforeAll to put the Mitglieder tests into a known clean state.
   async function removeUser2IfMember(page: import('@playwright/test').Page) {
     await page.goto('/polls');
+    await page.waitForLoadState('networkidle');
     await page.locator('[data-testid="share-btn"]').first().click();
     await expect(page.locator('.ds-sheet-panel')).toBeVisible();
 
@@ -64,8 +67,8 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
       const user2Row = page.locator('.ds-sheet-panel app-share-members-list .relative')
         .filter({ hasText: USER2 });
       if (await user2Row.count() > 0) {
-        // The only <button> in the non-Creator member row is the remove ds-button
-        await user2Row.locator('ds-button button').click();
+        await user2Row.locator('[data-testid="member-remove-btn"] button').click();
+        // Confirm if the inline confirm row appears
         const confirmBtn = page.locator('.ds-sheet-panel app-share-members-list ds-button button')
           .filter({ hasText: /entfernen|remove/i }).first();
         if (await confirmBtn.isVisible({ timeout: 2_000 }).catch(() => false)) {
@@ -94,7 +97,6 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
     test('share button opens the sheet', async ({ page }) => {
       await openShareDrawer(page);
-      // The portaled content panel is the reliable visibility indicator
       await expect(page.locator('.ds-sheet-panel app-share-content')).toBeVisible();
     });
 
@@ -110,12 +112,8 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
     test('Einladen tab — email input and invite button are visible', async ({ page }) => {
       await openShareDrawer(page);
-      // ds-input renders a plain <input> inside
       await expect(page.locator('.ds-sheet-panel ds-input input')).toBeVisible();
-      // Invite / Einladen button (disabled until email is typed, but still visible)
-      await expect(
-        page.locator('.ds-sheet-panel ds-button button').filter({ hasText: /einladen|invite/i }).first(),
-      ).toBeVisible();
+      await expect(page.locator('[data-testid="share-invite-btn"] button')).toBeVisible();
     });
 
     test('Einladen tab — visibility segmented-control and share-link copy button are visible', async ({ page }) => {
@@ -124,16 +122,13 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
       await expect(
         page.locator('.ds-sheet-panel app-share-access-tab ds-segmented-control'),
       ).toBeVisible();
-      // Share-link copy button (Kopieren / Copy)
-      await expect(
-        page.locator('.ds-sheet-panel app-share-access-tab ds-button button')
-          .filter({ hasText: /kopieren|copy/i }),
-      ).toBeVisible();
+      // Share-link copy button
+      await expect(page.locator('[data-testid="share-link-copy-btn"] button')).toBeVisible();
     });
 
     test('close button (ds-icon-button) closes the sheet', async ({ page }) => {
       await openShareDrawer(page);
-      await page.locator('.ds-sheet-header button').click();
+      await page.locator('[data-testid="bottom-sheet-close-btn"] button').click();
       await expect(page.locator('.ds-sheet-panel')).not.toBeVisible();
     });
 
@@ -178,17 +173,14 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
     test('close button closes the drawer on desktop', async ({ page }) => {
       await openShareDrawer(page);
-      await page.locator('.ds-sheet-header button').click();
+      await page.locator('[data-testid="bottom-sheet-close-btn"] button').click();
       await expect(page.locator('.ds-sheet-panel')).not.toBeVisible();
     });
 
     test('Einladen tab content is accessible on desktop', async ({ page }) => {
       await openShareDrawer(page);
       await expect(page.locator('.ds-sheet-panel ds-input input')).toBeVisible();
-      await expect(
-        page.locator('.ds-sheet-panel ds-button button')
-          .filter({ hasText: /einladen|invite/i }).first(),
-      ).toBeVisible();
+      await expect(page.locator('[data-testid="share-invite-btn"] button')).toBeVisible();
     });
   });
 
@@ -203,7 +195,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
       await removeUser2IfMember(page);
       await logout(page);
       await page.close();
-    }, 90_000);
+    }, { timeout: 90_000 });
 
     test.beforeEach(async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 });
@@ -221,9 +213,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
       // Invite USER2 unconditionally — beforeAll guarantees they are not yet a member
       await page.locator('.ds-sheet-panel ds-input input').fill(USER2);
-      const inviteBtn = page.locator('.ds-sheet-panel ds-button button')
-        .filter({ hasText: /einladen|invite/i }).first();
-      await inviteBtn.click();
+      await page.locator('[data-testid="share-invite-btn"] button').click();
 
       // Members tab must appear once the invite succeeds
       const membersTab = page.locator('.ds-sheet-panel ds-tabs button.ds-tab')
@@ -238,8 +228,8 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
         .filter({ hasText: USER2 });
       await expect(user2Row.locator('app-user-avatar').first()).toBeVisible();
 
-      // Clean up — scope remove button to USER2's row to avoid touching other members
-      await user2Row.locator('ds-button button').click();
+      // Clean up — scope to USER2's row to avoid touching other members
+      await user2Row.locator('[data-testid="member-remove-btn"] button').click();
       const confirmBtn = page.locator('.ds-sheet-panel app-share-members-list ds-button button')
         .filter({ hasText: /entfernen|remove/i }).first();
       if (await confirmBtn.isVisible({ timeout: 2_000 }).catch(() => false)) {

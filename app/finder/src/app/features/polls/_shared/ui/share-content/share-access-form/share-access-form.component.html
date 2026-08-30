@@ -20,7 +20,7 @@
     style="box-shadow: var(--shadow-card-soft)"
   >
     <span class="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-[var(--text-secondary)]">{{ shareLink() }}</span>
-    <ds-button variant="primary" size="sm" [noGlow]="true" (click)="copyLink()">{{ 'project.share.copy' | translate }}</ds-button>
+    <ds-button variant="primary" size="sm" [noGlow]="true" data-testid="share-link-copy-btn" (click)="copyLink()">{{ 'project.share.copy' | translate }}</ds-button>
   </div>
   <div class="mt-[9px] flex items-start gap-2 px-0.5">
     <span class="mt-px shrink-0">

@@ -160,6 +160,8 @@ export class PublicPollComponent implements OnInit {
           );
           if (this.isAuthenticated()) {
             this.navigateToPoll();
+          } else {
+            this.isLoading.set(false);
           }
         },
         error: (err) => {
@@ -205,11 +207,15 @@ export class PublicPollComponent implements OnInit {
     }
     this.hasNavigated = true;
     const info = this.projectInfo();
-    if (info?.isStandalone && info.pollId) {
-      this.router.navigate(['/polls', info.projectId, 'vote', info.pollId]);
-    } else {
-      this.router.navigate(['/polls']);
-    }
+    const target: Parameters<Router['navigate']>[0] =
+      info?.isStandalone && info.pollId
+        ? ['/polls', info.projectId, 'vote', info.pollId]
+        : ['/polls'];
+    this.router.navigate(target).then((success) => {
+      if (!success) {
+        this.hasNavigated = false;
+      }
+    });
   }
 
   protected copyShareLink(): void {

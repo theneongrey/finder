@@ -200,7 +200,9 @@ export class PublicPollComponent implements OnInit {
   }
 
   protected navigateToPoll(): void {
-    if (this.hasNavigated) { return; }
+    if (this.hasNavigated) {
+      return;
+    }
     this.hasNavigated = true;
     const info = this.projectInfo();
     if (info?.isStandalone && info.pollId) {

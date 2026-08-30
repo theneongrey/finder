@@ -145,6 +145,11 @@ Does it import a domain type (OptionType, PollItem, User, …)?
 - No `signal<Foo | null>` — use `| undefined`.
 - `@for` blocks all have `track`.
 - No `*ngIf` / `*ngFor` (use `@if` / `@for`).
+- **Run prettier** on all changed frontend files before committing:
+
+```bash
+cd app/finder && npx prettier --write "src/**/*.{ts,html,css}"
+```
 
 ---
 

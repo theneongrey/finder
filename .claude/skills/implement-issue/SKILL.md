@@ -106,6 +106,11 @@ Follow all rules in the `/implement-frontend` skill:
 - **Tailwind utility classes over custom CSS** — prefer inline Tailwind classes in templates; only add a `.component.css` file when Tailwind cannot express the styling (complex animations, unavoidable third-party overrides).
 - Two-file component default (`.ts` + `.html`); no `styleUrl` unless a CSS file is genuinely required.
 - ds-* design system layer, OnPush change detection, `signal<T | undefined>`, Angular 17+ control flow (`@if`/`@for`).
+- **Run prettier before every frontend commit:**
+
+```bash
+cd app/finder && npx prettier --write "src/**/*.{ts,html,css}"
+```
 
 #### Backend (ASP.NET Core)
 - **No business logic in endpoint handlers** — delegate to a service class in `Services/`.

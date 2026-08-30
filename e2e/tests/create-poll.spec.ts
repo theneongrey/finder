@@ -66,9 +66,7 @@ test.describe('CreatePoll', () => {
         const longText = 'a'.repeat(101);
         await input.fill(longText);
         await expect(indicator).toContainText('101/100');
-        const color = await indicator.evaluate((el) => getComputedStyle(el).color);
-        // danger color resolves to rgb(239, 68, 68) — #ef4444
-        expect(color).toBe('rgb(239, 68, 68)');
+        await expect(indicator).toHaveAttribute('data-over-limit', 'true');
       });
 
       test('input accepts text beyond 100 chars without being blocked', async ({ page }) => {

@@ -14,6 +14,7 @@
       [style.background]="background()"
       [style.paddingRight]="loading() ? '36px' : null"
       [class.ds-input--error]="!!error() || invalid()"
+      [attr.aria-invalid]="!!error() || invalid() || null"
       [attr.title]="title() ?? null"
       [attr.maxlength]="maxlength() ?? null"
       [class.ds-input--readonly]="readonly()"

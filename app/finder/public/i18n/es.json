@@ -313,11 +313,13 @@
         "addDescription": "Descripción",
         "addLink": "Enlace",
         "linkHint": "Pega un enlace y el título, texto e imagen se rellenan solos.",
-        "addOption": "Añadir opción",
-        "titleLabel": "Título"
+        "addOption": "Añadir opción"
       },
       "rating": {
         "answerOptions": "Opciones de valoración"
+      },
+      "shared": {
+        "titleLabel": "Título"
       }
     },
     "vote": {

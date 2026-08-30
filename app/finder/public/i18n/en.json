@@ -313,11 +313,13 @@
         "addDescription": "Description",
         "addLink": "Link",
         "linkHint": "Paste a link and the title, text and image fill in for you.",
-        "addOption": "Add option",
-        "titleLabel": "Title"
+        "addOption": "Add option"
       },
       "rating": {
         "answerOptions": "Rating options"
+      },
+      "shared": {
+        "titleLabel": "Title"
       }
     },
     "vote": {

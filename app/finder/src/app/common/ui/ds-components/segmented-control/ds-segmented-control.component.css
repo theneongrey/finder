@@ -12,7 +12,7 @@
 
 /* Sliding pill indicator */
 .ds-seg-track::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 4px;
   bottom: 4px;
@@ -49,8 +49,8 @@
   padding: unset;
   border-radius: var(--radius-xs) !important;
 }
-.ds-seg-btn[data-state='on'],
-.ds-seg-btn[aria-pressed='true'] {
+.ds-seg-btn[data-state="on"],
+.ds-seg-btn[aria-pressed="true"] {
   font-weight: var(--weight-bold);
   color: var(--text-primary);
 }

@@ -16,7 +16,12 @@ import {
 
 @Component({
   selector: 'app-share-access-tab',
-  imports: [DsButtonComponent, DsIconComponent, DsSegmentedControlComponent, TranslatePipe],
+  imports: [
+    DsButtonComponent,
+    DsIconComponent,
+    DsSegmentedControlComponent,
+    TranslatePipe,
+  ],
   templateUrl: './share-access-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './share-access-form.component.css',

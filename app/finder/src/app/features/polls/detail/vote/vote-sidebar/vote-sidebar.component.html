@@ -1,15 +1,17 @@
 <aside
-  class="hidden w-[296px] flex-none flex-col gap-[18px] overflow-y-auto py-[26px] px-[22px] border-r border-[var(--border-hairline-soft)] md:flex"
+  class="hidden w-[296px] flex-none flex-col gap-[18px] overflow-y-auto border-r border-[var(--border-hairline-soft)] px-[22px] py-[26px] md:flex"
 >
   <div>
     <app-poll-type-badge [type]="poll()?.optionType ?? OptionType.YesNo" />
     <div
-      class="text-wrap-pretty mt-3 leading-[1.15] font-[family-name:var(--font-display)] text-[26px] font-[var(--weight-bold)] tracking-[-0.6px] text-[var(--text-primary)]"
+      class="text-wrap-pretty mt-3 font-[family-name:var(--font-display)] text-[26px] leading-[1.15] font-[var(--weight-bold)] tracking-[-0.6px] text-[var(--text-primary)]"
     >
       {{ poll()?.name }}
     </div>
     @if (poll()?.description) {
-      <p class="m-0 mt-2 text-[length:var(--fs-body-sm)] leading-[1.45] text-[var(--text-secondary)] text-wrap-pretty">
+      <p
+        class="text-wrap-pretty m-0 mt-2 text-[length:var(--fs-body-sm)] leading-[1.45] text-[var(--text-secondary)]"
+      >
         {{ poll()?.description }}
       </p>
     }
@@ -17,20 +19,36 @@
 
   @if (closeDateDisplay() || memberVoteStatus().length > 0) {
     <div
-      class="flex flex-col gap-[9px] rounded-[16px] py-[14px] px-[15px] bg-[var(--surface-card)] border border-[var(--border-hairline-soft)]"
+      class="flex flex-col gap-[9px] rounded-[16px] border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] px-[15px] py-[14px]"
     >
       @if (closeDateDisplay()) {
-        <div class="flex items-center gap-2 text-[13.5px] font-[var(--weight-semibold)] text-[var(--text-secondary)]">
+        <div
+          class="flex items-center gap-2 text-[13.5px] font-[var(--weight-semibold)] text-[var(--text-secondary)]"
+        >
           <ds-icon name="clock" [size]="15" />
-          <span>{{ "project.vote.closeDate" | translate }} {{ closeDateDisplay() }}</span>
+          <span
+            >{{ "project.vote.closeDate" | translate }}
+            {{ closeDateDisplay() }}</span
+          >
         </div>
       }
       @if (memberVoteStatus().length > 0) {
-        <div class="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
+        <div
+          class="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]"
+        >
           <span class="flex w-[15px] justify-center">
-            <span class="w-1.5 h-1.5 rounded-full bg-[var(--positive-strong)]"></span>
+            <span
+              class="h-1.5 w-1.5 rounded-full bg-[var(--positive-strong)]"
+            ></span>
           </span>
-          <span>{{ "project.lastVote.voted" | translate: { count: votedMemberCount(), total: memberVoteStatus().length } }}</span>
+          <span>{{
+            "project.lastVote.voted"
+              | translate
+                : {
+                    count: votedMemberCount(),
+                    total: memberVoteStatus().length,
+                  }
+          }}</span>
         </div>
         <app-avatar-stack [users]="memberAvatars()" size="sm" [max]="12" />
       }
@@ -39,7 +57,7 @@
 
   <div>
     <div
-      class="px-[2px] pb-[9px] text-[12px] font-[var(--weight-bold)] tracking-[0.7px] uppercase text-[var(--text-muted)]"
+      class="px-[2px] pb-[9px] text-[12px] font-[var(--weight-bold)] tracking-[0.7px] text-[var(--text-muted)] uppercase"
     >
       {{ "project.vote.yourAnswers" | translate }}
     </div>

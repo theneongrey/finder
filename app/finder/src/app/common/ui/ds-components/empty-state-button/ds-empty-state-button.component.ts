@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { DsIconComponent } from '../icon/ds-icon.component';
 

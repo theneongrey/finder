@@ -32,7 +32,8 @@
   border: none;
   background: var(--positive-strong);
   color: var(--white);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--positive-strong) 30%, transparent);
+  box-shadow: 0 8px 20px
+    color-mix(in srgb, var(--positive-strong) 30%, transparent);
 }
 .desktop-vote-btn--yes:hover {
   filter: brightness(1.05);

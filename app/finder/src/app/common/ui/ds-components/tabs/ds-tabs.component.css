@@ -1,4 +1,6 @@
-.ds-tabs-host { display: block; }
+.ds-tabs-host {
+  display: block;
+}
 
 .ds-tabs {
   display: flex;
@@ -25,8 +27,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: color var(--duration-fast) var(--ease-standard),
-              border-color var(--duration-fast) var(--ease-standard);
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
   /* Override SpartanNG TabsTrigger defaults */
   border-radius: 0 !important;
   height: auto !important;

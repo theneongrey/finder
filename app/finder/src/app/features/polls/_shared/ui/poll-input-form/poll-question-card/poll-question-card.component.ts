@@ -46,7 +46,9 @@ export class PollQuestionCardComponent {
   showDescription = signal(false);
 
   private injector = inject(Injector);
-  private descriptionTextarea = viewChild<DsTextareaComponent>('descriptionTextarea');
+  private descriptionTextarea = viewChild<DsTextareaComponent>(
+    'descriptionTextarea',
+  );
 
   constructor() {
     effect(() => {

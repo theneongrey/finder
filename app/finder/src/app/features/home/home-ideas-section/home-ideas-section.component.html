@@ -1,16 +1,29 @@
 <div class="ideas-header">
-  <span class="section-eyebrow">{{ 'home.ideas.eyebrow' | translate }}</span>
-  <h2 class="ideas-h2">{{ 'home.ideas.heading' | translate }}</h2>
-  <p class="ideas-sub">{{ 'home.ideas.sub' | translate }}</p>
+  <span class="section-eyebrow">{{ "home.ideas.eyebrow" | translate }}</span>
+  <h2 class="ideas-h2">{{ "home.ideas.heading" | translate }}</h2>
+  <p class="ideas-sub">{{ "home.ideas.sub" | translate }}</p>
 </div>
 
 <!-- Tabs: 2-col grid on mobile, flex row on desktop -->
 <div class="idea-tabs">
   @for (idea of ideas; track idea.id; let i = $index) {
-    <button class="idea-tab" [class.active]="ideaIdx() === i" (click)="selectIdea(i)">
-      <span class="tab-dot" [style.background]="ideaIdx() === i ? 'rgba(255,255,255,.75)' : idea.tintFg"></span>
-      <span class="tab-label-short mobile-only">{{ idea.shortKey | translate }}</span>
-      <span class="tab-label-full desktop-only">{{ idea.tabKey | translate }}</span>
+    <button
+      class="idea-tab"
+      [class.active]="ideaIdx() === i"
+      (click)="selectIdea(i)"
+    >
+      <span
+        class="tab-dot"
+        [style.background]="
+          ideaIdx() === i ? 'rgba(255,255,255,.75)' : idea.tintFg
+        "
+      ></span>
+      <span class="tab-label-short mobile-only">{{
+        idea.shortKey | translate
+      }}</span>
+      <span class="tab-label-full desktop-only">{{
+        idea.tabKey | translate
+      }}</span>
     </button>
   }
 </div>
@@ -27,7 +40,18 @@
       @for (pk of currentIdea().pointKeys; track $index) {
         <div class="idea-point">
           <span class="point-check">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1f7a8c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"/></svg>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#1f7a8c"
+              stroke-width="3.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4.5 12.5l4.5 4.5L20 5" />
+            </svg>
           </span>
           <span>{{ pk | translate }}</span>
         </div>
@@ -35,8 +59,18 @@
     </div>
     <button class="idea-cta" (click)="scrollToEmail()">
       <span>{{ currentIdea().ctaKey | translate }}</span>
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M5 12h13" />
+        <path d="M12.5 6l6 6-6 6" />
       </svg>
     </button>
   </div>
@@ -44,22 +78,40 @@
   <!-- Poll preview -->
   <div class="idea-preview">
     <div class="idea-preview-inner">
-      <div class="preview-kind">{{ currentIdea().pollKindKey | translate }}</div>
-      <div class="preview-question">{{ currentIdea().questionKey | translate }}</div>
+      <div class="preview-kind">
+        {{ currentIdea().pollKindKey | translate }}
+      </div>
+      <div class="preview-question">
+        {{ currentIdea().questionKey | translate }}
+      </div>
       <div class="preview-options">
         @for (o of currentIdea().optionsFormatted; track $index) {
           <div class="preview-option" [style.border-color]="o.border">
-            <div class="preview-bar" [style.width]="o.pct" [style.background]="o.fill"></div>
+            <div
+              class="preview-bar"
+              [style.width]="o.pct"
+              [style.background]="o.fill"
+            ></div>
             <div class="preview-option-row">
-              <span [style.font-weight]="o.weight">{{ o.labelKey | translate }}</span>
-              <span class="preview-count" [style.color]="o.numColor">{{ o.numLabel }}</span>
+              <span [style.font-weight]="o.weight">{{
+                o.labelKey | translate
+              }}</span>
+              <span class="preview-count" [style.color]="o.numColor">{{
+                o.numLabel
+              }}</span>
             </div>
           </div>
         }
       </div>
       <div class="preview-voters">
-        <app-avatar-stack class="preview-avatar-row" [users]="currentIdea().votersFormatted" size="sm" />
-        <span class="preview-voters-line">{{ currentIdea().votersLineKey | translate }}</span>
+        <app-avatar-stack
+          class="preview-avatar-row"
+          [users]="currentIdea().votersFormatted"
+          size="sm"
+        />
+        <span class="preview-voters-line">{{
+          currentIdea().votersLineKey | translate
+        }}</span>
       </div>
     </div>
   </div>

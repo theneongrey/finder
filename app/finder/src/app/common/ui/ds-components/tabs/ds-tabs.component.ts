@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  model,
+} from '@angular/core';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 
 export interface TabItem {

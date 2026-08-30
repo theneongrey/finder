@@ -13,6 +13,8 @@ export class HomeNavComponent {
   @Input() scrolled = false;
 
   scrollToSection(id: string): void {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }

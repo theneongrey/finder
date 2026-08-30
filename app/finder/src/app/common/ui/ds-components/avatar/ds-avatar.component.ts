@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { DsIconComponent } from '../icon/ds-icon.component';
 
@@ -23,7 +28,7 @@ export class DsAvatarComponent {
 
   protected readonly px = computed(() => {
     const s = this.size();
-    return typeof s === 'number' ? s : SIZE_MAP[s] ?? SIZE_MAP['md'];
+    return typeof s === 'number' ? s : (SIZE_MAP[s] ?? SIZE_MAP['md']);
   });
   protected readonly fontSize = computed(() => Math.round(this.px() * 0.4));
   protected readonly isPending = computed(() => this.voted() === false);

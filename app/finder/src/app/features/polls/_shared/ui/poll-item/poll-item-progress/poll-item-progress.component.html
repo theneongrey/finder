@@ -2,11 +2,16 @@
   <div class="flex items-center justify-between gap-[10px]">
     <span
       data-testid="voted-count"
-      class="text-[var(--fs-ui-sm)] font-bold leading-none text-[var(--text-primary)]"
+      class="leading-none font-bold text-[var(--fs-ui-sm)] text-[var(--text-primary)]"
     >
-      {{ "project.lastVote.voted" | translate: { count: votedCount(), total: totalParticipants() } }}
+      {{
+        "project.lastVote.voted"
+          | translate: { count: votedCount(), total: totalParticipants() }
+      }}
     </span>
-    <span class="text-[var(--fs-caption)] font-semibold leading-none text-[var(--text-muted)]">
+    <span
+      class="leading-none font-semibold text-[var(--fs-caption)] text-[var(--text-muted)]"
+    >
       {{ progressPercent() }}%
     </span>
   </div>
@@ -15,7 +20,13 @@
   @if (participantAvatars().length > 0) {
     <div class="mt-1.5 flex flex-wrap items-center gap-[7px]">
       @for (a of participantAvatars(); track $index) {
-        <ds-avatar [initial]="a.initial" [bg]="a.bg" [fg]="a.fg" size="sm" [voted]="a.voted" />
+        <ds-avatar
+          [initial]="a.initial"
+          [bg]="a.bg"
+          [fg]="a.fg"
+          size="sm"
+          [voted]="a.voted"
+        />
       }
       <span class="ml-[2px] text-[var(--fs-caption)] text-[var(--text-muted)]">
         {{ missingVotersText() }}

@@ -85,9 +85,15 @@ export class HlmSwitch implements ControlValueAccessor {
   });
   public readonly size = input<'default' | 'sm'>('default');
   public readonly inputId = input<string | null>(null);
-  public readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
-  public readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
-  public readonly ariaDescribedby = input<string | null>(null, { alias: 'aria-describedby' });
+  public readonly ariaLabel = input<string | null>(null, {
+    alias: 'aria-label',
+  });
+  public readonly ariaLabelledby = input<string | null>(null, {
+    alias: 'aria-labelledby',
+  });
+  public readonly ariaDescribedby = input<string | null>(null, {
+    alias: 'aria-describedby',
+  });
 
   protected readonly _disabled = linkedSignal(this.disabled);
   protected _onChange?: ChangeFn<boolean>;
@@ -99,10 +105,18 @@ export class HlmSwitch implements ControlValueAccessor {
     this.checkedChange.emit(value);
   }
 
-  writeValue(value: boolean): void { this.checked.set(Boolean(value)); }
-  registerOnChange(fn: ChangeFn<boolean>): void { this._onChange = fn; }
-  registerOnTouched(fn: TouchFn): void { this._onTouched = fn; }
-  setDisabledState(isDisabled: boolean): void { this._disabled.set(isDisabled); }
+  writeValue(value: boolean): void {
+    this.checked.set(Boolean(value));
+  }
+  registerOnChange(fn: ChangeFn<boolean>): void {
+    this._onChange = fn;
+  }
+  registerOnTouched(fn: TouchFn): void {
+    this._onTouched = fn;
+  }
+  setDisabledState(isDisabled: boolean): void {
+    this._disabled.set(isDisabled);
+  }
 }
 
 export const HlmSwitchImports = [HlmSwitch, HlmSwitchThumb] as const;

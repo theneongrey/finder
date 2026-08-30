@@ -18,4 +18,6 @@
   text-align: left;
   transition: background var(--duration-fast) var(--ease-standard);
 }
-.ds-menu-item:hover { background: var(--sand-100); }
+.ds-menu-item:hover {
+  background: var(--sand-100);
+}

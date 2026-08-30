@@ -129,8 +129,9 @@ a {
   text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
   text-underline-offset: 3px;
   cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-standard),
-              text-decoration-color var(--duration-fast) var(--ease-standard);
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
 }
 .ds-link:hover {
   color: var(--ink-900);
@@ -166,8 +167,12 @@ input.invalid {
 }
 
 @keyframes ds-skeleton-shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .bg-app-gradient {
@@ -203,7 +208,7 @@ input.invalid {
 
 /* ── CDK overlay content (outside component host scope) ─────── */
 /* hlm-dropdown-menu lives in the CDK overlay; ::ng-deep can't reach it */
-[data-slot='dropdown-menu'] {
+[data-slot="dropdown-menu"] {
   background: #fff;
   border: 1px solid var(--border-hairline);
   border-radius: var(--radius-lg);
@@ -219,22 +224,22 @@ input.invalid {
   border: 1px solid var(--border-hairline) !important;
   box-shadow: var(--shadow-overlay) !important;
 }
-[data-sonner-toaster] [data-sonner-toast][data-type='success'] {
+[data-sonner-toaster] [data-sonner-toast][data-type="success"] {
   background: var(--green-badge-bg) !important;
   color: var(--positive) !important;
   border-color: var(--green-100) !important;
 }
-[data-sonner-toaster] [data-sonner-toast][data-type='error'] {
+[data-sonner-toaster] [data-sonner-toast][data-type="error"] {
   background: var(--red-100) !important;
   color: var(--negative) !important;
   border-color: var(--red-200) !important;
 }
-[data-sonner-toaster] [data-sonner-toast][data-type='info'] {
+[data-sonner-toaster] [data-sonner-toast][data-type="info"] {
   background: var(--accent-tint) !important;
   color: var(--accent) !important;
   border-color: var(--accent-border) !important;
 }
-[data-sonner-toaster] [data-sonner-toast][data-type='warning'] {
+[data-sonner-toaster] [data-sonner-toast][data-type="warning"] {
   background: var(--amber-100) !important;
   color: var(--warning) !important;
   border-color: var(--amber-avatar-bg) !important;
@@ -242,26 +247,54 @@ input.invalid {
 
 /* ── List entrance stagger ───────────────────────────────────── */
 @keyframes ds-fade-up {
-  from { opacity: 0; transform: translateY(12px) scale(0.985); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes resultsExpand {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .vt-stagger > * {
   animation: ds-fade-up 0.42s cubic-bezier(0.22, 0.7, 0.3, 1) both;
 }
-.vt-stagger > *:nth-child(1) { animation-delay: 0.01s; }
-.vt-stagger > *:nth-child(2) { animation-delay: 0.06s; }
-.vt-stagger > *:nth-child(3) { animation-delay: 0.11s; }
-.vt-stagger > *:nth-child(4) { animation-delay: 0.16s; }
-.vt-stagger > *:nth-child(5) { animation-delay: 0.21s; }
-.vt-stagger > *:nth-child(6) { animation-delay: 0.26s; }
-.vt-stagger > *:nth-child(7) { animation-delay: 0.31s; }
-.vt-stagger > *:nth-child(8) { animation-delay: 0.36s; }
+.vt-stagger > *:nth-child(1) {
+  animation-delay: 0.01s;
+}
+.vt-stagger > *:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.vt-stagger > *:nth-child(3) {
+  animation-delay: 0.11s;
+}
+.vt-stagger > *:nth-child(4) {
+  animation-delay: 0.16s;
+}
+.vt-stagger > *:nth-child(5) {
+  animation-delay: 0.21s;
+}
+.vt-stagger > *:nth-child(6) {
+  animation-delay: 0.26s;
+}
+.vt-stagger > *:nth-child(7) {
+  animation-delay: 0.31s;
+}
+.vt-stagger > *:nth-child(8) {
+  animation-delay: 0.36s;
+}
 
 /* ── Accessibility ───────────────────────────────────────────── */
 
@@ -269,7 +302,6 @@ input.invalid {
   outline: 2px solid var(--focus-ring-color);
   outline-offset: 2px;
 }
-
 
 /* ── ToggleGroup: segmented-control look ─────────────────────── */
 [data-slot="toggle-group"][data-variant="outline"][data-spacing="0"] {

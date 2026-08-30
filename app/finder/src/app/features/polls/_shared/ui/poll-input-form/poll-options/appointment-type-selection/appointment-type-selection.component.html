@@ -1,8 +1,10 @@
 <ds-card [accentBorder]="false" [padding]="16">
-  <p class="label text-[color:var(--text-muted)] tracking-[var(--tracking-eyebrow-lg)]">
-    {{ 'project.pollInput.date.appointmentTypeLabel' | translate }}
+  <p
+    class="label tracking-[var(--tracking-eyebrow-lg)] text-[color:var(--text-muted)]"
+  >
+    {{ "project.pollInput.date.appointmentTypeLabel" | translate }}
   </p>
-  <div class="flex flex-wrap gap-[7px] py-px mt-[11px]">
+  <div class="mt-[11px] flex flex-wrap gap-[7px] py-px">
     @for (t of types; track t.type) {
       <ds-button
         size="sm"
@@ -11,7 +13,9 @@
         (click)="typeSelected.emit(t.type)"
       >
         @if (t.type === selectedType()) {
-          <span class="w-[7px] h-[7px] rounded-full bg-[var(--accent)] flex-none"></span>
+          <span
+            class="h-[7px] w-[7px] flex-none rounded-full bg-[var(--accent)]"
+          ></span>
         }
         {{ t.labelKey | translate }}
       </ds-button>
@@ -21,24 +25,26 @@
   @if (canHaveTime()) {
     <button
       type="button"
-      class="flex items-center gap-3 w-full text-left cursor-pointer mt-[10px] px-[14px] py-3 rounded-[14px] border border-[rgba(20,24,28,.06)] bg-[#fdfcfa]"
+      class="mt-[10px] flex w-full cursor-pointer items-center gap-3 rounded-[14px] border border-[rgba(20,24,28,.06)] bg-[#fdfcfa] px-[14px] py-3 text-left"
       (click)="showTimeChange.emit(!showTime())"
     >
-      <span class="flex-1 min-w-0">
-        <span class="block text-[14px] font-bold text-[color:var(--text-primary)]">
-          {{ 'project.pollInput.date.timePerOption' | translate }}
+      <span class="min-w-0 flex-1">
+        <span
+          class="block text-[14px] font-bold text-[color:var(--text-primary)]"
+        >
+          {{ "project.pollInput.date.timePerOption" | translate }}
         </span>
-        <span class="block text-[12.5px] mt-0.5 text-[color:var(--text-muted)]">
-          {{ 'project.pollInput.date.timePerOptionHint' | translate }}
+        <span class="mt-0.5 block text-[12.5px] text-[color:var(--text-muted)]">
+          {{ "project.pollInput.date.timePerOptionHint" | translate }}
         </span>
       </span>
       <span
-        class="relative flex-none w-11 h-[26px] rounded-full transition-[background] duration-[180ms]"
+        class="relative h-[26px] w-11 flex-none rounded-full transition-[background] duration-[180ms]"
         [class.bg-[var(--accent)]]="showTime()"
         [class.bg-[var(--sand-500)]]="!showTime()"
       >
         <span
-          class="absolute top-[3px] w-5 h-5 rounded-full bg-white shadow-[0_1px_4px_rgba(30,35,40,.28)] transition-[left] duration-200"
+          class="absolute top-[3px] h-5 w-5 rounded-full bg-white shadow-[0_1px_4px_rgba(30,35,40,.28)] transition-[left] duration-200"
           [class.left-[21px]]="showTime()"
           [class.left-[3px]]="!showTime()"
         ></span>

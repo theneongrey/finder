@@ -5,7 +5,10 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { PollDetail, SharedWith } from '../../../_shared/models/poll-detail.model';
+import {
+  PollDetail,
+  SharedWith,
+} from '../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { OptionType } from '@common/models/option-type.model';

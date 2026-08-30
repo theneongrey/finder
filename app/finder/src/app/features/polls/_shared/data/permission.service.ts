@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SharedWith, SharingContact, VisibilityType } from '../models/poll-detail.model';
+import {
+  SharedWith,
+  SharingContact,
+  VisibilityType,
+} from '../models/poll-detail.model';
 import { LoggerService } from '@common/services/logger.service';
 import { environment } from '@common/env/environment';
 

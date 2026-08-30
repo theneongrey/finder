@@ -1,34 +1,36 @@
 <div class="flex gap-2">
   @for (day of weekdays; track day) {
     <div
-      class="flex flex-col w-9 h-16 rounded-xl overflow-hidden border-2 border-primary/50"
+      class="border-primary/50 flex h-16 w-9 flex-col overflow-hidden rounded-xl border-2"
     >
-      <div class="h-6 flex items-center justify-center bg-white">
-        <span class="text-[12px] font-bold text-primary leading-none">{{
+      <div class="flex h-6 items-center justify-center bg-white">
+        <span class="text-primary text-[12px] leading-none font-bold">{{
           weekdayShortName(day)
         }}</span>
       </div>
       @if (day === entry().weekday) {
-        <div class="h-px bg-primary"></div>
-        <div class="flex-1 flex items-center justify-center bg-primary">
-          <i class="fa-solid fa-check text-white text-xs"></i>
+        <div class="bg-primary h-px"></div>
+        <div class="bg-primary flex flex-1 items-center justify-center">
+          <i class="fa-solid fa-check text-xs text-white"></i>
         </div>
       } @else if (otherWeekdays().has(day)) {
-        <div class="h-px bg-primary/30"></div>
-        <div class="flex-1 bg-primary/20"></div>
+        <div class="bg-primary/30 h-px"></div>
+        <div class="bg-primary/20 flex-1"></div>
       } @else {
-        <div class="h-px bg-surface-200"></div>
-        <div class="flex-1 bg-surface-100"></div>
+        <div class="bg-surface-200 h-px"></div>
+        <div class="bg-surface-100 flex-1"></div>
       }
     </div>
   }
 </div>
 <div class="flex items-baseline gap-2">
-  <p class="text-[26px] font-semibold text-surface-900">
+  <p class="text-surface-900 text-[26px] font-semibold">
     {{ weekdayName(entry().weekday!) }}
   </p>
   @if (entry().startTime; as t) {
     <span class="text-surface-300">·</span>
-    <p class="text-[26px] font-medium text-surface-500">{{ formatTimeOnly(t) }}</p>
+    <p class="text-surface-500 text-[26px] font-medium">
+      {{ formatTimeOnly(t) }}
+    </p>
   }
 </div>

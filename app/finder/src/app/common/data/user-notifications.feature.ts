@@ -1,10 +1,18 @@
 import { inject } from '@angular/core';
-import { patchState, signalStoreFeature, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStoreFeature,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import { pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { LoggerService } from '../services/logger.service';
-import { NotificationSetting, NotificationValue } from '../models/notification-setting.model';
+import {
+  NotificationSetting,
+  NotificationValue,
+} from '../models/notification-setting.model';
 import { UserService } from '../services/user.service';
 
 export function withNotificationsFeature() {
@@ -25,10 +33,16 @@ export function withNotificationsFeature() {
               return userService.getNotificationSettings().pipe(
                 tapResponse({
                   next: (notifications) => {
-                    patchState(store, { notifications, notificationsLoading: false });
+                    patchState(store, {
+                      notifications,
+                      notificationsLoading: false,
+                    });
                   },
                   error: (error) => {
-                    loggerService.error('[UserStore] Error loading notification settings', error);
+                    loggerService.error(
+                      '[UserStore] Error loading notification settings',
+                      error,
+                    );
                     patchState(store, { notificationsLoading: false });
                   },
                 }),
@@ -44,13 +58,16 @@ export function withNotificationsFeature() {
                 tapResponse({
                   next: (updated) => {
                     patchState(store, {
-                      notifications: store.notifications().map((n) =>
-                        n.id === updated.id ? updated : n,
-                      ),
+                      notifications: store
+                        .notifications()
+                        .map((n) => (n.id === updated.id ? updated : n)),
                     });
                   },
                   error: (error) => {
-                    loggerService.error('[UserStore] Error updating notification setting', error);
+                    loggerService.error(
+                      '[UserStore] Error updating notification setting',
+                      error,
+                    );
                   },
                 }),
               ),

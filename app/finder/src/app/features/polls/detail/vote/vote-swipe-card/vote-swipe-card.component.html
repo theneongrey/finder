@@ -1,5 +1,5 @@
 <div
-  class="vote-card-area relative mx-auto mt-5 w-full flex-1 px-5 max-w-[560px] md:mt-0 md:px-8"
+  class="vote-card-area relative mx-auto mt-5 w-full max-w-[560px] flex-1 px-5 md:mt-0 md:px-8"
 >
   <div
     #voteCard
@@ -74,18 +74,18 @@
                 "project.vote.ratingMax" | translate
               }}</span
               >{{ "project.vote.swipeHintMid" | translate
-              }}<span class="text-[var(--negative)] font-bold">{{
+              }}<span class="font-bold text-[var(--negative)]">{{
                 "project.vote.ratingMin" | translate
               }}</span>
             </p>
           } @else {
             <p class="m-0 text-xs font-semibold text-white">
               {{ "project.vote.swipeHintPre" | translate
-              }}<span class="text-[var(--positive-strong)] font-bold">{{
-                  "project.votesOverview.voteLabel.yes" | translate
-                }}</span
+              }}<span class="font-bold text-[var(--positive-strong)]">{{
+                "project.votesOverview.voteLabel.yes" | translate
+              }}</span
               >{{ "project.vote.swipeHintMid" | translate
-              }}<span class="text-[var(--negative)] font-bold">{{
+              }}<span class="font-bold text-[var(--negative)]">{{
                 "project.votesOverview.voteLabel.no" | translate
               }}</span>
             </p>

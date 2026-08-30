@@ -1,6 +1,10 @@
 <div
   class="flex items-center border-t border-[var(--border-hairline-soft)]"
-  [class]="size() === 'sm' ? 'mt-[14px] gap-2.5 pt-[14px]' : 'mt-5 gap-[11px] pt-[18px]'"
+  [class]="
+    size() === 'sm'
+      ? 'mt-[14px] gap-2.5 pt-[14px]'
+      : 'mt-5 gap-[11px] pt-[18px]'
+  "
 >
   @if (isAuthenticated() && participantAvatarUsers().length > 0) {
     <app-avatar-stack

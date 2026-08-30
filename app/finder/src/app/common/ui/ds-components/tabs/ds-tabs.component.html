@@ -1,14 +1,25 @@
-<div hlmTabs [tab]="value()" (tabActivated)="value.set($event)" class="ds-tabs-host">
+<div
+  hlmTabs
+  [tab]="value()"
+  (tabActivated)="value.set($event)"
+  class="ds-tabs-host"
+>
   <div hlmTabsList variant="line" class="ds-tabs">
     @for (item of items(); track item.value) {
       <button
         [hlmTabsTrigger]="item.value"
-        [style.font-size]="size() === 'sm' ? 'var(--fs-body-sm)' : 'var(--fs-body)'"
+        [style.font-size]="
+          size() === 'sm' ? 'var(--fs-body-sm)' : 'var(--fs-body)'
+        "
         class="ds-tab"
       >
         {{ item.label }}
         @if (item.count != null) {
-          <span class="ds-tab-count" [class.ds-tab-count--active]="item.value === value()">{{ item.count }}</span>
+          <span
+            class="ds-tab-count"
+            [class.ds-tab-count--active]="item.value === value()"
+            >{{ item.count }}</span
+          >
         }
       </button>
     }

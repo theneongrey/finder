@@ -4,8 +4,12 @@
   flex-shrink: 0;
 }
 
-.ds-avatar-ring    { border: 2.5px solid var(--white); }
-.ds-avatar-pending { border: 1.5px dashed var(--sand-400); }
+.ds-avatar-ring {
+  border: 2.5px solid var(--white);
+}
+.ds-avatar-pending {
+  border: 1.5px dashed var(--sand-400);
+}
 
 .ds-avatar-badge {
   position: absolute;
@@ -31,7 +35,9 @@
   height: unset;
 }
 /* Override SpartanNG after-ring */
-.ds-avatar-circle::after { display: none; }
+.ds-avatar-circle::after {
+  display: none;
+}
 
 .ds-avatar-fallback {
   font-family: var(--font-body);

@@ -3,9 +3,15 @@
 }
 
 @keyframes addCardNudge {
-  0%   { transform: translateY(0); }
-  35%  { transform: translateY(-5px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .card-enter {

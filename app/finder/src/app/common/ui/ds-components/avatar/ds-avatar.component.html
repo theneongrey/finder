@@ -13,7 +13,8 @@
       [style.background]="isPending() ? 'var(--cream-50)' : bg()"
       [style.color]="isPending() ? 'var(--sand-500)' : fg()"
       [style.font-size.px]="fontSize()"
-    >{{ initial() }}</span>
+      >{{ initial() }}</span
+    >
   </hlm-avatar>
   @if (voted() === true) {
     <span class="ds-avatar-badge">

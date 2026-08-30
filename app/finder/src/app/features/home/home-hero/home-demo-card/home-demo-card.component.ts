@@ -1,14 +1,33 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
 import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
-import { DEMO, DEMO_SEQ, DEMO_TOTAL_VOTERS, NAMES_TOP_100, PPL } from '../../home.constants';
+import {
+  DEMO,
+  DEMO_SEQ,
+  DEMO_TOTAL_VOTERS,
+  NAMES_TOP_100,
+  PPL,
+} from '../../home.constants';
 import { HomeService } from '../../home.service';
 
 @Component({
   selector: 'app-home-demo-card',
-  imports: [TranslatePipe, DsStatusDotComponent, DsBadgeComponent, DsAvatarComponent],
+  imports: [
+    TranslatePipe,
+    DsStatusDotComponent,
+    DsBadgeComponent,
+    DsAvatarComponent,
+  ],
   templateUrl: './home-demo-card.component.html',
   styleUrl: './home-demo-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,7 +65,7 @@ export class HomeDemoCardComponent implements OnInit, OnDestroy {
         pct: Math.round((n / maxCount) * 100) + '%',
         fill: isLead ? 'rgba(31,122,140,.13)' : 'rgba(20,24,28,.045)',
         border: isLead ? '#bcdfe3' : 'rgba(20,24,28,.08)',
-        chips: (seq[i] || []).map(vi => PPL[d.voters[vi]]),
+        chips: (seq[i] || []).map((vi) => PPL[d.voters[vi]]),
       };
     });
 
@@ -72,7 +91,7 @@ export class HomeDemoCardComponent implements OnInit, OnDestroy {
     }, 2200);
 
     this.demoTimer = setInterval(() => {
-      this.demoStep.update(s => (s + 1) % (DEMO_SEQ.length + 2));
+      this.demoStep.update((s) => (s + 1) % (DEMO_SEQ.length + 2));
     }, 1800);
   }
 

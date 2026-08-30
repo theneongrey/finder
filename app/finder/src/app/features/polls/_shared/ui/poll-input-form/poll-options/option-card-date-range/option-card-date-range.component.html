@@ -1,11 +1,13 @@
 <ds-card [accentBorder]="false" [padding]="14">
   <div class="flex flex-col gap-3">
     <div class="flex items-start gap-2">
-      <div class="flex flex-col gap-2 flex-1">
+      <div class="flex flex-1 flex-col gap-2">
         <div class="flex gap-2">
-          <div class="flex flex-col gap-1 flex-1">
-            <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
-              {{ 'project.pollInput.date.startDate' | translate }}
+          <div class="flex flex-1 flex-col gap-1">
+            <label
+              class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+            >
+              {{ "project.pollInput.date.startDate" | translate }}
             </label>
             <ds-input
               type="date"
@@ -17,9 +19,11 @@
           </div>
 
           @if (showTime()) {
-            <div class="flex flex-col gap-1 flex-1">
-              <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
-                {{ 'project.pollInput.date.startTime' | translate }}
+            <div class="flex flex-1 flex-col gap-1">
+              <label
+                class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+              >
+                {{ "project.pollInput.date.startTime" | translate }}
               </label>
               <ds-input
                 type="time"
@@ -33,9 +37,11 @@
         </div>
 
         <div class="flex gap-2">
-          <div class="flex flex-col gap-1 flex-1">
-            <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
-              {{ 'project.pollInput.date.endDate' | translate }}
+          <div class="flex flex-1 flex-col gap-1">
+            <label
+              class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+            >
+              {{ "project.pollInput.date.endDate" | translate }}
             </label>
             <ds-input
               type="date"
@@ -47,9 +53,11 @@
           </div>
 
           @if (showTime()) {
-            <div class="flex flex-col gap-1 flex-1">
-              <label class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]">
-                {{ 'project.pollInput.date.endTime' | translate }}
+            <div class="flex flex-1 flex-col gap-1">
+              <label
+                class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+              >
+                {{ "project.pollInput.date.endTime" | translate }}
               </label>
               <ds-input
                 type="time"
@@ -63,15 +71,25 @@
         </div>
 
         @if (endBeforeStart()) {
-          <p class="flex items-center gap-1 m-0 text-[length:var(--fs-caption)] text-[color:var(--color-danger,#ef4444)]">
+          <p
+            class="m-0 flex items-center gap-1 text-[length:var(--fs-caption)] text-[color:var(--color-danger,#ef4444)]"
+          >
             <ds-icon name="warning" [size]="12" />
-            {{ 'project.pollInput.date.endBeforeStart' | translate: { date: formattedStartDate() } }}
+            {{
+              "project.pollInput.date.endBeforeStart"
+                | translate: { date: formattedStartDate() }
+            }}
           </p>
         }
       </div>
 
       @if (canRemove()) {
-        <ds-button [size]="32" variant="ghost" icon="close" (click)="remove.emit()" />
+        <ds-button
+          [size]="32"
+          variant="ghost"
+          icon="close"
+          (click)="remove.emit()"
+        />
       }
     </div>
   </div>

@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { PollInputComponent } from './poll-input/poll-input.component';
 
 @Component({
   selector: 'app-add-poll',
-  imports: [TitleBarComponent, PollInputComponent],
+  imports: [PollInputComponent],
   templateUrl: './add-poll.component.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,

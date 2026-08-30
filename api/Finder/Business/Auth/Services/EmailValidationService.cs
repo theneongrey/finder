@@ -16,10 +16,10 @@ public class EmailValidationService
     private readonly SemaphoreSlim _lock = new(1, 1);
 
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly LookupClient _lookupClient;
+    private readonly ILookupClient _lookupClient;
     private readonly ILogger<EmailValidationService> _logger;
 
-    public EmailValidationService(IHttpClientFactory httpClientFactory, LookupClient lookupClient, ILogger<EmailValidationService> logger)
+    public EmailValidationService(IHttpClientFactory httpClientFactory, ILookupClient lookupClient, ILogger<EmailValidationService> logger)
     {
         _httpClientFactory = httpClientFactory;
         _lookupClient = lookupClient;

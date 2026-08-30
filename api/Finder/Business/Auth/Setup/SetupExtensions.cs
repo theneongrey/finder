@@ -12,7 +12,7 @@ public static class SetupExtensions
         services.Configure<LoginOptions>(configuration.GetSection("Login"));
 
         services.AddSingleton<EmailValidationService>();
-        services.AddSingleton<LookupClient>();
+        services.AddSingleton<ILookupClient, LookupClient>();
         services.AddHttpClient("EmailValidation", client =>
         {
             client.Timeout = TimeSpan.FromSeconds(10);

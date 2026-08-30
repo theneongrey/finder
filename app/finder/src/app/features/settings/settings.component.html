@@ -35,19 +35,7 @@
                 <div
                   class="mt-1 inline-flex h-[24px] items-center gap-1 rounded-[8px] bg-(--green-badge-bg) px-2 [font-size:var(--fs-micro)] [font-weight:var(--weight-bold)] text-(--green-badge-fg)"
                 >
-                  <svg
-                    width="11"
-                    height="11"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M4.5 12.5l4.5 4.5L20 5" />
-                  </svg>
+                  <ds-icon name="logo" [size]="11" />
                   <span>{{ "settings.emailVerified" | translate }}</span>
                 </div>
               </div>
@@ -117,10 +105,10 @@
               @for (i of [1, 2, 3, 4, 5, 6]; track i) {
                 <div class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
                   <div class="flex flex-1 flex-col gap-1.5">
-                    <hlm-skeleton class="h-3.5 w-36" />
-                    <hlm-skeleton class="h-3 w-48" />
+                    <div class="ds-skeleton h-3.5 w-36"></div>
+                    <div class="ds-skeleton h-3 w-48"></div>
                   </div>
-                  <hlm-skeleton class="h-8 w-[206px] shrink-0" />
+                  <div class="ds-skeleton h-8 w-[206px] shrink-0"></div>
                 </div>
               }
             } @else {
@@ -171,20 +159,7 @@
           >
             {{ "settings.logout" | translate }}
           </span>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="shrink-0 text-(--text-tertiary)"
-            aria-hidden="true"
-          >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
+          <ds-icon name="chevron-right" [size]="16" [color]="'var(--text-tertiary)'" />
         </button>
 
         <div class="mx-6 border-t border-(--border-hairline-soft)"></div>
@@ -198,20 +173,7 @@
           >
             {{ "settings.deleteAccount" | translate }}
           </span>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="shrink-0 text-(--color-error,#c0392b)"
-            aria-hidden="true"
-          >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
+          <ds-icon name="chevron-right" [size]="16" [color]="'var(--color-error, #c0392b)'" />
         </button>
       </ds-card>
     </ng-template>

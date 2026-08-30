@@ -6,21 +6,18 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs';
 import { Router } from '@angular/router';
-import { Events } from '@ngrx/signals/events';
 import { UserStore } from '@common/data/user.store';
-import { profileUpdateFinished } from '@common/data/user-profile.feature';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { toast } from '@spartan-ng/brain/sonner';
 import { TitleBarComponent } from '@smart/title-bar/title-bar.component';
 import { TitleBarService } from '@common/services/title-bar.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -34,7 +31,7 @@ import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsSegmentedControlComponent, SegmentOption } from '@ds/segmented-control/ds-segmented-control.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
-import { HlmSkeleton } from '@spartan-ng/helm/skeleton';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { NotificationValue } from '@common/models/notification-setting.model';
 
 @Component({
@@ -48,7 +45,7 @@ import { NotificationValue } from '@common/models/notification-setting.model';
     DsInputComponent,
     DsSegmentedControlComponent,
     DsCardComponent,
-    HlmSkeleton,
+    DsIconComponent,
   ],
   templateUrl: './settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +53,6 @@ import { NotificationValue } from '@common/models/notification-setting.model';
 export class SettingsComponent {
   private readonly userStore = inject(UserStore);
   private readonly translateService = inject(TranslateService);
-  private readonly events = inject(Events);
   private readonly router = inject(Router);
 
   readonly isDesktop = toSignal(
@@ -107,19 +103,6 @@ export class SettingsComponent {
       }
     });
 
-    this.events
-      .on(profileUpdateFinished)
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ payload }) => {
-        const message = this.translateService.instant(
-          payload.success ? 'settings.saveSuccess' : 'settings.saveError',
-        );
-        if (payload.success) {
-          toast.success(message);
-        } else {
-          toast.error(message);
-        }
-      });
   }
 
   onLanguageChange(value: string): void {

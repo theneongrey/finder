@@ -70,6 +70,7 @@
           <div [formGroup]="form" class="flex flex-col gap-4">
             <div class="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-4">
               <ds-input
+                data-testid="settings-name-input"
                 formControlName="name"
                 [label]="'settings.name' | translate"
                 [placeholder]="'settings.namePlaceholder' | translate"
@@ -97,6 +98,7 @@
                 {{ "settings.language" | translate }}
               </span>
               <ds-segmented-control
+                data-testid="settings-language-control"
                 [options]="languageOptions"
                 [value]="selectedLanguage()"
                 (valueChange)="onLanguageChange($event)"
@@ -123,7 +125,7 @@
               }
             } @else {
               @for (notif of notifications(); track notif.id) {
-                <div class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+                <div data-testid="settings-notif-row" class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
                   <div class="flex min-w-0 flex-1 flex-col gap-0.5">
                     <span
                       class="[font-size:var(--fs-body-xs)] [font-weight:var(--weight-semibold)] text-(--text-primary)"
@@ -137,6 +139,7 @@
                     </span>
                   </div>
                   <ds-segmented-control
+                    data-testid="settings-notif-control"
                     class="w-[206px] shrink-0"
                     size="sm"
                     [options]="notificationOptions()"
@@ -158,6 +161,7 @@
     <ng-template #accountActionsCard>
       <ds-card [padding]="0">
         <button
+          data-testid="settings-logout-btn"
           type="button"
           (click)="logout()"
           class="flex w-full items-center justify-between [border-radius:var(--radius-card)_var(--radius-card)_0_0] px-6 py-4 text-left transition-colors hover:bg-(--cream-100) active:bg-(--cream-100)"

@@ -104,16 +104,16 @@ test.describe('App shell — title bar, layout, responsive (issue #239)', () => 
       await expect(animBlobs).toHaveCount(0);
     });
 
-    test('title bar is visible on auth screen', async ({ page }) => {
+    test('title bar is not present on auth screen (moved to polls-shell)', async ({ page }) => {
       await page.goto('/auth/request-email');
       await page.waitForLoadState('networkidle');
-      await expect(page.locator('app-title-bar')).toBeVisible();
+      await expect(page.locator('app-title-bar')).toHaveCount(0);
     });
 
     test('user avatar is NOT shown on unauthenticated auth screen', async ({ page }) => {
       await page.goto('/auth/request-email');
       await page.waitForLoadState('networkidle');
-      await expect(page.locator('app-title-bar app-user-avatar')).toHaveCount(0);
+      await expect(page.locator('app-user-avatar')).toHaveCount(0);
     });
 
     test('auth screen background is --bg-app cream', async ({ page }) => {

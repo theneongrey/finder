@@ -14,7 +14,8 @@ test.describe('Settings page (issue #247)', () => {
 
   test('renders title, profile section and notifications section', async ({ page }) => {
     await expect(page.getByRole('heading', { name: /settings|einstellungen|ajustes/i })).toBeVisible();
-    await expect(page.locator('app-user-avatar')).toBeVisible();
+    // Two app-user-avatar elements exist (title bar + profile card) — check first one
+    await expect(page.locator('app-user-avatar').first()).toBeVisible();
     await expect(page.getByText(/^profile$|^profil$|^perfil$/i)).toBeVisible();
     await expect(page.getByText(/email notifications|e-mail-benachrichtigungen|notificaciones/i)).toBeVisible();
   });
@@ -25,23 +26,28 @@ test.describe('Settings page (issue #247)', () => {
     const nameValue = await nameInput.inputValue();
     expect(nameValue.length).toBeGreaterThan(0);
 
-    // Email is displayed as a read-only field
-    await expect(page.getByText(USER1)).toBeVisible();
+    // Email appears in both the profile card and the read-only field — check first occurrence
+    await expect(page.getByText(USER1).first()).toBeVisible();
   });
 
-  test('editing name and blurring shows success toast', async ({ page }) => {
+  test('editing name and blurring persists the change', async ({ page }) => {
     const nameInput = page.locator('[data-testid="settings-name-input"] input');
     const originalName = await nameInput.inputValue();
 
     await nameInput.fill('E2E Settings Test');
     await nameInput.blur();
+    await page.waitForLoadState('networkidle');
 
-    await expect(page.locator('[data-sonner-toast]')).toBeVisible({ timeout: 5000 });
+    // Reload to verify the name was actually saved to the backend
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('[data-testid="settings-name-input"] input')).toHaveValue('E2E Settings Test');
 
     // Restore original name
-    await nameInput.fill(originalName);
-    await nameInput.blur();
-    await page.locator('[data-sonner-toast]').waitFor({ state: 'hidden', timeout: 6000 });
+    const restoredInput = page.locator('[data-testid="settings-name-input"] input');
+    await restoredInput.fill(originalName);
+    await restoredInput.blur();
+    await page.waitForLoadState('networkidle');
   });
 
   test('language segmented control shows all three language options', async ({ page }) => {

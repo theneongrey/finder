@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { login, logout, USER1 } from './helpers';
 
-// Helper: navigate past type selection into the form step
+// Helper: navigate past type selection into the form step.
+// Clicking a type card at step 1 auto-advances to step 2 — no extra CTA click needed.
 async function selectTypeAndNext(page: any, testid: string) {
   await page.locator(`[data-testid="${testid}"]`).click();
-  await page.locator('[data-testid="wizard-cta"]').click();
 }
 
 test.describe('CreatePoll', () => {
@@ -26,15 +26,14 @@ test.describe('CreatePoll', () => {
     await expect(page.locator('[data-testid="type-btn-rating"]')).toBeVisible();
   });
 
-  test('step 1: wizard CTA is disabled until a type is selected', async ({ page }) => {
-    await expect(page.locator('[data-testid="wizard-cta"] button').first()).toBeDisabled();
-    await page.locator('[data-testid="type-btn-yesno"]').click();
+  test('step 1: CTA is enabled by default (YesNo pre-selected on mount)', async ({ page }) => {
+    // preselectYesNo() runs on mount — CTA is immediately enabled, never starts disabled
     await expect(page.locator('[data-testid="wizard-cta"] button').first()).not.toBeDisabled();
   });
 
-  test('step 1: clicking a type card shows selected state', async ({ page }) => {
+  test('step 1: type-btn-yesno shows selected state by default (pre-selected on mount)', async ({ page }) => {
+    // preselectYesNo() sets YesNo before the user clicks anything
     const card = page.locator('[data-testid="type-btn-yesno"]');
-    await card.click();
     await expect(card).toHaveClass(/type-btn--selected/);
   });
 
@@ -93,21 +92,21 @@ test.describe('CreatePoll', () => {
       });
     });
 
-    test('shows two pre-seeded editable option cards', async ({ page }) => {
+    test('shows one empty option card (no pre-seeded values)', async ({ page }) => {
       const options = page.locator('[data-testid="yesno-options"]');
       await expect(options).toBeVisible();
       const cards = options.locator('app-option-card');
-      await expect(cards).toHaveCount(2);
-      await expect(cards.nth(0).locator('input').first()).toHaveValue('Ja');
-      await expect(cards.nth(1).locator('input').first()).toHaveValue('Nein');
+      await expect(cards).toHaveCount(1);
+      await expect(cards.nth(0).locator('input').first()).toHaveValue('');
     });
 
     test('CTA is disabled without a question', async ({ page }) => {
       await expect(page.locator('[data-testid="wizard-cta"] button').first()).toBeDisabled();
     });
 
-    test('CTA becomes enabled once a question is entered', async ({ page }) => {
+    test('CTA becomes enabled once a question and option text are entered', async ({ page }) => {
       await page.locator('[data-testid="question-input"] input').fill('Wer soll kochen?');
+      await page.locator('app-option-card ds-input input').first().fill('Ja');
       await expect(page.locator('[data-testid="wizard-cta"] button').first()).not.toBeDisabled();
     });
   });
@@ -215,16 +214,15 @@ test.describe('CreatePoll', () => {
     test.use({ viewport: { width: 390, height: 844 } });
 
     test('3-step wizard: type → form → share', async ({ page }) => {
-      // Step 1: type selection
+      // Step 1: type selection (YesNo pre-selected)
       await expect(page.locator('[data-testid="type-btn-yesno"]')).toBeVisible();
+      // Clicking a type card auto-advances to step 2 (form)
       await page.locator('[data-testid="type-btn-yesno"]').click();
-
-      // Advance to step 2 (form)
-      await page.locator('[data-testid="wizard-cta"] button').click();
       await expect(page.locator('[data-testid="yesno-options"]')).toBeVisible();
 
-      // Fill form and create poll
+      // Fill question and at least one option text, then submit → step 3 (share)
       await page.locator('[data-testid="question-input"] input').fill('Mobile test');
+      await page.locator('app-option-card ds-input input').first().fill('Ja');
       await page.locator('[data-testid="wizard-cta"] button').click();
 
       // Step 3: share panel visible
@@ -236,16 +234,15 @@ test.describe('CreatePoll', () => {
     test.use({ viewport: { width: 1280, height: 800 } });
 
     test('2-step wizard: type grid → form+share sidebar', async ({ page }) => {
-      // Step 1: type grid
+      // Step 1: type grid (YesNo pre-selected)
       await expect(page.locator('[data-testid="type-btn-yesno"]')).toBeVisible();
+      // Clicking a type card auto-advances to step 2 (form + share sidebar)
       await page.locator('[data-testid="type-btn-yesno"]').click();
-
-      // Advance to step 2 (form + share sidebar)
-      await page.locator('[data-testid="wizard-cta"] button').click();
       await expect(page.locator('[data-testid="question-input"]')).toBeVisible();
 
-      // Fill form and create poll → share sidebar appears
+      // Fill question and at least one option text, then submit → share sidebar appears
       await page.locator('[data-testid="question-input"] input').fill('Desktop test');
+      await page.locator('app-option-card ds-input input').first().fill('Ja');
       await page.locator('[data-testid="wizard-cta"] button').click();
       await expect(page.locator('app-share-content')).toBeVisible();
     });

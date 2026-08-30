@@ -54,6 +54,7 @@ test.describe('Poll results page (#255)', () => {
   test('desktop: stats row, hero card and option list render', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
     await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
+    await page.waitForLoadState('networkidle');
     // Both layouts are in the DOM; filter to the visible one (desktop)
     await expect(page.locator('[data-testid="results-stats-row"]').filter({ visible: true })).toBeVisible();
     await expect(page.locator('[data-testid="results-hero-card"]').filter({ visible: true })).toBeVisible();
@@ -112,13 +113,16 @@ test.describe('Poll results page (#255)', () => {
   test('mobile: Ergebnis and Kommentare tab bar is visible', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    await expect(page.locator('[data-testid="results-tab-ergebnis"]')).toBeVisible();
-    await expect(page.locator('[data-testid="results-tab-kommentare"]')).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    // ds-tabs renders buttons with role="tab" via hlmTabsTrigger directive
+    await expect(page.getByRole('tab', { name: /ergebnis/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /kommentare/i })).toBeVisible();
   });
 
   test('mobile: Ergebnis tab (default) shows hero card and option list', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
+    await page.waitForLoadState('networkidle');
     await expect(page.locator('[data-testid="results-hero-card"]').filter({ visible: true })).toBeVisible();
     await expect(page.locator('[data-testid="results-option-list"]').filter({ visible: true })).toBeVisible();
   });
@@ -126,7 +130,8 @@ test.describe('Poll results page (#255)', () => {
   test('mobile: switching to Kommentare tab shows textarea input and disabled submit', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    await page.locator('[data-testid="results-tab-kommentare"]').click();
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('tab', { name: /kommentare/i }).click();
     // Scope to the visible mobile comments panel (desktop sidebar is display:none at 390px)
     const mobileComments = page.locator('.flex.flex-col.lg\\:hidden app-comments-section');
     await expect(mobileComments.locator('[data-testid="results-comment-input"] textarea')).toBeVisible();

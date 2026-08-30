@@ -9,15 +9,14 @@ test.describe('Poll close date', () => {
     await login(page, USER1);
 
     // Create a standalone poll — the close settings auto-select "1 week" by default
-    await page.locator('[data-testid="add-poll-card"]').click();
+    await page.goto('/polls/add');
     await page.waitForURL('**/polls/add');
-    await page.getByText('Yes/No').click();
+    await page.getByText('Yes/No').click(); // auto-advances to step 2
     await page
       .getByRole('textbox', { name: 'Your question' })
       .fill('Close Date E2E Test Poll');
-    await page.getByPlaceholder('e.g. Italian restaurant').first().fill('Option A');
-
-    await page.getByRole('button', { name: 'Create poll' }).click();
+    await page.locator('app-option-card ds-input input').first().fill('Ja');
+    await page.locator('[data-testid="wizard-cta"] button').click();
     await page.waitForURL('**/polls');
 
     // Capture the poll slug from the first poll's edit route via the menu
@@ -76,7 +75,7 @@ test.describe('Poll close date', () => {
     await page.waitForURL('**/edit/**');
 
     await expect(page.getByRole('textbox', { name: 'Your question' })).toHaveValue('Close Date E2E Test Poll');
-    await expect(page.getByPlaceholder('e.g. Italian restaurant').first()).toHaveValue('Option A');
+    await expect(page.getByPlaceholder('e.g. Italian restaurant').first()).toHaveValue('Ja');
   });
 
   test('closing poll via API then reloading overview shows Beendet badge', async ({ page }) => {

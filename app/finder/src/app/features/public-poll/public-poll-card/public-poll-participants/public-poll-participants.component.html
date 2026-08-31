@@ -1,32 +1,38 @@
 <div
-  class="flex items-center border-t border-[var(--border-hairline-soft)]"
-  [class]="
-    size() === 'sm'
-      ? 'mt-[14px] gap-2.5 pt-[14px]'
-      : 'mt-5 gap-[11px] pt-[18px]'
-  "
+    class="flex items-center border-t border-[var(--border-hairline-soft)]"
+    [class]="
+        size() === 'sm'
+            ? 'mt-[14px] gap-2.5 pt-[14px]'
+            : 'mt-5 gap-[11px] pt-[18px]'
+    "
 >
-  @if (isAuthenticated() && participantAvatarUsers().length > 0) {
-    <app-avatar-stack
-      [users]="participantAvatarUsers()"
-      [max]="5"
-      [size]="size() === 'sm' ? 'sm' : 'md'"
-    />
-  } @else {
-    <div class="flex pl-[7px]">
-      @for (_ of participantSlots(); track $index) {
-        <div
-          class="-ml-[7px] rounded-full border-[2.5px] border-white bg-[var(--sand-300)]"
-          [class]="size() === 'sm' ? 'h-[30px] w-[30px]' : 'h-[34px] w-[34px]'"
-        ></div>
-      }
-    </div>
-  }
-  <span
-    class="text-pretty [color:var(--text-tertiary)]"
-    [class]="size() === 'sm' ? 'text-[12.5px] leading-[1.35]' : 'text-[13.5px]'"
-  >
-    {{ participantCount() }}
-    {{ "publicPoll.peopleCount" | translate }}
-  </span>
+    @if (isAuthenticated() && participantAvatarUsers().length > 0) {
+        <app-avatar-stack
+            [users]="participantAvatarUsers()"
+            [max]="5"
+            [size]="size() === 'sm' ? 'sm' : 'md'"
+        />
+    } @else {
+        <div class="flex pl-[7px]">
+            @for (_ of participantSlots(); track $index) {
+                <div
+                    class="-ml-[7px] rounded-full border-[2.5px] border-white bg-[var(--sand-300)]"
+                    [class]="
+                        size() === 'sm'
+                            ? 'h-[30px] w-[30px]'
+                            : 'h-[34px] w-[34px]'
+                    "
+                ></div>
+            }
+        </div>
+    }
+    <span
+        class="text-pretty [color:var(--text-tertiary)]"
+        [class]="
+            size() === 'sm' ? 'text-[12.5px] leading-[1.35]' : 'text-[13.5px]'
+        "
+    >
+        {{ participantCount() }}
+        {{ 'publicPoll.peopleCount' | translate }}
+    </span>
 </div>

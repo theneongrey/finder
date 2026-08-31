@@ -1,370 +1,393 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    input,
 } from '@angular/core';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import {
-  AvatarStackComponent,
-  AvatarUser,
+    AvatarStackComponent,
+    AvatarUser,
 } from '@smart/avatar-stack/avatar-stack.component';
 import {
-  OptionDetail,
-  PollDetail,
+    OptionDetail,
+    PollDetail,
 } from '../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
 import { OptionType } from '@common/models/option-type.model';
 
 interface StatCard {
-  label: string;
-  value: string;
-  sub: string;
-  color: string;
+    label: string;
+    value: string;
+    sub: string;
+    color: string;
 }
 
 interface TiedOption {
-  title: string;
-  big: string;
-  small: string;
+    title: string;
+    big: string;
+    small: string;
 }
 
 @Component({
-  selector: 'app-vote-overview-summary',
-  templateUrl: './vote-overview-summary.component.html',
-  imports: [DsCardComponent, AvatarStackComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-vote-overview-summary',
+    templateUrl: './vote-overview-summary.component.html',
+    imports: [DsCardComponent, AvatarStackComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteOverviewSummaryComponent {
-  private readonly dateFormatService = inject(DateOptionFormatService);
+    private readonly dateFormatService = inject(DateOptionFormatService);
 
-  poll = input.required<PollDetail>();
-  commentsCount = input(0);
-  commentsWithContext = input(0);
-  totalMembers = input(0);
+    poll = input.required<PollDetail>();
+    commentsCount = input(0);
+    commentsWithContext = input(0);
+    totalMembers = input(0);
 
-  private readonly winner = computed(() => {
-    const options = this.poll().options;
-    if (!options.length) {
-      return undefined;
-    }
-    const type = this.poll().optionType;
-    return options
-      .slice()
-      .sort((a, b) =>
-        type === OptionType.Rating
-          ? this.avgRating(b) - this.avgRating(a)
-          : this.yesCount(b) - this.yesCount(a),
-      )[0];
-  });
+    private readonly winner = computed(() => {
+        const options = this.poll().options;
+        if (!options.length) {
+            return undefined;
+        }
+        const type = this.poll().optionType;
+        return options
+            .slice()
+            .sort((a, b) =>
+                type === OptionType.Rating
+                    ? this.avgRating(b) - this.avgRating(a)
+                    : this.yesCount(b) - this.yesCount(a),
+            )[0];
+    });
 
-  readonly heroLabel = computed(() => {
-    const w = this.winner();
-    if (!w) {
-      return '';
-    }
-    const type = this.poll().optionType;
-    if (type === OptionType.Date) {
-      return this.dateFormatService.formatLabel(w.text);
-    }
-    return w.text;
-  });
+    readonly heroLabel = computed(() => {
+        const w = this.winner();
+        if (!w) {
+            return '';
+        }
+        const type = this.poll().optionType;
+        if (type === OptionType.Date) {
+            return this.dateFormatService.formatLabel(w.text);
+        }
+        return w.text;
+    });
 
-  readonly badge = computed(() => {
-    if (this.isTie()) {
-      return 'Unentschieden';
-    }
-    switch (this.poll().optionType) {
-      case OptionType.Rating:
-        return 'Beste Bewertung';
-      case OptionType.Date:
-        return 'Bester Termin';
-      default:
-        return 'Führt';
-    }
-  });
+    readonly badge = computed(() => {
+        if (this.isTie()) {
+            return 'Unentschieden';
+        }
+        switch (this.poll().optionType) {
+            case OptionType.Rating:
+                return 'Beste Bewertung';
+            case OptionType.Date:
+                return 'Bester Termin';
+            default:
+                return 'Führt';
+        }
+    });
 
-  readonly badgeBg = computed(() => {
-    if (this.isTie()) {
-      return '#ece7f8';
-    }
-    return this.poll().optionType !== OptionType.Rating ? '#e2ede1' : '#f9edd5';
-  });
+    readonly badgeBg = computed(() => {
+        if (this.isTie()) {
+            return '#ece7f8';
+        }
+        return this.poll().optionType !== OptionType.Rating
+            ? '#e2ede1'
+            : '#f9edd5';
+    });
 
-  readonly badgeFg = computed(() => {
-    if (this.isTie()) {
-      return '#6f5aac';
-    }
-    return this.poll().optionType !== OptionType.Rating
-      ? 'var(--positive-strong)'
-      : '#a8742a';
-  });
+    readonly badgeFg = computed(() => {
+        if (this.isTie()) {
+            return '#6f5aac';
+        }
+        return this.poll().optionType !== OptionType.Rating
+            ? 'var(--positive-strong)'
+            : '#a8742a';
+    });
 
-  readonly bigMetric = computed(() => {
-    const w = this.winner();
-    if (!w) {
-      return '0';
-    }
-    const type = this.poll().optionType;
-    if (type === OptionType.Rating) {
-      const avg = this.avgRating(w);
-      return avg > 0 ? avg.toFixed(1).replace('.', ',') : '—';
-    }
-    const total = this.uniqueVoters().size;
-    if (!total) {
-      return '0 %';
-    }
-    return Math.round((this.yesCount(w) / total) * 100) + ' %';
-  });
-
-  readonly metricSmall = computed(() => {
-    const w = this.winner();
-    if (!w) {
-      return '';
-    }
-    const type = this.poll().optionType;
-    if (type === OptionType.Rating) {
-      const count = w.votes.filter(
-        (v) => v.choice && parseInt(v.choice) > 0,
-      ).length;
-      return `von 5 Sternen · ${count} Bewertungen`;
-    }
-    const yes = this.yesCount(w);
-    const total = this.uniqueVoters().size;
-    return `${yes} von ${total} ${type === OptionType.Date ? 'können' : 'dafür'}`;
-  });
-
-  readonly metricColor = computed(() =>
-    this.poll().optionType === OptionType.Rating
-      ? '#c98f2c'
-      : 'var(--positive-strong)',
-  );
-
-  readonly peopleLine = computed(() => {
-    const w = this.winner();
-    if (!w) {
-      return '';
-    }
-    const type = this.poll().optionType;
-    if (type === OptionType.Rating) {
-      const maxRating = Math.max(
-        ...w.votes.map((v) => parseInt(v.choice ?? '0')),
-        0,
-      );
-      const topNames = w.votes
-        .filter((v) => parseInt(v.choice ?? '0') === maxRating)
-        .map((v) => v.person)
-        .join(', ');
-      return `Am höchsten bewertet von ${topNames}`;
-    }
-    const maybe = w.votes.filter((v) => v.choice === '3').length;
-    const no = w.votes.filter((v) => v.choice === '2').length;
-    if (maybe) {
-      return `${maybe} × vielleicht, ${no} × nein`;
-    }
-    return `${no} × dagegen`;
-  });
-
-  readonly avatarUsers = computed((): AvatarUser[] => {
-    const w = this.winner();
-    if (!w) {
-      return [];
-    }
-    const type = this.poll().optionType;
-    let voters: string[];
-    if (type === OptionType.Rating) {
-      const maxRating = Math.max(
-        ...w.votes.map((v) => parseInt(v.choice ?? '0')),
-      );
-      voters = w.votes
-        .filter((v) => parseInt(v.choice ?? '0') === maxRating)
-        .map((v) => v.person);
-    } else {
-      voters = w.votes.filter((v) => v.choice === '1').map((v) => v.person);
-    }
-    return voters.map((name) => ({ name }));
-  });
-
-  readonly typeLabel = computed(() => {
-    switch (this.poll().optionType) {
-      case OptionType.Rating:
-        return 'Bewertung';
-      case OptionType.Date:
-        return 'Terminumfrage';
-      default:
-        return 'Ja / Nein';
-    }
-  });
-
-  readonly statusLabel = computed(() =>
-    this.poll().isClosed ? 'Beendet' : 'Aktiv',
-  );
-  readonly statusBg = computed(() =>
-    this.poll().isClosed ? '#f1eee9' : '#e2ede1',
-  );
-  readonly statusFg = computed(() =>
-    this.poll().isClosed ? '#6f6b66' : '#3f7a4e',
-  );
-  readonly statusDot = computed(() =>
-    this.poll().isClosed ? '#b5b0a8' : '#5d9a56',
-  );
-  readonly statusPulse = computed(() => !this.poll().isClosed);
-
-  readonly deadlineText = computed(() => {
-    const poll = this.poll();
-    if (poll.isClosed) {
-      return 'Beendet';
-    }
-    if (!poll.closeDate) {
-      return 'Läuft';
-    }
-    const d = new Date(poll.closeDate);
-    const now = new Date();
-    const diffMs = d.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDays <= 0) {
-      return 'Endet heute';
-    }
-    if (diffDays === 1) {
-      return 'Endet morgen';
-    }
-    if (diffDays <= 7) {
-      return `Endet in ${diffDays} Tagen`;
-    }
-    return `Endet am ${d.toLocaleDateString('de', { day: 'numeric', month: 'short' })}`;
-  });
-
-  readonly stats = computed((): StatCard[] => {
-    const poll = this.poll();
-    const type = poll.optionType;
-    const voters = this.uniqueVoters().size;
-    const winner = this.winner();
-    const winnerYesPct =
-      winner && this.uniqueVoters().size
-        ? Math.round((this.yesCount(winner) / this.uniqueVoters().size) * 100)
-        : 0;
-    const overallAvg =
-      type === OptionType.Rating
-        ? poll.options.reduce((s, o) => s + this.avgRating(o), 0) /
-          (poll.options.length || 1)
-        : 0;
-
-    return [
-      {
-        label: 'Beteiligung',
-        value: this.totalMembers()
-          ? `${voters}/${this.totalMembers()}`
-          : String(voters),
-        sub: 'haben abgestimmt',
-        color: '#1f7a8c',
-      },
-      {
-        label: type === OptionType.Rating ? 'Schnitt gesamt' : 'Klarer Favorit',
-        value:
-          type === OptionType.Rating
-            ? overallAvg.toFixed(1).replace('.', ',')
-            : winnerYesPct + ' %',
-        sub: type === OptionType.Rating ? 'von 5' : 'Zustimmung',
-        color:
-          type === OptionType.Rating ? '#c98f2c' : 'var(--positive-strong)',
-      },
-      {
-        label: 'Kommentare',
-        value: String(this.commentsCount()),
-        sub: `${this.commentsWithContext()} beim Abstimmen`,
-        color: '#a8742a',
-      },
-    ];
-  });
-
-  readonly hasVotes = computed(() => this.uniqueVoters().size > 0);
-
-  private readonly topScore = computed(() => {
-    const w = this.winner();
-    if (!w) {
-      return 0;
-    }
-    return this.poll().optionType === OptionType.Rating
-      ? this.avgRating(w)
-      : this.yesCount(w);
-  });
-
-  private readonly tiedAll = computed(() => {
-    const top = this.topScore();
-    if (top === 0) {
-      return [];
-    }
-    const type = this.poll().optionType;
-    return this.poll().options.filter((o) =>
-      type === OptionType.Rating
-        ? this.avgRating(o) === top
-        : this.yesCount(o) === top,
-    );
-  });
-
-  readonly isTie = computed(() => this.tiedAll().length > 1);
-
-  readonly tiedOptions = computed((): TiedOption[] => {
-    if (!this.isTie()) {
-      return [];
-    }
-    const type = this.poll().optionType;
-    const total = this.uniqueVoters().size;
-    return this.tiedAll()
-      .slice(0, 3)
-      .map((o) => {
+    readonly bigMetric = computed(() => {
+        const w = this.winner();
+        if (!w) {
+            return '0';
+        }
+        const type = this.poll().optionType;
         if (type === OptionType.Rating) {
-          const avg = this.avgRating(o);
-          const big = avg > 0 ? avg.toFixed(1).replace('.', ',') : '—';
-          const count = o.votes.filter(
-            (v) => v.choice && parseInt(v.choice) > 0,
-          ).length;
-          return { title: o.text, big, small: `von 5 · ${count} Bewertungen` };
+            const avg = this.avgRating(w);
+            return avg > 0 ? avg.toFixed(1).replace('.', ',') : '—';
         }
-        const yes = this.yesCount(o);
-        const big = total ? Math.round((yes / total) * 100) + ' %' : '0 %';
-        const small = `${yes} von ${total} ${type === OptionType.Date ? 'können' : 'dafür'}`;
-        const title =
-          type === OptionType.Date
-            ? this.dateFormatService.formatLabel(o.text)
-            : o.text;
-        return { title, big, small };
-      });
-  });
-
-  readonly tiedMoreCount = computed(() =>
-    Math.max(0, this.tiedAll().length - 3),
-  );
-
-  readonly tiedPeopleLine = computed(() => {
-    const count = this.tiedAll().length;
-    return count > 0 ? `${count} Optionen liegen gleichauf` : '';
-  });
-
-  private readonly uniqueVoters = computed(() => {
-    const names = new Set<string>();
-    for (const opt of this.poll().options) {
-      for (const v of opt.votes) {
-        if (parseInt(v.choice ?? '0') > 0) {
-          names.add(v.person);
+        const total = this.uniqueVoters().size;
+        if (!total) {
+            return '0 %';
         }
-      }
-    }
-    return names;
-  });
+        return Math.round((this.yesCount(w) / total) * 100) + ' %';
+    });
 
-  private yesCount(option: OptionDetail): number {
-    return option.votes.filter((v) => v.choice === '1').length;
-  }
+    readonly metricSmall = computed(() => {
+        const w = this.winner();
+        if (!w) {
+            return '';
+        }
+        const type = this.poll().optionType;
+        if (type === OptionType.Rating) {
+            const count = w.votes.filter(
+                (v) => v.choice && parseInt(v.choice) > 0,
+            ).length;
+            return `von 5 Sternen · ${count} Bewertungen`;
+        }
+        const yes = this.yesCount(w);
+        const total = this.uniqueVoters().size;
+        return `${yes} von ${total} ${type === OptionType.Date ? 'können' : 'dafür'}`;
+    });
 
-  private avgRating(option: OptionDetail): number {
-    const rated = option.votes.filter(
-      (v) => v.choice && !isNaN(parseInt(v.choice)) && parseInt(v.choice) > 0,
+    readonly metricColor = computed(() =>
+        this.poll().optionType === OptionType.Rating
+            ? '#c98f2c'
+            : 'var(--positive-strong)',
     );
-    if (!rated.length) {
-      return 0;
+
+    readonly peopleLine = computed(() => {
+        const w = this.winner();
+        if (!w) {
+            return '';
+        }
+        const type = this.poll().optionType;
+        if (type === OptionType.Rating) {
+            const maxRating = Math.max(
+                ...w.votes.map((v) => parseInt(v.choice ?? '0')),
+                0,
+            );
+            const topNames = w.votes
+                .filter((v) => parseInt(v.choice ?? '0') === maxRating)
+                .map((v) => v.person)
+                .join(', ');
+            return `Am höchsten bewertet von ${topNames}`;
+        }
+        const maybe = w.votes.filter((v) => v.choice === '3').length;
+        const no = w.votes.filter((v) => v.choice === '2').length;
+        if (maybe) {
+            return `${maybe} × vielleicht, ${no} × nein`;
+        }
+        return `${no} × dagegen`;
+    });
+
+    readonly avatarUsers = computed((): AvatarUser[] => {
+        const w = this.winner();
+        if (!w) {
+            return [];
+        }
+        const type = this.poll().optionType;
+        let voters: string[];
+        if (type === OptionType.Rating) {
+            const maxRating = Math.max(
+                ...w.votes.map((v) => parseInt(v.choice ?? '0')),
+            );
+            voters = w.votes
+                .filter((v) => parseInt(v.choice ?? '0') === maxRating)
+                .map((v) => v.person);
+        } else {
+            voters = w.votes
+                .filter((v) => v.choice === '1')
+                .map((v) => v.person);
+        }
+        return voters.map((name) => ({ name }));
+    });
+
+    readonly typeLabel = computed(() => {
+        switch (this.poll().optionType) {
+            case OptionType.Rating:
+                return 'Bewertung';
+            case OptionType.Date:
+                return 'Terminumfrage';
+            default:
+                return 'Ja / Nein';
+        }
+    });
+
+    readonly statusLabel = computed(() =>
+        this.poll().isClosed ? 'Beendet' : 'Aktiv',
+    );
+    readonly statusBg = computed(() =>
+        this.poll().isClosed ? '#f1eee9' : '#e2ede1',
+    );
+    readonly statusFg = computed(() =>
+        this.poll().isClosed ? '#6f6b66' : '#3f7a4e',
+    );
+    readonly statusDot = computed(() =>
+        this.poll().isClosed ? '#b5b0a8' : '#5d9a56',
+    );
+    readonly statusPulse = computed(() => !this.poll().isClosed);
+
+    readonly deadlineText = computed(() => {
+        const poll = this.poll();
+        if (poll.isClosed) {
+            return 'Beendet';
+        }
+        if (!poll.closeDate) {
+            return 'Läuft';
+        }
+        const d = new Date(poll.closeDate);
+        const now = new Date();
+        const diffMs = d.getTime() - now.getTime();
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        if (diffDays <= 0) {
+            return 'Endet heute';
+        }
+        if (diffDays === 1) {
+            return 'Endet morgen';
+        }
+        if (diffDays <= 7) {
+            return `Endet in ${diffDays} Tagen`;
+        }
+        return `Endet am ${d.toLocaleDateString('de', { day: 'numeric', month: 'short' })}`;
+    });
+
+    readonly stats = computed((): StatCard[] => {
+        const poll = this.poll();
+        const type = poll.optionType;
+        const voters = this.uniqueVoters().size;
+        const winner = this.winner();
+        const winnerYesPct =
+            winner && this.uniqueVoters().size
+                ? Math.round(
+                      (this.yesCount(winner) / this.uniqueVoters().size) * 100,
+                  )
+                : 0;
+        const overallAvg =
+            type === OptionType.Rating
+                ? poll.options.reduce((s, o) => s + this.avgRating(o), 0) /
+                  (poll.options.length || 1)
+                : 0;
+
+        return [
+            {
+                label: 'Beteiligung',
+                value: this.totalMembers()
+                    ? `${voters}/${this.totalMembers()}`
+                    : String(voters),
+                sub: 'haben abgestimmt',
+                color: '#1f7a8c',
+            },
+            {
+                label:
+                    type === OptionType.Rating
+                        ? 'Schnitt gesamt'
+                        : 'Klarer Favorit',
+                value:
+                    type === OptionType.Rating
+                        ? overallAvg.toFixed(1).replace('.', ',')
+                        : winnerYesPct + ' %',
+                sub: type === OptionType.Rating ? 'von 5' : 'Zustimmung',
+                color:
+                    type === OptionType.Rating
+                        ? '#c98f2c'
+                        : 'var(--positive-strong)',
+            },
+            {
+                label: 'Kommentare',
+                value: String(this.commentsCount()),
+                sub: `${this.commentsWithContext()} beim Abstimmen`,
+                color: '#a8742a',
+            },
+        ];
+    });
+
+    readonly hasVotes = computed(() => this.uniqueVoters().size > 0);
+
+    private readonly topScore = computed(() => {
+        const w = this.winner();
+        if (!w) {
+            return 0;
+        }
+        return this.poll().optionType === OptionType.Rating
+            ? this.avgRating(w)
+            : this.yesCount(w);
+    });
+
+    private readonly tiedAll = computed(() => {
+        const top = this.topScore();
+        if (top === 0) {
+            return [];
+        }
+        const type = this.poll().optionType;
+        return this.poll().options.filter((o) =>
+            type === OptionType.Rating
+                ? this.avgRating(o) === top
+                : this.yesCount(o) === top,
+        );
+    });
+
+    readonly isTie = computed(() => this.tiedAll().length > 1);
+
+    readonly tiedOptions = computed((): TiedOption[] => {
+        if (!this.isTie()) {
+            return [];
+        }
+        const type = this.poll().optionType;
+        const total = this.uniqueVoters().size;
+        return this.tiedAll()
+            .slice(0, 3)
+            .map((o) => {
+                if (type === OptionType.Rating) {
+                    const avg = this.avgRating(o);
+                    const big =
+                        avg > 0 ? avg.toFixed(1).replace('.', ',') : '—';
+                    const count = o.votes.filter(
+                        (v) => v.choice && parseInt(v.choice) > 0,
+                    ).length;
+                    return {
+                        title: o.text,
+                        big,
+                        small: `von 5 · ${count} Bewertungen`,
+                    };
+                }
+                const yes = this.yesCount(o);
+                const big = total
+                    ? Math.round((yes / total) * 100) + ' %'
+                    : '0 %';
+                const small = `${yes} von ${total} ${type === OptionType.Date ? 'können' : 'dafür'}`;
+                const title =
+                    type === OptionType.Date
+                        ? this.dateFormatService.formatLabel(o.text)
+                        : o.text;
+                return { title, big, small };
+            });
+    });
+
+    readonly tiedMoreCount = computed(() =>
+        Math.max(0, this.tiedAll().length - 3),
+    );
+
+    readonly tiedPeopleLine = computed(() => {
+        const count = this.tiedAll().length;
+        return count > 0 ? `${count} Optionen liegen gleichauf` : '';
+    });
+
+    private readonly uniqueVoters = computed(() => {
+        const names = new Set<string>();
+        for (const opt of this.poll().options) {
+            for (const v of opt.votes) {
+                if (parseInt(v.choice ?? '0') > 0) {
+                    names.add(v.person);
+                }
+            }
+        }
+        return names;
+    });
+
+    private yesCount(option: OptionDetail): number {
+        return option.votes.filter((v) => v.choice === '1').length;
     }
-    return rated.reduce((s, v) => s + parseInt(v.choice!), 0) / rated.length;
-  }
+
+    private avgRating(option: OptionDetail): number {
+        const rated = option.votes.filter(
+            (v) =>
+                v.choice &&
+                !isNaN(parseInt(v.choice)) &&
+                parseInt(v.choice) > 0,
+        );
+        if (!rated.length) {
+            return 0;
+        }
+        return (
+            rated.reduce((s, v) => s + parseInt(v.choice!), 0) / rated.length
+        );
+    }
 }

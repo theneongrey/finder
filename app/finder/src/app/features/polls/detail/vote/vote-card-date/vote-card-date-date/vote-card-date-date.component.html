@@ -1,16 +1,16 @@
 <div class="pointer-events-none flex flex-col items-center gap-2">
-  <hlm-calendar
-    [date]="selectedDate()"
-    [highlightDays]="otherDatesArray()"
-    [weekStartsOn]="1"
-    [showNavigation]="false"
-  />
-  @if (entry().date; as d) {
-    <p class="text-center font-semibold">
-      {{ formatDate(d) }}
-      @if (entry().startTime; as t) {
-        <span class="mx-1">–</span>{{ formatTimeOnly(t) }}
-      }
-    </p>
-  }
+    <hlm-calendar
+        [date]="selectedDate()"
+        [highlightDays]="otherDatesArray()"
+        [weekStartsOn]="1"
+        [showNavigation]="false"
+    />
+    @if (entry().date; as d) {
+        <p class="text-center font-semibold">
+            {{ formatDate(d) }}
+            @if (entry().startTime; as t) {
+                <span class="mx-1">–</span>{{ formatTimeOnly(t) }}
+            }
+        </p>
+    }
 </div>

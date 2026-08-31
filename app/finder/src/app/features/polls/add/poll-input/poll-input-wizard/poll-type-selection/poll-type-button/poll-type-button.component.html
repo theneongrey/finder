@@ -1,36 +1,41 @@
 <button
-  type="button"
-  [class]="btnClass()"
-  [attr.data-testid]="testId()"
-  (click)="typeSelected.emit(type())"
+    type="button"
+    [class]="btnClass()"
+    [attr.data-testid]="testId()"
+    (click)="typeSelected.emit(type())"
 >
-  @if (layout() === "grid") {
-    <span class="flex w-full items-center justify-between">
-      <span class="type-icon" [class.type-icon--selected]="isSelected()">
-        <ds-icon [name]="iconName()" [size]="25" />
-      </span>
-      <span class="type-radio" [class.type-radio--selected]="isSelected()">
-        @if (isSelected()) {
-          <ds-icon name="check" [size]="13" [color]="'#fff'" />
-        }
-      </span>
-    </span>
-    <span class="w-full text-left">
-      <span class="type-name">{{ nameKey() | translate }}</span>
-      <span class="type-desc type-desc--grid">{{ descKey() | translate }}</span>
-    </span>
-  } @else {
-    <span class="type-icon" [class.type-icon--selected]="isSelected()">
-      <ds-icon [name]="iconName()" [size]="22" />
-    </span>
-    <span class="flex min-w-0 flex-1 flex-col text-left">
-      <span class="type-name">{{ nameKey() | translate }}</span>
-      <span class="type-desc">{{ descKey() | translate }}</span>
-    </span>
-    <span class="type-radio" [class.type-radio--selected]="isSelected()">
-      @if (isSelected()) {
-        <ds-icon name="check" [size]="12" [color]="'#fff'" />
-      }
-    </span>
-  }
+    @if (layout() === 'grid') {
+        <span class="flex w-full items-center justify-between">
+            <span class="type-icon" [class.type-icon--selected]="isSelected()">
+                <ds-icon [name]="iconName()" [size]="25" />
+            </span>
+            <span
+                class="type-radio"
+                [class.type-radio--selected]="isSelected()"
+            >
+                @if (isSelected()) {
+                    <ds-icon name="check" [size]="13" [color]="'#fff'" />
+                }
+            </span>
+        </span>
+        <span class="w-full text-left">
+            <span class="type-name">{{ nameKey() | translate }}</span>
+            <span class="type-desc type-desc--grid">{{
+                descKey() | translate
+            }}</span>
+        </span>
+    } @else {
+        <span class="type-icon" [class.type-icon--selected]="isSelected()">
+            <ds-icon [name]="iconName()" [size]="22" />
+        </span>
+        <span class="flex min-w-0 flex-1 flex-col text-left">
+            <span class="type-name">{{ nameKey() | translate }}</span>
+            <span class="type-desc">{{ descKey() | translate }}</span>
+        </span>
+        <span class="type-radio" [class.type-radio--selected]="isSelected()">
+            @if (isSelected()) {
+                <ds-icon name="check" [size]="12" [color]="'#fff'" />
+            }
+        </span>
+    }
 </button>

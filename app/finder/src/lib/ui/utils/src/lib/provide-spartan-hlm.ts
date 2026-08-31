@@ -1,7 +1,7 @@
 import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
 import {
-  type EnvironmentProviders,
-  makeEnvironmentProviders,
+    type EnvironmentProviders,
+    makeEnvironmentProviders,
 } from '@angular/core';
 
 /**
@@ -28,10 +28,10 @@ import {
  * ```
  */
 export function provideSpartanHlm(): EnvironmentProviders {
-  return makeEnvironmentProviders([
-    {
-      provide: OVERLAY_DEFAULT_CONFIG,
-      useValue: { usePopover: false },
-    },
-  ]);
+    return makeEnvironmentProviders([
+        {
+            provide: OVERLAY_DEFAULT_CONFIG,
+            useValue: { usePopover: false },
+        },
+    ]);
 }

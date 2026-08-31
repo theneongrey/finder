@@ -1,29 +1,29 @@
 <div class="avatar-stack">
-  @for (u of shown(); track $index) {
-    <div class="avatar-stack__item">
-      <app-user-avatar [user]="u" [size]="px()" [voted]="u.voted" />
-    </div>
-  }
-  @if (extra() > 0) {
-    <div
-      class="avatar-stack__overflow"
-      [style.width.px]="px()"
-      [style.height.px]="px()"
-      [style.font-size.px]="overflowFontSize()"
-    >
-      +{{ extra() }}
-    </div>
-  }
-  @if (showAdd()) {
-    <button
-      hlmBtn
-      class="avatar-stack__add"
-      [style.width.px]="px()"
-      [style.height.px]="px()"
-      [attr.aria-label]="addLabel()"
-      (click)="addClicked.emit()"
-    >
-      +
-    </button>
-  }
+    @for (u of shown(); track $index) {
+        <div class="avatar-stack__item">
+            <app-user-avatar [user]="u" [size]="px()" [voted]="u.voted" />
+        </div>
+    }
+    @if (extra() > 0) {
+        <div
+            class="avatar-stack__overflow"
+            [style.width.px]="px()"
+            [style.height.px]="px()"
+            [style.font-size.px]="overflowFontSize()"
+        >
+            +{{ extra() }}
+        </div>
+    }
+    @if (showAdd()) {
+        <button
+            hlmBtn
+            class="avatar-stack__add"
+            [style.width.px]="px()"
+            [style.height.px]="px()"
+            [attr.aria-label]="addLabel()"
+            (click)="addClicked.emit()"
+        >
+            +
+        </button>
+    }
 </div>

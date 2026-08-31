@@ -5,15 +5,15 @@ import { DsProgressBarComponent } from '@ds/progress-bar/ds-progress-bar.compone
 import { ParticipantAvatar } from '../poll-item.component';
 
 @Component({
-  selector: 'app-poll-item-progress',
-  imports: [TranslatePipe, DsProgressBarComponent, DsAvatarComponent],
-  templateUrl: './poll-item-progress.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-poll-item-progress',
+    imports: [TranslatePipe, DsProgressBarComponent, DsAvatarComponent],
+    templateUrl: './poll-item-progress.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PollItemProgressComponent {
-  progressPercent = input.required<number>();
-  votedCount = input.required<number>();
-  totalParticipants = input.required<number>();
-  participantAvatars = input.required<ParticipantAvatar[]>();
-  missingVotersText = input.required<string>();
+    progressPercent = input.required<number>();
+    votedCount = input.required<number>();
+    totalParticipants = input.required<number>();
+    participantAvatars = input.required<ParticipantAvatar[]>();
+    missingVotersText = input.required<string>();
 }

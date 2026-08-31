@@ -1,56 +1,56 @@
 /* Desktop rectangular vote buttons */
 .desktop-vote-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  height: 56px;
-  flex: 1;
-  border-radius: 16px;
-  font-family: var(--font-body);
-  font-size: 15.5px;
-  font-weight: var(--weight-bold);
-  cursor: pointer;
-  transition:
-    background var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    height: 56px;
+    flex: 1;
+    border-radius: 16px;
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    font-weight: var(--weight-bold);
+    cursor: pointer;
+    transition:
+        background var(--duration-fast) var(--ease-standard),
+        transform var(--duration-fast) var(--ease-standard);
 }
 .desktop-vote-btn:active {
-  transform: scale(0.985);
+    transform: scale(0.985);
 }
 
 .desktop-vote-btn--no {
-  border: 1.5px solid var(--red-200);
-  background: var(--surface-card);
-  color: var(--negative);
+    border: 1.5px solid var(--red-200);
+    background: var(--surface-card);
+    color: var(--negative);
 }
 .desktop-vote-btn--no:hover {
-  background: var(--red-100);
+    background: var(--red-100);
 }
 
 .desktop-vote-btn--yes {
-  border: none;
-  background: var(--positive-strong);
-  color: var(--white);
-  box-shadow: 0 8px 20px
-    color-mix(in srgb, var(--positive-strong) 30%, transparent);
+    border: none;
+    background: var(--positive-strong);
+    color: var(--white);
+    box-shadow: 0 8px 20px
+        color-mix(in srgb, var(--positive-strong) 30%, transparent);
 }
 .desktop-vote-btn--yes:hover {
-  filter: brightness(1.05);
+    filter: brightness(1.05);
 }
 
 /* Keyboard shortcut hint badge */
 .key-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 5px;
-  border-radius: 7px;
-  border: 1px solid var(--border-hairline-strong);
-  background: var(--surface-card);
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    border-radius: 7px;
+    border: 1px solid var(--border-hairline-strong);
+    background: var(--surface-card);
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-secondary);
 }

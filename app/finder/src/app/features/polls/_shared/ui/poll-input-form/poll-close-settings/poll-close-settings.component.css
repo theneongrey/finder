@@ -1,4 +1,4 @@
 /* Toggled (selected) deadline preset gets a 1px accent border */
 ::ng-deep .ds-btn.ds-btn--soft {
-  border: 1px solid var(--accent);
+    border: 1px solid var(--accent);
 }

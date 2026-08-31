@@ -1,46 +1,46 @@
 <app-auth-step-indicator [step]="1" />
 
 <form
-  [formGroup]="form"
-  (ngSubmit)="sendLoginMail()"
-  class="flex flex-col gap-0"
+    [formGroup]="form"
+    (ngSubmit)="sendLoginMail()"
+    class="flex flex-col gap-0"
 >
-  <div
-    class="[font-family:var(--font-display)] text-[27px] leading-[1.1] font-bold tracking-[-0.6px] [color:var(--text-primary)] lg:text-[30px] lg:tracking-[-0.7px]"
-  >
-    {{ "auth.requestEmail.heading" | translate }}
-  </div>
-  <p
-    class="mt-[8px] text-[14.5px] leading-[1.45] text-pretty [color:var(--text-secondary)] lg:text-[15px]"
-  >
-    {{ "auth.requestEmail.subtitle" | translate }}
-  </p>
-
-  <div class="mt-[20px]">
-    <ds-input
-      formControlName="email"
-      [label]="'auth.requestEmail.email' | translate"
-      [placeholder]="'auth.requestEmail.emailPlaceholder' | translate"
-      [error]="errorMessage()"
-    />
-  </div>
-
-  <div class="mt-[18px]">
-    <ds-button
-      variant="primary"
-      [fullWidth]="true"
-      trailingIcon="arrow-right"
-      [disabled]="form.invalid"
-      [loading]="isLoading()"
-      data-testid="request-email-submit"
+    <div
+        class="[font-family:var(--font-display)] text-[27px] leading-[1.1] font-bold tracking-[-0.6px] [color:var(--text-primary)] lg:text-[30px] lg:tracking-[-0.7px]"
     >
-      {{ "auth.requestEmail.sendCode" | translate }}
-    </ds-button>
-  </div>
+        {{ 'auth.requestEmail.heading' | translate }}
+    </div>
+    <p
+        class="mt-[8px] text-[14.5px] leading-[1.45] text-pretty [color:var(--text-secondary)] lg:text-[15px]"
+    >
+        {{ 'auth.requestEmail.subtitle' | translate }}
+    </p>
 
-  <p
-    class="mt-[14px] text-center text-[12.5px] leading-[1.5] text-pretty [color:var(--text-muted)] lg:text-[13px]"
-  >
-    {{ "auth.requestEmail.newUserHint" | translate }}
-  </p>
+    <div class="mt-[20px]">
+        <ds-input
+            formControlName="email"
+            [label]="'auth.requestEmail.email' | translate"
+            [placeholder]="'auth.requestEmail.emailPlaceholder' | translate"
+            [error]="errorMessage()"
+        />
+    </div>
+
+    <div class="mt-[18px]">
+        <ds-button
+            variant="primary"
+            [fullWidth]="true"
+            trailingIcon="arrow-right"
+            [disabled]="form.invalid"
+            [loading]="isLoading()"
+            data-testid="request-email-submit"
+        >
+            {{ 'auth.requestEmail.sendCode' | translate }}
+        </ds-button>
+    </div>
+
+    <p
+        class="mt-[14px] text-center text-[12.5px] leading-[1.5] text-pretty [color:var(--text-muted)] lg:text-[13px]"
+    >
+        {{ 'auth.requestEmail.newUserHint' | translate }}
+    </p>
 </form>

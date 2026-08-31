@@ -1,34 +1,36 @@
 <div
-  class="flex min-h-[calc(100dvh-60px)] w-full flex-col md:h-[calc(100dvh-60px)] md:flex-row md:overflow-hidden"
+    class="flex min-h-[calc(100dvh-60px)] w-full flex-col md:h-[calc(100dvh-60px)] md:flex-row md:overflow-hidden"
 >
-  <app-vote-sidebar [pollId]="pollId()" [optionId]="optionId()" />
+    <app-vote-sidebar [pollId]="pollId()" [optionId]="optionId()" />
 
-  <div class="flex min-h-0 min-w-0 flex-1 flex-col md:justify-center md:gap-5">
-    <app-vote-progress-header
-      [optionType]="poll()?.optionType ?? OptionType.YesNo"
-      [closeDateDisplay]="closeDateDisplay()"
-      [currentIndex]="currentOptionIndex()"
-      [total]="totalCount()"
-      [progressPercent]="progressPercent()"
-      [progressSegments]="progressSegments()"
-    />
+    <div
+        class="flex min-h-0 min-w-0 flex-1 flex-col md:justify-center md:gap-5"
+    >
+        <app-vote-progress-header
+            [optionType]="poll()?.optionType ?? OptionType.YesNo"
+            [closeDateDisplay]="closeDateDisplay()"
+            [currentIndex]="currentOptionIndex()"
+            [total]="totalCount()"
+            [progressPercent]="progressPercent()"
+            [progressSegments]="progressSegments()"
+        />
 
-    <app-vote-swipe-card
-      [optionType]="poll()?.optionType ?? OptionType.YesNo"
-      [option]="option()"
-      [allOptionTexts]="allOptionTexts()"
-      (voted)="onVoted($event)"
-    />
+        <app-vote-swipe-card
+            [optionType]="poll()?.optionType ?? OptionType.YesNo"
+            [option]="option()"
+            [allOptionTexts]="allOptionTexts()"
+            (voted)="onVoted($event)"
+        />
 
-    <app-vote-cta-area
-      [optionType]="poll()?.optionType ?? OptionType.YesNo"
-      [pollId]="pollId()"
-      [optionId]="optionId()"
-      [optionText]="option()?.text"
-      (yes)="swipeCardRef().swipeYes()"
-      (no)="swipeCardRef().swipeNo()"
-      (skip)="skip()"
-      (rated)="onRated($event)"
-    />
-  </div>
+        <app-vote-cta-area
+            [optionType]="poll()?.optionType ?? OptionType.YesNo"
+            [pollId]="pollId()"
+            [optionId]="optionId()"
+            [optionText]="option()?.text"
+            (yes)="swipeCardRef().swipeYes()"
+            (no)="swipeCardRef().swipeNo()"
+            (skip)="skip()"
+            (rated)="onRated($event)"
+        />
+    </div>
 </div>

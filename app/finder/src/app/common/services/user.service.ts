@@ -4,75 +4,84 @@ import { LoggerService } from './logger.service';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
 import {
-  NotificationSetting,
-  NotificationValue,
+    NotificationSetting,
+    NotificationValue,
 } from '../models/notification-setting.model';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class UserService {
-  private readonly loggerService = inject(LoggerService);
-  private readonly httpClient = inject(HttpClient);
+    private readonly loggerService = inject(LoggerService);
+    private readonly httpClient = inject(HttpClient);
 
-  private readonly baseUrl = environment.baseUrl;
+    private readonly baseUrl = environment.baseUrl;
 
-  getUser() {
-    this.loggerService.debug('[User service] fetching user');
-    return this.httpClient.get<User>(`${this.baseUrl}/api/auth/who`);
-  }
+    getUser() {
+        this.loggerService.debug('[User service] fetching user');
+        return this.httpClient.get<User>(`${this.baseUrl}/api/auth/who`);
+    }
 
-  requestLoginMail(email: string, redirectUrl?: string) {
-    this.loggerService.debug(
-      `[User service] request login email for ${email} and ${redirectUrl}`,
-    );
-    return this.httpClient.post<void>(
-      `${this.baseUrl}/api/auth/requestLoginMail`,
-      {
-        email,
-        redirectUrl,
-      },
-    );
-  }
+    requestLoginMail(email: string, redirectUrl?: string) {
+        this.loggerService.debug(
+            `[User service] request login email for ${email} and ${redirectUrl}`,
+        );
+        return this.httpClient.post<void>(
+            `${this.baseUrl}/api/auth/requestLoginMail`,
+            {
+                email,
+                redirectUrl,
+            },
+        );
+    }
 
-  loginByToken(loginToken: string) {
-    this.loggerService.debug('[User service] login by token');
-    return this.httpClient.post<string>(`${this.baseUrl}/api/auth/tokenLogin`, {
-      loginToken,
-    });
-  }
+    loginByToken(loginToken: string) {
+        this.loggerService.debug('[User service] login by token');
+        return this.httpClient.post<string>(
+            `${this.baseUrl}/api/auth/tokenLogin`,
+            {
+                loginToken,
+            },
+        );
+    }
 
-  loginByCode(email: string, loginCode: string) {
-    this.loggerService.debug('[User service] login by code');
-    return this.httpClient.post<string>(`${this.baseUrl}/api/auth/codeLogin`, {
-      email,
-      loginCode,
-    });
-  }
+    loginByCode(email: string, loginCode: string) {
+        this.loggerService.debug('[User service] login by code');
+        return this.httpClient.post<string>(
+            `${this.baseUrl}/api/auth/codeLogin`,
+            {
+                email,
+                loginCode,
+            },
+        );
+    }
 
-  updateProfile(name: string, language: string) {
-    this.loggerService.debug('[User service] update profile');
-    return this.httpClient.put<User>(`${this.baseUrl}/api/user`, {
-      name,
-      language,
-    });
-  }
+    updateProfile(name: string, language: string) {
+        this.loggerService.debug('[User service] update profile');
+        return this.httpClient.put<User>(`${this.baseUrl}/api/user`, {
+            name,
+            language,
+        });
+    }
 
-  getNotificationSettings() {
-    return this.httpClient.get<NotificationSetting[]>(
-      `${this.baseUrl}/api/user/notifications`,
-    );
-  }
+    getNotificationSettings() {
+        return this.httpClient.get<NotificationSetting[]>(
+            `${this.baseUrl}/api/user/notifications`,
+        );
+    }
 
-  updateNotificationSetting(id: number, value: NotificationValue) {
-    return this.httpClient.put<NotificationSetting>(
-      `${this.baseUrl}/api/user/notifications/${id}`,
-      { value },
-    );
-  }
+    updateNotificationSetting(id: number, value: NotificationValue) {
+        return this.httpClient.put<NotificationSetting>(
+            `${this.baseUrl}/api/user/notifications/${id}`,
+            { value },
+        );
+    }
 
-  logout() {
-    this.loggerService.debug('log out');
-    return this.httpClient.post<void>(`${this.baseUrl}/api/auth/logout`, {});
-  }
+    logout() {
+        this.loggerService.debug('log out');
+        return this.httpClient.post<void>(
+            `${this.baseUrl}/api/auth/logout`,
+            {},
+        );
+    }
 }

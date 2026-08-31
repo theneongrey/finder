@@ -1,9 +1,9 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  output,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    input,
+    output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,37 +14,37 @@ import { DateOptionFormatService } from '../../../../utils/date-option-format.se
 import { DateOptionEntry } from '../../../../models/date-option.model';
 
 @Component({
-  selector: 'app-option-card-time',
-  templateUrl: './option-card-time.component.html',
-  imports: [
-    FormsModule,
-    DsButtonComponent,
-    DsInputComponent,
-    DsCardComponent,
-    TranslatePipe,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-option-card-time',
+    templateUrl: './option-card-time.component.html',
+    imports: [
+        FormsModule,
+        DsButtonComponent,
+        DsInputComponent,
+        DsCardComponent,
+        TranslatePipe,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardTimeComponent {
-  private readonly dateOptionFormat = inject(DateOptionFormatService);
+    private readonly dateOptionFormat = inject(DateOptionFormatService);
 
-  option = input.required<DateOptionEntry>();
-  index = input.required<number>();
-  canRemove = input<boolean>(false);
-  readonly = input<boolean>(false);
-  remove = output<void>();
-  optionChange = output<DateOptionEntry>();
+    option = input.required<DateOptionEntry>();
+    index = input.required<number>();
+    canRemove = input<boolean>(false);
+    readonly = input<boolean>(false);
+    remove = output<void>();
+    optionChange = output<DateOptionEntry>();
 
-  get timeValue(): string {
-    return this.option().startTime
-      ? this.dateOptionFormat.formatTimeInput(this.option().startTime!)
-      : '';
-  }
+    get timeValue(): string {
+        return this.option().startTime
+            ? this.dateOptionFormat.formatTimeInput(this.option().startTime!)
+            : '';
+    }
 
-  setStartTime(value: string): void {
-    this.optionChange.emit({
-      ...this.option(),
-      startTime: this.dateOptionFormat.parseTimeInput(value),
-    });
-  }
+    setStartTime(value: string): void {
+        this.optionChange.emit({
+            ...this.option(),
+            startTime: this.dateOptionFormat.parseTimeInput(value),
+        });
+    }
 }

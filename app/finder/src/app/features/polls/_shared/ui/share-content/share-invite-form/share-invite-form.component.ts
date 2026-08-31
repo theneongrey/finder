@@ -1,12 +1,12 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  output,
-  signal,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    input,
+    output,
+    signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -18,145 +18,146 @@ import { SharingStore } from '../../../data/sharing.store';
 import { SharingContact } from '../../../models/poll-detail.model';
 
 export interface PendingInvite {
-  email: string;
-  role: number;
-  name?: string;
+    email: string;
+    role: number;
+    name?: string;
 }
 
 @Component({
-  selector: 'app-share-invite-form',
-  templateUrl: './share-invite-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FormsModule,
-    TranslatePipe,
-    DsButtonComponent,
-    DsInputComponent,
-    DsSegmentedControlComponent,
-    UserAvatarComponent,
-  ],
+    selector: 'app-share-invite-form',
+    templateUrl: './share-invite-form.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        FormsModule,
+        TranslatePipe,
+        DsButtonComponent,
+        DsInputComponent,
+        DsSegmentedControlComponent,
+        UserAvatarComponent,
+    ],
 })
 export class ShareInviteFormComponent {
-  private readonly sharingStore = inject(SharingStore);
-  private readonly translateService = inject(TranslateService);
+    private readonly sharingStore = inject(SharingStore);
+    private readonly translateService = inject(TranslateService);
 
-  projectId = input.required<string>();
-  contacts = input.required<SharingContact[]>();
-  sharingInProgress = input.required<boolean>();
-  deferred = input<boolean>(false);
-  pendingInvites = input<PendingInvite[]>([]);
-  excludedEmails = input<string[]>([]);
+    projectId = input.required<string>();
+    contacts = input.required<SharingContact[]>();
+    sharingInProgress = input.required<boolean>();
+    deferred = input<boolean>(false);
+    pendingInvites = input<PendingInvite[]>([]);
+    excludedEmails = input<string[]>([]);
 
-  pendingInvite = output<PendingInvite>();
-  removeInvite = output<string>();
+    pendingInvite = output<PendingInvite>();
+    removeInvite = output<string>();
 
-  selectedRole = signal('0');
-  contactEmail = signal<string | undefined>(undefined);
-  dropdownVisible = signal(false);
+    selectedRole = signal('0');
+    contactEmail = signal<string | undefined>(undefined);
+    dropdownVisible = signal(false);
 
-  private readonly voterLabel = this.translateService.translate(
-    'project.roles.voter',
-  );
-  private readonly maintainerLabel = this.translateService.translate(
-    'project.roles.maintainer',
-  );
-  private readonly ownerLabel = this.translateService.translate(
-    'project.roles.owner',
-  );
-  private readonly voterDesc = this.translateService.translate(
-    'project.share.voterDescription',
-  );
-  private readonly maintainerDesc = this.translateService.translate(
-    'project.share.maintainerDescription',
-  );
-  private readonly ownerDesc = this.translateService.translate(
-    'project.share.ownerDescription',
-  );
+    private readonly voterLabel = this.translateService.translate(
+        'project.roles.voter',
+    );
+    private readonly maintainerLabel = this.translateService.translate(
+        'project.roles.maintainer',
+    );
+    private readonly ownerLabel = this.translateService.translate(
+        'project.roles.owner',
+    );
+    private readonly voterDesc = this.translateService.translate(
+        'project.share.voterDescription',
+    );
+    private readonly maintainerDesc = this.translateService.translate(
+        'project.share.maintainerDescription',
+    );
+    private readonly ownerDesc = this.translateService.translate(
+        'project.share.ownerDescription',
+    );
 
-  roleOptions = computed(() => [
-    { value: '0', label: this.voterLabel() },
-    { value: '1', label: this.maintainerLabel() },
-    { value: '2', label: this.ownerLabel() },
-  ]);
+    roleOptions = computed(() => [
+        { value: '0', label: this.voterLabel() },
+        { value: '1', label: this.maintainerLabel() },
+        { value: '2', label: this.ownerLabel() },
+    ]);
 
-  selectedRoleDescription = computed(() => {
-    switch (this.selectedRole()) {
-      case '0':
-        return this.voterDesc();
-      case '1':
-        return this.maintainerDesc();
-      case '2':
-        return this.ownerDesc();
-      default:
-        return '';
-    }
-  });
-
-  private readonly availableContacts = computed(() => {
-    const excluded = new Set(this.excludedEmails());
-    return this.contacts().filter((c) => !excluded.has(c.email));
-  });
-
-  filteredContacts = computed(() => {
-    const q = (this.contactEmail() ?? '').toLowerCase();
-    if (!q) {
-      return [];
-    }
-    return this.availableContacts()
-      .filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q),
-      )
-      .slice(0, 5);
-  });
-
-  frequentContacts = computed(() =>
-    [...this.availableContacts()]
-      .sort((a, b) => b.shareCount - a.shareCount)
-      .slice(0, 3),
-  );
-
-  constructor() {
-    let wasSharingInProgress = false;
-    effect(() => {
-      const inProgress = this.sharingInProgress();
-      if (wasSharingInProgress && !inProgress) {
-        this.contactEmail.set(undefined);
-      }
-      wasSharingInProgress = inProgress;
+    selectedRoleDescription = computed(() => {
+        switch (this.selectedRole()) {
+            case '0':
+                return this.voterDesc();
+            case '1':
+                return this.maintainerDesc();
+            case '2':
+                return this.ownerDesc();
+            default:
+                return '';
+        }
     });
-  }
 
-  onEmailInput(value: string) {
-    this.contactEmail.set(value);
-    this.dropdownVisible.set(value.length > 0);
-  }
-
-  selectContact(contact: SharingContact) {
-    this.contactEmail.set(contact.email);
-    this.dropdownVisible.set(false);
-  }
-
-  invite() {
-    const email = this.contactEmail()?.trim();
-    if (!email || this.sharingInProgress()) {
-      return;
-    }
-    this.dropdownVisible.set(false);
-    if (this.deferred()) {
-      const contact = this.contacts().find((c) => c.email === email);
-      this.pendingInvite.emit({
-        email,
-        role: parseInt(this.selectedRole(), 10),
-        name: contact?.name,
-      });
-      this.contactEmail.set(undefined);
-      return;
-    }
-    this.sharingStore.share({
-      email,
-      permissionType: parseInt(this.selectedRole(), 10),
-      projectId: this.projectId(),
+    private readonly availableContacts = computed(() => {
+        const excluded = new Set(this.excludedEmails());
+        return this.contacts().filter((c) => !excluded.has(c.email));
     });
-  }
+
+    filteredContacts = computed(() => {
+        const q = (this.contactEmail() ?? '').toLowerCase();
+        if (!q) {
+            return [];
+        }
+        return this.availableContacts()
+            .filter(
+                (c) =>
+                    c.name.toLowerCase().includes(q) ||
+                    c.email.toLowerCase().includes(q),
+            )
+            .slice(0, 5);
+    });
+
+    frequentContacts = computed(() =>
+        [...this.availableContacts()]
+            .sort((a, b) => b.shareCount - a.shareCount)
+            .slice(0, 3),
+    );
+
+    constructor() {
+        let wasSharingInProgress = false;
+        effect(() => {
+            const inProgress = this.sharingInProgress();
+            if (wasSharingInProgress && !inProgress) {
+                this.contactEmail.set(undefined);
+            }
+            wasSharingInProgress = inProgress;
+        });
+    }
+
+    onEmailInput(value: string) {
+        this.contactEmail.set(value);
+        this.dropdownVisible.set(value.length > 0);
+    }
+
+    selectContact(contact: SharingContact) {
+        this.contactEmail.set(contact.email);
+        this.dropdownVisible.set(false);
+    }
+
+    invite() {
+        const email = this.contactEmail()?.trim();
+        if (!email || this.sharingInProgress()) {
+            return;
+        }
+        this.dropdownVisible.set(false);
+        if (this.deferred()) {
+            const contact = this.contacts().find((c) => c.email === email);
+            this.pendingInvite.emit({
+                email,
+                role: parseInt(this.selectedRole(), 10),
+                name: contact?.name,
+            });
+            this.contactEmail.set(undefined);
+            return;
+        }
+        this.sharingStore.share({
+            email,
+            permissionType: parseInt(this.selectedRole(), 10),
+            projectId: this.projectId(),
+        });
+    }
 }

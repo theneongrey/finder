@@ -1,9 +1,9 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-  signal,
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    inject,
+    signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,36 +17,36 @@ import { HomeFinalCtaComponent } from './home-final-cta/home-final-cta.component
 import { HomeFooterComponent } from './home-footer/home-footer.component';
 
 @Component({
-  selector: 'app-home',
-  imports: [
-    HomeNavComponent,
-    HomeHeroComponent,
-    HomeStepsComponent,
-    HomeIdeasSectionComponent,
-    HomeCodeAnimationComponent,
-    HomeFinalCtaComponent,
-    HomeFooterComponent,
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-home',
+    imports: [
+        HomeNavComponent,
+        HomeHeroComponent,
+        HomeStepsComponent,
+        HomeIdeasSectionComponent,
+        HomeCodeAnimationComponent,
+        HomeFinalCtaComponent,
+        HomeFooterComponent,
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private translate = inject(TranslateService);
+    private route = inject(ActivatedRoute);
+    private translate = inject(TranslateService);
 
-  readonly scrolled = signal(false);
+    readonly scrolled = signal(false);
 
-  ngOnInit(): void {
-    const lang = this.route.snapshot.data['lang'] as SupportedLanguage;
-    if (lang) {
-      this.translate.use(lang);
-      setStoredLanguage(lang);
+    ngOnInit(): void {
+        const lang = this.route.snapshot.data['lang'] as SupportedLanguage;
+        if (lang) {
+            this.translate.use(lang);
+            setStoredLanguage(lang);
+        }
     }
-  }
 
-  onScroll(e: Event): void {
-    const el = e.target as HTMLElement;
-    this.scrolled.set(el.scrollTop > 20);
-  }
+    onScroll(e: Event): void {
+        const el = e.target as HTMLElement;
+        this.scrolled.set(el.scrollTop > 20);
+    }
 }

@@ -1,8 +1,8 @@
 import { ApplicationConfig } from '@angular/core';
 import {
-  provideRouter,
-  withComponentInputBinding,
-  withInMemoryScrolling,
+    provideRouter,
+    withComponentInputBinding,
+    withInMemoryScrolling,
 } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -14,25 +14,25 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { getStoredLanguage } from './common/i18n/languages';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideAnimations(),
-    provideRouter(
-      routes,
-      withComponentInputBinding(),
-      withInMemoryScrolling({
-        anchorScrolling: 'enabled',
-        scrollPositionRestoration: 'enabled',
-      }),
-    ), //, withDebugTracing()),
-    provideHttpClient(),
-    provideSpartanHlm(),
-    provideTranslateService({
-      loader: provideTranslateHttpLoader({
-        prefix: '/i18n/',
-        suffix: '.json',
-      }),
-      fallbackLang: 'en',
-      lang: getStoredLanguage(),
-    }),
-  ],
+    providers: [
+        provideAnimations(),
+        provideRouter(
+            routes,
+            withComponentInputBinding(),
+            withInMemoryScrolling({
+                anchorScrolling: 'enabled',
+                scrollPositionRestoration: 'enabled',
+            }),
+        ), //, withDebugTracing()),
+        provideHttpClient(),
+        provideSpartanHlm(),
+        provideTranslateService({
+            loader: provideTranslateHttpLoader({
+                prefix: '/i18n/',
+                suffix: '.json',
+            }),
+            fallbackLang: 'en',
+            lang: getStoredLanguage(),
+        }),
+    ],
 };

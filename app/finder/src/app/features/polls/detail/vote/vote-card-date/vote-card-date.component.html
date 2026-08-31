@@ -1,31 +1,31 @@
 <div
-  class="flex flex-1 flex-col items-center justify-center gap-4"
-  [class.p-6]="parsed().type !== 'date'"
-  [class.p-2]="parsed().type === 'date'"
+    class="flex flex-1 flex-col items-center justify-center gap-4"
+    [class.p-6]="parsed().type !== 'date'"
+    [class.p-2]="parsed().type === 'date'"
 >
-  <div class="flex flex-col items-center gap-2 text-center">
-    @switch (parsed().type) {
-      @case ("weekday") {
-        <app-vote-card-date-weekday
-          [entry]="parsed()"
-          [otherWeekdays]="otherWeekdays()"
-        />
-      }
-      @case ("date") {
-        <app-vote-card-date-date
-          [entry]="parsed()"
-          [otherDates]="otherDates()"
-        />
-      }
-      @case ("date-range") {
-        <app-vote-card-date-date-range [entry]="parsed()" />
-      }
-      @case ("time") {
-        <app-vote-card-date-time [entry]="parsed()" />
-      }
-      @case ("time-range") {
-        <app-vote-card-date-time-range [entry]="parsed()" />
-      }
-    }
-  </div>
+    <div class="flex flex-col items-center gap-2 text-center">
+        @switch (parsed().type) {
+            @case ('weekday') {
+                <app-vote-card-date-weekday
+                    [entry]="parsed()"
+                    [otherWeekdays]="otherWeekdays()"
+                />
+            }
+            @case ('date') {
+                <app-vote-card-date-date
+                    [entry]="parsed()"
+                    [otherDates]="otherDates()"
+                />
+            }
+            @case ('date-range') {
+                <app-vote-card-date-date-range [entry]="parsed()" />
+            }
+            @case ('time') {
+                <app-vote-card-date-time [entry]="parsed()" />
+            }
+            @case ('time-range') {
+                <app-vote-card-date-time-range [entry]="parsed()" />
+            }
+        }
+    </div>
 </div>

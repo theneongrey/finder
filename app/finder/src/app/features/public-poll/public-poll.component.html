@@ -1,98 +1,102 @@
 <div class="bg-app-gradient flex min-h-dvh flex-col">
-  <app-title-bar />
+    <app-title-bar />
 
-  <main class="flex flex-1 flex-col">
-    @if (isLoading()) {
-      <div
-        class="flex flex-1 items-start px-(--screen-padding) pt-4 pb-8 lg:px-[34px] lg:pt-[30px]"
-      >
-        <div
-          class="w-full lg:grid lg:max-w-[1080px] lg:grid-cols-[1fr_352px] lg:gap-[18px]"
-        >
-          <ds-poll-card-skeleton [count]="1" />
-        </div>
-      </div>
-    } @else {
-      <!-- ═══ MOBILE layout (<lg) ══════════════════════════════ -->
-      <div
-        class="flex flex-col gap-3.5 overflow-y-auto px-(--screen-padding) py-3 pb-[172px] lg:hidden"
-      >
-        <app-public-poll-invite-banner
-          [isAuthenticated]="isAuthenticated()"
-          [userName]="currentUser()?.name ?? ''"
-          [projectName]="projectInfo()?.projectName ?? ''"
-        />
-
-        @if (pollPreview(); as poll) {
-          <app-public-poll-card
-            size="sm"
-            [poll]="poll"
-            [optionDisplays]="optionDisplays()"
-            [participantSlots]="participantSlots()"
-            [participantAvatarUsers]="participantAvatarUsers()"
-            [isAuthenticated]="isAuthenticated()"
-            (loginClick)="loginFromCard()"
-            (voteClick)="navigateToPoll()"
-          />
-        } @else {
-          <ds-poll-card-skeleton [count]="1" />
-        }
-
-        @if (!isAuthenticated()) {
-          <div class="flex items-start gap-2 px-1">
-            <ds-icon name="lock" [size]="14" color="var(--text-muted)" />
-            <span
-              class="flex-1 text-[12px] leading-[1.4] text-pretty [color:var(--text-muted)]"
+    <main class="flex flex-1 flex-col">
+        @if (isLoading()) {
+            <div
+                class="flex flex-1 items-start px-(--screen-padding) pt-4 pb-8 lg:px-[34px] lg:pt-[30px]"
             >
-              {{ "publicPoll.privacyNote" | translate }}
-            </span>
-          </div>
-        }
-      </div>
+                <div
+                    class="w-full lg:grid lg:max-w-[1080px] lg:grid-cols-[1fr_352px] lg:gap-[18px]"
+                >
+                    <ds-poll-card-skeleton [count]="1" />
+                </div>
+            </div>
+        } @else {
+            <!-- ═══ MOBILE layout (<lg) ══════════════════════════════ -->
+            <div
+                class="flex flex-col gap-3.5 overflow-y-auto px-(--screen-padding) py-3 pb-[172px] lg:hidden"
+            >
+                <app-public-poll-invite-banner
+                    [isAuthenticated]="isAuthenticated()"
+                    [userName]="currentUser()?.name ?? ''"
+                    [projectName]="projectInfo()?.projectName ?? ''"
+                />
 
-      @if (!isAuthenticated()) {
-        <app-public-poll-nudge-bar (loginClick)="login()" />
-      }
+                @if (pollPreview(); as poll) {
+                    <app-public-poll-card
+                        size="sm"
+                        [poll]="poll"
+                        [optionDisplays]="optionDisplays()"
+                        [participantSlots]="participantSlots()"
+                        [participantAvatarUsers]="participantAvatarUsers()"
+                        [isAuthenticated]="isAuthenticated()"
+                        (loginClick)="loginFromCard()"
+                        (voteClick)="navigateToPoll()"
+                    />
+                } @else {
+                    <ds-poll-card-skeleton [count]="1" />
+                }
 
-      <!-- ═══ DESKTOP layout (≥lg) ══════════════════════════════ -->
-      <div
-        class="hidden flex-1 flex-col overflow-y-auto px-[34px] py-[30px] lg:flex"
-      >
-        <div
-          class="grid w-full max-w-[1080px] grid-cols-[1fr_352px] items-start gap-[18px]"
-        >
-          @if (pollPreview(); as poll) {
-            <app-public-poll-card
-              size="md"
-              [poll]="poll"
-              [optionDisplays]="optionDisplays()"
-              [participantSlots]="participantSlots()"
-              [participantAvatarUsers]="participantAvatarUsers()"
-              [isAuthenticated]="isAuthenticated()"
-              (loginClick)="loginFromCard()"
-              (voteClick)="navigateToPoll()"
-            />
-          } @else {
-            <ds-poll-card-skeleton [count]="1" />
-          }
+                @if (!isAuthenticated()) {
+                    <div class="flex items-start gap-2 px-1">
+                        <ds-icon
+                            name="lock"
+                            [size]="14"
+                            color="var(--text-muted)"
+                        />
+                        <span
+                            class="flex-1 text-[12px] leading-[1.4] text-pretty [color:var(--text-muted)]"
+                        >
+                            {{ 'publicPoll.privacyNote' | translate }}
+                        </span>
+                    </div>
+                }
+            </div>
 
-          <div class="flex flex-col gap-4">
-            @if (isAuthenticated()) {
-              <app-public-poll-member-sidebar
-                [hasVoted]="currentUserHasVoted()"
-                [participants]="participantDisplays()"
-                (copyShareLink)="copyShareLink()"
-              />
-            } @else {
-              <app-public-poll-guest-sidebar
-                [emailControl]="emailControl"
-                [perks]="perks"
-                (loginClick)="login()"
-              />
+            @if (!isAuthenticated()) {
+                <app-public-poll-nudge-bar (loginClick)="login()" />
             }
-          </div>
-        </div>
-      </div>
-    }
-  </main>
+
+            <!-- ═══ DESKTOP layout (≥lg) ══════════════════════════════ -->
+            <div
+                class="hidden flex-1 flex-col overflow-y-auto px-[34px] py-[30px] lg:flex"
+            >
+                <div
+                    class="grid w-full max-w-[1080px] grid-cols-[1fr_352px] items-start gap-[18px]"
+                >
+                    @if (pollPreview(); as poll) {
+                        <app-public-poll-card
+                            size="md"
+                            [poll]="poll"
+                            [optionDisplays]="optionDisplays()"
+                            [participantSlots]="participantSlots()"
+                            [participantAvatarUsers]="participantAvatarUsers()"
+                            [isAuthenticated]="isAuthenticated()"
+                            (loginClick)="loginFromCard()"
+                            (voteClick)="navigateToPoll()"
+                        />
+                    } @else {
+                        <ds-poll-card-skeleton [count]="1" />
+                    }
+
+                    <div class="flex flex-col gap-4">
+                        @if (isAuthenticated()) {
+                            <app-public-poll-member-sidebar
+                                [hasVoted]="currentUserHasVoted()"
+                                [participants]="participantDisplays()"
+                                (copyShareLink)="copyShareLink()"
+                            />
+                        } @else {
+                            <app-public-poll-guest-sidebar
+                                [emailControl]="emailControl"
+                                [perks]="perks"
+                                (loginClick)="login()"
+                            />
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </main>
 </div>

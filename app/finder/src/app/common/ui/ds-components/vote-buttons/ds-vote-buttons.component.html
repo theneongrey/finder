@@ -1,21 +1,25 @@
 <div class="ds-vote-row">
-  <button type="button" class="ds-vote-btn ds-vote-btn--no" (click)="no.emit()">
-    <ds-icon name="close" [size]="24" color="var(--negative)" />
-  </button>
-  @if (showMaybe()) {
     <button
-      type="button"
-      class="ds-vote-btn ds-vote-btn--maybe"
-      (click)="maybe.emit()"
+        type="button"
+        class="ds-vote-btn ds-vote-btn--no"
+        (click)="no.emit()"
     >
-      <ds-icon name="info" [size]="21" color="var(--warning)" />
+        <ds-icon name="close" [size]="24" color="var(--negative)" />
     </button>
-  }
-  <button
-    type="button"
-    class="ds-vote-btn ds-vote-btn--yes"
-    (click)="yes.emit()"
-  >
-    <ds-icon name="check" [size]="25" color="#fff" />
-  </button>
+    @if (showMaybe()) {
+        <button
+            type="button"
+            class="ds-vote-btn ds-vote-btn--maybe"
+            (click)="maybe.emit()"
+        >
+            <ds-icon name="info" [size]="21" color="var(--warning)" />
+        </button>
+    }
+    <button
+        type="button"
+        class="ds-vote-btn ds-vote-btn--yes"
+        (click)="yes.emit()"
+    >
+        <ds-icon name="check" [size]="25" color="#fff" />
+    </button>
 </div>

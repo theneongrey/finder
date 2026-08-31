@@ -1,47 +1,47 @@
 .ds-avatar-wrap {
-  position: relative;
-  display: inline-flex;
-  flex-shrink: 0;
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
 }
 
 .ds-avatar-ring {
-  border: 2.5px solid var(--white);
+    border: 2.5px solid var(--white);
 }
 .ds-avatar-pending {
-  border: 1.5px dashed var(--sand-400);
+    border: 1.5px dashed var(--sand-400);
 }
 
 .ds-avatar-badge {
-  position: absolute;
-  right: -2px;
-  bottom: -2px;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: #5d9a56;
-  border: 2px solid var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #5d9a56;
+    border: 2px solid var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .ds-avatar-circle {
-  border-radius: var(--radius-circle) !important;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  /* Override SpartanNG size-8 default */
-  width: unset;
-  height: unset;
+    border-radius: var(--radius-circle) !important;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    /* Override SpartanNG size-8 default */
+    width: unset;
+    height: unset;
 }
 /* Override SpartanNG after-ring */
 .ds-avatar-circle::after {
-  display: none;
+    display: none;
 }
 
 .ds-avatar-fallback {
-  font-family: var(--font-body);
-  font-weight: var(--weight-bold);
-  border-radius: var(--radius-circle);
-  user-select: none;
+    font-family: var(--font-body);
+    font-weight: var(--weight-bold);
+    border-radius: var(--radius-circle);
+    user-select: none;
 }

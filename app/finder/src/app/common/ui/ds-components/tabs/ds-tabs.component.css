@@ -1,59 +1,59 @@
 .ds-tabs-host {
-  display: block;
+    display: block;
 }
 
 .ds-tabs {
-  display: flex;
-  gap: 24px;
-  border-bottom: 1px solid var(--border-hairline);
-  /* Override SpartanNG TabsList defaults */
-  background: transparent !important;
-  height: auto !important;
-  width: 100% !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  justify-content: flex-start !important;
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid var(--border-hairline);
+    /* Override SpartanNG TabsList defaults */
+    background: transparent !important;
+    height: auto !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    justify-content: flex-start !important;
 }
 .ds-tab {
-  border: none;
-  background: none;
-  font-family: var(--font-body);
-  font-weight: var(--weight-semibold);
-  cursor: pointer;
-  color: var(--text-muted) !important;
-  padding: 0 0 12px;
-  margin-bottom: -1px;
-  border-bottom: 2.5px solid transparent !important;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition:
-    color var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard);
-  /* Override SpartanNG TabsTrigger defaults */
-  border-radius: 0 !important;
-  height: auto !important;
-  flex: unset !important;
+    border: none;
+    background: none;
+    font-family: var(--font-body);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    color: var(--text-muted) !important;
+    padding: 0 0 12px;
+    margin-bottom: -1px;
+    border-bottom: 2.5px solid transparent !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition:
+        color var(--duration-fast) var(--ease-standard),
+        border-color var(--duration-fast) var(--ease-standard);
+    /* Override SpartanNG TabsTrigger defaults */
+    border-radius: 0 !important;
+    height: auto !important;
+    flex: unset !important;
 }
-.ds-tab[data-state="active"] {
-  font-weight: var(--weight-bold) !important;
-  color: var(--text-primary) !important;
-  border-bottom-color: var(--accent) !important;
+.ds-tab[data-state='active'] {
+    font-weight: var(--weight-bold) !important;
+    color: var(--text-primary) !important;
+    border-bottom-color: var(--accent) !important;
 }
 .ds-tab-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  font-size: var(--fs-micro);
-  font-weight: var(--weight-bold);
-  background: var(--sand-300);
-  color: var(--text-secondary);
-  padding: 0 6px;
-  border-radius: 99px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    font-size: var(--fs-micro);
+    font-weight: var(--weight-bold);
+    background: var(--sand-300);
+    color: var(--text-secondary);
+    padding: 0 6px;
+    border-radius: 99px;
 }
 .ds-tab-count--active {
-  background: var(--accent-tint);
-  color: var(--accent);
+    background: var(--accent-tint);
+    color: var(--accent);
 }

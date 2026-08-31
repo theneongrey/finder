@@ -1,10 +1,10 @@
 import {
-  patchState,
-  signalStore,
-  withComputed,
-  withMethods,
-  withProps,
-  withState,
+    patchState,
+    signalStore,
+    withComputed,
+    withMethods,
+    withProps,
+    withState,
 } from '@ngrx/signals';
 import { on, withReducer } from '@ngrx/signals/events';
 import { computed, inject } from '@angular/core';
@@ -18,293 +18,328 @@ import { sharingEvents } from './sharing.events';
 import { LoggerService } from '@common/services/logger.service';
 
 export const PollDetailStore = signalStore(
-  { providedIn: 'root' },
-  withState({
-    currentProject: undefined as Project | undefined,
-    currentPoll: undefined as PollDetail | undefined,
-  }),
-  withComputed((store) => ({
-    projectId: computed(() => store.currentProject()?.id),
-  })),
-  withProps(() => ({
-    loggerService: inject(LoggerService),
-    projectService: inject(PollService),
-    router: inject(Router),
-  })),
-  withMethods((store) => ({
-    getProject: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { currentProject: undefined })),
-        switchMap((id) =>
-          store.projectService.getProject(id).pipe(
-            tapResponse({
-              next: (project) => {
-                patchState(store, { currentProject: project });
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[PollDetailStore] Error while loading project',
-                  error,
-                );
-              },
-            }),
-          ),
+    { providedIn: 'root' },
+    withState({
+        currentProject: undefined as Project | undefined,
+        currentPoll: undefined as PollDetail | undefined,
+    }),
+    withComputed((store) => ({
+        projectId: computed(() => store.currentProject()?.id),
+    })),
+    withProps(() => ({
+        loggerService: inject(LoggerService),
+        projectService: inject(PollService),
+        router: inject(Router),
+    })),
+    withMethods((store) => ({
+        getProject: rxMethod<string>(
+            pipe(
+                tap(() => patchState(store, { currentProject: undefined })),
+                switchMap((id) =>
+                    store.projectService.getProject(id).pipe(
+                        tapResponse({
+                            next: (project) => {
+                                patchState(store, { currentProject: project });
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error while loading project',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
+                ),
+            ),
         ),
-      ),
-    ),
 
-    getPoll: rxMethod<string>(
-      pipe(
-        tap(() => patchState(store, { currentPoll: undefined })),
-        switchMap((id) =>
-          store.projectService.getPoll(id).pipe(
-            tapResponse({
-              next: (poll) => {
-                patchState(store, { currentPoll: poll });
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[PollDetailStore] Error while loading poll',
-                  error,
-                );
-              },
-            }),
-          ),
+        getPoll: rxMethod<string>(
+            pipe(
+                tap(() => patchState(store, { currentPoll: undefined })),
+                switchMap((id) =>
+                    store.projectService.getPoll(id).pipe(
+                        tapResponse({
+                            next: (poll) => {
+                                patchState(store, { currentPoll: poll });
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error while loading poll',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
+                ),
+            ),
         ),
-      ),
-    ),
 
-    editPoll: rxMethod<{
-      projectId: string;
-      pollId: string;
-      name: string;
-      description: string;
-      closeDate?: string;
-      options: {
-        id?: string;
-        text: string;
-        description: string;
-        meta?: {
-          url: string;
-          title?: string;
-          description?: string;
-          imageUrl?: string;
-          siteName?: string;
-        };
-      }[];
-      removedOptionIds: string[];
-    }>(
-      pipe(
-        switchMap((poll) =>
-          store.projectService
-            .updatePoll(
-              poll.pollId,
-              poll.name,
-              poll.description,
-              poll.closeDate,
-            )
-            .pipe(
-              switchMap(() => {
-                const optionRequests = [
-                  ...poll.options.map((o) => {
-                    const meta = o.meta
-                      ? {
-                          url: o.meta.url,
-                          title: o.meta.title ?? '',
-                          description: o.meta.description ?? '',
-                          imageUrl: o.meta.imageUrl ?? '',
-                          siteName: o.meta.siteName ?? '',
-                        }
-                      : undefined;
-                    return o.id
-                      ? store.projectService.updateOption(
-                          o.id,
-                          o.text,
-                          o.description,
-                          meta,
+        editPoll: rxMethod<{
+            projectId: string;
+            pollId: string;
+            name: string;
+            description: string;
+            closeDate?: string;
+            options: {
+                id?: string;
+                text: string;
+                description: string;
+                meta?: {
+                    url: string;
+                    title?: string;
+                    description?: string;
+                    imageUrl?: string;
+                    siteName?: string;
+                };
+            }[];
+            removedOptionIds: string[];
+        }>(
+            pipe(
+                switchMap((poll) =>
+                    store.projectService
+                        .updatePoll(
+                            poll.pollId,
+                            poll.name,
+                            poll.description,
+                            poll.closeDate,
                         )
-                      : store.projectService.addOption(
-                          poll.pollId,
-                          o.text,
-                          o.description,
-                          meta,
-                        );
-                  }),
-                  ...poll.removedOptionIds.map((id) =>
-                    store.projectService.deleteOption(id),
-                  ),
-                ];
+                        .pipe(
+                            switchMap(() => {
+                                const optionRequests = [
+                                    ...poll.options.map((o) => {
+                                        const meta = o.meta
+                                            ? {
+                                                  url: o.meta.url,
+                                                  title: o.meta.title ?? '',
+                                                  description:
+                                                      o.meta.description ?? '',
+                                                  imageUrl:
+                                                      o.meta.imageUrl ?? '',
+                                                  siteName:
+                                                      o.meta.siteName ?? '',
+                                              }
+                                            : undefined;
+                                        return o.id
+                                            ? store.projectService.updateOption(
+                                                  o.id,
+                                                  o.text,
+                                                  o.description,
+                                                  meta,
+                                              )
+                                            : store.projectService.addOption(
+                                                  poll.pollId,
+                                                  o.text,
+                                                  o.description,
+                                                  meta,
+                                              );
+                                    }),
+                                    ...poll.removedOptionIds.map((id) =>
+                                        store.projectService.deleteOption(id),
+                                    ),
+                                ];
 
-                return optionRequests.length
-                  ? forkJoin(optionRequests)
-                  : of([]);
-              }),
-              tapResponse({
-                next: () => {
-                  store.loggerService.debug(
-                    `[PollDetailStore] Updated poll`,
-                    poll.pollId,
-                  );
-                  store.router.navigate(['/polls']);
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[PollDetailStore] Error while editing a poll',
-                    error,
-                  );
-                },
-              }),
-            ),
-        ),
-      ),
-    ),
-
-    vote: rxMethod<{ optionId: string; choice: string }>(
-      pipe(
-        switchMap((vote) =>
-          store.projectService.vote(vote.optionId, vote.choice).pipe(
-            tapResponse({
-              next: () => {
-                const currentPoll = store.currentPoll();
-                if (currentPoll) {
-                  const updatedOptions = currentPoll.options.map((o) =>
-                    o.id !== vote.optionId ? o : { ...o, choice: vote.choice },
-                  );
-                  patchState(store, {
-                    currentPoll: { ...currentPoll, options: updatedOptions },
-                  });
-
-                  const currentProject = store.currentProject();
-                  if (currentProject) {
-                    const nextUnvoted = updatedOptions.find((o) => !o.choice);
-                    const nextSkipped = updatedOptions
-                      .filter((o) => o.choice && parseInt(o.choice) < 0)
-                      .sort(
-                        (a, b) => parseInt(b.choice!) - parseInt(a.choice!),
-                      )[0];
-                    const nextOpenOptionId = (nextUnvoted ?? nextSkipped)?.id;
-                    patchState(store, {
-                      currentProject: {
-                        ...currentProject,
-                        polls: currentProject.polls.map((p) =>
-                          p.id !== currentPoll.id
-                            ? p
-                            : { ...p, nextOpenOptionId },
+                                return optionRequests.length
+                                    ? forkJoin(optionRequests)
+                                    : of([]);
+                            }),
+                            tapResponse({
+                                next: () => {
+                                    store.loggerService.debug(
+                                        `[PollDetailStore] Updated poll`,
+                                        poll.pollId,
+                                    );
+                                    store.router.navigate(['/polls']);
+                                },
+                                error: (error) => {
+                                    store.loggerService.log(
+                                        '[PollDetailStore] Error while editing a poll',
+                                        error,
+                                    );
+                                },
+                            }),
                         ),
-                      },
-                    });
-                  }
-                }
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[PollDetailStore] Error while voting',
-                  error,
-                );
-              },
-            }),
-          ),
-        ),
-      ),
-    ),
-
-    closePoll: rxMethod<string>(
-      pipe(
-        switchMap((pollSlug) =>
-          store.projectService.closePoll(pollSlug).pipe(
-            tapResponse({
-              next: (updatedPoll) => {
-                patchState(store, { currentPoll: updatedPoll });
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[PollDetailStore] Error closing poll',
-                  error,
-                );
-              },
-            }),
-          ),
-        ),
-      ),
-    ),
-
-    reopenPoll: rxMethod<string>(
-      pipe(
-        switchMap((pollSlug) =>
-          store.projectService.reopenPoll(pollSlug).pipe(
-            tapResponse({
-              next: (updatedPoll) => {
-                patchState(store, { currentPoll: updatedPoll });
-              },
-              error: (error) => {
-                store.loggerService.log(
-                  '[PollDetailStore] Error reopening poll',
-                  error,
-                );
-              },
-            }),
-          ),
-        ),
-      ),
-    ),
-
-    addComment: rxMethod<{ pollId: string; content: string; quote?: string }>(
-      pipe(
-        switchMap((comment) =>
-          store.projectService
-            .addComment(comment.pollId, comment.content, comment.quote)
-            .pipe(
-              tapResponse({
-                next: (addedComment: Comment) => {
-                  const currentPoll = store.currentPoll();
-                  if (currentPoll?.id === comment.pollId) {
-                    patchState(store, {
-                      currentPoll: {
-                        ...currentPoll,
-                        comments: [...currentPoll.comments, addedComment],
-                      },
-                    });
-                  }
-                },
-                error: (error) => {
-                  store.loggerService.log(
-                    '[PollDetailStore] Error while adding a comment',
-                    error,
-                  );
-                },
-              }),
+                ),
             ),
         ),
-      ),
+
+        vote: rxMethod<{ optionId: string; choice: string }>(
+            pipe(
+                switchMap((vote) =>
+                    store.projectService.vote(vote.optionId, vote.choice).pipe(
+                        tapResponse({
+                            next: () => {
+                                const currentPoll = store.currentPoll();
+                                if (currentPoll) {
+                                    const updatedOptions =
+                                        currentPoll.options.map((o) =>
+                                            o.id !== vote.optionId
+                                                ? o
+                                                : { ...o, choice: vote.choice },
+                                        );
+                                    patchState(store, {
+                                        currentPoll: {
+                                            ...currentPoll,
+                                            options: updatedOptions,
+                                        },
+                                    });
+
+                                    const currentProject =
+                                        store.currentProject();
+                                    if (currentProject) {
+                                        const nextUnvoted = updatedOptions.find(
+                                            (o) => !o.choice,
+                                        );
+                                        const nextSkipped = updatedOptions
+                                            .filter(
+                                                (o) =>
+                                                    o.choice &&
+                                                    parseInt(o.choice) < 0,
+                                            )
+                                            .sort(
+                                                (a, b) =>
+                                                    parseInt(b.choice!) -
+                                                    parseInt(a.choice!),
+                                            )[0];
+                                        const nextOpenOptionId = (
+                                            nextUnvoted ?? nextSkipped
+                                        )?.id;
+                                        patchState(store, {
+                                            currentProject: {
+                                                ...currentProject,
+                                                polls: currentProject.polls.map(
+                                                    (p) =>
+                                                        p.id !== currentPoll.id
+                                                            ? p
+                                                            : {
+                                                                  ...p,
+                                                                  nextOpenOptionId,
+                                                              },
+                                                ),
+                                            },
+                                        });
+                                    }
+                                }
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error while voting',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
+                ),
+            ),
+        ),
+
+        closePoll: rxMethod<string>(
+            pipe(
+                switchMap((pollSlug) =>
+                    store.projectService.closePoll(pollSlug).pipe(
+                        tapResponse({
+                            next: (updatedPoll) => {
+                                patchState(store, { currentPoll: updatedPoll });
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error closing poll',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
+                ),
+            ),
+        ),
+
+        reopenPoll: rxMethod<string>(
+            pipe(
+                switchMap((pollSlug) =>
+                    store.projectService.reopenPoll(pollSlug).pipe(
+                        tapResponse({
+                            next: (updatedPoll) => {
+                                patchState(store, { currentPoll: updatedPoll });
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error reopening poll',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
+                ),
+            ),
+        ),
+
+        addComment: rxMethod<{
+            pollId: string;
+            content: string;
+            quote?: string;
+        }>(
+            pipe(
+                switchMap((comment) =>
+                    store.projectService
+                        .addComment(
+                            comment.pollId,
+                            comment.content,
+                            comment.quote,
+                        )
+                        .pipe(
+                            tapResponse({
+                                next: (addedComment: Comment) => {
+                                    const currentPoll = store.currentPoll();
+                                    if (currentPoll?.id === comment.pollId) {
+                                        patchState(store, {
+                                            currentPoll: {
+                                                ...currentPoll,
+                                                comments: [
+                                                    ...currentPoll.comments,
+                                                    addedComment,
+                                                ],
+                                            },
+                                        });
+                                    }
+                                },
+                                error: (error) => {
+                                    store.loggerService.log(
+                                        '[PollDetailStore] Error while adding a comment',
+                                        error,
+                                    );
+                                },
+                            }),
+                        ),
+                ),
+            ),
+        ),
+    })),
+    withReducer(
+        on(
+            sharingEvents.shared,
+            sharingEvents.permissionRemoved,
+            ({ payload }) =>
+                (state: { currentProject: Project | undefined }) =>
+                    state.currentProject?.id === payload.projectId
+                        ? {
+                              currentProject: {
+                                  ...state.currentProject,
+                                  sharedWith: payload.sharedWith,
+                              },
+                          }
+                        : {},
+        ),
+        on(
+            sharingEvents.visibilityTypeUpdated,
+            ({ payload }) =>
+                (state: { currentProject: Project | undefined }) =>
+                    state.currentProject?.id === payload.projectId
+                        ? {
+                              currentProject: {
+                                  ...state.currentProject,
+                                  visibilityType: payload.visibilityType,
+                              },
+                          }
+                        : {},
+        ),
     ),
-  })),
-  withReducer(
-    on(
-      sharingEvents.shared,
-      sharingEvents.permissionRemoved,
-      ({ payload }) =>
-        (state: { currentProject: Project | undefined }) =>
-          state.currentProject?.id === payload.projectId
-            ? {
-                currentProject: {
-                  ...state.currentProject,
-                  sharedWith: payload.sharedWith,
-                },
-              }
-            : {},
-    ),
-    on(
-      sharingEvents.visibilityTypeUpdated,
-      ({ payload }) =>
-        (state: { currentProject: Project | undefined }) =>
-          state.currentProject?.id === payload.projectId
-            ? {
-                currentProject: {
-                  ...state.currentProject,
-                  visibilityType: payload.visibilityType,
-                },
-              }
-            : {},
-    ),
-  ),
 );

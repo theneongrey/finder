@@ -71,5 +71,9 @@ _services/  — HttpClient services
 
 For implementation conventions (file structure, component layers, ds-* usage), invoke the `/implement-frontend` skill.
 
+## Style rules
+
+Never append "Generated with Claude Code" (or any similar attribution line) to PR descriptions, commit messages, comments, or any other text you write.
+
 ## Testing
 When testing locally, use testuser1@neongrey.de or testuser2@neongrey.de to log in. Enter the email address, then when asked for the code, navigate to http://localhost:4200/auth/token-login?token=1234 to log in. If you are already logged in when starting the session. Log out first.

@@ -1,46 +1,46 @@
 .slide-enter {
-  animation: slideEnter 200ms ease-out;
-  overflow: hidden;
+    animation: slideEnter 200ms ease-out;
+    overflow: hidden;
 }
 
 @keyframes slideEnter {
-  from {
-    max-height: 0;
-    opacity: 0;
-  }
-  to {
-    max-height: 80px;
-    opacity: 1;
-  }
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+    to {
+        max-height: 80px;
+        opacity: 1;
+    }
 }
 
 .preview-spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--border-hairline-strong);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-hairline-strong);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .slide-leave {
-  animation: slideLeave 200ms ease-in forwards;
-  overflow: hidden;
+    animation: slideLeave 200ms ease-in forwards;
+    overflow: hidden;
 }
 
 @keyframes slideLeave {
-  from {
-    max-height: 80px;
-    opacity: 1;
-  }
-  to {
-    max-height: 0;
-    opacity: 0;
-  }
+    from {
+        max-height: 80px;
+        opacity: 1;
+    }
+    to {
+        max-height: 0;
+        opacity: 0;
+    }
 }

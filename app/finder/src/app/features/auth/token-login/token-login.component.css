@@ -1,14 +1,14 @@
 .token-login-spinner {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 3px solid var(--sand-300);
-  border-top-color: var(--accent);
-  animation: token-spin 0.7s linear infinite;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid var(--sand-300);
+    border-top-color: var(--accent);
+    animation: token-spin 0.7s linear infinite;
 }
 
 @keyframes token-spin {
-  to {
-    transform: rotate(360deg);
-  }
+    to {
+        transform: rotate(360deg);
+    }
 }

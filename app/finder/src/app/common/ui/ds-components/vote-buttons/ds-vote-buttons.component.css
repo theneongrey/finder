@@ -1,38 +1,38 @@
 .ds-vote-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
 }
 .ds-vote-btn {
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: transform var(--duration-fast) var(--ease-standard);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform var(--duration-fast) var(--ease-standard);
 }
 .ds-vote-btn:active {
-  transform: scale(0.92);
+    transform: scale(0.92);
 }
 .ds-vote-btn--no {
-  width: 62px;
-  height: 62px;
-  border: 1.5px solid #f0c3bd;
-  background: #fff;
+    width: 62px;
+    height: 62px;
+    border: 1.5px solid #f0c3bd;
+    background: #fff;
 }
 .ds-vote-btn--maybe {
-  width: 54px;
-  height: 54px;
-  border: 1.5px solid #e6cfa4;
-  background: #fff;
+    width: 54px;
+    height: 54px;
+    border: 1.5px solid #e6cfa4;
+    background: #fff;
 }
 .ds-vote-btn--yes {
-  width: 62px;
-  height: 62px;
-  border: none;
-  background: var(--positive-strong);
-  box-shadow: 0 8px 20px rgba(93, 154, 86, 0.34);
+    width: 62px;
+    height: 62px;
+    border: none;
+    background: var(--positive-strong);
+    box-shadow: 0 8px 20px rgba(93, 154, 86, 0.34);
 }

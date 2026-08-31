@@ -1,83 +1,91 @@
 <div>
-  <div class="mb-3 hidden items-center justify-between px-1 lg:flex">
-    <h3 class="text-[var(--text-primary)]">Kommentare</h3>
-    @if (comments().length) {
-      <span
-        class="inline-flex h-6 items-center rounded-[8px] bg-[var(--sand-100)] px-2.5 text-[12px] font-bold text-[var(--text-secondary)]"
-      >
-        {{ comments().length }}
-      </span>
-    }
-  </div>
-
-  <ds-card [padding]="0">
-    <!-- Comment list -->
-    @if (comments().length) {
-      <div class="flex flex-col gap-2.5 p-4 pb-3">
-        @for (comment of comments(); track comment.id) {
-          <ds-card [padding]="14">
-            <div class="flex items-center gap-2.5">
-              <app-user-avatar
-                [user]="authorUser(comment.author)"
-                [size]="30"
-              />
-              <span
-                class="min-w-0 flex-1 truncate text-[14px] font-bold text-[var(--text-primary)]"
-              >
-                {{ comment.author.name }}
-              </span>
-              <span class="shrink-0 text-[12px] text-[var(--text-muted)]">
-                {{ comment.created | timeSince }}
-              </span>
-            </div>
-
-            @if (comment.quote) {
-              <div
-                class="mt-2 inline-flex h-6 max-w-full items-center gap-1.5 overflow-hidden rounded-[8px] bg-[var(--cream-200)] px-2.5 text-[11.5px] font-bold text-[var(--ink-500)]"
-              >
-                <ds-icon name="logo" [size]="12" color="#5d9a56" />
-                <span class="truncate">{{ comment.quote }}</span>
-              </div>
-            }
-
-            <p
-              class="mt-2 text-[14px] leading-[1.5] text-pretty text-[var(--text-body)]"
+    <div class="mb-3 hidden items-center justify-between px-1 lg:flex">
+        <h3 class="text-[var(--text-primary)]">Kommentare</h3>
+        @if (comments().length) {
+            <span
+                class="inline-flex h-6 items-center rounded-[8px] bg-[var(--sand-100)] px-2.5 text-[12px] font-bold text-[var(--text-secondary)]"
             >
-              {{ comment.content }}
-            </p>
-          </ds-card>
+                {{ comments().length }}
+            </span>
         }
-      </div>
-    } @else {
-      <div class="flex items-center justify-center px-4 py-8">
-        <p class="text-center text-[13.5px] text-[var(--text-muted)]">
-          Noch keine Kommentare. Schreib den ersten!
-        </p>
-      </div>
-    }
-
-    <!-- Comment input -->
-    <div class="border-t border-[var(--border-hairline)] p-4 pt-3">
-      <ds-textarea
-        data-testid="results-comment-input"
-        [placeholder]="'Kommentar schreiben…'"
-        [autoResize]="true"
-        [rows]="1"
-        [maxlength]="limits.commentContentLength"
-        [(ngModel)]="newCommentText"
-        (keydown.enter)="onEnterKey($event)"
-      />
-      <div class="mt-2 flex justify-end">
-        <ds-button
-          data-testid="results-comment-submit"
-          variant="primary"
-          size="sm"
-          [disabled]="!newCommentText.trim()"
-          (click)="submitComment()"
-        >
-          Kommentieren
-        </ds-button>
-      </div>
     </div>
-  </ds-card>
+
+    <ds-card [padding]="0">
+        <!-- Comment list -->
+        @if (comments().length) {
+            <div class="flex flex-col gap-2.5 p-4 pb-3">
+                @for (comment of comments(); track comment.id) {
+                    <ds-card [padding]="14">
+                        <div class="flex items-center gap-2.5">
+                            <app-user-avatar
+                                [user]="authorUser(comment.author)"
+                                [size]="30"
+                            />
+                            <span
+                                class="min-w-0 flex-1 truncate text-[14px] font-bold text-[var(--text-primary)]"
+                            >
+                                {{ comment.author.name }}
+                            </span>
+                            <span
+                                class="shrink-0 text-[12px] text-[var(--text-muted)]"
+                            >
+                                {{ comment.created | timeSince }}
+                            </span>
+                        </div>
+
+                        @if (comment.quote) {
+                            <div
+                                class="mt-2 inline-flex h-6 max-w-full items-center gap-1.5 overflow-hidden rounded-[8px] bg-[var(--cream-200)] px-2.5 text-[11.5px] font-bold text-[var(--ink-500)]"
+                            >
+                                <ds-icon
+                                    name="logo"
+                                    [size]="12"
+                                    color="#5d9a56"
+                                />
+                                <span class="truncate">{{
+                                    comment.quote
+                                }}</span>
+                            </div>
+                        }
+
+                        <p
+                            class="mt-2 text-[14px] leading-[1.5] text-pretty text-[var(--text-body)]"
+                        >
+                            {{ comment.content }}
+                        </p>
+                    </ds-card>
+                }
+            </div>
+        } @else {
+            <div class="flex items-center justify-center px-4 py-8">
+                <p class="text-center text-[13.5px] text-[var(--text-muted)]">
+                    Noch keine Kommentare. Schreib den ersten!
+                </p>
+            </div>
+        }
+
+        <!-- Comment input -->
+        <div class="border-t border-[var(--border-hairline)] p-4 pt-3">
+            <ds-textarea
+                data-testid="results-comment-input"
+                [placeholder]="'Kommentar schreiben…'"
+                [autoResize]="true"
+                [rows]="1"
+                [maxlength]="limits.commentContentLength"
+                [(ngModel)]="newCommentText"
+                (keydown.enter)="onEnterKey($event)"
+            />
+            <div class="mt-2 flex justify-end">
+                <ds-button
+                    data-testid="results-comment-submit"
+                    variant="primary"
+                    size="sm"
+                    [disabled]="!newCommentText.trim()"
+                    (click)="submitComment()"
+                >
+                    Kommentieren
+                </ds-button>
+            </div>
+        </div>
+    </ds-card>
 </div>

@@ -1,106 +1,116 @@
 <div class="hero-demo">
-  <div class="demo-card">
-    <div class="demo-tags">
-      <ds-badge class="tag-type" tone="neutral" size="sm">{{
-        "home.demo.tagType" | translate
-      }}</ds-badge>
-      <ds-badge class="tag-live" tone="success" size="sm">
-        <ds-status-dot />{{ "home.demo.tagLive" | translate }}
-      </ds-badge>
-      <span class="demo-time">{{ "home.demo.endsIn" | translate }}</span>
-    </div>
-    <div class="demo-question">{{ "home.demo.question" | translate }}</div>
-    <div class="demo-options">
-      @for (o of demoState().options; track o.labelKey) {
-        <div class="demo-option" [style.border-color]="o.border">
-          <div
-            class="demo-bar"
-            [style.width]="o.pct"
-            [style.background]="o.fill"
-          ></div>
-          <div class="demo-option-row">
-            <span class="demo-option-label" [style.font-weight]="o.weight">{{
-              o.labelKey | translate
-            }}</span>
-            <div class="demo-chips">
-              @for (c of o.chips; track c.i) {
-                <ds-avatar
-                  [initial]="c.i"
-                  [bg]="c.bg"
-                  [fg]="c.fg"
-                  [size]="20"
-                />
-              }
-            </div>
-            <span class="demo-count" [style.color]="o.numColor">{{
-              o.numLabel
-            }}</span>
-          </div>
+    <div class="demo-card">
+        <div class="demo-tags">
+            <ds-badge class="tag-type" tone="neutral" size="sm">{{
+                'home.demo.tagType' | translate
+            }}</ds-badge>
+            <ds-badge class="tag-live" tone="success" size="sm">
+                <ds-status-dot />{{ 'home.demo.tagLive' | translate }}
+            </ds-badge>
+            <span class="demo-time">{{ 'home.demo.endsIn' | translate }}</span>
         </div>
-      }
+        <div class="demo-question">{{ 'home.demo.question' | translate }}</div>
+        <div class="demo-options">
+            @for (o of demoState().options; track o.labelKey) {
+                <div class="demo-option" [style.border-color]="o.border">
+                    <div
+                        class="demo-bar"
+                        [style.width]="o.pct"
+                        [style.background]="o.fill"
+                    ></div>
+                    <div class="demo-option-row">
+                        <span
+                            class="demo-option-label"
+                            [style.font-weight]="o.weight"
+                            >{{ o.labelKey | translate }}</span
+                        >
+                        <div class="demo-chips">
+                            @for (c of o.chips; track c.i) {
+                                <ds-avatar
+                                    [initial]="c.i"
+                                    [bg]="c.bg"
+                                    [fg]="c.fg"
+                                    [size]="20"
+                                />
+                            }
+                        </div>
+                        <span class="demo-count" [style.color]="o.numColor">{{
+                            o.numLabel
+                        }}</span>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="demo-footer">
+            <span class="demo-voted">{{
+                'home.demo.voted'
+                    | translate
+                        : {
+                              count: demoState().votedCount,
+                              total: demoState().votedTotal,
+                          }
+            }}</span>
+            <span class="demo-progress-track">
+                <span
+                    class="demo-progress-fill"
+                    [style.width]="demoState().pct"
+                ></span>
+            </span>
+        </div>
     </div>
-    <div class="demo-footer">
-      <span class="demo-voted">{{
-        "home.demo.voted"
-          | translate
-            : { count: demoState().votedCount, total: demoState().votedTotal }
-      }}</span>
-      <span class="demo-progress-track">
-        <span class="demo-progress-fill" [style.width]="demoState().pct"></span>
-      </span>
-    </div>
-  </div>
 
-  <!-- Floating toasts — desktop only -->
-  <div class="float-toast float-top desktop-only">
-    <span class="float-icon float-icon-green">
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#3f7a4e"
-        stroke-width="3.2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M4.5 12.5l4.5 4.5L20 5" />
-      </svg>
-    </span>
-    <div class="float-name-wrap" [class.visible]="floatVisible()">
-      <div class="float-title">
-        {{ "home.demo.floatVoted" | translate: { name: floatName() } }}
-      </div>
-      <div class="float-sub">{{ "home.demo.floatJustNow" | translate }}</div>
+    <!-- Floating toasts — desktop only -->
+    <div class="float-toast float-top desktop-only">
+        <span class="float-icon float-icon-green">
+            <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#3f7a4e"
+                stroke-width="3.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M4.5 12.5l4.5 4.5L20 5" />
+            </svg>
+        </span>
+        <div class="float-name-wrap" [class.visible]="floatVisible()">
+            <div class="float-title">
+                {{ 'home.demo.floatVoted' | translate: { name: floatName() } }}
+            </div>
+            <div class="float-sub">
+                {{ 'home.demo.floatJustNow' | translate }}
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="float-toast float-bottom desktop-only">
-    <span class="float-icon float-icon-dark">
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#9fc2cf"
-        stroke-width="2.2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <circle cx="18" cy="5" r="2.6" />
-        <circle cx="6" cy="12" r="2.6" />
-        <circle cx="18" cy="19" r="2.6" />
-        <path d="M8.3 10.7l7.4-4.4" />
-        <path d="M8.3 13.3l7.4 4.4" />
-      </svg>
-    </span>
-    <div>
-      <div class="float-title">
-        {{ "home.demo.floatLinkTitle" | translate }}
-      </div>
-      <div class="float-sub-light">
-        {{ "home.demo.floatLinkSub" | translate }}
-      </div>
+    <div class="float-toast float-bottom desktop-only">
+        <span class="float-icon float-icon-dark">
+            <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#9fc2cf"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <circle cx="18" cy="5" r="2.6" />
+                <circle cx="6" cy="12" r="2.6" />
+                <circle cx="18" cy="19" r="2.6" />
+                <path d="M8.3 10.7l7.4-4.4" />
+                <path d="M8.3 13.3l7.4 4.4" />
+            </svg>
+        </span>
+        <div>
+            <div class="float-title">
+                {{ 'home.demo.floatLinkTitle' | translate }}
+            </div>
+            <div class="float-sub-light">
+                {{ 'home.demo.floatLinkSub' | translate }}
+            </div>
+        </div>
     </div>
-  </div>
 </div>

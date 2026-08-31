@@ -1,36 +1,36 @@
 <div class="flex gap-2">
-  @for (day of weekdays; track day) {
-    <div
-      class="border-primary/50 flex h-16 w-9 flex-col overflow-hidden rounded-xl border-2"
-    >
-      <div class="flex h-6 items-center justify-center bg-white">
-        <span class="text-primary text-[12px] leading-none font-bold">{{
-          weekdayShortName(day)
-        }}</span>
-      </div>
-      @if (day === entry().weekday) {
-        <div class="bg-primary h-px"></div>
-        <div class="bg-primary flex flex-1 items-center justify-center">
-          <i class="fa-solid fa-check text-xs text-white"></i>
+    @for (day of weekdays; track day) {
+        <div
+            class="border-primary/50 flex h-16 w-9 flex-col overflow-hidden rounded-xl border-2"
+        >
+            <div class="flex h-6 items-center justify-center bg-white">
+                <span class="text-primary text-[12px] leading-none font-bold">{{
+                    weekdayShortName(day)
+                }}</span>
+            </div>
+            @if (day === entry().weekday) {
+                <div class="bg-primary h-px"></div>
+                <div class="bg-primary flex flex-1 items-center justify-center">
+                    <i class="fa-solid fa-check text-xs text-white"></i>
+                </div>
+            } @else if (otherWeekdays().has(day)) {
+                <div class="bg-primary/30 h-px"></div>
+                <div class="bg-primary/20 flex-1"></div>
+            } @else {
+                <div class="bg-surface-200 h-px"></div>
+                <div class="bg-surface-100 flex-1"></div>
+            }
         </div>
-      } @else if (otherWeekdays().has(day)) {
-        <div class="bg-primary/30 h-px"></div>
-        <div class="bg-primary/20 flex-1"></div>
-      } @else {
-        <div class="bg-surface-200 h-px"></div>
-        <div class="bg-surface-100 flex-1"></div>
-      }
-    </div>
-  }
+    }
 </div>
 <div class="flex items-baseline gap-2">
-  <p class="text-surface-900 text-[26px] font-semibold">
-    {{ weekdayName(entry().weekday!) }}
-  </p>
-  @if (entry().startTime; as t) {
-    <span class="text-surface-300">·</span>
-    <p class="text-surface-500 text-[26px] font-medium">
-      {{ formatTimeOnly(t) }}
+    <p class="text-surface-900 text-[26px] font-semibold">
+        {{ weekdayName(entry().weekday!) }}
     </p>
-  }
+    @if (entry().startTime; as t) {
+        <span class="text-surface-300">·</span>
+        <p class="text-surface-500 text-[26px] font-medium">
+            {{ formatTimeOnly(t) }}
+        </p>
+    }
 </div>

@@ -1,1104 +1,1266 @@
 <div class="ds-page">
-  <!-- Header -->
-  <header class="ds-page__header">
-    <div class="ds-page__header-title">
-      <h2 style="margin: 0; color: var(--accent)">Design System</h2>
-      <span class="label">Votean App</span>
-    </div>
-    <nav class="ds-page__nav">
-      @for (
-        link of [
-          ["colors", "Colors"],
-          ["typography", "Typography"],
-          ["spacing", "Spacing"],
-          ["shadows", "Shadows"],
-          ["icons", "Icons"],
-          ["buttons", "Buttons"],
-          ["icon-buttons", "IconButton"],
-          ["avatars", "Avatar"],
-          ["badges", "Badge"],
-          ["cards", "Cards"],
-          ["inputs", "Input"],
-          ["textareas", "Textarea"],
-          ["progress", "Progress"],
-          ["segmented", "Segmented"],
-          ["tabs", "Tabs"],
-          ["stepper", "Stepper"],
-          ["bottom-sheet", "BottomSheet"],
-          ["menu", "Menu"],
-          ["empty-state", "EmptyState"],
-          ["vote-buttons", "VoteButtons"],
-          ["chips", "Chips"],
-          ["switch", "Switch"],
-          ["sub-header", "SubHeader"],
-          ["loading", "Loading"],
-        ];
-        track link[0]
-      ) {
-        <a
-          href="javascript:void(0)"
-          (click)="scrollTo(link[0])"
-          class="ds-page__nav-link"
-          >{{ link[1] }}</a
-        >
-      }
-    </nav>
-  </header>
-
-  <main class="ds-page__main">
-    <!-- ── 1. COLORS ──────────────────────────────────────────────── -->
-    <section id="colors" data-testid="section-colors">
-      <h2>Colors</h2>
-      <p class="ds-section-desc">
-        CSS custom properties from <code>tokens/_colors.css</code>.
-      </p>
-      @for (group of colorGroups; track group.label) {
-        <div class="ds-section-block">
-          <p class="label mb-3">{{ group.label }}</p>
-          <div class="ds-color-grid">
-            @for (color of group.colors; track color.token) {
-              <div class="ds-color-swatch">
-                <div
-                  class="ds-color-swatch__block"
-                  [style.background]="color.hex"
-                  [style.border]="'1px solid rgba(0,0,0,0.08)'"
+    <!-- Header -->
+    <header class="ds-page__header">
+        <div class="ds-page__header-title">
+            <h2 style="margin: 0; color: var(--accent)">Design System</h2>
+            <span class="label">Votean App</span>
+        </div>
+        <nav class="ds-page__nav">
+            @for (
+                link of [
+                    ['colors', 'Colors'],
+                    ['typography', 'Typography'],
+                    ['spacing', 'Spacing'],
+                    ['shadows', 'Shadows'],
+                    ['icons', 'Icons'],
+                    ['buttons', 'Buttons'],
+                    ['icon-buttons', 'IconButton'],
+                    ['avatars', 'Avatar'],
+                    ['badges', 'Badge'],
+                    ['cards', 'Cards'],
+                    ['inputs', 'Input'],
+                    ['textareas', 'Textarea'],
+                    ['progress', 'Progress'],
+                    ['segmented', 'Segmented'],
+                    ['tabs', 'Tabs'],
+                    ['stepper', 'Stepper'],
+                    ['bottom-sheet', 'BottomSheet'],
+                    ['menu', 'Menu'],
+                    ['empty-state', 'EmptyState'],
+                    ['vote-buttons', 'VoteButtons'],
+                    ['chips', 'Chips'],
+                    ['switch', 'Switch'],
+                    ['sub-header', 'SubHeader'],
+                    ['loading', 'Loading'],
+                ];
+                track link[0]
+            ) {
+                <a
+                    href="javascript:void(0)"
+                    (click)="scrollTo(link[0])"
+                    class="ds-page__nav-link"
+                    >{{ link[1] }}</a
                 >
-                  @if ($any(color).fgHex) {
-                    <span
-                      style="font-size: 11px; font-weight: 700"
-                      [style.color]="$any(color).fgHex"
-                      >Aa</span
-                    >
-                  }
-                </div>
-                <p
-                  class="ds-mono"
-                  style="word-break: break-all; max-width: 80px"
-                >
-                  {{ color.hex }}
-                </p>
-                <p
-                  class="ds-mono-xs"
-                  style="word-break: break-all; max-width: 80px"
-                >
-                  {{ color.token }}
-                </p>
-              </div>
             }
-          </div>
-        </div>
-      }
-    </section>
+        </nav>
+    </header>
 
-    <hr class="ds-divider" />
+    <main class="ds-page__main">
+        <!-- ── 1. COLORS ──────────────────────────────────────────────── -->
+        <section id="colors" data-testid="section-colors">
+            <h2>Colors</h2>
+            <p class="ds-section-desc">
+                CSS custom properties from <code>tokens/_colors.css</code>.
+            </p>
+            @for (group of colorGroups; track group.label) {
+                <div class="ds-section-block">
+                    <p class="label mb-3">{{ group.label }}</p>
+                    <div class="ds-color-grid">
+                        @for (color of group.colors; track color.token) {
+                            <div class="ds-color-swatch">
+                                <div
+                                    class="ds-color-swatch__block"
+                                    [style.background]="color.hex"
+                                    [style.border]="'1px solid rgba(0,0,0,0.08)'"
+                                >
+                                    @if ($any(color).fgHex) {
+                                        <span
+                                            style="
+                                                font-size: 11px;
+                                                font-weight: 700;
+                                            "
+                                            [style.color]="$any(color).fgHex"
+                                            >Aa</span
+                                        >
+                                    }
+                                </div>
+                                <p
+                                    class="ds-mono"
+                                    style="
+                                        word-break: break-all;
+                                        max-width: 80px;
+                                    "
+                                >
+                                    {{ color.hex }}
+                                </p>
+                                <p
+                                    class="ds-mono-xs"
+                                    style="
+                                        word-break: break-all;
+                                        max-width: 80px;
+                                    "
+                                >
+                                    {{ color.token }}
+                                </p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </section>
 
-    <!-- ── 2. TYPOGRAPHY ──────────────────────────────────────────── -->
-    <section id="typography" data-testid="section-typography">
-      <h2>Typography</h2>
-      <p class="ds-section-desc">
-        Display:
-        <strong style="font-family: var(--font-display)"
-          >Bricolage Grotesque Variable</strong
-        >
-        — Body:
-        <strong style="font-family: var(--font-body)"
-          >Hanken Grotesk Variable</strong
-        >
-      </p>
-      <div class="ds-section-block">
-        <p class="label mb-4">Display Scale</p>
-        @for (size of displaySizes; track size.token) {
-          <div class="ds-type-row">
-            <span class="ds-mono" style="width: 160px; flex-shrink: 0">{{
-              size.token
-            }}</span>
-            <span
-              [style.font-family]="'var(--font-display)'"
-              [style.font-size]="size.size"
-              [style.font-weight]="700"
-              [style.letter-spacing]="size.tracking"
-              style="color: var(--text-primary); line-height: 1.05"
-              >The quick brown fox</span
-            >
-            <span class="ds-mono" style="flex-shrink: 0">{{ size.size }}</span>
-          </div>
-        }
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-4">Body Scale</p>
-        @for (size of bodySizes; track size.token) {
-          <div class="ds-type-row">
-            <span class="ds-mono" style="width: 160px; flex-shrink: 0">{{
-              size.token
-            }}</span>
-            <span
-              [style.font-family]="'var(--font-body)'"
-              [style.font-size]="size.size"
-              style="color: var(--text-body)"
-              >The quick brown fox jumps over the lazy dog.</span
-            >
-            <span class="ds-mono" style="flex-shrink: 0">{{ size.size }}</span>
-          </div>
-        }
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-4">Semantic Heading Elements</p>
-        <div style="display: flex; flex-direction: column; gap: 16px">
-          <h1>Page Title — h1</h1>
-          <h2>Section Heading — h2</h2>
-          <h3>Item Heading — h3</h3>
-          <span class="label">Label / Eyebrow</span>
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-4">Links</p>
-        <div style="display: flex; flex-direction: column; gap: 10px">
-          <p
-            style="
-              font-size: var(--fs-body);
-              color: var(--text-body);
-              margin: 0;
-            "
-          >
-            Du hast bereits ein Konto?
-            <a href="javascript:void(0)">Jetzt anmelden</a>
-          </p>
-          <p
-            style="
-              font-size: var(--fs-body-xs);
-              color: var(--text-secondary);
-              margin: 0;
-            "
-          >
-            Keinen Code erhalten? <a href="javascript:void(0)">Erneut senden</a>
-          </p>
-          <p
-            style="
-              font-size: var(--fs-body-xs);
-              color: var(--text-secondary);
-              margin: 0;
-            "
-          >
-            <button class="ds-link">Zurück zur E-Mail-Eingabe</button>
-          </p>
-        </div>
-      </div>
-    </section>
+        <hr class="ds-divider" />
 
-    <hr class="ds-divider" />
+        <!-- ── 2. TYPOGRAPHY ──────────────────────────────────────────── -->
+        <section id="typography" data-testid="section-typography">
+            <h2>Typography</h2>
+            <p class="ds-section-desc">
+                Display:
+                <strong style="font-family: var(--font-display)"
+                    >Bricolage Grotesque Variable</strong
+                >
+                — Body:
+                <strong style="font-family: var(--font-body)"
+                    >Hanken Grotesk Variable</strong
+                >
+            </p>
+            <div class="ds-section-block">
+                <p class="label mb-4">Display Scale</p>
+                @for (size of displaySizes; track size.token) {
+                    <div class="ds-type-row">
+                        <span
+                            class="ds-mono"
+                            style="width: 160px; flex-shrink: 0"
+                            >{{ size.token }}</span
+                        >
+                        <span
+                            [style.font-family]="'var(--font-display)'"
+                            [style.font-size]="size.size"
+                            [style.font-weight]="700"
+                            [style.letter-spacing]="size.tracking"
+                            style="
+                                color: var(--text-primary);
+                                line-height: 1.05;
+                            "
+                            >The quick brown fox</span
+                        >
+                        <span class="ds-mono" style="flex-shrink: 0">{{
+                            size.size
+                        }}</span>
+                    </div>
+                }
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-4">Body Scale</p>
+                @for (size of bodySizes; track size.token) {
+                    <div class="ds-type-row">
+                        <span
+                            class="ds-mono"
+                            style="width: 160px; flex-shrink: 0"
+                            >{{ size.token }}</span
+                        >
+                        <span
+                            [style.font-family]="'var(--font-body)'"
+                            [style.font-size]="size.size"
+                            style="color: var(--text-body)"
+                            >The quick brown fox jumps over the lazy dog.</span
+                        >
+                        <span class="ds-mono" style="flex-shrink: 0">{{
+                            size.size
+                        }}</span>
+                    </div>
+                }
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-4">Semantic Heading Elements</p>
+                <div style="display: flex; flex-direction: column; gap: 16px">
+                    <h1>Page Title — h1</h1>
+                    <h2>Section Heading — h2</h2>
+                    <h3>Item Heading — h3</h3>
+                    <span class="label">Label / Eyebrow</span>
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-4">Links</p>
+                <div style="display: flex; flex-direction: column; gap: 10px">
+                    <p
+                        style="
+                            font-size: var(--fs-body);
+                            color: var(--text-body);
+                            margin: 0;
+                        "
+                    >
+                        Du hast bereits ein Konto?
+                        <a href="javascript:void(0)">Jetzt anmelden</a>
+                    </p>
+                    <p
+                        style="
+                            font-size: var(--fs-body-xs);
+                            color: var(--text-secondary);
+                            margin: 0;
+                        "
+                    >
+                        Keinen Code erhalten?
+                        <a href="javascript:void(0)">Erneut senden</a>
+                    </p>
+                    <p
+                        style="
+                            font-size: var(--fs-body-xs);
+                            color: var(--text-secondary);
+                            margin: 0;
+                        "
+                    >
+                        <button class="ds-link">
+                            Zurück zur E-Mail-Eingabe
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    <!-- ── 3. SPACING ────────────────────────────────────────────── -->
-    <section id="spacing" data-testid="section-spacing">
-      <h2>Spacing &amp; Radii</h2>
-      <div class="ds-section-block">
-        <p class="label mb-4">Space Scale</p>
-        <div style="display: flex; flex-direction: column; gap: 8px">
-          @for (s of spacingScale; track s.token) {
-            <div style="display: flex; align-items: center; gap: 12px">
-              <span class="ds-mono" style="width: 100px; flex-shrink: 0">{{
-                s.token
-              }}</span>
-              <div
+        <hr class="ds-divider" />
+
+        <!-- ── 3. SPACING ────────────────────────────────────────────── -->
+        <section id="spacing" data-testid="section-spacing">
+            <h2>Spacing &amp; Radii</h2>
+            <div class="ds-section-block">
+                <p class="label mb-4">Space Scale</p>
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                    @for (s of spacingScale; track s.token) {
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                            "
+                        >
+                            <span
+                                class="ds-mono"
+                                style="width: 100px; flex-shrink: 0"
+                                >{{ s.token }}</span
+                            >
+                            <div
+                                style="
+                                    height: 8px;
+                                    background: var(--accent);
+                                    border-radius: 4px;
+                                "
+                                [style.width.px]="s.px"
+                            ></div>
+                            <span class="ds-mono">{{ s.px }}px</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-4">Border Radius Scale</p>
+                <div class="ds-radius-grid">
+                    @for (r of radiusScale; track r.token) {
+                        <div class="ds-color-swatch">
+                            <div
+                                class="ds-radius-box"
+                                [style.border-radius]="r.value"
+                            ></div>
+                            <p class="ds-mono">{{ r.value }}</p>
+                            <p class="ds-mono-xs">{{ r.token }}</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 4. SHADOWS ────────────────────────────────────────────── -->
+        <section id="shadows" data-testid="section-shadows">
+            <h2>Shadows</h2>
+            <div class="ds-shadow-grid">
+                @for (s of shadowTokens; track s.token) {
+                    <div class="ds-color-swatch">
+                        <div
+                            class="ds-shadow-box"
+                            [style.box-shadow]="s.shadow"
+                        ></div>
+                        <p class="ds-mono">{{ s.label }}</p>
+                        <p class="ds-mono-xs">{{ s.token }}</p>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 5. ICONS ───────────────────────────────────────────────── -->
+        <section id="icons" data-testid="section-icons">
+            <h2>Icons</h2>
+            <p class="ds-section-desc">
+                23 custom inline SVGs. Selector:
+                <code>ds-icon [name] [size] [color]</code>
+            </p>
+            <div class="ds-icon-grid">
+                @for (name of iconNames; track name) {
+                    <div
+                        class="ds-icon-item"
+                        [attr.data-testid]="'icon-' + name"
+                    >
+                        <ds-icon
+                            [name]="name"
+                            [size]="22"
+                            color="var(--ink-700)"
+                        />
+                        <span class="ds-mono-xs">{{ name }}</span>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 6. BUTTONS ────────────────────────────────────────────── -->
+        <section id="buttons" data-testid="section-buttons">
+            <h2>Buttons</h2>
+            <p class="ds-section-desc">
+                Selector:
+                <code
+                    >ds-button [variant] [icon] [fullWidth] [loading]
+                    [disabled]</code
+                >
+            </p>
+            <div class="ds-section-block">
+                <p class="label mb-3">Variants</p>
+                <div class="ds-row-wrap">
+                    <ds-button variant="primary" data-testid="btn-primary"
+                        >Primary</ds-button
+                    >
+                    <ds-button variant="dark">Dark</ds-button>
+                    <ds-button variant="outline">Outline</ds-button>
+                    <ds-button variant="subtle">Subtle</ds-button>
+                    <ds-button variant="surface">Surface</ds-button>
+                    <ds-button variant="ghost">Ghost</ds-button>
+                    <ds-button variant="neutral">Neutral</ds-button>
+                    <ds-button variant="soft">Soft</ds-button>
+                    <ds-button variant="danger">Danger</ds-button>
+                    <ds-button variant="danger" size="sm">Danger sm</ds-button>
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Sizes (sm / md)</p>
+                <div class="ds-row-wrap" style="align-items: center">
+                    <ds-button variant="primary" size="sm"
+                        >Primary sm</ds-button
+                    >
+                    <ds-button variant="primary" size="md"
+                        >Primary md</ds-button
+                    >
+                    <ds-button variant="neutral" size="sm"
+                        >Neutral sm</ds-button
+                    >
+                    <ds-button variant="outline" size="sm"
+                        >Outline sm</ds-button
+                    >
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Trailing icon</p>
+                <div class="ds-row-wrap">
+                    <ds-button variant="outline" trailingIcon="share"
+                        >Teilen</ds-button
+                    >
+                    <ds-button
+                        variant="neutral"
+                        trailingIcon="chevron-right"
+                        size="sm"
+                        >Bearbeiten</ds-button
+                    >
+                    <ds-button variant="primary" trailingIcon="arrow-right"
+                        >Weiter</ds-button
+                    >
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">With leading icon + states</p>
+                <div class="ds-row-wrap">
+                    <ds-button variant="primary" icon="refresh"
+                        >Mit Icon</ds-button
+                    >
+                    <ds-button variant="primary" [disabled]="true"
+                        >Disabled</ds-button
+                    >
+                    <ds-button
+                        variant="primary"
+                        [loading]="loadingDemo()"
+                        (click)="loadingDemo.set(!loadingDemo())"
+                    >
+                        {{ loadingDemo() ? 'Lädt…' : 'Loading demo' }}
+                    </ds-button>
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Full width</p>
+                <div style="max-width: 280px">
+                    <ds-button variant="primary" [fullWidth]="true"
+                        >Weiter abstimmen</ds-button
+                    >
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 7. ICON BUTTONS ───────────────────────────────────────── -->
+        <section id="icon-buttons" data-testid="section-icon-buttons">
+            <h2>IconButton</h2>
+            <p class="ds-section-desc">
+                Selector:
+                <code
+                    >ds-button [icon] [variant] [size]="&lt;px&gt;"
+                    [label]</code
+                >
+                — pass a pixel number for [size] to activate icon-only circular
+                mode.
+            </p>
+            <div class="ds-row-wrap">
+                <div class="ds-labeled-item">
+                    <ds-button
+                        icon="chevron-left"
+                        variant="surface"
+                        data-testid="icon-btn-surface"
+                    />
+                    <span class="ds-mono-xs">surface</span>
+                </div>
+                <div class="ds-labeled-item">
+                    <ds-button icon="kebab" variant="ghost" />
+                    <span class="ds-mono-xs">ghost</span>
+                </div>
+                <div class="ds-labeled-item">
+                    <ds-button icon="close" variant="dark" />
+                    <span class="ds-mono-xs">dark</span>
+                </div>
+                <div class="ds-labeled-item">
+                    <ds-button icon="share" variant="teal" />
+                    <span class="ds-mono-xs">teal</span>
+                </div>
+                <div class="ds-labeled-item">
+                    <ds-button icon="plus" variant="soft" />
+                    <span class="ds-mono-xs">soft</span>
+                </div>
+                <div class="ds-labeled-item">
+                    <ds-button icon="close" variant="danger" [size]="28" />
+                    <span class="ds-mono-xs">danger</span>
+                </div>
+                <div class="ds-labeled-item">
+                    <ds-button icon="share" variant="surface" [size]="44" />
+                    <span class="ds-mono-xs">size 44</span>
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 8. AVATAR + AVATAR STACK ──────────────────────────────── -->
+        <section id="avatars" data-testid="section-avatars">
+            <h2>Avatar &amp; AvatarStack</h2>
+            <div class="ds-section-block">
+                <p class="label mb-3">Avatar — person palette × sizes</p>
+                <div class="ds-row-wrap" style="align-items: flex-end">
+                    @for (item of avatarStack; track item.name) {
+                        <div class="ds-labeled-item">
+                            <app-user-avatar [user]="item" size="normal" />
+                            <span class="ds-mono-xs">{{ item.name[0] }}</span>
+                        </div>
+                    }
+                    <div class="ds-labeled-item">
+                        <ds-avatar
+                            initial="G"
+                            bg="var(--person-1-bg)"
+                            fg="var(--person-1-fg)"
+                            size="sm"
+                        />
+                        <span class="ds-mono-xs">sm</span>
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-avatar
+                            initial="G"
+                            bg="var(--person-1-bg)"
+                            fg="var(--person-1-fg)"
+                            size="md"
+                        />
+                        <span class="ds-mono-xs">md</span>
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-avatar
+                            initial="G"
+                            bg="var(--person-1-bg)"
+                            fg="var(--person-1-fg)"
+                            size="lg"
+                        />
+                        <span class="ds-mono-xs">lg</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">AvatarStack</p>
+                <div class="ds-row-wrap">
+                    <app-avatar-stack
+                        [users]="avatarStack"
+                        [max]="4"
+                        data-testid="avatar-stack"
+                    />
+                    <app-avatar-stack
+                        [users]="avatarStack"
+                        [max]="3"
+                        [showAdd]="true"
+                    />
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Avatar — voted / pending</p>
+                <div class="ds-row-wrap" style="align-items: flex-end">
+                    <div class="ds-labeled-item">
+                        <ds-avatar initial="A" [voted]="false" size="sm" />
+                        <span class="ds-mono-xs">sm pending</span>
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-avatar initial="B" [voted]="false" size="md" />
+                        <span class="ds-mono-xs">md pending</span>
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-avatar initial="C" [voted]="false" size="lg" />
+                        <span class="ds-mono-xs">lg pending</span>
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-avatar
+                            initial="D"
+                            bg="var(--person-2-bg)"
+                            fg="var(--person-2-fg)"
+                            [voted]="true"
+                            size="md"
+                        />
+                        <span class="ds-mono-xs">voted</span>
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-avatar initial="D" [voted]="false" size="md" />
+                        <span class="ds-mono-xs">pending</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 9. BADGE + STATUS DOT ──────────────────────────────────── -->
+        <section id="badges" data-testid="section-badges">
+            <h2>Badge &amp; StatusDot</h2>
+            <div class="ds-section-block">
+                <p class="label mb-3">Badge — tones</p>
+                <div class="ds-row-wrap">
+                    <ds-badge tone="accent">Aktiv</ds-badge>
+                    <ds-badge tone="neutral">Entwurf</ds-badge>
+                    <ds-badge tone="warning">Ausstehend</ds-badge>
+                    <ds-badge tone="success">Abgeschlossen</ds-badge>
+                    <ds-badge tone="manager">Manager</ds-badge>
+                    <ds-badge tone="contributor">Mitwirkender</ds-badge>
+                    <ds-badge tone="viewer">Betrachter</ds-badge>
+                    <ds-badge tone="accent" icon="trophy"
+                        >Meiste Stimmen</ds-badge
+                    >
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Badge — sizes</p>
+                <div class="ds-row-wrap" style="align-items: center">
+                    <div class="ds-labeled-item">
+                        <ds-badge tone="success" size="sm">sm</ds-badge>
+                        <span class="ds-mono-xs">sm</span>
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-badge tone="success" size="md">md</ds-badge>
+                        <span class="ds-mono-xs">md</span>
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-badge tone="success" size="lg">lg</ds-badge>
+                        <span class="ds-mono-xs">lg</span>
+                    </div>
+                    <ds-badge tone="accent" size="sm">Offen</ds-badge>
+                    <ds-badge tone="success" size="sm">Läuft</ds-badge>
+                    <ds-badge tone="neutral" size="sm">Beendet</ds-badge>
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">StatusDot</p>
+                <div class="ds-row-wrap">
+                    <ds-status-dot tone="positive">Läuft</ds-status-dot>
+                    <ds-status-dot tone="muted">Beendet</ds-status-dot>
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Poll type — pill</p>
+                <div class="ds-row-wrap">
+                    <app-poll-type-badge [type]="OptionType.YesNo" />
+                    <app-poll-type-badge [type]="OptionType.Rating" />
+                    <app-poll-type-badge [type]="OptionType.Date" />
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Poll type — icon only</p>
+                <div class="ds-row-wrap">
+                    <app-poll-type-badge
+                        [type]="OptionType.YesNo"
+                        [showLabel]="false"
+                    />
+                    <app-poll-type-badge
+                        [type]="OptionType.Rating"
+                        [showLabel]="false"
+                    />
+                    <app-poll-type-badge
+                        [type]="OptionType.Date"
+                        [showLabel]="false"
+                    />
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 10. CARD ───────────────────────────────────────────────── -->
+        <section id="cards" data-testid="section-cards">
+            <h2>Card</h2>
+            <p class="ds-section-desc">
+                Selector: <code>ds-card [padding] [accentBorder]</code>
+            </p>
+            <div class="ds-row-wrap" style="align-items: flex-start">
+                <ds-card style="width: 240px" data-testid="card-default">
+                    <h3 style="margin: 0 0 8px">Kartenüberschrift</h3>
+                    <p
+                        style="
+                            margin: 0;
+                            font-size: var(--fs-body-xs);
+                            color: var(--text-tertiary);
+                        "
+                    >
+                        Weißer Container mit weichem Schatten und großem Radius.
+                    </p>
+                </ds-card>
+                <ds-card [accentBorder]="true" style="width: 240px">
+                    <h3 style="margin: 0 0 8px">Akzentrand</h3>
+                    <p
+                        style="
+                            margin: 0;
+                            font-size: var(--fs-body-xs);
+                            color: var(--text-tertiary);
+                        "
+                    >
+                        4 px linker Teal-Rand für hervorgehobene Inhalte.
+                    </p>
+                </ds-card>
+                <ds-card [padding]="12" style="width: 240px">
+                    <p
+                        style="
+                            margin: 0;
+                            font-size: var(--fs-body-xs);
+                            color: var(--text-tertiary);
+                        "
+                    >
+                        Schmales Padding (12 px) für kompakte Listen.
+                    </p>
+                </ds-card>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 11. INPUT ──────────────────────────────────────────────── -->
+        <section id="inputs" data-testid="section-inputs">
+            <h2>Input</h2>
+            <p class="ds-section-desc">
+                Selector:
+                <code
+                    >ds-input [type] [label] [error] [placeholder]
+                    [readonly]</code
+                >
+                — implements ControlValueAccessor.
+            </p>
+            <div class="ds-form-grid">
+                <ds-input
+                    type="text"
+                    label="Text"
+                    placeholder="Tippe etwas…"
+                    data-testid="input-text"
+                />
+                <ds-input type="date" label="Datum" />
+                <ds-input type="time" label="Uhrzeit" />
+                <ds-input
+                    type="text"
+                    label="Fehler"
+                    placeholder="Ungültige Eingabe"
+                    error="Dieses Feld ist erforderlich."
+                />
+                <ds-input
+                    type="text"
+                    label="Read-only"
+                    [ngModel]="'Nicht änderbar'"
+                    [readonly]="true"
+                />
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">
+                    InputOtp — <code>ds-input-otp [length] [groupSize]</code>
+                </p>
+                <ds-input-otp data-testid="input-otp" />
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 11b. TEXTAREA ───────────────────────────────────────────── -->
+        <section id="textareas" data-testid="section-textareas">
+            <h2>Textarea</h2>
+            <p class="ds-section-desc">
+                Selector:
+                <code
+                    >ds-textarea [label] [error] [rows] [autoResize]
+                    [maxHeight]</code
+                >
+                — implements ControlValueAccessor.
+            </p>
+            <div class="ds-form-grid">
+                <ds-textarea
+                    label="Statisch (3 Zeilen)"
+                    placeholder="Beschreibung eingeben…"
+                />
+                <ds-textarea
+                    label="Fehler"
+                    placeholder="Ungültige Eingabe"
+                    error="Dieses Feld ist erforderlich."
+                />
+                <ds-textarea
+                    label="Auto-resize"
+                    placeholder="Wächst beim Tippen mit…"
+                    [autoResize]="true"
+                />
+                <ds-textarea
+                    label="Auto-resize mit Limit"
+                    placeholder="Max. 200 px Höhe…"
+                    [autoResize]="true"
+                    maxHeight="200px"
+                />
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 12. PROGRESS BAR ───────────────────────────────────────── -->
+        <section id="progress" data-testid="section-progress">
+            <h2>ProgressBar</h2>
+            <p class="ds-section-desc">
+                Selector: <code>ds-progress-bar [percent] [height]</code>
+            </p>
+            <div
                 style="
-                  height: 8px;
-                  background: var(--accent);
-                  border-radius: 4px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    max-width: 360px;
                 "
-                [style.width.px]="s.px"
-              ></div>
-              <span class="ds-mono">{{ s.px }}px</span>
-            </div>
-          }
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-4">Border Radius Scale</p>
-        <div class="ds-radius-grid">
-          @for (r of radiusScale; track r.token) {
-            <div class="ds-color-swatch">
-              <div class="ds-radius-box" [style.border-radius]="r.value"></div>
-              <p class="ds-mono">{{ r.value }}</p>
-              <p class="ds-mono-xs">{{ r.token }}</p>
-            </div>
-          }
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 4. SHADOWS ────────────────────────────────────────────── -->
-    <section id="shadows" data-testid="section-shadows">
-      <h2>Shadows</h2>
-      <div class="ds-shadow-grid">
-        @for (s of shadowTokens; track s.token) {
-          <div class="ds-color-swatch">
-            <div class="ds-shadow-box" [style.box-shadow]="s.shadow"></div>
-            <p class="ds-mono">{{ s.label }}</p>
-            <p class="ds-mono-xs">{{ s.token }}</p>
-          </div>
-        }
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 5. ICONS ───────────────────────────────────────────────── -->
-    <section id="icons" data-testid="section-icons">
-      <h2>Icons</h2>
-      <p class="ds-section-desc">
-        23 custom inline SVGs. Selector:
-        <code>ds-icon [name] [size] [color]</code>
-      </p>
-      <div class="ds-icon-grid">
-        @for (name of iconNames; track name) {
-          <div class="ds-icon-item" [attr.data-testid]="'icon-' + name">
-            <ds-icon [name]="name" [size]="22" color="var(--ink-700)" />
-            <span class="ds-mono-xs">{{ name }}</span>
-          </div>
-        }
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 6. BUTTONS ────────────────────────────────────────────── -->
-    <section id="buttons" data-testid="section-buttons">
-      <h2>Buttons</h2>
-      <p class="ds-section-desc">
-        Selector:
-        <code>ds-button [variant] [icon] [fullWidth] [loading] [disabled]</code>
-      </p>
-      <div class="ds-section-block">
-        <p class="label mb-3">Variants</p>
-        <div class="ds-row-wrap">
-          <ds-button variant="primary" data-testid="btn-primary"
-            >Primary</ds-button
-          >
-          <ds-button variant="dark">Dark</ds-button>
-          <ds-button variant="outline">Outline</ds-button>
-          <ds-button variant="subtle">Subtle</ds-button>
-          <ds-button variant="surface">Surface</ds-button>
-          <ds-button variant="ghost">Ghost</ds-button>
-          <ds-button variant="neutral">Neutral</ds-button>
-          <ds-button variant="soft">Soft</ds-button>
-          <ds-button variant="danger">Danger</ds-button>
-          <ds-button variant="danger" size="sm">Danger sm</ds-button>
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Sizes (sm / md)</p>
-        <div class="ds-row-wrap" style="align-items: center">
-          <ds-button variant="primary" size="sm">Primary sm</ds-button>
-          <ds-button variant="primary" size="md">Primary md</ds-button>
-          <ds-button variant="neutral" size="sm">Neutral sm</ds-button>
-          <ds-button variant="outline" size="sm">Outline sm</ds-button>
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Trailing icon</p>
-        <div class="ds-row-wrap">
-          <ds-button variant="outline" trailingIcon="share">Teilen</ds-button>
-          <ds-button variant="neutral" trailingIcon="chevron-right" size="sm"
-            >Bearbeiten</ds-button
-          >
-          <ds-button variant="primary" trailingIcon="arrow-right"
-            >Weiter</ds-button
-          >
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">With leading icon + states</p>
-        <div class="ds-row-wrap">
-          <ds-button variant="primary" icon="refresh">Mit Icon</ds-button>
-          <ds-button variant="primary" [disabled]="true">Disabled</ds-button>
-          <ds-button
-            variant="primary"
-            [loading]="loadingDemo()"
-            (click)="loadingDemo.set(!loadingDemo())"
-          >
-            {{ loadingDemo() ? "Lädt…" : "Loading demo" }}
-          </ds-button>
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Full width</p>
-        <div style="max-width: 280px">
-          <ds-button variant="primary" [fullWidth]="true"
-            >Weiter abstimmen</ds-button
-          >
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 7. ICON BUTTONS ───────────────────────────────────────── -->
-    <section id="icon-buttons" data-testid="section-icon-buttons">
-      <h2>IconButton</h2>
-      <p class="ds-section-desc">
-        Selector:
-        <code>ds-button [icon] [variant] [size]="&lt;px&gt;" [label]</code> —
-        pass a pixel number for [size] to activate icon-only circular mode.
-      </p>
-      <div class="ds-row-wrap">
-        <div class="ds-labeled-item">
-          <ds-button
-            icon="chevron-left"
-            variant="surface"
-            data-testid="icon-btn-surface"
-          />
-          <span class="ds-mono-xs">surface</span>
-        </div>
-        <div class="ds-labeled-item">
-          <ds-button icon="kebab" variant="ghost" />
-          <span class="ds-mono-xs">ghost</span>
-        </div>
-        <div class="ds-labeled-item">
-          <ds-button icon="close" variant="dark" />
-          <span class="ds-mono-xs">dark</span>
-        </div>
-        <div class="ds-labeled-item">
-          <ds-button icon="share" variant="teal" />
-          <span class="ds-mono-xs">teal</span>
-        </div>
-        <div class="ds-labeled-item">
-          <ds-button icon="plus" variant="soft" />
-          <span class="ds-mono-xs">soft</span>
-        </div>
-        <div class="ds-labeled-item">
-          <ds-button icon="close" variant="danger" [size]="28" />
-          <span class="ds-mono-xs">danger</span>
-        </div>
-        <div class="ds-labeled-item">
-          <ds-button icon="share" variant="surface" [size]="44" />
-          <span class="ds-mono-xs">size 44</span>
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 8. AVATAR + AVATAR STACK ──────────────────────────────── -->
-    <section id="avatars" data-testid="section-avatars">
-      <h2>Avatar &amp; AvatarStack</h2>
-      <div class="ds-section-block">
-        <p class="label mb-3">Avatar — person palette × sizes</p>
-        <div class="ds-row-wrap" style="align-items: flex-end">
-          @for (item of avatarStack; track item.name) {
-            <div class="ds-labeled-item">
-              <app-user-avatar [user]="item" size="normal" />
-              <span class="ds-mono-xs">{{ item.name[0] }}</span>
-            </div>
-          }
-          <div class="ds-labeled-item">
-            <ds-avatar
-              initial="G"
-              bg="var(--person-1-bg)"
-              fg="var(--person-1-fg)"
-              size="sm"
-            />
-            <span class="ds-mono-xs">sm</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-avatar
-              initial="G"
-              bg="var(--person-1-bg)"
-              fg="var(--person-1-fg)"
-              size="md"
-            />
-            <span class="ds-mono-xs">md</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-avatar
-              initial="G"
-              bg="var(--person-1-bg)"
-              fg="var(--person-1-fg)"
-              size="lg"
-            />
-            <span class="ds-mono-xs">lg</span>
-          </div>
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">AvatarStack</p>
-        <div class="ds-row-wrap">
-          <app-avatar-stack
-            [users]="avatarStack"
-            [max]="4"
-            data-testid="avatar-stack"
-          />
-          <app-avatar-stack [users]="avatarStack" [max]="3" [showAdd]="true" />
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Avatar — voted / pending</p>
-        <div class="ds-row-wrap" style="align-items: flex-end">
-          <div class="ds-labeled-item">
-            <ds-avatar initial="A" [voted]="false" size="sm" />
-            <span class="ds-mono-xs">sm pending</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-avatar initial="B" [voted]="false" size="md" />
-            <span class="ds-mono-xs">md pending</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-avatar initial="C" [voted]="false" size="lg" />
-            <span class="ds-mono-xs">lg pending</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-avatar
-              initial="D"
-              bg="var(--person-2-bg)"
-              fg="var(--person-2-fg)"
-              [voted]="true"
-              size="md"
-            />
-            <span class="ds-mono-xs">voted</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-avatar initial="D" [voted]="false" size="md" />
-            <span class="ds-mono-xs">pending</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 9. BADGE + STATUS DOT ──────────────────────────────────── -->
-    <section id="badges" data-testid="section-badges">
-      <h2>Badge &amp; StatusDot</h2>
-      <div class="ds-section-block">
-        <p class="label mb-3">Badge — tones</p>
-        <div class="ds-row-wrap">
-          <ds-badge tone="accent">Aktiv</ds-badge>
-          <ds-badge tone="neutral">Entwurf</ds-badge>
-          <ds-badge tone="warning">Ausstehend</ds-badge>
-          <ds-badge tone="success">Abgeschlossen</ds-badge>
-          <ds-badge tone="manager">Manager</ds-badge>
-          <ds-badge tone="contributor">Mitwirkender</ds-badge>
-          <ds-badge tone="viewer">Betrachter</ds-badge>
-          <ds-badge tone="accent" icon="trophy">Meiste Stimmen</ds-badge>
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Badge — sizes</p>
-        <div class="ds-row-wrap" style="align-items: center">
-          <div class="ds-labeled-item">
-            <ds-badge tone="success" size="sm">sm</ds-badge>
-            <span class="ds-mono-xs">sm</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-badge tone="success" size="md">md</ds-badge>
-            <span class="ds-mono-xs">md</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-badge tone="success" size="lg">lg</ds-badge>
-            <span class="ds-mono-xs">lg</span>
-          </div>
-          <ds-badge tone="accent" size="sm">Offen</ds-badge>
-          <ds-badge tone="success" size="sm">Läuft</ds-badge>
-          <ds-badge tone="neutral" size="sm">Beendet</ds-badge>
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">StatusDot</p>
-        <div class="ds-row-wrap">
-          <ds-status-dot tone="positive">Läuft</ds-status-dot>
-          <ds-status-dot tone="muted">Beendet</ds-status-dot>
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Poll type — pill</p>
-        <div class="ds-row-wrap">
-          <app-poll-type-badge [type]="OptionType.YesNo" />
-          <app-poll-type-badge [type]="OptionType.Rating" />
-          <app-poll-type-badge [type]="OptionType.Date" />
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Poll type — icon only</p>
-        <div class="ds-row-wrap">
-          <app-poll-type-badge [type]="OptionType.YesNo" [showLabel]="false" />
-          <app-poll-type-badge [type]="OptionType.Rating" [showLabel]="false" />
-          <app-poll-type-badge [type]="OptionType.Date" [showLabel]="false" />
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 10. CARD ───────────────────────────────────────────────── -->
-    <section id="cards" data-testid="section-cards">
-      <h2>Card</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-card [padding] [accentBorder]</code>
-      </p>
-      <div class="ds-row-wrap" style="align-items: flex-start">
-        <ds-card style="width: 240px" data-testid="card-default">
-          <h3 style="margin: 0 0 8px">Kartenüberschrift</h3>
-          <p
-            style="
-              margin: 0;
-              font-size: var(--fs-body-xs);
-              color: var(--text-tertiary);
-            "
-          >
-            Weißer Container mit weichem Schatten und großem Radius.
-          </p>
-        </ds-card>
-        <ds-card [accentBorder]="true" style="width: 240px">
-          <h3 style="margin: 0 0 8px">Akzentrand</h3>
-          <p
-            style="
-              margin: 0;
-              font-size: var(--fs-body-xs);
-              color: var(--text-tertiary);
-            "
-          >
-            4 px linker Teal-Rand für hervorgehobene Inhalte.
-          </p>
-        </ds-card>
-        <ds-card [padding]="12" style="width: 240px">
-          <p
-            style="
-              margin: 0;
-              font-size: var(--fs-body-xs);
-              color: var(--text-tertiary);
-            "
-          >
-            Schmales Padding (12 px) für kompakte Listen.
-          </p>
-        </ds-card>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 11. INPUT ──────────────────────────────────────────────── -->
-    <section id="inputs" data-testid="section-inputs">
-      <h2>Input</h2>
-      <p class="ds-section-desc">
-        Selector:
-        <code>ds-input [type] [label] [error] [placeholder] [readonly]</code> —
-        implements ControlValueAccessor.
-      </p>
-      <div class="ds-form-grid">
-        <ds-input
-          type="text"
-          label="Text"
-          placeholder="Tippe etwas…"
-          data-testid="input-text"
-        />
-        <ds-input type="date" label="Datum" />
-        <ds-input type="time" label="Uhrzeit" />
-        <ds-input
-          type="text"
-          label="Fehler"
-          placeholder="Ungültige Eingabe"
-          error="Dieses Feld ist erforderlich."
-        />
-        <ds-input
-          type="text"
-          label="Read-only"
-          [ngModel]="'Nicht änderbar'"
-          [readonly]="true"
-        />
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">
-          InputOtp — <code>ds-input-otp [length] [groupSize]</code>
-        </p>
-        <ds-input-otp data-testid="input-otp" />
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 11b. TEXTAREA ───────────────────────────────────────────── -->
-    <section id="textareas" data-testid="section-textareas">
-      <h2>Textarea</h2>
-      <p class="ds-section-desc">
-        Selector:
-        <code>ds-textarea [label] [error] [rows] [autoResize] [maxHeight]</code>
-        — implements ControlValueAccessor.
-      </p>
-      <div class="ds-form-grid">
-        <ds-textarea
-          label="Statisch (3 Zeilen)"
-          placeholder="Beschreibung eingeben…"
-        />
-        <ds-textarea
-          label="Fehler"
-          placeholder="Ungültige Eingabe"
-          error="Dieses Feld ist erforderlich."
-        />
-        <ds-textarea
-          label="Auto-resize"
-          placeholder="Wächst beim Tippen mit…"
-          [autoResize]="true"
-        />
-        <ds-textarea
-          label="Auto-resize mit Limit"
-          placeholder="Max. 200 px Höhe…"
-          [autoResize]="true"
-          maxHeight="200px"
-        />
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 12. PROGRESS BAR ───────────────────────────────────────── -->
-    <section id="progress" data-testid="section-progress">
-      <h2>ProgressBar</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-progress-bar [percent] [height]</code>
-      </p>
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          max-width: 360px;
-        "
-      >
-        @for (pct of [0, 35, 75, 100]; track pct) {
-          <div style="display: flex; align-items: center; gap: 12px">
-            <span class="ds-mono" style="width: 36px; flex-shrink: 0"
-              >{{ pct }}%</span
             >
-            <ds-progress-bar
-              [percent]="pct"
-              style="flex: 1"
-              [attr.data-testid]="'progress-' + pct"
-            />
-          </div>
-        }
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 13. SEGMENTED CONTROL ──────────────────────────────────── -->
-    <section id="segmented" data-testid="section-segmented">
-      <h2>SegmentedControl</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-segmented-control [options] [(value)] [size]</code>
-      </p>
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          max-width: 320px;
-        "
-      >
-        <ds-segmented-control
-          [options]="segOptions"
-          [value]="segValue()"
-          (valueChange)="segValue.set($event)"
-          data-testid="segmented-control"
-        />
-        <p class="ds-mono-xs">Ausgewählt: {{ segValue() }}</p>
-        <ds-segmented-control
-          [options]="[
-            { value: 'a', label: 'Eingeladen' },
-            { value: 'b', label: 'Offen' },
-          ]"
-          [value]="'a'"
-          (valueChange)="($event)"
-          size="sm"
-        />
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 14. TABS ───────────────────────────────────────────────── -->
-    <section id="tabs" data-testid="section-tabs">
-      <h2>Tabs</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-tabs [items] [(value)] [size]</code>
-      </p>
-      <ds-tabs
-        [items]="tabItems"
-        [value]="tabsValue()"
-        (valueChange)="tabsValue.set($event)"
-        data-testid="tabs"
-      />
-      <p class="ds-mono-xs" style="margin-top: 12px">
-        Aktiver Tab: {{ tabsValue() }}
-      </p>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 14b. STEPPER ────────────────────────────────────────────── -->
-    <section id="stepper" data-testid="section-stepper">
-      <h2>Stepper</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-stepper [steps] [current]</code> — horizontal pill
-        bars matching the login flow.
-      </p>
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          max-width: 300px;
-        "
-      >
-        <div>
-          <p class="ds-mono-xs" style="margin-bottom: 6px">step 1 / 3</p>
-          <ds-stepper [steps]="3" [current]="1" />
-        </div>
-        <div>
-          <p class="ds-mono-xs" style="margin-bottom: 6px">step 2 / 3</p>
-          <ds-stepper [steps]="3" [current]="2" />
-        </div>
-        <div>
-          <p class="ds-mono-xs" style="margin-bottom: 6px">step 3 / 3 (done)</p>
-          <ds-stepper [steps]="3" [current]="3" />
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 15. BOTTOM SHEET ───────────────────────────────────────── -->
-    <section id="bottom-sheet" data-testid="section-bottom-sheet">
-      <h2>BottomSheet</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-bottom-sheet [title] [subtitle] (close)</code> —
-        fixed overlay, bottom on mobile / centered modal ≥ 680 px.
-      </p>
-      <ds-button
-        variant="primary"
-        icon="share"
-        (click)="bottomSheetOpen.set(true)"
-        data-testid="bottom-sheet-trigger"
-      >
-        Bottom Sheet öffnen
-      </ds-button>
-      <ds-bottom-sheet
-        [open]="bottomSheetOpen()"
-        title="Projekt teilen"
-        subtitle="Lade Mitglieder ein oder ändere die Sichtbarkeit"
-        (dismissed)="bottomSheetOpen.set(false)"
-        data-testid="bottom-sheet"
-      >
-        <p
-          style="
-            margin-top: 16px;
-            color: var(--text-tertiary);
-            font-size: var(--fs-body-xs);
-          "
-        >
-          Hier käme der Inhalt des Sheets — z. B. das ShareContent-Formular.
-        </p>
-      </ds-bottom-sheet>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 16. MENU ───────────────────────────────────────────────── -->
-    <section id="menu" data-testid="section-menu">
-      <h2>Menu</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-menu [items]</code> — floating dropdown, trigger via
-        ng-content.
-      </p>
-      <ds-menu [items]="menuItems" data-testid="menu">
-        <ds-button icon="kebab" variant="surface" data-testid="menu-trigger" />
-      </ds-menu>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 17. EMPTY STATE BUTTON ────────────────────────────────── -->
-    <section id="empty-state" data-testid="section-empty-state">
-      <h2>EmptyStateButton</h2>
-      <p class="ds-section-desc">
-        Selector:
-        <code>ds-empty-state-button [layout] [icon] [label] (clicked)</code>
-      </p>
-      <div class="ds-section-block">
-        <p class="label mb-3">Row layout</p>
-        <ds-empty-state-button
-          layout="row"
-          label="Neues Projekt starten"
-          icon="plus"
-          data-testid="esb-row"
-        />
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Tile layout</p>
-        <div
-          style="
-            display: grid;
-            grid-template-columns: repeat(3, 120px);
-            gap: 12px;
-          "
-        >
-          <ds-empty-state-button
-            layout="tile"
-            label="Datum"
-            icon="calendar"
-            data-testid="esb-tile"
-          />
-          <ds-empty-state-button layout="tile" label="Thema" icon="checklist" />
-          <ds-empty-state-button layout="tile" label="Sonstige" icon="plus" />
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 18. VOTE BUTTONS ───────────────────────────────────────── -->
-    <section id="vote-buttons" data-testid="section-vote-buttons">
-      <h2>VoteButtons</h2>
-      <p class="ds-section-desc">
-        Selector:
-        <code>ds-vote-buttons [showMaybe] (yes) (no) (skip) (maybe)</code>
-      </p>
-      <div class="ds-section-block">
-        <p class="label mb-3">Default (yes / no / skip)</p>
-        <div style="max-width: 320px">
-          <ds-vote-buttons
-            (yes)="($event)"
-            (no)="($event)"
-            (skip)="($event)"
-            data-testid="vote-buttons"
-          />
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">With maybe</p>
-        <div style="max-width: 320px">
-          <ds-vote-buttons
-            [showMaybe]="true"
-            (yes)="($event)"
-            (no)="($event)"
-            (skip)="($event)"
-            (maybe)="($event)"
-          />
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 19b. CHIPS ────────────────────────────────────────────── -->
-    <section id="chips" data-testid="section-chips">
-      <h2>Chips</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-chip [label] [icon] [(active)]</code> — pill toggle
-        for filter bars.
-      </p>
-      <div class="ds-section-block">
-        <p class="label mb-3">Filter bar (mobile)</p>
-        <div class="ds-row-wrap">
-          <ds-chip label="Läuft" icon="circle-dot" [(active)]="chipLauft" />
-          <ds-chip label="Beendet" icon="close" [(active)]="chipBeendet" />
-          <ds-chip label="Offen" icon="clock" [(active)]="chipOffen" />
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Without icon</p>
-        <div class="ds-row-wrap">
-          <ds-chip label="Alle" [(active)]="chipLauft" />
-          <ds-chip label="Meine" [(active)]="chipBeendet" />
-          <ds-chip label="Archiv" [(active)]="chipOffen" />
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 19c. SWITCH ───────────────────────────────────────────── -->
-    <section id="switch" data-testid="section-switch">
-      <h2>Switch</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-switch [size] [(ngModel)]</code> — implements
-        ControlValueAccessor.
-      </p>
-      <div class="ds-section-block">
-        <p class="label mb-3">Sizes</p>
-        <div class="ds-row-wrap" style="align-items: center; gap: 24px">
-          <div class="ds-labeled-item">
-            <ds-switch size="sm" [(ngModel)]="switchA" />
-            <span class="ds-mono-xs">sm {{ switchA() ? "on" : "off" }}</span>
-          </div>
-          <div class="ds-labeled-item">
-            <ds-switch size="md" [(ngModel)]="switchB" />
-            <span class="ds-mono-xs">md {{ switchB() ? "on" : "off" }}</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <hr class="ds-divider" />
-
-    <!-- ── 19d. SUB HEADER ────────────────────────────────────────── -->
-    <section id="sub-header" data-testid="section-sub-header">
-      <h2>SubHeader</h2>
-      <p class="ds-section-desc">
-        Selector: <code>ds-sub-header</code> — shared secondary title-bar chrome
-        (cream translucent background, <code>blur(8px)</code>, bottom border,
-        sticky at <code>top: 60px</code>) exposing a single
-        <code>ng-content</code>. The poll overview filter bar is the canonical
-        reference.
-      </p>
-
-      <div class="ds-section-block">
-        <p class="label mb-3">
-          Simple label + trailing action (under a mock title bar)
-        </p>
-        <div
-          style="
-            border: 1px solid rgba(20, 24, 28, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-          "
-        >
-          <div
-            style="
-              height: 60px;
-              display: flex;
-              align-items: center;
-              padding: 0 28px;
-              background: var(--cream-100);
-              border-bottom: 1px solid rgba(20, 24, 28, 0.06);
-              font-weight: 700;
-              color: var(--text-primary);
-            "
-          >
-            Mock title bar
-          </div>
-          <ds-sub-header
-            class="flex items-center justify-between"
-            data-testid="ds-sub-header-simple"
-          >
-            <span
-              style="
-                font-size: 12px;
-                font-weight: 700;
-                letter-spacing: 0.7px;
-                text-transform: uppercase;
-                color: var(--text-muted);
-              "
-              >Section label</span
-            >
-            <ds-button variant="subtle" icon="plus">Action</ds-button>
-          </ds-sub-header>
-        </div>
-      </div>
-
-      <div class="ds-section-block">
-        <p class="label mb-3">Filter-style row (mirrors poll overview)</p>
-        <div
-          style="
-            border: 1px solid rgba(20, 24, 28, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-          "
-        >
-          <div
-            style="
-              height: 60px;
-              display: flex;
-              align-items: center;
-              padding: 0 28px;
-              background: var(--cream-100);
-              border-bottom: 1px solid rgba(20, 24, 28, 0.06);
-              font-weight: 700;
-              color: var(--text-primary);
-            "
-          >
-            Mock title bar
-          </div>
-          <ds-sub-header
-            class="flex flex-wrap items-center gap-2"
-            data-testid="ds-sub-header-filter"
-          >
-            <span
-              style="
-                font-size: 12px;
-                font-weight: 700;
-                letter-spacing: 0.7px;
-                text-transform: uppercase;
-                color: var(--text-muted);
-              "
-              >Status</span
-            >
-            <ds-chip label="Läuft" icon="circle-dot" [(active)]="chipLauft" />
-            <ds-chip label="Beendet" icon="close" [(active)]="chipBeendet" />
-            <span
-              style="
-                width: 1px;
-                height: 22px;
-                background: rgba(20, 24, 28, 0.1);
-                margin: 0 4px;
-              "
-            ></span>
-            <span
-              style="
-                font-size: 12px;
-                font-weight: 700;
-                letter-spacing: 0.7px;
-                text-transform: uppercase;
-                color: var(--text-muted);
-              "
-              >Show only</span
-            >
-            <div class="ds-labeled-item">
-              <ds-switch size="sm" [(ngModel)]="switchA" />
-              <span class="ds-mono-xs">Todo</span>
+                @for (pct of [0, 35, 75, 100]; track pct) {
+                    <div style="display: flex; align-items: center; gap: 12px">
+                        <span
+                            class="ds-mono"
+                            style="width: 36px; flex-shrink: 0"
+                            >{{ pct }}%</span
+                        >
+                        <ds-progress-bar
+                            [percent]="pct"
+                            style="flex: 1"
+                            [attr.data-testid]="'progress-' + pct"
+                        />
+                    </div>
+                }
             </div>
-          </ds-sub-header>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <hr class="ds-divider" />
+        <hr class="ds-divider" />
 
-    <!-- ── 19. LOADING / SKELETON ─────────────────────────────────── -->
-    <section id="loading" data-testid="section-loading">
-      <h2>Loading / Skeleton</h2>
-      <p class="ds-section-desc">
-        Skeleton bars use <code>--cream-300 / --cream-200</code> — they are only
-        visible on white card backgrounds, not on the app's cream background.
-      </p>
-      <div class="ds-section-block">
-        <p class="label mb-3">
-          Poll card skeleton — <code>ds-poll-card-skeleton [count]</code>
-        </p>
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            max-width: 360px;
-          "
-        >
-          <ds-poll-card-skeleton [count]="3" />
-        </div>
-      </div>
-      <div class="ds-section-block">
-        <p class="label mb-3">Raw skeleton bars — inside a card</p>
-        <ds-card style="max-width: 360px">
-          <div style="display: flex; flex-direction: column; gap: 10px">
-            <div class="ds-skeleton" style="height: 20px; width: 60%"></div>
-            <div class="ds-skeleton" style="height: 14px; width: 40%"></div>
-            <div class="ds-skeleton" style="height: 14px; width: 80%"></div>
-            <div class="ds-skeleton" style="height: 9px; width: 100%"></div>
-          </div>
-        </ds-card>
-      </div>
-    </section>
+        <!-- ── 13. SEGMENTED CONTROL ──────────────────────────────────── -->
+        <section id="segmented" data-testid="section-segmented">
+            <h2>SegmentedControl</h2>
+            <p class="ds-section-desc">
+                Selector:
+                <code>ds-segmented-control [options] [(value)] [size]</code>
+            </p>
+            <div
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                    max-width: 320px;
+                "
+            >
+                <ds-segmented-control
+                    [options]="segOptions"
+                    [value]="segValue()"
+                    (valueChange)="segValue.set($event)"
+                    data-testid="segmented-control"
+                />
+                <p class="ds-mono-xs">Ausgewählt: {{ segValue() }}</p>
+                <ds-segmented-control
+                    [options]="[
+                        { value: 'a', label: 'Eingeladen' },
+                        { value: 'b', label: 'Offen' },
+                    ]"
+                    [value]="'a'"
+                    (valueChange)="($event)"
+                    size="sm"
+                />
+            </div>
+        </section>
 
-    <div style="height: 48px"></div>
-  </main>
+        <hr class="ds-divider" />
+
+        <!-- ── 14. TABS ───────────────────────────────────────────────── -->
+        <section id="tabs" data-testid="section-tabs">
+            <h2>Tabs</h2>
+            <p class="ds-section-desc">
+                Selector: <code>ds-tabs [items] [(value)] [size]</code>
+            </p>
+            <ds-tabs
+                [items]="tabItems"
+                [value]="tabsValue()"
+                (valueChange)="tabsValue.set($event)"
+                data-testid="tabs"
+            />
+            <p class="ds-mono-xs" style="margin-top: 12px">
+                Aktiver Tab: {{ tabsValue() }}
+            </p>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 14b. STEPPER ────────────────────────────────────────────── -->
+        <section id="stepper" data-testid="section-stepper">
+            <h2>Stepper</h2>
+            <p class="ds-section-desc">
+                Selector: <code>ds-stepper [steps] [current]</code> — horizontal
+                pill bars matching the login flow.
+            </p>
+            <div
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                    max-width: 300px;
+                "
+            >
+                <div>
+                    <p class="ds-mono-xs" style="margin-bottom: 6px">
+                        step 1 / 3
+                    </p>
+                    <ds-stepper [steps]="3" [current]="1" />
+                </div>
+                <div>
+                    <p class="ds-mono-xs" style="margin-bottom: 6px">
+                        step 2 / 3
+                    </p>
+                    <ds-stepper [steps]="3" [current]="2" />
+                </div>
+                <div>
+                    <p class="ds-mono-xs" style="margin-bottom: 6px">
+                        step 3 / 3 (done)
+                    </p>
+                    <ds-stepper [steps]="3" [current]="3" />
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 15. BOTTOM SHEET ───────────────────────────────────────── -->
+        <section id="bottom-sheet" data-testid="section-bottom-sheet">
+            <h2>BottomSheet</h2>
+            <p class="ds-section-desc">
+                Selector:
+                <code>ds-bottom-sheet [title] [subtitle] (close)</code> — fixed
+                overlay, bottom on mobile / centered modal ≥ 680 px.
+            </p>
+            <ds-button
+                variant="primary"
+                icon="share"
+                (click)="bottomSheetOpen.set(true)"
+                data-testid="bottom-sheet-trigger"
+            >
+                Bottom Sheet öffnen
+            </ds-button>
+            <ds-bottom-sheet
+                [open]="bottomSheetOpen()"
+                title="Projekt teilen"
+                subtitle="Lade Mitglieder ein oder ändere die Sichtbarkeit"
+                (dismissed)="bottomSheetOpen.set(false)"
+                data-testid="bottom-sheet"
+            >
+                <p
+                    style="
+                        margin-top: 16px;
+                        color: var(--text-tertiary);
+                        font-size: var(--fs-body-xs);
+                    "
+                >
+                    Hier käme der Inhalt des Sheets — z. B. das
+                    ShareContent-Formular.
+                </p>
+            </ds-bottom-sheet>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 16. MENU ───────────────────────────────────────────────── -->
+        <section id="menu" data-testid="section-menu">
+            <h2>Menu</h2>
+            <p class="ds-section-desc">
+                Selector: <code>ds-menu [items]</code> — floating dropdown,
+                trigger via ng-content.
+            </p>
+            <ds-menu [items]="menuItems" data-testid="menu">
+                <ds-button
+                    icon="kebab"
+                    variant="surface"
+                    data-testid="menu-trigger"
+                />
+            </ds-menu>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 17. EMPTY STATE BUTTON ────────────────────────────────── -->
+        <section id="empty-state" data-testid="section-empty-state">
+            <h2>EmptyStateButton</h2>
+            <p class="ds-section-desc">
+                Selector:
+                <code
+                    >ds-empty-state-button [layout] [icon] [label]
+                    (clicked)</code
+                >
+            </p>
+            <div class="ds-section-block">
+                <p class="label mb-3">Row layout</p>
+                <ds-empty-state-button
+                    layout="row"
+                    label="Neues Projekt starten"
+                    icon="plus"
+                    data-testid="esb-row"
+                />
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Tile layout</p>
+                <div
+                    style="
+                        display: grid;
+                        grid-template-columns: repeat(3, 120px);
+                        gap: 12px;
+                    "
+                >
+                    <ds-empty-state-button
+                        layout="tile"
+                        label="Datum"
+                        icon="calendar"
+                        data-testid="esb-tile"
+                    />
+                    <ds-empty-state-button
+                        layout="tile"
+                        label="Thema"
+                        icon="checklist"
+                    />
+                    <ds-empty-state-button
+                        layout="tile"
+                        label="Sonstige"
+                        icon="plus"
+                    />
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 18. VOTE BUTTONS ───────────────────────────────────────── -->
+        <section id="vote-buttons" data-testid="section-vote-buttons">
+            <h2>VoteButtons</h2>
+            <p class="ds-section-desc">
+                Selector:
+                <code
+                    >ds-vote-buttons [showMaybe] (yes) (no) (skip) (maybe)</code
+                >
+            </p>
+            <div class="ds-section-block">
+                <p class="label mb-3">Default (yes / no / skip)</p>
+                <div style="max-width: 320px">
+                    <ds-vote-buttons
+                        (yes)="($event)"
+                        (no)="($event)"
+                        (skip)="($event)"
+                        data-testid="vote-buttons"
+                    />
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">With maybe</p>
+                <div style="max-width: 320px">
+                    <ds-vote-buttons
+                        [showMaybe]="true"
+                        (yes)="($event)"
+                        (no)="($event)"
+                        (skip)="($event)"
+                        (maybe)="($event)"
+                    />
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 19b. CHIPS ────────────────────────────────────────────── -->
+        <section id="chips" data-testid="section-chips">
+            <h2>Chips</h2>
+            <p class="ds-section-desc">
+                Selector: <code>ds-chip [label] [icon] [(active)]</code> — pill
+                toggle for filter bars.
+            </p>
+            <div class="ds-section-block">
+                <p class="label mb-3">Filter bar (mobile)</p>
+                <div class="ds-row-wrap">
+                    <ds-chip
+                        label="Läuft"
+                        icon="circle-dot"
+                        [(active)]="chipLauft"
+                    />
+                    <ds-chip
+                        label="Beendet"
+                        icon="close"
+                        [(active)]="chipBeendet"
+                    />
+                    <ds-chip
+                        label="Offen"
+                        icon="clock"
+                        [(active)]="chipOffen"
+                    />
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Without icon</p>
+                <div class="ds-row-wrap">
+                    <ds-chip label="Alle" [(active)]="chipLauft" />
+                    <ds-chip label="Meine" [(active)]="chipBeendet" />
+                    <ds-chip label="Archiv" [(active)]="chipOffen" />
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 19c. SWITCH ───────────────────────────────────────────── -->
+        <section id="switch" data-testid="section-switch">
+            <h2>Switch</h2>
+            <p class="ds-section-desc">
+                Selector: <code>ds-switch [size] [(ngModel)]</code> — implements
+                ControlValueAccessor.
+            </p>
+            <div class="ds-section-block">
+                <p class="label mb-3">Sizes</p>
+                <div class="ds-row-wrap" style="align-items: center; gap: 24px">
+                    <div class="ds-labeled-item">
+                        <ds-switch size="sm" [(ngModel)]="switchA" />
+                        <span class="ds-mono-xs"
+                            >sm {{ switchA() ? 'on' : 'off' }}</span
+                        >
+                    </div>
+                    <div class="ds-labeled-item">
+                        <ds-switch size="md" [(ngModel)]="switchB" />
+                        <span class="ds-mono-xs"
+                            >md {{ switchB() ? 'on' : 'off' }}</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 19d. SUB HEADER ────────────────────────────────────────── -->
+        <section id="sub-header" data-testid="section-sub-header">
+            <h2>SubHeader</h2>
+            <p class="ds-section-desc">
+                Selector: <code>ds-sub-header</code> — shared secondary
+                title-bar chrome (cream translucent background,
+                <code>blur(8px)</code>, bottom border, sticky at
+                <code>top: 60px</code>) exposing a single
+                <code>ng-content</code>. The poll overview filter bar is the
+                canonical reference.
+            </p>
+
+            <div class="ds-section-block">
+                <p class="label mb-3">
+                    Simple label + trailing action (under a mock title bar)
+                </p>
+                <div
+                    style="
+                        border: 1px solid rgba(20, 24, 28, 0.1);
+                        border-radius: 12px;
+                        overflow: hidden;
+                    "
+                >
+                    <div
+                        style="
+                            height: 60px;
+                            display: flex;
+                            align-items: center;
+                            padding: 0 28px;
+                            background: var(--cream-100);
+                            border-bottom: 1px solid rgba(20, 24, 28, 0.06);
+                            font-weight: 700;
+                            color: var(--text-primary);
+                        "
+                    >
+                        Mock title bar
+                    </div>
+                    <ds-sub-header
+                        class="flex items-center justify-between"
+                        data-testid="ds-sub-header-simple"
+                    >
+                        <span
+                            style="
+                                font-size: 12px;
+                                font-weight: 700;
+                                letter-spacing: 0.7px;
+                                text-transform: uppercase;
+                                color: var(--text-muted);
+                            "
+                            >Section label</span
+                        >
+                        <ds-button variant="subtle" icon="plus"
+                            >Action</ds-button
+                        >
+                    </ds-sub-header>
+                </div>
+            </div>
+
+            <div class="ds-section-block">
+                <p class="label mb-3">
+                    Filter-style row (mirrors poll overview)
+                </p>
+                <div
+                    style="
+                        border: 1px solid rgba(20, 24, 28, 0.1);
+                        border-radius: 12px;
+                        overflow: hidden;
+                    "
+                >
+                    <div
+                        style="
+                            height: 60px;
+                            display: flex;
+                            align-items: center;
+                            padding: 0 28px;
+                            background: var(--cream-100);
+                            border-bottom: 1px solid rgba(20, 24, 28, 0.06);
+                            font-weight: 700;
+                            color: var(--text-primary);
+                        "
+                    >
+                        Mock title bar
+                    </div>
+                    <ds-sub-header
+                        class="flex flex-wrap items-center gap-2"
+                        data-testid="ds-sub-header-filter"
+                    >
+                        <span
+                            style="
+                                font-size: 12px;
+                                font-weight: 700;
+                                letter-spacing: 0.7px;
+                                text-transform: uppercase;
+                                color: var(--text-muted);
+                            "
+                            >Status</span
+                        >
+                        <ds-chip
+                            label="Läuft"
+                            icon="circle-dot"
+                            [(active)]="chipLauft"
+                        />
+                        <ds-chip
+                            label="Beendet"
+                            icon="close"
+                            [(active)]="chipBeendet"
+                        />
+                        <span
+                            style="
+                                width: 1px;
+                                height: 22px;
+                                background: rgba(20, 24, 28, 0.1);
+                                margin: 0 4px;
+                            "
+                        ></span>
+                        <span
+                            style="
+                                font-size: 12px;
+                                font-weight: 700;
+                                letter-spacing: 0.7px;
+                                text-transform: uppercase;
+                                color: var(--text-muted);
+                            "
+                            >Show only</span
+                        >
+                        <div class="ds-labeled-item">
+                            <ds-switch size="sm" [(ngModel)]="switchA" />
+                            <span class="ds-mono-xs">Todo</span>
+                        </div>
+                    </ds-sub-header>
+                </div>
+            </div>
+        </section>
+
+        <hr class="ds-divider" />
+
+        <!-- ── 19. LOADING / SKELETON ─────────────────────────────────── -->
+        <section id="loading" data-testid="section-loading">
+            <h2>Loading / Skeleton</h2>
+            <p class="ds-section-desc">
+                Skeleton bars use <code>--cream-300 / --cream-200</code> — they
+                are only visible on white card backgrounds, not on the app's
+                cream background.
+            </p>
+            <div class="ds-section-block">
+                <p class="label mb-3">
+                    Poll card skeleton —
+                    <code>ds-poll-card-skeleton [count]</code>
+                </p>
+                <div
+                    style="
+                        display: flex;
+                        flex-direction: column;
+                        gap: 14px;
+                        max-width: 360px;
+                    "
+                >
+                    <ds-poll-card-skeleton [count]="3" />
+                </div>
+            </div>
+            <div class="ds-section-block">
+                <p class="label mb-3">Raw skeleton bars — inside a card</p>
+                <ds-card style="max-width: 360px">
+                    <div
+                        style="display: flex; flex-direction: column; gap: 10px"
+                    >
+                        <div
+                            class="ds-skeleton"
+                            style="height: 20px; width: 60%"
+                        ></div>
+                        <div
+                            class="ds-skeleton"
+                            style="height: 14px; width: 40%"
+                        ></div>
+                        <div
+                            class="ds-skeleton"
+                            style="height: 14px; width: 80%"
+                        ></div>
+                        <div
+                            class="ds-skeleton"
+                            style="height: 9px; width: 100%"
+                        ></div>
+                    </div>
+                </ds-card>
+            </div>
+        </section>
+
+        <div style="height: 48px"></div>
+    </main>
 </div>

@@ -93,7 +93,7 @@ test.describe('CreatePoll', () => {
     });
 
     test('shows one empty option card (no pre-seeded values)', async ({ page }) => {
-      const options = page.locator('[data-testid="yesno-options"]');
+      const options = page.locator('[data-testid="poll-options-list"]');
       await expect(options).toBeVisible();
       const cards = options.locator('app-option-card');
       await expect(cards).toHaveCount(1);
@@ -218,7 +218,7 @@ test.describe('CreatePoll', () => {
       await expect(page.locator('[data-testid="type-btn-yesno"]')).toBeVisible();
       // Clicking a type card auto-advances to step 2 (form)
       await page.locator('[data-testid="type-btn-yesno"]').click();
-      await expect(page.locator('[data-testid="yesno-options"]')).toBeVisible();
+      await expect(page.locator('[data-testid="poll-options-list"]')).toBeVisible();
 
       // Fill question and at least one option text, then submit → step 3 (share)
       await page.locator('[data-testid="question-input"] input').fill('Mobile test');

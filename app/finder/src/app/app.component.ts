@@ -7,67 +7,67 @@ import { SUPPORTED_LANGUAGES, getStoredLanguage } from '@common/i18n/languages';
 import { injectBrnCalendarI18n } from '@spartan-ng/brain/calendar';
 
 function applyCalendarLocale(
-  lang: string,
-  calendarI18n: ReturnType<typeof injectBrnCalendarI18n>,
+    lang: string,
+    calendarI18n: ReturnType<typeof injectBrnCalendarI18n>,
 ): void {
-  calendarI18n.use({
-    months: () =>
-      Array.from({ length: 12 }, (_, i) =>
-        new Intl.DateTimeFormat(lang, { month: 'short' }).format(
-          new Date(2024, i),
-        ),
-      ) as [
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-      ],
-    formatHeader: (month, year) =>
-      new Date(year, month).toLocaleDateString(lang, {
-        month: 'long',
-        year: 'numeric',
-      }),
-    formatMonth: (month) =>
-      new Date(2000, month).toLocaleDateString(lang, { month: 'short' }),
-    formatYear: (year) =>
-      new Date(year, 0).toLocaleDateString(lang, { year: 'numeric' }),
-    formatWeekdayName: (index) =>
-      new Intl.DateTimeFormat(lang, { weekday: 'short' }).format(
-        new Date(2024, 0, 7 + index),
-      ),
-    labelWeekday: (index) =>
-      new Intl.DateTimeFormat(lang, { weekday: 'long' }).format(
-        new Date(2024, 0, 7 + index),
-      ),
-  });
+    calendarI18n.use({
+        months: () =>
+            Array.from({ length: 12 }, (_, i) =>
+                new Intl.DateTimeFormat(lang, { month: 'short' }).format(
+                    new Date(2024, i),
+                ),
+            ) as [
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+                string,
+            ],
+        formatHeader: (month, year) =>
+            new Date(year, month).toLocaleDateString(lang, {
+                month: 'long',
+                year: 'numeric',
+            }),
+        formatMonth: (month) =>
+            new Date(2000, month).toLocaleDateString(lang, { month: 'short' }),
+        formatYear: (year) =>
+            new Date(year, 0).toLocaleDateString(lang, { year: 'numeric' }),
+        formatWeekdayName: (index) =>
+            new Intl.DateTimeFormat(lang, { weekday: 'short' }).format(
+                new Date(2024, 0, 7 + index),
+            ),
+        labelWeekday: (index) =>
+            new Intl.DateTimeFormat(lang, { weekday: 'long' }).format(
+                new Date(2024, 0, 7 + index),
+            ),
+    });
 }
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, ...HlmToasterImports],
-  templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    imports: [RouterOutlet, ...HlmToasterImports],
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  constructor() {
-    const userStore = inject(UserStore);
-    const translateService = inject(TranslateService);
-    const calendarI18n = injectBrnCalendarI18n();
+    constructor() {
+        const userStore = inject(UserStore);
+        const translateService = inject(TranslateService);
+        const calendarI18n = injectBrnCalendarI18n();
 
-    userStore.getUser();
-    translateService.addLangs([...SUPPORTED_LANGUAGES]);
+        userStore.getUser();
+        translateService.addLangs([...SUPPORTED_LANGUAGES]);
 
-    applyCalendarLocale(getStoredLanguage(), calendarI18n);
-    translateService.onLangChange.subscribe(({ lang }) =>
-      applyCalendarLocale(lang, calendarI18n),
-    );
-  }
+        applyCalendarLocale(getStoredLanguage(), calendarI18n);
+        translateService.onLangChange.subscribe(({ lang }) =>
+            applyCalendarLocale(lang, calendarI18n),
+        );
+    }
 }

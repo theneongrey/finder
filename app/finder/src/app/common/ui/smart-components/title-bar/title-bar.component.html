@@ -1,101 +1,111 @@
 @if (!isHidden()) {
-  <header class="title-bar" [class.title-bar--scrolled]="isScrolled()">
-    @if (hasBack()) {
-      <!-- Mobile: back button -->
-      <div class="title-bar__back-btn">
-        <ds-button
-          icon="chevron-left"
-          variant="surface"
-          [square]="true"
-          [size]="36"
-          (click)="onBack()"
-        />
-      </div>
+    <header class="title-bar" [class.title-bar--scrolled]="isScrolled()">
+        @if (hasBack()) {
+            <!-- Mobile: back button -->
+            <div class="title-bar__back-btn">
+                <ds-button
+                    icon="chevron-left"
+                    variant="surface"
+                    [square]="true"
+                    [size]="36"
+                    (click)="onBack()"
+                />
+            </div>
 
-      <!-- Mobile: title + optional subtitle -->
-      @if (!titleDisabled()) {
-        <div class="title-bar__info">
-          @if (title() === undefined) {
-            <hlm-skeleton class="my-auto h-4 w-32" />
-          } @else {
-            <h1 class="title-bar__title">{{ title() }}</h1>
-          }
-          @if (subtitle()) {
-            <p class="title-bar__subtitle">{{ subtitle() }}</p>
-          }
-        </div>
-      }
+            <!-- Mobile: title + optional subtitle -->
+            @if (!titleDisabled()) {
+                <div class="title-bar__info">
+                    @if (title() === undefined) {
+                        <hlm-skeleton class="my-auto h-4 w-32" />
+                    } @else {
+                        <h1 class="title-bar__title">{{ title() }}</h1>
+                    }
+                    @if (subtitle()) {
+                        <p class="title-bar__subtitle">{{ subtitle() }}</p>
+                    }
+                </div>
+            }
 
-      <!-- Web (≥ 680px): logo + breadcrumb replaces back button -->
-      <div class="title-bar__brand title-bar__brand--web-only">
-        <a href="/" class="title-bar__logo-link">
-          <img alt="logo" ngSrc="logo-primary.svg" width="87" height="23" />
-        </a>
-      </div>
-      @if (subtitle()) {
-        <span
-          class="title-bar__sep title-bar__sep--lead"
-          aria-hidden="true"
-        ></span>
-        <button
-          class="title-bar__web-label title-bar__web-label--breadcrumb cursor-pointer border-none bg-transparent p-0"
-          (click)="onBack()"
-        >
-          {{ subtitle() }}
-        </button>
-        <span class="title-bar__sep" aria-hidden="true"></span>
-        @if (title() === undefined) {
-          <hlm-skeleton class="my-auto h-4 w-32" />
+            <!-- Web (≥ 680px): logo + breadcrumb replaces back button -->
+            <div class="title-bar__brand title-bar__brand--web-only">
+                <a href="/" class="title-bar__logo-link">
+                    <img
+                        alt="logo"
+                        ngSrc="logo-primary.svg"
+                        width="87"
+                        height="23"
+                    />
+                </a>
+            </div>
+            @if (subtitle()) {
+                <span
+                    class="title-bar__sep title-bar__sep--lead"
+                    aria-hidden="true"
+                ></span>
+                <button
+                    class="title-bar__web-label title-bar__web-label--breadcrumb cursor-pointer border-none bg-transparent p-0"
+                    (click)="onBack()"
+                >
+                    {{ subtitle() }}
+                </button>
+                <span class="title-bar__sep" aria-hidden="true"></span>
+                @if (title() === undefined) {
+                    <hlm-skeleton class="my-auto h-4 w-32" />
+                } @else {
+                    <span class="title-bar__web-label">{{ title() }}</span>
+                }
+            } @else if (!titleDisabled()) {
+                <span
+                    class="title-bar__sep title-bar__sep--lead"
+                    aria-hidden="true"
+                ></span>
+                @if (title() === undefined) {
+                    <hlm-skeleton class="my-auto h-4 w-32" />
+                } @else {
+                    <span class="title-bar__web-label">{{ title() }}</span>
+                }
+            }
         } @else {
-          <span class="title-bar__web-label">{{ title() }}</span>
+            <div class="title-bar__brand">
+                <a href="/" class="title-bar__logo-link">
+                    <img
+                        alt="logo"
+                        ngSrc="logo-primary.svg"
+                        width="87"
+                        height="23"
+                    />
+                </a>
+                @if (title()) {
+                    <span class="title-bar__mobile-label">{{ title() }}</span>
+                }
+            </div>
+            @if (title()) {
+                <span class="title-bar__sep" aria-hidden="true"></span>
+                <span class="title-bar__web-label">{{ title() }}</span>
+            }
         }
-      } @else if (!titleDisabled()) {
-        <span
-          class="title-bar__sep title-bar__sep--lead"
-          aria-hidden="true"
-        ></span>
-        @if (title() === undefined) {
-          <hlm-skeleton class="my-auto h-4 w-32" />
-        } @else {
-          <span class="title-bar__web-label">{{ title() }}</span>
-        }
-      }
-    } @else {
-      <div class="title-bar__brand">
-        <a href="/" class="title-bar__logo-link">
-          <img alt="logo" ngSrc="logo-primary.svg" width="87" height="23" />
-        </a>
-        @if (title()) {
-          <span class="title-bar__mobile-label">{{ title() }}</span>
-        }
-      </div>
-      @if (title()) {
-        <span class="title-bar__sep" aria-hidden="true"></span>
-        <span class="title-bar__web-label">{{ title() }}</span>
-      }
-    }
 
-    @if (user()?.isAuthenticated) {
-      <div class="title-bar__user">
-        <ds-menu [items]="menuItems()">
-          <app-user-avatar [user]="user()!" class="cursor-pointer" />
-        </ds-menu>
-      </div>
-    } @else if (user() !== undefined) {
-      <div class="title-bar__user">
-        <ds-button variant="primary" (click)="login()">
-          {{ "titleBar.login" | translate }}
-        </ds-button>
-      </div>
-    }
+        @if (user()?.isAuthenticated) {
+            <div class="title-bar__user">
+                <ds-menu [items]="menuItems()">
+                    <app-user-avatar [user]="user()!" class="cursor-pointer" />
+                </ds-menu>
+            </div>
+        } @else if (user() !== undefined) {
+            <div class="title-bar__user">
+                <ds-button variant="primary" (click)="login()">
+                    {{ 'titleBar.login' | translate }}
+                </ds-button>
+            </div>
+        }
 
-    @if (progress() !== undefined) {
-      <div class="title-bar__progress-track">
-        <div
-          class="title-bar__progress-fill"
-          [style.width]="progress() + '%'"
-        ></div>
-      </div>
-    }
-  </header>
+        @if (progress() !== undefined) {
+            <div class="title-bar__progress-track">
+                <div
+                    class="title-bar__progress-fill"
+                    [style.width]="progress() + '%'"
+                ></div>
+            </div>
+        }
+    </header>
 }

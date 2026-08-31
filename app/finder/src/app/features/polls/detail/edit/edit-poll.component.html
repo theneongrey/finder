@@ -1,150 +1,152 @@
 @if (isDesktop()) {
-  <!-- ═══════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════
        DESKTOP EDIT
   ═══════════════════════════════════════════ -->
-  <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
-    <!-- Content header: title + type badge | action buttons -->
-    <div
-      class="flex flex-none items-center justify-between gap-6 px-8 pt-6 pb-0"
-    >
-      <div class="flex items-center gap-3">
-        <h1
-          class="font-display text-[30px] leading-[1.05] font-bold tracking-[-0.8px] text-[#1d2227]"
+    <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <!-- Content header: title + type badge | action buttons -->
+        <div
+            class="flex flex-none items-center justify-between gap-6 px-8 pt-6 pb-0"
         >
-          {{ "project.pollInput.editPollTitle" | translate }}
-        </h1>
-        @if (state.optionType() !== undefined) {
-          <app-poll-type-badge [type]="state.optionType()!" />
-        }
-      </div>
-      <div class="flex flex-none items-center gap-2.5">
-        <ds-button variant="neutral" (click)="discard()">
-          {{ "project.pollInput.discard" | translate }}
-        </ds-button>
-        <ds-button
-          variant="primary"
-          [disabled]="!canSave()"
-          data-testid="wizard-cta"
-          (click)="save()"
-          >{{ "project.pollInput.updatePoll" | translate }}</ds-button
-        >
-      </div>
-    </div>
+            <div class="flex items-center gap-3">
+                <h1
+                    class="font-display text-[30px] leading-[1.05] font-bold tracking-[-0.8px] text-[#1d2227]"
+                >
+                    {{ 'project.pollInput.editPollTitle' | translate }}
+                </h1>
+                @if (state.optionType() !== undefined) {
+                    <app-poll-type-badge [type]="state.optionType()!" />
+                }
+            </div>
+            <div class="flex flex-none items-center gap-2.5">
+                <ds-button variant="neutral" (click)="discard()">
+                    {{ 'project.pollInput.discard' | translate }}
+                </ds-button>
+                <ds-button
+                    variant="primary"
+                    [disabled]="!canSave()"
+                    data-testid="wizard-cta"
+                    (click)="save()"
+                    >{{ 'project.pollInput.updatePoll' | translate }}</ds-button
+                >
+            </div>
+        </div>
 
-    <!-- Scrollable form -->
-    <div class="min-h-0 flex-1 overflow-y-auto px-8 pb-8">
-      @if (state.editLoading()) {
-        <div class="flex max-w-[800px] flex-col gap-4 pt-5">
-          <ng-container *ngTemplateOutlet="skeletonCards" />
+        <!-- Scrollable form -->
+        <div class="min-h-0 flex-1 overflow-y-auto px-8 pb-8">
+            @if (state.editLoading()) {
+                <div class="flex max-w-[800px] flex-col gap-4 pt-5">
+                    <ng-container *ngTemplateOutlet="skeletonCards" />
+                </div>
+            } @else if (state.optionType() !== undefined) {
+                <div class="max-w-[1000px]">
+                    <app-poll-input-form
+                        [optionType]="state.optionType()!"
+                        mode="edit"
+                        [isValid]="state.isValid()"
+                        [question]="state.question()"
+                        (questionChange)="state.question.set($event)"
+                        [description]="state.description()"
+                        (descriptionChange)="state.description.set($event)"
+                        [closeDate]="state.closeDate()"
+                        (closeDateChange)="state.closeDate.set($event)"
+                        [isClosed]="state.canReopenPoll()"
+                        [closedAt]="state.pollClosedAt()"
+                        (closePollNow)="state.closePollNow(pollId())"
+                        (reopenPoll)="state.reopenPollNow(pollId())"
+                        [options]="state.options()"
+                        [dateOptions]="state.dateOptions()"
+                        [appointmentDateType]="state.appointmentDateType()"
+                        (appointmentDateTypeChange)="
+                            state.onAppointmentDateTypeChange($event)
+                        "
+                        (add)="state.addOption()"
+                        (remove)="state.removeOption($event)"
+                        (weekdayToggle)="state.toggleWeekday($event)"
+                        (optionsChange)="state.onOptionsChange($event)"
+                        (dateOptionsChange)="state.onDateOptionsChange($event)"
+                        (formSubmit)="save()"
+                        [hideCta]="true"
+                    />
+                </div>
+            }
         </div>
-      } @else if (state.optionType() !== undefined) {
-        <div class="max-w-[1000px]">
-          <app-poll-input-form
-            [optionType]="state.optionType()!"
-            mode="edit"
-            [isValid]="state.isValid()"
-            [question]="state.question()"
-            (questionChange)="state.question.set($event)"
-            [description]="state.description()"
-            (descriptionChange)="state.description.set($event)"
-            [closeDate]="state.closeDate()"
-            (closeDateChange)="state.closeDate.set($event)"
-            [isClosed]="state.canReopenPoll()"
-            [closedAt]="state.pollClosedAt()"
-            (closePollNow)="state.closePollNow(pollId())"
-            (reopenPoll)="state.reopenPollNow(pollId())"
-            [options]="state.options()"
-            [dateOptions]="state.dateOptions()"
-            [appointmentDateType]="state.appointmentDateType()"
-            (appointmentDateTypeChange)="
-              state.onAppointmentDateTypeChange($event)
-            "
-            (add)="state.addOption()"
-            (remove)="state.removeOption($event)"
-            (weekdayToggle)="state.toggleWeekday($event)"
-            (optionsChange)="state.onOptionsChange($event)"
-            (dateOptionsChange)="state.onDateOptionsChange($event)"
-            (formSubmit)="save()"
-            [hideCta]="true"
-          />
-        </div>
-      }
     </div>
-  </div>
 } @else {
-  <!-- ═══════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════
        MOBILE EDIT
   ═══════════════════════════════════════════ -->
-  @if (state.editLoading()) {
-    <div class="flex flex-col gap-4 px-[18px] pt-5 pb-32">
-      <ng-container *ngTemplateOutlet="skeletonCards" />
-    </div>
-  } @else if (state.optionType() !== undefined) {
-    <div class="px-[18px]">
-      <app-poll-input-form
-        [optionType]="state.optionType()!"
-        mode="edit"
-        [isValid]="state.isValid()"
-        [question]="state.question()"
-        (questionChange)="state.question.set($event)"
-        [description]="state.description()"
-        (descriptionChange)="state.description.set($event)"
-        [closeDate]="state.closeDate()"
-        (closeDateChange)="state.closeDate.set($event)"
-        [isClosed]="state.canReopenPoll()"
-        [closedAt]="state.pollClosedAt()"
-        (closePollNow)="state.closePollNow(pollId())"
-        (reopenPoll)="state.reopenPollNow(pollId())"
-        [options]="state.options()"
-        [dateOptions]="state.dateOptions()"
-        [appointmentDateType]="state.appointmentDateType()"
-        (appointmentDateTypeChange)="state.onAppointmentDateTypeChange($event)"
-        (add)="state.addOption()"
-        (remove)="state.removeOption($event)"
-        (weekdayToggle)="state.toggleWeekday($event)"
-        (optionsChange)="state.onOptionsChange($event)"
-        (dateOptionsChange)="state.onDateOptionsChange($event)"
-        (formSubmit)="save()"
-      />
-    </div>
-  }
+    @if (state.editLoading()) {
+        <div class="flex flex-col gap-4 px-[18px] pt-5 pb-32">
+            <ng-container *ngTemplateOutlet="skeletonCards" />
+        </div>
+    } @else if (state.optionType() !== undefined) {
+        <div class="px-[18px]">
+            <app-poll-input-form
+                [optionType]="state.optionType()!"
+                mode="edit"
+                [isValid]="state.isValid()"
+                [question]="state.question()"
+                (questionChange)="state.question.set($event)"
+                [description]="state.description()"
+                (descriptionChange)="state.description.set($event)"
+                [closeDate]="state.closeDate()"
+                (closeDateChange)="state.closeDate.set($event)"
+                [isClosed]="state.canReopenPoll()"
+                [closedAt]="state.pollClosedAt()"
+                (closePollNow)="state.closePollNow(pollId())"
+                (reopenPoll)="state.reopenPollNow(pollId())"
+                [options]="state.options()"
+                [dateOptions]="state.dateOptions()"
+                [appointmentDateType]="state.appointmentDateType()"
+                (appointmentDateTypeChange)="
+                    state.onAppointmentDateTypeChange($event)
+                "
+                (add)="state.addOption()"
+                (remove)="state.removeOption($event)"
+                (weekdayToggle)="state.toggleWeekday($event)"
+                (optionsChange)="state.onOptionsChange($event)"
+                (dateOptionsChange)="state.onDateOptionsChange($event)"
+                (formSubmit)="save()"
+            />
+        </div>
+    }
 }
 
 <!-- ═══════════════════════════════════════════
      SHARED SKELETON TEMPLATE
 ═══════════════════════════════════════════ -->
 <ng-template #skeletonCards>
-  <!-- Question card skeleton -->
-  <div
-    class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
-    style="box-shadow: var(--shadow-card-soft)"
-  >
-    <div class="ds-skeleton mb-3 h-4 w-24 rounded-sm"></div>
-    <div class="ds-skeleton mb-2 h-10 w-full rounded-lg"></div>
-    <div class="ds-skeleton h-4 w-1/2 rounded-sm"></div>
-  </div>
-  <!-- Options card skeleton -->
-  <div
-    class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
-    style="box-shadow: var(--shadow-card-soft)"
-  >
-    <div class="ds-skeleton mb-3 h-4 w-32 rounded-sm"></div>
-    <div class="flex flex-col gap-2">
-      <div class="ds-skeleton h-10 w-full rounded-lg"></div>
-      <div class="ds-skeleton h-10 w-full rounded-lg"></div>
-      <div class="ds-skeleton h-10 w-3/4 rounded-lg"></div>
+    <!-- Question card skeleton -->
+    <div
+        class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
+        style="box-shadow: var(--shadow-card-soft)"
+    >
+        <div class="ds-skeleton mb-3 h-4 w-24 rounded-sm"></div>
+        <div class="ds-skeleton mb-2 h-10 w-full rounded-lg"></div>
+        <div class="ds-skeleton h-4 w-1/2 rounded-sm"></div>
     </div>
-  </div>
-  <!-- Close settings card skeleton -->
-  <div
-    class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
-    style="box-shadow: var(--shadow-card-soft)"
-  >
-    <div class="ds-skeleton mb-3 h-4 w-28 rounded-sm"></div>
-    <div class="flex gap-2">
-      <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
-      <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
-      <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
+    <!-- Options card skeleton -->
+    <div
+        class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
+        style="box-shadow: var(--shadow-card-soft)"
+    >
+        <div class="ds-skeleton mb-3 h-4 w-32 rounded-sm"></div>
+        <div class="flex flex-col gap-2">
+            <div class="ds-skeleton h-10 w-full rounded-lg"></div>
+            <div class="ds-skeleton h-10 w-full rounded-lg"></div>
+            <div class="ds-skeleton h-10 w-3/4 rounded-lg"></div>
+        </div>
     </div>
-  </div>
+    <!-- Close settings card skeleton -->
+    <div
+        class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-white p-4"
+        style="box-shadow: var(--shadow-card-soft)"
+    >
+        <div class="ds-skeleton mb-3 h-4 w-28 rounded-sm"></div>
+        <div class="flex gap-2">
+            <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
+            <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
+            <div class="ds-skeleton h-8 w-20 rounded-lg"></div>
+        </div>
+    </div>
 </ng-template>

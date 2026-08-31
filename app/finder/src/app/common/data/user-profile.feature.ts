@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import {
-  patchState,
-  signalStoreFeature,
-  type,
-  withMethods,
+    patchState,
+    signalStoreFeature,
+    type,
+    withMethods,
 } from '@ngrx/signals';
 import { filter, pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
@@ -15,47 +15,59 @@ import { UserService } from '../services/user.service';
 import { LANGUAGE_STORAGE_KEY } from '../i18n/languages';
 
 export const profileUpdateFinished = event(
-  '[User Profile] Update Finished',
-  type<{ success: boolean }>(),
+    '[User Profile] Update Finished',
+    type<{ success: boolean }>(),
 );
 
 export function withProfileFeature() {
-  return signalStoreFeature(
-    { state: type<{ user: User | undefined }>() },
-    withMethods((store) => {
-      const userService = inject(UserService);
-      const loggerService = inject(LoggerService);
-      const dispatcher = inject(Dispatcher);
+    return signalStoreFeature(
+        { state: type<{ user: User | undefined }>() },
+        withMethods((store) => {
+            const userService = inject(UserService);
+            const loggerService = inject(LoggerService);
+            const dispatcher = inject(Dispatcher);
 
-      return {
-        updateProfile: rxMethod<{ name: string; language: string }>(
-          pipe(
-            filter(({ name }) => !!store.user()?.isAuthenticated && !!name),
-            switchMap(({ name, language }) => {
-              return userService.updateProfile(name, language).pipe(
-                tapResponse({
-                  next: (user) => {
-                    patchState(store, { user });
-                    localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-                    dispatcher.dispatch(
-                      profileUpdateFinished({ success: true }),
-                    );
-                  },
-                  error: (error) => {
-                    loggerService.error(
-                      '[UserStore] Error while updating the profile',
-                      error,
-                    );
-                    dispatcher.dispatch(
-                      profileUpdateFinished({ success: false }),
-                    );
-                  },
-                }),
-              );
-            }),
-          ),
-        ),
-      };
-    }),
-  );
+            return {
+                updateProfile: rxMethod<{ name: string; language: string }>(
+                    pipe(
+                        filter(
+                            ({ name }) =>
+                                !!store.user()?.isAuthenticated && !!name,
+                        ),
+                        switchMap(({ name, language }) => {
+                            return userService
+                                .updateProfile(name, language)
+                                .pipe(
+                                    tapResponse({
+                                        next: (user) => {
+                                            patchState(store, { user });
+                                            localStorage.setItem(
+                                                LANGUAGE_STORAGE_KEY,
+                                                language,
+                                            );
+                                            dispatcher.dispatch(
+                                                profileUpdateFinished({
+                                                    success: true,
+                                                }),
+                                            );
+                                        },
+                                        error: (error) => {
+                                            loggerService.error(
+                                                '[UserStore] Error while updating the profile',
+                                                error,
+                                            );
+                                            dispatcher.dispatch(
+                                                profileUpdateFinished({
+                                                    success: false,
+                                                }),
+                                            );
+                                        },
+                                    }),
+                                );
+                        }),
+                    ),
+                ),
+            };
+        }),
+    );
 }

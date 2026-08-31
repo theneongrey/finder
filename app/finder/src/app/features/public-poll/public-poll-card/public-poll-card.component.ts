@@ -1,8 +1,8 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
+    ChangeDetectionStrategy,
+    Component,
+    input,
+    output,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -19,30 +19,30 @@ import { OptionTypeBadgeComponent } from '@smart/option-type-badge/option-type-b
 export type { OptionDisplay };
 
 @Component({
-  selector: 'app-public-poll-card',
-  standalone: true,
-  imports: [
-    DsCardComponent,
-    DsIconComponent,
-    DsStatusDotComponent,
-    OptionTypeBadgeComponent,
-    PublicPollParticipantsComponent,
-    PublicPollOptionsComponent,
-    PublicPollCtaComponent,
-    TranslatePipe,
-    DatePipe,
-  ],
-  templateUrl: 'public-poll-card.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-public-poll-card',
+    standalone: true,
+    imports: [
+        DsCardComponent,
+        DsIconComponent,
+        DsStatusDotComponent,
+        OptionTypeBadgeComponent,
+        PublicPollParticipantsComponent,
+        PublicPollOptionsComponent,
+        PublicPollCtaComponent,
+        TranslatePipe,
+        DatePipe,
+    ],
+    templateUrl: 'public-poll-card.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PublicPollCardComponent {
-  poll = input.required<PublicPollPreview>();
-  optionDisplays = input.required<OptionDisplay[]>();
-  participantSlots = input<unknown[]>([]);
-  participantAvatarUsers = input<{ name: string; voted: boolean }[]>([]);
-  isAuthenticated = input<boolean>(false);
-  size = input<'sm' | 'md'>('sm');
+    poll = input.required<PublicPollPreview>();
+    optionDisplays = input.required<OptionDisplay[]>();
+    participantSlots = input<unknown[]>([]);
+    participantAvatarUsers = input<{ name: string; voted: boolean }[]>([]);
+    isAuthenticated = input<boolean>(false);
+    size = input<'sm' | 'md'>('sm');
 
-  loginClick = output<void>();
-  voteClick = output<void>();
+    loginClick = output<void>();
+    voteClick = output<void>();
 }

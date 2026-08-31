@@ -1,21 +1,21 @@
 import {
-  type ExistingProvider,
-  InjectionToken,
-  type Type,
-  inject,
+    type ExistingProvider,
+    InjectionToken,
+    type Type,
+    inject,
 } from '@angular/core';
 import type { HlmToggleGroup } from './hlm-toggle-group';
 
 export const HlmToggleGroupToken = new InjectionToken<HlmToggleGroup>(
-  'HlmToggleGroupToken',
+    'HlmToggleGroupToken',
 );
 
 export function injectHlmToggleGroup(): HlmToggleGroup {
-  return inject(HlmToggleGroupToken);
+    return inject(HlmToggleGroupToken);
 }
 
 export function provideHlmToggleGroup(
-  toggleGroup: Type<HlmToggleGroup>,
+    toggleGroup: Type<HlmToggleGroup>,
 ): ExistingProvider {
-  return { provide: HlmToggleGroupToken, useExisting: toggleGroup };
+    return { provide: HlmToggleGroupToken, useExisting: toggleGroup };
 }

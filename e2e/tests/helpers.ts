@@ -11,7 +11,9 @@ export async function login(page: Page, email: string) {
   // Wait for the backend to create the token before navigating to token-login
   await page.waitForURL('**/auth/code-login');
   await page.goto('/auth/token-login?token=1234');
-  await page.waitForURL('**/polls');
+  // The app may redirect to /polls or /polls/add (if redirectUrl was stored from a prior route).
+  // Use a regex so both cases resolve without timeout.
+  await page.waitForURL(/\/polls/);
 }
 
 export async function logout(page: Page) {

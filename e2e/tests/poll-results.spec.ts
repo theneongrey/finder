@@ -5,25 +5,47 @@ test.describe('Poll results page (#255)', () => {
   let testProjectId: string;
   let testPollId: string;
 
-  // Ensure a poll with at least one vote exists. Idempotent across runs.
+  // Ensure a dedicated test poll with at least one vote exists. Idempotent across runs.
   test.beforeAll(async ({ browser }) => {
     test.setTimeout(90000);
     const page = await browser.newPage();
     await login(page, USER1);
     await page.goto('/polls');
+    await page.waitForLoadState('networkidle');
 
-    const firstCta = page.locator('[data-testid="vote-cta-btn"]').first();
-    await firstCta.click();
+    // Create the results test poll if it doesn't exist yet
+    const testPoll = page.locator('app-poll-item').filter({ hasText: 'Results E2E Test Poll' });
+    if (await testPoll.count() === 0) {
+      await page.goto('/polls/add');
+      await page.waitForURL('**/polls/add');
+      await page.locator('[data-testid="type-btn-yesno"]').click();
+      await page.locator('[data-testid="question-input"] input').fill('Results E2E Test Poll');
+      await page.locator('app-option-card ds-input input').first().fill('Ja');
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
+      await page.waitForSelector('app-share-content');
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
+      await page.waitForURL('**/polls');
+      await page.waitForLoadState('networkidle');
+    }
+
+    // Navigate via the poll's own CTA to capture projectId and pollId from the URL
+    const pollCard = page.locator('app-poll-item').filter({ hasText: 'Results E2E Test Poll' }).first();
+    await pollCard.locator('[data-testid="vote-cta-btn"]').click();
     await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
 
     const parts = new URL(page.url()).pathname.split('/');
     testProjectId = parts[2];
     testPollId = parts[4];
 
-    // Cast a vote to populate the results page when the poll is in voting state
+    // Cast a vote if the poll hasn't been voted on yet.
+    // ds-vote-buttons is md:hidden at default 1280px desktop viewport — use the desktop vote button.
+    // waitForURL('**/results/**') ensures the vote API call completes before proceeding.
     if (page.url().includes('/vote/')) {
-      await page.locator('ds-vote-buttons button').last().click();
-      await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
+      await page.locator('button.desktop-vote-btn--yes').first().click();
+      await page.waitForURL('**/results/**');
+      // Re-capture pollId from the results URL (same value, but confirms navigation completed)
+      const resultParts = new URL(page.url()).pathname.split('/');
+      testPollId = resultParts[4];
     }
 
     await logout(page);

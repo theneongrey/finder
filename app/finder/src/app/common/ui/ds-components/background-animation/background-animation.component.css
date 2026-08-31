@@ -1,7 +1,7 @@
 ::host {
-  background-color: rgb(248 250 246 / 1);
+    background-color: rgb(248 250 246 / 1);
 }
 
 .organic-shape {
-  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
 }

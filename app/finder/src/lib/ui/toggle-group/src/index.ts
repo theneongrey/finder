@@ -6,6 +6,6 @@ export * from './lib/hlm-toggle-group-item';
 export * from './lib/hlm-toggle-group.token';
 
 export const HlmToggleGroupImports = [
-  HlmToggleGroup,
-  HlmToggleGroupItem,
+    HlmToggleGroup,
+    HlmToggleGroupItem,
 ] as const;

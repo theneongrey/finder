@@ -1,120 +1,126 @@
 <div class="auth-grid">
-  <div class="auth-card">
-    <div class="auth-glow"></div>
-    <div class="auth-content">
-      <span class="auth-eyebrow">{{
-        "home.authPitch.eyebrow" | translate
-      }}</span>
-      <div class="auth-headline">
-        {{ "home.authPitch.headline1" | translate }}<br />{{
-          "home.authPitch.headline2" | translate
-        }}
-      </div>
-      <p class="auth-sub">{{ "home.authPitch.sub" | translate }}</p>
-      <div class="code-boxes">
-        @for (box of codeBoxes(); track $index) {
-          <span
-            class="code-box"
-            [style.background]="box.bg"
-            [style.border-color]="box.border"
-            >{{ box.v }}</span
-          >
-        }
-      </div>
-      <div class="code-hint">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="8.5" />
-          <path d="M12 7.5V12l3 2" />
-        </svg>
-        <span>{{ codeHintKey() | translate }}</span>
-      </div>
+    <div class="auth-card">
+        <div class="auth-glow"></div>
+        <div class="auth-content">
+            <span class="auth-eyebrow">{{
+                'home.authPitch.eyebrow' | translate
+            }}</span>
+            <div class="auth-headline">
+                {{ 'home.authPitch.headline1' | translate }}<br />{{
+                    'home.authPitch.headline2' | translate
+                }}
+            </div>
+            <p class="auth-sub">{{ 'home.authPitch.sub' | translate }}</p>
+            <div class="code-boxes">
+                @for (box of codeBoxes(); track $index) {
+                    <span
+                        class="code-box"
+                        [style.background]="box.bg"
+                        [style.border-color]="box.border"
+                        >{{ box.v }}</span
+                    >
+                }
+            </div>
+            <div class="code-hint">
+                <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="12" cy="12" r="8.5" />
+                    <path d="M12 7.5V12l3 2" />
+                </svg>
+                <span>{{ codeHintKey() | translate }}</span>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Feature cards (2×2 grid on desktop, stacked on mobile) -->
-  <div class="feature-cards">
-    @for (f of features; track f.titleKey) {
-      <div class="feature-card">
-        <span class="feature-icon" [style.background]="f.iconBg">
-          @switch (f.icon) {
-            @case ("check-list") {
-              <svg
-                width="19"
-                height="19"
-                viewBox="0 0 24 24"
-                fill="none"
-                [attr.stroke]="f.iconFg"
-                stroke-width="2.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M4.5 11.5l3.5 3.5L18 5" />
-                <path d="M4 19h10" />
-              </svg>
-            }
-            @case ("share") {
-              <svg
-                width="19"
-                height="19"
-                viewBox="0 0 24 24"
-                fill="none"
-                [attr.stroke]="f.iconFg"
-                stroke-width="2.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="18" cy="5" r="2.6" />
-                <circle cx="6" cy="12" r="2.6" />
-                <circle cx="18" cy="19" r="2.6" />
-                <path d="M8.3 10.7l7.4-4.4" />
-                <path d="M8.3 13.3l7.4 4.4" />
-              </svg>
-            }
-            @case ("clock") {
-              <svg
-                width="19"
-                height="19"
-                viewBox="0 0 24 24"
-                fill="none"
-                [attr.stroke]="f.iconFg"
-                stroke-width="2.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="8.5" />
-                <path d="M12 7.5V12l3 2" />
-              </svg>
-            }
-            @case ("grid") {
-              <svg
-                width="19"
-                height="19"
-                viewBox="0 0 24 24"
-                fill="none"
-                [attr.stroke]="f.iconFg"
-                stroke-width="2.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="4" y="4" width="16" height="16" rx="4" />
-                <path d="M4 10h16" />
-                <path d="M10 20V10" />
-              </svg>
-            }
-          }
-        </span>
-        <div class="feature-title">{{ f.titleKey | translate }}</div>
-        <p class="feature-text">{{ f.textKey | translate }}</p>
-      </div>
-    }
-  </div>
+    <!-- Feature cards (2×2 grid on desktop, stacked on mobile) -->
+    <div class="feature-cards">
+        @for (f of features; track f.titleKey) {
+            <div class="feature-card">
+                <span class="feature-icon" [style.background]="f.iconBg">
+                    @switch (f.icon) {
+                        @case ('check-list') {
+                            <svg
+                                width="19"
+                                height="19"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                [attr.stroke]="f.iconFg"
+                                stroke-width="2.4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M4.5 11.5l3.5 3.5L18 5" />
+                                <path d="M4 19h10" />
+                            </svg>
+                        }
+                        @case ('share') {
+                            <svg
+                                width="19"
+                                height="19"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                [attr.stroke]="f.iconFg"
+                                stroke-width="2.2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <circle cx="18" cy="5" r="2.6" />
+                                <circle cx="6" cy="12" r="2.6" />
+                                <circle cx="18" cy="19" r="2.6" />
+                                <path d="M8.3 10.7l7.4-4.4" />
+                                <path d="M8.3 13.3l7.4 4.4" />
+                            </svg>
+                        }
+                        @case ('clock') {
+                            <svg
+                                width="19"
+                                height="19"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                [attr.stroke]="f.iconFg"
+                                stroke-width="2.2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <circle cx="12" cy="12" r="8.5" />
+                                <path d="M12 7.5V12l3 2" />
+                            </svg>
+                        }
+                        @case ('grid') {
+                            <svg
+                                width="19"
+                                height="19"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                [attr.stroke]="f.iconFg"
+                                stroke-width="2.2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <rect
+                                    x="4"
+                                    y="4"
+                                    width="16"
+                                    height="16"
+                                    rx="4"
+                                />
+                                <path d="M4 10h16" />
+                                <path d="M10 20V10" />
+                            </svg>
+                        }
+                    }
+                </span>
+                <div class="feature-title">{{ f.titleKey | translate }}</div>
+                <p class="feature-text">{{ f.textKey | translate }}</p>
+            </div>
+        }
+    </div>
 </div>

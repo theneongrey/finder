@@ -1,28 +1,28 @@
 <div class="flex flex-1 flex-col justify-center gap-3 p-6 md:p-9">
-  <p
-    class="text-wrap-pretty text-center font-[family-name:var(--font-display)] text-[length:var(--fs-display-sm)] leading-snug font-bold tracking-[-0.5px] text-[var(--text-primary)]"
-  >
-    {{ text() }}
-  </p>
-  @if (description()) {
     <p
-      class="text-wrap-pretty text-center text-[length:var(--fs-body)] leading-[1.45] text-[var(--text-secondary)]"
+        class="text-wrap-pretty text-center font-[family-name:var(--font-display)] text-[length:var(--fs-display-sm)] leading-snug font-bold tracking-[-0.5px] text-[var(--text-primary)]"
     >
-      {{ description() }}
+        {{ text() }}
     </p>
-  }
-  @if (link()) {
-    <div
-      class="mt-1 flex max-w-full min-w-0 flex-col self-center overflow-hidden"
-    >
-      <ds-button
-        variant="outline"
-        icon="link"
-        size="sm"
-        (click)="openLink(link())"
-      >
-        <span class="min-w-0 truncate">{{ link() }}</span>
-      </ds-button>
-    </div>
-  }
+    @if (description()) {
+        <p
+            class="text-wrap-pretty text-center text-[length:var(--fs-body)] leading-[1.45] text-[var(--text-secondary)]"
+        >
+            {{ description() }}
+        </p>
+    }
+    @if (link()) {
+        <div
+            class="mt-1 flex max-w-full min-w-0 flex-col self-center overflow-hidden"
+        >
+            <ds-button
+                variant="outline"
+                icon="link"
+                size="sm"
+                (click)="openLink(link())"
+            >
+                <span class="min-w-0 truncate">{{ link() }}</span>
+            </ds-button>
+        </div>
+    }
 </div>

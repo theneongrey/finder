@@ -1,47 +1,47 @@
 <div class="pointer-events-none flex w-full flex-col items-center">
-  @if (isSameMonth()) {
-    <hlm-calendar-range
-      [startDate]="startDate()"
-      [endDate]="endDate()"
-      [weekStartsOn]="1"
-      [showNavigation]="false"
-    />
-  } @else {
-    <div class="flex w-full origin-top scale-55 justify-center">
-      <hlm-calendar-range
-        [startDate]="startDate()"
-        [endDate]="endDate()"
-        [defaultFocusedDate]="startDate()"
-        [weekStartsOn]="1"
-        [showNavigation]="false"
-      />
-      <hlm-calendar-range
-        [startDate]="startDate()"
-        [endDate]="endDate()"
-        [defaultFocusedDate]="endDate()"
-        [weekStartsOn]="1"
-        [showNavigation]="false"
-      />
-    </div>
-  }
+    @if (isSameMonth()) {
+        <hlm-calendar-range
+            [startDate]="startDate()"
+            [endDate]="endDate()"
+            [weekStartsOn]="1"
+            [showNavigation]="false"
+        />
+    } @else {
+        <div class="flex w-full origin-top scale-55 justify-center">
+            <hlm-calendar-range
+                [startDate]="startDate()"
+                [endDate]="endDate()"
+                [defaultFocusedDate]="startDate()"
+                [weekStartsOn]="1"
+                [showNavigation]="false"
+            />
+            <hlm-calendar-range
+                [startDate]="startDate()"
+                [endDate]="endDate()"
+                [defaultFocusedDate]="endDate()"
+                [weekStartsOn]="1"
+                [showNavigation]="false"
+            />
+        </div>
+    }
 
-  @if (entry().date && entry().endDate) {
-    <div class="flex flex-col items-center gap-1 text-center">
-      <p class="font-semibold">
-        {{ formatDate(entry().date!) }}
-        @if (entry().startTime; as t) {
-          <span class="mx-1">–</span>{{ formatTimeOnly(t) }}
-        }
-      </p>
-      <div class="flex items-center">
-        <i class="fa-solid fa-arrow-down"></i>
-      </div>
-      <p class="font-semibold">
-        {{ formatDate(entry().endDate!) }}
-        @if (entry().endTime; as e) {
-          <span class="mx-1">–</span>{{ formatTimeOnly(e) }}
-        }
-      </p>
-    </div>
-  }
+    @if (entry().date && entry().endDate) {
+        <div class="flex flex-col items-center gap-1 text-center">
+            <p class="font-semibold">
+                {{ formatDate(entry().date!) }}
+                @if (entry().startTime; as t) {
+                    <span class="mx-1">–</span>{{ formatTimeOnly(t) }}
+                }
+            </p>
+            <div class="flex items-center">
+                <i class="fa-solid fa-arrow-down"></i>
+            </div>
+            <p class="font-semibold">
+                {{ formatDate(entry().endDate!) }}
+                @if (entry().endTime; as e) {
+                    <span class="mx-1">–</span>{{ formatTimeOnly(e) }}
+                }
+            </p>
+        </div>
+    }
 </div>

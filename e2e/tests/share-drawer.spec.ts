@@ -23,10 +23,12 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
     if (await shareBtn.count() === 0) {
       await page.locator('[data-testid="fab-add-poll"]').click();
       await page.waitForURL('**/polls/add');
-      await page.getByText('Yes/No').click();
-      await page.getByRole('textbox', { name: 'Your question' }).fill('E2E Share Drawer Poll');
-      await page.getByPlaceholder('e.g. Italian restaurant').first().fill('Option A');
-      await page.getByRole('button', { name: 'Create poll' }).click();
+      await page.locator('[data-testid="type-btn-yesno"]').click();
+      await page.locator('[data-testid="question-input"] input').fill('E2E Share Drawer Poll');
+      await page.locator('app-option-card ds-input input').first().fill('Option A');
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
+      await page.waitForSelector('app-share-content');
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
       await page.waitForURL('**/polls');
     }
 

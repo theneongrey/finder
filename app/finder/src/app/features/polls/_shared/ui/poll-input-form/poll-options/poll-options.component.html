@@ -179,7 +179,7 @@
             </span>
         </div>
 
-        <div data-testid="yesno-options" class="flex flex-col gap-2">
+        <div data-testid="poll-options-list" class="flex flex-col gap-2">
             @for (option of options(); track option.id ?? $index) {
                 @if (optionType() === OptionType.Rating) {
                     <span

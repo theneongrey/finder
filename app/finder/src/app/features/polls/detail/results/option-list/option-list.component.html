@@ -1,57 +1,59 @@
 @if (!hideResults()) {
-  <div class="mb-3 flex items-center justify-between px-1">
-    <h3 style="color: var(--text-primary)">Alle Optionen</h3>
-    <button
-      class="flex h-8 items-center gap-1.5 rounded-[11px] px-3 text-[12.5px] font-bold transition-colors"
-      style="
-        border: 1px solid var(--border-hairline);
-        background: var(--surface-card);
-        color: var(--text-secondary);
-      "
-      data-testid="results-sort-btn"
-      (click)="toggleSort()"
-    >
-      <ds-icon name="sort" [size]="13" />
-      {{ sort() === "top" ? "Nach Zustimmung" : "Nach Reihenfolge" }}
-    </button>
-  </div>
-  @if (!isClosed()) {
-    <div class="mb-3">
-      <ds-button
-        variant="subtle"
-        [fullWidth]="true"
-        [routerLink]="['/polls', projectId(), 'vote', pollId()]"
-        [queryParams]="{ revote: true }"
-      >
-        Erneut abstimmen
-      </ds-button>
+    <div class="mb-3 flex items-center justify-between px-1">
+        <h3 style="color: var(--text-primary)">Alle Optionen</h3>
+        <button
+            class="flex h-8 items-center gap-1.5 rounded-[11px] px-3 text-[12.5px] font-bold transition-colors"
+            style="
+                border: 1px solid var(--border-hairline);
+                background: var(--surface-card);
+                color: var(--text-secondary);
+            "
+            data-testid="results-sort-btn"
+            (click)="toggleSort()"
+        >
+            <ds-icon name="sort" [size]="13" />
+            {{ sort() === 'top' ? 'Nach Zustimmung' : 'Nach Reihenfolge' }}
+        </button>
     </div>
-  }
+    @if (!isClosed()) {
+        <div class="mb-3">
+            <ds-button
+                variant="subtle"
+                [fullWidth]="true"
+                [routerLink]="['/polls', projectId(), 'vote', pollId()]"
+                [queryParams]="{ revote: true }"
+            >
+                Erneut abstimmen
+            </ds-button>
+        </div>
+    }
 }
 
 <div class="flex flex-col gap-2.5" data-testid="results-option-list">
-  @for (option of sortedOptions(); track option.id; let idx = $index) {
-    @if (optionType() === OptionType.Date) {
-      <app-option-card-date
-        [option]="option"
-        [members]="members()"
-        [isMostVoted]="hasMostVotes(option)"
-        [projectId]="projectId()"
-        [pollId]="pollId()"
-        [hideResults]="hideResults()"
-        [rank]="idx + 1"
-      />
-    } @else {
-      <app-option-card
-        [option]="option"
-        [members]="members()"
-        [isMostVoted]="hasMostVotes(option)"
-        [projectId]="projectId()"
-        [pollId]="pollId()"
-        [hideResults]="hideResults()"
-        [rank]="idx + 1"
-        [pollType]="optionType() === OptionType.Rating ? 'rating' : 'yesno'"
-      />
+    @for (option of sortedOptions(); track option.id; let idx = $index) {
+        @if (optionType() === OptionType.Date) {
+            <app-option-card-date
+                [option]="option"
+                [members]="members()"
+                [isMostVoted]="hasMostVotes(option)"
+                [projectId]="projectId()"
+                [pollId]="pollId()"
+                [hideResults]="hideResults()"
+                [rank]="idx + 1"
+            />
+        } @else {
+            <app-option-card
+                [option]="option"
+                [members]="members()"
+                [isMostVoted]="hasMostVotes(option)"
+                [projectId]="projectId()"
+                [pollId]="pollId()"
+                [hideResults]="hideResults()"
+                [rank]="idx + 1"
+                [pollType]="
+                    optionType() === OptionType.Rating ? 'rating' : 'yesno'
+                "
+            />
+        }
     }
-  }
 </div>

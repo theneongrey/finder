@@ -1,5 +1,5 @@
 export enum OptionType {
-  YesNo,
-  Rating,
-  Date,
+    YesNo,
+    Rating,
+    Date,
 }

@@ -1,23 +1,23 @@
 <div
-  class="fixed right-0 bottom-0 left-0 z-10 bg-gradient-to-t from-[#e7efef] from-[46%] to-transparent px-(--screen-padding) pt-10 pb-5 lg:hidden"
+    class="fixed right-0 bottom-0 left-0 z-10 bg-gradient-to-t from-[#e7efef] from-[46%] to-transparent px-(--screen-padding) pt-10 pb-5 lg:hidden"
 >
-  <div
-    class="flex items-center gap-3 rounded-[20px] bg-[var(--ink-900)] px-4 py-3 shadow-[0_12px_30px_rgba(30,35,40,.26)]"
-  >
-    <div class="min-w-0 flex-1">
-      <div class="text-[14px] leading-[1.2] font-bold text-white">
-        {{ "publicPoll.nudgeTitle" | translate }}
-      </div>
-      <div class="mt-0.5 text-[12px] [color:var(--ink-150)]">
-        {{ "publicPoll.barSub" | translate }}
-      </div>
-    </div>
-    <ds-button
-      variant="primary"
-      (click)="loginClick.emit()"
-      data-testid="public-poll-nudge-btn"
+    <div
+        class="flex items-center gap-3 rounded-[20px] bg-[var(--ink-900)] px-4 py-3 shadow-[0_12px_30px_rgba(30,35,40,.26)]"
     >
-      {{ "publicPoll.nudgeBtn" | translate }}
-    </ds-button>
-  </div>
+        <div class="min-w-0 flex-1">
+            <div class="text-[14px] leading-[1.2] font-bold text-white">
+                {{ 'publicPoll.nudgeTitle' | translate }}
+            </div>
+            <div class="mt-0.5 text-[12px] [color:var(--ink-150)]">
+                {{ 'publicPoll.barSub' | translate }}
+            </div>
+        </div>
+        <ds-button
+            variant="primary"
+            (click)="loginClick.emit()"
+            data-testid="public-poll-nudge-btn"
+        >
+            {{ 'publicPoll.nudgeBtn' | translate }}
+        </ds-button>
+    </div>
 </div>

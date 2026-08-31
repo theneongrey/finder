@@ -61,11 +61,8 @@
                                     : 'project.detail.item.favorite'
                                 ) | translate
                             "
-                            [attr.data-testid]="
-                                _poll.isFavorite
-                                    ? 'favorite-active'
-                                    : 'favorite-btn'
-                            "
+                            data-testid="favorite-btn"
+                            [attr.data-favorited]="_poll.isFavorite ? '' : null"
                             (click)="favoriteToggled.emit(_poll.projectId)"
                         >
                             <ds-icon

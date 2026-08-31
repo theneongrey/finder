@@ -1,25 +1,25 @@
 <div
-  hlmToggleGroup
-  type="single"
-  [value]="value()"
-  (valueChange)="onValueChange($event)"
-  class="ds-seg-track"
-  [style]="pillStyle()"
+    hlmToggleGroup
+    type="single"
+    [value]="value()"
+    (valueChange)="onValueChange($event)"
+    class="ds-seg-track"
+    [style]="pillStyle()"
 >
-  @for (opt of options(); track opt.value) {
-    <button
-      hlmToggleGroupItem
-      [value]="opt.value"
-      [style.padding]="size() === 'sm' ? '8px 4px' : '9px 8px'"
-      [style.font-size]="
-        size() === 'sm' ? 'var(--fs-caption)' : 'var(--fs-ui-sm)'
-      "
-      class="ds-seg-btn"
-    >
-      @if (opt.icon) {
-        <ds-icon [name]="opt.icon" [size]="14" />
-      }
-      {{ opt.label }}
-    </button>
-  }
+    @for (opt of options(); track opt.value) {
+        <button
+            hlmToggleGroupItem
+            [value]="opt.value"
+            [style.padding]="size() === 'sm' ? '8px 4px' : '9px 8px'"
+            [style.font-size]="
+                size() === 'sm' ? 'var(--fs-caption)' : 'var(--fs-ui-sm)'
+            "
+            class="ds-seg-btn"
+        >
+            @if (opt.icon) {
+                <ds-icon [name]="opt.icon" [size]="14" />
+            }
+            {{ opt.label }}
+        </button>
+    }
 </div>

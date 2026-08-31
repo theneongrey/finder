@@ -1,27 +1,27 @@
 .ds-card {
-  position: relative;
-  background: var(--surface-card);
-  border-radius: var(--radius-3xl);
-  box-shadow: var(--shadow-card-soft);
-  /* Override SpartanNG card Tailwind defaults */
-  border: 1px solid var(--border-hairline-soft);
-  display: block;
-  gap: unset;
-  overflow: visible;
-  padding: unset;
-  text-shadow: none;
-  ring-width: 0;
-  outline: none;
-  box-shadow: var(--shadow-card-soft);
+    position: relative;
+    background: var(--surface-card);
+    border-radius: var(--radius-3xl);
+    box-shadow: var(--shadow-card-soft);
+    /* Override SpartanNG card Tailwind defaults */
+    border: 1px solid var(--border-hairline-soft);
+    display: block;
+    gap: unset;
+    overflow: visible;
+    padding: unset;
+    text-shadow: none;
+    ring-width: 0;
+    outline: none;
+    box-shadow: var(--shadow-card-soft);
 }
 .ds-card--fill {
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .ds-card--accent {
-  border: none;
-  border-left: 4px solid var(--accent);
+    border: none;
+    border-left: 4px solid var(--accent);
 }

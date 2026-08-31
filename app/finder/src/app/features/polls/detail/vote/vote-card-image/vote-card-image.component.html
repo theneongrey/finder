@@ -1,33 +1,33 @@
 <div
-  class="flex flex-1 items-center justify-center overflow-hidden border-b border-[var(--border-hairline-soft)] bg-[var(--bg-panel)]"
+    class="flex flex-1 items-center justify-center overflow-hidden border-b border-[var(--border-hairline-soft)] bg-[var(--bg-panel)]"
 >
-  <img
-    [src]="imageUrl()"
-    alt="preview-image"
-    class="h-full w-full object-cover"
-    draggable="false"
-  />
+    <img
+        [src]="imageUrl()"
+        alt="preview-image"
+        class="h-full w-full object-cover"
+        draggable="false"
+    />
 </div>
 
 <div class="flex flex-col gap-2 p-5">
-  <p
-    class="text-[length:var(--fs-body-sm)] leading-snug font-[var(--weight-semibold)] text-[var(--text-primary)]"
-  >
-    {{ text() }}
-  </p>
-  @if (description()) {
-    <p class="text-[length:var(--fs-body-xs)] text-[var(--text-secondary)]">
-      {{ description() }}
-    </p>
-  }
-  @if (link()) {
-    <ds-button
-      variant="outline"
-      icon="link"
-      size="sm"
-      (click)="openLink(link())"
+    <p
+        class="text-[length:var(--fs-body-sm)] leading-snug font-[var(--weight-semibold)] text-[var(--text-primary)]"
     >
-      <span class="min-w-0 truncate">{{ link() }}</span>
-    </ds-button>
-  }
+        {{ text() }}
+    </p>
+    @if (description()) {
+        <p class="text-[length:var(--fs-body-xs)] text-[var(--text-secondary)]">
+            {{ description() }}
+        </p>
+    }
+    @if (link()) {
+        <ds-button
+            variant="outline"
+            icon="link"
+            size="sm"
+            (click)="openLink(link())"
+        >
+            <span class="min-w-0 truncate">{{ link() }}</span>
+        </ds-button>
+    }
 </div>

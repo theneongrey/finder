@@ -1,14 +1,16 @@
 <div class="steps-grid">
-  @for (s of steps; track s.n) {
-    <div class="step-card">
-      <div class="step-header">
-        <span class="step-num">{{ s.n }}</span>
-        <span class="step-title desktop-only">{{
-          s.titleKey | translate
-        }}</span>
-      </div>
-      <div class="step-title mobile-only">{{ s.titleKey | translate }}</div>
-      <p class="step-text">{{ s.textKey | translate }}</p>
-    </div>
-  }
+    @for (s of steps; track s.n) {
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-num">{{ s.n }}</span>
+                <span class="step-title desktop-only">{{
+                    s.titleKey | translate
+                }}</span>
+            </div>
+            <div class="step-title mobile-only">
+                {{ s.titleKey | translate }}
+            </div>
+            <p class="step-text">{{ s.textKey | translate }}</p>
+        </div>
+    }
 </div>

@@ -16,10 +16,12 @@ test.describe('Polls-only overview (simplified MVP)', () => {
     if (await voteBtn.count() === 0) {
       await page.goto('/polls/add');
       await page.waitForURL('**/polls/add');
-      await page.getByText('Yes/No').click(); // auto-advances to step 2
-      await page.getByRole('textbox', { name: 'Your question' }).fill('E2E Smoke Test Poll');
+      await page.locator('[data-testid="type-btn-yesno"]').click(); // auto-advances to step 2
+      await page.locator('[data-testid="question-input"] input').fill('E2E Smoke Test Poll');
       await page.locator('app-option-card ds-input input').first().fill('Ja');
-      await page.locator('[data-testid="wizard-cta"] button').click();
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
+      await page.waitForSelector('app-share-content');
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
       await page.waitForURL('**/polls');
     }
 
@@ -81,18 +83,26 @@ test.describe('Polls-only overview (simplified MVP)', () => {
       await page.locator('[data-testid="fab-add-poll"]').click();
       await page.waitForURL('**/polls/add');
 
-      await page.getByText('Yes/No').click(); // auto-advances to step 2
-      await page.getByRole('textbox', { name: 'Your question' }).fill('E2E Created Poll');
+      await page.locator('[data-testid="type-btn-yesno"]').click(); // auto-advances to step 2
+      await page.locator('[data-testid="question-input"] input').fill('E2E Created Poll');
       await page.locator('app-option-card ds-input input').first().fill('Ja');
-      await page.locator('[data-testid="wizard-cta"] button').click();
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
+      await page.waitForSelector('app-share-content');
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
       await page.waitForURL('**/polls');
 
-      await expect(page.getByText('E2E Created Poll')).toBeVisible();
+      // .first() avoids strict-mode violation if a stale "E2E Created Poll" exists from a previous run
+      await expect(page.getByText('E2E Created Poll').first()).toBeVisible();
 
       // Enable edit mode to reveal delete buttons, then delete the created poll
       await page.locator('[data-testid="edit-mode-btn"]').click();
-      const pollCard = page.locator('app-poll-item').filter({ hasText: 'E2E Created Poll' });
-      await pollCard.locator('[data-testid="delete-btn"]').click();
+      const pollCard = page.locator('app-poll-item').filter({ hasText: 'E2E Created Poll' }).first();
+      // delete-btn has 2 ds-button instances (desktop hover + mobile edit-mode); filter to the visible one
+      await pollCard.locator('[data-testid="delete-btn"]')
+        .filter({ has: page.locator('button:visible') })
+        .locator('button')
+        .click();
+      await pollCard.locator('[data-testid="delete-confirm-btn"]').locator('button').click();
     });
   });
 
@@ -111,8 +121,8 @@ test.describe('Polls-only overview (simplified MVP)', () => {
       await page.waitForURL('**/polls/**/vote/**');
       await page.waitForLoadState('networkidle');
 
-      // Cast a "Yes" vote via the ds-vote-buttons
-      await page.locator('ds-vote-buttons button').first().click();
+      // Cast a "Yes" vote — desktop viewport: ds-vote-buttons is md:hidden, use desktop button
+      await page.locator('button.desktop-vote-btn--yes').first().click();
 
       // After voting, either advances to the next option or navigates to results
       await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);

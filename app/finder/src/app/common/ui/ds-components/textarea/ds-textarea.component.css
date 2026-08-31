@@ -1,65 +1,65 @@
 .ds-ta-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
 }
 .ds-ta-label {
-  font-family: var(--font-body);
-  font-size: var(--fs-ui-sm);
-  font-weight: var(--weight-semibold);
-  color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: var(--fs-ui-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-secondary);
 }
 .ds-ta {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid var(--border-hairline-strong);
-  border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  font-size: var(--fs-body-xs);
-  font-family: var(--font-body);
-  color: var(--text-primary);
-  background: var(--bg-input);
-  outline: none;
-  resize: vertical;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border-hairline-strong);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-size: var(--fs-body-xs);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    background: var(--bg-input);
+    outline: none;
+    resize: vertical;
 }
 .ds-ta--autoresize {
-  resize: none;
-  transition:
-    border-color var(--duration-fast) var(--ease-standard),
-    height 200ms ease-out;
-  scrollbar-width: none;
-  /* Override SpartanNG Tailwind defaults */
-  min-height: unset;
-  height: auto;
-  shadow: none;
-  box-shadow: none;
-  field-sizing: unset;
+    resize: none;
+    transition:
+        border-color var(--duration-fast) var(--ease-standard),
+        height 200ms ease-out;
+    scrollbar-width: none;
+    /* Override SpartanNG Tailwind defaults */
+    min-height: unset;
+    height: auto;
+    shadow: none;
+    box-shadow: none;
+    field-sizing: unset;
 }
 .ds-ta::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 .ds-ta.scrollable {
-  scrollbar-width: auto;
+    scrollbar-width: auto;
 }
 .ds-ta.scrollable::-webkit-scrollbar {
-  display: block;
+    display: block;
 }
 .ds-ta::placeholder {
-  color: var(--text-muted);
-  opacity: var(--placeholder-opacity, 0.7);
+    color: var(--text-muted);
+    opacity: var(--placeholder-opacity, 0.7);
 }
 .ds-ta:focus {
-  border-color: var(--accent);
+    border-color: var(--accent);
 }
 .ds-ta--error {
-  border-color: var(--negative);
+    border-color: var(--negative);
 }
 .ds-ta:disabled {
-  opacity: 0.5;
-  cursor: default;
+    opacity: 0.5;
+    cursor: default;
 }
 .ds-ta-error {
-  font-size: var(--fs-caption-sm);
-  color: var(--negative);
+    font-size: var(--fs-caption-sm);
+    color: var(--negative);
 }

@@ -1,32 +1,32 @@
 <div class="flex flex-col gap-0.5">
-  @for (item of items(); track item.id) {
-    <button
-      type="button"
-      (click)="itemClick.emit(item.id)"
-      class="flex w-full cursor-pointer items-center gap-[10px] rounded-[11px] border-none px-[10px] py-[9px] text-left [transition:background_var(--duration-fast)_var(--ease-standard)]"
-      [style.background]="item.rowBg"
-    >
-      <span
-        class="h-1.5 w-1.5 flex-none rounded-full"
-        [style.background]="item.dotBg"
-      ></span>
-      <span
-        class="min-w-0 flex-1 truncate text-[13.5px] text-[var(--text-primary)]"
-        [style.font-weight]="item.fontWeight"
-      >
-        {{ item.label }}
-      </span>
-      <span
-        class="inline-flex h-[23px] flex-none items-center rounded-[8px] px-2 text-[11.5px] font-[var(--weight-bold)]"
-        [style.background]="item.badgeBg"
-        [style.color]="item.badgeFg"
-      >
-        @if (item.ratingValue > 0) {
-          {{ item.ratingValue }} ★
-        } @else {
-          {{ item.badgeKey | translate }}
-        }
-      </span>
-    </button>
-  }
+    @for (item of items(); track item.id) {
+        <button
+            type="button"
+            (click)="itemClick.emit(item.id)"
+            class="flex w-full cursor-pointer items-center gap-[10px] rounded-[11px] border-none px-[10px] py-[9px] text-left [transition:background_var(--duration-fast)_var(--ease-standard)]"
+            [style.background]="item.rowBg"
+        >
+            <span
+                class="h-1.5 w-1.5 flex-none rounded-full"
+                [style.background]="item.dotBg"
+            ></span>
+            <span
+                class="min-w-0 flex-1 truncate text-[13.5px] text-[var(--text-primary)]"
+                [style.font-weight]="item.fontWeight"
+            >
+                {{ item.label }}
+            </span>
+            <span
+                class="inline-flex h-[23px] flex-none items-center rounded-[8px] px-2 text-[11.5px] font-[var(--weight-bold)]"
+                [style.background]="item.badgeBg"
+                [style.color]="item.badgeFg"
+            >
+                @if (item.ratingValue > 0) {
+                    {{ item.ratingValue }} ★
+                } @else {
+                    {{ item.badgeKey | translate }}
+                }
+            </span>
+        </button>
+    }
 </div>

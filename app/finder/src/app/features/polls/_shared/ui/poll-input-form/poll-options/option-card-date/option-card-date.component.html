@@ -1,50 +1,53 @@
 <ds-card [accentBorder]="false" [padding]="14">
-  <div class="flex flex-col gap-3">
-    <div class="flex items-start gap-2">
-      <div class="flex flex-1 flex-col gap-2">
-        <div class="flex gap-2">
-          <div class="flex flex-1 flex-col gap-1">
-            <label
-              class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
-            >
-              {{ "project.pollInput.date.startDate" | translate }}
-            </label>
-            <ds-input
-              type="date"
-              [ngModel]="dateValue"
-              (ngModelChange)="setDate($event)"
-              [name]="'date-' + index()"
-              [readonly]="readonly()"
-            />
-          </div>
+    <div class="flex flex-col gap-3">
+        <div class="flex items-start gap-2">
+            <div class="flex flex-1 flex-col gap-2">
+                <div class="flex gap-2">
+                    <div class="flex flex-1 flex-col gap-1">
+                        <label
+                            class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+                        >
+                            {{ 'project.pollInput.date.startDate' | translate }}
+                        </label>
+                        <ds-input
+                            type="date"
+                            [ngModel]="dateValue"
+                            (ngModelChange)="setDate($event)"
+                            [name]="'date-' + index()"
+                            [readonly]="readonly()"
+                        />
+                    </div>
 
-          @if (showTime()) {
-            <div class="flex flex-1 flex-col gap-1">
-              <label
-                class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
-              >
-                {{ "project.pollInput.date.startTime" | translate }}
-              </label>
-              <ds-input
-                type="time"
-                [ngModel]="timeValue"
-                (ngModelChange)="setStartTime($event)"
-                [name]="'date-time-' + index()"
-                [readonly]="readonly()"
-              />
+                    @if (showTime()) {
+                        <div class="flex flex-1 flex-col gap-1">
+                            <label
+                                class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+                            >
+                                {{
+                                    'project.pollInput.date.startTime'
+                                        | translate
+                                }}
+                            </label>
+                            <ds-input
+                                type="time"
+                                [ngModel]="timeValue"
+                                (ngModelChange)="setStartTime($event)"
+                                [name]="'date-time-' + index()"
+                                [readonly]="readonly()"
+                            />
+                        </div>
+                    }
+                </div>
             </div>
-          }
-        </div>
-      </div>
 
-      @if (canRemove()) {
-        <ds-button
-          [size]="32"
-          variant="ghost"
-          icon="close"
-          (click)="remove.emit()"
-        />
-      }
+            @if (canRemove()) {
+                <ds-button
+                    [size]="32"
+                    variant="ghost"
+                    icon="close"
+                    (click)="remove.emit()"
+                />
+            }
+        </div>
     </div>
-  </div>
 </ds-card>

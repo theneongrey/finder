@@ -34,20 +34,22 @@ test.describe('Settings page (issue #247)', () => {
     const nameInput = page.locator('[data-testid="settings-name-input"] input');
     const originalName = await nameInput.inputValue();
 
-    await nameInput.fill('E2E Settings Test');
-    await nameInput.blur();
-    await page.waitForLoadState('networkidle');
+    try {
+      await nameInput.fill('E2E Settings Test');
+      await nameInput.blur();
+      await page.waitForLoadState('networkidle');
 
-    // Reload to verify the name was actually saved to the backend
-    await page.reload();
-    await page.waitForLoadState('networkidle');
-    await expect(page.locator('[data-testid="settings-name-input"] input')).toHaveValue('E2E Settings Test');
-
-    // Restore original name
-    const restoredInput = page.locator('[data-testid="settings-name-input"] input');
-    await restoredInput.fill(originalName);
-    await restoredInput.blur();
-    await page.waitForLoadState('networkidle');
+      // Reload to verify the name was actually saved to the backend
+      await page.reload();
+      await page.waitForLoadState('networkidle');
+      await expect(page.locator('[data-testid="settings-name-input"] input')).toHaveValue('E2E Settings Test');
+    } finally {
+      // Always restore original name even if the assertion above fails
+      const restoredInput = page.locator('[data-testid="settings-name-input"] input');
+      await restoredInput.fill(originalName);
+      await restoredInput.blur();
+      await page.waitForLoadState('networkidle');
+    }
   });
 
   test('language segmented control shows all three language options', async ({ page }) => {

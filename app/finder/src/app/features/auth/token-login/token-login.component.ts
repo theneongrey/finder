@@ -6,36 +6,36 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.component';
 
 @Component({
-  selector: 'app-auth-token-login',
-  imports: [TranslatePipe, AuthStepIndicatorComponent],
-  templateUrl: './token-login.component.html',
-  styleUrl: './token-login.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'block',
-  },
+    selector: 'app-auth-token-login',
+    imports: [TranslatePipe, AuthStepIndicatorComponent],
+    templateUrl: './token-login.component.html',
+    styleUrl: './token-login.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'block',
+    },
 })
 export class TokenLoginComponent {
-  constructor() {
-    const userStore = inject(UserStore);
-    const route = inject(ActivatedRoute);
-    const router = inject(Router);
-    const loggerService = inject(LoggerService);
+    constructor() {
+        const userStore = inject(UserStore);
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const loggerService = inject(LoggerService);
 
-    const loginToken = route.snapshot.queryParams['token'];
-    const redirecturl = route.snapshot.queryParams['redirecturl'];
+        const loginToken = route.snapshot.queryParams['token'];
+        const redirecturl = route.snapshot.queryParams['redirecturl'];
 
-    loggerService.log('Login by token with redirectUrl');
+        loggerService.log('Login by token with redirectUrl');
 
-    if (!loginToken) {
-      router.navigate(['/']);
+        if (!loginToken) {
+            router.navigate(['/']);
+        }
+
+        if (redirecturl) {
+            loggerService.log(`with redirectUrl: ${redirecturl}`);
+            userStore.setRedirectUrl(redirecturl);
+        }
+
+        userStore.loginByToken(loginToken);
     }
-
-    if (redirecturl) {
-      loggerService.log(`with redirectUrl: ${redirecturl}`);
-      userStore.setRedirectUrl(redirecturl);
-    }
-
-    userStore.loginByToken(loginToken);
-  }
 }

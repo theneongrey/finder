@@ -1,55 +1,55 @@
 <ds-card [accentBorder]="false" [padding]="14">
-  <div class="flex flex-col gap-3">
-    <div class="flex items-start gap-2">
-      <div class="flex flex-1 flex-col gap-2">
-        <div class="flex gap-1">
-          @for (day of weekdayButtons; track day.value) {
-            <button
-              type="button"
-              class="flex-1 rounded-[8px] border-0 px-0.5 py-[6px] text-[length:var(--fs-caption-sm)] font-bold transition-[background,color]"
-              [class.cursor-pointer]="!readonly()"
-              [class.cursor-default]="readonly()"
-              [ngClass]="
-                option().weekday === day.value
-                  ? 'bg-[var(--accent)] text-white'
-                  : 'bg-[var(--bg-panel)] text-[color:var(--text-secondary)]'
-              "
-              [disabled]="readonly()"
-              (click)="!readonly() && selectWeekday(day.value)"
-              [attr.aria-label]="day.ariaLabel"
-              [attr.aria-pressed]="option().weekday === day.value"
-            >
-              {{ day.label }}
-            </button>
-          }
+    <div class="flex flex-col gap-3">
+        <div class="flex items-start gap-2">
+            <div class="flex flex-1 flex-col gap-2">
+                <div class="flex gap-1">
+                    @for (day of weekdayButtons; track day.value) {
+                        <button
+                            type="button"
+                            class="flex-1 rounded-[8px] border-0 px-0.5 py-[6px] text-[length:var(--fs-caption-sm)] font-bold transition-[background,color]"
+                            [class.cursor-pointer]="!readonly()"
+                            [class.cursor-default]="readonly()"
+                            [ngClass]="
+                                option().weekday === day.value
+                                    ? 'bg-[var(--accent)] text-white'
+                                    : 'bg-[var(--bg-panel)] text-[color:var(--text-secondary)]'
+                            "
+                            [disabled]="readonly()"
+                            (click)="!readonly() && selectWeekday(day.value)"
+                            [attr.aria-label]="day.ariaLabel"
+                            [attr.aria-pressed]="option().weekday === day.value"
+                        >
+                            {{ day.label }}
+                        </button>
+                    }
+                </div>
+
+                @if (showTime()) {
+                    <div class="flex flex-col gap-1">
+                        <label
+                            class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
+                        >
+                            {{ 'project.pollInput.date.startTime' | translate }}
+                        </label>
+                        <ds-input
+                            type="time"
+                            [ngModel]="timeValue"
+                            (ngModelChange)="setStartTime($event)"
+                            [name]="'weekday-time-' + index()"
+                            [readonly]="readonly()"
+                        />
+                    </div>
+                }
+            </div>
+
+            @if (canRemove()) {
+                <ds-button
+                    [size]="32"
+                    variant="ghost"
+                    icon="close"
+                    (click)="remove.emit()"
+                />
+            }
         </div>
-
-        @if (showTime()) {
-          <div class="flex flex-col gap-1">
-            <label
-              class="text-[length:var(--fs-caption)] font-bold text-[color:var(--text-secondary)]"
-            >
-              {{ "project.pollInput.date.startTime" | translate }}
-            </label>
-            <ds-input
-              type="time"
-              [ngModel]="timeValue"
-              (ngModelChange)="setStartTime($event)"
-              [name]="'weekday-time-' + index()"
-              [readonly]="readonly()"
-            />
-          </div>
-        }
-      </div>
-
-      @if (canRemove()) {
-        <ds-button
-          [size]="32"
-          variant="ghost"
-          icon="close"
-          (click)="remove.emit()"
-        />
-      }
     </div>
-  </div>
 </ds-card>

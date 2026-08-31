@@ -1,74 +1,76 @@
-@if (isClosed() && mode() === "edit") {
-  <div
-    class="flex items-start gap-3 rounded-[14px] border border-[rgba(20,24,28,.08)] bg-[rgba(20,24,28,.05)] px-4 py-3"
-  >
-    <span class="mt-[2px]"
-      ><ds-icon name="info" [size]="16" [color]="'var(--text-muted)'"
-    /></span>
-    <p class="text-[13.5px] leading-[1.45] text-[color:var(--text-muted)]">
-      {{ "project.pollInput.closedPollEditInfo" | translate }}
-    </p>
-  </div>
+@if (isClosed() && mode() === 'edit') {
+    <div
+        class="flex items-start gap-3 rounded-[14px] border border-[rgba(20,24,28,.08)] bg-[rgba(20,24,28,.05)] px-4 py-3"
+    >
+        <span class="mt-[2px]"
+            ><ds-icon name="info" [size]="16" [color]="'var(--text-muted)'"
+        /></span>
+        <p class="text-[13.5px] leading-[1.45] text-[color:var(--text-muted)]">
+            {{ 'project.pollInput.closedPollEditInfo' | translate }}
+        </p>
+    </div>
 }
 
 <ds-card [accentBorder]="false" [padding]="16">
-  <p
-    class="label tracking-[var(--tracking-eyebrow-lg)] text-[color:var(--text-muted)]"
-  >
-    {{ "project.pollInput.yesNo.question" | translate }}
-  </p>
-  <ds-input
-    class="mt-2 block"
-    data-testid="question-input"
-    [placeholder]="'project.pollInput.yesNo.questionPlaceholder' | translate"
-    [ngModel]="question()"
-    (ngModelChange)="questionChange.emit($event)"
-    name="question"
-    [maxlength]="limits.questionLength"
-    [readonly]="isClosed()"
-  />
-
-  @if (showDescription()) {
-    <div class="mt-3">
-      <div class="mb-[7px] flex items-center justify-between">
-        <p
-          class="label tracking-[var(--tracking-eyebrow-lg)] text-[color:var(--text-muted)]"
-        >
-          {{ "project.pollInput.yesNo.description" | translate }}
-        </p>
-        <ds-button
-          [size]="24"
-          variant="ghost"
-          icon="close"
-          (click)="onDescriptionBlur()"
-        />
-      </div>
-      <ds-textarea
-        #descriptionTextarea
-        name="description"
-        [autoResize]="true"
-        [maxlength]="limits.descriptionLength"
+    <p
+        class="label tracking-[var(--tracking-eyebrow-lg)] text-[color:var(--text-muted)]"
+    >
+        {{ 'project.pollInput.yesNo.question' | translate }}
+    </p>
+    <ds-input
+        class="mt-2 block"
+        data-testid="question-input"
         [placeholder]="
-          'project.pollInput.yesNo.descriptionPlaceholder' | translate
+            'project.pollInput.yesNo.questionPlaceholder' | translate
         "
-        [ngModel]="description()"
-        (ngModelChange)="descriptionChange.emit($event)"
-        (blurred)="onDescriptionBlur()"
-        [disabled]="isClosed()"
-      />
-    </div>
-  }
+        [ngModel]="question()"
+        (ngModelChange)="questionChange.emit($event)"
+        name="question"
+        [maxlength]="limits.questionLength"
+        [readonly]="isClosed()"
+    />
 
-  @if (!showDescription() && !isClosed()) {
-    <div class="mt-2">
-      <ds-button
-        variant="ghost"
-        size="sm"
-        icon="plus"
-        (click)="toggleDescription()"
-      >
-        {{ "project.pollInput.addDescriptionCta" | translate }}
-      </ds-button>
-    </div>
-  }
+    @if (showDescription()) {
+        <div class="mt-3">
+            <div class="mb-[7px] flex items-center justify-between">
+                <p
+                    class="label tracking-[var(--tracking-eyebrow-lg)] text-[color:var(--text-muted)]"
+                >
+                    {{ 'project.pollInput.yesNo.description' | translate }}
+                </p>
+                <ds-button
+                    [size]="24"
+                    variant="ghost"
+                    icon="close"
+                    (click)="onDescriptionBlur()"
+                />
+            </div>
+            <ds-textarea
+                #descriptionTextarea
+                name="description"
+                [autoResize]="true"
+                [maxlength]="limits.descriptionLength"
+                [placeholder]="
+                    'project.pollInput.yesNo.descriptionPlaceholder' | translate
+                "
+                [ngModel]="description()"
+                (ngModelChange)="descriptionChange.emit($event)"
+                (blurred)="onDescriptionBlur()"
+                [disabled]="isClosed()"
+            />
+        </div>
+    }
+
+    @if (!showDescription() && !isClosed()) {
+        <div class="mt-2">
+            <ds-button
+                variant="ghost"
+                size="sm"
+                icon="plus"
+                (click)="toggleDescription()"
+            >
+                {{ 'project.pollInput.addDescriptionCta' | translate }}
+            </ds-button>
+        </div>
+    }
 </ds-card>

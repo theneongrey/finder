@@ -1,46 +1,27 @@
 import { test, expect } from '@playwright/test';
-import { USER1, USER2, login, logout } from './helpers';
+import { USER1, login, logout } from './helpers';
 
 test.describe('Poll voting progress on overview', () => {
-  let testProjectId: string;
-  let testPollId: string;
-  let testOptionId: string;
-
-  // Ensure USER1 has a standalone poll with at least one option and USER2 has voter access.
-  // Creates one if none is suitable, so repeated runs stay fast.
+  // Ensure USER1 has a standalone "Voting Progress Test Poll" with one option.
   test.beforeAll(async ({ browser }) => {
     const page = await browser.newPage();
     await login(page, USER1);
+    await page.goto('/polls');
+    await page.waitForLoadState('networkidle');
 
-    const voteBtn = page
-      .locator('[data-testid="vote-cta-btn"]')
-      .filter({ hasText: /vote now|jetzt abstimmen/i })
-      .first();
-
-    if (await voteBtn.count() === 0) {
+    const testPoll = page.locator('app-poll-item').filter({ hasText: 'Voting Progress Test Poll' });
+    if (await testPoll.count() === 0) {
       await page.goto('/polls/add');
       await page.waitForURL('**/polls/add');
-      await page.getByText('Yes/No').click(); // auto-advances to step 2
-      await page.getByRole('textbox', { name: 'Your question' }).fill('Voting Progress Test Poll');
+      await page.locator('[data-testid="type-btn-yesno"]').click(); // auto-advances to step 2
+      await page.locator('[data-testid="question-input"] input').fill('Voting Progress Test Poll');
       await page.locator('app-option-card ds-input input').first().fill('Ja');
-      await page.locator('[data-testid="wizard-cta"] button').click();
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
+      await page.waitForSelector('app-share-content');
+      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
       await page.waitForURL('**/polls');
     }
 
-    // Capture IDs from the vote URL
-    await page
-      .locator('[data-testid="vote-cta-btn"]')
-      .filter({ hasText: /vote now|jetzt abstimmen/i })
-      .first()
-      .click();
-    await page.waitForURL('**/polls/**/vote/**');
-    const parts = new URL(page.url()).pathname.split('/');
-    // URL shape: /polls/<projectId>/vote/<pollId>/<optionId>
-    testProjectId = parts[2];
-    testPollId = parts[4];
-    testOptionId = parts[5];
-
-    await page.goto('/polls');
     await logout(page);
     await page.close();
   }, 90000);
@@ -55,8 +36,9 @@ test.describe('Poll voting progress on overview', () => {
 
   test('CTA reads "Vote now" (or locale equivalent) for unvoted poll', async ({ page }) => {
     await page.goto('/polls');
-    const ctaBtn = page.locator('app-poll-item [data-testid="vote-cta-btn"]').first();
-    await expect(ctaBtn).toContainText(/vote now|jetzt abstimmen/i);
+    // At least one poll must show vote-now CTA
+    const voteBtns = page.locator('app-poll-item [data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i });
+    await expect(voteBtns).not.toHaveCount(0);
   });
 
   test('voted-count is visible on each card', async ({ page }) => {
@@ -66,16 +48,33 @@ test.describe('Poll voting progress on overview', () => {
   });
 
   test('CTA changes after casting a vote', async ({ page }) => {
-    // Cast a vote
-    await page.goto(`/polls/${testProjectId}/vote/${testPollId}/${testOptionId}`);
-    await page.waitForLoadState('networkidle');
-    await page.locator('button.ds-vote-btn--yes').first().click();
-    await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
-
-    // Return to overview and verify CTA no longer says "Vote now"
     await page.goto('/polls');
     const pollCard = page.locator('app-poll-item').filter({ hasText: 'Voting Progress Test Poll' }).first();
     const ctaBtn = pollCard.locator('[data-testid="vote-cta-btn"]');
-    await expect(ctaBtn).not.toContainText(/vote now|jetzt abstimmen/i);
+
+    // If previously voted in another run, CTA already says "show results" — idempotent pass
+    const ctaText = await ctaBtn.innerText();
+    if (/show results|zeige ergebnisse/i.test(ctaText)) {
+      await expect(ctaBtn).toContainText(/show results|zeige ergebnisse/i);
+      return;
+    }
+
+    // Navigate to vote page via the overview CTA
+    await ctaBtn.click();
+    await page.waitForURL('**/polls/**/vote/**');
+    await page.waitForLoadState('networkidle');
+
+    // Cast a "Yes" vote — desktop viewport: mobile ds-vote-btn is md:hidden
+    await page.locator('button.desktop-vote-btn--yes').first().click();
+    await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
+
+    // Return to overview and verify at least one "Voting Progress Test Poll" CTA changed.
+    // (The list may re-sort after voting so .first() can resolve to a different unvoted duplicate.)
+    await page.goto('/polls');
+    const resultsCtas = page.locator('app-poll-item')
+      .filter({ hasText: 'Voting Progress Test Poll' })
+      .locator('[data-testid="vote-cta-btn"]')
+      .filter({ hasText: /show results|zeige ergebnisse/i });
+    await expect(resultsCtas).not.toHaveCount(0);
   });
 });

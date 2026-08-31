@@ -1,9 +1,9 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  output,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    input,
+    output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,53 +14,53 @@ import { DateOptionFormatService } from '../../../../utils/date-option-format.se
 import { DateOptionEntry } from '../../../../models/date-option.model';
 
 @Component({
-  selector: 'app-option-card-time-range',
-  templateUrl: './option-card-time-range.component.html',
-  imports: [
-    FormsModule,
-    DsButtonComponent,
-    DsInputComponent,
-    DsCardComponent,
-    TranslatePipe,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-option-card-time-range',
+    templateUrl: './option-card-time-range.component.html',
+    imports: [
+        FormsModule,
+        DsButtonComponent,
+        DsInputComponent,
+        DsCardComponent,
+        TranslatePipe,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardTimeRangeComponent {
-  private readonly dateOptionFormat = inject(DateOptionFormatService);
+    private readonly dateOptionFormat = inject(DateOptionFormatService);
 
-  option = input.required<DateOptionEntry>();
-  index = input.required<number>();
-  canRemove = input<boolean>(false);
-  readonly = input<boolean>(false);
-  remove = output<void>();
-  optionChange = output<DateOptionEntry>();
+    option = input.required<DateOptionEntry>();
+    index = input.required<number>();
+    canRemove = input<boolean>(false);
+    readonly = input<boolean>(false);
+    remove = output<void>();
+    optionChange = output<DateOptionEntry>();
 
-  get startTimeValue(): string {
-    return this.option().startTime
-      ? this.dateOptionFormat.formatTimeInput(this.option().startTime!)
-      : '';
-  }
-
-  get endTimeValue(): string {
-    return this.option().endTime
-      ? this.dateOptionFormat.formatTimeInput(this.option().endTime!)
-      : '';
-  }
-
-  onStartTimeChange(value: string): void {
-    const startTime = this.dateOptionFormat.parseTimeInput(value);
-    let endTime = this.option().endTime;
-    if (startTime && !endTime) {
-      endTime = new Date(startTime);
-      endTime.setHours(endTime.getHours() + 1);
+    get startTimeValue(): string {
+        return this.option().startTime
+            ? this.dateOptionFormat.formatTimeInput(this.option().startTime!)
+            : '';
     }
-    this.optionChange.emit({ ...this.option(), startTime, endTime });
-  }
 
-  setEndTime(value: string): void {
-    this.optionChange.emit({
-      ...this.option(),
-      endTime: this.dateOptionFormat.parseTimeInput(value),
-    });
-  }
+    get endTimeValue(): string {
+        return this.option().endTime
+            ? this.dateOptionFormat.formatTimeInput(this.option().endTime!)
+            : '';
+    }
+
+    onStartTimeChange(value: string): void {
+        const startTime = this.dateOptionFormat.parseTimeInput(value);
+        let endTime = this.option().endTime;
+        if (startTime && !endTime) {
+            endTime = new Date(startTime);
+            endTime.setHours(endTime.getHours() + 1);
+        }
+        this.optionChange.emit({ ...this.option(), startTime, endTime });
+    }
+
+    setEndTime(value: string): void {
+        this.optionChange.emit({
+            ...this.option(),
+            endTime: this.dateOptionFormat.parseTimeInput(value),
+        });
+    }
 }

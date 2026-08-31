@@ -1,89 +1,101 @@
 @if (members().length > 0) {
-  <div class="mb-3 flex items-center justify-between">
-    <p class="label">{{ "project.share.alreadyShared" | translate }}</p>
-    <span class="text-sm font-semibold text-[var(--text-secondary)]"
-      >{{ members().length }} {{ "project.share.persons" | translate }}</span
-    >
-  </div>
-
-  <div
-    class="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-hairline-soft)] bg-white pb-1"
-  >
-    @for (member of sortedMembers(); track member.email; let last = $last) {
-      <div class="relative">
-        <div
-          class="flex items-center gap-3 border-[var(--border-hairline-soft)] px-4 py-3"
-          [class.border-b]="!last"
+    <div class="mb-3 flex items-center justify-between">
+        <p class="label">{{ 'project.share.alreadyShared' | translate }}</p>
+        <span class="text-sm font-semibold text-[var(--text-secondary)]"
+            >{{ members().length }}
+            {{ 'project.share.persons' | translate }}</span
         >
-          <app-user-avatar [user]="member" />
-
-          <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-medium">{{ member.name }}</p>
-            <p class="truncate text-xs text-[var(--text-muted)]">
-              {{ member.email }}
-            </p>
-          </div>
-
-          @if (member.role === PollRole.Creator) {
-            <ds-badge tone="accent" size="lg">{{
-              "project.roles.creator" | translate
-            }}</ds-badge>
-          } @else {
-            <ds-menu [items]="getRoleMenuItems(member)">
-              <ds-badge
-                [tone]="getRoleBadgeTone(member.role)"
-                size="lg"
-                class="cursor-pointer"
-              >
-                {{ "project.roles." + getRoleKey(member.role) | translate }}
-              </ds-badge>
-            </ds-menu>
-          }
-
-          @if (member.role !== PollRole.Creator) {
-            <ds-button
-              variant="danger"
-              [size]="28"
-              icon="close"
-              (click)="onRemoveClick(member.email)"
-            />
-          }
-        </div>
-
-        @if (pendingRemoveEmail() === member.email) {
-          <div
-            class="absolute inset-0 flex items-center justify-end gap-3 rounded-[inherit] bg-white/92 px-4"
-            (click)="pendingRemoveEmail.set(undefined)"
-          >
-            <span class="text-xs text-[var(--text-secondary)]">{{
-              "project.share.removeConfirm" | translate: { name: member.name }
-            }}</span>
-            <ds-button
-              variant="danger"
-              size="sm"
-              (click)="$event.stopPropagation(); confirmRemove(member.email)"
-              >{{ "project.share.remove" | translate }}</ds-button
-            >
-          </div>
-        }
-      </div>
-    }
-  </div>
-
-  @if (roleSummary().length > 0) {
-    <div class="mt-3 flex flex-wrap gap-2">
-      @for (item of roleSummary(); track item.label) {
-        <ds-badge [tone]="item.tone" size="lg">{{ item.label }}</ds-badge>
-      }
     </div>
-  }
+
+    <div
+        class="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-hairline-soft)] bg-white pb-1"
+    >
+        @for (member of sortedMembers(); track member.email; let last = $last) {
+            <div class="relative">
+                <div
+                    class="flex items-center gap-3 border-[var(--border-hairline-soft)] px-4 py-3"
+                    [class.border-b]="!last"
+                >
+                    <app-user-avatar [user]="member" />
+
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate text-sm font-medium">
+                            {{ member.name }}
+                        </p>
+                        <p class="truncate text-xs text-[var(--text-muted)]">
+                            {{ member.email }}
+                        </p>
+                    </div>
+
+                    @if (member.role === PollRole.Creator) {
+                        <ds-badge tone="accent" size="lg">{{
+                            'project.roles.creator' | translate
+                        }}</ds-badge>
+                    } @else {
+                        <ds-menu [items]="getRoleMenuItems(member)">
+                            <ds-badge
+                                [tone]="getRoleBadgeTone(member.role)"
+                                size="lg"
+                                class="cursor-pointer"
+                            >
+                                {{
+                                    'project.roles.' + getRoleKey(member.role)
+                                        | translate
+                                }}
+                            </ds-badge>
+                        </ds-menu>
+                    }
+
+                    @if (member.role !== PollRole.Creator) {
+                        <ds-button
+                            variant="danger"
+                            [size]="28"
+                            icon="close"
+                            (click)="onRemoveClick(member.email)"
+                        />
+                    }
+                </div>
+
+                @if (pendingRemoveEmail() === member.email) {
+                    <div
+                        class="absolute inset-0 flex items-center justify-end gap-3 rounded-[inherit] bg-white/92 px-4"
+                        (click)="pendingRemoveEmail.set(undefined)"
+                    >
+                        <span class="text-xs text-[var(--text-secondary)]">{{
+                            'project.share.removeConfirm'
+                                | translate: { name: member.name }
+                        }}</span>
+                        <ds-button
+                            variant="danger"
+                            size="sm"
+                            (click)="
+                                $event.stopPropagation();
+                                confirmRemove(member.email)
+                            "
+                            >{{ 'project.share.remove' | translate }}</ds-button
+                        >
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @if (roleSummary().length > 0) {
+        <div class="mt-3 flex flex-wrap gap-2">
+            @for (item of roleSummary(); track item.label) {
+                <ds-badge [tone]="item.tone" size="lg">{{
+                    item.label
+                }}</ds-badge>
+            }
+        </div>
+    }
 }
 
 <div class="mt-6">
-  <ds-empty-state-button
-    layout="row"
-    icon="users"
-    [label]="'project.share.inviteMore' | translate"
-    (clicked)="goInvite.emit()"
-  />
+    <ds-empty-state-button
+        layout="row"
+        icon="users"
+        [label]="'project.share.inviteMore' | translate"
+        (clicked)="goInvite.emit()"
+    />
 </div>

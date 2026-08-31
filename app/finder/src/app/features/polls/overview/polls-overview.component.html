@@ -1,34 +1,34 @@
 <div class="flex w-full flex-col">
-  <main class="w-full flex-grow rounded-t-2xl px-[22px] pt-5 lg:pt-0">
-    <app-standalone-poll-tab
-      (deletionRequested)="pollDeletionRequested($event)"
-      (shareRequested)="pollShareRequested($event)"
-    />
-  </main>
+    <main class="w-full flex-grow rounded-t-2xl px-[22px] pt-5 lg:pt-0">
+        <app-standalone-poll-tab
+            (deletionRequested)="pollDeletionRequested($event)"
+            (shareRequested)="pollShareRequested($event)"
+        />
+    </main>
 </div>
 
 <!-- FAB — mobile only -->
 <button
-  class="fixed right-5 bottom-6 z-50 flex h-[58px] w-[58px] cursor-pointer items-center justify-center rounded-full border-none bg-[var(--accent)] text-white shadow-[var(--shadow-accent-btn)] lg:hidden"
-  [routerLink]="['/polls/add']"
-  [title]="'project.pollsTab.newPoll' | translate"
-  data-testid="fab-add-poll"
+    class="fixed right-5 bottom-6 z-50 flex h-[58px] w-[58px] cursor-pointer items-center justify-center rounded-full border-none bg-[var(--accent)] text-white shadow-[var(--shadow-accent-btn)] lg:hidden"
+    [routerLink]="['/polls/add']"
+    [title]="'project.pollsTab.newPoll' | translate"
+    data-testid="fab-add-poll"
 >
-  <ds-icon name="plus" [size]="24" color="#fff" />
+    <ds-icon name="plus" [size]="24" color="#fff" />
 </button>
 
 @if (sharingProject(); as project) {
-  <app-share-drawer
-    [title]="shareDrawerTitle()"
-    [subtitle]="shareDrawerSubtitle()"
-    [visible]="!!sharingProjectId()"
-    (visibleChange)="shareDrawerVisibilityChanged($event)"
-  >
-    <app-share-content
-      [projectId]="project.projectId"
-      [sharedWith]="project.sharedWith"
-      [visibilityType]="project.visibilityType"
-      [inCard]="false"
-    />
-  </app-share-drawer>
+    <app-share-drawer
+        [title]="shareDrawerTitle()"
+        [subtitle]="shareDrawerSubtitle()"
+        [visible]="!!sharingProjectId()"
+        (visibleChange)="shareDrawerVisibilityChanged($event)"
+    >
+        <app-share-content
+            [projectId]="project.projectId"
+            [sharedWith]="project.sharedWith"
+            [visibilityType]="project.visibilityType"
+            [inCard]="false"
+        />
+    </app-share-drawer>
 }

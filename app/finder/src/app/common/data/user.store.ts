@@ -6,20 +6,20 @@ import { withNotificationsFeature } from './user-notifications.feature';
 import { SupportedLanguage } from '../i18n/languages';
 
 const dateFormatByLanguage: Record<SupportedLanguage, string> = {
-  en: 'M/d/yyyy',
-  de: 'dd.MM.yyyy',
-  es: 'dd/MM/yyyy',
+    en: 'M/d/yyyy',
+    de: 'dd.MM.yyyy',
+    es: 'dd/MM/yyyy',
 };
 
 export const UserStore = signalStore(
-  { providedIn: 'root' },
-  withAuthFeature(),
-  withProfileFeature(),
-  withNotificationsFeature(),
-  withComputed((store) => ({
-    dateFormat: computed(() => {
-      const lang = (store.user()?.language ?? 'en') as SupportedLanguage;
-      return dateFormatByLanguage[lang] ?? dateFormatByLanguage['en'];
-    }),
-  })),
+    { providedIn: 'root' },
+    withAuthFeature(),
+    withProfileFeature(),
+    withNotificationsFeature(),
+    withComputed((store) => ({
+        dateFormat: computed(() => {
+            const lang = (store.user()?.language ?? 'en') as SupportedLanguage;
+            return dateFormatByLanguage[lang] ?? dateFormatByLanguage['en'];
+        }),
+    })),
 );

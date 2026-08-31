@@ -1,51 +1,53 @@
 <nav class="home-nav" [class.scrolled]="scrolled">
-  <div class="nav-inner">
-    <div class="nav-logo">
-      <img
-        src="logo-icon.svg"
-        alt=""
-        aria-hidden="true"
-        width="23"
-        height="26"
-        class="nav-logo-icon"
-      />
-      <span class="nav-logo-text">Votean</span>
+    <div class="nav-inner">
+        <div class="nav-logo">
+            <img
+                src="logo-icon.svg"
+                alt=""
+                aria-hidden="true"
+                width="23"
+                height="26"
+                class="nav-logo-icon"
+            />
+            <span class="nav-logo-text">Votean</span>
+        </div>
+
+        <div class="nav-links">
+            <button class="nav-link" (click)="scrollToSection('how-it-works')">
+                {{ 'home.nav.howItWorks' | translate }}
+            </button>
+            <button class="nav-link" (click)="scrollToSection('ideas')">
+                {{ 'home.nav.ideas' | translate }}
+            </button>
+            <button class="nav-link" (click)="scrollToSection('features')">
+                {{ 'home.nav.features' | translate }}
+            </button>
+        </div>
+
+        <span class="nav-tagline">{{ 'home.nav.tagline' | translate }}</span>
+
+        <a routerLink="/auth/request-email" class="nav-cta">
+            <span class="mobile-only">{{
+                'home.nav.signInMobile' | translate
+            }}</span>
+            <span class="desktop-only">{{
+                'home.nav.signInDesktop' | translate
+            }}</span>
+            <svg
+                class="desktop-only"
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fff"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M5 12h13" />
+                <path d="M12.5 6l6 6-6 6" />
+            </svg>
+        </a>
     </div>
-
-    <div class="nav-links">
-      <button class="nav-link" (click)="scrollToSection('how-it-works')">
-        {{ "home.nav.howItWorks" | translate }}
-      </button>
-      <button class="nav-link" (click)="scrollToSection('ideas')">
-        {{ "home.nav.ideas" | translate }}
-      </button>
-      <button class="nav-link" (click)="scrollToSection('features')">
-        {{ "home.nav.features" | translate }}
-      </button>
-    </div>
-
-    <span class="nav-tagline">{{ "home.nav.tagline" | translate }}</span>
-
-    <a routerLink="/auth/request-email" class="nav-cta">
-      <span class="mobile-only">{{ "home.nav.signInMobile" | translate }}</span>
-      <span class="desktop-only">{{
-        "home.nav.signInDesktop" | translate
-      }}</span>
-      <svg
-        class="desktop-only"
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#fff"
-        stroke-width="2.6"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M5 12h13" />
-        <path d="M12.5 6l6 6-6 6" />
-      </svg>
-    </a>
-  </div>
 </nav>

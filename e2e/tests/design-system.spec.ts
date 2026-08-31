@@ -89,8 +89,8 @@ test.describe('Design system showcase (/ux)', () => {
     const panel = page.locator('.ds-sheet-panel');
     await expect(panel).toBeVisible();
 
-    // Dismiss via the X close button in the sheet header
-    await panel.locator('.ds-sheet-header button').click();
+    // Dismiss via the close button (data-testid set on the ds-button host)
+    await panel.locator('[data-testid="sheet-close-btn"] button').click();
     await expect(panel).not.toBeVisible();
   });
 

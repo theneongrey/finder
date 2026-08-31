@@ -1,334 +1,341 @@
 @if (poll(); as poll) {
-  <!-- ── MOBILE layout (<lg) ─────────────────────────────────── -->
-  <div class="flex flex-col lg:hidden">
-    <!-- Tab bar -->
-    <div class="relative">
-      <ds-tabs
-        class="px-4"
-        [items]="tabItems()"
-        [value]="view()"
-        (valueChange)="view.set($any($event))"
-      />
-      @if (!poll.isClosed) {
-        <div class="absolute top-1/2 right-3 -translate-y-1/2">
-          <ds-button
-            variant="ghost"
-            [size]="36"
-            icon="share"
-            label="Umfrage teilen"
-            (click)="sharePoll()"
-          />
-        </div>
-      }
-    </div>
-
-    @if (view() === "results") {
-      <div class="flex flex-col gap-3.5 p-4 pb-8">
-        <app-vote-overview-summary
-          [poll]="poll"
-          [commentsCount]="poll.comments.length"
-          [commentsWithContext]="commentsWithContext()"
-          [totalMembers]="totalMembers()"
-        />
-
-        <app-option-list
-          [options]="poll.options"
-          [optionType]="poll.optionType"
-          [members]="project()?.sharedWith ?? []"
-          [projectId]="project()?.id ?? ''"
-          [pollId]="pollId()"
-          [isClosed]="poll.isClosed"
-        />
-
-        @if (canManagePoll()) {
-          <div
-            class="relative mt-2 flex flex-col gap-3 rounded-[22px] p-5"
-            data-testid="results-manage-card"
-            style="
-              background: var(--surface-card);
-              border: 1px solid var(--border-hairline-soft);
-              box-shadow: var(--shadow-card-soft);
-            "
-          >
-            @if (showCloseConfirm()) {
-              <div
-                class="pointer-events-none absolute inset-0 rounded-[22px] bg-white/60"
-              ></div>
+    <!-- ── MOBILE layout (<lg) ─────────────────────────────────── -->
+    <div class="flex flex-col lg:hidden">
+        <!-- Tab bar -->
+        <div class="relative">
+            <ds-tabs
+                class="px-4"
+                [items]="tabItems()"
+                [value]="view()"
+                (valueChange)="view.set($any($event))"
+            />
+            @if (!poll.isClosed) {
+                <div class="absolute top-1/2 right-3 -translate-y-1/2">
+                    <ds-button
+                        variant="ghost"
+                        [size]="36"
+                        icon="share"
+                        label="Umfrage teilen"
+                        (click)="sharePoll()"
+                    />
+                </div>
             }
-            <div>
-              @if (poll.isClosed) {
-                <p
-                  class="text-[15px] font-bold"
-                  style="color: var(--text-primary)"
-                >
-                  Umfrage ist beendet
-                </p>
-                <p
-                  class="mt-0.5 text-[13px]"
-                  style="color: var(--text-secondary)"
-                >
-                  Teilnehmende können wieder abstimmen und ihre Antwort ändern.
-                </p>
-              } @else {
-                <p
-                  class="text-[15px] font-bold"
-                  style="color: var(--text-primary)"
-                >
-                  Abstimmung läuft
-                  @if (deadlineText()) {
-                    <span
-                      class="ml-2 text-[13px] font-normal"
-                      style="color: var(--text-secondary)"
-                      >· {{ deadlineText() }}</span
+        </div>
+
+        @if (view() === 'results') {
+            <div class="flex flex-col gap-3.5 p-4 pb-8">
+                <app-vote-overview-summary
+                    [poll]="poll"
+                    [commentsCount]="poll.comments.length"
+                    [commentsWithContext]="commentsWithContext()"
+                    [totalMembers]="totalMembers()"
+                />
+
+                <app-option-list
+                    [options]="poll.options"
+                    [optionType]="poll.optionType"
+                    [members]="project()?.sharedWith ?? []"
+                    [projectId]="project()?.id ?? ''"
+                    [pollId]="pollId()"
+                    [isClosed]="poll.isClosed"
+                />
+
+                @if (canManagePoll()) {
+                    <div
+                        class="relative mt-2 flex flex-col gap-3 rounded-[22px] p-5"
+                        data-testid="results-manage-card"
+                        style="
+                            background: var(--surface-card);
+                            border: 1px solid var(--border-hairline-soft);
+                            box-shadow: var(--shadow-card-soft);
+                        "
                     >
-                  }
-                </p>
-                <p
-                  class="mt-0.5 text-[13px]"
-                  style="color: var(--text-secondary)"
-                >
-                  Keine weiteren Stimmen möglich — das Ergebnis bleibt sichtbar.
-                </p>
-              }
-            </div>
-            <div class="relative z-10 flex gap-2">
-              @if (poll.isClosed) {
-                <ds-button
-                  variant="neutral"
-                  data-testid="reopen-poll-btn"
-                  (click)="reopenPoll()"
-                >
-                  Wieder öffnen
-                </ds-button>
-              } @else if (showCloseConfirm()) {
-                <ds-button
-                  variant="ghost"
-                  size="sm"
-                  (click)="showCloseConfirm.set(false)"
-                >
-                  Abbrechen
-                </ds-button>
-                <ds-button
-                  variant="danger"
-                  size="sm"
-                  data-testid="close-poll-confirm-btn"
-                  (click)="closePoll()"
-                >
-                  Ja, beenden
-                </ds-button>
-              } @else {
-                <ds-button
-                  variant="danger"
-                  data-testid="close-poll-btn"
-                  (click)="showCloseConfirm.set(true)"
-                >
-                  Umfrage beenden
-                </ds-button>
-              }
-            </div>
-          </div>
-        }
-      </div>
-    } @else {
-      <div class="p-4 pb-8">
-        <app-comments-section
-          [comments]="poll.comments"
-          (addComment)="addComment($event)"
-        />
-      </div>
-    }
-  </div>
-
-  <!-- ── DESKTOP layout (≥lg) ─────────────────────────────────── -->
-  <div class="hidden lg:flex lg:items-start lg:gap-6 lg:p-6">
-    <!-- Main column -->
-    <div
-      class="flex flex-col gap-4 lg:min-w-0 lg:flex-1"
-      style="max-width: 1000px"
-    >
-      <!-- Poll header -->
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-2.5">
-          <ds-badge tone="neutral">{{ typeLabel() }}</ds-badge>
-          <ds-status-dot [tone]="poll.isClosed ? 'muted' : 'positive'">{{
-            statusLabel()
-          }}</ds-status-dot>
-          @if (deadlineText()) {
-            <span class="text-[13px]" style="color: var(--text-secondary)">{{
-              deadlineText()
-            }}</span>
-          }
-          @if (!poll.isClosed) {
-            <div class="ml-auto flex items-center">
-              <ds-button
-                variant="ghost"
-                size="sm"
-                icon="share"
-                (click)="sharePoll()"
-                >Teilen</ds-button
-              >
-            </div>
-          }
-        </div>
-        <h1
-          class="text-[32px] leading-[1.14] font-bold text-pretty"
-          style="letter-spacing: -0.8px; color: var(--text-primary)"
-        >
-          {{ poll.name }}
-        </h1>
-        @if (poll.description) {
-          <p
-            class="mt-1.5 text-[15px] leading-[1.5] text-pretty"
-            style="color: var(--text-secondary)"
-          >
-            {{ poll.description }}
-          </p>
-        }
-      </div>
-
-      <app-vote-overview-summary
-        [poll]="poll"
-        [commentsCount]="poll.comments.length"
-        [commentsWithContext]="commentsWithContext()"
-        [totalMembers]="totalMembers()"
-      />
-
-      <app-option-list
-        [options]="poll.options"
-        [optionType]="poll.optionType"
-        [members]="project()?.sharedWith ?? []"
-        [projectId]="project()?.id ?? ''"
-        [pollId]="pollId()"
-        [isClosed]="poll.isClosed"
-      />
-
-      <!-- Voting matrix -->
-      @if (poll.options.length && poll.options[0].votes.length) {
-        <app-vote-matrix
-          [poll]="poll"
-          [members]="project()?.sharedWith ?? []"
-        />
-      }
-
-      @if (canManagePoll()) {
-        <div
-          class="relative flex items-center gap-4 rounded-[22px] p-5"
-          style="
-            background: var(--surface-card);
-            border: 1px solid var(--border-hairline-soft);
-            box-shadow: var(--shadow-card-soft);
-          "
-        >
-          @if (showCloseConfirm()) {
-            <div
-              class="pointer-events-none absolute inset-0 rounded-[22px] bg-white/60"
-            ></div>
-          }
-          <div class="min-w-0 flex-1">
-            @if (poll.isClosed) {
-              <p
-                class="text-[15px] font-bold"
-                style="color: var(--text-primary)"
-              >
-                Umfrage ist beendet
-              </p>
-              <p
-                class="mt-0.5 text-[13px]"
-                style="color: var(--text-secondary)"
-              >
-                Teilnehmende können wieder abstimmen und ihre Antwort ändern.
-              </p>
-            } @else {
-              <p
-                class="text-[15px] font-bold"
-                style="color: var(--text-primary)"
-              >
-                Abstimmung läuft
-                @if (deadlineText()) {
-                  <span
-                    class="ml-2 text-[13px] font-normal"
-                    style="color: var(--text-secondary)"
-                    >· {{ deadlineText() }}</span
-                  >
+                        @if (showCloseConfirm()) {
+                            <div
+                                class="pointer-events-none absolute inset-0 rounded-[22px] bg-white/60"
+                            ></div>
+                        }
+                        <div>
+                            @if (poll.isClosed) {
+                                <p
+                                    class="text-[15px] font-bold"
+                                    style="color: var(--text-primary)"
+                                >
+                                    Umfrage ist beendet
+                                </p>
+                                <p
+                                    class="mt-0.5 text-[13px]"
+                                    style="color: var(--text-secondary)"
+                                >
+                                    Teilnehmende können wieder abstimmen und
+                                    ihre Antwort ändern.
+                                </p>
+                            } @else {
+                                <p
+                                    class="text-[15px] font-bold"
+                                    style="color: var(--text-primary)"
+                                >
+                                    Abstimmung läuft
+                                    @if (deadlineText()) {
+                                        <span
+                                            class="ml-2 text-[13px] font-normal"
+                                            style="color: var(--text-secondary)"
+                                            >· {{ deadlineText() }}</span
+                                        >
+                                    }
+                                </p>
+                                <p
+                                    class="mt-0.5 text-[13px]"
+                                    style="color: var(--text-secondary)"
+                                >
+                                    Keine weiteren Stimmen möglich — das
+                                    Ergebnis bleibt sichtbar.
+                                </p>
+                            }
+                        </div>
+                        <div class="relative z-10 flex gap-2">
+                            @if (poll.isClosed) {
+                                <ds-button
+                                    variant="neutral"
+                                    data-testid="reopen-poll-btn"
+                                    (click)="reopenPoll()"
+                                >
+                                    Wieder öffnen
+                                </ds-button>
+                            } @else if (showCloseConfirm()) {
+                                <ds-button
+                                    variant="ghost"
+                                    size="sm"
+                                    (click)="showCloseConfirm.set(false)"
+                                >
+                                    Abbrechen
+                                </ds-button>
+                                <ds-button
+                                    variant="danger"
+                                    size="sm"
+                                    data-testid="close-poll-confirm-btn"
+                                    (click)="closePoll()"
+                                >
+                                    Ja, beenden
+                                </ds-button>
+                            } @else {
+                                <ds-button
+                                    variant="danger"
+                                    data-testid="close-poll-btn"
+                                    (click)="showCloseConfirm.set(true)"
+                                >
+                                    Umfrage beenden
+                                </ds-button>
+                            }
+                        </div>
+                    </div>
                 }
-              </p>
-              <p
-                class="mt-0.5 text-[13px]"
-                style="color: var(--text-secondary)"
-              >
-                Keine weiteren Stimmen möglich — das Ergebnis bleibt sichtbar.
-              </p>
-            }
-          </div>
+            </div>
+        } @else {
+            <div class="p-4 pb-8">
+                <app-comments-section
+                    [comments]="poll.comments"
+                    (addComment)="addComment($event)"
+                />
+            </div>
+        }
+    </div>
 
-          <div class="relative z-10 flex items-center gap-2">
-            @if (poll.isClosed) {
-              <ds-button
-                variant="neutral"
-                data-testid="reopen-poll-btn"
-                (click)="reopenPoll()"
-              >
-                Wieder öffnen
-              </ds-button>
-            } @else if (showCloseConfirm()) {
-              <ds-button
-                [@btnEnter]
-                variant="ghost"
-                size="sm"
-                (click)="showCloseConfirm.set(false)"
-              >
-                Abbrechen
-              </ds-button>
-              <ds-button
-                [@btnEnter]
-                variant="danger"
-                data-testid="close-poll-confirm-btn"
-                (click)="closePoll()"
-              >
-                Ja, beenden
-              </ds-button>
-            } @else {
-              <ds-button
-                variant="danger"
-                data-testid="close-poll-btn"
-                (click)="showCloseConfirm.set(true)"
-              >
-                Umfrage beenden
-              </ds-button>
+    <!-- ── DESKTOP layout (≥lg) ─────────────────────────────────── -->
+    <div class="hidden lg:flex lg:items-start lg:gap-6 lg:p-6">
+        <!-- Main column -->
+        <div
+            class="flex flex-col gap-4 lg:min-w-0 lg:flex-1"
+            style="max-width: 1000px"
+        >
+            <!-- Poll header -->
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center gap-2.5">
+                    <ds-badge tone="neutral">{{ typeLabel() }}</ds-badge>
+                    <ds-status-dot
+                        [tone]="poll.isClosed ? 'muted' : 'positive'"
+                        >{{ statusLabel() }}</ds-status-dot
+                    >
+                    @if (deadlineText()) {
+                        <span
+                            class="text-[13px]"
+                            style="color: var(--text-secondary)"
+                            >{{ deadlineText() }}</span
+                        >
+                    }
+                    @if (!poll.isClosed) {
+                        <div class="ml-auto flex items-center">
+                            <ds-button
+                                variant="ghost"
+                                size="sm"
+                                icon="share"
+                                (click)="sharePoll()"
+                                >Teilen</ds-button
+                            >
+                        </div>
+                    }
+                </div>
+                <h1
+                    class="text-[32px] leading-[1.14] font-bold text-pretty"
+                    style="letter-spacing: -0.8px; color: var(--text-primary)"
+                >
+                    {{ poll.name }}
+                </h1>
+                @if (poll.description) {
+                    <p
+                        class="mt-1.5 text-[15px] leading-[1.5] text-pretty"
+                        style="color: var(--text-secondary)"
+                    >
+                        {{ poll.description }}
+                    </p>
+                }
+            </div>
+
+            <app-vote-overview-summary
+                [poll]="poll"
+                [commentsCount]="poll.comments.length"
+                [commentsWithContext]="commentsWithContext()"
+                [totalMembers]="totalMembers()"
+            />
+
+            <app-option-list
+                [options]="poll.options"
+                [optionType]="poll.optionType"
+                [members]="project()?.sharedWith ?? []"
+                [projectId]="project()?.id ?? ''"
+                [pollId]="pollId()"
+                [isClosed]="poll.isClosed"
+            />
+
+            <!-- Voting matrix -->
+            @if (poll.options.length && poll.options[0].votes.length) {
+                <app-vote-matrix
+                    [poll]="poll"
+                    [members]="project()?.sharedWith ?? []"
+                />
             }
-          </div>
+
+            @if (canManagePoll()) {
+                <div
+                    class="relative flex items-center gap-4 rounded-[22px] p-5"
+                    style="
+                        background: var(--surface-card);
+                        border: 1px solid var(--border-hairline-soft);
+                        box-shadow: var(--shadow-card-soft);
+                    "
+                >
+                    @if (showCloseConfirm()) {
+                        <div
+                            class="pointer-events-none absolute inset-0 rounded-[22px] bg-white/60"
+                        ></div>
+                    }
+                    <div class="min-w-0 flex-1">
+                        @if (poll.isClosed) {
+                            <p
+                                class="text-[15px] font-bold"
+                                style="color: var(--text-primary)"
+                            >
+                                Umfrage ist beendet
+                            </p>
+                            <p
+                                class="mt-0.5 text-[13px]"
+                                style="color: var(--text-secondary)"
+                            >
+                                Teilnehmende können wieder abstimmen und ihre
+                                Antwort ändern.
+                            </p>
+                        } @else {
+                            <p
+                                class="text-[15px] font-bold"
+                                style="color: var(--text-primary)"
+                            >
+                                Abstimmung läuft
+                                @if (deadlineText()) {
+                                    <span
+                                        class="ml-2 text-[13px] font-normal"
+                                        style="color: var(--text-secondary)"
+                                        >· {{ deadlineText() }}</span
+                                    >
+                                }
+                            </p>
+                            <p
+                                class="mt-0.5 text-[13px]"
+                                style="color: var(--text-secondary)"
+                            >
+                                Keine weiteren Stimmen möglich — das Ergebnis
+                                bleibt sichtbar.
+                            </p>
+                        }
+                    </div>
+
+                    <div class="relative z-10 flex items-center gap-2">
+                        @if (poll.isClosed) {
+                            <ds-button
+                                variant="neutral"
+                                data-testid="reopen-poll-btn"
+                                (click)="reopenPoll()"
+                            >
+                                Wieder öffnen
+                            </ds-button>
+                        } @else if (showCloseConfirm()) {
+                            <ds-button
+                                [@btnEnter]
+                                variant="ghost"
+                                size="sm"
+                                (click)="showCloseConfirm.set(false)"
+                            >
+                                Abbrechen
+                            </ds-button>
+                            <ds-button
+                                [@btnEnter]
+                                variant="danger"
+                                data-testid="close-poll-confirm-btn"
+                                (click)="closePoll()"
+                            >
+                                Ja, beenden
+                            </ds-button>
+                        } @else {
+                            <ds-button
+                                variant="danger"
+                                data-testid="close-poll-btn"
+                                (click)="showCloseConfirm.set(true)"
+                            >
+                                Umfrage beenden
+                            </ds-button>
+                        }
+                    </div>
+                </div>
+            }
         </div>
-      }
-    </div>
 
-    <!-- Comments sidebar -->
-    <div class="lg:w-[360px] lg:flex-none">
-      <app-comments-section
-        [comments]="poll.comments"
-        (addComment)="addComment($event)"
-      />
+        <!-- Comments sidebar -->
+        <div class="lg:w-[360px] lg:flex-none">
+            <app-comments-section
+                [comments]="poll.comments"
+                (addComment)="addComment($event)"
+            />
+        </div>
     </div>
-  </div>
 } @else {
-  <div class="flex h-32 items-center justify-center">
-    <p style="color: var(--text-secondary)">
-      {{ "project.votesOverview.loading" | translate }}
-    </p>
-  </div>
+    <div class="flex h-32 items-center justify-center">
+        <p style="color: var(--text-secondary)">
+            {{ 'project.votesOverview.loading' | translate }}
+        </p>
+    </div>
 }
 
 @if (project(); as project) {
-  <app-share-drawer
-    [title]="shareDrawerTitle()"
-    [subtitle]="shareDrawerSubtitle()"
-    [visible]="showShareDrawer()"
-    (visibleChange)="showShareDrawer.set($event)"
-  >
-    <app-share-content
-      [projectId]="project.id"
-      [sharedWith]="project.sharedWith"
-      [visibilityType]="project.visibilityType"
-      [inCard]="false"
-    />
-  </app-share-drawer>
+    <app-share-drawer
+        [title]="shareDrawerTitle()"
+        [subtitle]="shareDrawerSubtitle()"
+        [visible]="showShareDrawer()"
+        (visibleChange)="showShareDrawer.set($event)"
+    >
+        <app-share-content
+            [projectId]="project.id"
+            [sharedWith]="project.sharedWith"
+            [visibilityType]="project.visibilityType"
+            [inCard]="false"
+        />
+    </app-share-drawer>
 }

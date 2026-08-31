@@ -1,83 +1,83 @@
 .desktop-only {
-  display: none;
+    display: none;
 }
 
 @media (min-width: 830px) {
-  .desktop-only {
-    display: inline;
-  }
+    .desktop-only {
+        display: inline;
+    }
 }
 
 .home-footer {
-  padding: 40px 20px 44px;
+    padding: 40px 20px 44px;
 }
 
 .footer-inner {
-  padding-top: 20px;
-  border-top: 1px solid rgba(20, 24, 28, 0.08);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px solid rgba(20, 24, 28, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 @media (min-width: 830px) {
-  .home-footer {
-    padding: 70px 40px 46px;
-  }
-  .footer-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 26px;
-    gap: 16px;
-  }
+    .home-footer {
+        padding: 70px 40px 46px;
+    }
+    .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-top: 26px;
+        gap: 16px;
+    }
 }
 
 .footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .footer-logo-text {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: var(--weight-bold);
-  letter-spacing: -0.3px;
-  color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: var(--weight-bold);
+    letter-spacing: -0.3px;
+    color: var(--accent);
 }
 
 @media (min-width: 830px) {
-  .footer-logo-text {
-    font-size: 16px;
-  }
+    .footer-logo-text {
+        font-size: 16px;
+    }
 }
 
 .footer-tagline {
-  font-size: var(--fs-ui-sm);
-  color: var(--text-muted);
+    font-size: var(--fs-ui-sm);
+    color: var(--text-muted);
 }
 
 .footer-links {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: var(--fs-caption);
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: var(--fs-caption);
 }
 
 @media (min-width: 830px) {
-  .footer-links {
-    gap: 20px;
-    font-size: var(--fs-ui-sm);
-  }
+    .footer-links {
+        gap: 20px;
+        font-size: var(--fs-ui-sm);
+    }
 }
 
 .footer-links a {
-  color: var(--accent);
-  text-decoration: none;
+    color: var(--accent);
+    text-decoration: none;
 }
 
 .footer-links a:hover {
-  color: var(--teal-alt-fg);
+    color: var(--teal-alt-fg);
 }

@@ -1,15 +1,15 @@
-@if (layout() === "tile") {
-  <button hlmBtn type="button" class="ds-esb-tile" (click)="clicked.emit()">
-    <span class="ds-esb-tile__icon-wrap">
-      <ds-icon [name]="icon()" [size]="19" color="var(--accent)" />
-    </span>
-    <span class="ds-esb-tile__label">{{ label() }}</span>
-  </button>
+@if (layout() === 'tile') {
+    <button hlmBtn type="button" class="ds-esb-tile" (click)="clicked.emit()">
+        <span class="ds-esb-tile__icon-wrap">
+            <ds-icon [name]="icon()" [size]="19" color="var(--accent)" />
+        </span>
+        <span class="ds-esb-tile__label">{{ label() }}</span>
+    </button>
 } @else {
-  <button hlmBtn type="button" class="ds-esb-row" (click)="clicked.emit()">
-    <span class="ds-esb-row__icon">
-      <ds-icon [name]="icon()" [size]="18" color="#fff" />
-    </span>
-    {{ label() }}
-  </button>
+    <button hlmBtn type="button" class="ds-esb-row" (click)="clicked.emit()">
+        <span class="ds-esb-row__icon">
+            <ds-icon [name]="icon()" [size]="18" color="#fff" />
+        </span>
+        {{ label() }}
+    </button>
 }

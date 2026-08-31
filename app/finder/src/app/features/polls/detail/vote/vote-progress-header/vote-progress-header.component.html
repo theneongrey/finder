@@ -1,42 +1,43 @@
 <div class="px-5 pt-3 md:px-8 md:pt-0">
-  <div class="mx-auto w-full max-w-[560px]">
-    <!-- Type badge + deadline row — mobile only -->
-    <div class="mb-3 flex items-center justify-between gap-2 md:hidden">
-      <app-poll-type-badge [type]="optionType()" />
-      @if (closeDateDisplay()) {
-        <span
-          class="flex items-center gap-1.5 text-[12.5px] font-[var(--weight-semibold)] text-[var(--text-secondary)]"
-        >
-          <ds-icon name="clock" [size]="13" />
-          {{ closeDateDisplay() }}
-        </span>
-      }
-    </div>
+    <div class="mx-auto w-full max-w-[560px]">
+        <!-- Type badge + deadline row — mobile only -->
+        <div class="mb-3 flex items-center justify-between gap-2 md:hidden">
+            <app-poll-type-badge [type]="optionType()" />
+            @if (closeDateDisplay()) {
+                <span
+                    class="flex items-center gap-1.5 text-[12.5px] font-[var(--weight-semibold)] text-[var(--text-secondary)]"
+                >
+                    <ds-icon name="clock" [size]="13" />
+                    {{ closeDateDisplay() }}
+                </span>
+            }
+        </div>
 
-    <div class="mb-2 flex items-baseline justify-between gap-2">
-      <span
-        class="text-[13px] font-[var(--weight-bold)] text-[var(--text-primary)]"
-      >
-        {{
-          "project.vote.optionProgress"
-            | translate: { current: currentIndex() + 1, total: total() }
-        }}
-      </span>
-      <span
-        class="text-[12px] font-[var(--weight-semibold)] text-[var(--text-muted)]"
-      >
-        {{ progressPercent() }}&thinsp;%
-      </span>
-    </div>
+        <div class="mb-2 flex items-baseline justify-between gap-2">
+            <span
+                class="text-[13px] font-[var(--weight-bold)] text-[var(--text-primary)]"
+            >
+                {{
+                    'project.vote.optionProgress'
+                        | translate
+                            : { current: currentIndex() + 1, total: total() }
+                }}
+            </span>
+            <span
+                class="text-[12px] font-[var(--weight-semibold)] text-[var(--text-muted)]"
+            >
+                {{ progressPercent() }}&thinsp;%
+            </span>
+        </div>
 
-    <!-- Segmented bar — one segment per option -->
-    <div class="flex gap-1">
-      @for (seg of progressSegments(); track $index) {
-        <span
-          class="h-[5px] flex-1 rounded-full [transition:background_260ms_ease]"
-          [style.background]="seg"
-        ></span>
-      }
+        <!-- Segmented bar — one segment per option -->
+        <div class="flex gap-1">
+            @for (seg of progressSegments(); track $index) {
+                <span
+                    class="h-[5px] flex-1 rounded-full [transition:background_260ms_ease]"
+                    [style.background]="seg"
+                ></span>
+            }
+        </div>
     </div>
-  </div>
 </div>

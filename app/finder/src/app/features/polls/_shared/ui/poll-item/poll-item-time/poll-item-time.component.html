@@ -1,57 +1,57 @@
 <div class="mt-[13px] flex flex-col gap-[5px]">
-  @if (closeDate() && !isClosed()) {
-    <div
-      class="flex items-center gap-[7px] font-semibold text-[var(--fs-ui-sm)] text-[var(--warning)]"
-    >
-      <ds-icon name="clock" [size]="14" />
-      <span
-        >{{ "project.detail.item.openUntil" | translate }}:
-        {{ closeDate() | date: "dd.MM.yyyy" }}</span
-      >
-    </div>
-  } @else if (closeDate() && isClosed()) {
-    <div
-      class="flex items-center gap-[7px] font-semibold text-[var(--fs-ui-sm)] text-[var(--text-secondary)]"
-    >
-      <ds-icon name="clock" [size]="14" />
-      <span
-        >{{ "project.detail.item.closedOn" | translate }}:
-        {{ closeDate() | date: "dd.MM.yyyy" }}</span
-      >
-    </div>
-  } @else if (!isClosed()) {
-    <div
-      class="flex items-center gap-[7px] font-semibold text-[var(--fs-ui-sm)] text-[var(--text-secondary)]"
-    >
-      <ds-icon name="clock" [size]="14" />
-      <span>{{ "project.detail.item.openIndefinite" | translate }}</span>
-    </div>
-  }
+    @if (closeDate() && !isClosed()) {
+        <div
+            class="flex items-center gap-[7px] font-semibold text-[var(--fs-ui-sm)] text-[var(--warning)]"
+        >
+            <ds-icon name="clock" [size]="14" />
+            <span
+                >{{ 'project.detail.item.openUntil' | translate }}:
+                {{ closeDate() | date: 'dd.MM.yyyy' }}</span
+            >
+        </div>
+    } @else if (closeDate() && isClosed()) {
+        <div
+            class="flex items-center gap-[7px] font-semibold text-[var(--fs-ui-sm)] text-[var(--text-secondary)]"
+        >
+            <ds-icon name="clock" [size]="14" />
+            <span
+                >{{ 'project.detail.item.closedOn' | translate }}:
+                {{ closeDate() | date: 'dd.MM.yyyy' }}</span
+            >
+        </div>
+    } @else if (!isClosed()) {
+        <div
+            class="flex items-center gap-[7px] font-semibold text-[var(--fs-ui-sm)] text-[var(--text-secondary)]"
+        >
+            <ds-icon name="clock" [size]="14" />
+            <span>{{ 'project.detail.item.openIndefinite' | translate }}</span>
+        </div>
+    }
 
-  @if (lastVoteAt()) {
-    <div
-      class="flex items-center gap-[7px] text-[var(--fs-caption)] text-[var(--text-muted)]"
-    >
-      <span class="flex w-[14px] justify-center">
-        <span
-          class="h-[5px] w-[5px] rounded-full [border:1.4px_solid_var(--border-hairline-strong)]"
-        ></span>
-      </span>
-      <span
-        >{{ "project.lastVote.label" | translate }}:
-        {{ lastVoteAt()! | timeSince }}</span
-      >
-    </div>
-  } @else {
-    <div
-      class="flex items-center gap-[7px] text-[var(--fs-caption)] text-[var(--text-muted)]"
-    >
-      <span class="flex w-[14px] justify-center">
-        <span
-          class="h-[5px] w-[5px] rounded-full [border:1.4px_solid_var(--border-hairline-strong)]"
-        ></span>
-      </span>
-      <span>{{ "project.lastVote.none" | translate }}</span>
-    </div>
-  }
+    @if (lastVoteAt()) {
+        <div
+            class="flex items-center gap-[7px] text-[var(--fs-caption)] text-[var(--text-muted)]"
+        >
+            <span class="flex w-[14px] justify-center">
+                <span
+                    class="h-[5px] w-[5px] rounded-full [border:1.4px_solid_var(--border-hairline-strong)]"
+                ></span>
+            </span>
+            <span
+                >{{ 'project.lastVote.label' | translate }}:
+                {{ lastVoteAt()! | timeSince }}</span
+            >
+        </div>
+    } @else {
+        <div
+            class="flex items-center gap-[7px] text-[var(--fs-caption)] text-[var(--text-muted)]"
+        >
+            <span class="flex w-[14px] justify-center">
+                <span
+                    class="h-[5px] w-[5px] rounded-full [border:1.4px_solid_var(--border-hairline-strong)]"
+                ></span>
+            </span>
+            <span>{{ 'project.lastVote.none' | translate }}</span>
+        </div>
+    }
 </div>

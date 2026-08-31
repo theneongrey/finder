@@ -1,16 +1,16 @@
 .rbar-track {
-  width: 100%;
-  background: var(--sand-200);
-  border-radius: 999px;
-  overflow: hidden;
-  display: flex;
-  gap: 3px;
+    width: 100%;
+    background: var(--sand-200);
+    border-radius: 999px;
+    overflow: hidden;
+    display: flex;
+    gap: 3px;
 }
 
 .rbar-seg {
-  flex-shrink: 1;
-  min-width: 0;
-  height: 100%;
-  border-radius: 999px;
-  transition: width 320ms ease;
+    flex-shrink: 1;
+    min-width: 0;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 320ms ease;
 }

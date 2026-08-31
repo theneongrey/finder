@@ -1,218 +1,253 @@
 @if (!hideResults()) {
-  <!-- Results mode -->
-  <div
-    class="overflow-hidden rounded-[22px]"
-    style="box-shadow: var(--shadow-card-soft)"
-    [style.border]="
-      isMostVoted()
-        ? '1px solid rgba(31,122,140,.3)'
-        : '1px solid var(--border-hairline-soft)'
-    "
-    [style.background]="'var(--surface-card)'"
-  >
-    <!-- ── Mobile layout (< xl) ─────────────────────────────────── -->
-    <button
-      class="block w-full text-left transition-colors xl:hidden"
-      style="
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        padding: 15px 16px 14px;
-      "
-      (click)="expanded.update((v) => !v)"
+    <!-- Results mode -->
+    <div
+        class="overflow-hidden rounded-[22px]"
+        style="box-shadow: var(--shadow-card-soft)"
+        [style.border]="
+            isMostVoted()
+                ? '1px solid rgba(31,122,140,.3)'
+                : '1px solid var(--border-hairline-soft)'
+        "
+        [style.background]="'var(--surface-card)'"
     >
-      <div class="flex items-center gap-2.5">
-        <span
-          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-[8px] text-[12px] font-bold"
-          [style.background]="isMostVoted() ? 'var(--accent)' : '#f1eee9'"
-          [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
-          >{{ rank() }}</span
+        <!-- ── Mobile layout (< xl) ─────────────────────────────────── -->
+        <button
+            class="block w-full text-left transition-colors xl:hidden"
+            style="
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                padding: 15px 16px 14px;
+            "
+            (click)="expanded.update((v) => !v)"
         >
-        <span class="min-w-0 flex-1">
-          <span
-            class="block truncate text-[15px] font-bold"
-            style="color: var(--text-primary)"
-            >{{ label() }}</span
-          >
-          @if (subLabel(); as sub) {
+            <div class="flex items-center gap-2.5">
+                <span
+                    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-[8px] text-[12px] font-bold"
+                    [style.background]="
+                        isMostVoted() ? 'var(--accent)' : '#f1eee9'
+                    "
+                    [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
+                    >{{ rank() }}</span
+                >
+                <span class="min-w-0 flex-1">
+                    <span
+                        class="block truncate text-[15px] font-bold"
+                        style="color: var(--text-primary)"
+                        >{{ label() }}</span
+                    >
+                    @if (subLabel(); as sub) {
+                        <span
+                            class="mt-0.5 block text-[12.5px]"
+                            style="color: var(--text-secondary)"
+                            >{{ sub }}</span
+                        >
+                    }
+                </span>
+                <span
+                    class="shrink-0 text-[14.5px] font-bold"
+                    style="color: var(--positive-strong)"
+                >
+                    {{ yesPercent() }} %
+                </span>
+                <span
+                    class="shrink-0 transition-transform"
+                    [style.transform]="
+                        expanded() ? 'rotate(180deg)' : 'rotate(0deg)'
+                    "
+                    ><ds-icon name="chevron-down" [size]="15" color="#c8c2b8"
+                /></span>
+            </div>
+            <div class="mt-3 pl-[34px]">
+                <app-results-progress-bar
+                    [segments]="segments()"
+                    [height]="8"
+                />
+            </div>
+            <div class="mt-2.5 flex items-center gap-2 pl-[34px]">
+                @if (avatarUsers().length) {
+                    <app-avatar-stack
+                        [users]="avatarUsers()"
+                        [max]="4"
+                        size="sm"
+                    />
+                }
+                <span
+                    class="flex-1 truncate text-[12.5px] font-semibold"
+                    style="color: var(--text-secondary)"
+                >
+                    {{ voteLine() }}
+                </span>
+            </div>
+        </button>
+
+        <!-- ── Wide layout (≥ xl) ─────────────────────────────────── -->
+        <button
+            class="hidden w-full text-left transition-colors xl:flex xl:items-center xl:gap-3"
+            style="
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                padding: 15px 16px;
+            "
+            (click)="expanded.update((v) => !v)"
+        >
             <span
-              class="mt-0.5 block text-[12.5px]"
-              style="color: var(--text-secondary)"
-              >{{ sub }}</span
+                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] text-[13px] font-bold"
+                [style.background]="isMostVoted() ? 'var(--accent)' : '#f1eee9'"
+                [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
+                >{{ rank() }}</span
             >
-          }
-        </span>
-        <span
-          class="shrink-0 text-[14.5px] font-bold"
-          style="color: var(--positive-strong)"
-        >
-          {{ yesPercent() }} %
-        </span>
-        <span
-          class="shrink-0 transition-transform"
-          [style.transform]="expanded() ? 'rotate(180deg)' : 'rotate(0deg)'"
-          ><ds-icon name="chevron-down" [size]="15" color="#c8c2b8"
-        /></span>
-      </div>
-      <div class="mt-3 pl-[34px]">
-        <app-results-progress-bar [segments]="segments()" [height]="8" />
-      </div>
-      <div class="mt-2.5 flex items-center gap-2 pl-[34px]">
-        @if (avatarUsers().length) {
-          <app-avatar-stack [users]="avatarUsers()" [max]="4" size="sm" />
-        }
-        <span
-          class="flex-1 truncate text-[12.5px] font-semibold"
-          style="color: var(--text-secondary)"
-        >
-          {{ voteLine() }}
-        </span>
-      </div>
-    </button>
 
-    <!-- ── Wide layout (≥ xl) ─────────────────────────────────── -->
-    <button
-      class="hidden w-full text-left transition-colors xl:flex xl:items-center xl:gap-3"
-      style="
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        padding: 15px 16px;
-      "
-      (click)="expanded.update((v) => !v)"
-    >
-      <span
-        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] text-[13px] font-bold"
-        [style.background]="isMostVoted() ? 'var(--accent)' : '#f1eee9'"
-        [style.color]="isMostVoted() ? '#fff' : '#8a8681'"
-        >{{ rank() }}</span
-      >
+            <span class="w-[280px] min-w-0 shrink-0">
+                <span
+                    class="block text-[15.5px] font-bold"
+                    style="color: var(--text-primary)"
+                    >{{ label() }}</span
+                >
+                @if (subLabel(); as sub) {
+                    <span
+                        class="mt-0.5 block text-[12.5px]"
+                        style="color: var(--text-secondary)"
+                        >{{ sub }}</span
+                    >
+                }
+            </span>
 
-      <span class="w-[280px] min-w-0 shrink-0">
-        <span
-          class="block text-[15.5px] font-bold"
-          style="color: var(--text-primary)"
-          >{{ label() }}</span
-        >
-        @if (subLabel(); as sub) {
-          <span
-            class="mt-0.5 block text-[12.5px]"
-            style="color: var(--text-secondary)"
-            >{{ sub }}</span
-          >
-        }
-      </span>
+            <span class="min-w-0 flex-1">
+                <app-results-progress-bar
+                    [segments]="segments()"
+                    [height]="10"
+                />
+                <span
+                    class="mt-2 block text-[12.5px] font-semibold"
+                    style="color: var(--text-secondary)"
+                >
+                    {{ voteLine() }}
+                </span>
+            </span>
 
-      <span class="min-w-0 flex-1">
-        <app-results-progress-bar [segments]="segments()" [height]="10" />
-        <span
-          class="mt-2 block text-[12.5px] font-semibold"
-          style="color: var(--text-secondary)"
-        >
-          {{ voteLine() }}
-        </span>
-      </span>
+            @if (avatarUsers().length) {
+                <span class="flex shrink-0 justify-end">
+                    <app-avatar-stack
+                        [users]="avatarUsers()"
+                        [max]="3"
+                        size="sm"
+                    />
+                </span>
+            }
 
-      @if (avatarUsers().length) {
-        <span class="flex shrink-0 justify-end">
-          <app-avatar-stack [users]="avatarUsers()" [max]="3" size="sm" />
-        </span>
-      }
-
-      <span
-        class="shrink-0 text-right text-[17px] font-bold"
-        style="width: 60px; color: var(--positive-strong)"
-      >
-        {{ yesPercent() }} %
-      </span>
-
-      <span
-        class="shrink-0 transition-transform"
-        [style.transform]="expanded() ? 'rotate(180deg)' : 'rotate(0deg)'"
-        ><ds-icon name="chevron-down" [size]="16" color="#c8c2b8"
-      /></span>
-    </button>
-
-    <!-- Expanded breakdown (shared) -->
-    @if (expanded()) {
-      <div class="px-4 pb-4 xl:px-5 xl:pb-5 xl:pl-16">
-        <div class="mb-3 h-px" style="background: var(--border-hairline)"></div>
-        <div class="flex flex-col gap-2 xl:hidden">
-          @for (g of groups(); track g.label) {
-            <div class="flex items-start gap-2.5 py-1">
-              <span
-                class="inline-flex h-6 min-w-[72px] shrink-0 items-center justify-center rounded-lg px-2 text-[11.5px] font-bold"
-                [style.background]="g.bg"
-                [style.color]="g.fg"
-                >{{ g.label }}</span
-              >
-              <span
-                class="text-[13px] leading-[1.5]"
-                style="color: var(--text-secondary)"
-                >{{ g.names }}</span
-              >
-            </div>
-          }
-        </div>
-        <div class="hidden xl:flex xl:flex-wrap xl:gap-2.5">
-          @for (g of groups(); track g.label) {
-            <div
-              class="flex items-center gap-2 rounded-[14px] px-3 py-2"
-              [style.background]="g.bg + '40'"
+            <span
+                class="shrink-0 text-right text-[17px] font-bold"
+                style="width: 60px; color: var(--positive-strong)"
             >
-              <span
-                class="inline-flex h-[22px] items-center justify-center rounded-[7px] px-2 text-[11.5px] font-bold"
-                [style.background]="g.bg"
-                [style.color]="g.fg"
-                >{{ g.label }}</span
-              >
-              <span class="text-[13px]" style="color: #5a5650">{{
-                g.names
-              }}</span>
+                {{ yesPercent() }} %
+            </span>
+
+            <span
+                class="shrink-0 transition-transform"
+                [style.transform]="
+                    expanded() ? 'rotate(180deg)' : 'rotate(0deg)'
+                "
+                ><ds-icon name="chevron-down" [size]="16" color="#c8c2b8"
+            /></span>
+        </button>
+
+        <!-- Expanded breakdown (shared) -->
+        @if (expanded()) {
+            <div class="px-4 pb-4 xl:px-5 xl:pb-5 xl:pl-16">
+                <div
+                    class="mb-3 h-px"
+                    style="background: var(--border-hairline)"
+                ></div>
+                <div class="flex flex-col gap-2 xl:hidden">
+                    @for (g of groups(); track g.label) {
+                        <div class="flex items-start gap-2.5 py-1">
+                            <span
+                                class="inline-flex h-6 min-w-[72px] shrink-0 items-center justify-center rounded-lg px-2 text-[11.5px] font-bold"
+                                [style.background]="g.bg"
+                                [style.color]="g.fg"
+                                >{{ g.label }}</span
+                            >
+                            <span
+                                class="text-[13px] leading-[1.5]"
+                                style="color: var(--text-secondary)"
+                                >{{ g.names }}</span
+                            >
+                        </div>
+                    }
+                </div>
+                <div class="hidden xl:flex xl:flex-wrap xl:gap-2.5">
+                    @for (g of groups(); track g.label) {
+                        <div
+                            class="flex items-center gap-2 rounded-[14px] px-3 py-2"
+                            [style.background]="g.bg + '40'"
+                        >
+                            <span
+                                class="inline-flex h-[22px] items-center justify-center rounded-[7px] px-2 text-[11.5px] font-bold"
+                                [style.background]="g.bg"
+                                [style.color]="g.fg"
+                                >{{ g.label }}</span
+                            >
+                            <span class="text-[13px]" style="color: #5a5650">{{
+                                g.names
+                            }}</span>
+                        </div>
+                    }
+                </div>
             </div>
-          }
-        </div>
-      </div>
-    }
-  </div>
-} @else {
-  <!-- Overview mode -->
-  <div
-    class="rounded-[22px] p-4"
-    style="
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline-soft);
-      box-shadow: var(--shadow-card-soft);
-    "
-  >
-    <div class="mb-3 flex flex-col gap-1">
-      <p class="text-[15px] font-bold" style="color: var(--text-primary)">
-        {{ label() }}
-      </p>
-      @if (subLabel(); as sub) {
-        <p class="text-[13px]" style="color: var(--text-secondary)">
-          {{ sub }}
-        </p>
-      }
+        }
     </div>
-    @if (+(option().choice ?? "0") > 0) {
-      <div class="flex justify-end">
-        <ds-button
-          variant="ghost"
-          size="sm"
-          [routerLink]="['/polls', projectId(), 'vote', pollId(), option().id]"
-        >
-          Erneut abstimmen
-        </ds-button>
-      </div>
-    } @else {
-      <ds-button
-        variant="primary"
-        [fullWidth]="true"
-        [routerLink]="['/polls', projectId(), 'vote', pollId(), option().id]"
-      >
-        Abstimmen
-      </ds-button>
-    }
-  </div>
+} @else {
+    <!-- Overview mode -->
+    <div
+        class="rounded-[22px] p-4"
+        style="
+            background: var(--surface-card);
+            border: 1px solid var(--border-hairline-soft);
+            box-shadow: var(--shadow-card-soft);
+        "
+    >
+        <div class="mb-3 flex flex-col gap-1">
+            <p class="text-[15px] font-bold" style="color: var(--text-primary)">
+                {{ label() }}
+            </p>
+            @if (subLabel(); as sub) {
+                <p class="text-[13px]" style="color: var(--text-secondary)">
+                    {{ sub }}
+                </p>
+            }
+        </div>
+        @if (+(option().choice ?? '0') > 0) {
+            <div class="flex justify-end">
+                <ds-button
+                    variant="ghost"
+                    size="sm"
+                    [routerLink]="[
+                        '/polls',
+                        projectId(),
+                        'vote',
+                        pollId(),
+                        option().id,
+                    ]"
+                >
+                    Erneut abstimmen
+                </ds-button>
+            </div>
+        } @else {
+            <ds-button
+                variant="primary"
+                [fullWidth]="true"
+                [routerLink]="[
+                    '/polls',
+                    projectId(),
+                    'vote',
+                    pollId(),
+                    option().id,
+                ]"
+            >
+                Abstimmen
+            </ds-button>
+        }
+    </div>
 }

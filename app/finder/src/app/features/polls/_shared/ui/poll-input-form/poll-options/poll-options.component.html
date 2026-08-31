@@ -1,167 +1,211 @@
 <div class="mt-4 flex flex-col gap-2">
-  @if (optionType() === OptionType.Date) {
-    @if (!readonly()) {
-      <app-appointment-type-selection
-        [selectedType]="appointmentDateType()"
-        [showTime]="weekdayShowsTime()"
-        (typeSelected)="appointmentDateTypeSelected.emit($event)"
-        (showTimeChange)="onToggleTime($event)"
-      />
-    }
-
-    @if (appointmentDateType()) {
-      <div class="mt-4 flex items-center justify-between px-1">
-        <span
-          class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]"
-        >
-          {{ titleKey() | translate }}
-        </span>
-        <span
-          class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]"
-        >
-          {{ subtitleKey() | translate }}
-        </span>
-      </div>
-
-      <div class="flex flex-col gap-2">
-        @switch (appointmentDateType()) {
-          @case ("weekday") {
-            @if (!weekdayShowsTime()) {
-              <ds-card [accentBorder]="false" [padding]="14">
-                <div class="flex gap-1">
-                  @for (day of weekdayButtons; track day.value) {
-                    <div class="flex-1">
-                      <ds-button
-                        size="sm"
-                        [fullWidth]="true"
-                        [variant]="
-                          selectedWeekdays().includes(day.value)
-                            ? 'soft'
-                            : 'neutral'
-                        "
-                        [disabled]="readonly()"
-                        [attr.aria-label]="day.ariaLabel"
-                        [attr.aria-pressed]="
-                          selectedWeekdays().includes(day.value)
-                        "
-                        (click)="weekdayToggle.emit(day.value)"
-                        >{{ day.label }}</ds-button
-                      >
-                    </div>
-                  }
-                </div>
-              </ds-card>
-            } @else {
-              @for (option of dateOptions(); track $index) {
-                <app-option-card-weekday
-                  [option]="option"
-                  [index]="$index"
-                  [canRemove]="!readonly() && dateOptions().length > 1"
-                  [initialShowTime]="weekdayShowsTime()"
-                  [readonly]="readonly()"
-                  (remove)="remove.emit($index)"
-                  (optionChange)="updateDateOption($index, $event)"
-                />
-              }
-            }
-          }
-          @default {
-            @for (option of dateOptions(); track $index) {
-              @switch (appointmentDateType()) {
-                @case ("date") {
-                  <app-option-card-date
-                    [option]="option"
-                    [index]="$index"
-                    [canRemove]="!readonly() && dateOptions().length > 1"
-                    [initialShowTime]="weekdayShowsTime()"
-                    [readonly]="readonly()"
-                    (remove)="remove.emit($index)"
-                    (optionChange)="updateDateOption($index, $event)"
-                  />
-                }
-                @case ("date-range") {
-                  <app-option-card-date-range
-                    [option]="option"
-                    [index]="$index"
-                    [canRemove]="!readonly() && dateOptions().length > 1"
-                    [initialShowTime]="weekdayShowsTime()"
-                    [readonly]="readonly()"
-                    (remove)="remove.emit($index)"
-                    (optionChange)="updateDateOption($index, $event)"
-                  />
-                }
-                @case ("time") {
-                  <app-option-card-time
-                    [option]="option"
-                    [index]="$index"
-                    [canRemove]="!readonly() && dateOptions().length > 1"
-                    [readonly]="readonly()"
-                    (remove)="remove.emit($index)"
-                    (optionChange)="updateDateOption($index, $event)"
-                  />
-                }
-                @case ("time-range") {
-                  <app-option-card-time-range
-                    [option]="option"
-                    [index]="$index"
-                    [canRemove]="!readonly() && dateOptions().length > 1"
-                    [readonly]="readonly()"
-                    (remove)="remove.emit($index)"
-                    (optionChange)="updateDateOption($index, $event)"
-                  />
-                }
-              }
-            }
-          }
+    @if (optionType() === OptionType.Date) {
+        @if (!readonly()) {
+            <app-appointment-type-selection
+                [selectedType]="appointmentDateType()"
+                [showTime]="weekdayShowsTime()"
+                (typeSelected)="appointmentDateTypeSelected.emit($event)"
+                (showTimeChange)="onToggleTime($event)"
+            />
         }
-      </div>
 
-      @if (
-        !readonly() &&
-        (appointmentDateType() !== "weekday" || weekdayShowsTime())
-      ) {
-        <ds-empty-state-button
-          data-testid="add-date-option-btn"
-          [class.add-card-nudge]="addCardAnimating()"
-          [label]="'project.pollInput.date.addOption' | translate"
-          (clicked)="onAdd()"
-        />
-      }
+        @if (appointmentDateType()) {
+            <div class="mt-4 flex items-center justify-between px-1">
+                <span
+                    class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]"
+                >
+                    {{ titleKey() | translate }}
+                </span>
+                <span
+                    class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]"
+                >
+                    {{ subtitleKey() | translate }}
+                </span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                @switch (appointmentDateType()) {
+                    @case ('weekday') {
+                        @if (!weekdayShowsTime()) {
+                            <ds-card [accentBorder]="false" [padding]="14">
+                                <div class="flex gap-1">
+                                    @for (
+                                        day of weekdayButtons;
+                                        track day.value
+                                    ) {
+                                        <div class="flex-1">
+                                            <ds-button
+                                                size="sm"
+                                                [fullWidth]="true"
+                                                [variant]="
+                                                    selectedWeekdays().includes(
+                                                        day.value
+                                                    )
+                                                        ? 'soft'
+                                                        : 'neutral'
+                                                "
+                                                [disabled]="readonly()"
+                                                [attr.aria-label]="
+                                                    day.ariaLabel
+                                                "
+                                                [attr.aria-pressed]="
+                                                    selectedWeekdays().includes(
+                                                        day.value
+                                                    )
+                                                "
+                                                (click)="
+                                                    weekdayToggle.emit(
+                                                        day.value
+                                                    )
+                                                "
+                                                >{{ day.label }}</ds-button
+                                            >
+                                        </div>
+                                    }
+                                </div>
+                            </ds-card>
+                        } @else {
+                            @for (option of dateOptions(); track $index) {
+                                <app-option-card-weekday
+                                    [option]="option"
+                                    [index]="$index"
+                                    [canRemove]="
+                                        !readonly() && dateOptions().length > 1
+                                    "
+                                    [initialShowTime]="weekdayShowsTime()"
+                                    [readonly]="readonly()"
+                                    (remove)="remove.emit($index)"
+                                    (optionChange)="
+                                        updateDateOption($index, $event)
+                                    "
+                                />
+                            }
+                        }
+                    }
+                    @default {
+                        @for (option of dateOptions(); track $index) {
+                            @switch (appointmentDateType()) {
+                                @case ('date') {
+                                    <app-option-card-date
+                                        [option]="option"
+                                        [index]="$index"
+                                        [canRemove]="
+                                            !readonly() &&
+                                            dateOptions().length > 1
+                                        "
+                                        [initialShowTime]="weekdayShowsTime()"
+                                        [readonly]="readonly()"
+                                        (remove)="remove.emit($index)"
+                                        (optionChange)="
+                                            updateDateOption($index, $event)
+                                        "
+                                    />
+                                }
+                                @case ('date-range') {
+                                    <app-option-card-date-range
+                                        [option]="option"
+                                        [index]="$index"
+                                        [canRemove]="
+                                            !readonly() &&
+                                            dateOptions().length > 1
+                                        "
+                                        [initialShowTime]="weekdayShowsTime()"
+                                        [readonly]="readonly()"
+                                        (remove)="remove.emit($index)"
+                                        (optionChange)="
+                                            updateDateOption($index, $event)
+                                        "
+                                    />
+                                }
+                                @case ('time') {
+                                    <app-option-card-time
+                                        [option]="option"
+                                        [index]="$index"
+                                        [canRemove]="
+                                            !readonly() &&
+                                            dateOptions().length > 1
+                                        "
+                                        [readonly]="readonly()"
+                                        (remove)="remove.emit($index)"
+                                        (optionChange)="
+                                            updateDateOption($index, $event)
+                                        "
+                                    />
+                                }
+                                @case ('time-range') {
+                                    <app-option-card-time-range
+                                        [option]="option"
+                                        [index]="$index"
+                                        [canRemove]="
+                                            !readonly() &&
+                                            dateOptions().length > 1
+                                        "
+                                        [readonly]="readonly()"
+                                        (remove)="remove.emit($index)"
+                                        (optionChange)="
+                                            updateDateOption($index, $event)
+                                        "
+                                    />
+                                }
+                            }
+                        }
+                    }
+                }
+            </div>
+
+            @if (
+                !readonly() &&
+                (appointmentDateType() !== 'weekday' || weekdayShowsTime())
+            ) {
+                <ds-empty-state-button
+                    data-testid="add-date-option-btn"
+                    [class.add-card-nudge]="addCardAnimating()"
+                    [label]="'project.pollInput.date.addOption' | translate"
+                    (clicked)="onAdd()"
+                />
+            }
+        }
+    } @else {
+        <div class="flex items-center justify-between px-1">
+            <span
+                class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]"
+            >
+                {{ titleKey() | translate }}
+            </span>
+            <span
+                class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]"
+            >
+                {{ subtitleKey() | translate }}
+            </span>
+        </div>
+
+        <div data-testid="yesno-options" class="flex flex-col gap-2">
+            @for (option of options(); track option.id ?? $index) {
+                @if (optionType() === OptionType.Rating) {
+                    <span
+                        data-testid="star-indicator"
+                        class="px-1 text-[length:var(--fs-body-sm)] text-[color:var(--accent)]"
+                        >{{ getStars($index) }}</span
+                    >
+                }
+                <app-option-card
+                    [option]="option"
+                    [index]="$index"
+                    [canRemove]="!readonly() && options().length > 1"
+                    [readonly]="readonly()"
+                    (remove)="remove.emit($index)"
+                    (optionChange)="updateOption($index, $event)"
+                />
+            }
+        </div>
+
+        @if (!readonly()) {
+            <ds-empty-state-button
+                data-testid="add-option-btn"
+                [class.add-card-nudge]="addCardAnimating()"
+                [label]="'project.pollInput.yesNo.addOption' | translate"
+                (clicked)="onAdd()"
+            />
+        }
     }
-  } @else {
-    <div class="flex items-center justify-between px-1">
-      <span
-        class="text-[length:var(--fs-body-xs)] font-bold text-[color:var(--text-primary)]"
-      >
-        {{ titleKey() | translate }}
-      </span>
-      <span
-        class="text-[length:var(--fs-caption)] text-[color:var(--text-muted)]"
-      >
-        {{ subtitleKey() | translate }}
-      </span>
-    </div>
-
-    <div data-testid="yesno-options" class="flex flex-col gap-2">
-      @for (option of options(); track option.id ?? $index) {
-        <app-option-card
-          [option]="option"
-          [index]="$index"
-          [canRemove]="!readonly() && options().length > 1"
-          [readonly]="readonly()"
-          (remove)="remove.emit($index)"
-          (optionChange)="updateOption($index, $event)"
-        />
-      }
-    </div>
-
-    @if (!readonly()) {
-      <ds-empty-state-button
-        data-testid="add-option-btn"
-        [class.add-card-nudge]="addCardAnimating()"
-        [label]="'project.pollInput.yesNo.addOption' | translate"
-        (clicked)="onAdd()"
-      />
-    }
-  }
 </div>

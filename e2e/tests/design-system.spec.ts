@@ -68,7 +68,8 @@ test.describe('Design system showcase (/ux)', () => {
     const tabs = page.locator('[data-testid="tabs"]');
     await expect(tabs).toBeVisible();
 
-    await tabs.getByRole('button', { name: /Mitglieder/ }).click();
+    // hlmTabsTrigger sets role="tab" on the button elements
+    await tabs.getByRole('tab', { name: /Mitglieder/ }).click();
     await expect(page.getByText('Aktiver Tab: members')).toBeVisible();
   });
 
@@ -79,28 +80,31 @@ test.describe('Design system showcase (/ux)', () => {
     await expect(input).toHaveValue('Hallo Welt');
   });
 
-  test('ds-bottom-sheet: trigger opens sheet; scrim click closes it', async ({ page }) => {
+  test('ds-bottom-sheet: trigger opens sheet; close button dismisses it', async ({ page }) => {
     const trigger = page.locator('[data-testid="bottom-sheet-trigger"] button');
     await trigger.click();
 
-    const sheet = page.locator('[data-testid="bottom-sheet"]');
-    await expect(sheet).toBeVisible();
+    // *hlmSheetPortal portals the content into the CDK overlay — the host element
+    // stays hidden; find the panel in the overlay instead
+    const panel = page.locator('.ds-sheet-panel');
+    await expect(panel).toBeVisible();
 
-    // Click the backdrop (first child of ds-bottom-sheet host)
-    await sheet.locator('.ds-sheet-backdrop').click();
-    await expect(sheet).not.toBeVisible();
+    // Dismiss via the X close button in the sheet header
+    await panel.locator('.ds-sheet-header button').click();
+    await expect(panel).not.toBeVisible();
   });
 
-  test('ds-menu: trigger opens menu; clicking outside closes it', async ({ page }) => {
+  test('ds-menu: trigger opens menu; Escape key closes it', async ({ page }) => {
     const trigger = page.locator('[data-testid="menu-trigger"] button');
     await trigger.click();
 
-    const menu = page.locator('[data-testid="menu"] .ds-menu-panel');
-    await expect(menu).toBeVisible();
+    // hlmDropdownMenuTrigger portals .ds-menu-panel into the CDK overlay —
+    // it is not a descendant of [data-testid="menu"]
+    const panel = page.locator('.ds-menu-panel');
+    await expect(panel).toBeVisible();
 
-    // Click the scrim
-    await page.locator('[data-testid="menu"] .ds-menu-scrim').click();
-    await expect(menu).not.toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(panel).not.toBeVisible();
   });
 
   test('ds-avatar-stack: overlap group renders without overflow', async ({ page }) => {

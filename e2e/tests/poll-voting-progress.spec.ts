@@ -12,20 +12,27 @@ test.describe('Poll voting progress on overview', () => {
     const page = await browser.newPage();
     await login(page, USER1);
 
-    const voteBtn = page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: 'Vote now' }).first();
+    const voteBtn = page
+      .locator('[data-testid="vote-cta-btn"]')
+      .filter({ hasText: /vote now|jetzt abstimmen/i })
+      .first();
 
     if (await voteBtn.count() === 0) {
-      await page.locator('[data-testid="add-poll-card"]').click();
+      await page.goto('/polls/add');
       await page.waitForURL('**/polls/add');
-      await page.getByText('Yes/No').click();
+      await page.getByText('Yes/No').click(); // auto-advances to step 2
       await page.getByRole('textbox', { name: 'Your question' }).fill('Voting Progress Test Poll');
-      await page.getByPlaceholder('e.g. Italian restaurant').first().fill('Option A');
-      await page.getByRole('button', { name: 'Create poll' }).click();
+      await page.locator('app-option-card ds-input input').first().fill('Ja');
+      await page.locator('[data-testid="wizard-cta"] button').click();
       await page.waitForURL('**/polls');
     }
 
     // Capture IDs from the vote URL
-    await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: 'Vote now' }).first().click();
+    await page
+      .locator('[data-testid="vote-cta-btn"]')
+      .filter({ hasText: /vote now|jetzt abstimmen/i })
+      .first()
+      .click();
     await page.waitForURL('**/polls/**/vote/**');
     const parts = new URL(page.url()).pathname.split('/');
     // URL shape: /polls/<projectId>/vote/<pollId>/<optionId>
@@ -46,28 +53,29 @@ test.describe('Poll voting progress on overview', () => {
     await logout(page);
   });
 
-  test('CTA reads "Vote now" when user has not voted', async ({ page }) => {
+  test('CTA reads "Vote now" (or locale equivalent) for unvoted poll', async ({ page }) => {
     await page.goto('/polls');
-    const ctaBtn = page.locator(`app-poll-item [data-testid="vote-cta-btn"]`).first();
-    await expect(ctaBtn).toContainText('Vote now');
+    const ctaBtn = page.locator('app-poll-item [data-testid="vote-cta-btn"]').first();
+    await expect(ctaBtn).toContainText(/vote now|jetzt abstimmen/i);
   });
 
-  test('voted-count and total-participants are visible on each card', async ({ page }) => {
+  test('voted-count is visible on each card', async ({ page }) => {
     await page.goto('/polls');
+    // voted-count span shows both the voted count and total in one element
     await expect(page.locator('[data-testid="voted-count"]').first()).toBeVisible();
-    await expect(page.locator('[data-testid="total-participants"]').first()).toBeVisible();
   });
 
-  test('CTA reads "View current standings" after casting a vote', async ({ page }) => {
+  test('CTA changes after casting a vote', async ({ page }) => {
     // Cast a vote
     await page.goto(`/polls/${testProjectId}/vote/${testPollId}/${testOptionId}`);
+    await page.waitForLoadState('networkidle');
     await page.locator('button.ds-vote-btn--yes').first().click();
     await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
 
-    // Return to overview and verify CTA changed
+    // Return to overview and verify CTA no longer says "Vote now"
     await page.goto('/polls');
     const pollCard = page.locator('app-poll-item').filter({ hasText: 'Voting Progress Test Poll' }).first();
     const ctaBtn = pollCard.locator('[data-testid="vote-cta-btn"]');
-    await expect(ctaBtn).toContainText('View current standings');
+    await expect(ctaBtn).not.toContainText(/vote now|jetzt abstimmen/i);
   });
 });

@@ -14,12 +14,12 @@ test.describe('Polls-only overview (simplified MVP)', () => {
     const voteBtn = page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i }).first();
 
     if (await voteBtn.count() === 0) {
-      await page.locator('[data-testid="fab-add-poll"]').click();
+      await page.goto('/polls/add');
       await page.waitForURL('**/polls/add');
-      await page.getByText('Yes/No').click();
+      await page.getByText('Yes/No').click(); // auto-advances to step 2
       await page.getByRole('textbox', { name: 'Your question' }).fill('E2E Smoke Test Poll');
-      await page.getByPlaceholder('e.g. Italian restaurant').first().fill('Option A');
-      await page.getByRole('button', { name: 'Create poll' }).click();
+      await page.locator('app-option-card ds-input input').first().fill('Ja');
+      await page.locator('[data-testid="wizard-cta"] button').click();
       await page.waitForURL('**/polls');
     }
 
@@ -76,14 +76,15 @@ test.describe('Polls-only overview (simplified MVP)', () => {
     });
 
     test('FAB navigates to /polls/add and new poll appears in list after submit', async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 }); // FAB is lg:hidden — use mobile viewport
       await page.goto('/polls');
       await page.locator('[data-testid="fab-add-poll"]').click();
       await page.waitForURL('**/polls/add');
 
-      await page.getByText('Yes/No').click();
+      await page.getByText('Yes/No').click(); // auto-advances to step 2
       await page.getByRole('textbox', { name: 'Your question' }).fill('E2E Created Poll');
-      await page.getByPlaceholder('e.g. Italian restaurant').first().fill('Option A');
-      await page.getByRole('button', { name: 'Create poll' }).click();
+      await page.locator('app-option-card ds-input input').first().fill('Ja');
+      await page.locator('[data-testid="wizard-cta"] button').click();
       await page.waitForURL('**/polls');
 
       await expect(page.getByText('E2E Created Poll')).toBeVisible();
@@ -108,6 +109,7 @@ test.describe('Polls-only overview (simplified MVP)', () => {
       await page.goto('/polls');
       await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i }).first().click();
       await page.waitForURL('**/polls/**/vote/**');
+      await page.waitForLoadState('networkidle');
 
       // Cast a "Yes" vote via the ds-vote-buttons
       await page.locator('ds-vote-buttons button').first().click();

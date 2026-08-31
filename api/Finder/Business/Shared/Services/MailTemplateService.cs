@@ -10,7 +10,7 @@ public class MailTemplateService
     {
         var html = LoadTemplate(templateName, language);
         foreach (var (key, value) in variables)
-            html = html.Replace($"{{{{{key}}}}}", value);
+            html = html.Replace($"{{{{{key}}}}}", System.Net.WebUtility.HtmlEncode(value));
         return html;
     }
 

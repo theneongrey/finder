@@ -66,8 +66,8 @@ public class ProjectService
         var project = new Entities.Project
         {
             Id = SlugHelper.GenerateId(),
-            Name = name,
-            Description = description,
+            Name = name.StripHtml(),
+            Description = description?.StripHtml(),
             Creator = userRequest.Payload!,
             VisibilityType = VisibilityType.VisibleForSelectedOnly
         };
@@ -88,7 +88,7 @@ public class ProjectService
         var project = new Entities.Project
         {
             Id = SlugHelper.GenerateId(),
-            Name = name,
+            Name = name.StripHtml(),
             Description = null,
             IsStandalone = true,
             Creator = userRequest.Payload!,
@@ -98,8 +98,8 @@ public class ProjectService
         var poll = new Poll
         {
             Id = SlugHelper.GenerateId(),
-            Name = name,
-            Description = description,
+            Name = name.StripHtml(),
+            Description = description.StripHtml(),
             OptionType = optionType,
             Project = project,
             CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null
@@ -127,8 +127,8 @@ public class ProjectService
             return Result<Entities.Project>.Fail(404);
         }
 
-        projectToUpdate.Name = projectName;
-        projectToUpdate.Description = projectDescription;
+        projectToUpdate.Name = projectName.StripHtml();
+        projectToUpdate.Description = projectDescription?.StripHtml();
         await _dbContext.SaveChangesAsync();
         return Result<Entities.Project>.Success(projectToUpdate);
     }
@@ -230,8 +230,8 @@ public class ProjectService
         {
             Id = SlugHelper.GenerateId(),
             OptionType = pollRequest.OptionType,
-            Name = pollRequest.Name,
-            Description = pollRequest.Description,
+            Name = pollRequest.Name.StripHtml(),
+            Description = pollRequest.Description.StripHtml(),
             Project = projectResult,
             CloseDate = pollRequest.CloseDate.HasValue ? DateTime.SpecifyKind(pollRequest.CloseDate.Value, DateTimeKind.Utc) : null
         };
@@ -265,13 +265,13 @@ public class ProjectService
             return Result<Poll>.Fail(409);
         }
 
-        poll.Name = name;
-        poll.Description = description;
+        poll.Name = name.StripHtml();
+        poll.Description = description.StripHtml();
         poll.CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null;
 
         if (poll.Project.IsStandalone)
         {
-            poll.Project.Name = name;
+            poll.Project.Name = name.StripHtml();
         }
 
         await _dbContext.SaveChangesAsync();
@@ -342,8 +342,8 @@ public class ProjectService
         var option = new Option
         {
             Id = SlugHelper.GenerateId(),
-            Text = pollRequest.Text,
-            Description = pollRequest.Description,
+            Text = pollRequest.Text.StripHtml(),
+            Description = pollRequest.Description.StripHtml(),
             Poll = poll
         };
 
@@ -353,10 +353,10 @@ public class ProjectService
             {
                 Id = option.Id,
                 Url = pollRequest.Meta.Url,
-                Title = pollRequest.Meta.Title,
-                Description = pollRequest.Meta.Description,
+                Title = pollRequest.Meta.Title.StripHtml(),
+                Description = pollRequest.Meta.Description.StripHtml(),
                 ImageUrl = pollRequest.Meta.ImageUrl,
-                SiteName = pollRequest.Meta.SiteName,
+                SiteName = pollRequest.Meta.SiteName.StripHtml(),
                 Option = option
             };
         }
@@ -391,18 +391,18 @@ public class ProjectService
             return Result<Option>.Fail(409);
         }
 
-        option.Text = request.Text;
-        option.Description = request.Description;
+        option.Text = request.Text.StripHtml();
+        option.Description = request.Description.StripHtml();
 
         if (request.Meta is not null)
         {
             if (option.Meta is not null)
             {
                 option.Meta.Url = request.Meta.Url;
-                option.Meta.Title = request.Meta.Title;
-                option.Meta.Description = request.Meta.Description;
+                option.Meta.Title = request.Meta.Title.StripHtml();
+                option.Meta.Description = request.Meta.Description.StripHtml();
                 option.Meta.ImageUrl = request.Meta.ImageUrl;
-                option.Meta.SiteName = request.Meta.SiteName;
+                option.Meta.SiteName = request.Meta.SiteName.StripHtml();
             }
             else
             {
@@ -410,10 +410,10 @@ public class ProjectService
                 {
                     Id = option.Id,
                     Url = request.Meta.Url,
-                    Title = request.Meta.Title,
-                    Description = request.Meta.Description,
+                    Title = request.Meta.Title.StripHtml(),
+                    Description = request.Meta.Description.StripHtml(),
                     ImageUrl = request.Meta.ImageUrl,
-                    SiteName = request.Meta.SiteName,
+                    SiteName = request.Meta.SiteName.StripHtml(),
                     Option = option
                 };
             }
@@ -508,8 +508,8 @@ public class ProjectService
         var comment = new Comment
         {
             Id = Guid.NewGuid(),
-            Content = request.Content,
-            Quote = request.Quote,
+            Content = request.Content.StripHtml(),
+            Quote = request.Quote?.StripHtml(),
             Poll = poll,
             Person = user
         };

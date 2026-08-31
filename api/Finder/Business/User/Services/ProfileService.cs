@@ -31,7 +31,7 @@ public class ProfileService
             return Result<Person?>.Fail();
         }
 
-        person.Name = name;
+        person.Name = name.StripHtml();
         person.Language = language;
         await _dbContext.SaveChangesAsync();
         return Result<Person?>.Success(person);

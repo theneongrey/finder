@@ -12,14 +12,16 @@
             <div class="flex items-center gap-2 pb-3">
                 <app-poll-type-badge [type]="_poll.optionType" />
 
-                <ds-status-dot [tone]="_poll.isClosed ? 'muted' : 'positive'">
-                    {{
-                        (_poll.isClosed
-                            ? 'project.detail.item.statusClosed'
-                            : 'project.detail.item.statusOpen'
-                        ) | translate
-                    }}
-                </ds-status-dot>
+                <span data-testid="poll-status-badge">
+                    <ds-status-dot [tone]="_poll.isClosed ? 'muted' : 'positive'">
+                        {{
+                            (_poll.isClosed
+                                ? 'project.detail.item.statusClosed'
+                                : 'project.detail.item.statusOpen'
+                            ) | translate
+                        }}
+                    </ds-status-dot>
+                </span>
 
                 @if (!previewMode()) {
                     <span class="ml-auto flex items-center gap-1">
@@ -61,11 +63,8 @@
                                     : 'project.detail.item.favorite'
                                 ) | translate
                             "
-                            [attr.data-testid]="
-                                _poll.isFavorite
-                                    ? 'favorite-active'
-                                    : 'favorite-btn'
-                            "
+                            data-testid="favorite-btn"
+                            [attr.data-favorited]="_poll.isFavorite ? '' : null"
                             (click)="favoriteToggled.emit(_poll.projectId)"
                         >
                             <ds-icon
@@ -217,7 +216,7 @@
                 <ds-button variant="ghost" (click)="cancelDelete()">
                     {{ 'project.overview.deleteOverlay.cancel' | translate }}
                 </ds-button>
-                <ds-button variant="danger" (click)="confirmDelete()">
+                <ds-button variant="danger" data-testid="delete-confirm-btn" (click)="confirmDelete()">
                     {{ 'project.overview.deleteOverlay.confirm' | translate }}
                 </ds-button>
             </div>

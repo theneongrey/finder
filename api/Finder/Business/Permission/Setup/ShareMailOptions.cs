@@ -3,7 +3,6 @@ namespace Finder.Business.Permission.Setup;
 public class MailTemplate
 {
     public required string Subject { get; set; }
-    public required string Text { get; set; }
 }
 
 public class ShareMailOptions

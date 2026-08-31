@@ -239,7 +239,7 @@ public class PermissionService
             {
                 await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
                     Enum.GetName(permissionType) ?? "Unknown",
-                    _shareMailOptions.Update);
+                    _shareMailOptions.Update.Subject, "permission-update");
             }
             else
             {
@@ -247,13 +247,13 @@ public class PermissionService
                 {
                     await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
                         Enum.GetName(permissionType) ?? "Unknown",
-                        _shareMailOptions.SharedAndInvited);
+                        _shareMailOptions.SharedAndInvited.Subject, "permission-shared-invited");
                 }
                 else
                 {
                     await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
                         Enum.GetName(permissionType) ?? "Unknown",
-                        _shareMailOptions.Shared);
+                        _shareMailOptions.Shared.Subject, "permission-shared");
                 }
             }
         }

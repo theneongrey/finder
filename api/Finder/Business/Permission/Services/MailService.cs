@@ -1,6 +1,6 @@
 using Finder.Business.Auth.Entities;
 using Finder.Business.Auth.Setup;
-using Finder.Business.Permission.Setup;
+using Finder.Business.Shared.Services;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -10,13 +10,16 @@ namespace Finder.Business.Permission.Services;
 public class MailService
 {
     private SmtpOptions _smtpOptions;
+    private MailTemplateService _mailTemplateService;
 
-    public MailService(IOptions<SmtpOptions> stmpOptions)
+    public MailService(IOptions<SmtpOptions> stmpOptions, MailTemplateService mailTemplateService)
     {
         _smtpOptions = stmpOptions.Value;
+        _mailTemplateService = mailTemplateService;
     }
 
-    public async Task SendMail(Person recipient, string userName, string project, string permission, MailTemplate mailTemplate)
+    public async Task SendMail(Person recipient, string userName, string project, string permission,
+        string subject, string templateName, string language = "en")
     {
         if (recipient.Role == Role.TestUser)
         {
@@ -28,17 +31,17 @@ public class MailService
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Finder", _smtpOptions.User));
             message.To.Add(new MailboxAddress("Finder User", recipient.Email));
-            
-            var body = mailTemplate.Text
-                .Replace("{{recipient}}", recipient.Name)
-                .Replace("{{user}}", userName)
-                .Replace("{{project}}", project)
-                .Replace("{{permission}}", permission);
-            
-            message.Subject = mailTemplate.Subject;
+
+            message.Subject = subject;
             message.Body = new TextPart("html")
             {
-                Text = $"<p>{body}</p>"
+                Text = _mailTemplateService.Render(templateName, language, new Dictionary<string, string>
+                {
+                    ["recipient"] = recipient.Name ?? recipient.Email,
+                    ["user"] = userName,
+                    ["project"] = project,
+                    ["permission"] = permission
+                })
             };
 
             using var client = new SmtpClient();

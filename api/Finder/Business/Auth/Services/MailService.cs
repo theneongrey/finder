@@ -1,5 +1,6 @@
 using Finder.Business.Auth.Entities;
 using Finder.Business.Auth.Setup;
+using Finder.Business.Shared.Services;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -10,11 +11,13 @@ public class MailService
 {
     private SmtpOptions _smtpOptions;
     private LoginOptions _loginOptions;
+    private MailTemplateService _mailTemplateService;
 
-    public MailService(IOptions<SmtpOptions> stmpOptions, IOptions<LoginOptions> loginOptions)
+    public MailService(IOptions<SmtpOptions> stmpOptions, IOptions<LoginOptions> loginOptions, MailTemplateService mailTemplateService)
     {
         _smtpOptions = stmpOptions.Value;
         _loginOptions = loginOptions.Value;
+        _mailTemplateService = mailTemplateService;
     }
 
     public async Task SendLoginMail(Person person, LoginToken token)
@@ -28,7 +31,7 @@ public class MailService
         {
             var loginLink = _loginOptions.LoginLink.Replace("{{token}}", token.Token)
                 .Replace("{{redirecturl}}", token.RedirectUrl);
-            
+
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Finder", _smtpOptions.User));
             message.To.Add(new MailboxAddress("Finder User", person.Email));
@@ -38,7 +41,11 @@ public class MailService
                 message.Subject = _loginOptions.Subject;
                 message.Body = new TextPart("html")
                 {
-                    Text = $"<p>{_loginOptions.Text} {token.Code}</p><p><a href=\"{loginLink}\">Login</a></p>"
+                    Text = _mailTemplateService.Render("login", "en", new Dictionary<string, string>
+                    {
+                        ["code"] = token.Code ?? string.Empty,
+                        ["link"] = loginLink
+                    })
                 };
             }
             else
@@ -46,7 +53,11 @@ public class MailService
                 message.Subject = _loginOptions.SubjectNew;
                 message.Body = new TextPart("html")
                 {
-                    Text = $"<p>{_loginOptions.TextNew} {token.Code}</p><p><a href=\"{loginLink}\">Login</a></p>"
+                    Text = _mailTemplateService.Render("login-new", "en", new Dictionary<string, string>
+                    {
+                        ["code"] = token.Code ?? string.Empty,
+                        ["link"] = loginLink
+                    })
                 };
             }
 

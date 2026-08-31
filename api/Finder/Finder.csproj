@@ -37,4 +37,8 @@
       <Folder Include="Business\Permission\Api\Responses\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="Business\Shared\Templates\**\*.html" />
+    </ItemGroup>
+
 </Project>

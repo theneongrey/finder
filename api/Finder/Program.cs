@@ -42,6 +42,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.AddSingleton<ILookupClient, LookupClient>();
 builder.Services.AddSingleton<EmailValidationService>();
+builder.Services.AddSingleton<MailTemplateService>();
 builder.Services.AddHttpClient("EmailValidation", client =>
 {
     client.Timeout = TimeSpan.FromSeconds(10);

@@ -8,10 +8,10 @@ namespace Finder.Business.Project.Services;
 
 public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOptions<NotificationOptions> options)
 {
-    private readonly ConcurrentDictionary<string, (CancellationTokenSource Cts, string ActionUserName)> _pending = new();
+    private readonly ConcurrentDictionary<string, (CancellationTokenSource Cts, string ActionUserName, Guid ActionUserId)> _pending = new();
     private readonly int _debounceMs = options.Value.PollUpdateDebounceSeconds * 1000;
 
-    public void Enqueue(string pollId, string actionUserName)
+    public void Enqueue(string pollId, string actionUserName, Guid actionUserId)
     {
         if (_pending.TryRemove(pollId, out var existing))
         {
@@ -20,7 +20,7 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
         }
 
         var cts = new CancellationTokenSource();
-        _pending[pollId] = (cts, actionUserName);
+        _pending[pollId] = (cts, actionUserName, actionUserId);
 
         _ = Task.Run(async () =>
         {
@@ -28,7 +28,7 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
             {
                 await Task.Delay(_debounceMs, cts.Token);
                 _pending.TryRemove(pollId, out _);
-                await FireAsync(pollId, actionUserName);
+                await FireAsync(pollId, actionUserName, actionUserId);
             }
             catch (OperationCanceledException)
             {
@@ -37,7 +37,7 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
         }, cts.Token);
     }
 
-    private async Task FireAsync(string pollId, string actionUserName)
+    private async Task FireAsync(string pollId, string actionUserName, Guid actionUserId)
     {
         try
         {
@@ -56,6 +56,7 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
             var recipients = poll.Project.Permissions
                 .Select(p => p.Person)
                 .Append(poll.Project.Creator)
+                .Where(p => p.Id != actionUserId)
                 .ToList();
 
             await mailService.SendPollUpdatedNotificationsAsync(recipients, actionUserName, poll.Project, poll);

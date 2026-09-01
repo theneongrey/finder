@@ -9,7 +9,7 @@ public class MailService(IOptions<SmtpOptions> smtpOptions, MailTemplateService 
 {
     private readonly SmtpOptions _smtpOptions = smtpOptions.Value;
 
-    public async Task SendAsync(Mail mail)
+    public virtual async Task SendAsync(Mail mail)
     {
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress("Finder", _smtpOptions.User));

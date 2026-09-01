@@ -283,7 +283,7 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var actor = await _userService.GetUser();
-        _pollUpdateQueue.Enqueue(poll.Id, actor.Payload!.Name ?? "Unknown");
+        _pollUpdateQueue.Enqueue(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id);
 
         return Result<Poll>.Success(poll);
     }
@@ -377,7 +377,7 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var actor = await _userService.GetUser();
-        _pollUpdateQueue.Enqueue(poll.Id, actor.Payload!.Name ?? "Unknown");
+        _pollUpdateQueue.Enqueue(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id);
 
         return Result<Option>.Success(option);
     }
@@ -441,7 +441,7 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var updateActor = await _userService.GetUser();
-        _pollUpdateQueue.Enqueue(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown");
+        _pollUpdateQueue.Enqueue(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown", updateActor.Payload!.Id);
 
         return Result<Option>.Success(option);
     }
@@ -471,7 +471,7 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var deleteActor = await _userService.GetUser();
-        _pollUpdateQueue.Enqueue(pollId, deleteActor.Payload!.Name ?? "Unknown");
+        _pollUpdateQueue.Enqueue(pollId, deleteActor.Payload!.Name ?? "Unknown", deleteActor.Payload!.Id);
 
         return Result.Success();
     }

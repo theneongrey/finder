@@ -59,7 +59,6 @@ public class PermissionMailService(MailService mailService, NotificationMailGuar
             {
                 ["recipient"] = recipient.Name ?? recipient.Email,
                 ["user"] = userName,
-                ["project"] = project.Name,
                 ["permission"] = permission
             }, preheader)
         );

@@ -59,7 +59,6 @@ public class ProjectMailService(MailService mailService, NotificationMailGuard n
         {
             ["recipient"] = recipient.Name ?? recipient.Email,
             ["user"] = actionUserName,
-            ["project"] = project.Name,
             ["poll"] = poll.Name
         };
 

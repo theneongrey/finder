@@ -5,13 +5,13 @@ using Finder.Business.Shared.Services;
 
 namespace Finder.Business.Project.Services;
 
-public class ProjectMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService)
+public class ProjectMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, PollChangesBuilder pollChangesBuilder)
 {
     public async Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
         Entities.Project project, Poll poll, string language = "en")
     {
         foreach (var recipient in recipients)
-            await SendNotificationAsync(recipient, actionUserName, project, poll, null,
+            await SendNotificationAsync(recipient, actionUserName, project, poll, null, null,
                 languageService.Get("poll.closed.subject", language),
                 languageService.Get("poll.closed.preheader", language),
                 "poll-closed", NotificationKey.PollClosed, language);
@@ -21,17 +21,17 @@ public class ProjectMailService(MailService mailService, NotificationMailGuard n
         Entities.Project project, Poll poll, string language = "en")
     {
         foreach (var recipient in recipients)
-            await SendNotificationAsync(recipient, actionUserName, project, poll, null,
+            await SendNotificationAsync(recipient, actionUserName, project, poll, null, null,
                 languageService.Get("poll.reopened.subject", language),
                 languageService.Get("poll.reopened.preheader", language),
                 "poll-reopened", NotificationKey.PollReopened, language);
     }
 
     public async Task SendPollUpdatedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll, string language = "en")
+        Entities.Project project, Poll poll, PollUpdateSummary summary, string language = "en")
     {
         foreach (var recipient in recipients)
-            await SendNotificationAsync(recipient, actionUserName, project, poll, null,
+            await SendNotificationAsync(recipient, actionUserName, project, poll, null, summary,
                 languageService.Get("poll.updated.subject", language),
                 languageService.Get("poll.updated.preheader", language),
                 "poll-updated", NotificationKey.PollUpdated, language);
@@ -41,15 +41,15 @@ public class ProjectMailService(MailService mailService, NotificationMailGuard n
         Entities.Project project, Poll poll, string commentContent, string language = "en")
     {
         foreach (var recipient in recipients)
-            await SendNotificationAsync(recipient, actionUserName, project, poll, commentContent,
+            await SendNotificationAsync(recipient, actionUserName, project, poll, commentContent, null,
                 languageService.Get("poll.comment.subject", language),
                 languageService.Get("poll.comment.preheader", language),
                 "new-comment", NotificationKey.NewComment, language);
     }
 
     private async Task SendNotificationAsync(Person recipient, string actionUserName, Entities.Project project,
-        Poll poll, string? commentContent, string subject, string preheader, string templateName,
-        NotificationKey notificationKey, string language)
+        Poll poll, string? commentContent, PollUpdateSummary? summary, string subject, string preheader,
+        string templateName, NotificationKey notificationKey, string language)
     {
         if (recipient.Role == Role.TestUser) return;
 
@@ -66,11 +66,15 @@ public class ProjectMailService(MailService mailService, NotificationMailGuard n
         if (commentContent is not null)
             variables["comment"] = commentContent;
 
+        Dictionary<string, string>? rawHtml = null;
+        if (summary is not null)
+            rawHtml = new Dictionary<string, string> { ["changesHtml"] = pollChangesBuilder.Build(summary, language) };
+
         var mail = new Mail(
             subject,
             recipient.Name ?? recipient.Email,
             recipient.Email,
-            new MailTemplate(templateName, language, variables, preheader)
+            new MailTemplate(templateName, language, variables, preheader, rawHtml)
         );
 
         try

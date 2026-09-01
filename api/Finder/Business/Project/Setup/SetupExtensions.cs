@@ -9,6 +9,7 @@ public static class SetupExtensions
         services.AddScoped<ProjectService>();
         services.AddScoped<VoteService>();
         services.AddScoped<ProjectMailService>();
+        services.AddScoped<PollChangesBuilder>();
         services.AddSingleton<PollUpdateNotificationQueue>();
 
         return services;

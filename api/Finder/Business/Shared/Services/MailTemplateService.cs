@@ -6,11 +6,14 @@ public class MailTemplateService
 {
     private readonly Assembly _assembly = typeof(MailTemplateService).Assembly;
 
-    public string Render(string templateName, string language, Dictionary<string, string> variables)
+    public string Render(string templateName, string language, Dictionary<string, string> variables, Dictionary<string, string>? rawHtmlVariables = null)
     {
         var html = LoadTemplate(templateName, language);
         foreach (var (key, value) in variables)
             html = html.Replace($"{{{{{key}}}}}", System.Net.WebUtility.HtmlEncode(value));
+        if (rawHtmlVariables is not null)
+            foreach (var (key, value) in rawHtmlVariables)
+                html = html.Replace($"{{{{{key}}}}}", value);
         return html;
     }
 

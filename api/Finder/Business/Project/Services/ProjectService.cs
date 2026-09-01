@@ -271,6 +271,9 @@ public class ProjectService
             return Result<Poll>.Fail(409);
         }
 
+        var oldName = poll.Name;
+        var oldDescription = poll.Description;
+
         poll.Name = name.StripHtml();
         poll.Description = description.StripHtml();
         poll.CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null;
@@ -283,7 +286,8 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var actor = await _userService.GetUser();
-        _pollUpdateQueue.Enqueue(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id);
+        _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
+            oldName, poll.Name, oldDescription, poll.Description);
 
         return Result<Poll>.Success(poll);
     }
@@ -377,7 +381,7 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var actor = await _userService.GetUser();
-        _pollUpdateQueue.Enqueue(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id);
+        _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id);
 
         return Result<Option>.Success(option);
     }
@@ -441,7 +445,7 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var updateActor = await _userService.GetUser();
-        _pollUpdateQueue.Enqueue(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown", updateActor.Payload!.Id);
+        _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown", updateActor.Payload!.Id);
 
         return Result<Option>.Success(option);
     }
@@ -467,11 +471,13 @@ public class ProjectService
         }
 
         var pollId = option.Poll.Id;
+        var optionId = option.Id;
+        var optionText = option.Text;
         _dbContext.Options.Remove(option);
         await _dbContext.SaveChangesAsync();
 
         var deleteActor = await _userService.GetUser();
-        _pollUpdateQueue.Enqueue(pollId, deleteActor.Payload!.Name ?? "Unknown", deleteActor.Payload!.Id);
+        _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown", deleteActor.Payload!.Id);
 
         return Result.Success();
     }

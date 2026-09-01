@@ -66,13 +66,13 @@ export class UserService {
 
     getNotificationSettings() {
         return this.httpClient.get<NotificationSetting[]>(
-            `${this.baseUrl}/api/user/notifications`,
+            `${this.baseUrl}/api/user/notifications/settings`,
         );
     }
 
     updateNotificationSetting(id: number, value: NotificationValue) {
         return this.httpClient.put<NotificationSetting>(
-            `${this.baseUrl}/api/user/notifications/${id}`,
+            `${this.baseUrl}/api/user/notifications/settings/${id}`,
             { value },
         );
     }

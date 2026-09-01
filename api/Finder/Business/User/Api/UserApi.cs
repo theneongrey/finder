@@ -20,13 +20,13 @@ public static class UserApi
             return Results.Ok(result.Payload!.ToPersonResponse(true));
         }).RequireAuthorization();
 
-        app.MapGet("/api/user/notifications", async (NotificationSettingsService svc) =>
+        app.MapGet("/api/user/notifications/settings", async (NotificationSettingsService svc) =>
         {
             var result = await svc.GetSettings();
             return result.IsSuccess ? Results.Ok(result.Payload) : Results.StatusCode(result.Code);
         }).RequireAuthorization();
 
-        app.MapPut("/api/user/notifications/{id:int}", async (int id, [FromBody] UpdateNotificationSettingRequest request, NotificationSettingsService svc) =>
+        app.MapPut("/api/user/notifications/settings/{id:int}", async (int id, [FromBody] UpdateNotificationSettingRequest request, NotificationSettingsService svc) =>
         {
             var result = await svc.UpdateSetting(id, request.Value);
             return result.IsSuccess ? Results.Ok(result.Payload) : Results.StatusCode(result.Code);

@@ -138,6 +138,12 @@ export class ShareInviteFormComponent {
         this.dropdownVisible.set(false);
     }
 
+    selectAndInvite(contact: SharingContact) {
+        this.contactEmail.set(contact.email);
+        this.dropdownVisible.set(false);
+        this.invite();
+    }
+
     invite() {
         const email = this.contactEmail()?.trim();
         if (!email || this.sharingInProgress()) {

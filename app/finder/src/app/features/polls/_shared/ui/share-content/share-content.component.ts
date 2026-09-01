@@ -38,6 +38,7 @@ export class ShareContentComponent {
     sharedWith = input.required<SharedWith[]>();
     visibilityType = input.required<VisibilityType>();
     inCard = input<boolean>(true);
+    hideTabs = input<boolean>(false);
 
     selectedVisibility = signal<VisibilityType>(
         VisibilityType.VisibleForSelectedOnly,

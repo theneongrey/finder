@@ -8,7 +8,9 @@ public static class SetupExtensions
     {
         services.AddScoped<ProjectService>();
         services.AddScoped<VoteService>();
-        
+        services.AddScoped<ProjectMailService>();
+        services.AddSingleton<PollUpdateNotificationQueue>();
+
         return services;
     }
 }

@@ -35,6 +35,15 @@ public class PermissionMailService(MailService mailService, NotificationMailGuar
         }
     }
 
+    public async Task SendPermissionRemovedMailAsync(Person recipient, string actionUserName,
+        Project.Entities.Project project, string language = "en")
+    {
+        await SendMail(recipient, actionUserName, project, string.Empty,
+            languageService.Get("permission.removed.subject", language),
+            languageService.Get("permission.removed.preheader", language),
+            "permission-removed", NotificationKey.AccessChanged, language);
+    }
+
     private async Task SendMail(Person recipient, string userName, Project.Entities.Project project, string permission,
         string subject, string preheader, string templateName, NotificationKey notificationKey, string language)
     {

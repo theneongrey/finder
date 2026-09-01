@@ -40,6 +40,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
+builder.Services.Configure<NotificationOptions>(builder.Configuration.GetSection("Notifications"));
 builder.Services.AddSingleton<ILookupClient, LookupClient>();
 builder.Services.AddSingleton<EmailValidationService>();
 builder.Services.AddSingleton<MailTemplateService>();

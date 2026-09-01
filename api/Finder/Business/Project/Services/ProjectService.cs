@@ -14,14 +14,19 @@ public class ProjectService
     private readonly AppDbContext _dbContext;
     private readonly UserService _userService;
     private readonly PermissionService _permissionService;
+    private readonly ProjectMailService _projectMailService;
+    private readonly PollUpdateNotificationQueue _pollUpdateQueue;
 
     private Guid? UserId => _userService.GetUserId();
 
-    public ProjectService(AppDbContext dbContext, UserService userService, PermissionService permissionService)
+    public ProjectService(AppDbContext dbContext, UserService userService, PermissionService permissionService,
+        ProjectMailService projectMailService, PollUpdateNotificationQueue pollUpdateQueue)
     {
         _dbContext = dbContext;
         _userService = userService;
         _permissionService = permissionService;
+        _projectMailService = projectMailService;
+        _pollUpdateQueue = pollUpdateQueue;
     }
 
     public async Task<List<Entities.Project>> GetAll()
@@ -245,7 +250,8 @@ public class ProjectService
     public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null)
     {
         var poll = await _dbContext.Polls
-            .Include(t => t.Project)
+            .Include(t => t.Project).ThenInclude(p => p.Creator)
+            .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
@@ -275,6 +281,10 @@ public class ProjectService
         }
 
         await _dbContext.SaveChangesAsync();
+
+        var actor = await _userService.GetUser();
+        _pollUpdateQueue.Enqueue(poll.Id, actor.Payload!.Name ?? "Unknown");
+
         return Result<Poll>.Success(poll);
     }
 
@@ -365,6 +375,10 @@ public class ProjectService
         _dbContext.Options.Add(option);
 
         await _dbContext.SaveChangesAsync();
+
+        var actor = await _userService.GetUser();
+        _pollUpdateQueue.Enqueue(poll.Id, actor.Payload!.Name ?? "Unknown");
+
         return Result<Option>.Success(option);
     }
 
@@ -425,6 +439,10 @@ public class ProjectService
         }
 
         await _dbContext.SaveChangesAsync();
+
+        var updateActor = await _userService.GetUser();
+        _pollUpdateQueue.Enqueue(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown");
+
         return Result<Option>.Success(option);
     }
 
@@ -448,8 +466,13 @@ public class ProjectService
             return Result.Fail(409);
         }
 
+        var pollId = option.Poll.Id;
         _dbContext.Options.Remove(option);
         await _dbContext.SaveChangesAsync();
+
+        var deleteActor = await _userService.GetUser();
+        _pollUpdateQueue.Enqueue(pollId, deleteActor.Payload!.Name ?? "Unknown");
+
         return Result.Success();
     }
 
@@ -492,6 +515,8 @@ public class ProjectService
     public async Task<Result<Comment>> AddComment(AddCommentRequest request)
     {
         var poll = await _dbContext.Polls
+            .Include(t => t.Project).ThenInclude(p => p.Creator)
+            .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Where(t => t.Id == SlugHelper.ExtractId(request.PollId) && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
@@ -518,12 +543,23 @@ public class ProjectService
         _dbContext.Comments.Add(comment);
 
         await _dbContext.SaveChangesAsync();
+
+        var recipients = poll.Project.Permissions
+            .Select(p => p.Person)
+            .Append(poll.Project.Creator)
+            .Where(p => p.Id != user.Id)
+            .ToList();
+        await _projectMailService.SendNewCommentNotificationsAsync(
+            recipients, user.Name ?? "Unknown", poll.Project, poll, comment.Content);
+
         return Result<Comment>.Success(comment);
     }
 
     public async Task<Result<Poll>> ClosePollAsync(string slug)
     {
         var poll = await _dbContext.Polls
+            .Include(t => t.Project).ThenInclude(p => p.Creator)
+            .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Include(t => t.Options)
             .ThenInclude(o => o.Meta)
             .Include(t => t.Options)
@@ -554,12 +590,23 @@ public class ProjectService
         poll.StatusChanges.Add(closedStatus);
         _dbContext.PollStatusChanges.Add(closedStatus);
         await _dbContext.SaveChangesAsync();
+
+        var closeRecipients = poll.Project.Permissions
+            .Select(p => p.Person)
+            .Append(poll.Project.Creator)
+            .Where(p => p.Id != actor.Payload!.Id)
+            .ToList();
+        await _projectMailService.SendPollClosedNotificationsAsync(
+            closeRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
+
         return Result<Poll>.Success(poll);
     }
 
     public async Task<Result<Poll>> ReopenPollAsync(string slug)
     {
         var poll = await _dbContext.Polls
+            .Include(t => t.Project).ThenInclude(p => p.Creator)
+            .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Include(t => t.Options)
             .ThenInclude(o => o.Meta)
             .Include(t => t.Options)
@@ -590,6 +637,15 @@ public class ProjectService
         poll.StatusChanges.Add(reopenedStatus);
         _dbContext.PollStatusChanges.Add(reopenedStatus);
         await _dbContext.SaveChangesAsync();
+
+        var reopenRecipients = poll.Project.Permissions
+            .Select(p => p.Person)
+            .Append(poll.Project.Creator)
+            .Where(p => p.Id != actor.Payload!.Id)
+            .ToList();
+        await _projectMailService.SendPollReopenedNotificationsAsync(
+            reopenRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
+
         return Result<Poll>.Success(poll);
     }
 }

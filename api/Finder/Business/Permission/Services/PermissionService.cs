@@ -160,6 +160,10 @@ public class PermissionService
         _dbContext.Permissions.Remove(permission);
         await _dbContext.SaveChangesAsync();
 
+        var actionUser = await _userService.GetUser();
+        await _mailService.SendPermissionRemovedMailAsync(
+            permission.Person, actionUser.Payload!.Name ?? "Unknown", project);
+
         return Result<Project.Entities.Project>.Success(project);
     }
 

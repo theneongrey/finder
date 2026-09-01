@@ -1,5 +1,7 @@
 # Fix Bug Skill
 
+**TRIGGER:** Only invoke this skill when the user explicitly types `/fix-bug`. Do not invoke it automatically when a bug is described or reported in conversation.
+
 Diagnose a bug, fix it on a dedicated branch, open a PR, and report the review findings — without auto-applying any new issues found by the reviewer.
 
 ---

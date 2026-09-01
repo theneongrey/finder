@@ -100,7 +100,12 @@ export const SharingStore = signalStore(
             ),
         ),
 
-        removePermission: rxMethod<{ projectId: string; email: string }>(
+        removePermission: rxMethod<{
+            projectId: string;
+            email: string;
+            name: string;
+            picture?: string;
+        }>(
             pipe(
                 switchMap((payload) =>
                     store.permissionService
@@ -108,6 +113,23 @@ export const SharingStore = signalStore(
                         .pipe(
                             tapResponse({
                                 next: (sharedWith) => {
+                                    patchState(store, {
+                                        sharingContactsSuggestion: [
+                                            ...store
+                                                .sharingContactsSuggestion()
+                                                .filter(
+                                                    (c) =>
+                                                        c.email !==
+                                                        payload.email,
+                                                ),
+                                            {
+                                                email: payload.email,
+                                                name: payload.name,
+                                                picture: payload.picture,
+                                                shareCount: 0,
+                                            },
+                                        ],
+                                    });
                                     store.dispatcher.dispatch(
                                         sharingEvents.permissionRemoved({
                                             projectId: payload.projectId,

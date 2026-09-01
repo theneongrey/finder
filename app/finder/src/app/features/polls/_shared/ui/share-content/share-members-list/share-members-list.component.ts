@@ -159,10 +159,12 @@ export class ShareMembersListComponent {
         );
     }
 
-    confirmRemove(email: string) {
+    confirmRemove(member: SharedWith) {
         this.sharingStore.removePermission({
             projectId: this.projectId(),
-            email,
+            email: member.email,
+            name: member.name,
+            picture: member.picture,
         });
         this.pendingRemoveEmail.set(undefined);
     }

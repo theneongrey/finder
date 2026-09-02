@@ -158,7 +158,7 @@ test.describe('Public shared link page (/p/:projectId)', () => {
     });
 
     test('vote button navigates to the poll voting page', async ({ page }) => {
-      await page.locator('[data-testid="public-poll-vote-btn"]').first().click();
+      await page.locator('[data-testid="public-poll-vote-btn"] button').first().click();
       await page.waitForURL('**/polls/**');
       expect(page.url()).toContain('/polls/');
     });
@@ -192,7 +192,7 @@ test.describe('Public shared link page (/p/:projectId)', () => {
     test('vote button is visible and navigates to the poll voting page', async ({
       page,
     }) => {
-      const voteBtn = page.locator('[data-testid="public-poll-vote-btn"]').first();
+      const voteBtn = page.locator('[data-testid="public-poll-vote-btn"] button').first();
       await expect(voteBtn).toBeVisible();
       await voteBtn.click();
       await page.waitForURL('**/polls/**');

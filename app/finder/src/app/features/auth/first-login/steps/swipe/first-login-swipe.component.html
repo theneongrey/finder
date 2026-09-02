@@ -1,0 +1,90 @@
+<div class="pb-[4px]">
+    <div
+        class="[font-family:var(--font-display)] leading-[1.1] font-bold tracking-[-0.6px] text-[var(--fs-display-sm)] text-[var(--text-primary)]"
+    >
+        {{ 'auth.firstLogin.swipe.heading' | translate }}
+    </div>
+    <p class="mt-[8px] text-[var(--fs-body-sm)] text-[var(--text-secondary)]">
+        {{ 'auth.firstLogin.swipe.description' | translate }}
+    </p>
+
+    <div class="relative mt-[20px] h-[180px]">
+        @if (!swiped()) {
+            <div
+                class="swipe-card absolute inset-0 cursor-grab rounded-[16px] border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] shadow-[0_4px_16px_rgba(35,40,45,0.08)] select-none active:cursor-grabbing"
+                [style.transform]="cardTransform()"
+                [style.transition]="
+                    dragging()
+                        ? 'none'
+                        : 'transform 0.3s cubic-bezier(0.3,0.7,0.3,1)'
+                "
+                (pointerdown)="onPointerDown($event)"
+                (pointermove)="onPointerMove($event)"
+                (pointerup)="onPointerUp()"
+                (pointercancel)="onPointerUp()"
+            >
+                <span
+                    class="absolute top-[12px] left-[12px] rounded-[8px] bg-[#e8f5e5] px-[10px] py-[4px] text-[13px] font-bold text-[#5d9a56]"
+                    [style.opacity]="jaOpacity()"
+                    >{{ 'auth.firstLogin.swipe.ja' | translate }}</span
+                >
+                <span
+                    class="absolute top-[12px] right-[12px] rounded-[8px] bg-[#fdecea] px-[10px] py-[4px] text-[13px] font-bold text-[#c1453f]"
+                    [style.opacity]="neinOpacity()"
+                    >{{ 'auth.firstLogin.swipe.nein' | translate }}</span
+                >
+                <div
+                    class="flex h-full items-center justify-center px-[18px] pt-[14px] pb-[44px]"
+                >
+                    <p
+                        class="m-0 text-center text-[24px] leading-[1.3] font-semibold text-[var(--text-primary)]"
+                    >
+                        {{ 'auth.firstLogin.swipe.cardText' | translate }}
+                    </p>
+                </div>
+
+                <div
+                    class="swipe-hint pointer-events-none absolute inset-x-4 bottom-4 flex h-[34px] items-center justify-center rounded-[var(--radius-md)] bg-[rgba(36,39,43,0.88)] backdrop-blur-[4px]"
+                >
+                    <p class="m-0 text-[11.5px] font-semibold text-white">
+                        {{ 'project.vote.swipeHintPre' | translate
+                        }}<span
+                            class="font-bold text-[var(--positive-strong)]"
+                            >{{
+                                'project.votesOverview.voteLabel.yes'
+                                    | translate
+                            }}</span
+                        >{{ 'project.vote.swipeHintMid' | translate
+                        }}<span class="font-bold text-[var(--negative)]">{{
+                            'project.votesOverview.voteLabel.no' | translate
+                        }}</span>
+                    </p>
+                </div>
+            </div>
+        } @else {
+            <div
+                class="flex h-full flex-col items-center justify-center gap-[8px] text-center"
+            >
+                <div class="swipe-success-circle">
+                    <ds-icon name="check" [size]="26" color="#5d9a56" />
+                </div>
+                <p
+                    class="m-0 font-medium text-[var(--fs-body-sm)] text-[var(--text-primary)]"
+                >
+                    {{ 'auth.firstLogin.swipe.success' | translate }}
+                </p>
+            </div>
+        }
+    </div>
+
+    <div class="mt-[22px]">
+        <ds-button
+            [fullWidth]="true"
+            trailingIcon="arrow-right"
+            [disabled]="!swiped()"
+            (click)="next.emit()"
+        >
+            {{ 'auth.firstLogin.swipe.cta' | translate }}
+        </ds-button>
+    </div>
+</div>

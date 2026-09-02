@@ -88,6 +88,46 @@
       "legalConsentSuffix": ".",
       "helpText": "Problems signing in?",
       "helpLink": "Help"
+    },
+    "firstLogin": {
+      "sidebar": {
+        "tagline": "Great to have you here.",
+        "description": "Just a few steps and you're ready to go.",
+        "feature1": "Find a date",
+        "feature2": "Yes or no decisions",
+        "feature3": "Rate options"
+      },
+      "about": {
+        "heading": "What is Votean for?",
+        "description": "With Votean you find the best date together, make clear decisions – all without endless chat messages.",
+        "feature1": "Find a date",
+        "feature1Sub": "Vote together on the best time slot",
+        "feature2": "Yes or No",
+        "feature2Sub": "Clear decisions without endless debate",
+        "feature3": "Rate",
+        "feature3Sub": "Compare options and pick the best one",
+        "cta": "Continue"
+      },
+      "swipe": {
+        "heading": "Here's how you vote",
+        "description": "Swipe the card right for yes, left for no.",
+        "cardText": "BBQ on Saturday?",
+        "ja": "YES",
+        "nein": "NO",
+        "hint": "Drag the card",
+        "success": "That's all there is to it!",
+        "cta": "Continue"
+      },
+      "name": {
+        "heading": "What should we call you?",
+        "label": "First name",
+        "placeholder": "e.g. Giovanni",
+        "cta": "Done"
+      },
+      "done": {
+        "heading": "Welcome, {{name}}!",
+        "redirect": "Taking you to your polls."
+      }
     }
   },
   "project": {

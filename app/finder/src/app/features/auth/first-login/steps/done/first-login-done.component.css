@@ -1,0 +1,40 @@
+.done-success-circle {
+    width: 66px;
+    height: 66px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: #e2ede1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation:
+        done-success-pop 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both,
+        done-success-ring 1.4s ease-out 0.3s;
+}
+
+@keyframes done-success-pop {
+    0% {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.12);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes done-success-ring {
+    0% {
+        box-shadow: 0 0 0 0 rgba(93, 154, 86, 0.45);
+    }
+    70% {
+        box-shadow: 0 0 0 16px rgba(93, 154, 86, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(93, 154, 86, 0);
+    }
+}

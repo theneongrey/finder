@@ -1,0 +1,44 @@
+<div class="pb-[4px]">
+    <div class="flex justify-center pt-[4px] pb-[18px]">
+        <ds-avatar
+            [initial]="initial()"
+            [bg]="palette().bg"
+            [fg]="palette().fg"
+            [size]="64"
+        />
+    </div>
+
+    <div
+        class="[font-family:var(--font-display)] leading-[1.1] font-bold tracking-[-0.6px] text-[var(--fs-display-sm)] text-[var(--text-primary)]"
+    >
+        {{ 'auth.firstLogin.name.heading' | translate }}
+    </div>
+
+    <div class="relative mt-[18px]">
+        <ds-input
+            [label]="'auth.firstLogin.name.label' | translate"
+            placeholder=""
+            [ngModel]="nameValue()"
+            (ngModelChange)="nameValue.set($event)"
+            (keydown.enter)="submit()"
+        />
+        @if (showPlaceholder()) {
+            <span
+                class="animated-ph pointer-events-none absolute bottom-0 left-[14px] flex h-[44px] items-center [font-family:var(--font-body)] [font-size:var(--fs-body-xs)] text-[var(--text-muted)]"
+                [style.opacity]="fadingOut() ? 0 : 0.7"
+                >{{ animatedName() }}</span
+            >
+        }
+    </div>
+
+    <div class="mt-[16px]">
+        <ds-button
+            [fullWidth]="true"
+            [disabled]="!nameValue().trim()"
+            [loading]="saving()"
+            (click)="submit()"
+        >
+            {{ 'auth.firstLogin.name.cta' | translate }}
+        </ds-button>
+    </div>
+</div>

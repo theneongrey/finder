@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { userAuthentication } from '../../common/services/auth.guard';
 
 export const authRoutes: Routes = [
     {
@@ -30,5 +31,13 @@ export const authRoutes: Routes = [
             import('./login-success/login-success.component').then(
                 (m) => m.LoginSuccessComponent,
             ),
+    },
+    {
+        path: 'first-login',
+        loadComponent: () =>
+            import('./first-login/first-login.component').then(
+                (m) => m.FirstLoginComponent,
+            ),
+        canActivate: [userAuthentication()],
     },
 ];

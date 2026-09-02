@@ -18,8 +18,6 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsInputOtpComponent } from '@ds/input-otp/ds-input-otp.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.component';
-
 @Component({
     selector: 'app-auth-code-login',
     imports: [
@@ -28,7 +26,6 @@ import { AuthStepIndicatorComponent } from '../_shared/auth-step-indicator.compo
         DsButtonComponent,
         DsIconComponent,
         TranslatePipe,
-        AuthStepIndicatorComponent,
     ],
     templateUrl: './code-login.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

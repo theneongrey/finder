@@ -6,7 +6,6 @@ import { SharingStore } from '../../_shared/data/sharing.store';
 import { AppointmentTypeConversionService } from '../../_shared/utils/appointment-type-conversion.service';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
 import { OptionType } from '../../../../common/models/option-type.model';
-import { PollItem } from '../../_shared/models/poll-item.model';
 import { PendingInvite } from '../../_shared/ui/share-content/share-invite-form/share-invite-form.component';
 import { PollRole } from '../../_shared/models/poll-role.enum';
 import { OptionEntry } from '../../_shared/ui/poll-input-form/poll-options/poll-options.component';
@@ -37,32 +36,6 @@ export class PollInputStateService {
     readonly createdProject = computed(() =>
         this.projectListStore.lastCreatedProject(),
     );
-
-    readonly pollPreview = computed((): PollItem | undefined => {
-        const p = this.createdProject();
-        if (!p) {
-            return undefined;
-        }
-        return {
-            pollId: p.pollId,
-            projectId: p.projectId,
-            name: p.name,
-            description: p.description,
-            optionType: p.optionType as OptionType,
-            optionCount: p.optionCount,
-            commentCount: p.commentCount,
-            lastVoteAt: p.lastVoteAt,
-            nextOpenOptionId: p.nextOpenOptionId,
-            role: p.role,
-            totalParticipants: p.totalParticipants,
-            votedCount: p.votedCount,
-            currentUserVoted: p.currentUserVoted,
-            participants: p.participants,
-            isFavorite: p.isFavorite,
-            closeDate: p.closeDate,
-            isClosed: p.isClosed,
-        };
-    });
 
     optionType = signal<OptionType | undefined>(
         this.route.snapshot.data['optionType'],

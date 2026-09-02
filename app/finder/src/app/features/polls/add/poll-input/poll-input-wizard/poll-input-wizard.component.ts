@@ -16,10 +16,11 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
 import { ShareContentComponent } from '../../../_shared/ui/share-content/share-content.component';
-import { PollItemComponent } from '../../../_shared/ui/poll-item/poll-item.component';
+import { ShareMembersListComponent } from '../../../_shared/ui/share-content/share-members-list/share-members-list.component';
 import { PollInputFormComponent } from '../../../_shared/ui/poll-input-form/poll-input-form.component';
 import { TitleBarService } from '@common/services/title-bar.service';
 import { OptionType } from '@common/models/option-type.model';
+import { VisibilityType } from '../../../_shared/models/poll-detail.model';
 
 @Component({
     selector: 'app-poll-input-wizard',
@@ -28,7 +29,7 @@ import { OptionType } from '@common/models/option-type.model';
         PollTypeSelectionComponent,
         PollInputFormComponent,
         ShareContentComponent,
-        PollItemComponent,
+        ShareMembersListComponent,
         DsButtonComponent,
         DsIconComponent,
         DsSubHeaderComponent,
@@ -42,6 +43,7 @@ export class PollInputWizardComponent {
     private readonly translateService = inject(TranslateService);
 
     readonly OptionType = OptionType;
+    readonly VisibilityType = VisibilityType;
 
     readonly wizardStep = signal(1);
 

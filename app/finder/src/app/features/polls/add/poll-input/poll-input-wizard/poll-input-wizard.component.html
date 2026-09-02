@@ -134,31 +134,29 @@
             } @else {
                 <!-- Step 3: sharing -->
                 <div class="pt-1.5">
-                    <div class="flex items-start gap-8">
-                        <div class="max-w-[640px] min-w-0 flex-1">
-                            @if (state.createdProject()) {
+                    @if (state.createdProject(); as project) {
+                        <div class="flex items-start gap-8">
+                            <div class="max-w-[640px] min-w-0 flex-1">
                                 <app-share-content
-                                    [projectId]="
-                                        state.createdProject()!.projectId
-                                    "
-                                    [sharedWith]="
-                                        state.createdProject()!.sharedWith
-                                    "
-                                    [visibilityType]="
-                                        state.createdProject()!.visibilityType
-                                    "
-                                />
-                            }
-                        </div>
-                        @if (state.pollPreview(); as preview) {
-                            <div class="mt-3.5 w-[520px] shrink-0">
-                                <app-poll-item
-                                    [poll]="preview"
-                                    [previewMode]="true"
+                                    [projectId]="project.projectId"
+                                    [sharedWith]="project.sharedWith"
+                                    [visibilityType]="project.visibilityType"
+                                    [hideTabs]="true"
                                 />
                             </div>
-                        }
-                    </div>
+                            <div class="mt-3.5 w-[400px] shrink-0">
+                                <app-share-members-list
+                                    [projectId]="project.projectId"
+                                    [members]="project.sharedWith"
+                                    [isPublic]="
+                                        project.visibilityType ===
+                                        VisibilityType.VisibleForEverybody
+                                    "
+                                    [hideInviteButton]="true"
+                                />
+                            </div>
+                        </div>
+                    }
                 </div>
             }
         </div>
@@ -234,14 +232,24 @@
                     >
                         {{ 'project.pollInput.shareSub' | translate }}
                     </p>
-                    @if (state.createdProject()) {
+                    @if (state.createdProject(); as project) {
                         <app-share-content
-                            [projectId]="state.createdProject()!.projectId"
-                            [sharedWith]="state.createdProject()!.sharedWith"
-                            [visibilityType]="
-                                state.createdProject()!.visibilityType
-                            "
+                            [projectId]="project.projectId"
+                            [sharedWith]="project.sharedWith"
+                            [visibilityType]="project.visibilityType"
+                            [hideTabs]="true"
                         />
+                        <div class="mt-4">
+                            <app-share-members-list
+                                [projectId]="project.projectId"
+                                [members]="project.sharedWith"
+                                [isPublic]="
+                                    project.visibilityType ===
+                                    VisibilityType.VisibleForEverybody
+                                "
+                                [hideInviteButton]="true"
+                            />
+                        </div>
                     }
                 </div>
             }

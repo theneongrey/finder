@@ -8,6 +8,7 @@ public static class SetupExtensions
     {
         services.AddScoped<ProfileService>();
         services.AddScoped<NotificationSettingsService>();
+        services.AddScoped<InAppNotificationService>();
 
         return services;
     }

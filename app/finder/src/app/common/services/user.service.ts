@@ -7,6 +7,7 @@ import {
     NotificationSetting,
     NotificationValue,
 } from '../models/notification-setting.model';
+import { InAppNotification } from '../models/in-app-notification.model';
 
 @Injectable({
     providedIn: 'root',
@@ -74,6 +75,24 @@ export class UserService {
         return this.httpClient.put<NotificationSetting>(
             `${this.baseUrl}/api/user/notifications/settings/${id}`,
             { value },
+        );
+    }
+
+    getInAppNotifications() {
+        return this.httpClient.get<InAppNotification[]>(
+            `${this.baseUrl}/api/user/notifications`,
+        );
+    }
+
+    markNotificationAsRead(id: string) {
+        return this.httpClient.delete<void>(
+            `${this.baseUrl}/api/user/notifications/${id}`,
+        );
+    }
+
+    markAllNotificationsAsRead() {
+        return this.httpClient.delete<void>(
+            `${this.baseUrl}/api/user/notifications`,
         );
     }
 

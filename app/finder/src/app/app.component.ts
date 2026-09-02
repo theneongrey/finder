@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HlmToasterImports } from '@spartan-ng/helm/sonner';
 import { UserStore } from '@common/data/user.store';
@@ -64,6 +64,12 @@ export class AppComponent {
 
         userStore.getUser();
         translateService.addLangs([...SUPPORTED_LANGUAGES]);
+
+        effect(() => {
+            if (userStore.user()?.isAuthenticated) {
+                userStore.startPolling();
+            }
+        });
 
         applyCalendarLocale(getStoredLanguage(), calendarI18n);
         translateService.onLangChange.subscribe(({ lang }) =>

@@ -2,10 +2,11 @@ using Finder.Business.Auth.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
+using Finder.Business.User.Services;
 
 namespace Finder.Business.Project.Services;
 
-public class ProjectMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, PollChangesBuilder pollChangesBuilder)
+public class ProjectMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, PollChangesBuilder pollChangesBuilder, InAppNotificationService inAppNotificationService)
 {
     public async Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
         Entities.Project project, Poll poll, string language = "en")
@@ -51,6 +52,11 @@ public class ProjectMailService(MailService mailService, NotificationMailGuard n
         Poll poll, string? commentContent, PollUpdateSummary? summary, string subject, string preheader,
         string templateName, NotificationKey notificationKey, string language)
     {
+        await inAppNotificationService.CreateAsync(
+            recipient.Id, notificationKey,
+            projectId: project.Id, pollId: poll.Id,
+            new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
+
         if (recipient.Role == Role.TestUser) return;
 
         if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, notificationKey, project.Id)) return;

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Npgsql;
 using System.Threading.RateLimiting;
 using DnsClient;
 using Microsoft.AspNetCore.DataProtection;
@@ -26,8 +27,12 @@ builder.Services.AddOpenApi();
 builder.Services.AddCors();
 
 builder.Services.AddHttpContextAccessor();
+var npgsqlDataSource = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Database"))
+    .EnableDynamicJson()
+    .Build();
+
 builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
+    opt.UseNpgsql(npgsqlDataSource));
 
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<AppDbContext>();

@@ -3,6 +3,7 @@ import { signalStore, withComputed } from '@ngrx/signals';
 import { withAuthFeature } from './user-auth.feature';
 import { withProfileFeature } from './user-profile.feature';
 import { withNotificationsFeature } from './user-notifications.feature';
+import { withInAppNotificationsFeature } from './user-in-app-notifications.feature';
 import { SupportedLanguage } from '../i18n/languages';
 
 const dateFormatByLanguage: Record<SupportedLanguage, string> = {
@@ -16,6 +17,7 @@ export const UserStore = signalStore(
     withAuthFeature(),
     withProfileFeature(),
     withNotificationsFeature(),
+    withInAppNotificationsFeature(),
     withComputed((store) => ({
         dateFormat: computed(() => {
             const lang = (store.user()?.language ?? 'en') as SupportedLanguage;

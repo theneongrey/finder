@@ -2,10 +2,11 @@ using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
+using Finder.Business.User.Services;
 
 namespace Finder.Business.Permission.Services;
 
-public class PermissionMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService)
+public class PermissionMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, InAppNotificationService inAppNotificationService)
 {
     public async Task SendPermissionMail(Person recipient, string actionUserName, Project.Entities.Project project,
         PermissionType permissionType, bool isExistingPermission, bool isNewUser, string language = "en")
@@ -47,6 +48,11 @@ public class PermissionMailService(MailService mailService, NotificationMailGuar
     private async Task SendMail(Person recipient, string userName, Project.Entities.Project project, string permission,
         string subject, string preheader, string templateName, NotificationKey notificationKey, string language)
     {
+        await inAppNotificationService.CreateAsync(
+            recipient.Id, notificationKey,
+            projectId: project.Id, pollId: null,
+            new Dictionary<string, string> { ["user"] = userName, ["poll"] = project.Name });
+
         if (recipient.Role == Role.TestUser) return;
 
         if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, notificationKey, project.Id)) return;

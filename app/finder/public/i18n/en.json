@@ -1,4 +1,14 @@
 {
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "pollClosed": "{{user}} closed \"{{poll}}\"",
+    "pollReopened": "{{user}} reopened \"{{poll}}\"",
+    "pollUpdated": "{{user}} updated \"{{poll}}\"",
+    "newComment": "{{user}} commented on \"{{poll}}\"",
+    "accessChanged": "Your access to \"{{poll}}\" has changed",
+    "pollShared": "{{user}} shared \"{{poll}}\" with you"
+  },
   "titleBar": {
     "logout": "Logout",
     "settings": "Settings",

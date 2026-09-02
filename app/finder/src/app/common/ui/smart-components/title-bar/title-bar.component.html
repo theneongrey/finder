@@ -87,9 +87,7 @@
 
         @if (user()?.isAuthenticated) {
             <div class="title-bar__user">
-                <ds-menu [items]="menuItems()">
-                    <app-user-avatar [user]="user()!" class="cursor-pointer" />
-                </ds-menu>
+                <app-notifications-panel />
             </div>
         } @else if (user() !== undefined) {
             <div class="title-bar__user">

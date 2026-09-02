@@ -3,6 +3,7 @@ using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared.Entities;
 using Finder.Business.User.Entities;
+
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,7 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     public DbSet<NotificationSetting> NotificationSettings { get; set; }
     public DbSet<PersonNotificationSetting> PersonNotificationSettings { get; set; }
+    public DbSet<UserNotification> UserNotifications { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     

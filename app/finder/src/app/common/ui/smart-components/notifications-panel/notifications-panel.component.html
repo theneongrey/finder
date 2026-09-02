@@ -1,0 +1,69 @@
+<div [hlmDropdownMenuTrigger]="panel" class="notifications-panel__trigger">
+    <app-user-avatar [user]="user()!" class="cursor-pointer" />
+    @if (unreadCount() > 0) {
+        <span class="notifications-panel__badge">{{ unreadCount() }}</span>
+    }
+</div>
+
+<ng-template #panel>
+    <hlm-dropdown-menu class="notifications-panel__menu">
+        @if (inAppNotifications()?.length) {
+            <div class="notifications-panel__header">
+                <span class="notifications-panel__header-title">
+                    {{ 'notifications.title' | translate }}
+                </span>
+                <button
+                    hlmDropdownMenuItem
+                    class="notifications-panel__mark-all"
+                    (click)="onMarkAllAsRead()"
+                >
+                    {{ 'notifications.markAllRead' | translate }}
+                </button>
+            </div>
+
+            @for (notification of inAppNotifications(); track notification.id) {
+                <button
+                    hlmDropdownMenuItem
+                    class="notifications-panel__item"
+                    (click)="onNotificationClick(notification)"
+                >
+                    <ds-icon
+                        [name]="getIcon(notification.key)"
+                        [size]="15"
+                        class="notifications-panel__item-icon"
+                    />
+                    <span class="notifications-panel__item-body">
+                        <span class="notifications-panel__item-text">
+                            {{
+                                getTranslationKey(notification.key)
+                                    | translate : notification.variables
+                            }}
+                        </span>
+                        <span class="notifications-panel__item-time">
+                            {{ relativeTime(notification.created) }}
+                        </span>
+                    </span>
+                </button>
+            }
+
+            <hlm-dropdown-menu-separator />
+        }
+
+        <button
+            hlmDropdownMenuItem
+            class="notifications-panel__menu-item"
+            (click)="navigateTo('/settings')"
+        >
+            <ds-icon name="arrow-right" [size]="15" />
+            {{ 'titleBar.settings' | translate }}
+        </button>
+        <button
+            hlmDropdownMenuItem
+            class="notifications-panel__menu-item"
+            (click)="navigateTo('/logout')"
+        >
+            <ds-icon name="arrow-right" [size]="15" />
+            {{ 'titleBar.logout' | translate }}
+        </button>
+    </hlm-dropdown-menu>
+</ng-template>

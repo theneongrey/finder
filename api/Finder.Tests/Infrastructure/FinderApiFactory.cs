@@ -106,7 +106,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         return client;
     }
 
-    public async Task<Person> SeedUser(string? email = null)
+    public async Task<Person> SeedUser(string? email = null, Role role = Role.Free)
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -114,7 +114,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         {
             Id = Guid.NewGuid(),
             Email = email ?? $"{Guid.NewGuid()}@test.com",
-            Role = Role.Free
+            Role = role
         };
         db.Persons.Add(person);
         await db.SaveChangesAsync();

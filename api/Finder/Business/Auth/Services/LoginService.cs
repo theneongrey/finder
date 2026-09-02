@@ -18,13 +18,13 @@ public class LoginService
     private readonly TimeSpan _loginTimeout = TimeSpan.FromHours(1);
 
     private readonly AppDbContext _dbContext;
-    private readonly MailService _mailService;
+    private readonly LoginMailService _mailService;
     private readonly UserService _userService;
     private readonly SeedingService _seedingService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly LoginOptions _loginOptions;
 
-    public LoginService(AppDbContext dbContext, MailService mailService, UserService userService, SeedingService seedingService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions)
+    public LoginService(AppDbContext dbContext, LoginMailService mailService, UserService userService, SeedingService seedingService, IHttpContextAccessor httpContextAccessor, IOptions<LoginOptions> loginOptions)
     {
         _dbContext = dbContext;
         _mailService = mailService;

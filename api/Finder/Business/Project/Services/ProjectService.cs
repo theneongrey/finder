@@ -14,14 +14,19 @@ public class ProjectService
     private readonly AppDbContext _dbContext;
     private readonly UserService _userService;
     private readonly PermissionService _permissionService;
+    private readonly ProjectMailService _projectMailService;
+    private readonly PollUpdateNotificationQueue _pollUpdateQueue;
 
     private Guid? UserId => _userService.GetUserId();
 
-    public ProjectService(AppDbContext dbContext, UserService userService, PermissionService permissionService)
+    public ProjectService(AppDbContext dbContext, UserService userService, PermissionService permissionService,
+        ProjectMailService projectMailService, PollUpdateNotificationQueue pollUpdateQueue)
     {
         _dbContext = dbContext;
         _userService = userService;
         _permissionService = permissionService;
+        _projectMailService = projectMailService;
+        _pollUpdateQueue = pollUpdateQueue;
     }
 
     public async Task<List<Entities.Project>> GetAll()
@@ -66,8 +71,8 @@ public class ProjectService
         var project = new Entities.Project
         {
             Id = SlugHelper.GenerateId(),
-            Name = name,
-            Description = description,
+            Name = name.StripHtml(),
+            Description = description?.StripHtml(),
             Creator = userRequest.Payload!,
             VisibilityType = VisibilityType.VisibleForSelectedOnly
         };
@@ -88,7 +93,7 @@ public class ProjectService
         var project = new Entities.Project
         {
             Id = SlugHelper.GenerateId(),
-            Name = name,
+            Name = name.StripHtml(),
             Description = null,
             IsStandalone = true,
             Creator = userRequest.Payload!,
@@ -98,8 +103,8 @@ public class ProjectService
         var poll = new Poll
         {
             Id = SlugHelper.GenerateId(),
-            Name = name,
-            Description = description,
+            Name = name.StripHtml(),
+            Description = description.StripHtml(),
             OptionType = optionType,
             Project = project,
             CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null
@@ -127,8 +132,8 @@ public class ProjectService
             return Result<Entities.Project>.Fail(404);
         }
 
-        projectToUpdate.Name = projectName;
-        projectToUpdate.Description = projectDescription;
+        projectToUpdate.Name = projectName.StripHtml();
+        projectToUpdate.Description = projectDescription?.StripHtml();
         await _dbContext.SaveChangesAsync();
         return Result<Entities.Project>.Success(projectToUpdate);
     }
@@ -230,8 +235,8 @@ public class ProjectService
         {
             Id = SlugHelper.GenerateId(),
             OptionType = pollRequest.OptionType,
-            Name = pollRequest.Name,
-            Description = pollRequest.Description,
+            Name = pollRequest.Name.StripHtml(),
+            Description = pollRequest.Description.StripHtml(),
             Project = projectResult,
             CloseDate = pollRequest.CloseDate.HasValue ? DateTime.SpecifyKind(pollRequest.CloseDate.Value, DateTimeKind.Utc) : null
         };
@@ -245,7 +250,8 @@ public class ProjectService
     public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null)
     {
         var poll = await _dbContext.Polls
-            .Include(t => t.Project)
+            .Include(t => t.Project).ThenInclude(p => p.Creator)
+            .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
@@ -265,16 +271,24 @@ public class ProjectService
             return Result<Poll>.Fail(409);
         }
 
-        poll.Name = name;
-        poll.Description = description;
+        var oldName = poll.Name;
+        var oldDescription = poll.Description;
+
+        poll.Name = name.StripHtml();
+        poll.Description = description.StripHtml();
         poll.CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null;
 
         if (poll.Project.IsStandalone)
         {
-            poll.Project.Name = name;
+            poll.Project.Name = name.StripHtml();
         }
 
         await _dbContext.SaveChangesAsync();
+
+        var actor = await _userService.GetUser();
+        _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
+            oldName, poll.Name, oldDescription, poll.Description);
+
         return Result<Poll>.Success(poll);
     }
 
@@ -342,8 +356,8 @@ public class ProjectService
         var option = new Option
         {
             Id = SlugHelper.GenerateId(),
-            Text = pollRequest.Text,
-            Description = pollRequest.Description,
+            Text = pollRequest.Text.StripHtml(),
+            Description = pollRequest.Description.StripHtml(),
             Poll = poll
         };
 
@@ -353,10 +367,10 @@ public class ProjectService
             {
                 Id = option.Id,
                 Url = pollRequest.Meta.Url,
-                Title = pollRequest.Meta.Title,
-                Description = pollRequest.Meta.Description,
+                Title = pollRequest.Meta.Title.StripHtml(),
+                Description = pollRequest.Meta.Description.StripHtml(),
                 ImageUrl = pollRequest.Meta.ImageUrl,
-                SiteName = pollRequest.Meta.SiteName,
+                SiteName = pollRequest.Meta.SiteName.StripHtml(),
                 Option = option
             };
         }
@@ -365,6 +379,10 @@ public class ProjectService
         _dbContext.Options.Add(option);
 
         await _dbContext.SaveChangesAsync();
+
+        var actor = await _userService.GetUser();
+        _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id);
+
         return Result<Option>.Success(option);
     }
 
@@ -391,18 +409,18 @@ public class ProjectService
             return Result<Option>.Fail(409);
         }
 
-        option.Text = request.Text;
-        option.Description = request.Description;
+        option.Text = request.Text.StripHtml();
+        option.Description = request.Description.StripHtml();
 
         if (request.Meta is not null)
         {
             if (option.Meta is not null)
             {
                 option.Meta.Url = request.Meta.Url;
-                option.Meta.Title = request.Meta.Title;
-                option.Meta.Description = request.Meta.Description;
+                option.Meta.Title = request.Meta.Title.StripHtml();
+                option.Meta.Description = request.Meta.Description.StripHtml();
                 option.Meta.ImageUrl = request.Meta.ImageUrl;
-                option.Meta.SiteName = request.Meta.SiteName;
+                option.Meta.SiteName = request.Meta.SiteName.StripHtml();
             }
             else
             {
@@ -410,10 +428,10 @@ public class ProjectService
                 {
                     Id = option.Id,
                     Url = request.Meta.Url,
-                    Title = request.Meta.Title,
-                    Description = request.Meta.Description,
+                    Title = request.Meta.Title.StripHtml(),
+                    Description = request.Meta.Description.StripHtml(),
                     ImageUrl = request.Meta.ImageUrl,
-                    SiteName = request.Meta.SiteName,
+                    SiteName = request.Meta.SiteName.StripHtml(),
                     Option = option
                 };
             }
@@ -425,6 +443,10 @@ public class ProjectService
         }
 
         await _dbContext.SaveChangesAsync();
+
+        var updateActor = await _userService.GetUser();
+        _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown", updateActor.Payload!.Id);
+
         return Result<Option>.Success(option);
     }
 
@@ -448,8 +470,15 @@ public class ProjectService
             return Result.Fail(409);
         }
 
+        var pollId = option.Poll.Id;
+        var optionId = option.Id;
+        var optionText = option.Text;
         _dbContext.Options.Remove(option);
         await _dbContext.SaveChangesAsync();
+
+        var deleteActor = await _userService.GetUser();
+        _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown", deleteActor.Payload!.Id);
+
         return Result.Success();
     }
 
@@ -492,6 +521,8 @@ public class ProjectService
     public async Task<Result<Comment>> AddComment(AddCommentRequest request)
     {
         var poll = await _dbContext.Polls
+            .Include(t => t.Project).ThenInclude(p => p.Creator)
+            .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Where(t => t.Id == SlugHelper.ExtractId(request.PollId) && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
@@ -508,8 +539,8 @@ public class ProjectService
         var comment = new Comment
         {
             Id = Guid.NewGuid(),
-            Content = request.Content,
-            Quote = request.Quote,
+            Content = request.Content.StripHtml(),
+            Quote = request.Quote?.StripHtml(),
             Poll = poll,
             Person = user
         };
@@ -518,12 +549,23 @@ public class ProjectService
         _dbContext.Comments.Add(comment);
 
         await _dbContext.SaveChangesAsync();
+
+        var recipients = poll.Project.Permissions
+            .Select(p => p.Person)
+            .Append(poll.Project.Creator)
+            .Where(p => p.Id != user.Id)
+            .ToList();
+        await _projectMailService.SendNewCommentNotificationsAsync(
+            recipients, user.Name ?? "Unknown", poll.Project, poll, comment.Content);
+
         return Result<Comment>.Success(comment);
     }
 
     public async Task<Result<Poll>> ClosePollAsync(string slug)
     {
         var poll = await _dbContext.Polls
+            .Include(t => t.Project).ThenInclude(p => p.Creator)
+            .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Include(t => t.Options)
             .ThenInclude(o => o.Meta)
             .Include(t => t.Options)
@@ -554,12 +596,23 @@ public class ProjectService
         poll.StatusChanges.Add(closedStatus);
         _dbContext.PollStatusChanges.Add(closedStatus);
         await _dbContext.SaveChangesAsync();
+
+        var closeRecipients = poll.Project.Permissions
+            .Select(p => p.Person)
+            .Append(poll.Project.Creator)
+            .Where(p => p.Id != actor.Payload!.Id)
+            .ToList();
+        await _projectMailService.SendPollClosedNotificationsAsync(
+            closeRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
+
         return Result<Poll>.Success(poll);
     }
 
     public async Task<Result<Poll>> ReopenPollAsync(string slug)
     {
         var poll = await _dbContext.Polls
+            .Include(t => t.Project).ThenInclude(p => p.Creator)
+            .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Include(t => t.Options)
             .ThenInclude(o => o.Meta)
             .Include(t => t.Options)
@@ -590,6 +643,15 @@ public class ProjectService
         poll.StatusChanges.Add(reopenedStatus);
         _dbContext.PollStatusChanges.Add(reopenedStatus);
         await _dbContext.SaveChangesAsync();
+
+        var reopenRecipients = poll.Project.Permissions
+            .Select(p => p.Person)
+            .Append(poll.Project.Creator)
+            .Where(p => p.Id != actor.Payload!.Id)
+            .ToList();
+        await _projectMailService.SendPollReopenedNotificationsAsync(
+            reopenRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
+
         return Result<Poll>.Success(poll);
     }
 }

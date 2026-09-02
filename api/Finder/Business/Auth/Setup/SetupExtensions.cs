@@ -11,7 +11,7 @@ public static class SetupExtensions
         services.Configure<LoginOptions>(configuration.GetSection("Login"));
 
         services.AddScoped<LoginService>();
-        services.AddScoped<MailService>();
+        services.AddScoped<LoginMailService>();
         services.AddScoped<SeedingService>();
 
         services.AddAuthorization();

@@ -12,14 +12,14 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
 
     public NotificationSettingsApiTests(FinderApiFactory factory) => _factory = factory;
 
-    // --- GET /api/user/notifications ---
+    // --- GET /api/user/notifications/settings ---
 
     [Fact]
     public async Task GetNotificationSettings_WhenUnauthenticated_Returns401()
     {
         using var client = _factory.CreateClient();
 
-        var response = await client.GetAsync("/api/user/notifications");
+        var response = await client.GetAsync("/api/user/notifications/settings");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -31,7 +31,7 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
         await _factory.SeedPersonNotificationSettings(user.Id);
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
-        var response = await client.GetAsync("/api/user/notifications");
+        var response = await client.GetAsync("/api/user/notifications/settings");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var array = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
@@ -45,7 +45,7 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
         await _factory.SeedPersonNotificationSettings(user.Id);
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
-        var response = await client.GetAsync("/api/user/notifications");
+        var response = await client.GetAsync("/api/user/notifications/settings");
 
         var array = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
         foreach (var item in array)
@@ -59,7 +59,7 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
         await _factory.SeedPersonNotificationSettings(user.Id);
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
-        var response = await client.GetAsync("/api/user/notifications");
+        var response = await client.GetAsync("/api/user/notifications/settings");
 
         var array = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
         for (var i = 0; i < array.Count; i++)
@@ -73,21 +73,21 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
         await _factory.SeedPersonNotificationSettings(user.Id);
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
-        var response = await client.GetAsync("/api/user/notifications");
+        var response = await client.GetAsync("/api/user/notifications/settings");
 
         var array = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
         var allowedValues = array[0]!["allowedValues"]!.AsArray().Select(v => v!.GetValue<string>()).ToList();
         Assert.Equal(["off", "favOnly", "all"], allowedValues);
     }
 
-    // --- PUT /api/user/notifications/{id} ---
+    // --- PUT /api/user/notifications/settings/{id} ---
 
     [Fact]
     public async Task UpdateNotificationSetting_WhenUnauthenticated_Returns401()
     {
         using var client = _factory.CreateClient();
 
-        var response = await client.PutAsJsonAsync("/api/user/notifications/1", new { value = "off" });
+        var response = await client.PutAsJsonAsync("/api/user/notifications/settings/1", new { value = "off" });
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -99,7 +99,7 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
         await _factory.SeedPersonNotificationSettings(user.Id);
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
-        var response = await client.PutAsJsonAsync("/api/user/notifications/1", new { value = "off" });
+        var response = await client.PutAsJsonAsync("/api/user/notifications/settings/1", new { value = "off" });
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
@@ -114,8 +114,8 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
         await _factory.SeedPersonNotificationSettings(user.Id);
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
-        await client.PutAsJsonAsync("/api/user/notifications/1", new { value = "favOnly" });
-        var response = await client.GetAsync("/api/user/notifications");
+        await client.PutAsJsonAsync("/api/user/notifications/settings/1", new { value = "favOnly" });
+        var response = await client.GetAsync("/api/user/notifications/settings");
 
         var array = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
         var setting1 = array.First(n => n!["id"]!.GetValue<int>() == 1)!;
@@ -129,7 +129,7 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
         await _factory.SeedPersonNotificationSettings(user.Id);
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
-        var response = await client.PutAsJsonAsync("/api/user/notifications/1", new { value = "invalid" });
+        var response = await client.PutAsJsonAsync("/api/user/notifications/settings/1", new { value = "invalid" });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -141,7 +141,7 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
         await _factory.SeedPersonNotificationSettings(user.Id);
         using var client = _factory.CreateAuthenticatedClient(user.Id);
 
-        var response = await client.PutAsJsonAsync("/api/user/notifications/999", new { value = "off" });
+        var response = await client.PutAsJsonAsync("/api/user/notifications/settings/999", new { value = "off" });
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }

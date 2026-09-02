@@ -1,12 +1,10 @@
 using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
-using Finder.Business.Permission.Setup;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Permission.Services;
 
@@ -14,17 +12,15 @@ public class PermissionService
 {
     private readonly AppDbContext _dbContext;
     private readonly UserService _userService;
-    private readonly MailService _mailService;
-    private readonly ShareMailOptions _shareMailOptions;
+    private readonly PermissionMailService _mailService;
 
     private Guid? UserId => _userService.GetUserId();
 
-    public PermissionService(AppDbContext dbContext, UserService userService, MailService mailService, IOptions<ShareMailOptions> shareMailOptions)
+    public PermissionService(AppDbContext dbContext, UserService userService, PermissionMailService mailService)
     {
         _dbContext = dbContext;
         _userService = userService;
         _mailService = mailService;
-        _shareMailOptions = shareMailOptions.Value;
     }
 
     public async Task<Result<List<Person>>> GetInvitedPersons()
@@ -164,6 +160,10 @@ public class PermissionService
         _dbContext.Permissions.Remove(permission);
         await _dbContext.SaveChangesAsync();
 
+        var actionUser = await _userService.GetUser();
+        await _mailService.SendPermissionRemovedMailAsync(
+            permission.Person, actionUser.Payload!.Name ?? "Unknown", project);
+
         return Result<Project.Entities.Project>.Success(project);
     }
 
@@ -235,27 +235,8 @@ public class PermissionService
         if (!silent)
         {
             var actionUser = await _userService.GetUser();
-            if (permission is not null)
-            {
-                await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
-                    Enum.GetName(permissionType) ?? "Unknown",
-                    _shareMailOptions.Update);
-            }
-            else
-            {
-                if (isNewUser)
-                {
-                    await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
-                        Enum.GetName(permissionType) ?? "Unknown",
-                        _shareMailOptions.SharedAndInvited);
-                }
-                else
-                {
-                    await _mailService.SendMail(user, actionUser.Payload!.Name ?? "Unknown", project.Name,
-                        Enum.GetName(permissionType) ?? "Unknown",
-                        _shareMailOptions.Shared);
-                }
-            }
+            await _mailService.SendPermissionMail(user, actionUser.Payload!.Name ?? "Unknown", project,
+                permissionType, permission is not null, isNewUser);
         }
 
         return Result<Project.Entities.Project>.Success(project);

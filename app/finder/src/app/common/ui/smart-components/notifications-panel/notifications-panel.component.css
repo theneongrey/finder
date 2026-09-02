@@ -22,8 +22,6 @@
     pointer-events: none;
 }
 
-/* .notifications-panel__menu background/border is in styles.css (CDK overlay lives outside host scope) */
-
 .notifications-panel__header {
     display: flex;
     align-items: center;

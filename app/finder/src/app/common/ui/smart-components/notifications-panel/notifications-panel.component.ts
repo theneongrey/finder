@@ -5,7 +5,10 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { UserStore } from '../../../data/user.store';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
-import { InAppNotification, InAppNotificationKey } from '../../../models/in-app-notification.model';
+import {
+    InAppNotification,
+    InAppNotificationKey,
+} from '../../../models/in-app-notification.model';
 
 const NOTIFICATION_TRANSLATION_KEYS: Record<InAppNotificationKey, string> = {
     PollClosed: 'notifications.pollClosed',
@@ -57,10 +60,16 @@ export class NotificationsPanelComponent {
     protected relativeTime(created: string): string {
         const diff = Date.now() - new Date(created).getTime();
         const minutes = Math.floor(diff / 60_000);
-        if (minutes < 1) return '<1m';
-        if (minutes < 60) return `${minutes}m`;
+        if (minutes < 1) {
+            return '<1m';
+        }
+        if (minutes < 60) {
+            return `${minutes}m`;
+        }
         const hours = Math.floor(minutes / 60);
-        if (hours < 24) return `${hours}h`;
+        if (hours < 24) {
+            return `${hours}h`;
+        }
         return `${Math.floor(hours / 24)}d`;
     }
 

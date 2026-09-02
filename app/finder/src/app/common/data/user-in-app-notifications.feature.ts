@@ -6,7 +6,7 @@ import {
     withMethods,
     withState,
 } from '@ngrx/signals';
-import { concatMap, EMPTY, pipe, switchMap, timer } from 'rxjs';
+import { concatMap, pipe, switchMap, timer } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { LoggerService } from '../services/logger.service';
@@ -19,7 +19,9 @@ export function withInAppNotificationsFeature() {
             inAppNotifications: undefined as InAppNotification[] | undefined,
         }),
         withComputed((store) => ({
-            unreadCount: computed(() => store.inAppNotifications()?.length ?? 0),
+            unreadCount: computed(
+                () => store.inAppNotifications()?.length ?? 0,
+            ),
         })),
         withMethods((store) => {
             const userService = inject(UserService);
@@ -45,10 +47,9 @@ export function withInAppNotificationsFeature() {
                             tapResponse({
                                 next: () =>
                                     patchState(store, {
-                                        inAppNotifications:
-                                            store
-                                                .inAppNotifications()
-                                                ?.filter((n) => n.id !== id),
+                                        inAppNotifications: store
+                                            .inAppNotifications()
+                                            ?.filter((n) => n.id !== id),
                                     }),
                                 error: (error) =>
                                     loggerService.error(
@@ -101,21 +102,19 @@ export function withInAppNotificationsFeature() {
                         switchMap(() =>
                             timer(0, 30_000).pipe(
                                 switchMap(() =>
-                                    userService
-                                        .getInAppNotifications()
-                                        .pipe(
-                                            tapResponse({
-                                                next: (inAppNotifications) =>
-                                                    patchState(store, {
-                                                        inAppNotifications,
-                                                    }),
-                                                error: (error) =>
-                                                    loggerService.error(
-                                                        '[UserStore] Error polling in-app notifications',
-                                                        error,
-                                                    ),
-                                            }),
-                                        ),
+                                    userService.getInAppNotifications().pipe(
+                                        tapResponse({
+                                            next: (inAppNotifications) =>
+                                                patchState(store, {
+                                                    inAppNotifications,
+                                                }),
+                                            error: (error) =>
+                                                loggerService.error(
+                                                    '[UserStore] Error polling in-app notifications',
+                                                    error,
+                                                ),
+                                        }),
+                                    ),
                                 ),
                             ),
                         ),

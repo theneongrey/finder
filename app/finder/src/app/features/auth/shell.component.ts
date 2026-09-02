@@ -6,12 +6,20 @@ import {
     untracked,
 } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { UserStore } from '../../common/data/user.store';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import {
+    NavigationEnd,
+    Router,
+    RouterLink,
+    RouterOutlet,
+} from '@angular/router';
 import { LoggerService } from '../../common/services/logger.service';
 import { DsButtonComponent } from '../../common/ui/ds-components/button/ds-button.component';
-import { DsIconComponent } from '../../common/ui/ds-components/icon/ds-icon.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthShellDefaultSidebarComponent } from './_shared/auth-shell-default-sidebar.component';
+import { AuthShellFirstLoginSidebarComponent } from './_shared/auth-shell-first-login-sidebar.component';
+import { filter, map, startWith } from 'rxjs';
 
 @Component({
     selector: 'app-auth-shell',
@@ -20,25 +28,29 @@ import { TranslatePipe } from '@ngx-translate/core';
         RouterLink,
         NgOptimizedImage,
         DsButtonComponent,
-        DsIconComponent,
         TranslatePipe,
+        AuthShellDefaultSidebarComponent,
+        AuthShellFirstLoginSidebarComponent,
     ],
     templateUrl: './shell.component.html',
     host: { class: 'flex flex-col h-dvh bg-app-gradient' },
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthShellComponent {
-    readonly features = [
-        'auth.shell.feature1',
-        'auth.shell.feature2',
-        'auth.shell.feature3',
-    ];
     private userStore = inject(UserStore);
     private loggerService = inject(LoggerService);
+    private router = inject(Router);
+
+    protected readonly isFirstLogin = toSignal(
+        this.router.events.pipe(
+            filter((e) => e instanceof NavigationEnd),
+            map(() => this.router.url.includes('/auth/first-login')),
+            startWith(this.router.url.includes('/auth/first-login')),
+        ),
+        { initialValue: false },
+    );
 
     constructor() {
-        const router = inject(Router);
-
         effect(() => {
             const user = this.userStore.user();
             if (!user) {
@@ -48,13 +60,15 @@ export class AuthShellComponent {
             if (user.isAuthenticated) {
                 this.loggerService.log('user is authenticated');
 
+                if (!user.name) {
+                    this.loggerService.log(
+                        'first time user. redirect to first login',
+                    );
+                    this.router.navigate(['/auth/first-login']);
+                    return;
+                }
+
                 const target = untracked((): string => {
-                    if (!user.name) {
-                        this.loggerService.log(
-                            'first time user. redirect to set name',
-                        );
-                        return '/settings';
-                    }
                     const redirectUrl = this.userStore.redirectUrl();
                     if (redirectUrl) {
                         this.loggerService.log(`redirect to ${redirectUrl}`);
@@ -62,12 +76,14 @@ export class AuthShellComponent {
                         return redirectUrl;
                     }
                     this.loggerService.log('redirect to project overview');
-                    return '/project';
+                    return '/polls';
                 });
 
-                router.navigate(['/auth/login-success'], { state: { target } });
+                this.router.navigate(['/auth/login-success'], {
+                    state: { target },
+                });
             } else {
-                router.navigate(['/auth/request-email']);
+                this.router.navigate(['/auth/request-email']);
             }
         });
 

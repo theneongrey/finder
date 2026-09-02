@@ -40,7 +40,7 @@
   <div style="display:flex;align-items:center;gap:12px">
     <span style="display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:8px;background:#24272b;color:#fff;font-size:12px;font-weight:700;letter-spacing:.6px">1a</span>
     <span style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:20px;font-weight:700;letter-spacing:-.4px;color:#1d2227">Umfrage erstellen · Termin</span>
-    <span style="font-size:13.5px;color:#79756f">Art · Terminoptionen · Teilen — Mobil in 3 Schritten, Web mit Teilen-Panel</span>
+    <span style="font-size:13.5px;color:#79756f">Art · Terminoptionen · Teilen — 3 Schritte auf Mobil und Web</span>
   </div>
 
   <div style="display:flex;align-items:flex-start;gap:56px">
@@ -117,8 +117,11 @@
             <div style="padding:20px 18px 130px;animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
 
               <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:16px 16px 18px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
-                <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Deine Frage</div>
-                <input value="{{ m.q }}" onChange="{{ m.onQ }}" placeholder="z. B. Wann passt es allen?" style="width:100%;height:48px;margin-top:8px;padding:0 14px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:16px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+                  <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Deine Frage</div>
+                  <div style="font-size:11.5px;font-weight:700;color:{{ m.qCountColor }};transition:color 160ms ease">{{ m.qCount }}/100</div>
+                </div>
+                <input value="{{ m.q }}" onChange="{{ m.onQ }}" maxlength="100" placeholder="z. B. Wann passt es allen?" style="width:100%;height:48px;margin-top:8px;padding:0 14px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:16px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
                 <sc-if value="{{ m.descOff }}" hint-placeholder-val="{{ true }}">
                   <button onClick="{{ m.onAddDesc }}" style="display:flex;align-items:center;gap:6px;margin-top:11px;padding:0;border:none;background:none;color:#1f7a8c;font-size:13.5px;font-weight:700;cursor:pointer">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
@@ -392,7 +395,7 @@
     <div style="display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:baseline;gap:10px;padding-left:4px">
         <span style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#79756f">Web</span>
-        <span style="font-size:12px;color:#a39e96">1280 × 820 · Kalender + Teilen-Panel</span>
+        <span style="font-size:12px;color:#a39e96">1280 × 820 · Kalender + Teilen als Schritt 3</span>
       </div>
 
       <div data-screen-label="Web – Umfrage erstellen" style="position:relative;width:1280px;height:820px;background:linear-gradient(135deg,#faf5ed 10%,#f5f4ee 30%,#f1f2ee 50%,#ecf1ef 70%,#e7efef 90%);border:1px solid rgba(20,24,28,.1);border-radius:20px;box-shadow:0 24px 60px rgba(30,35,40,.16);overflow:hidden;display:flex;flex-direction:column">
@@ -512,12 +515,15 @@
             </sc-if>
 
             <sc-if value="{{ w.isStep2 }}">
-              <div style="display:grid;grid-template-columns:minmax(0,1fr) 344px;gap:24px;align-items:start;animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:start;max-width:1000px;animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
 
                 <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
                   <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:20px 22px 22px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
-                    <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Deine Frage</div>
-                    <input value="{{ w.q }}" onChange="{{ w.onQ }}" placeholder="z. B. Wann passt es allen?" style="width:100%;height:50px;margin-top:9px;padding:0 15px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:16.5px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+                      <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Deine Frage</div>
+                      <div style="font-size:11.5px;font-weight:700;color:{{ w.qCountColor }};transition:color 160ms ease">{{ w.qCount }}/100</div>
+                    </div>
+                    <input value="{{ w.q }}" onChange="{{ w.onQ }}" maxlength="100" placeholder="z. B. Wann passt es allen?" style="width:100%;height:50px;margin-top:9px;padding:0 15px;border-radius:14px;border:1px solid rgba(20,24,28,.1);background:#fdfcfa;font-size:16.5px;color:#1d2227;outline:none;transition:border-color 160ms ease,box-shadow 160ms ease" style-focus="border-color:#9fc2cf;box-shadow:0 0 0 3px rgba(31,122,140,.1)">
                     <sc-if value="{{ w.descOff }}" hint-placeholder-val="{{ true }}">
                       <button onClick="{{ w.onAddDesc }}" style="display:flex;align-items:center;gap:6px;margin-top:12px;padding:0;border:none;background:none;color:#1f7a8c;font-size:14px;font-weight:700;cursor:pointer">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
@@ -694,6 +700,45 @@
                         <span>Jetzt beenden</span>
                       </button>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ w.isStep3 }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start;animation:vtStepIn .34s cubic-bezier(.22,.7,.3,1) both">
+
+                <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+                  <div style="display:flex;align-items:center;gap:11px;padding:13px 16px;border-radius:16px;background:#eaf4f5;border:1px solid rgba(31,122,140,.2)">
+                    <span style="flex:none;width:24px;height:24px;border-radius:50%;background:#1f7a8c;display:flex;align-items:center;justify-content:center">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L20 5"></path></svg>
+                    </span>
+                    <span style="flex:1;min-width:0;font-size:13.5px;color:#2c5f68;text-wrap:pretty">Umfrage angelegt — ab jetzt gibt es den Link. Teilnehmende sehen sie erst, wenn du sie einlädst.</span>
+                  </div>
+
+                  <div style="background:#fff;border:1px solid rgba(20,24,28,.055);border-radius:22px;padding:20px 22px 22px;box-shadow:0 3px 14px rgba(35,40,45,.05)">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+                      <div style="min-width:0">
+                        <div style="font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#a39e96">Deine Umfrage</div>
+                        <div style="font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:23px;font-weight:700;letter-spacing:-.5px;line-height:1.15;color:#1d2227;margin-top:7px;text-wrap:pretty">{{ w.q }}</div>
+                      </div>
+                      <button onClick="{{ w.onEditStep2 }}" style="flex:none;height:36px;padding:0 14px;border-radius:12px;border:1px solid rgba(20,24,28,.08);background:#fdfcfa;color:#5a5650;font-size:13px;font-weight:700;cursor:pointer;transition:background 140ms ease" style-hover="background:#f1eee9">Bearbeiten</button>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+                      <sc-for list="{{ w.summaryChips }}" as="c" hint-placeholder-count="3">
+                        <span style="display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:10px;background:#f4f1ec;color:#5a5650;font-size:12.5px;font-weight:700">{{ c.label }}</span>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(20,24,28,.055)">
+                      <sc-for list="{{ w.itemChips }}" as="it" hint-placeholder-count="4">
+                        <span style="display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:11px;border:1px solid rgba(31,122,140,.18);background:#eaf4f5;color:#1f7a8c;font-size:13px;font-weight:700">{{ it.label }}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+
+                  <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.6);border:1px solid rgba(20,24,28,.05)">
+                    <svg width="17" height="17" style="flex:none" viewBox="0 0 24 24" fill="none" stroke="#a39e96" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"></circle><path d="M12 11v5.4"></path><path d="M12 7.9v.1"></path></svg>
+                    <span style="font-size:13.5px;color:#79756f;text-wrap:pretty">Einladen kannst du auch später jederzeit — über die Umfrage selbst.</span>
                   </div>
                 </div>
 
@@ -1073,7 +1118,7 @@ class Component extends DCLogic {
     if (s.step === 2) {
       if (!s.q.trim()) { this.toast(k, 'Bitte zuerst eine Frage eingeben'); return; }
       if (s.items.length < this.minItems) { this.toast(k, 'Mindestens ' + this.minItems + ' Optionen w\u00e4hlen'); return; }
-      if (k === 'm') { this.patch(k, { step: 3 }); return; }
+      this.patch(k, { step: 3 }); return;
     }
     const n = s.shared.length - 1;
     this.toast(k, n > 0 ? 'Umfrage erstellt \u2014 ' + (n === 1 ? '1 Person eingeladen' : n + ' Personen eingeladen') : 'Umfrage erstellt \u2014 Link kopiert');
@@ -1220,19 +1265,27 @@ class Component extends DCLogic {
     });
 
     const step3 = s.step === 3;
-    const steps = k === 'm' ? 3 : 2;
+    const steps = 3;
     const headTitles = { 1: 'Neue Umfrage', 2: 'Terminoptionen', 3: 'Teilen' };
     const headSubs = {
       1: 'Schritt 1 von ' + steps + ' \u00b7 Art',
       2: 'Schritt 2 von ' + steps + ' \u00b7 ' + modeLabel,
-      3: 'Schritt 3 von 3 \u00b7 ' + (s.shared.length - 1) + ' eingeladen',
+      3: 'Schritt 3 von ' + steps + ' \u00b7 ' + (s.shared.length - 1) + ' eingeladen',
     };
 
     return Object.assign(this.share(k), {
       isStep1: step1,
       isStep2: s.step === 2,
+      onEditStep2: () => this.patch(k, { step: 2 }),
+      summaryChips: [
+        { label: 'Terminumfrage' },
+        { label: modeLabel },
+        { label: s.items.length === 1 ? '1 Option' : s.items.length + ' Optionen' },
+        { label: dl.text },
+      ],
+      itemChips: s.items.slice(0, 8).map(it => ({ label: this.pvLabel(it, s) })),
       isStep3: step3,
-      progress: step1 ? '33%' : (s.step === 2 ? (steps === 3 ? '66%' : '100%') : '100%'),
+      progress: step1 ? '33%' : (s.step === 2 ? '66%' : '100%'),
       headTitle: headTitles[s.step],
       headSub: headSubs[s.step],
       onBack: () => this.back(k),
@@ -1255,7 +1308,10 @@ class Component extends DCLogic {
       }),
 
       q: s.q,
-      onQ: e => this.patch(k, { q: e.target.value }),
+      onQ: e => this.patch(k, { q: e.target.value.slice(0, 100) }),
+      qCount: s.q.length,
+      qNear: s.q.length >= 90 ? '1' : '0',
+      qCountColor: s.q.length >= 100 ? '#c1453f' : (s.q.length >= 90 ? '#b8863a' : '#a39e96'),
       desc: s.desc || '',
       descOn: s.desc !== null,
       descOff: s.desc === null,
@@ -1332,8 +1388,8 @@ class Component extends DCLogic {
       customBorder: s.deadline === 'custom' ? '#bcdfe3' : 'rgba(20,24,28,.1)',
       customBg: s.deadline === 'custom' ? '#eaf4f5' : '#fdfcfa',
 
-      ctaLabel: step1 ? 'Weiter zu den Optionen' : (step3 || steps === 2 ? 'Umfrage erstellen' : 'Weiter zum Teilen'),
-      ctaIcon: step3 || (steps === 2 && !step1),
+      ctaLabel: step1 ? 'Weiter zu den Optionen' : (step3 ? 'Umfrage erstellen' : 'Weiter zum Teilen'),
+      ctaIcon: step3,
       ctaBg: step1 || step3 ? ac : (valid ? ac : '#e4e0da'),
       ctaFg: step1 || step3 ? '#ffffff' : (valid ? '#ffffff' : '#a39e96'),
       ctaShadow: (step1 || step3 || valid) ? '0 8px 22px rgba(31,122,140,.28)' : 'none',
@@ -1392,15 +1448,27 @@ class Component extends DCLogic {
           },
           {
             num: '2', title: 'Optionen & Regeln', sub: st.items.length + ' gew\u00e4hlt',
-            done: false, showNum: true,
+            done: st.step > 2, showNum: st.step <= 2,
             bg: st.step === 2 ? '#f7f5f1' : 'transparent',
-            ringBg: st.step === 2 ? ac : 'transparent',
-            ringBorder: st.step === 2 ? ac : 'rgba(20,24,28,.18)',
-            ringFg: st.step === 2 ? '#ffffff' : '#a39e96',
-            titleFg: st.step === 2 ? '#1d2227' : '#79756f',
+            ringBg: st.step >= 2 ? ac : 'transparent',
+            ringBorder: st.step >= 2 ? ac : 'rgba(20,24,28,.18)',
+            ringFg: st.step >= 2 ? '#ffffff' : '#a39e96',
+            titleFg: st.step >= 2 ? '#1d2227' : '#79756f',
             cursor: 'pointer',
             pulse: st.step === 2 ? 'vtPulse 2.6s ease-out infinite' : 'none',
             onGo: () => this.patch('w', { step: 2 }),
+          },
+          {
+            num: '3', title: 'Teilen', sub: st.shared.length === 1 ? 'nur du' : st.shared.length + ' mit Zugriff',
+            done: false, showNum: true,
+            bg: st.step === 3 ? '#f7f5f1' : 'transparent',
+            ringBg: st.step === 3 ? ac : 'transparent',
+            ringBorder: st.step === 3 ? ac : 'rgba(20,24,28,.18)',
+            ringFg: st.step === 3 ? '#ffffff' : '#a39e96',
+            titleFg: st.step === 3 ? '#1d2227' : '#79756f',
+            cursor: 'pointer',
+            pulse: st.step === 3 ? 'vtPulse 2.6s ease-out infinite' : 'none',
+            onGo: () => this.patch('w', { step: 3 }),
           },
         ],
       }),

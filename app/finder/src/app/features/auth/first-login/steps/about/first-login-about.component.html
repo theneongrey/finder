@@ -1,0 +1,49 @@
+<div class="pb-[4px]">
+    <div
+        class="[font-family:var(--font-display)] leading-[1.1] font-bold tracking-[-0.6px] text-[var(--fs-display-sm)] text-[var(--text-primary)]"
+    >
+        {{ 'auth.firstLogin.about.heading' | translate }}
+    </div>
+    <p class="mt-[8px] text-[var(--fs-body-sm)] text-[var(--text-secondary)]">
+        {{ 'auth.firstLogin.about.description' | translate }}
+    </p>
+
+    <div class="mt-[20px] flex flex-col gap-[14px]">
+        @for (feature of features; track feature.key) {
+            <div class="flex items-center gap-[14px]">
+                <span
+                    class="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-full"
+                    [style.background]="feature.bg"
+                >
+                    <ds-icon
+                        [name]="feature.icon"
+                        [size]="16"
+                        [color]="feature.color"
+                    />
+                </span>
+                <div class="flex flex-col gap-[1px]">
+                    <span
+                        class="font-semibold text-[var(--fs-body-sm)] text-[var(--text-primary)]"
+                    >
+                        {{ feature.key | translate }}
+                    </span>
+                    <span
+                        class="text-[12.5px] leading-[1.4] text-[var(--text-secondary)]"
+                    >
+                        {{ feature.subKey | translate }}
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="mt-[22px]">
+        <ds-button
+            [fullWidth]="true"
+            trailingIcon="arrow-right"
+            (click)="next.emit()"
+        >
+            {{ 'auth.firstLogin.about.cta' | translate }}
+        </ds-button>
+    </div>
+</div>

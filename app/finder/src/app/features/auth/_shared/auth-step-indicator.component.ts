@@ -12,12 +12,20 @@ import {
     host: { class: 'flex gap-[7px] mb-[16px]' },
 })
 export class AuthStepIndicatorComponent {
-    step = input.required<1 | 2 | 3>();
+    step = input.required<number>();
+    total = input<number>(3);
 
-    protected dot2Class = computed(() =>
-        this.step() >= 2 ? 'bg-[var(--accent)]' : 'bg-[var(--sand-200)]',
+    protected segments = computed(() =>
+        Array.from({ length: this.total() }, (_, i) => i + 1),
     );
-    protected dot3Class = computed(() =>
-        this.step() === 3 ? 'bg-[#5d9a56]' : 'bg-[var(--sand-200)]',
-    );
+
+    protected segmentClass = computed(() => {
+        const current = this.step();
+        const last = this.total();
+        return (i: number) => {
+            if (i > current) return 'bg-[var(--sand-200)]';
+            if (i === last && current === last) return 'bg-[#5d9a56]';
+            return 'bg-[var(--accent)]';
+        };
+    });
 }

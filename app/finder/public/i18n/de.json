@@ -88,6 +88,46 @@
       "legalConsentSuffix": "zu.",
       "helpText": "Probleme beim Anmelden?",
       "helpLink": "Hilfe"
+    },
+    "firstLogin": {
+      "sidebar": {
+        "tagline": "Schön, dass du dabei bist.",
+        "description": "Nur noch ein paar Schritte, dann bist du startklar.",
+        "feature1": "Termine finden",
+        "feature2": "Ja oder Nein entscheiden",
+        "feature3": "Optionen bewerten"
+      },
+      "about": {
+        "heading": "Wofür ist Votean?",
+        "description": "Mit Votean findet ihr gemeinsam den besten Termin, trefft klare Entscheidungen – und das alles ohne endlose Chatnachrichten.",
+        "feature1": "Termine finden",
+        "feature1Sub": "Gemeinsam den besten Termin abstimmen",
+        "feature2": "Ja oder Nein",
+        "feature2Sub": "Klare Entscheidungen ohne endlose Diskussionen",
+        "feature3": "Bewerten",
+        "feature3Sub": "Optionen vergleichen und die beste wählen",
+        "cta": "Weiter"
+      },
+      "swipe": {
+        "heading": "So stimmst du ab",
+        "description": "Ziehe die Karte nach rechts für Ja, nach links für Nein.",
+        "cardText": "Grillabend am Samstag?",
+        "ja": "JA",
+        "nein": "NEIN",
+        "hint": "Karte ziehen",
+        "success": "Genau so einfach ist das!",
+        "cta": "Weiter"
+      },
+      "name": {
+        "heading": "Wie dürfen wir dich nennen?",
+        "label": "Vorname",
+        "placeholder": "z. B. Giovanni",
+        "cta": "Fertig"
+      },
+      "done": {
+        "heading": "Willkommen, {{name}}!",
+        "redirect": "Wir bringen dich zu deinen Umfragen."
+      }
     }
   },
   "project": {

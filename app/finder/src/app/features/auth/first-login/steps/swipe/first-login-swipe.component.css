@@ -1,0 +1,43 @@
+.swipe-success-circle {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: #e2ede1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: swipe-success-pop 0.4s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+@keyframes swipe-success-pop {
+    0% {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.12);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes vtNudge {
+    0%,
+    62%,
+    100% {
+        transform: translateX(0);
+    }
+    72% {
+        transform: translateX(7px) rotate(1.4deg);
+    }
+    86% {
+        transform: translateX(-7px) rotate(-1.4deg);
+    }
+}
+
+.swipe-hint {
+    animation: vtNudge 4.2s ease-in-out 1.2s infinite;
+    transition: opacity 0.3s ease-out;
+}

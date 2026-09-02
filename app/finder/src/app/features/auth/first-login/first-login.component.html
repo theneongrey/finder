@@ -1,0 +1,18 @@
+@if (currentStep() < 3) {
+    <app-auth-step-indicator [step]="currentStep() + 2" [total]="4" />
+}
+
+@switch (currentStep()) {
+    @case (0) {
+        <app-first-login-about (next)="nextStep()" />
+    }
+    @case (1) {
+        <app-first-login-swipe (next)="nextStep()" />
+    }
+    @case (2) {
+        <app-first-login-name (next)="nextStep()" />
+    }
+    @case (3) {
+        <app-first-login-done />
+    }
+}

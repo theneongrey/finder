@@ -33,7 +33,7 @@ function nameHash(name: string): number {
     host: { style: 'display: contents' },
 })
 export class UserAvatarComponent {
-    user = input.required<{ name: string }>();
+    user = input.required<{ name: string | undefined }>();
     size = input<'normal' | 'large' | 'xlarge' | number>('normal');
     voted = input<boolean | undefined>(undefined);
 

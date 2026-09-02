@@ -11,13 +11,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
 import { DsAvatarComponent } from '@ds/avatar/ds-avatar.component';
-import {
-    DEMO,
-    DEMO_SEQ,
-    DEMO_TOTAL_VOTERS,
-    NAMES_TOP_100,
-    PPL,
-} from '../../home.constants';
+import { NAMES_TOP_100 } from '../../../../common/constants/names.constants';
+import { DEMO, DEMO_SEQ, DEMO_TOTAL_VOTERS, PPL } from '../../home.constants';
 import { HomeService } from '../../home.service';
 
 @Component({

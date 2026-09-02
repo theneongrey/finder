@@ -98,6 +98,46 @@
       "legalConsentSuffix": ".",
       "helpText": "¿Problemas al iniciar sesión?",
       "helpLink": "Ayuda"
+    },
+    "firstLogin": {
+      "sidebar": {
+        "tagline": "Qué bueno tenerte aquí.",
+        "description": "Solo unos pasos más y estarás listo.",
+        "feature1": "Encontrar fechas",
+        "feature2": "Decidir sí o no",
+        "feature3": "Valorar opciones"
+      },
+      "about": {
+        "heading": "¿Para qué sirve Votean?",
+        "description": "Con Votean encontráis juntos la mejor fecha, tomáis decisiones claras, todo sin mensajes interminables.",
+        "feature1": "Encontrar fechas",
+        "feature1Sub": "Votad juntos el mejor momento",
+        "feature2": "Sí o No",
+        "feature2Sub": "Decisiones claras sin debates interminables",
+        "feature3": "Valorar",
+        "feature3Sub": "Compara opciones y elige la mejor",
+        "cta": "Continuar"
+      },
+      "swipe": {
+        "heading": "Así votas",
+        "description": "Desliza la tarjeta a la derecha para sí, a la izquierda para no.",
+        "cardText": "¿Barbacoa el sábado?",
+        "ja": "SÍ",
+        "nein": "NO",
+        "hint": "Arrastra la tarjeta",
+        "success": "¡Así de sencillo!",
+        "cta": "Continuar"
+      },
+      "name": {
+        "heading": "¿Cómo te llamamos?",
+        "label": "Nombre",
+        "placeholder": "p. ej. Giovanni",
+        "cta": "Listo"
+      },
+      "done": {
+        "heading": "¡Bienvenido, {{name}}!",
+        "redirect": "Te llevamos a tus encuestas."
+      }
     }
   },
   "project": {

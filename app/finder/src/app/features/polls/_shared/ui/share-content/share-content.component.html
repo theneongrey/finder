@@ -6,7 +6,7 @@
     "
     [style.box-shadow]="inCard() ? 'var(--shadow-card-soft)' : null"
 >
-    @if (tabItems().length > 1) {
+    @if (!hideTabs() && tabItems().length > 1) {
         <ds-tabs
             [items]="tabItems()"
             [value]="activeTab()"
@@ -14,8 +14,8 @@
         />
     }
 
-    @if (activeTab() === 'invite') {
-        <div [class.mt-[18px]]="tabItems().length > 1">
+    @if (hideTabs() || activeTab() === 'invite') {
+        <div [class.mt-[18px]]="!hideTabs() && tabItems().length > 1">
             <app-share-access-tab
                 [visibilityOptions]="visibilityOptions()"
                 [selectedVisibility]="selectedVisibilityStr()"
@@ -33,7 +33,7 @@
         </div>
     }
 
-    @if (activeTab() === 'members') {
+    @if (!hideTabs() && activeTab() === 'members') {
         <div class="mt-[18px]">
             <app-share-members-list
                 [projectId]="projectId()"

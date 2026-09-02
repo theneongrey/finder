@@ -1,6 +1,8 @@
+import { computed } from '@angular/core';
 import {
     patchState,
     signalStore,
+    withComputed,
     withMethods,
     withProps,
     withState,
@@ -22,8 +24,15 @@ export const PollListStore = signalStore(
     withState({
         standalonePolls: [] as StandalonePollOverview[],
         isLoading: true,
-        lastCreatedProject: undefined as StandalonePollOverview | undefined,
+        lastCreatedProjectId: undefined as string | undefined,
     }),
+    withComputed((store) => ({
+        lastCreatedProject: computed(() => {
+            const id = store.lastCreatedProjectId();
+            if (!id) return undefined;
+            return store.standalonePolls().find((p) => p.projectId === id);
+        }),
+    })),
     withProps(() => ({
         loggerService: inject(LoggerService),
         projectService: inject(PollService),
@@ -181,7 +190,8 @@ export const PollListStore = signalStore(
                                             responsePoll,
                                             ...store.standalonePolls(),
                                         ],
-                                        lastCreatedProject: responsePoll,
+                                        lastCreatedProjectId:
+                                            responsePoll.projectId,
                                     });
                                 },
                                 error: (error) => {
@@ -197,7 +207,7 @@ export const PollListStore = signalStore(
         ),
 
         clearCreatedProject(): void {
-            patchState(store, { lastCreatedProject: undefined });
+            patchState(store, { lastCreatedProjectId: undefined });
         },
     })),
     withReducer(

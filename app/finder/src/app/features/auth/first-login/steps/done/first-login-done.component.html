@@ -1,0 +1,25 @@
+<div class="pt-[6px] pb-[4px] text-center">
+    <div class="done-success-circle">
+        <ds-icon name="check" [size]="30" color="#5d9a56" />
+    </div>
+
+    <div
+        class="mt-[18px] [font-family:var(--font-display)] leading-[1.1] font-bold tracking-[-0.6px] text-[var(--fs-display-md)] text-[var(--text-primary)] lg:text-[28px]"
+    >
+        {{ 'auth.firstLogin.done.heading' | translate: { name: name } }}
+    </div>
+    <p
+        class="mt-[8px] text-[var(--fs-body-sm)] text-[var(--text-secondary)] lg:text-[var(--fs-body)]"
+    >
+        {{ 'auth.firstLogin.done.redirect' | translate }}
+    </p>
+
+    <div
+        class="mt-[22px] h-[4px] overflow-hidden rounded-full bg-[var(--sand-200)]"
+    >
+        <div
+            [style.width]="barWidth()"
+            class="h-full rounded-full bg-[var(--accent)] [transition:width_1.4s_cubic-bezier(0.3,0.7,0.3,1)]"
+        ></div>
+    </div>
+</div>

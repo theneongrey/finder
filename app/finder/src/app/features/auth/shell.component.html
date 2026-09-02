@@ -16,59 +16,11 @@
 </header>
 
 <main class="flex flex-1 items-center justify-center lg:items-stretch">
-    <!-- Desktop branding panel -->
-    <div
-        class="hidden w-[520px] flex-none flex-col justify-between border-r border-[var(--border-hairline-soft)] bg-[rgba(250,253,249,0.5)] px-11 py-10 lg:flex"
-    >
-        <a routerLink="/" class="flex items-center gap-2 no-underline">
-            <ds-icon name="logo" [size]="24" color="var(--accent)" />
-            <span
-                class="[font-family:var(--font-display)] text-[22px] font-bold tracking-[-0.3px] text-[var(--accent)]"
-                >Votean</span
-            >
-        </a>
-
-        <div class="flex flex-col gap-[16px]">
-            <div
-                class="max-w-[400px] [font-family:var(--font-display)] text-[42px] leading-[1.08] font-bold tracking-[-1.2px] text-pretty text-[var(--text-primary)]"
-            >
-                {{ 'auth.shell.tagline' | translate }}
-            </div>
-            <p
-                class="m-0 max-w-[400px] leading-[var(--leading-relaxed)] text-pretty text-[var(--fs-body-lg)] text-[var(--text-secondary)]"
-            >
-                {{ 'auth.shell.description' | translate }}
-            </p>
-
-            <div class="mt-[12px] flex flex-col gap-[13px]">
-                @for (feature of features; track feature) {
-                    <div
-                        class="flex items-center gap-[11px] text-[var(--fs-body-sm)] text-[var(--ink-600)]"
-                    >
-                        <span
-                            class="flex h-[26px] w-[26px] flex-none items-center justify-center rounded-full bg-[var(--teal-100)]"
-                        >
-                            <ds-icon
-                                name="check"
-                                [size]="14"
-                                color="var(--accent)"
-                            />
-                        </span>
-                        <span>{{ feature | translate }}</span>
-                    </div>
-                }
-            </div>
-        </div>
-
-        <p
-            class="m-0 text-[13px] leading-[var(--leading-relaxed)] text-[var(--text-muted)]"
-        >
-            {{ 'auth.shell.helpText' | translate }}
-            <a href="#" class="ds-link">{{
-                'auth.shell.helpLink' | translate
-            }}</a>
-        </p>
-    </div>
+    @if (isFirstLogin()) {
+        <app-auth-shell-first-login-sidebar />
+    } @else {
+        <app-auth-shell-default-sidebar />
+    }
 
     <!-- Form area -->
     <div

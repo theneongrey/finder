@@ -37,6 +37,7 @@ export class ShareMembersListComponent {
     projectId = input.required<string>();
     members = input.required<SharedWith[]>();
     isPublic = input.required<boolean>();
+    hideInviteButton = input<boolean>(false);
 
     goInvite = output<void>();
 
@@ -54,17 +55,21 @@ export class ShareMembersListComponent {
     );
 
     roleSummary = computed(() => {
-        const counts: Record<string, number> = {};
+        const counts = new Map<PollRole, number>();
         for (const m of this.members()) {
-            const key = this.getRoleKey(m.role);
-            counts[key] = (counts[key] ?? 0) + 1;
+            counts.set(m.role, (counts.get(m.role) ?? 0) + 1);
         }
-        const order = ['creator', 'owner', 'maintainer', 'voter'];
-        return Object.entries(counts)
+        const order = [
+            PollRole.Creator,
+            PollRole.Owner,
+            PollRole.Maintainer,
+            PollRole.Voter,
+        ];
+        return [...counts.entries()]
             .sort(([a], [b]) => order.indexOf(a) - order.indexOf(b))
-            .map(([key, count]) => ({
-                label: `${count} ${this.translateService.instant('project.roles.' + key)}`,
-                tone: this.getRoleBadgeToneByKey(key),
+            .map(([role, count]) => ({
+                label: `${count} ${this.translateService.instant('project.roles.' + this.getRoleKey(role))}`,
+                tone: this.getRoleBadgeTone(role),
             }));
     });
 
@@ -132,19 +137,6 @@ export class ShareMembersListComponent {
         }
     }
 
-    private getRoleBadgeToneByKey(key: string): BadgeTone {
-        switch (key) {
-            case 'creator':
-                return 'accent';
-            case 'owner':
-                return 'manager';
-            case 'maintainer':
-                return 'contributor';
-            default:
-                return 'viewer';
-        }
-    }
-
     changeRole(email: string, permissionType: number) {
         this.sharingStore.share({
             email,
@@ -159,10 +151,12 @@ export class ShareMembersListComponent {
         );
     }
 
-    confirmRemove(email: string) {
+    confirmRemove(member: SharedWith) {
         this.sharingStore.removePermission({
             projectId: this.projectId(),
-            email,
+            email: member.email,
+            name: member.name,
+            picture: member.picture,
         });
         this.pendingRemoveEmail.set(undefined);
     }

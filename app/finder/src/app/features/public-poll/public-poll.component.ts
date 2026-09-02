@@ -163,9 +163,6 @@ export class PublicPollComponent implements OnInit {
                         info.pollPreview?.name ?? info.projectName,
                     );
                     this.isLoading.set(false);
-                    if (this.isAuthenticated()) {
-                        this.navigateToPoll();
-                    }
                 },
                 error: () => {
                     this.isLoading.set(false);
@@ -182,9 +179,6 @@ export class PublicPollComponent implements OnInit {
                     this.isAuthenticated.set(authenticated);
                     this.currentUser.set(user ?? undefined);
                     this.isLoading.set(false);
-                    if (authenticated && this.projectInfo()) {
-                        this.navigateToPoll();
-                    }
                 },
                 error: () => this.isLoading.set(false),
             });

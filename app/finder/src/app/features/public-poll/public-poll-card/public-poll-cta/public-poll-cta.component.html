@@ -4,6 +4,7 @@
             <ds-button
                 variant="primary"
                 [fullWidth]="true"
+                data-testid="public-poll-vote-btn"
                 (click)="voteClick.emit()"
             >
                 {{ 'publicPoll.memberVoteButton' | translate }}
@@ -31,7 +32,11 @@
 } @else {
     @if (isAuthenticated()) {
         <div class="mt-[22px] flex items-center gap-3.5">
-            <ds-button variant="primary" (click)="voteClick.emit()">
+            <ds-button
+                variant="primary"
+                data-testid="public-poll-vote-btn"
+                (click)="voteClick.emit()"
+            >
                 {{ 'publicPoll.memberVoteButton' | translate }}
             </ds-button>
             <span

@@ -3,10 +3,11 @@ using Finder.Business.Permission.Entities;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Business.User.Services;
+using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Permission.Services;
 
-public class PermissionMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, InAppNotificationService inAppNotificationService)
+public class PermissionMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, InAppNotificationService inAppNotificationService, IOptions<AppOptions> appOptions)
 {
     public async Task SendPermissionMail(Person recipient, string actionUserName, Project.Entities.Project project,
         PermissionType permissionType, bool isExistingPermission, bool isNewUser, string language = "en")
@@ -65,7 +66,8 @@ public class PermissionMailService(MailService mailService, NotificationMailGuar
             {
                 ["recipient"] = recipient.Name ?? recipient.Email,
                 ["user"] = userName,
-                ["permission"] = permission
+                ["permission"] = permission,
+                ["projectLink"] = $"{appOptions.Value.BaseUrl}/p/{project.Id}"
             }, preheader)
         );
 

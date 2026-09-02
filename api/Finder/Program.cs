@@ -13,6 +13,7 @@ using Finder.Business.Preview.Api;
 using Finder.Business.Preview.Setup;
 using Finder.Business.Project.Api;
 using Finder.Business.Project.Setup;
+using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Business.User.Api;
 using Finder.Business.User.Setup;
@@ -44,6 +45,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+builder.Services.Configure<AppOptions>(builder.Configuration.GetSection("App"));
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.Configure<NotificationOptions>(builder.Configuration.GetSection("Notifications"));
 builder.Services.AddSingleton<ILookupClient, LookupClient>();

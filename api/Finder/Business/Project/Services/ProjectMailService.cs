@@ -3,10 +3,11 @@ using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Business.User.Services;
+using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Project.Services;
 
-public class ProjectMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, PollChangesBuilder pollChangesBuilder, InAppNotificationService inAppNotificationService)
+public class ProjectMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, PollChangesBuilder pollChangesBuilder, InAppNotificationService inAppNotificationService, IOptions<AppOptions> appOptions)
 {
     public async Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
         Entities.Project project, Poll poll, string language = "en")
@@ -65,7 +66,8 @@ public class ProjectMailService(MailService mailService, NotificationMailGuard n
         {
             ["recipient"] = recipient.Name ?? recipient.Email,
             ["user"] = actionUserName,
-            ["poll"] = poll.Name
+            ["poll"] = poll.Name,
+            ["projectLink"] = $"{appOptions.Value.BaseUrl}/p/{project.Id}"
         };
 
         if (commentContent is not null)

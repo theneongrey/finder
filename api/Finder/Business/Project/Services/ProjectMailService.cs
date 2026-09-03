@@ -2,66 +2,44 @@ using Finder.Business.Auth.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
-using Finder.Business.User.Services;
 using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Project.Services;
 
-public class ProjectMailService(MailService mailService, NotificationMailGuard notificationMailGuard, LanguageService languageService, PollChangesBuilder pollChangesBuilder, InAppNotificationService inAppNotificationService, IOptions<AppOptions> appOptions)
+public class ProjectMailService(MailService mailService, LanguageService languageService, PollChangesBuilder pollChangesBuilder, IOptions<AppOptions> appOptions)
 {
-    public async Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
+    public async Task SendPollClosedMailAsync(Person recipient, string actionUserName,
         Entities.Project project, Poll poll, string language = "en")
-    {
-        foreach (var recipient in recipients)
-            await SendNotificationAsync(recipient, actionUserName, project, poll, null, null,
-                languageService.Get("poll.closed.subject", language),
-                languageService.Get("poll.closed.preheader", language),
-                "poll-closed", NotificationKey.PollClosed, language);
-    }
+        => await SendMailAsync(recipient, actionUserName, project, poll, null, null,
+            languageService.Get("poll.closed.subject", language),
+            languageService.Get("poll.closed.preheader", language),
+            "poll-closed", language);
 
-    public async Task SendPollReopenedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
+    public async Task SendPollReopenedMailAsync(Person recipient, string actionUserName,
         Entities.Project project, Poll poll, string language = "en")
-    {
-        foreach (var recipient in recipients)
-            await SendNotificationAsync(recipient, actionUserName, project, poll, null, null,
-                languageService.Get("poll.reopened.subject", language),
-                languageService.Get("poll.reopened.preheader", language),
-                "poll-reopened", NotificationKey.PollReopened, language);
-    }
+        => await SendMailAsync(recipient, actionUserName, project, poll, null, null,
+            languageService.Get("poll.reopened.subject", language),
+            languageService.Get("poll.reopened.preheader", language),
+            "poll-reopened", language);
 
-    public async Task SendPollUpdatedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
+    public async Task SendPollUpdatedMailAsync(Person recipient, string actionUserName,
         Entities.Project project, Poll poll, PollUpdateSummary summary, string language = "en")
-    {
-        foreach (var recipient in recipients)
-            await SendNotificationAsync(recipient, actionUserName, project, poll, null, summary,
-                languageService.Get("poll.updated.subject", language),
-                languageService.Get("poll.updated.preheader", language),
-                "poll-updated", NotificationKey.PollUpdated, language);
-    }
+        => await SendMailAsync(recipient, actionUserName, project, poll, null, summary,
+            languageService.Get("poll.updated.subject", language),
+            languageService.Get("poll.updated.preheader", language),
+            "poll-updated", language);
 
-    public async Task SendNewCommentNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
+    public async Task SendNewCommentMailAsync(Person recipient, string actionUserName,
         Entities.Project project, Poll poll, string commentContent, string language = "en")
-    {
-        foreach (var recipient in recipients)
-            await SendNotificationAsync(recipient, actionUserName, project, poll, commentContent, null,
-                languageService.Get("poll.comment.subject", language),
-                languageService.Get("poll.comment.preheader", language),
-                "new-comment", NotificationKey.NewComment, language);
-    }
+        => await SendMailAsync(recipient, actionUserName, project, poll, commentContent, null,
+            languageService.Get("poll.comment.subject", language),
+            languageService.Get("poll.comment.preheader", language),
+            "new-comment", language);
 
-    private async Task SendNotificationAsync(Person recipient, string actionUserName, Entities.Project project,
+    private async Task SendMailAsync(Person recipient, string actionUserName, Entities.Project project,
         Poll poll, string? commentContent, PollUpdateSummary? summary, string subject, string preheader,
-        string templateName, NotificationKey notificationKey, string language)
+        string templateName, string language)
     {
-        await inAppNotificationService.CreateAsync(
-            recipient.Id, notificationKey,
-            projectId: project.Id, pollId: poll.Id,
-            new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
-
-        if (recipient.Role == Role.TestUser) return;
-
-        if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, notificationKey, project.Id)) return;
-
         var variables = new Dictionary<string, string>
         {
             ["recipient"] = recipient.Name ?? recipient.Email,

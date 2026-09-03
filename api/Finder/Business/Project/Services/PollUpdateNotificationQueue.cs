@@ -114,7 +114,7 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            var mailService = scope.ServiceProvider.GetRequiredService<ProjectMailService>();
+            var mailService = scope.ServiceProvider.GetRequiredService<ProjectNotificationService>();
 
             var poll = await dbContext.Polls
                 .Include(p => p.Project).ThenInclude(proj => proj.Creator)

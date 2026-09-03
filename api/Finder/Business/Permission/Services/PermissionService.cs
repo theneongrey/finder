@@ -12,15 +12,15 @@ public class PermissionService
 {
     private readonly AppDbContext _dbContext;
     private readonly UserService _userService;
-    private readonly PermissionMailService _mailService;
+    private readonly PermissionNotificationService _notificationService;
 
     private Guid? UserId => _userService.GetUserId();
 
-    public PermissionService(AppDbContext dbContext, UserService userService, PermissionMailService mailService)
+    public PermissionService(AppDbContext dbContext, UserService userService, PermissionNotificationService notificationService)
     {
         _dbContext = dbContext;
         _userService = userService;
-        _mailService = mailService;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<List<Person>>> GetInvitedPersons()
@@ -161,7 +161,7 @@ public class PermissionService
         await _dbContext.SaveChangesAsync();
 
         var actionUser = await _userService.GetUser();
-        await _mailService.SendPermissionRemovedMailAsync(
+        await _notificationService.SendPermissionRemovedMailAsync(
             permission.Person, actionUser.Payload!.Name ?? "Unknown", project);
 
         return Result<Project.Entities.Project>.Success(project);
@@ -235,7 +235,7 @@ public class PermissionService
         if (!silent)
         {
             var actionUser = await _userService.GetUser();
-            await _mailService.SendPermissionMail(user, actionUser.Payload!.Name ?? "Unknown", project,
+            await _notificationService.SendPermissionMailAsync(user, actionUser.Payload!.Name ?? "Unknown", project,
                 permissionType, permission is not null, isNewUser);
         }
 

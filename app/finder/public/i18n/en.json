@@ -179,7 +179,12 @@
       "filterTodoLong": "Not yet voted",
       "newPoll": "New poll",
       "reload": "Reload",
-      "searchClear": "Clear search"
+      "searchClear": "Clear search",
+      "emptySubtitle": "Your first poll is just a minute away",
+      "emptyHeading": "No polls yet",
+      "emptyDescription": "Create a poll, invite your team or friends – and decide together instead of endless back-and-forth.",
+      "emptyCta": "Create your first poll",
+      "emptyHints": "Find a date · Choose a restaurant · Group decision"
     },
     "standaloneItem": {
       "badge": "No project",

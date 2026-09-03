@@ -19,6 +19,7 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
 import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
 import { OptionType } from '@common/models/option-type.model';
+import { PollsEmptyStateComponent } from '../polls-empty-state/polls-empty-state.component';
 
 @Component({
     selector: 'app-standalone-poll-tab',
@@ -30,6 +31,7 @@ import { OptionType } from '@common/models/option-type.model';
         RouterLink,
         DsPollCardSkeletonComponent,
         DsSubHeaderComponent,
+        PollsEmptyStateComponent,
     ],
     templateUrl: './standalone-poll-tab.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

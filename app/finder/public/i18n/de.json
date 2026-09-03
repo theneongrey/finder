@@ -179,7 +179,12 @@
       "filterTodoLong": "Noch nicht abgestimmt",
       "newPoll": "Neue Umfrage",
       "reload": "Neu laden",
-      "searchClear": "Suche löschen"
+      "searchClear": "Suche löschen",
+      "emptySubtitle": "Deine erste Abstimmung ist nur eine Minute entfernt",
+      "emptyHeading": "Noch keine Umfragen",
+      "emptyDescription": "Erstelle eine Umfrage, lade dein Team oder deine Freunde ein – und entscheidet gemeinsam statt endlos hin und her zu schreiben.",
+      "emptyCta": "Erste Umfrage erstellen",
+      "emptyHints": "Termin finden · Restaurant wählen · Gruppenentscheidung"
     },
     "standaloneItem": {
       "badge": "Ohne Projekt",

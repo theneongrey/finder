@@ -179,7 +179,12 @@
       "filterTodoLong": "Aún no votado",
       "newPoll": "Nueva encuesta",
       "reload": "Recargar",
-      "searchClear": "Borrar búsqueda"
+      "searchClear": "Borrar búsqueda",
+      "emptySubtitle": "Tu primera votación está a solo un minuto",
+      "emptyHeading": "Aún no hay encuestas",
+      "emptyDescription": "Crea una encuesta, invita a tu equipo o amigos – y decidid juntos en lugar de escribiros sin parar.",
+      "emptyCta": "Crear tu primera encuesta",
+      "emptyHints": "Encontrar fecha · Elegir restaurante · Decisión de grupo"
     },
     "standaloneItem": {
       "badge": "Sin proyecto",

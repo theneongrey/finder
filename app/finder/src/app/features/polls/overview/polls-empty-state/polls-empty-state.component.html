@@ -1,0 +1,182 @@
+<!-- ═══════════════════════════════════════════════════════════
+     WEB HEADING ROW  (lg+ only — no filter bar)
+     ═══════════════════════════════════════════════════════════ -->
+<div
+    class="-mx-[22px] hidden items-end justify-between gap-6 px-8 pt-7 pb-5 lg:flex"
+>
+    <div>
+        <h1
+            style="
+                font-family: var(--font-display);
+                font-size: var(--fs-display-xl);
+                font-weight: 700;
+                letter-spacing: var(--tracking-display-xl);
+                line-height: 1.05;
+                color: var(--text-primary);
+            "
+        >
+            {{ 'project.pollsTab.title' | translate }}
+        </h1>
+        <p class="mt-1.5" style="font-size: 15px; color: var(--text-secondary)">
+            {{ 'project.pollsTab.emptySubtitle' | translate }}
+        </p>
+    </div>
+
+    <ds-button
+        variant="primary"
+        [noGlow]="true"
+        icon="plus"
+        [title]="'project.pollsTab.newPoll' | translate"
+        [routerLink]="['/polls/add']"
+    >
+        {{ 'project.pollsTab.newPoll' | translate }}
+    </ds-button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MOBILE HEADING  (hidden on lg+)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="mb-4 lg:hidden">
+    <h1
+        style="
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.7px;
+            line-height: 1.05;
+            color: var(--text-primary);
+        "
+    >
+        {{ 'project.pollsTab.title' | translate }}
+    </h1>
+    <p
+        class="mt-1"
+        style="font-size: var(--fs-body-sm); color: var(--text-secondary)"
+    >
+        {{ 'project.pollsTab.emptySubtitle' | translate }}
+    </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CENTERED EMPTY STATE CONTENT
+     ═══════════════════════════════════════════════════════════ -->
+<div
+    class="flex flex-col items-center py-14 text-center lg:-mx-[22px] lg:py-20"
+>
+    <!-- Avatar cluster illustration -->
+    <div class="relative mb-8" style="width: 160px; height: 150px">
+        <!-- Soft background glow -->
+        <div
+            class="absolute"
+            style="
+                width: 200px;
+                height: 180px;
+                top: -15px;
+                left: -20px;
+                background: radial-gradient(
+                    ellipse,
+                    rgba(207, 230, 232, 0.6) 0%,
+                    transparent 68%
+                );
+                border-radius: 50%;
+                pointer-events: none;
+            "
+        ></div>
+
+        <!-- M avatar (amber, top-left) -->
+        <div class="absolute" style="top: 0; left: 12px; z-index: 1">
+            <ds-avatar
+                initial="M"
+                [size]="58"
+                bg="var(--person-3-bg)"
+                fg="var(--person-3-fg)"
+            />
+        </div>
+
+        <!-- L avatar (purple, top-right) -->
+        <div class="absolute" style="top: 5px; right: 8px; z-index: 2">
+            <ds-avatar
+                initial="L"
+                [size]="54"
+                bg="var(--person-4-bg)"
+                fg="var(--person-4-fg)"
+            />
+        </div>
+
+        <!-- N avatar (green, bottom-center) -->
+        <div
+            class="absolute"
+            style="bottom: 0; left: 50%; transform: translateX(-50%); z-index: 3"
+        >
+            <ds-avatar
+                initial="N"
+                [size]="52"
+                bg="var(--person-5-bg)"
+                fg="var(--person-5-fg)"
+            />
+        </div>
+
+        <!-- Teal check circle (bottom-right) -->
+        <div
+            class="absolute flex items-center justify-center rounded-full"
+            style="
+                bottom: 0;
+                right: 0;
+                width: 44px;
+                height: 44px;
+                background: var(--accent);
+                z-index: 4;
+                box-shadow: 0 2px 8px rgba(31, 122, 140, 0.35);
+            "
+        >
+            <ds-icon name="check" [size]="19" color="#fff" />
+        </div>
+    </div>
+
+    <!-- Heading -->
+    <h2
+        style="
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        "
+    >
+        {{ 'project.pollsTab.emptyHeading' | translate }}
+    </h2>
+
+    <!-- Description -->
+    <p
+        style="
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 360px;
+            line-height: 1.55;
+            margin-bottom: 28px;
+        "
+    >
+        {{ 'project.pollsTab.emptyDescription' | translate }}
+    </p>
+
+    <!-- CTA button -->
+    <ds-button
+        variant="primary"
+        [noGlow]="true"
+        [routerLink]="['/polls/add']"
+    >
+        {{ 'project.pollsTab.emptyCta' | translate }}
+    </ds-button>
+
+    <!-- Hint row -->
+    <p
+        style="
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 18px;
+        "
+    >
+        {{ 'project.pollsTab.emptyHints' | translate }}
+    </p>
+</div>

@@ -132,15 +132,71 @@ test.describe('Public shared link page (/p/:projectId)', () => {
 
   // ── Authenticated ────────────────────────────────────────────────────
 
-  test.describe('Authenticated user', () => {
-    test('authenticated user is redirected away from /p/:projectId', async ({
-      page,
-    }) => {
+  test.describe('Authenticated user – desktop', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 820 });
       await login(page, USER1);
       await page.goto(`/p/${publicProjectId}`);
-      await page.waitForURL(/\/(polls|auth)/);
-      expect(page.url()).not.toContain(`/p/${publicProjectId}`);
+      await page.waitForLoadState('networkidle');
+    });
+
+    test.afterEach(async ({ page }) => {
       await logout(page);
+    });
+
+    test('stays on the public poll page', async ({ page }) => {
+      expect(page.url()).toContain(`/p/${publicProjectId}`);
+    });
+
+    test('shows member sidebar instead of sign-in card', async ({ page }) => {
+      await expect(
+        page.locator('[data-testid="public-poll-member-sidebar"]'),
+      ).toBeVisible();
+      await expect(
+        page.locator('[data-testid="public-poll-heading"]'),
+      ).not.toBeVisible();
+    });
+
+    test('vote button navigates to the poll voting page', async ({ page }) => {
+      await page.locator('[data-testid="public-poll-vote-btn"] button').first().click();
+      await page.waitForURL('**/polls/**');
+      expect(page.url()).toContain('/polls/');
+    });
+  });
+
+  test.describe('Authenticated user – mobile', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await login(page, USER1);
+      await page.goto(`/p/${publicProjectId}`);
+      await page.waitForLoadState('networkidle');
+    });
+
+    test.afterEach(async ({ page }) => {
+      await logout(page);
+    });
+
+    test('stays on the public poll page', async ({ page }) => {
+      expect(page.url()).toContain(`/p/${publicProjectId}`);
+    });
+
+    test('shows authenticated welcome banner', async ({ page }) => {
+      await expect(
+        page.locator('[data-testid="public-poll-member-banner"]'),
+      ).toBeVisible();
+      await expect(
+        page.locator('[data-testid="public-poll-nudge-btn"]'),
+      ).not.toBeVisible();
+    });
+
+    test('vote button is visible and navigates to the poll voting page', async ({
+      page,
+    }) => {
+      const voteBtn = page.locator('[data-testid="public-poll-vote-btn"] button').first();
+      await expect(voteBtn).toBeVisible();
+      await voteBtn.click();
+      await page.waitForURL('**/polls/**');
+      expect(page.url()).toContain('/polls/');
     });
   });
 });

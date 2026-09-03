@@ -28,12 +28,13 @@ builder.Services.AddOpenApi();
 builder.Services.AddCors();
 
 builder.Services.AddHttpContextAccessor();
-var npgsqlDataSource = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Database"))
-    .EnableDynamicJson()
-    .Build();
+builder.Services.AddSingleton(sp =>
+    new NpgsqlDataSourceBuilder(sp.GetRequiredService<IConfiguration>().GetConnectionString("Database"))
+        .EnableDynamicJson()
+        .Build());
 
-builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseNpgsql(npgsqlDataSource));
+builder.Services.AddDbContext<AppDbContext>((sp, opt) =>
+    opt.UseNpgsql(sp.GetRequiredService<NpgsqlDataSource>()));
 
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<AppDbContext>();

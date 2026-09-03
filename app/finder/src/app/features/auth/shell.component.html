@@ -17,9 +17,9 @@
 
 <main class="flex flex-1 items-center justify-center lg:items-stretch">
     @if (isFirstLogin()) {
-        <app-auth-shell-first-login-sidebar />
+        <app-auth-shell-first-login-sidebar [@sidebarSwap] />
     } @else {
-        <app-auth-shell-default-sidebar />
+        <app-auth-shell-default-sidebar [@sidebarSwap] />
     }
 
     <!-- Form area -->

@@ -35,7 +35,7 @@ export class FirstLoginComponent {
 
         effect(() => {
             const user = userStore.user();
-            if (user?.isAuthenticated && user.name) {
+            if (user?.isAuthenticated && user.name && this.currentStep() < 3) {
                 void router.navigate(['/polls']);
             }
         });

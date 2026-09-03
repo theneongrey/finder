@@ -1,3 +1,6 @@
+@if (isEmpty() && !isLoading()) {
+    <app-polls-empty-state />
+} @else {
 <!-- ═══════════════════════════════════════════════════════════
      WEB FILTER BAR  (lg+ only — sticky below title-bar)
      ═══════════════════════════════════════════════════════════ -->
@@ -604,3 +607,4 @@
     </div>
 }
 <!-- end @else !isLoading -->
+} <!-- end @else !isEmpty -->

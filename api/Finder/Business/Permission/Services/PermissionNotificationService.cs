@@ -13,7 +13,7 @@ public class PermissionNotificationService(
 {
     public async Task SendPermissionMailAsync(Person recipient, string actionUserName,
         Project.Entities.Project project, PermissionType permissionType, bool isExistingPermission,
-        bool isNewUser, string language = "en")
+        bool isNewUser)
     {
         var notificationKey = isExistingPermission ? NotificationKey.AccessChanged : NotificationKey.PollShared;
         var poll = project.IsStandalone ? project.Polls.FirstOrDefault() : null;
@@ -34,11 +34,11 @@ public class PermissionNotificationService(
         }
 
         await mailService.SendPermissionMailAsync(recipient, actionUserName, project, permissionType,
-            isExistingPermission, isNewUser, language);
+            isExistingPermission, isNewUser);
     }
 
     public async Task SendPermissionRemovedMailAsync(Person recipient, string actionUserName,
-        Project.Entities.Project project, string language = "en")
+        Project.Entities.Project project)
     {
         await inAppNotificationService.CreateAsync(
             recipient.Id, NotificationKey.AccessChanged,
@@ -55,6 +55,6 @@ public class PermissionNotificationService(
             return;
         }
 
-        await mailService.SendPermissionRemovedMailAsync(recipient, actionUserName, project, language);
+        await mailService.SendPermissionRemovedMailAsync(recipient, actionUserName, project);
     }
 }

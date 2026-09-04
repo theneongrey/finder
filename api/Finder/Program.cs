@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Npgsql;
 using System.Threading.RateLimiting;
 using DnsClient;
 using Microsoft.AspNetCore.DataProtection;
@@ -12,6 +13,7 @@ using Finder.Business.Preview.Api;
 using Finder.Business.Preview.Setup;
 using Finder.Business.Project.Api;
 using Finder.Business.Project.Setup;
+using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Business.User.Api;
 using Finder.Business.User.Setup;
@@ -26,8 +28,13 @@ builder.Services.AddOpenApi();
 builder.Services.AddCors();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
+builder.Services.AddSingleton(sp =>
+    new NpgsqlDataSourceBuilder(sp.GetRequiredService<IConfiguration>().GetConnectionString("Database"))
+        .EnableDynamicJson()
+        .Build());
+
+builder.Services.AddDbContext<AppDbContext>((sp, opt) =>
+    opt.UseNpgsql(sp.GetRequiredService<NpgsqlDataSource>()));
 
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<AppDbContext>();
@@ -39,6 +46,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+builder.Services.Configure<AppOptions>(builder.Configuration.GetSection("App"));
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.Configure<NotificationOptions>(builder.Configuration.GetSection("Notifications"));
 builder.Services.AddSingleton<ILookupClient, LookupClient>();

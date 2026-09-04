@@ -1,6 +1,7 @@
 using Finder.Business.User.Api.Requests;
 using Finder.Business.User.Api.Responses;
 using Finder.Business.User.Services;
+using Finder.Business.Shared.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finder.Business.User.Api;
@@ -30,6 +31,33 @@ public static class UserApi
         {
             var result = await svc.UpdateSetting(id, request.Value);
             return result.IsSuccess ? Results.Ok(result.Payload) : Results.StatusCode(result.Code);
+        }).RequireAuthorization();
+
+        app.MapGet("/api/user/notifications", async (UserService userService, InAppNotificationService inAppNotificationService) =>
+        {
+            var userResult = await userService.GetUser();
+            if (!userResult.IsSuccess) return Results.Unauthorized();
+
+            var notifications = await inAppNotificationService.GetNotificationsAsync(userResult.Payload!.Id);
+            return Results.Ok(notifications.Select(n => n.ToUserNotificationResponse()));
+        }).RequireAuthorization();
+
+        app.MapDelete("/api/user/notifications/{id:guid}", async (Guid id, UserService userService, InAppNotificationService inAppNotificationService) =>
+        {
+            var userResult = await userService.GetUser();
+            if (!userResult.IsSuccess) return Results.Unauthorized();
+
+            var found = await inAppNotificationService.MarkAsReadAsync(id, userResult.Payload!.Id);
+            return found ? Results.NoContent() : Results.NotFound();
+        }).RequireAuthorization();
+
+        app.MapDelete("/api/user/notifications", async (UserService userService, InAppNotificationService inAppNotificationService) =>
+        {
+            var userResult = await userService.GetUser();
+            if (!userResult.IsSuccess) return Results.Unauthorized();
+
+            await inAppNotificationService.MarkAllAsReadAsync(userResult.Payload!.Id);
+            return Results.NoContent();
         }).RequireAuthorization();
     }
 }

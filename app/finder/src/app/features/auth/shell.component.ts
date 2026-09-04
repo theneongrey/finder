@@ -5,6 +5,7 @@ import {
     inject,
     untracked,
 } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { NgOptimizedImage } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserStore } from '../../common/data/user.store';
@@ -35,6 +36,17 @@ import { filter, map, startWith } from 'rxjs';
     templateUrl: './shell.component.html',
     host: { class: 'flex flex-col h-dvh bg-app-gradient' },
     changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        trigger('sidebarSwap', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('250ms ease-out', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('150ms ease-in', style({ opacity: 0 })),
+            ]),
+        ]),
+    ],
 })
 export class AuthShellComponent {
     private userStore = inject(UserStore);

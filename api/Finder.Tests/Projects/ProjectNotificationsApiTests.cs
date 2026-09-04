@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json.Nodes;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Setup;
@@ -187,6 +188,115 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
 
         // Notification is debounced — no immediate send
         Assert.DoesNotContain(mail.SentMails, m => m.Template.Name == "poll-updated");
+    }
+
+    // --- In-app notifications ---
+
+    [Fact]
+    public async Task ClosePoll_CreatesInAppNotificationForMember()
+    {
+        var owner = await _factory.SeedUser();
+        var voter = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        await _factory.SeedPermission(project.Id, voter.Id, PermissionType.Voter);
+        var poll = await _factory.SeedPoll(project.Id);
+
+        using var factory = CreateFactory(out _);
+        using var ownerClient = AuthenticatedClient(factory, owner.Id);
+        using var voterClient = AuthenticatedClient(factory, voter.Id);
+
+        await ownerClient.PostAsync($"/api/polls/{poll.Id}/close", null);
+
+        var response = await voterClient.GetAsync("/api/user/notifications");
+        var notifications = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
+        Assert.Single(notifications);
+        Assert.Equal("PollClosed", notifications[0]!["key"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task ClosePoll_TestUserMember_StillReceivesInAppNotification()
+    {
+        // TestUser skips email but should still get an in-app notification
+        var owner = await _factory.SeedUser();
+        var testUser = await _factory.SeedUser(role: Role.TestUser);
+        var project = await _factory.SeedProject(owner.Id);
+        await _factory.SeedPermission(project.Id, testUser.Id, PermissionType.Voter);
+        var poll = await _factory.SeedPoll(project.Id);
+
+        using var factory = CreateFactory(out var mail);
+        using var ownerClient = AuthenticatedClient(factory, owner.Id);
+        using var testUserClient = AuthenticatedClient(factory, testUser.Id);
+
+        await ownerClient.PostAsync($"/api/polls/{poll.Id}/close", null);
+
+        Assert.Empty(mail.SentMails);
+
+        var response = await testUserClient.GetAsync("/api/user/notifications");
+        var notifications = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
+        Assert.Single(notifications);
+        Assert.Equal("PollClosed", notifications[0]!["key"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task AddPermission_CreatesInAppNotificationForRecipient()
+    {
+        var creator = await _factory.SeedUser();
+        var target = await _factory.SeedUser();
+        var project = await _factory.SeedProject(creator.Id);
+
+        using var factory = CreateFactory(out _);
+        using var creatorClient = AuthenticatedClient(factory, creator.Id);
+        using var targetClient = AuthenticatedClient(factory, target.Id);
+
+        await creatorClient.PutAsJsonAsync($"/api/permission/{project.Id}",
+            new { email = target.Email, permissionType = (int)PermissionType.Voter });
+
+        var response = await targetClient.GetAsync("/api/user/notifications");
+        var notifications = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
+        Assert.Single(notifications);
+        Assert.Equal("PollShared", notifications[0]!["key"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task RemovePermission_CreatesInAppNotificationForRemovedUser()
+    {
+        var owner = await _factory.SeedUser();
+        var voter = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        await _factory.SeedPermission(project.Id, voter.Id, PermissionType.Voter);
+
+        using var factory = CreateFactory(out _);
+        using var ownerClient = AuthenticatedClient(factory, owner.Id);
+        using var voterClient = AuthenticatedClient(factory, voter.Id);
+
+        await ownerClient.DeleteAsync($"/api/permission/{project.Id}/{Uri.EscapeDataString(voter.Email)}");
+
+        var response = await voterClient.GetAsync("/api/user/notifications");
+        var notifications = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
+        Assert.Single(notifications);
+        Assert.Equal("AccessChanged", notifications[0]!["key"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task AddComment_CreatesInAppNotificationForOwner()
+    {
+        var owner = await _factory.SeedUser();
+        var voter = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        await _factory.SeedPermission(project.Id, voter.Id, PermissionType.Voter);
+        var poll = await _factory.SeedPoll(project.Id);
+
+        using var factory = CreateFactory(out _);
+        using var voterClient = AuthenticatedClient(factory, voter.Id);
+        using var ownerClient = AuthenticatedClient(factory, owner.Id);
+
+        await voterClient.PostAsJsonAsync("/api/project/poll/comment",
+            new { pollId = poll.Id, content = "Great poll!" });
+
+        var response = await ownerClient.GetAsync("/api/user/notifications");
+        var notifications = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
+        Assert.Single(notifications);
+        Assert.Equal("NewComment", notifications[0]!["key"]!.GetValue<string>());
     }
 
     [Fact]

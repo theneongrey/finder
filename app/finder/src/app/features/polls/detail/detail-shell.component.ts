@@ -9,6 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { PollDetailStore } from '../_shared/data/poll-detail.store';
+import { UserStore } from '@common/data/user.store';
 
 @Component({
     selector: 'app-poll-detail-shell',
@@ -20,6 +21,7 @@ import { PollDetailStore } from '../_shared/data/poll-detail.store';
 export class PollDetailShellComponent {
     private readonly projectDetailStore = inject(PollDetailStore);
     private readonly router = inject(Router);
+    private readonly userStore = inject(UserStore);
 
     isFullWidth = toSignal(
         this.router.events.pipe(
@@ -41,6 +43,7 @@ export class PollDetailShellComponent {
             const projectId = this.id();
             if (projectId) {
                 this.projectDetailStore.getProject(projectId);
+                this.userStore.markProjectNotificationsAsRead(projectId);
             }
         });
 

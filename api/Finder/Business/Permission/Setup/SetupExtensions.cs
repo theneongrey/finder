@@ -8,6 +8,7 @@ public static class SetupExtensions
     {
         services.AddScoped<PermissionService>();
         services.AddScoped<PermissionMailService>();
+        services.AddScoped<PermissionNotificationService>();
 
         return services;
     }

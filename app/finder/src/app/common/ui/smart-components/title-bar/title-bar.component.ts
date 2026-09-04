@@ -9,24 +9,21 @@ import { fromEvent } from 'rxjs';
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
 import { HlmSkeleton } from '@spartan-ng/helm/skeleton';
 import { UserStore } from '../../../data/user.store';
 import { TitleBarService } from '../../../services/title-bar.service';
-import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
 import { TranslatePipe } from '@ngx-translate/core';
+import { NotificationsPanelComponent } from '@smart/notifications-panel/notifications-panel.component';
 
 @Component({
     selector: 'app-title-bar',
     imports: [
         NgOptimizedImage,
         HlmSkeleton,
-        UserAvatarComponent,
         DsButtonComponent,
-        DsMenuComponent,
         TranslatePipe,
+        NotificationsPanelComponent,
     ],
     templateUrl: './title-bar.component.html',
     styleUrl: './title-bar.component.css',
@@ -35,7 +32,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class TitleBarComponent {
     private readonly userStore = inject(UserStore);
     private readonly titleService = inject(TitleBarService);
-    private readonly translateService = inject(TranslateService);
     private readonly router = inject(Router);
 
     user = this.userStore.user;
@@ -57,24 +53,6 @@ export class TitleBarComponent {
         { initialValue: false },
     );
 
-    private readonly settingsLabel =
-        this.translateService.translate('titleBar.settings');
-    private readonly logoutLabel =
-        this.translateService.translate('titleBar.logout');
-
-    menuItems = computed<MenuItem[]>(() => [
-        {
-            icon: 'arrow-right',
-            label: this.settingsLabel(),
-            onClick: () => this.navigateTo('/settings'),
-        },
-        {
-            icon: 'arrow-right',
-            label: this.logoutLabel(),
-            onClick: () => this.navigateTo('/logout'),
-        },
-    ]);
-
     onBack(): void {
         const fn = this.backFn();
         if (fn) {
@@ -87,9 +65,5 @@ export class TitleBarComponent {
     login(): void {
         this.userStore.setRedirectUrl(this.router.url);
         this.router.navigate(['/auth/request-email']);
-    }
-
-    private navigateTo(path: string): void {
-        this.router.navigate([path]);
     }
 }

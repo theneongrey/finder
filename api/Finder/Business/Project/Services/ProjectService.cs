@@ -14,18 +14,18 @@ public class ProjectService
     private readonly AppDbContext _dbContext;
     private readonly UserService _userService;
     private readonly PermissionService _permissionService;
-    private readonly ProjectMailService _projectMailService;
+    private readonly ProjectNotificationService _projectNotificationService;
     private readonly PollUpdateNotificationQueue _pollUpdateQueue;
 
     private Guid? UserId => _userService.GetUserId();
 
     public ProjectService(AppDbContext dbContext, UserService userService, PermissionService permissionService,
-        ProjectMailService projectMailService, PollUpdateNotificationQueue pollUpdateQueue)
+        ProjectNotificationService projectNotificationService, PollUpdateNotificationQueue pollUpdateQueue)
     {
         _dbContext = dbContext;
         _userService = userService;
         _permissionService = permissionService;
-        _projectMailService = projectMailService;
+        _projectNotificationService = projectNotificationService;
         _pollUpdateQueue = pollUpdateQueue;
     }
 
@@ -555,7 +555,7 @@ public class ProjectService
             .Append(poll.Project.Creator)
             .Where(p => p.Id != user.Id)
             .ToList();
-        await _projectMailService.SendNewCommentNotificationsAsync(
+        await _projectNotificationService.SendNewCommentNotificationsAsync(
             recipients, user.Name ?? "Unknown", poll.Project, poll, comment.Content);
 
         return Result<Comment>.Success(comment);
@@ -602,7 +602,7 @@ public class ProjectService
             .Append(poll.Project.Creator)
             .Where(p => p.Id != actor.Payload!.Id)
             .ToList();
-        await _projectMailService.SendPollClosedNotificationsAsync(
+        await _projectNotificationService.SendPollClosedNotificationsAsync(
             closeRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
 
         return Result<Poll>.Success(poll);
@@ -649,7 +649,7 @@ public class ProjectService
             .Append(poll.Project.Creator)
             .Where(p => p.Id != actor.Payload!.Id)
             .ToList();
-        await _projectMailService.SendPollReopenedNotificationsAsync(
+        await _projectNotificationService.SendPollReopenedNotificationsAsync(
             reopenRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
 
         return Result<Poll>.Success(poll);

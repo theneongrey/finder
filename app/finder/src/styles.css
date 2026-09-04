@@ -213,7 +213,6 @@ input.invalid {
     border: 1px solid var(--border-hairline);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-overlay);
-    padding: 6px;
     min-width: 160px;
 }
 

@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { Comment } from '../../../_shared/models/poll-detail.model';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
-import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { POLL_LIMITS } from '../../../_shared/models/poll-limits';
@@ -22,7 +21,6 @@ import { TimeSincePipe } from '@common/ui/pipes/time-ago.pipe';
         TimeSincePipe,
         DsButtonComponent,
         DsCardComponent,
-        DsIconComponent,
         DsTextareaComponent,
         UserAvatarComponent,
     ],

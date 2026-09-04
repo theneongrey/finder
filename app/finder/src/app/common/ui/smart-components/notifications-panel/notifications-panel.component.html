@@ -1,0 +1,79 @@
+<div [hlmDropdownMenuTrigger]="panel" class="notifications-panel__trigger">
+    <app-user-avatar [user]="user()!" class="cursor-pointer" />
+    @if (unreadCount() > 0) {
+        <span class="notifications-panel__badge">{{ unreadCount() }}</span>
+    }
+</div>
+
+<ng-template #panel>
+    <hlm-dropdown-menu class="notifications-panel__menu">
+        @if (inAppNotifications().length) {
+            <div
+                class="notifications-panel__header border-b border-[var(--border-hairline-soft)]"
+            >
+                <span class="notifications-panel__header-title mr-3">
+                    {{ 'notifications.title' | translate }}
+                </span>
+                <ds-button
+                    size="sm"
+                    variant="ghost"
+                    (click)="onMarkAllAsRead()"
+                >
+                    {{ 'notifications.markAllRead' | translate }}
+                </ds-button>
+            </div>
+
+            @for (notification of inAppNotifications(); track notification.id) {
+                <button
+                    hlmDropdownMenuItem
+                    class="notifications-panel__item border-b border-[var(--border-hairline-soft)]"
+                    [class.bg-(--accent-tint)]="!notification.read"
+                    (click)="onNotificationClick(notification)"
+                >
+                    <ds-icon
+                        [name]="getIcon(notification.key)"
+                        [size]="15"
+                        class="notifications-panel__item-icon"
+                    />
+                    <span class="notifications-panel__item-body">
+                        <span class="notifications-panel__item-text">
+                            {{
+                                getTranslationKey(notification.key)
+                                    | translate: notification.variables
+                            }}
+                        </span>
+                        <span class="notifications-panel__item-time">
+                            {{ relativeTime(notification.created) }}
+                        </span>
+                    </span>
+                    @if (!notification.read) {
+                        <div
+                            class="bg-primary mr-0 ml-auto size-1.5 rounded-full"
+                        ></div>
+                    }
+                </button>
+            }
+
+            <hlm-dropdown-menu-separator />
+        }
+
+        <div class="my-2 flex flex-col items-start gap-2 px-3">
+            <ds-button
+                (click)="navigateTo('/settings')"
+                size="sm"
+                icon="arrow-right"
+                variant="ghost"
+            >
+                {{ 'titleBar.settings' | translate }}
+            </ds-button>
+            <ds-button
+                (click)="navigateTo('/logout')"
+                size="sm"
+                icon="close"
+                variant="danger-ghost"
+            >
+                {{ 'titleBar.logout' | translate }}
+            </ds-button>
+        </div>
+    </hlm-dropdown-menu>
+</ng-template>

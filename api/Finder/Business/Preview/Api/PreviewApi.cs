@@ -15,9 +15,9 @@ public static class PreviewApi
                 {
                     var myWriter = new StringWriter();
                     HttpUtility.HtmlDecode(url, myWriter);
-                    
+
                     var result = await previewService.GetPreviewAsync(url);
-                    
+
                     return !result.IsSuccess ? Results.BadRequest(result.ErrorMessasge) : Results.Ok(result.Payload!.ToPreviewResponse());
                 })
             .RequireAuthorization()

@@ -59,14 +59,14 @@ public class PreviewService
             var metaPlaywrightResult = _previewGrabberMetaService.GetPreview(playwrightHtmlContent, new Uri(playwrightResultUrl));
             if (metaPlaywrightResult.IsSuccess)
             {
-                metaPlaywrightPreview = metaPlaywrightResult.Payload; 
+                metaPlaywrightPreview = metaPlaywrightResult.Payload;
                 if (metaPlaywrightResult.Payload!.HasImage)
                 {
                     return metaPlaywrightResult;
                 }
             }
         }
-        
+
         // 3. Let's see first if we have any query to grab the info from the HTML content 
         /* since we arent saving the xpath by the ai no more, this step can be skipped for now.
         var queryResult = _previewGrabberQueryService.GetPreview(playwrightHtmlContent, new Uri(playwrightResultUrl));
@@ -75,7 +75,7 @@ public class PreviewService
             return queryResult;
         }
         */
-        
+
         // 4. If we don't have any preview picture so far, let's ask the AI for a suggestion (disabled for now)
         /*
         var claudeResult = await _previewGrabberClaudeService.GetPreview(playwrightHtmlContent, metaPlaywrightPreview ?? new Models.Preview("", "", "", playwrightResultUrl));

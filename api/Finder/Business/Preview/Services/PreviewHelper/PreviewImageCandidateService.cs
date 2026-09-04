@@ -24,14 +24,20 @@ public class PreviewImageCandidateService : IPreviewImageCandidateService
         var imageCandidate = _imageFinder.GetMostPromisingImage(htmlContent, basePreview?.Title);
 
         if (string.IsNullOrWhiteSpace(imageCandidate))
+        {
             return Result<Models.Preview>.Fail(404, "No image candidate found");
+        }
 
         if (!imageCandidate.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+        {
             imageCandidate = new Uri(new Uri(baseUrl), imageCandidate).ToString();
+        }
 
         var sizeResult = await _imageSizeService.GetImageSizeAsync(imageCandidate);
         if (!sizeResult.IsSuccess || !IsValidSize(sizeResult.Payload!))
+        {
             return Result<Models.Preview>.Fail(422, "Image does not meet size criteria");
+        }
 
         var preview = basePreview is not null
             ? basePreview with { ImageUrl = imageCandidate }

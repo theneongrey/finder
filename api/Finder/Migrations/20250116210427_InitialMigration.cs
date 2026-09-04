@@ -1,5 +1,4 @@
-﻿using System;
-using Finder.Business.Auth.Entities;
+﻿using Finder.Business.Auth.Entities;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -217,19 +216,19 @@ namespace Finder.Migrations
                 name: "IX_Vote_PersonId",
                 table: "Vote",
                 column: "PersonId");
-            
+
             migrationBuilder.InsertData(
                 table: "AllowedEmails",
-                columns: [ "Id", "Email" ],
+                columns: ["Id", "Email"],
                 values: new object[,]
                 {
                     { Guid.NewGuid(), "test@neongrey.de" },
                     { Guid.NewGuid(), "leistenschneiderei@gmail.com" },
                 });
-            
+
             migrationBuilder.InsertData(
                 table: "Persons",
-                columns: [ "Id", "Email", "Name", "HasLoggedIn", "Role", "Created", "Edited" ],
+                columns: ["Id", "Email", "Name", "HasLoggedIn", "Role", "Created", "Edited"],
                 values: new object[,]
                 {
                     { Guid.NewGuid(), "test@neongrey.de", "Giovanni", false, (int)Role.Admin, DateTime.UtcNow, DateTime.UtcNow },

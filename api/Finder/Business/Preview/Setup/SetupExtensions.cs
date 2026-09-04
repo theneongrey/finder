@@ -17,7 +17,7 @@ public static class SetupExtensions
         services.AddScoped<PreviewImageOnlyFinder>();
         services.AddScoped<IImageSizeService, ImageSizeService>();
         services.AddScoped<IPreviewImageCandidateService, PreviewImageCandidateService>();
-        
+
         services.AddRateLimiter(options =>
         {
             options.AddPolicy("preview", httpContext =>
@@ -31,12 +31,13 @@ public static class SetupExtensions
                     }));
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
         });
-        
-        services.AddHttpClient("PreviewClient", client => {
+
+        services.AddHttpClient("PreviewClient", client =>
+        {
             client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
             client.Timeout = TimeSpan.FromSeconds(5);
         });
-        
+
         return services;
     }
 }

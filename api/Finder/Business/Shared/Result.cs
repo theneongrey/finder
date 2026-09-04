@@ -12,7 +12,7 @@ public class Result
         IsSuccess = isSuccess;
         ErrorMessasge = errorMessasge;
     }
-    
+
     public static Result Success(int code = 200) => new(code, true, null);
     public static Result Fail(int code = 400, string? errorMessage = null) => new(code, false, errorMessage);
 }

@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Npgsql;
-using System.Threading.RateLimiting;
 using DnsClient;
 using Microsoft.AspNetCore.DataProtection;
 using Scalar.AspNetCore;

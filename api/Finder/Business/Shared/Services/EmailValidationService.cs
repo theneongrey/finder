@@ -1,5 +1,4 @@
 using DnsClient;
-using Finder.Business.Shared;
 
 namespace Finder.Business.Shared.Services;
 

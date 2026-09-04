@@ -52,7 +52,8 @@ public static class StandalonePollOverviewMapper
             });
 
         var nextOption = poll.Options
-            .Select(o => new {
+            .Select(o => new
+            {
                 Option = o,
                 UserChoice = o.Votes
                     .Where(v => v.Person.Id == userId)

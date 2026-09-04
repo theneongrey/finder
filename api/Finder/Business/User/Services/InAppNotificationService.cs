@@ -38,7 +38,11 @@ public class InAppNotificationService(AppDbContext dbContext)
     {
         var notification = await dbContext.UserNotifications
             .FirstOrDefaultAsync(n => n.Id == id && n.PersonId == personId);
-        if (notification is null) return false;
+        if (notification is null)
+        {
+            return false;
+        }
+
         dbContext.UserNotifications.Remove(notification);
         await dbContext.SaveChangesAsync();
         return true;

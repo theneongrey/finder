@@ -3,7 +3,7 @@ using Finder.Database;
 using HtmlAgilityPack;
 
 namespace Finder.Business.Preview.Services.PreviewHelper;
-    
+
 public class PreviewGrabberQueryService
 {
     private readonly AppDbContext _dbContext;
@@ -12,7 +12,7 @@ public class PreviewGrabberQueryService
     {
         _dbContext = dbContext;
     }
-    
+
     public Result<Models.Preview> GetPreview(string htmlContent, Uri baseUrl)
     {
         if (baseUrl.Host.Equals("www.amazon.com", StringComparison.OrdinalIgnoreCase) ||
@@ -24,12 +24,12 @@ public class PreviewGrabberQueryService
 
             // 1. Extract Title(check OG, then twitter, fallback to standard <title> tag)
             var title = GetMetaContent(doc, "og:title", "twitter:title");
-            if(string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrWhiteSpace(title))
             {
                 var titleNode = doc.DocumentNode.SelectSingleNode("//title");
                 title = System.Web.HttpUtility.HtmlDecode(titleNode.InnerText);
             }
-                
+
             // 2. Extract Description
             var description = GetMetaContent(doc, "og:description", "twitter:description", "description");
             var siteName = GetMetaContent(doc, "og:site_name");
@@ -37,7 +37,7 @@ public class PreviewGrabberQueryService
             // 3. Extract image from landing image element
             var landingImage = doc.DocumentNode.SelectSingleNode("//img[@id='landingImage']");
             var imageUrl = landingImage?.GetAttributeValue("src", string.Empty) ?? string.Empty;
-            if(!string.IsNullOrWhiteSpace(imageUrl) && !imageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(imageUrl) && !imageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             {
                 imageUrl = new Uri(baseUrl, imageUrl).ToString();
             }
@@ -47,15 +47,15 @@ public class PreviewGrabberQueryService
 
         return Result<Models.Preview>.Fail(500, "Not implemented");
     }
-    
+
     public async Task RegisterQuery(string query)
     {
-        
+
     }
-    
+
     private string GetMetaContent(HtmlDocument doc, params string[] propertyOrNames)
     {
-        foreach(var key in propertyOrNames)
+        foreach (var key in propertyOrNames)
         {
             var node = doc.DocumentNode.SelectSingleNode($"//meta[@property='{key}'] | //meta[@name='{key}']");
 

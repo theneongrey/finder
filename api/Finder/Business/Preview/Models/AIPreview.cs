@@ -7,6 +7,6 @@ public record AIPreview : Preview
 
     public AIPreview(string title, string description, string imageUrl, string siteName, string elementQuery) : base(title, description, imageUrl, siteName)
     {
-        
+
     }
 }

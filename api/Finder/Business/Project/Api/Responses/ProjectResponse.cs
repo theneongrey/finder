@@ -173,7 +173,8 @@ public static class ProjectMapper
     public static ProjectResponsePoll ToProjectResponsePoll(this Entities.Poll poll, Guid? userId)
     {
         var nextOption = poll.Options
-            .Select(o => new {
+            .Select(o => new
+            {
                 Option = o,
                 UserChoice = o.Votes
                     .Where(v => v.Person.Id == userId)

@@ -9,6 +9,7 @@ import {
     InAppNotification,
     InAppNotificationKey,
 } from '../../../models/in-app-notification.model';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
 
 const NOTIFICATION_TRANSLATION_KEYS: Record<InAppNotificationKey, string> = {
     PollClosed: 'notifications.pollClosed',
@@ -35,6 +36,7 @@ const NOTIFICATION_ICONS: Record<InAppNotificationKey, string> = {
         UserAvatarComponent,
         DsIconComponent,
         TranslatePipe,
+        DsButtonComponent,
     ],
     templateUrl: './notifications-panel.component.html',
     styleUrl: './notifications-panel.component.css',
@@ -46,7 +48,7 @@ export class NotificationsPanelComponent {
     private readonly router = inject(Router);
 
     protected readonly user = this.userStore.user;
-    protected readonly inAppNotifications = this.userStore.inAppNotifications;
+    protected readonly inAppNotifications = this.userStore.allNotifications;
     protected readonly unreadCount = this.userStore.unreadCount;
 
     protected getTranslationKey(key: InAppNotificationKey): string {
@@ -74,10 +76,16 @@ export class NotificationsPanelComponent {
     }
 
     protected onNotificationClick(notification: InAppNotification): void {
-        this.userStore.markAsRead(notification.id);
-        if (notification.projectId) {
-            this.router.navigate(['/polls', notification.projectId]);
+        if (!notification.read) {
+            this.userStore.markAsRead(notification.id);
         }
+        this.router.navigate([
+            '/',
+            'polls',
+            notification.projectId,
+            'vote',
+            notification.pollId,
+        ]);
     }
 
     protected onMarkAllAsRead(): void {

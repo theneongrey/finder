@@ -43,8 +43,8 @@ export const detailRoutes: Routes = [
     {
         path: 'vote/:pollId/:optionId',
         loadComponent: () =>
-            import('./vote/project-vote.component').then(
-                (m) => m.ProjectVoteComponent,
+            import('./vote/poll-vote.component').then(
+                (m) => m.PollVoteComponent,
             ),
         data: {
             backRoute: '/polls',
@@ -53,8 +53,8 @@ export const detailRoutes: Routes = [
     {
         path: 'vote/:pollId',
         loadComponent: () =>
-            import('./vote/project-vote.component').then(
-                (m) => m.ProjectVoteComponent,
+            import('./vote/poll-vote.component').then(
+                (m) => m.PollVoteComponent,
             ),
         data: {
             backRoute: '/polls',

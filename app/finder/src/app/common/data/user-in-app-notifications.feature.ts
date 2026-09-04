@@ -16,11 +16,29 @@ import { InAppNotification } from '../models/in-app-notification.model';
 export function withInAppNotificationsFeature() {
     return signalStoreFeature(
         withState({
-            inAppNotifications: undefined as InAppNotification[] | undefined,
+            unreadNotifications: [] as InAppNotification[],
+            readNotifications: [] as InAppNotification[],
         }),
         withComputed((store) => ({
             unreadCount: computed(
-                () => store.inAppNotifications()?.length ?? 0,
+                () => store.unreadNotifications().length ?? 0,
+            ),
+            allNotifications: computed(() =>
+                [
+                    ...store.unreadNotifications(),
+                    ...store.readNotifications(),
+                ].sort((a, b) => {
+                    const createdA = a.created;
+                    const createdB = b.created;
+                    if (createdA < createdB) {
+                        return -1;
+                    }
+                    if (createdA > createdB) {
+                        return 1;
+                    }
+
+                    return 0;
+                }),
             ),
         })),
         withMethods((store) => {
@@ -31,7 +49,9 @@ export function withInAppNotificationsFeature() {
                 userService.getInAppNotifications().pipe(
                     tapResponse({
                         next: (inAppNotifications) =>
-                            patchState(store, { inAppNotifications }),
+                            patchState(store, {
+                                unreadNotifications: inAppNotifications,
+                            }),
                         error: (error) =>
                             loggerService.error(
                                 '[UserStore] Error loading in-app notifications',
@@ -47,9 +67,13 @@ export function withInAppNotificationsFeature() {
                             tapResponse({
                                 next: () =>
                                     patchState(store, {
-                                        inAppNotifications: store
-                                            .inAppNotifications()
-                                            ?.filter((n) => n.id !== id),
+                                        readNotifications: store
+                                            .unreadNotifications()
+                                            .filter((n) => n.id === id)
+                                            .map((n) => ({ ...n, read: true })),
+                                        unreadNotifications: store
+                                            .unreadNotifications()
+                                            .filter((n) => n.id !== id),
                                     }),
                                 error: (error) =>
                                     loggerService.error(
@@ -76,7 +100,13 @@ export function withInAppNotificationsFeature() {
                                 tapResponse({
                                     next: () =>
                                         patchState(store, {
-                                            inAppNotifications: [],
+                                            readNotifications: store
+                                                .unreadNotifications()
+                                                .map((n) => ({
+                                                    ...n,
+                                                    read: true,
+                                                })),
+                                            unreadNotifications: [],
                                         }),
                                     error: (error) =>
                                         loggerService.error(
@@ -89,10 +119,15 @@ export function withInAppNotificationsFeature() {
                     ),
                 ),
 
-                markProjectNotificationsAsRead(projectId: string) {
+                markProjectNotificationsAsRead(projectIdSlug: string) {
+                    // this is a temporary fix, clean this up with AI later:
+                    // the backend is supposed to pass the slug instead of the ID, when fetching notifications
+
+                    const projectId = projectIdSlug.split('-')[1];
+
                     const matching =
                         store
-                            .inAppNotifications()
+                            .unreadNotifications()
                             ?.filter((n) => n.projectId === projectId) ?? [];
                     matching.forEach((n) => markAsRead(n.id));
                 },
@@ -106,7 +141,8 @@ export function withInAppNotificationsFeature() {
                                         tapResponse({
                                             next: (inAppNotifications) =>
                                                 patchState(store, {
-                                                    inAppNotifications,
+                                                    unreadNotifications:
+                                                        inAppNotifications,
                                                 }),
                                             error: (error) =>
                                                 loggerService.error(

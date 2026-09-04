@@ -21,8 +21,15 @@ public class ProjectNotificationService(
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
-            if (recipient.Role == Role.TestUser) continue;
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollClosed, project.Id)) continue;
+            if (recipient.Role == Role.TestUser)
+            {
+                continue;
+            }
+
+            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollClosed, project.Id))
+            {
+                continue;
+            }
 
             await mailService.SendPollClosedMailAsync(recipient, actionUserName, project, poll, language);
         }
@@ -38,8 +45,15 @@ public class ProjectNotificationService(
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
-            if (recipient.Role == Role.TestUser) continue;
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollReopened, project.Id)) continue;
+            if (recipient.Role == Role.TestUser)
+            {
+                continue;
+            }
+
+            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollReopened, project.Id))
+            {
+                continue;
+            }
 
             await mailService.SendPollReopenedMailAsync(recipient, actionUserName, project, poll, language);
         }
@@ -55,8 +69,15 @@ public class ProjectNotificationService(
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
-            if (recipient.Role == Role.TestUser) continue;
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollUpdated, project.Id)) continue;
+            if (recipient.Role == Role.TestUser)
+            {
+                continue;
+            }
+
+            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollUpdated, project.Id))
+            {
+                continue;
+            }
 
             await mailService.SendPollUpdatedMailAsync(recipient, actionUserName, project, poll, summary, language);
         }
@@ -72,8 +93,15 @@ public class ProjectNotificationService(
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
-            if (recipient.Role == Role.TestUser) continue;
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.NewComment, project.Id)) continue;
+            if (recipient.Role == Role.TestUser)
+            {
+                continue;
+            }
+
+            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.NewComment, project.Id))
+            {
+                continue;
+            }
 
             await mailService.SendNewCommentMailAsync(recipient, actionUserName, project, poll, commentContent, language);
         }

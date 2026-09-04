@@ -13,4 +13,5 @@ export interface InAppNotification {
     pollId?: string;
     variables: Record<string, string>;
     created: string;
+    read: boolean;
 }

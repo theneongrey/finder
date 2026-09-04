@@ -26,31 +26,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 10px 4px;
+    padding: 14px 16px;
+    min-width: 288px;
 }
 
 .notifications-panel__header-title {
     font-family: var(--font-body);
     font-size: var(--fs-ui);
-    font-weight: var(--weight-bold);
-    color: var(--text-secondary);
-}
-
-.notifications-panel__mark-all {
-    font-family: var(--font-body);
-    font-size: 11px;
     font-weight: var(--weight-semibold);
-    color: var(--accent);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 2px 4px;
-    border-radius: var(--radius-xs);
-    transition: background var(--duration-fast) var(--ease-standard);
-}
-
-.notifications-panel__mark-all:hover {
-    background: var(--sand-100);
 }
 
 .notifications-panel__item {
@@ -58,10 +41,8 @@
     align-items: flex-start;
     gap: 10px;
     width: 100%;
-    max-width: 280px;
     font-family: var(--font-body);
     padding: 9px 10px;
-    border-radius: var(--radius-xs);
     cursor: pointer;
     text-align: left;
     transition: background var(--duration-fast) var(--ease-standard);
@@ -96,23 +77,4 @@
     font-size: 11px;
     color: var(--text-secondary);
     font-weight: var(--weight-semibold);
-}
-
-.notifications-panel__menu-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    font-family: var(--font-body);
-    font-size: var(--fs-ui);
-    font-weight: var(--weight-semibold);
-    padding: 9px 10px;
-    border-radius: var(--radius-xs);
-    cursor: pointer;
-    text-align: left;
-    transition: background var(--duration-fast) var(--ease-standard);
-}
-
-.notifications-panel__menu-item:hover {
-    background: var(--sand-100);
 }

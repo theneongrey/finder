@@ -1,7 +1,7 @@
 {
   "notifications": {
     "title": "Benachrichtigungen",
-    "markAllRead": "Alle als gelesen markieren",
+    "markAllRead": "Alle gelesen",
     "pollClosed": "{{user}} hat \"{{poll}}\" beendet",
     "pollReopened": "{{user}} hat \"{{poll}}\" wieder geöffnet",
     "pollUpdated": "{{user}} hat \"{{poll}}\" aktualisiert",

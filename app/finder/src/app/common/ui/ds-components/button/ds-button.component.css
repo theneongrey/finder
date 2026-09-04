@@ -111,6 +111,21 @@
     font-size: var(--fs-ui-sm);
 }
 
+/* Danger text button */
+.ds-btn.ds-btn--danger-ghost {
+    background: #fff;
+    color: var(--negative);
+    border-radius: 0;
+    padding: 0;
+    font-size: var(--fs-body-xs);
+}
+.ds-btn.ds-btn--danger-ghost:hover {
+    opacity: 0.88;
+}
+.ds-btn.ds-btn--danger-ghost.ds-btn--sm {
+    font-size: var(--fs-ui-sm);
+}
+
 /* Icon-only mode (size is a pixel number) */
 .ds-btn.ds-btn--icon-only {
     flex-shrink: 0;

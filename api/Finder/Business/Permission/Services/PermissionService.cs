@@ -186,6 +186,7 @@ public class PermissionService
 
         var project = await _dbContext.Projects
             .Include(p => p.Creator)
+            .Include(p => p.Polls)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
             .Where(p => p.Id == SlugHelper.ExtractId(projectSlug) &&

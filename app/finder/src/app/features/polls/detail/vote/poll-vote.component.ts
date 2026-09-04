@@ -21,11 +21,12 @@ import { VoteProgressHeaderComponent } from './vote-progress-header/vote-progres
 import { VoteSwipeCardComponent } from './vote-swipe-card/vote-swipe-card.component';
 import { VoteCtaAreaComponent } from './vote-cta-area/vote-cta-area.component';
 import { OptionType } from '@common/models/option-type.model';
+import { UserStore } from '@common/data/user.store';
 
 @Component({
     selector: 'app-project-vote',
-    templateUrl: './project-vote.component.html',
-    styleUrl: './project-vote.component.css',
+    templateUrl: './poll-vote.component.html',
+    styleUrl: './poll-vote.component.css',
     imports: [
         VoteSidebarComponent,
         VoteProgressHeaderComponent,
@@ -38,7 +39,7 @@ import { OptionType } from '@common/models/option-type.model';
         '(window:keyup)': 'onKeyUp($event)',
     },
 })
-export class ProjectVoteComponent implements OnDestroy {
+export class PollVoteComponent implements OnDestroy {
     private readonly document = inject(DOCUMENT);
     private readonly titleService = inject(TitleBarService);
     private readonly translateService = inject(TranslateService);
@@ -132,7 +133,9 @@ export class ProjectVoteComponent implements OnDestroy {
             }
         });
         effect(() => {
-            if (this.projectId()) {
+            const poll = this.poll();
+
+            if (poll && this.projectId()) {
                 if (!this.optionId()) {
                     this.navigateToNextOption(undefined, true);
                 }

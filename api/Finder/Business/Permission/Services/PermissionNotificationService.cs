@@ -16,14 +16,22 @@ public class PermissionNotificationService(
         bool isNewUser, string language = "en")
     {
         var notificationKey = isExistingPermission ? NotificationKey.AccessChanged : NotificationKey.PollShared;
+        var poll = project.IsStandalone ? project.Polls.FirstOrDefault() : null;
 
         await inAppNotificationService.CreateAsync(
             recipient.Id, notificationKey,
-            projectId: project.Id, pollId: null,
-            new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = project.Name });
+            projectId: project.Id, pollId: poll?.Id,
+            new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll?.Name ?? project.Name });
 
-        if (recipient.Role == Role.TestUser) return;
-        if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, notificationKey, project.Id)) return;
+        if (recipient.Role == Role.TestUser)
+        {
+            return;
+        }
+
+        if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, notificationKey, project.Id))
+        {
+            return;
+        }
 
         await mailService.SendPermissionMailAsync(recipient, actionUserName, project, permissionType,
             isExistingPermission, isNewUser, language);
@@ -37,8 +45,15 @@ public class PermissionNotificationService(
             projectId: project.Id, pollId: null,
             new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = project.Name });
 
-        if (recipient.Role == Role.TestUser) return;
-        if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.AccessChanged, project.Id)) return;
+        if (recipient.Role == Role.TestUser)
+        {
+            return;
+        }
+
+        if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.AccessChanged, project.Id))
+        {
+            return;
+        }
 
         await mailService.SendPermissionRemovedMailAsync(recipient, actionUserName, project, language);
     }

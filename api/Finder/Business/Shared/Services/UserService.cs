@@ -66,6 +66,7 @@ public class UserService
                 Id = Guid.NewGuid(),
                 Email = email,
                 Role = Role.Free,
+                Language = "de"
             };
             _dbContext.Persons.Add(person);
         }

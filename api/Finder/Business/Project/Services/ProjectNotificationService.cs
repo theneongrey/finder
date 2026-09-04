@@ -12,7 +12,7 @@ public class ProjectNotificationService(
     NotificationMailGuard notificationMailGuard)
 {
     public async Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll, string language = "en")
+        Entities.Project project, Poll poll)
     {
         foreach (var recipient in recipients)
         {
@@ -31,12 +31,12 @@ public class ProjectNotificationService(
                 continue;
             }
 
-            await mailService.SendPollClosedMailAsync(recipient, actionUserName, project, poll, language);
+            await mailService.SendPollClosedMailAsync(recipient, actionUserName, project, poll, recipient.Language);
         }
     }
 
     public async Task SendPollReopenedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll, string language = "en")
+        Entities.Project project, Poll poll)
     {
         foreach (var recipient in recipients)
         {
@@ -55,12 +55,12 @@ public class ProjectNotificationService(
                 continue;
             }
 
-            await mailService.SendPollReopenedMailAsync(recipient, actionUserName, project, poll, language);
+            await mailService.SendPollReopenedMailAsync(recipient, actionUserName, project, poll, recipient.Language);
         }
     }
 
     public async Task SendPollUpdatedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll, PollUpdateSummary summary, string language = "en")
+        Entities.Project project, Poll poll, PollUpdateSummary summary)
     {
         foreach (var recipient in recipients)
         {
@@ -79,12 +79,12 @@ public class ProjectNotificationService(
                 continue;
             }
 
-            await mailService.SendPollUpdatedMailAsync(recipient, actionUserName, project, poll, summary, language);
+            await mailService.SendPollUpdatedMailAsync(recipient, actionUserName, project, poll, summary);
         }
     }
 
     public async Task SendNewCommentNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll, string commentContent, string language = "en")
+        Entities.Project project, Poll poll, string commentContent)
     {
         foreach (var recipient in recipients)
         {
@@ -103,7 +103,7 @@ public class ProjectNotificationService(
                 continue;
             }
 
-            await mailService.SendNewCommentMailAsync(recipient, actionUserName, project, poll, commentContent, language);
+            await mailService.SendNewCommentMailAsync(recipient, actionUserName, project, poll, commentContent);
         }
     }
 }

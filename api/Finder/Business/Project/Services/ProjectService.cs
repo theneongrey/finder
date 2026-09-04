@@ -36,7 +36,8 @@ public class ProjectService
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
-            .Where(p => !p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
+            .Where(p => !p.IsStandalone &&
+                        (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
             .ToListAsync();
     }
 
@@ -55,7 +56,8 @@ public class ProjectService
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
             .Include(p => p.Favorites)
-            .Where(p => p.IsStandalone && (p.Creator.Id == UserId || p.Permissions.Any(permission => permission.Person.Id == UserId)))
+            .Where(p => p.IsStandalone && (p.Creator.Id == UserId ||
+                                           p.Permissions.Any(permission => permission.Person.Id == UserId)))
             .Where(p => p.Polls.Any())
             .ToListAsync();
     }
@@ -82,7 +84,8 @@ public class ProjectService
         return Result<Entities.Project>.Success(project);
     }
 
-    public async Task<Result<Entities.Project>> CreateStandalonePoll(string name, string description, OptionType optionType, DateTime? closeDate = null)
+    public async Task<Result<Entities.Project>> CreateStandalonePoll(string name, string description,
+        OptionType optionType, DateTime? closeDate = null)
     {
         var userRequest = await _userService.GetUser();
         if (!userRequest.IsSuccess)
@@ -196,8 +199,9 @@ public class ProjectService
             .ThenInclude(o => o.Votes)
             .Include(p => p.Polls)
             .ThenInclude(t => t.Comments)
-            .Where(p => p.Id == SlugHelper.ExtractId(slug) && (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
-                                          p.Permissions.Any(permission => permission.PersonKey == UserId)))
+            .Where(p => p.Id == SlugHelper.ExtractId(slug) &&
+                        (p.VisibilityType == VisibilityType.VisibleForEverbody || p.Creator.Id == UserId ||
+                         p.Permissions.Any(permission => permission.PersonKey == UserId)))
             .SingleOrDefaultAsync();
 
         if (project == null)
@@ -210,7 +214,8 @@ public class ProjectService
         if (project.Permissions.All(permission => permission.PersonKey != UserId))
         {
             var user = await _userService.GetUser();
-            await _permissionService.AddOrUpdatePermissionForUser(user.Payload!, false, project, PermissionType.Voter, true);
+            await _permissionService.AddOrUpdatePermissionForUser(user.Payload!, false, project, PermissionType.Voter,
+                true);
         }
 
         return Result<Entities.Project>.Success(project);
@@ -221,9 +226,9 @@ public class ProjectService
         var projectResult = await _dbContext.Projects
             .Include(p => p.Polls)
             .Where(p => p.Id == SlugHelper.ExtractId(pollRequest.ProjectId) && (p.Creator.Id == UserId ||
-                                                           p.Permissions.Any(permission =>
-                                                               permission.Person.Id == UserId &&
-                                                               permission.PermissionType >= PermissionType.Maintainer)))
+                p.Permissions.Any(permission =>
+                    permission.Person.Id == UserId &&
+                    permission.PermissionType >= PermissionType.Maintainer)))
             .SingleOrDefaultAsync();
 
         if (projectResult == null)
@@ -238,7 +243,9 @@ public class ProjectService
             Name = pollRequest.Name.StripHtml(),
             Description = pollRequest.Description.StripHtml(),
             Project = projectResult,
-            CloseDate = pollRequest.CloseDate.HasValue ? DateTime.SpecifyKind(pollRequest.CloseDate.Value, DateTimeKind.Utc) : null
+            CloseDate = pollRequest.CloseDate.HasValue
+                ? DateTime.SpecifyKind(pollRequest.CloseDate.Value, DateTimeKind.Utc)
+                : null
         };
 
         _dbContext.Polls.Add(poll);
@@ -256,9 +263,10 @@ public class ProjectService
             .ThenInclude(o => o.Votes)
             .ThenInclude(v => v.Person)
             .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
-                                            t.Project.Permissions.Any(permission =>
-                                                permission.Person.Id == UserId &&
-                                                permission.PermissionType >= PermissionType.Maintainer)))
+                                                               t.Project.Permissions.Any(permission =>
+                                                                   permission.Person.Id == UserId &&
+                                                                   permission.PermissionType >=
+                                                                   PermissionType.Maintainer)))
             .SingleOrDefaultAsync();
 
         if (poll is null)
@@ -296,9 +304,10 @@ public class ProjectService
     {
         var deletedPolls = await _dbContext.Polls
             .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
-                                            t.Project.Permissions.Any(permission =>
-                                                permission.Person.Id == UserId &&
-                                                permission.PermissionType >= PermissionType.Maintainer)))
+                                                               t.Project.Permissions.Any(permission =>
+                                                                   permission.Person.Id == UserId &&
+                                                                   permission.PermissionType >=
+                                                                   PermissionType.Maintainer)))
             .ExecuteDeleteAsync();
 
         if (deletedPolls == 0)
@@ -338,9 +347,10 @@ public class ProjectService
     {
         var poll = await _dbContext.Polls
             .Where(t => t.Id == SlugHelper.ExtractId(pollRequest.PollId) && (t.Project.Creator.Id == UserId ||
-                                                         t.Project.Permissions.Any(permission =>
-                                                             permission.Person.Id == UserId &&
-                                                             permission.PermissionType >= PermissionType.Maintainer)))
+                                                                             t.Project.Permissions.Any(permission =>
+                                                                                 permission.Person.Id == UserId &&
+                                                                                 permission.PermissionType >=
+                                                                                 PermissionType.Maintainer)))
             .FirstOrDefaultAsync();
 
         if (poll is null)
@@ -374,6 +384,7 @@ public class ProjectService
                 Option = option
             };
         }
+
         poll.Options.Add(option);
 
         _dbContext.Options.Add(option);
@@ -381,7 +392,8 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var actor = await _userService.GetUser();
-        _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id);
+        _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, actor.Payload!.Name ?? "Unknown",
+            actor.Payload!.Id);
 
         return Result<Option>.Success(option);
     }
@@ -394,9 +406,10 @@ public class ProjectService
             .Include(o => o.Votes)
             .ThenInclude(v => v.Person)
             .Where(o => o.Id == SlugHelper.ExtractId(slug) && (o.Poll.Project.Creator.Id == UserId ||
-                                             o.Poll.Project.Permissions.Any(permission =>
-                                                 permission.Person.Id == UserId &&
-                                                 permission.PermissionType >= PermissionType.Maintainer)))
+                                                               o.Poll.Project.Permissions.Any(permission =>
+                                                                   permission.Person.Id == UserId &&
+                                                                   permission.PermissionType >=
+                                                                   PermissionType.Maintainer)))
             .FirstOrDefaultAsync();
 
         if (option is null)
@@ -409,13 +422,28 @@ public class ProjectService
             return Result<Option>.Fail(409);
         }
 
-        option.Text = request.Text.StripHtml();
-        option.Description = request.Description.StripHtml();
+        var cleanText = request.Text.StripHtml();
+        var cleanDescription = request.Description.StripHtml();
+
+        var textChanged = option.Text != cleanText;
+        var descriptionChanged = option.Description != cleanDescription;
+
+        option.Text = cleanText;
+        option.Description = cleanDescription;
+
+        var metaChanged = false;
 
         if (request.Meta is not null)
         {
             if (option.Meta is not null)
             {
+                var oldOptionValues = option.Meta.Url + option.Meta.Title + option.Meta.Description +
+                                      option.Meta.ImageUrl + option.Meta.SiteName;
+                var newOptionValues = request.Meta.Url + request.Meta.Title + request.Meta.Description +
+                                      request.Meta.ImageUrl + request.Meta.SiteName;
+                
+                metaChanged = oldOptionValues != newOptionValues;
+
                 option.Meta.Url = request.Meta.Url;
                 option.Meta.Title = request.Meta.Title.StripHtml();
                 option.Meta.Description = request.Meta.Description.StripHtml();
@@ -424,6 +452,7 @@ public class ProjectService
             }
             else
             {
+                metaChanged = true;
                 option.Meta = new OptionMeta
                 {
                     Id = option.Id,
@@ -438,6 +467,7 @@ public class ProjectService
         }
         else if (option.Meta is not null)
         {
+            metaChanged = true;
             _dbContext.OptionMetas.Remove(option.Meta);
             option.Meta = null;
         }
@@ -445,7 +475,12 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var updateActor = await _userService.GetUser();
-        _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown", updateActor.Payload!.Id);
+
+        if (textChanged || descriptionChanged || metaChanged)
+        {
+            _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown",
+                updateActor.Payload!.Id);
+        }
 
         return Result<Option>.Success(option);
     }
@@ -455,9 +490,10 @@ public class ProjectService
         var option = await _dbContext.Options
             .Include(o => o.Poll)
             .Where(o => o.Id == SlugHelper.ExtractId(slug) && (o.Poll.Project.Creator.Id == UserId ||
-                                             o.Poll.Project.Permissions.Any(permission =>
-                                                 permission.Person.Id == UserId &&
-                                                 permission.PermissionType >= PermissionType.Maintainer)))
+                                                               o.Poll.Project.Permissions.Any(permission =>
+                                                                   permission.Person.Id == UserId &&
+                                                                   permission.PermissionType >=
+                                                                   PermissionType.Maintainer)))
             .FirstOrDefaultAsync();
 
         if (option is null)
@@ -477,7 +513,8 @@ public class ProjectService
         await _dbContext.SaveChangesAsync();
 
         var deleteActor = await _userService.GetUser();
-        _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown", deleteActor.Payload!.Id);
+        _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown",
+            deleteActor.Payload!.Id);
 
         return Result.Success();
     }
@@ -574,9 +611,10 @@ public class ProjectService
             .Include(t => t.Comments)
             .ThenInclude(c => c.Person)
             .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
-                                            t.Project.Permissions.Any(permission =>
-                                                permission.Person.Id == UserId &&
-                                                permission.PermissionType >= PermissionType.Maintainer)))
+                                                               t.Project.Permissions.Any(permission =>
+                                                                   permission.Person.Id == UserId &&
+                                                                   permission.PermissionType >=
+                                                                   PermissionType.Maintainer)))
             .SingleOrDefaultAsync();
 
         if (poll is null)
@@ -621,9 +659,10 @@ public class ProjectService
             .Include(t => t.Comments)
             .ThenInclude(c => c.Person)
             .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
-                                            t.Project.Permissions.Any(permission =>
-                                                permission.Person.Id == UserId &&
-                                                permission.PermissionType >= PermissionType.Maintainer)))
+                                                               t.Project.Permissions.Any(permission =>
+                                                                   permission.Person.Id == UserId &&
+                                                                   permission.PermissionType >=
+                                                                   PermissionType.Maintainer)))
             .SingleOrDefaultAsync();
 
         if (poll is null)

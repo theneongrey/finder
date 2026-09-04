@@ -27,7 +27,11 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
         return _factory.WithWebHostBuilder(b => b.ConfigureServices(services =>
         {
             var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(MailService));
-            if (descriptor != null) services.Remove(descriptor);
+            if (descriptor != null)
+            {
+                services.Remove(descriptor);
+            }
+
             services.AddSingleton<MailService>(captured);
 
             services.Configure<NotificationOptions>(o => o.PollUpdateDebounceSeconds = 1);

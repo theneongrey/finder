@@ -19,28 +19,28 @@ public class UserService
         _httpContextAccessor = httpContextAccessor;
         _emailValidationService = emailValidationService;
     }
-    
+
     public async Task<Result<Person>> GetUser()
     {
         if (_cachedUser is not null)
         {
             return _cachedUser;
         }
-        
+
         var userId = GetUserId();
         if (!userId.HasValue)
         {
             return Result<Person>.Fail();
         }
-        
+
         var person = await _dbContext.Persons.SingleOrDefaultAsync(p => p.Id == userId);
         if (person == null)
         {
             return Result<Person>.Fail();
         }
-        
+
         _cachedUser = Result<Person>.Success(person);
-        
+
         return _cachedUser;
     }
 
@@ -79,7 +79,7 @@ public class UserService
         {
             return _cachedId;
         }
-        
+
         var id = _httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (id == null)
         {
@@ -87,7 +87,7 @@ public class UserService
         }
 
         _cachedId = Guid.Parse(id);
-        
+
         return _cachedId;
     }
 }

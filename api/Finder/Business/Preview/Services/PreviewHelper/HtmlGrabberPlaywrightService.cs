@@ -17,38 +17,38 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
     {
         _configuration = configuration;
     }
-    
+
     public async Task<Result<PlaywrightResult>> GetHtmlContent(string url)
     {
         var timeoutSeconds = _configuration.GetValue<int?>("Preview:PlaywrightTimeoutSeconds") ?? 5;
         var cancellationToken = new CancellationTokenSource();
         cancellationToken.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
-        
+
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new()
         {
             Headless = true
         });
-        
+
         var page = await browser.NewPageAsync();
         await page.GotoAsync(url);
-        await page.WaitForLoadStateAsync(LoadState.Load, new ()
+        await page.WaitForLoadStateAsync(LoadState.Load, new()
         {
             Timeout = 3
         });
         // wait for a redirect
         await page.WaitForTimeoutAsync(1000);
-        
+
         if (cancellationToken.IsCancellationRequested)
         {
             return Result<PlaywrightResult>.Fail();
         }
-        
-        await page.WaitForLoadStateAsync(LoadState.Load, new ()
+
+        await page.WaitForLoadStateAsync(LoadState.Load, new()
         {
             Timeout = 3
         });
-        
+
         var html = await page.ContentAsync();
         Console.WriteLine("--------------------------------------------");
         Console.WriteLine(html);
@@ -57,7 +57,7 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
         {
             return Result<PlaywrightResult>.Fail(500, "Failed to fetch from url");
         }
-        
+
         return Result<PlaywrightResult>.Success(new PlaywrightResult(html, page.Url));
     }
 }

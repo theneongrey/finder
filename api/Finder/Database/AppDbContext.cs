@@ -28,12 +28,12 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<UserNotification> UserNotifications { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Project).Assembly);
     }
-    
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var modifiedOrAddedEntities = ChangeTracker.Entries();

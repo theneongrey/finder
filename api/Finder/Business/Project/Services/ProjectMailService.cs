@@ -49,11 +49,15 @@ public class ProjectMailService(MailService mailService, LanguageService languag
         };
 
         if (commentContent is not null)
+        {
             variables["comment"] = commentContent;
+        }
 
         Dictionary<string, string>? rawHtml = null;
         if (summary is not null)
+        {
             rawHtml = new Dictionary<string, string> { ["changesHtml"] = pollChangesBuilder.Build(summary, language) };
+        }
 
         var mail = new Mail(
             subject,

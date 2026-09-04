@@ -194,12 +194,12 @@ public class PermissionService
                         (p.Creator.Id == UserId || // only creator or owner can update rights
                          p.Permissions.Any(permission => permission.Person.Id == UserId && permission.PermissionType == PermissionType.Owner)))
             .FirstOrDefaultAsync();
-        
+
         if (project == null)
         {
             return Result<Project.Entities.Project>.Fail(404);
         }
-        
+
         return await AddOrUpdatePermissionForUser(user, isNewUser, project, permissionType);
     }
 
@@ -232,7 +232,7 @@ public class PermissionService
         {
             return Result<Project.Entities.Project>.Fail(400, "Error while writing to database");
         }
-        
+
         if (!silent)
         {
             var actionUser = await _userService.GetUser();

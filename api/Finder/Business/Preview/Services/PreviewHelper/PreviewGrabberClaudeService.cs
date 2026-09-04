@@ -15,7 +15,7 @@ public class PreviewGrabberClaudeService
         // this service is not used for now.
         // HTML page exceeds the token-limit. And fetching takes too much time.
         // Instead, I could filter out only the images and then let Claude decide. But: I can do this myself without spending tokens
-        
+
         _configuration = configuration;
     }
 
@@ -29,7 +29,7 @@ public class PreviewGrabberClaudeService
 
         var dataToCollect = GetDataToCollect(collectedData);
         var compressedHtml = CompressHtml(htmlContent);
-        
+
         var messages =
             new List<MessageParam>
             {
@@ -94,7 +94,7 @@ public class PreviewGrabberClaudeService
                     Content = $@"Extract the {dataToCollect.names} for a preview image from the following url. Dont return the raw values, return the xpath to get to this elements. Return the result in JSON format with keys {dataToCollect.keys}.\nThe url is {url}.",
                 }
             };
-        
+
         var parameters = new MessageCreateParams
         {
             MaxTokens = 1024,
@@ -115,7 +115,7 @@ public class PreviewGrabberClaudeService
             Messages = messages
         };
 
-        return await client.Messages.Create(parameters); 
+        return await client.Messages.Create(parameters);
     }
 
     private (string names, string keys) GetDataToCollect(Models.Preview collectedData)
@@ -134,7 +134,7 @@ public class PreviewGrabberClaudeService
             missingDataNames.Add("description");
             missingDataKeys.Add("'description'");
         }
-        
+
         if (string.IsNullOrWhiteSpace(collectedData.Title))
         {
             missingDataNames.Add("title");

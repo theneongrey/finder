@@ -49,7 +49,9 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
 
         var array = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
         foreach (var item in array)
+        {
             Assert.Equal("all", item!["value"]!.GetValue<string>());
+        }
     }
 
     [Fact]
@@ -63,7 +65,9 @@ public class NotificationSettingsApiTests : IClassFixture<FinderApiFactory>
 
         var array = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
         for (var i = 0; i < array.Count; i++)
+        {
             Assert.Equal(i, array[i]!["sortIndex"]!.GetValue<int>());
+        }
     }
 
     [Fact]

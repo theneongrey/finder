@@ -9,13 +9,13 @@ public class LoginTokenConfiguration : IEntityTypeConfiguration<LoginToken>
     public void Configure(EntityTypeBuilder<LoginToken> builder)
     {
         builder.HasKey(p => p.Id);
-        
+
         builder.Property(p => p.Token)
             .HasMaxLength(32);
-        
+
         builder.Property(p => p.Code)
             .HasMaxLength(6);
-        
+
         builder.Property(p => p.RedirectUrl)
             .HasMaxLength(512);
 

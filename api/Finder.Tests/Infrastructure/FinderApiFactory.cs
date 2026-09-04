@@ -66,7 +66,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             var rateLimiterConfigDescriptors = services
                 .Where(d => d.ServiceType == typeof(IConfigureOptions<RateLimiterOptions>))
                 .ToList();
-            
+
             foreach (var d in rateLimiterConfigDescriptors)
             {
                 services.Remove(d);

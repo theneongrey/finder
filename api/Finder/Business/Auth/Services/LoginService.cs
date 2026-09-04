@@ -33,11 +33,11 @@ public class LoginService
         _httpContextAccessor = httpContextAccessor;
         _loginOptions = loginOptions.Value;
     }
-    
+
     public async Task<Result<string?>> LoginByToken(string token)
     {
         var cleanToken = token.ToLower().Trim();
-        
+
         var loginToken = await _dbContext.LoginTokens
             .Include(loginToken => loginToken.Person)
             .SingleOrDefaultAsync(t => t.Token == cleanToken);
@@ -53,16 +53,16 @@ public class LoginService
     {
         var cleanEmail = email.Trim().ToLower();
         var cleanCode = code.Trim().ToLower();
-        
+
         var loginToken = await _dbContext.LoginTokens
             .Include(loginToken => loginToken.Person)
             .SingleOrDefaultAsync(t => t.Person.Email == cleanEmail);
-        
+
         if (loginToken == null || loginToken.Code == null || IsTokenExpired(loginToken))
         {
             return Result<string?>.Fail(401);
         }
-        
+
         if (loginToken.Code != cleanCode)
         {
             loginToken.Retries++;
@@ -70,7 +70,7 @@ public class LoginService
             {
                 loginToken.Code = null;
             }
-            
+
             await _dbContext.SaveChangesAsync();
             return Result<string?>.Fail(401);
         }
@@ -122,11 +122,11 @@ public class LoginService
         {
             return Result.Fail(403);
         }
-        
+
         var loginToken = await CreateLoginTokenForPerson(person.Payload!, redirectUrl);
         await _dbContext.SaveChangesAsync();
         await SendLoginMail(person.Payload!, loginToken);
-        
+
         return Result.Success();
     }
 

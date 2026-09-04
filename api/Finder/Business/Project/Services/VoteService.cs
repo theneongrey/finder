@@ -51,9 +51,9 @@ public class VoteService
         {
             vote.Choice = choice;
         }
-        
+
         await _dbContext.SaveChangesAsync();
-        
+
         return Result.Success();
     }
 }

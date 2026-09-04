@@ -37,7 +37,7 @@ public static class AuthApi
 
             return Results.Unauthorized();
         }).RequireRateLimiting("auth");
-        
+
         app.MapGet("/api/auth/who", async (UserService userService) =>
         {
             var result = await userService.GetUser();

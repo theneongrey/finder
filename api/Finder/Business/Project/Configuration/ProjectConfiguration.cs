@@ -18,9 +18,9 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Entities.Project>
 
         builder.HasMany(p => p.Polls)
             .WithOne(p => p.Project);
-        
+
         builder.HasOne(p => p.Creator);
-        
+
         builder.Property(p => p.VisibilityType)
             .HasConversion<int>();
 

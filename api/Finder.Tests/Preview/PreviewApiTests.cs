@@ -1,10 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
-using Finder.Business.Preview.Models;
-using Finder.Business.Preview.Services.PreviewHelper;
-using Finder.Business.Shared;
 using Finder.Tests.Infrastructure;
-using NSubstitute;
 using Xunit;
 
 namespace Finder.Tests.Preview;
@@ -40,7 +36,7 @@ public class PreviewApiTests : IClassFixture<FinderApiFactory>
         var user = await _factory.SeedUser();
         using var client = _factory.CreateClient();
         //*/
-        
+
         client.DefaultRequestHeaders.Add(TestAuthHandler.UserIdHeader, user.Id.ToString());
 
         const string url = "https://www.amazon.de/dp/B0FVX89SVD?ref=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&ref_=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&social_share=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&th=1";

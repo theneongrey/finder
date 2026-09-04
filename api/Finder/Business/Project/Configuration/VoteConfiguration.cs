@@ -11,7 +11,7 @@ public class VoteConfiguration : IEntityTypeConfiguration<Vote>
         builder.HasKey(p => p.Id);
 
         builder.HasOne(p => p.Person);
-        
+
         builder.Property(p => p.Choice)
             .HasMaxLength(64);
     }

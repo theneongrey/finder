@@ -26,7 +26,11 @@ public class NotificationMailGuard(AppDbContext dbContext)
 
         if (value == NotificationValue.FavOnly)
         {
-            if (projectId is null) return false;
+            if (projectId is null)
+            {
+                return false;
+            }
+
             return await dbContext.ProjectFavorites
                 .AnyAsync(f => f.UserId == personId && f.ProjectId == projectId);
         }

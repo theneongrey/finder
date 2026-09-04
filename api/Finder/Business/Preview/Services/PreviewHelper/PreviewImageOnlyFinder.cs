@@ -15,16 +15,16 @@ public class PreviewImageOnlyFinder
         public int Width { get; set; }
         public int Height { get; set; }
     }
-    
+
     public string? GetMostPromisingImage(string htmlContent, string? title)
     {
         var doc = new HtmlDocument();
         doc.LoadHtml(htmlContent);
 
         var candidates = new List<ImageCandidate>();
-        
+
         var imgNodes = doc.DocumentNode.SelectNodes("//img");
-        
+
         // --- Amazon-specific: data-a-dynamic-image holds a JSON dict of {url: [w,h]} ---
         var dynamicImageNodes = doc.DocumentNode.SelectNodes("//img[@data-a-dynamic-image]");
         foreach (var node in dynamicImageNodes)
@@ -67,7 +67,7 @@ public class PreviewImageOnlyFinder
         {
             return PickLargestDynamicImage(candidates);
         }
-        
+
         foreach (var node in imgNodes)
         {
             var src = node.GetAttributeValue("src", "")
@@ -98,7 +98,7 @@ public class PreviewImageOnlyFinder
 
         return PickMostPromising(candidates, title);
     }
-    
+
     private string? PickLargestDynamicImage(IEnumerable<ImageCandidate> candidates)
     {
         return candidates
@@ -106,7 +106,7 @@ public class PreviewImageOnlyFinder
             .OrderByDescending(c => c.Width * c.Height)
             .FirstOrDefault()?.Src;
     }
-    
+
     private string? PickMostPromising(List<ImageCandidate> candidates, string? title)
     {
         var previewCandidates = candidates.Where(c =>
@@ -124,7 +124,7 @@ public class PreviewImageOnlyFinder
                 return result;
             }
         }
-        
+
         var largest = PickLargestDynamicImage(candidates);
         if (largest is not null)
         {

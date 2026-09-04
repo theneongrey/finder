@@ -1,9 +1,7 @@
-using System.Text;
 using Finder.Business.Shared;
-using Microsoft.Playwright;
 
 namespace Finder.Business.Preview.Services.PreviewHelper;
-    
+
 public interface IHtmlGrabberHttpClientService
 {
     Task<Result<string>> GetHtmlContent(string url);
@@ -17,7 +15,7 @@ public class HtmlGrabberHttpClientService : IHtmlGrabberHttpClientService
     {
         _clientFactory = clientFactory;
     }
-    
+
     public async Task<Result<string>> GetHtmlContent(string url)
     {
         try
@@ -25,15 +23,15 @@ public class HtmlGrabberHttpClientService : IHtmlGrabberHttpClientService
             var client = _clientFactory.CreateClient("PreviewClient");
             // Fetch HTML content from the target site
             var html = await client.GetStringAsync(url);
-            
+
             if (html.Contains("html"))
             {
                 return Result<string>.Success(html);
             }
-            
+
             return Result<string>.Fail(500, "not a valid html page");
         }
-        catch(Exception)
+        catch (Exception)
         {
             return Result<string>.Fail(500, "Could not fetch html content");
         }

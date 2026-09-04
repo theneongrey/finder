@@ -34,7 +34,9 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
             changes.FirstOldName ??= oldName;
             changes.LastNewName = newName;
             if (oldDescription != newDescription)
+            {
                 changes.DescriptionChanged = true;
+            }
         });
     }
 
@@ -54,7 +56,9 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
         EnqueueChange(pollId, actionUserName, actionUserId, changes =>
         {
             if (!changes.NetOptionsAdded.Remove(optionId))
+            {
                 changes.NetOptionsRemoved[optionId] = optionText;
+            }
         });
     }
 
@@ -98,7 +102,10 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
                     {
                         // Bail if a newer enqueue replaced our CTS — it will fire instead.
                         if (!_pending.TryGetValue(pollId, out var current) || !ReferenceEquals(current.Cts, cts))
+                        {
                             return;
+                        }
+
                         _pending.Remove(pollId);
                     }
                     await FireAsync(pollId, changes);
@@ -122,7 +129,10 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
                 .Where(p => p.Id == pollId)
                 .FirstOrDefaultAsync();
 
-            if (poll is null) return;
+            if (poll is null)
+            {
+                return;
+            }
 
             var nameChanged = changes.FirstOldName is not null && changes.FirstOldName != changes.LastNewName;
             var summary = new PollUpdateSummary(
@@ -135,7 +145,10 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
                 OptionsModified: changes.OptionsModified
             );
 
-            if (!summary.HasChanges) return;
+            if (!summary.HasChanges)
+            {
+                return;
+            }
 
             var recipients = poll.Project.Permissions
                 .Select(p => p.Person)

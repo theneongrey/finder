@@ -15,12 +15,12 @@ public class NotificationSettingConfiguration : IEntityTypeConfiguration<Notific
         builder.Property(n => n.DefaultValue).HasConversion<int>();
 
         builder.HasData(
-            new NotificationSetting { Id = 1, Key = "pollClosed",    TitleKey = "settings.notifications.pollClosed",    DescriptionKey = "settings.notifications.pollClosedSub",    DefaultValue = NotificationValue.All, SortIndex = 0 },
-            new NotificationSetting { Id = 2, Key = "pollReopened",  TitleKey = "settings.notifications.pollReopened",  DescriptionKey = "settings.notifications.pollReopenedSub",  DefaultValue = NotificationValue.All, SortIndex = 1 },
-            new NotificationSetting { Id = 3, Key = "newComment",    TitleKey = "settings.notifications.newComment",    DescriptionKey = "settings.notifications.newCommentSub",    DefaultValue = NotificationValue.All, SortIndex = 2 },
+            new NotificationSetting { Id = 1, Key = "pollClosed", TitleKey = "settings.notifications.pollClosed", DescriptionKey = "settings.notifications.pollClosedSub", DefaultValue = NotificationValue.All, SortIndex = 0 },
+            new NotificationSetting { Id = 2, Key = "pollReopened", TitleKey = "settings.notifications.pollReopened", DescriptionKey = "settings.notifications.pollReopenedSub", DefaultValue = NotificationValue.All, SortIndex = 1 },
+            new NotificationSetting { Id = 3, Key = "newComment", TitleKey = "settings.notifications.newComment", DescriptionKey = "settings.notifications.newCommentSub", DefaultValue = NotificationValue.All, SortIndex = 2 },
             new NotificationSetting { Id = 4, Key = "accessChanged", TitleKey = "settings.notifications.accessChanged", DescriptionKey = "settings.notifications.accessChangedSub", DefaultValue = NotificationValue.All, SortIndex = 3 },
-            new NotificationSetting { Id = 5, Key = "pollShared",    TitleKey = "settings.notifications.pollShared",    DescriptionKey = "settings.notifications.pollSharedSub",    DefaultValue = NotificationValue.All, SortIndex = 4 },
-            new NotificationSetting { Id = 6, Key = "pollUpdated",   TitleKey = "settings.notifications.pollUpdated",   DescriptionKey = "settings.notifications.pollUpdatedSub",   DefaultValue = NotificationValue.All, SortIndex = 5 }
+            new NotificationSetting { Id = 5, Key = "pollShared", TitleKey = "settings.notifications.pollShared", DescriptionKey = "settings.notifications.pollSharedSub", DefaultValue = NotificationValue.All, SortIndex = 4 },
+            new NotificationSetting { Id = 6, Key = "pollUpdated", TitleKey = "settings.notifications.pollUpdated", DescriptionKey = "settings.notifications.pollUpdatedSub", DefaultValue = NotificationValue.All, SortIndex = 5 }
         );
     }
 }

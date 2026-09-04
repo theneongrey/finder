@@ -10,10 +10,18 @@ public class MailTemplateService
     {
         var html = LoadTemplate(templateName, language);
         foreach (var (key, value) in variables)
+        {
             html = html.Replace($"{{{{{key}}}}}", System.Net.WebUtility.HtmlEncode(value));
+        }
+
         if (rawHtmlVariables is not null)
+        {
             foreach (var (key, value) in rawHtmlVariables)
+            {
                 html = html.Replace($"{{{{{key}}}}}", value);
+            }
+        }
+
         return html;
     }
 
@@ -21,7 +29,9 @@ public class MailTemplateService
     {
         var stream = GetStream(language, templateName) ?? GetStream("en", templateName);
         if (stream is null)
+        {
             throw new InvalidOperationException($"Email template '{templateName}' not found.");
+        }
 
         using var reader = new StreamReader(stream);
         return reader.ReadToEnd();

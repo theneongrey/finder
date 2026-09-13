@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Finder.Business.User.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,7 +15,12 @@ public class UserNotificationConfiguration : IEntityTypeConfiguration<UserNotifi
         builder.Property(n => n.Key).HasConversion<string>().HasMaxLength(64).IsRequired();
         builder.Property(n => n.ProjectId).HasMaxLength(256);
         builder.Property(n => n.PollId).HasMaxLength(256);
-        builder.Property(n => n.Variables).HasColumnType("jsonb");
+        builder.Property(n => n.Variables)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<Dictionary<string, string>>(v, (JsonSerializerOptions?)null) ?? new Dictionary<string, string>()
+            )
+            .HasColumnType("jsonb");
 
         builder.HasOne(n => n.Person)
             .WithMany()

@@ -23,48 +23,59 @@ public class PreviewService
 
     public async Task<Result<Models.Preview>> GetPreviewAsync(string url)
     {
-        if (string.IsNullOrWhiteSpace(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
+        if (string.IsNullOrWhiteSpace(url) || !Uri.TryCreate(url, UriKind.Absolute, out _))
         {
             return Result<Models.Preview>.Fail(400, "Invalid URL");
         }
 
         // 1. Try the plain HTTP client first and try to find out if you can get the image via the meta tags
         var httpHtmlResult = await _htmlGrabberHttpClientService.GetHtmlContent(url);
-        var httpClientHtmlContent = httpHtmlResult.Payload!;
-
+        var htmlContent = httpHtmlResult.Payload!;
+        Models.Preview? preview = null;
+        
         if (httpHtmlResult.IsSuccess)
         {
-            var metaResult = _previewGrabberMetaService.GetPreview(httpClientHtmlContent, new Uri(url));
-            if (metaResult.IsSuccess && metaResult.Payload!.HasImage)
+            var metaResult = _previewGrabberMetaService.GetPreview(htmlContent, new Uri(url));
+            if (metaResult.IsSuccess)
             {
-                return metaResult;
+                preview = metaResult.Payload;
+                if (metaResult.Payload!.HasImage)
+                {
+                    return metaResult;
+                }    
             }
+            
         }
 
         // 2. If the plain HTTP client does not work, maybe it's an SPA, try it with playwright
-        var htmlPlaywrightResult = await _htmlGrabberPlaywrightService.GetHtmlContent(url);
-        if (!htmlPlaywrightResult.IsSuccess)
+        try
         {
-            return Result<Models.Preview>.Fail(500, "Failed to fetch from url");
-        }
-
-        var playwrightHtmlContent = htmlPlaywrightResult.Payload!.HtmlContent;
-        var playwrightResultUrl = htmlPlaywrightResult.Payload!.Url;
-        Models.Preview? metaPlaywrightPreview = null;
-        if (!httpHtmlResult.IsSuccess || httpClientHtmlContent.Length != playwrightHtmlContent.Length)
-        {
-            // Even if the content changed after calling it with playwright, it's most likely the metadata will
-            // not change, but since it's a low-cost operation, try it again.
-
-            var metaPlaywrightResult = _previewGrabberMetaService.GetPreview(playwrightHtmlContent, new Uri(playwrightResultUrl));
-            if (metaPlaywrightResult.IsSuccess)
+            var htmlPlaywrightResult = await _htmlGrabberPlaywrightService.GetHtmlContent(url);
+            if (htmlPlaywrightResult.IsSuccess)
             {
-                metaPlaywrightPreview = metaPlaywrightResult.Payload;
-                if (metaPlaywrightResult.Payload!.HasImage)
+                htmlContent = htmlPlaywrightResult.Payload!.HtmlContent;
+                url = htmlPlaywrightResult.Payload!.Url;
+
+                if (!httpHtmlResult.IsSuccess || htmlContent.Length != htmlContent.Length)
                 {
-                    return metaPlaywrightResult;
+                    // Even if the content changed after calling it with playwright, it's most likely the metadata will
+                    // not change, but since it's a low-cost operation, try it again.
+
+                    var metaPlaywrightResult = _previewGrabberMetaService.GetPreview(htmlContent, new Uri(url));
+                    if (metaPlaywrightResult.IsSuccess)
+                    {
+                        preview = metaPlaywrightResult.Payload;
+                        if (metaPlaywrightResult.Payload!.HasImage)
+                        {
+                            return metaPlaywrightResult;
+                        }
+                    }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            return Result<Models.Preview>.Fail(500, "Failed to fetch from url");
         }
 
         // 3. Let's see first if we have any query to grab the info from the HTML content 
@@ -85,12 +96,15 @@ public class PreviewService
         }
         */
 
-        var imageResult = await _previewImageCandidateService.GetPreviewWithValidatedImageAsync(
-            playwrightHtmlContent, metaPlaywrightPreview, playwrightResultUrl);
-
+        var imageResult = await _previewImageCandidateService.GetPreviewWithValidatedImageAsync(htmlContent, preview, url);
         if (imageResult.IsSuccess)
         {
             return imageResult;
+        }
+
+        if (preview is not null)
+        {
+            return Result<Models.Preview>.Success(preview);
         }
 
         return Result<Models.Preview>.Fail(500, "Failed to fetch from url");

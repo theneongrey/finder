@@ -11,4 +11,7 @@ public class Comment : BaseEntity
 
     public required Poll Poll { get; set; }
     public required Person Person { get; set; }
+
+    public Option? Option { get; set; }
+    public string? OptionId { get; set; }
 }

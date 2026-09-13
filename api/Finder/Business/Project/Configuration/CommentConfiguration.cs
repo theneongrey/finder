@@ -17,5 +17,10 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
             .HasMaxLength(100);
 
         builder.HasOne(p => p.Person);
+
+        builder.HasOne(p => p.Option)
+            .WithMany()
+            .HasForeignKey(p => p.OptionId)
+            .IsRequired(false);
     }
 }

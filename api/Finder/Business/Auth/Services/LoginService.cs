@@ -117,7 +117,7 @@ public class LoginService
     {
         var cleanEmail = email.Trim().ToLower();
 
-        var person = await _userService.GetOrCreatePersonByEmail(cleanEmail, true);
+        var person = await _userService.GetOrCreatePersonByEmail(cleanEmail, false);
         if (!person.IsSuccess)
         {
             return Result.Fail(403);

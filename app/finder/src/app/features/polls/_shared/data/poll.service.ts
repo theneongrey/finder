@@ -153,7 +153,12 @@ export class PollService {
         );
     }
 
-    addComment(pollId: string, content: string, quote?: string) {
+    addComment(
+        pollId: string,
+        content: string,
+        quote?: string,
+        optionId?: string,
+    ) {
         this.loggerService.debug(
             `[PollService] adding comment to poll ${pollId}`,
         );
@@ -163,6 +168,7 @@ export class PollService {
                 pollId,
                 content,
                 quote,
+                optionId,
             },
         );
     }

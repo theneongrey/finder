@@ -113,6 +113,7 @@
             <div class="ml-auto flex items-center gap-2">
                 <app-vote-comment-button
                     [pollId]="pollId()"
+                    [optionId]="optionId()"
                     [optionText]="optionText()"
                 />
                 <ds-button variant="soft" size="sm" (click)="skip.emit()">

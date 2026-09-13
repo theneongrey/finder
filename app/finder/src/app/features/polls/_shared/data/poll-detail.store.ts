@@ -276,6 +276,7 @@ export const PollDetailStore = signalStore(
             pollId: string;
             content: string;
             quote?: string;
+            optionId?: string;
         }>(
             pipe(
                 switchMap((comment) =>
@@ -284,6 +285,7 @@ export const PollDetailStore = signalStore(
                             comment.pollId,
                             comment.content,
                             comment.quote,
+                            comment.optionId,
                         )
                         .pipe(
                             tapResponse({

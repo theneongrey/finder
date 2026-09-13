@@ -30,6 +30,7 @@ export class VoteCommentButtonComponent {
     private readonly projectDetailStore = inject(PollDetailStore);
 
     pollId = input('');
+    optionId = input<string | undefined>(undefined);
     optionText = input<string | undefined>(undefined);
 
     commentText = '';
@@ -44,6 +45,7 @@ export class VoteCommentButtonComponent {
             pollId: this.pollId(),
             content,
             quote: this.optionText(),
+            optionId: this.optionId(),
         });
         this.commentText = '';
         this.popoverOpen.set('closed');

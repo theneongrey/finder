@@ -67,7 +67,7 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
         EnqueueChange(pollId, actionUserName, actionUserId, changes =>
         {
             changes.OptionsModified = true;
-        });
+        }); 
     }
 
     private void EnqueueChange(string pollId, string actionUserName, Guid actionUserId, Action<PollChanges> applyChange)

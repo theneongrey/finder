@@ -21,57 +21,25 @@ public class PreviewImageOnlyFinder
         var doc = new HtmlDocument();
         doc.LoadHtml(htmlContent);
 
-        var candidates = new List<ImageCandidate>();
-
         var imgNodes = doc.DocumentNode.SelectNodes("//img");
 
-        // --- Amazon-specific: data-a-dynamic-image holds a JSON dict of {url: [w,h]} ---
-        var dynamicImageNodes = doc.DocumentNode.SelectNodes("//img[@data-a-dynamic-image]");
-        foreach (var node in dynamicImageNodes)
-        {
-            var raw = node.GetAttributeValue("data-a-dynamic-image", "");
-            if (string.IsNullOrWhiteSpace(raw))
-            {
-                continue;
-            }
-
-            try
-            {
-                // Amazon HTML-encodes the JSON, HtmlAgilityPack usually decodes it already
-                var dict = JsonSerializer.Deserialize<Dictionary<string, int[]>>(raw);
-                if (dict == null)
-                {
-                    continue;
-                }
-
-                foreach (var kv in dict)
-                {
-                    candidates.Add(new ImageCandidate
-                    {
-                        Src = kv.Key,
-                        Width = kv.Value.ElementAtOrDefault(0),
-                        Height = kv.Value.ElementAtOrDefault(1),
-                        Alt = node.GetAttributeValue("alt", ""),
-                        Id = node.GetAttributeValue("id", ""),
-                        ClassName = node.GetAttributeValue("class", "")
-                    });
-                }
-            }
-            catch (JsonException)
-            {
-                // malformed/partial JSON, skip
-            }
-        }
-
+        var candidates = GetAmazonSpecific(doc, imgNodes);
         if (candidates.Count > 0)
         {
             return PickLargestDynamicImage(candidates);
+        }
+        
+        candidates = GetCheck24Specific(doc);
+        if (candidates.Count > 0)
+        {
+            return candidates.First().Src;
         }
 
         foreach (var node in imgNodes)
         {
             var src = node.GetAttributeValue("src", "")
-                is { Length: > 0 } s ? s
+                is { Length: > 0 } s
+                ? s
                 : node.GetAttributeValue("data-src", "");
 
             if (string.IsNullOrWhiteSpace(src))
@@ -97,6 +65,101 @@ public class PreviewImageOnlyFinder
         }
 
         return PickMostPromising(candidates, title);
+    }
+
+    private List<ImageCandidate> GetCheck24Specific(HtmlDocument doc)
+    {
+        var candidates = new List<ImageCandidate>();
+        
+        var containerNode = doc.DocumentNode.SelectSingleNode("//div[contains(@id, 'imageTilesContainer')]");
+
+        if (containerNode != null)
+        {
+            // 3. Find all child divs inside that container that possess a 'style' attribute
+            var imageNodes = containerNode.SelectNodes(".//div[@style]");
+
+            if (imageNodes != null)
+            {
+                // Regex pattern to safely isolate URLs inside url("...") or url(...)
+                // It accounts for escaped quotes like &quot; or standard quotes
+                Regex urlRegex = new Regex(@"url\((?:&quot;|['""])?(?<url>https://.*?)(?:&quot;|['""])?\)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+                foreach (var node in imageNodes)
+                {
+                    string styleAttr = node.GetAttributeValue("style", "");
+                    Match match = urlRegex.Match(styleAttr);
+
+                    if (match.Success)
+                    {
+                        string cleanUrl = match.Groups["url"].Value;
+                        candidates.Add(new ImageCandidate
+                        {
+                            Src = cleanUrl
+                        });
+                        
+                        Console.WriteLine($"Found Preview Image: {cleanUrl}");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No style-bearing child divs found inside the container.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Could not find a div with the class 'imageTilesContainer'.");
+        }
+
+        return candidates;
+    }
+
+    private List<ImageCandidate> GetAmazonSpecific(HtmlDocument doc, HtmlNodeCollection imgNodes)
+    {
+        var candidates = new List<ImageCandidate>();
+        
+        // --- Amazon-specific: data-a-dynamic-image holds a JSON dict of {url: [w,h]} ---
+        var dynamicImageNodes = doc.DocumentNode.SelectNodes("//img[@data-a-dynamic-image]");
+        if (dynamicImageNodes is not null)
+        {
+            foreach (var node in dynamicImageNodes)
+            {
+                var raw = node.GetAttributeValue("data-a-dynamic-image", "");
+                if (string.IsNullOrWhiteSpace(raw))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    // Amazon HTML-encodes the JSON, HtmlAgilityPack usually decodes it already
+                    var dict = JsonSerializer.Deserialize<Dictionary<string, int[]>>(raw);
+                    if (dict == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var kv in dict)
+                    {
+                        candidates.Add(new ImageCandidate
+                        {
+                            Src = kv.Key,
+                            Width = kv.Value.ElementAtOrDefault(0),
+                            Height = kv.Value.ElementAtOrDefault(1),
+                            Alt = node.GetAttributeValue("alt", ""),
+                            Id = node.GetAttributeValue("id", ""),
+                            ClassName = node.GetAttributeValue("class", "")
+                        });
+                    }
+                }
+                catch (JsonException)
+                {
+                    // malformed/partial JSON, skip
+                }
+            }
+        }
+
+        return candidates;
     }
 
     private string? PickLargestDynamicImage(IEnumerable<ImageCandidate> candidates)

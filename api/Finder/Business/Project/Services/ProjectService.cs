@@ -329,6 +329,8 @@ public class ProjectService
             .ThenInclude(v => v.Person)
             .Include(t => t.Comments)
             .ThenInclude(c => c.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Option)
             .Where(t => t.Id == SlugHelper.ExtractId(slug) && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
@@ -560,6 +562,7 @@ public class ProjectService
         var poll = await _dbContext.Polls
             .Include(t => t.Project).ThenInclude(p => p.Creator)
             .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
+            .Include(t => t.Options)
             .Where(t => t.Id == SlugHelper.ExtractId(request.PollId) && (
                 t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 t.Project.Creator.Id == UserId ||
@@ -571,6 +574,17 @@ public class ProjectService
             return Result<Comment>.Fail(404);
         }
 
+        Option? option = null;
+        if (request.OptionId is not null)
+        {
+            var optionId = SlugHelper.ExtractId(request.OptionId);
+            option = poll.Options.FirstOrDefault(o => o.Id == optionId);
+            if (option is null)
+            {
+                return Result<Comment>.Fail(404);
+            }
+        }
+
         var user = (await _userService.GetUser()).Payload!;
 
         var comment = new Comment
@@ -579,7 +593,8 @@ public class ProjectService
             Content = request.Content.StripHtml(),
             Quote = request.Quote?.StripHtml(),
             Poll = poll,
-            Person = user
+            Person = user,
+            Option = option
         };
         poll.Comments.Add(comment);
 
@@ -610,6 +625,8 @@ public class ProjectService
             .ThenInclude(v => v.Person)
             .Include(t => t.Comments)
             .ThenInclude(c => c.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Option)
             .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
                                                                t.Project.Permissions.Any(permission =>
                                                                    permission.Person.Id == UserId &&
@@ -658,6 +675,8 @@ public class ProjectService
             .ThenInclude(v => v.Person)
             .Include(t => t.Comments)
             .ThenInclude(c => c.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Option)
             .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
                                                                t.Project.Permissions.Any(permission =>
                                                                    permission.Person.Id == UserId &&

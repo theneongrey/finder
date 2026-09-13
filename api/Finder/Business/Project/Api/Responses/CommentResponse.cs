@@ -1,3 +1,5 @@
+using Finder.Business.Shared;
+
 namespace Finder.Business.Project.Api.Responses;
 
 public class CommentAuthorResponse
@@ -13,6 +15,7 @@ public class CommentResponse
     public required CommentAuthorResponse Author { get; set; }
     public required DateTime Created { get; set; }
     public string? Quote { get; set; }
+    public string? OptionId { get; set; }
 }
 
 public static class CommentMapper
@@ -29,7 +32,10 @@ public static class CommentMapper
                 Picture = comment.Person.Picture,
             },
             Created = comment.Created,
-            Quote = comment.Quote
+            Quote = comment.Option?.Text ?? comment.Quote,
+            OptionId = comment.Option is null
+                ? null
+                : SlugHelper.ToSlug(SlugHelper.OptionSlugName(comment.Option.Text), comment.Option.Id)
         };
     }
 }

@@ -50,9 +50,6 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
         });
 
         var html = await page.ContentAsync();
-        Console.WriteLine("--------------------------------------------");
-        Console.WriteLine(html);
-        Console.WriteLine("--------------------------------------------");
         if (!html.Contains("html"))
         {
             return Result<PlaywrightResult>.Fail(500, "Failed to fetch from url");

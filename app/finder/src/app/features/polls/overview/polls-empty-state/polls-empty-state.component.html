@@ -106,7 +106,12 @@
         <!-- N avatar (green, bottom-center) -->
         <div
             class="absolute"
-            style="bottom: 0; left: 50%; transform: translateX(-50%); z-index: 3"
+            style="
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 3;
+            "
         >
             <ds-avatar
                 initial="N"
@@ -161,22 +166,12 @@
     </p>
 
     <!-- CTA button -->
-    <ds-button
-        variant="primary"
-        [noGlow]="true"
-        [routerLink]="['/polls/add']"
-    >
+    <ds-button variant="primary" [noGlow]="true" [routerLink]="['/polls/add']">
         {{ 'project.pollsTab.emptyCta' | translate }}
     </ds-button>
 
     <!-- Hint row -->
-    <p
-        style="
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 18px;
-        "
-    >
+    <p style="font-size: 13px; color: var(--text-muted); margin-top: 18px">
         {{ 'project.pollsTab.emptyHints' | translate }}
     </p>
 </div>

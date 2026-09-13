@@ -49,6 +49,7 @@ export interface Comment {
     author: CommentAuthor;
     created: string;
     quote?: string;
+    optionId?: string;
 }
 
 export interface PollDetail {

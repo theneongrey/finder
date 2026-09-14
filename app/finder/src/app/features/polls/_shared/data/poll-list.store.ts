@@ -29,7 +29,9 @@ export const PollListStore = signalStore(
     withComputed((store) => ({
         lastCreatedProject: computed(() => {
             const id = store.lastCreatedProjectId();
-            if (!id) return undefined;
+            if (!id) {
+                return undefined;
+            }
             return store.standalonePolls().find((p) => p.projectId === id);
         }),
     })),

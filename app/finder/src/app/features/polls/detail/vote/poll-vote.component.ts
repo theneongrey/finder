@@ -21,7 +21,6 @@ import { VoteProgressHeaderComponent } from './vote-progress-header/vote-progres
 import { VoteSwipeCardComponent } from './vote-swipe-card/vote-swipe-card.component';
 import { VoteCtaAreaComponent } from './vote-cta-area/vote-cta-area.component';
 import { OptionType } from '@common/models/option-type.model';
-import { UserStore } from '@common/data/user.store';
 
 @Component({
     selector: 'app-project-vote',

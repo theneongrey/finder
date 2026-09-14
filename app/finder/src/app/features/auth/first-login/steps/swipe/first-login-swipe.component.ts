@@ -33,19 +33,25 @@ export class FirstLoginSwipeComponent {
     private startX = 0;
 
     onPointerDown(event: PointerEvent): void {
-        if (this.swiped()) return;
+        if (this.swiped()) {
+            return;
+        }
         this.dragging.set(true);
         this.startX = event.clientX;
         (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
     }
 
     onPointerMove(event: PointerEvent): void {
-        if (!this.dragging()) return;
+        if (!this.dragging()) {
+            return;
+        }
         this.dragX.set(event.clientX - this.startX);
     }
 
     onPointerUp(): void {
-        if (!this.dragging()) return;
+        if (!this.dragging()) {
+            return;
+        }
         this.dragging.set(false);
         if (Math.abs(this.dragX()) >= 80) {
             this.swiped.set(true);

@@ -323,6 +323,8 @@ public class ProjectService
     {
         var poll = await _dbContext.Polls
             .Include(t => t.Options)
+            .ThenInclude(o => o.Creator)
+            .Include(t => t.Options)
             .ThenInclude(o => o.Meta)
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
@@ -365,12 +367,15 @@ public class ProjectService
             return Result<Option>.Fail(409);
         }
 
+        var creator = (await _userService.GetUser()).Payload!;
+
         var option = new Option
         {
             Id = SlugHelper.GenerateId(),
             Text = pollRequest.Text.StripHtml(),
             Description = pollRequest.Description.StripHtml(),
-            Poll = poll
+            Poll = poll,
+            Creator = creator
         };
 
         if (pollRequest.Meta is not null)
@@ -393,9 +398,8 @@ public class ProjectService
 
         await _dbContext.SaveChangesAsync();
 
-        var actor = await _userService.GetUser();
-        _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, actor.Payload!.Name ?? "Unknown",
-            actor.Payload!.Id);
+        _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, creator.Name ?? "Unknown",
+            creator.Id);
 
         return Result<Option>.Success(option);
     }
@@ -619,6 +623,8 @@ public class ProjectService
             .Include(t => t.Project).ThenInclude(p => p.Creator)
             .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
             .Include(t => t.Options)
+            .ThenInclude(o => o.Creator)
+            .Include(t => t.Options)
             .ThenInclude(o => o.Meta)
             .Include(t => t.Options)
             .ThenInclude(o => o.Votes)
@@ -668,6 +674,8 @@ public class ProjectService
         var poll = await _dbContext.Polls
             .Include(t => t.Project).ThenInclude(p => p.Creator)
             .Include(t => t.Project).ThenInclude(p => p.Permissions).ThenInclude(perm => perm.Person)
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Creator)
             .Include(t => t.Options)
             .ThenInclude(o => o.Meta)
             .Include(t => t.Options)

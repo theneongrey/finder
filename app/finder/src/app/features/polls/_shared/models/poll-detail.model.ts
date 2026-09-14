@@ -36,6 +36,7 @@ export interface OptionDetail {
     meta?: OptionMeta;
     votes: Vote[];
     choice: string | null;
+    creator: CommentAuthor;
 }
 
 export interface CommentAuthor {

@@ -33,7 +33,7 @@
     class="grid grid-cols-1 gap-4 min-[830px]:grid-cols-2 min-[1600px]:grid-cols-3"
     data-testid="results-option-list"
 >
-    @for (option of sortedOptions(); track option.id; let idx = $index) {
+    @for (option of sortedOptions(); track option.id) {
         @if (optionType() === OptionType.Date) {
             <app-option-card-date
                 [option]="option"
@@ -43,7 +43,6 @@
                 [projectId]="projectId()"
                 [pollId]="pollId()"
                 [hideResults]="hideResults()"
-                [rank]="idx + 1"
             />
         } @else {
             <app-option-card
@@ -54,7 +53,6 @@
                 [projectId]="projectId()"
                 [pollId]="pollId()"
                 [hideResults]="hideResults()"
-                [rank]="idx + 1"
                 [pollType]="
                     optionType() === OptionType.Rating ? 'rating' : 'yesno'
                 "

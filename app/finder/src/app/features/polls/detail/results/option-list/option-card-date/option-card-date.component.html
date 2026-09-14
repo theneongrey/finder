@@ -14,7 +14,7 @@
         @if (option().meta?.imageUrl) {
             <img
                 [src]="option().meta!.imageUrl"
-                alt=""
+                [alt]="label()"
                 class="h-[150px] w-full object-cover"
             />
         } @else {

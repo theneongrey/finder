@@ -21,13 +21,6 @@ import {
     SharedWith,
 } from '../../../../_shared/models/poll-detail.model';
 
-interface VoteGroup {
-    label: string;
-    bg: string;
-    fg: string;
-    names: string;
-}
-
 @Component({
     selector: 'app-option-card',
     templateUrl: './option-card.component.html',
@@ -49,7 +42,6 @@ export class OptionCardComponent {
     projectId = input('');
     pollId = input('');
     hideResults = input(false);
-    rank = input(0);
     pollType = input<'yesno' | 'rating'>('yesno');
 
     // ── Yes/No ──────────────────────────────────────────────────────
@@ -66,13 +58,6 @@ export class OptionCardComponent {
             this.option().votes.filter((v) => parseInt(v.choice ?? '0') > 0)
                 .length,
     );
-
-    readonly yesPercent = computed(() => {
-        const total = this.totalVoters();
-        return total > 0
-            ? Math.round((this.yesVotes().length / total) * 100)
-            : 0;
-    });
 
     // ── Rating ──────────────────────────────────────────────────────
     readonly averageRating = computed(() => {
@@ -170,57 +155,6 @@ export class OptionCardComponent {
                     .map((v) => v.person),
             ),
     );
-
-    readonly groups = computed((): VoteGroup[] => {
-        const groups: VoteGroup[] = [];
-        if (this.pollType() === 'rating') {
-            for (let stars = 5; stars >= 1; stars--) {
-                const voters = this.option().votes.filter(
-                    (v) => parseInt(v.choice ?? '0') === stars,
-                );
-                if (!voters.length) {
-                    continue;
-                }
-                groups.push({
-                    label: `${stars} ★`,
-                    bg: 'var(--star-bg)',
-                    fg: 'var(--star-fg)',
-                    names: voters.map((v) => v.person).join(', '),
-                });
-            }
-        } else {
-            const yes = this.yesVotes();
-            const no = this.noVotes();
-            if (yes.length) {
-                groups.push({
-                    label: 'Ja',
-                    bg: '#e2ede1',
-                    fg: '#3f7a4e',
-                    names: yes.map((v) => v.person).join(', '),
-                });
-            }
-            if (no.length) {
-                groups.push({
-                    label: 'Nein',
-                    bg: '#fdf3f1',
-                    fg: '#c1453f',
-                    names: no.map((v) => v.person).join(', '),
-                });
-            }
-        }
-        const open = this.members().filter(
-            (m) => !this.votedNames().has(m.name),
-        );
-        if (open.length) {
-            groups.push({
-                label: 'Offen',
-                bg: '#f1eee9',
-                fg: '#8a8681',
-                names: open.map((m) => m.name).join(', '),
-            });
-        }
-        return groups;
-    });
 
     protected openUrl(url: string) {
         window.open(url, '_blank', 'noopener noreferrer');

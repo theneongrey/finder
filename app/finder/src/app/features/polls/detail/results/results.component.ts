@@ -10,15 +10,12 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { VoteOverviewSummaryComponent } from './vote-overview-summary/vote-overview-summary.component';
 import { OptionListComponent } from './option-list/option-list.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
-import { VoteMatrixComponent } from './vote-matrix/vote-matrix.component';
 import { TitleBarService } from '@common/services/title-bar.service';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
-import { DsTabsComponent, TabItem } from '@ds/tabs/ds-tabs.component';
 import { PollRole } from '../../_shared/models/poll-role.enum';
 import { OptionType } from '@common/models/option-type.model';
 import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
@@ -29,14 +26,11 @@ import { ShareContentComponent } from '../../_shared/ui/share-content/share-cont
     templateUrl: './results.component.html',
     imports: [
         TranslatePipe,
-        VoteOverviewSummaryComponent,
         OptionListComponent,
         CommentsSectionComponent,
-        VoteMatrixComponent,
         DsButtonComponent,
         DsBadgeComponent,
         DsStatusDotComponent,
-        DsTabsComponent,
         ShareDrawerComponent,
         ShareContentComponent,
     ],
@@ -53,7 +47,6 @@ export class ResultsComponent {
     poll = this.projectDetailStore.currentPoll;
     project = this.projectDetailStore.currentProject;
 
-    view = signal<'results' | 'comments'>('results');
     showShareDrawer = signal(false);
 
     private readonly sharePollLabel = this.translateService.translate(
@@ -66,14 +59,6 @@ export class ResultsComponent {
         () => `${this.sharePollLabel()} · ${this.poll()?.name ?? ''}`,
     );
 
-    readonly tabItems = computed((): TabItem[] => [
-        { value: 'results', label: 'Ergebnis' },
-        {
-            value: 'comments',
-            label: 'Kommentare',
-            count: this.poll()?.comments.length,
-        },
-    ]);
     showCloseConfirm = signal(false);
 
     canManagePoll = computed(() => {
@@ -110,18 +95,6 @@ export class ResultsComponent {
         this.poll()?.isClosed ? '#b5b0a8' : '#5d9a56',
     );
     readonly statusPulse = computed(() => !this.poll()?.isClosed);
-
-    readonly commentsWithContext = computed(() => {
-        const poll = this.poll();
-        if (!poll) {
-            return 0;
-        }
-        return poll.comments.filter((c) => !!c.quote).length;
-    });
-
-    readonly totalMembers = computed(
-        () => this.project()?.sharedWith.length ?? 0,
-    );
 
     readonly deadlineText = computed(() => {
         const poll = this.poll();

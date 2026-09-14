@@ -3,7 +3,6 @@ import {
     Component,
     computed,
     input,
-    signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
@@ -16,6 +15,7 @@ import {
     AvatarStackComponent,
     AvatarUser,
 } from '@smart/avatar-stack/avatar-stack.component';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import {
     OptionDetail,
     SharedWith,
@@ -36,6 +36,7 @@ interface VoteGroup {
         DsButtonComponent,
         ResultsProgressBarComponent,
         AvatarStackComponent,
+        UserAvatarComponent,
         DsIconComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,14 +44,13 @@ interface VoteGroup {
 export class OptionCardComponent {
     option = input.required<OptionDetail>();
     members = input<SharedWith[]>([]);
+    commentCount = input(0);
     isMostVoted = input(false);
     projectId = input('');
     pollId = input('');
     hideResults = input(false);
     rank = input(0);
     pollType = input<'yesno' | 'rating'>('yesno');
-
-    expanded = signal(false);
 
     // ── Yes/No ──────────────────────────────────────────────────────
     readonly yesVotes = computed(() =>

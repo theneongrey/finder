@@ -8,6 +8,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import {
+    Comment,
     OptionDetail,
     SharedWith,
 } from '../../../_shared/models/poll-detail.model';
@@ -35,6 +36,7 @@ export class OptionListComponent {
 
     options = input.required<OptionDetail[]>();
     members = input<SharedWith[]>([]);
+    comments = input<Comment[]>([]);
     projectId = input('');
     pollId = input('');
     optionType = input(OptionType.YesNo);
@@ -42,6 +44,23 @@ export class OptionListComponent {
     isClosed = input(false);
 
     sort = signal<SortMode>('top');
+
+    private readonly commentCountByOption = computed(() => {
+        const counts = new Map<string, number>();
+        for (const comment of this.comments()) {
+            if (comment.optionId) {
+                counts.set(
+                    comment.optionId,
+                    (counts.get(comment.optionId) ?? 0) + 1,
+                );
+            }
+        }
+        return counts;
+    });
+
+    commentCount(option: OptionDetail): number {
+        return this.commentCountByOption().get(option.id) ?? 0;
+    }
 
     sortedOptions = computed(() => {
         const opts = [...this.options()];

@@ -4,7 +4,6 @@ import {
     computed,
     inject,
     input,
-    signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
@@ -12,11 +11,11 @@ import {
     ResultsProgressBarComponent,
     ProgressSegment,
 } from '../results-progress-bar/results-progress-bar.component';
-import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import {
     AvatarStackComponent,
     AvatarUser,
 } from '@smart/avatar-stack/avatar-stack.component';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import {
     OptionDetail,
     SharedWith,
@@ -38,7 +37,7 @@ interface VoteGroup {
         DsButtonComponent,
         ResultsProgressBarComponent,
         AvatarStackComponent,
-        DsIconComponent,
+        UserAvatarComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -47,13 +46,12 @@ export class OptionCardDateComponent {
 
     option = input.required<OptionDetail>();
     members = input<SharedWith[]>([]);
+    commentCount = input(0);
     isMostVoted = input(false);
     projectId = input('');
     pollId = input('');
     hideResults = input(false);
     rank = input(0);
-
-    expanded = signal(false);
 
     private readonly parsed = computed(() =>
         this.dateFormatService.parse(this.option().text),

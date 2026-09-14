@@ -29,12 +29,16 @@
     }
 }
 
-<div class="flex flex-col gap-2.5" data-testid="results-option-list">
+<div
+    class="grid grid-cols-1 gap-4 min-[830px]:grid-cols-2 min-[1600px]:grid-cols-3"
+    data-testid="results-option-list"
+>
     @for (option of sortedOptions(); track option.id; let idx = $index) {
         @if (optionType() === OptionType.Date) {
             <app-option-card-date
                 [option]="option"
                 [members]="members()"
+                [commentCount]="commentCount(option)"
                 [isMostVoted]="hasMostVotes(option)"
                 [projectId]="projectId()"
                 [pollId]="pollId()"
@@ -45,6 +49,7 @@
             <app-option-card
                 [option]="option"
                 [members]="members()"
+                [commentCount]="commentCount(option)"
                 [isMostVoted]="hasMostVotes(option)"
                 [projectId]="projectId()"
                 [pollId]="pollId()"

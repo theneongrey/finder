@@ -17,6 +17,12 @@ public class PollResponseOptionMeta
     public required string SiteName { get; set; }
 }
 
+public class PollResponseOptionCreator
+{
+    public required string Name { get; set; }
+    public required string? Picture { get; set; }
+}
+
 public class PollResponseOption
 {
     public required string Id { get; set; }
@@ -25,6 +31,7 @@ public class PollResponseOption
     public PollResponseOptionMeta? Meta { get; set; }
     public required PollResponseVote[] Votes { get; set; }
     public required string? Choice { get; set; }
+    public required PollResponseOptionCreator Creator { get; set; }
 }
 
 public class PollResponse
@@ -66,7 +73,12 @@ public static class PollMapper
                 SiteName = option.Meta.SiteName
             },
             Votes = option.Votes.Select(v => v.ToPollResponseVote()).ToArray(),
-            Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice
+            Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice,
+            Creator = new PollResponseOptionCreator
+            {
+                Name = option.Creator.Name ?? "Unknown",
+                Picture = option.Creator.Picture
+            }
         };
     }
 

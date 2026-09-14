@@ -169,14 +169,17 @@ public class FinderApiFactory : WebApplicationFactory<Program>
     {
         using var scope = Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var poll = await db.Polls.FindAsync(pollId)
+        var poll = await db.Polls
+                       .Include(p => p.Project).ThenInclude(pr => pr.Creator)
+                       .FirstOrDefaultAsync(p => p.Id == pollId)
                     ?? throw new InvalidOperationException($"Poll {pollId} not found. Call SeedPoll first.");
         var option = new Option
         {
             Id = SlugHelper.GenerateId(),
             Text = text,
             Description = description,
-            Poll = poll
+            Poll = poll,
+            Creator = poll.Project.Creator
         };
         if (url is not null)
         {

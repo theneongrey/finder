@@ -19,5 +19,9 @@ public class OptionConfiguration : IEntityTypeConfiguration<Option>
 
         builder.HasMany(p => p.Votes)
             .WithOne(p => p.Option);
+
+        builder.HasOne(p => p.Creator)
+            .WithMany()
+            .HasForeignKey(p => p.CreatorId);
     }
 }

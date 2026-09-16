@@ -8,7 +8,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
-import { DateOptionType } from '../../../../models/date-option.model';
+import { DateOptionType } from '../../../../../_shared/models/date-option.model';
 
 @Component({
     selector: 'app-appointment-type-selection',

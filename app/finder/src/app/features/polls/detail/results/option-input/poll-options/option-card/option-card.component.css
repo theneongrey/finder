@@ -14,6 +14,43 @@
     }
 }
 
+.url-btn-enter {
+    animation: urlBtnEnter 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes urlBtnEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.6) translateX(6px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+    }
+}
+
+.url-btn-leave {
+    animation: urlBtnLeave 140ms ease-in forwards;
+}
+
+@keyframes urlBtnLeave {
+    from {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.6) translateX(6px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .url-btn-enter,
+    .url-btn-leave {
+        animation: none;
+    }
+}
+
 .preview-spinner {
     width: 18px;
     height: 18px;

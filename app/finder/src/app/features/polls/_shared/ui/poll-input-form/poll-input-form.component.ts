@@ -9,7 +9,7 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 import {
     OptionEntry,
     PollOptionsComponent,
-} from './poll-options/poll-options.component';
+} from '../../../detail/results/option-input/poll-options/poll-options.component';
 import { PollCloseSettingsComponent } from './poll-close-settings/poll-close-settings.component';
 import { PollQuestionCardComponent } from './poll-question-card/poll-question-card.component';
 import { OptionType } from '@common/models/option-type.model';

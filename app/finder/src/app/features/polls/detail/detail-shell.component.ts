@@ -4,6 +4,7 @@ import {
     effect,
     inject,
     input,
+    untracked,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
@@ -43,7 +44,9 @@ export class PollDetailShellComponent {
             const projectId = this.id();
             if (projectId) {
                 this.projectDetailStore.getProject(projectId);
-                this.userStore.markProjectNotificationsAsRead(projectId);
+                untracked(() =>
+                    this.userStore.markProjectNotificationsAsRead(projectId),
+                );
             }
         });
 

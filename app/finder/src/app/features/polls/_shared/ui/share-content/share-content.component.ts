@@ -114,14 +114,11 @@ export class ShareContentComponent {
             prevProjectId = id;
         });
 
-        effect(
-            () => {
-                if (!this.hasOtherMembers() && this.activeTab() === 'members') {
-                    this.activeTab.set('invite');
-                }
-            },
-            { allowSignalWrites: true },
-        );
+        effect(() => {
+            if (!this.hasOtherMembers() && this.activeTab() === 'members') {
+                this.activeTab.set('invite');
+            }
+        });
     }
 
     onVisibilityChange(value: string) {

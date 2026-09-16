@@ -7,20 +7,19 @@ import {
     output,
     signal,
 } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
-import { DateOptionFormatService } from '../../../../utils/date-option-format.service';
-import { DateOptionEntry } from '../../../../models/date-option.model';
+import { DateOptionFormatService } from '../../../../../_shared/utils/date-option-format.service';
+import { DateOptionEntry } from '../../../../../_shared/models/date-option.model';
 
 @Component({
-    selector: 'app-option-card-weekday',
-    templateUrl: './option-card-weekday.component.html',
+    selector: 'app-option-card-date',
+    templateUrl: './option-card-date.component.html',
     imports: [
-        NgClass,
         FormsModule,
         DsButtonComponent,
         DsInputComponent,
@@ -29,8 +28,7 @@ import { DateOptionEntry } from '../../../../models/date-option.model';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionCardWeekdayComponent {
-    private readonly translate = inject(TranslateService);
+export class OptionCardDateComponent {
     private readonly dateOptionFormat = inject(DateOptionFormatService);
 
     option = input.required<DateOptionEntry>();
@@ -42,16 +40,6 @@ export class OptionCardWeekdayComponent {
     optionChange = output<DateOptionEntry>();
 
     showTime = signal(false);
-
-    readonly weekdayButtons = [1, 2, 3, 4, 5, 6, 0].map((v) => ({
-        value: v,
-        label: this.translate.instant(
-            `project.pollInput.date.weekdaysShort.${v}`,
-        ),
-        ariaLabel: this.translate.instant(
-            `project.pollInput.date.weekdays.${v}`,
-        ),
-    }));
 
     constructor() {
         effect(() => {
@@ -71,8 +59,21 @@ export class OptionCardWeekdayComponent {
         });
     }
 
-    selectWeekday(value: number): void {
-        this.optionChange.emit({ ...this.option(), weekday: value });
+    get dateValue(): string {
+        const d = this.option().date;
+        return d ? formatDate(d, 'yyyy-MM-dd', 'en') : '';
+    }
+
+    setDate(value: string): void {
+        if (!value) {
+            this.optionChange.emit({ ...this.option(), date: undefined });
+            return;
+        }
+        const [y, m, d] = value.split('-').map(Number);
+        this.optionChange.emit({
+            ...this.option(),
+            date: new Date(y, m - 1, d),
+        });
     }
 
     get timeValue(): string {

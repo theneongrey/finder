@@ -20,10 +20,18 @@ import { PollRole } from '../../_shared/models/poll-role.enum';
 import { OptionType } from '@common/models/option-type.model';
 import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
 import { ShareContentComponent } from '../../_shared/ui/share-content/share-content.component';
+import {
+    AddOptionPanelComponent,
+    NewOptionPayload,
+} from './option-input/add-option-panel/add-option-panel.component';
+import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
+import { DateOptionType } from '../../_shared/models/date-option.model';
+import { UserStore } from '@common/data/user.store';
 
 @Component({
     selector: 'app-results',
     templateUrl: './results.component.html',
+    styleUrl: './results.component.css',
     imports: [
         TranslatePipe,
         OptionListComponent,
@@ -32,6 +40,7 @@ import { ShareContentComponent } from '../../_shared/ui/share-content/share-cont
         PollHeaderComponent,
         ShareDrawerComponent,
         ShareContentComponent,
+        AddOptionPanelComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -39,10 +48,33 @@ export class ResultsComponent {
     private readonly projectDetailStore = inject(PollDetailStore);
     private readonly translateService = inject(TranslateService);
     private readonly router = inject(Router);
+    private readonly dateFormat = inject(DateOptionFormatService);
+    private readonly userStore = inject(UserStore);
 
     readonly OptionType = OptionType;
 
     pollId = input('');
+
+    showAddOption = signal(false);
+
+    readonly addPanelDateType = computed<DateOptionType | undefined>(() => {
+        const poll = this.poll();
+        if (!poll || poll.optionType !== OptionType.Date) {
+            return undefined;
+        }
+        const first = poll.options[0];
+        return first ? this.dateFormat.parse(first.text).type : 'date';
+    });
+
+    readonly addPanelShowTime = computed(() => {
+        const poll = this.poll();
+        if (!poll || poll.optionType !== OptionType.Date) {
+            return false;
+        }
+        return poll.options.some(
+            (o) => this.dateFormat.parse(o.text).startTime !== undefined,
+        );
+    });
 
     poll = this.projectDetailStore.currentPoll;
     project = this.projectDetailStore.currentProject;
@@ -189,6 +221,19 @@ export class ResultsComponent {
 
     addComment(content: string) {
         this.projectDetailStore.addComment({ pollId: this.pollId(), content });
+    }
+
+    onAddOption(payload: NewOptionPayload) {
+        this.projectDetailStore.addOption({
+            pollId: this.pollId(),
+            text: payload.text,
+            description: payload.description,
+            meta: payload.meta,
+            creator: {
+                name: this.userStore.user()?.name ?? '',
+                picture: '',
+            },
+        });
     }
 
     closePoll() {

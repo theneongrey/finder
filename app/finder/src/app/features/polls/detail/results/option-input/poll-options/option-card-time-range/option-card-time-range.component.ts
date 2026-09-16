@@ -10,8 +10,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
-import { DateOptionFormatService } from '../../../../utils/date-option-format.service';
-import { DateOptionEntry } from '../../../../models/date-option.model';
+import { DateOptionFormatService } from '../../../../../_shared/utils/date-option-format.service';
+import { DateOptionEntry } from '../../../../../_shared/models/date-option.model';
 
 @Component({
     selector: 'app-option-card-time-range',

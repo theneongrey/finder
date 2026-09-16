@@ -166,21 +166,15 @@ export class PollInputWizardComponent {
             this.state.initStandaloneMode();
         });
 
-        effect(
-            () => {
-                this.state.preselectYesNo();
-            },
-            { allowSignalWrites: true },
-        );
+        effect(() => {
+            this.state.preselectYesNo();
+        });
 
-        effect(
-            () => {
-                if (this.state.tryApplySharesAfterCreation()) {
-                    this.wizardStep.set(3);
-                }
-            },
-            { allowSignalWrites: true },
-        );
+        effect(() => {
+            if (this.state.tryApplySharesAfterCreation()) {
+                this.wizardStep.set(3);
+            }
+        });
 
         effect(() => {
             this.state.loadSharingContacts();

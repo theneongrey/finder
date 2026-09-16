@@ -7,6 +7,7 @@
                 [isClosed]="poll.isClosed"
                 [commentsHidden]="!showComments()"
                 (startVote)="startVote()"
+                (addOption)="showAddOption.set(true)"
                 (closePoll)="closePoll()"
                 (reopenPoll)="reopenPoll()"
                 (showComments)="showComments.set(true)"
@@ -31,6 +32,19 @@
                     class="h-px border-0"
                     style="background: var(--border-hairline)"
                 />
+
+                @if (canManagePoll() && !poll.isClosed && showAddOption()) {
+                    <app-add-option-panel
+                        class="add-option-animate block"
+                        animate.enter="add-option-enter"
+                        animate.leave="add-option-leave"
+                        [optionType]="poll.optionType"
+                        [dateType]="addPanelDateType()"
+                        [showTime]="addPanelShowTime()"
+                        (add)="onAddOption($event)"
+                        (cancelled)="showAddOption.set(false)"
+                    />
+                }
 
                 <app-option-list
                     [options]="poll.options"

@@ -13,7 +13,13 @@ import { forkJoin, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { PollService } from './poll.service';
 import { Router } from '@angular/router';
-import { Comment, Project, PollDetail } from '../models/poll-detail.model';
+import {
+    Comment,
+    CommentAuthor,
+    OptionDetail,
+    Project,
+    PollDetail,
+} from '../models/poll-detail.model';
 import { sharingEvents } from './sharing.events';
 import { LoggerService } from '@common/services/logger.service';
 
@@ -153,6 +159,75 @@ export const PollDetailStore = signalStore(
                                 error: (error) => {
                                     store.loggerService.log(
                                         '[PollDetailStore] Error while editing a poll',
+                                        error,
+                                    );
+                                },
+                            }),
+                        ),
+                ),
+            ),
+        ),
+
+        addOption: rxMethod<{
+            pollId: string;
+            text: string;
+            description: string;
+            meta?: {
+                url: string;
+                title?: string;
+                description?: string;
+                imageUrl?: string;
+                siteName?: string;
+            };
+            creator: CommentAuthor;
+        }>(
+            pipe(
+                switchMap((request) =>
+                    store.projectService
+                        .addOption(
+                            request.pollId,
+                            request.text,
+                            request.description,
+                            request.meta
+                                ? {
+                                      url: request.meta.url,
+                                      title: request.meta.title ?? '',
+                                      description:
+                                          request.meta.description ?? '',
+                                      imageUrl: request.meta.imageUrl ?? '',
+                                      siteName: request.meta.siteName ?? '',
+                                  }
+                                : undefined,
+                        )
+                        .pipe(
+                            tapResponse({
+                                next: (option) => {
+                                    const currentPoll = store.currentPoll();
+                                    if (currentPoll?.id !== request.pollId) {
+                                        return;
+                                    }
+                                    const newOption: OptionDetail = {
+                                        id: option.id,
+                                        text: option.text,
+                                        description: option.description,
+                                        meta: option.meta,
+                                        votes: [],
+                                        choice: null,
+                                        creator: request.creator,
+                                    };
+                                    patchState(store, {
+                                        currentPoll: {
+                                            ...currentPoll,
+                                            options: [
+                                                ...currentPoll.options,
+                                                newOption,
+                                            ],
+                                        },
+                                    });
+                                },
+                                error: (error) => {
+                                    store.loggerService.log(
+                                        '[PollDetailStore] Error while adding an option',
                                         error,
                                     );
                                 },

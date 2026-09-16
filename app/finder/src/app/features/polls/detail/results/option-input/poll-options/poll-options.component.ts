@@ -20,11 +20,11 @@ import { OptionCardTimeComponent } from './option-card-time/option-card-time.com
 import { OptionCardTimeRangeComponent } from './option-card-time-range/option-card-time-range.component';
 import { AppointmentTypeSelectionComponent } from './appointment-type-selection/appointment-type-selection.component';
 import { OptionType } from '@common/models/option-type.model';
-import { DateOptionFormatService } from '../../../utils/date-option-format.service';
+import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
 import {
     DateOptionEntry,
     DateOptionType,
-} from '../../../models/date-option.model';
+} from '../../../../_shared/models/date-option.model';
 
 export interface OptionEntry {
     id?: string;

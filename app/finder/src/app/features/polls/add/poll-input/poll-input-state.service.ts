@@ -8,7 +8,7 @@ import { DateOptionFormatService } from '../../_shared/utils/date-option-format.
 import { OptionType } from '../../../../common/models/option-type.model';
 import { PendingInvite } from '../../_shared/ui/share-content/share-invite-form/share-invite-form.component';
 import { PollRole } from '../../_shared/models/poll-role.enum';
-import { OptionEntry } from '../../_shared/ui/poll-input-form/poll-options/poll-options.component';
+import { OptionEntry } from '../../detail/results/option-input/poll-options/poll-options.component';
 import {
     DateOptionEntry,
     DateOptionType,

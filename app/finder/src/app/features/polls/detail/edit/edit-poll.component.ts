@@ -58,15 +58,12 @@ export class EditPollComponent {
             }
         });
 
-        effect(
-            () => {
-                const pollId = this.pollId();
-                if (pollId) {
-                    this.state.loadEditData(pollId);
-                }
-            },
-            { allowSignalWrites: true },
-        );
+        effect(() => {
+            const pollId = this.pollId();
+            if (pollId) {
+                this.state.loadEditData(pollId);
+            }
+        });
 
         effect(() => {
             this.titleService.setTitle(

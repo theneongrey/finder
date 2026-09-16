@@ -13,6 +13,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OptionEntry } from '../poll-options.component';
@@ -21,9 +22,12 @@ import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
-import { POLL_LIMITS } from '../../../../models/poll-limits';
-import { PreviewData, PreviewService } from '../../../../data/preview.service';
-import { UrlValidationService } from '../../../../utils/url-validation.service';
+import { POLL_LIMITS } from '../../../../../_shared/models/poll-limits';
+import {
+    PreviewData,
+    PreviewService,
+} from '../../../../../_shared/data/preview.service';
+import { UrlValidationService } from '../../../../../_shared/utils/url-validation.service';
 
 @Component({
     selector: 'app-option-card',
@@ -56,6 +60,7 @@ export class OptionCardComponent {
 
     showDescription = signal(false);
     showLink = signal(false);
+    showTitleUrlButton = signal(false);
     urlError = signal(false);
     previewLoading = signal(false);
     urlLoading = signal(false);
@@ -72,7 +77,20 @@ export class OptionCardComponent {
     private previewService = inject(PreviewService);
     private destroyRef = inject(DestroyRef);
 
+    private readonly titleChanges = new Subject<string>();
+
     constructor() {
+        // Debounced URL detection on the title input: surface an inline action
+        // to fetch the link preview once the text looks like a valid URL.
+        this.titleChanges
+            .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+            .subscribe((value) => {
+                const text = value.trim();
+                this.showTitleUrlButton.set(
+                    !!text && this.urlValidation.isValid(text),
+                );
+            });
+
         effect(() => {
             const option = this.option();
             if (option) {
@@ -90,6 +108,16 @@ export class OptionCardComponent {
                 }
             }
         });
+    }
+
+    onTitleChange(value: string) {
+        this.optionChange.emit({ ...this.option(), text: value });
+        this.titleChanges.next(value);
+    }
+
+    applyTitleUrl() {
+        this.showTitleUrlButton.set(false);
+        this.onTitleBlur();
     }
 
     toggleDescription() {

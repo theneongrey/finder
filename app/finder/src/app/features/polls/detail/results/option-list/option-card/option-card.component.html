@@ -12,21 +12,11 @@
             }
 
             <!-- Body -->
-            <div class="flex flex-1 flex-col p-4">
-                <!-- Title + edit -->
-                <div class="flex items-center gap-2">
-                    <p
-                        class="min-w-0 flex-1 text-[19px] leading-[1.2] font-bold text-pretty"
-                        style="
-                            font-family: var(--font-display);
-                            letter-spacing: -0.3px;
-                            color: var(--text-primary);
-                        "
-                    >
-                        {{ option().text }}
-                    </p>
+            <div class="relative flex flex-1 flex-col p-4">
+                @if (isTextOnly()) {
+                    <!-- Text-only option: hero title, centered -->
                     <span
-                        class="lg:opacity-0 lg:transition-opacity lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
+                        class="absolute top-3 right-3 z-[1] lg:opacity-0 lg:transition-opacity lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
                     >
                         <ds-button
                             variant="ghost"
@@ -35,7 +25,45 @@
                             label="Bearbeiten"
                         />
                     </span>
-                </div>
+                    <div
+                        class="flex flex-1 items-center justify-center px-2 py-4"
+                    >
+                        <p
+                            class="text-center text-[23px] leading-[1.2] font-bold text-pretty"
+                            style="
+                                font-family: var(--font-display);
+                                letter-spacing: -0.3px;
+                                color: var(--text-primary);
+                            "
+                        >
+                            {{ option().text }}
+                        </p>
+                    </div>
+                } @else {
+                    <!-- Title + edit -->
+                    <div class="flex items-center gap-2">
+                        <p
+                            class="min-w-0 flex-1 text-[19px] leading-[1.2] font-bold text-pretty"
+                            style="
+                                font-family: var(--font-display);
+                                letter-spacing: -0.3px;
+                                color: var(--text-primary);
+                            "
+                        >
+                            {{ option().text }}
+                        </p>
+                        <span
+                            class="lg:opacity-0 lg:transition-opacity lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
+                        >
+                            <ds-button
+                                variant="ghost"
+                                [size]="32"
+                                icon="edit"
+                                label="Bearbeiten"
+                            />
+                        </span>
+                    </div>
+                }
 
                 <!-- Creator -->
                 <div class="mt-1 flex items-center gap-2">

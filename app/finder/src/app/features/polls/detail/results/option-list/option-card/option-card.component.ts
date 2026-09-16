@@ -46,6 +46,12 @@ export class OptionCardComponent {
     hideResults = input(false);
     pollType = input<'yesno' | 'rating'>('yesno');
 
+    /** Option carries only its title — no description, image or link. */
+    readonly isTextOnly = computed(() => {
+        const o = this.option();
+        return !o.description && !o.meta?.imageUrl && !o.meta?.url;
+    });
+
     // ── Yes/No ──────────────────────────────────────────────────────
     readonly yesVotes = computed(() =>
         this.option().votes.filter((v) => v.choice === '1'),

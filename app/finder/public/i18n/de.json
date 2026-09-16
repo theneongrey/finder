@@ -1,4 +1,70 @@
 {
+    "legal": {
+        "privacy": {
+            "title": "Datenschutzerklärung",
+            "lastUpdated": "Stand: 16.09.2026",
+            "intro": "Der Schutz deiner personenbezogenen Daten ist uns wichtig. In dieser Erklärung informieren wir dich darüber, welche Daten wir bei der Nutzung von Votean verarbeiten, zu welchen Zwecken und auf welcher Rechtsgrundlage.",
+            "sections": {
+                "controller": {
+                    "heading": "Verantwortlicher",
+                    "body": "Verantwortlich für die Datenverarbeitung auf dieser Website ist:\n\npixel-fusion.de\nE-Mail: {{email}}"
+                },
+                "dataCategories": {
+                    "heading": "Welche Daten wir verarbeiten",
+                    "body": "• Kontodaten: deine E-Mail-Adresse sowie – sofern angegeben – Name, Profilbild und bevorzugte Sprache.\n• Anmeldedaten: einmalige Anmeldelinks und -codes, die wir zur passwortlosen Anmeldung erzeugen und kurzzeitig speichern.\n• Inhaltsdaten: Umfragen, Projekte, Antwortoptionen, Kommentare und deine abgegebenen Stimmen, jeweils verknüpft mit deinem Konto.\n• Berechtigungen: welche Rolle (Teilnehmer, Verwalter, Eigentümer) du in einem Projekt hast.\n• Benachrichtigungen: Datensätze und Einstellungen zu den Benachrichtigungen, die du erhältst.\n• Metadaten: Zeitpunkte der Erstellung und letzten Änderung eines Datensatzes."
+                },
+                "purposes": {
+                    "heading": "Zwecke und Rechtsgrundlagen",
+                    "body": "Wir verarbeiten deine Daten, um dir den Dienst bereitzustellen, dich anzumelden, deine Umfragen und Stimmen zu speichern und dich über relevante Ereignisse zu benachrichtigen. Rechtsgrundlage ist die Erfüllung des Nutzungsvertrags bzw. die Durchführung vorvertraglicher Maßnahmen (Art. 6 Abs. 1 lit. b DSGVO). Die anonyme Reichweitenmessung erfolgt auf Grundlage unseres berechtigten Interesses an einem sicheren und bedarfsgerechten Betrieb (Art. 6 Abs. 1 lit. f DSGVO)."
+                },
+                "analytics": {
+                    "heading": "Reichweitenmessung mit Umami",
+                    "body": "Zur statistischen Auswertung der Nutzung setzen wir Umami ein, eine von uns selbst betriebene, datenschutzfreundliche Analyse-Software. Umami arbeitet ohne Cookies, speichert keine IP-Adressen, erhebt keine personenbezogenen Daten und verfolgt dich nicht über verschiedene Websites hinweg. Erfasst werden ausschließlich anonymisierte Angaben wie Seitenaufrufe, Verweisquelle, Browser, Betriebssystem, Gerätetyp und Herkunftsland. Ein Rückschluss auf einzelne Personen ist nicht möglich."
+                },
+                "email": {
+                    "heading": "E-Mail-Versand",
+                    "body": "Zur Anmeldung und für Benachrichtigungen versenden wir E-Mails an die von dir angegebene Adresse. Der Versand erfolgt über einen SMTP-Dienstleister, der die E-Mails in unserem Auftrag verarbeitet."
+                },
+                "cookies": {
+                    "heading": "Cookies und lokale Speicherung",
+                    "body": "Votean setzt keine Tracking- oder Marketing-Cookies. Für die Anmeldung wird lediglich ein technisch notwendiges Token in der lokalen Speicherung deines Browsers abgelegt, damit du angemeldet bleibst. Da keine nicht notwendigen Cookies oder Tracker verwendet werden, ist kein Einwilligungsbanner erforderlich."
+                },
+                "retention": {
+                    "heading": "Speicherdauer",
+                    "body": "Wir speichern deine Daten so lange, wie dein Konto besteht bzw. wie es zur Erfüllung der genannten Zwecke erforderlich ist. Anmeldelinks und -codes werden nur kurzzeitig vorgehalten und laufen nach kurzer Zeit ab. Auf Wunsch löschen wir deine Daten, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen."
+                },
+                "rights": {
+                    "heading": "Deine Rechte",
+                    "body": "Dir stehen die Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch zu. Außerdem hast du das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Zur Ausübung deiner Rechte kannst du dich jederzeit an uns wenden."
+                },
+                "contact": {
+                    "heading": "Kontakt zum Datenschutz",
+                    "body": "Bei Fragen zum Datenschutz oder zur Ausübung deiner Rechte erreichst du uns unter: {{email}}"
+                }
+            }
+        },
+        "imprint": {
+            "title": "Impressum",
+            "sections": {
+                "provider": {
+                    "heading": "Angaben gemäß § 5 TMG",
+                    "body": "pixel-fusion.de"
+                },
+                "contact": {
+                    "heading": "Kontakt",
+                    "body": "E-Mail: {{email}}"
+                },
+                "responsible": {
+                    "heading": "Verantwortlich für den Inhalt",
+                    "body": "pixel-fusion.de"
+                },
+                "disclaimer": {
+                    "heading": "Haftung für Inhalte",
+                    "body": "Die Inhalte dieser Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Für Inhalte, die von Nutzern erstellt oder auf externe Websites verlinkt werden, sind ausschließlich deren Betreiber verantwortlich."
+                }
+            }
+        }
+    },
     "notifications": {
         "title": "Benachrichtigungen",
         "markAllRead": "Alle gelesen",

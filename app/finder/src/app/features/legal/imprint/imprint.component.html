@@ -1,0 +1,40 @@
+<div class="bg-app-gradient flex min-h-dvh flex-col">
+    <app-title-bar />
+
+    <main class="flex flex-1 flex-col">
+        <div
+            class="mx-auto w-full max-w-[760px] px-(--screen-padding) py-6 lg:px-[34px] lg:py-[30px]"
+        >
+            <article
+                class="rounded-[var(--radius-4xl)] border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] px-[22px] py-[26px] lg:px-[34px] lg:py-[34px]"
+            >
+                <h1
+                    class="text-[22px] leading-tight font-semibold text-[var(--text-primary)] lg:text-[26px]"
+                >
+                    {{ 'legal.imprint.title' | translate }}
+                </h1>
+
+                @for (section of sections; track section) {
+                    <section class="mt-7">
+                        <h2
+                            class="text-[16px] leading-snug font-semibold text-[var(--text-primary)]"
+                        >
+                            {{
+                                'legal.imprint.sections.' + section + '.heading'
+                                    | translate
+                            }}
+                        </h2>
+                        <p
+                            class="mt-2 text-[14px] leading-[1.6] text-pretty whitespace-pre-line text-[var(--text-body)]"
+                        >
+                            {{
+                                'legal.imprint.sections.' + section + '.body'
+                                    | translate: { email: contactEmail }
+                            }}
+                        </p>
+                    </section>
+                }
+            </article>
+        </div>
+    </main>
+</div>

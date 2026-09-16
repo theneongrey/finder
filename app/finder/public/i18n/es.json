@@ -1,4 +1,70 @@
 {
+    "legal": {
+        "privacy": {
+            "title": "Política de privacidad",
+            "lastUpdated": "Última actualización: 16 de septiembre de 2026",
+            "intro": "La protección de tus datos personales es importante para nosotros. En esta política te informamos sobre qué datos tratamos cuando usas Votean, con qué fines y sobre qué base jurídica. La versión alemana es la jurídicamente vinculante.",
+            "sections": {
+                "controller": {
+                    "heading": "Responsable",
+                    "body": "El responsable del tratamiento de datos en este sitio web es:\n\npixel-fusion.de\nCorreo electrónico: {{email}}"
+                },
+                "dataCategories": {
+                    "heading": "Qué datos tratamos",
+                    "body": "• Datos de cuenta: tu dirección de correo electrónico y, si los facilitas, tu nombre, foto de perfil e idioma preferido.\n• Datos de inicio de sesión: enlaces y códigos de un solo uso que generamos y almacenamos brevemente para el acceso sin contraseña.\n• Datos de contenido: encuestas, proyectos, opciones de respuesta, comentarios y los votos que emites, vinculados a tu cuenta.\n• Permisos: tu rol (votante, gestor, propietario) dentro de un proyecto.\n• Notificaciones: registros y ajustes de las notificaciones que recibes.\n• Metadatos: marcas de tiempo de creación y última modificación de un registro."
+                },
+                "purposes": {
+                    "heading": "Fines y bases jurídicas",
+                    "body": "Tratamos tus datos para prestarte el servicio, autenticarte, guardar tus encuestas y votos y notificarte sobre eventos relevantes. La base jurídica es la ejecución del contrato de uso o de medidas precontractuales (art. 6(1)(b) RGPD). La medición anónima de uso se basa en nuestro interés legítimo en un funcionamiento seguro y adecuado (art. 6(1)(f) RGPD)."
+                },
+                "analytics": {
+                    "heading": "Medición de uso con Umami",
+                    "body": "Para el análisis estadístico del uso empleamos Umami, una herramienta de analítica respetuosa con la privacidad que alojamos nosotros mismos. Umami funciona sin cookies, no almacena direcciones IP, no recopila datos personales y no te rastrea entre distintos sitios web. Solo se registra información anonimizada como páginas vistas, procedencia, navegador, sistema operativo, tipo de dispositivo y país de origen. No es posible identificar a personas concretas."
+                },
+                "email": {
+                    "heading": "Envío de correos electrónicos",
+                    "body": "Para el inicio de sesión y las notificaciones enviamos correos a la dirección que facilites. El envío se realiza a través de un proveedor de SMTP que trata estos correos por cuenta nuestra."
+                },
+                "cookies": {
+                    "heading": "Cookies y almacenamiento local",
+                    "body": "Votean no utiliza cookies de seguimiento ni de marketing. Para el inicio de sesión solo se almacena un token estrictamente necesario en el almacenamiento local de tu navegador para que sigas conectado. Al no usarse cookies ni rastreadores no esenciales, no se requiere ningún banner de consentimiento."
+                },
+                "retention": {
+                    "heading": "Plazo de conservación",
+                    "body": "Conservamos tus datos mientras exista tu cuenta o mientras sea necesario para cumplir los fines descritos. Los enlaces y códigos de acceso se conservan solo brevemente y caducan tras poco tiempo. A petición, eliminamos tus datos salvo que existan obligaciones legales de conservación."
+                },
+                "rights": {
+                    "heading": "Tus derechos",
+                    "body": "Tienes derecho de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición. También tienes derecho a presentar una reclamación ante una autoridad de control de protección de datos. Para ejercer tus derechos puedes contactarnos en cualquier momento."
+                },
+                "contact": {
+                    "heading": "Contacto de privacidad",
+                    "body": "Para consultas sobre protección de datos o para ejercer tus derechos, contáctanos en: {{email}}"
+                }
+            }
+        },
+        "imprint": {
+            "title": "Aviso legal",
+            "sections": {
+                "provider": {
+                    "heading": "Información conforme al § 5 TMG",
+                    "body": "pixel-fusion.de"
+                },
+                "contact": {
+                    "heading": "Contacto",
+                    "body": "Correo electrónico: {{email}}"
+                },
+                "responsible": {
+                    "heading": "Responsable del contenido",
+                    "body": "pixel-fusion.de"
+                },
+                "disclaimer": {
+                    "heading": "Responsabilidad por los contenidos",
+                    "body": "Los contenidos de estas páginas se han elaborado con el mayor cuidado. No obstante, no podemos garantizar que sean exactos, completos o estén actualizados. De los contenidos creados por los usuarios o de los sitios web externos enlazados son responsables exclusivamente sus respectivos operadores."
+                }
+            }
+        }
+    },
     "notifications": {
         "title": "Notificaciones",
         "markAllRead": "todo leído",

@@ -1,6 +1,6 @@
 @let _poll = poll();
 
-<ds-card>
+<ds-card [fill]="true">
     <!-- ── Header row: type badge · status dot · share · fav (animates out in edit mode) -->
     <div
         class="grid overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
@@ -36,7 +36,10 @@
                                     icon="share"
                                     [color]="'var(--ink-900)'"
                                     data-testid="share-btn"
-                                    (click)="shareRequested.emit()"
+                                    (click)="
+                                        $event.stopPropagation();
+                                        shareRequested.emit()
+                                    "
                                 />
                             </span>
                             <!-- Web: pill share button with label, always visible -->
@@ -46,7 +49,10 @@
                                     size="sm"
                                     icon="share"
                                     data-testid="share-btn"
-                                    (click)="shareRequested.emit()"
+                                    (click)="
+                                        $event.stopPropagation();
+                                        shareRequested.emit()
+                                    "
                                     [title]="'project.share.title' | translate"
                                     >{{
                                         'project.share.title' | translate
@@ -67,7 +73,10 @@
                             "
                             data-testid="favorite-btn"
                             [attr.data-favorited]="_poll.isFavorite ? '' : null"
-                            (click)="favoriteToggled.emit(_poll.projectId)"
+                            (click)="
+                                $event.stopPropagation();
+                                favoriteToggled.emit(_poll.projectId)
+                            "
                         >
                             <ds-icon
                                 name="heart"
@@ -93,27 +102,14 @@
                                 <span
                                     class="mx-[3px] h-[18px] w-px flex-none bg-[rgba(20,24,28,0.1)]"
                                 ></span>
-                                @if (editRoute()) {
-                                    <ds-button
-                                        variant="ghost"
-                                        [size]="30"
-                                        icon="edit"
-                                        [color]="'var(--text-secondary)'"
-                                        (click)="navigateToEdit()"
-                                        [title]="
-                                            'project.common.edit' | translate
-                                        "
-                                        [label]="
-                                            'project.common.edit' | translate
-                                        "
-                                        data-testid="edit-btn"
-                                    />
-                                }
                                 <ds-button
                                     variant="danger"
                                     [size]="30"
                                     icon="trash"
-                                    (click)="requestDelete()"
+                                    (click)="
+                                        $event.stopPropagation();
+                                        requestDelete()
+                                    "
                                     [title]="
                                         'project.common.delete' | translate
                                     "
@@ -138,23 +134,13 @@
         <!-- Mobile: edit-mode actions -->
         @if (!previewMode() && showActions() && editMode()) {
             <div class="flex shrink-0 gap-2 lg:hidden">
-                @if (editRoute()) {
-                    <ds-button
-                        variant="neutral"
-                        [size]="36"
-                        icon="edit"
-                        data-testid="edit-btn"
-                        [label]="'project.common.edit' | translate"
-                        (click)="navigateToEdit()"
-                    />
-                }
                 <ds-button
                     variant="danger"
                     [size]="36"
                     icon="trash"
                     data-testid="delete-btn"
                     [label]="'project.common.delete' | translate"
-                    (click)="requestDelete()"
+                    (click)="$event.stopPropagation(); requestDelete()"
                 />
             </div>
         }
@@ -162,12 +148,12 @@
 
     <!-- ── Body: description, time, progress, CTA (animates out in edit mode) ── -->
     <div
-        class="grid overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
+        class="grid flex-1 overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
         [ngClass]="
             editMode() ? '[grid-template-rows:0fr]' : '[grid-template-rows:1fr]'
         "
     >
-        <div class="overflow-hidden">
+        <div class="flex h-full flex-col overflow-hidden">
             @if (_poll.description) {
                 <p
                     class="mt-1.5 leading-[1.4] text-pretty text-[var(--fs-ui)] text-[var(--text-secondary)]"
@@ -177,6 +163,7 @@
             }
 
             <app-poll-item-time
+                class="mt-auto block"
                 [closeDate]="_poll.closeDate"
                 [isClosed]="_poll.isClosed"
                 [lastVoteAt]="_poll.lastVoteAt"
@@ -190,17 +177,23 @@
                 [missingVotersText]="missingVotersText()"
             />
 
-            <!-- ── CTA ─────────────────────────────────────────────────── -->
-            <div class="mt-4">
-                <ds-button
-                    variant="primary"
-                    [fullWidth]="true"
-                    [attr.aria-label]="ctaLabel() | translate"
-                    data-testid="vote-cta-btn"
-                    [routerLink]="ctaRoute()"
-                    >{{ ctaLabel() | translate }}</ds-button
-                >
-            </div>
+            @if (!previewMode()) {
+                <div class="mt-4">
+                    <ds-button
+                        [variant]="_poll.isClosed ? 'subtle' : 'primary'"
+                        [fullWidth]="true"
+                        [routerLink]="resultsRoute()"
+                        data-testid="open-poll-btn"
+                    >
+                        {{
+                            (_poll.isClosed
+                                ? 'project.detail.item.openClosed'
+                                : 'project.detail.item.open'
+                            ) | translate
+                        }}
+                    </ds-button>
+                </div>
+            }
         </div>
     </div>
 
@@ -208,6 +201,7 @@
     @if (showDeleteConfirm()) {
         <div
             class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-[var(--radius-3xl)] bg-white/60 px-6 text-center backdrop-blur-[3px]"
+            (click)="$event.stopPropagation()"
         >
             <p
                 class="text-[15px] leading-[1.4] font-semibold text-[var(--text-primary)]"
@@ -215,13 +209,16 @@
                 {{ 'project.overview.deleteOverlay.message' | translate }}
             </p>
             <div class="flex items-center gap-2">
-                <ds-button variant="ghost" (click)="cancelDelete()">
+                <ds-button
+                    variant="ghost"
+                    (click)="$event.stopPropagation(); cancelDelete()"
+                >
                     {{ 'project.overview.deleteOverlay.cancel' | translate }}
                 </ds-button>
                 <ds-button
                     variant="danger"
                     data-testid="delete-confirm-btn"
-                    (click)="confirmDelete()"
+                    (click)="$event.stopPropagation(); confirmDelete()"
                 >
                     {{ 'project.overview.deleteOverlay.confirm' | translate }}
                 </ds-button>

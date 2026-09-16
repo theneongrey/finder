@@ -228,6 +228,8 @@
                 "pollOverview": "Show results",
                 "voteOverview": "To Overview",
                 "voteNow": "Vote now",
+                "open": "Take a look",
+                "openClosed": "See how it went",
                 "viewProgress": "View current standings",
                 "statusOpen": "Open",
                 "statusClosed": "Closed",

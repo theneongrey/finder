@@ -228,6 +228,8 @@
                 "pollOverview": "Los resultados",
                 "voteOverview": "Al Resumen",
                 "voteNow": "Votar ahora",
+                "open": "Echar un vistazo",
+                "openClosed": "Ver cómo quedó",
                 "viewProgress": "Ver resultados actuales",
                 "statusOpen": "Activa",
                 "statusClosed": "Cerrada",

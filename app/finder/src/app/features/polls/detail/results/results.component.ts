@@ -10,8 +10,9 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { OptionListComponent } from './option-list/option-list.component';
+import { ResultsSkeletonComponent } from './results-skeleton/results-skeleton.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
 import { ResultsToolbarComponent } from './results-toolbar/results-toolbar.component';
 import { PollHeaderComponent } from './poll-header/poll-header.component';
@@ -19,6 +20,7 @@ import { TitleBarService } from '@common/services/title-bar.service';
 import { PollRole } from '../../_shared/models/poll-role.enum';
 import { OptionType } from '@common/models/option-type.model';
 import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
+import { DsSideDrawerComponent } from '@ds/side-drawer/ds-side-drawer.component';
 import { ShareContentComponent } from '../../_shared/ui/share-content/share-content.component';
 import {
     AddOptionPanelComponent,
@@ -26,6 +28,7 @@ import {
 } from './option-input/add-option-panel/add-option-panel.component';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
 import { DateOptionType } from '../../_shared/models/date-option.model';
+import { OptionDetail } from '../../_shared/models/poll-detail.model';
 import { UserStore } from '@common/data/user.store';
 
 @Component({
@@ -33,12 +36,13 @@ import { UserStore } from '@common/data/user.store';
     templateUrl: './results.component.html',
     styleUrl: './results.component.css',
     imports: [
-        TranslatePipe,
         OptionListComponent,
+        ResultsSkeletonComponent,
         CommentsSectionComponent,
         ResultsToolbarComponent,
         PollHeaderComponent,
         ShareDrawerComponent,
+        DsSideDrawerComponent,
         ShareContentComponent,
         AddOptionPanelComponent,
     ],
@@ -95,6 +99,35 @@ export class ResultsComponent {
     );
 
     showComments = signal(true);
+
+    /** Poll-level comments drawer (mobile only). */
+    showMobileComments = signal(false);
+
+    /** Option whose comment drawer is currently open, if any. */
+    commentsOption = signal<OptionDetail | undefined>(undefined);
+
+    readonly commentsOptionTitle = computed(() => {
+        const option = this.commentsOption();
+        if (!option) {
+            return '';
+        }
+        if (this.poll()?.optionType === OptionType.Date) {
+            return this.dateFormat.labelFromEntry(
+                this.dateFormat.parse(option.text),
+            );
+        }
+        return option.text;
+    });
+
+    readonly optionComments = computed(() => {
+        const option = this.commentsOption();
+        if (!option) {
+            return [];
+        }
+        return (
+            this.poll()?.comments.filter((c) => c.optionId === option.id) ?? []
+        );
+    });
 
     sortMode = signal<'top' | 'original'>('top');
 
@@ -223,6 +256,22 @@ export class ResultsComponent {
         this.projectDetailStore.addComment({ pollId: this.pollId(), content });
     }
 
+    openOptionComments(option: OptionDetail) {
+        this.commentsOption.set(option);
+    }
+
+    addOptionComment(content: string) {
+        const option = this.commentsOption();
+        if (!option) {
+            return;
+        }
+        this.projectDetailStore.addComment({
+            pollId: this.pollId(),
+            content,
+            optionId: option.id,
+        });
+    }
+
     onAddOption(payload: NewOptionPayload) {
         this.projectDetailStore.addOption({
             pollId: this.pollId(),
@@ -244,11 +293,23 @@ export class ResultsComponent {
         this.projectDetailStore.reopenPoll(this.pollId());
     }
 
-    editPoll() {
-        // TODO: wire up poll editing once the edit flow exists.
+    savePollDetails(details: { name: string; description: string }) {
+        this.projectDetailStore.updatePollDetails({
+            pollId: this.pollId(),
+            name: details.name,
+            description: details.description,
+        });
+    }
+
+    deletePoll() {
+        this.projectDetailStore.deletePoll(this.pollId());
     }
 
     sharePoll() {
         this.showShareDrawer.set(true);
+    }
+
+    refresh() {
+        this.projectDetailStore.getPoll(this.pollId());
     }
 }

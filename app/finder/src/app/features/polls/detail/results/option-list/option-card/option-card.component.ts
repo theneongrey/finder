@@ -3,6 +3,7 @@ import {
     Component,
     computed,
     input,
+    output,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
@@ -45,6 +46,8 @@ export class OptionCardComponent {
     pollId = input('');
     hideResults = input(false);
     pollType = input<'yesno' | 'rating'>('yesno');
+
+    commentsClick = output<void>();
 
     /** Option carries only its title — no description, image or link. */
     readonly isTextOnly = computed(() => {

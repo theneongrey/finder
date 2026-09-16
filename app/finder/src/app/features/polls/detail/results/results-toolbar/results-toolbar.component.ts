@@ -24,6 +24,7 @@ export class ResultsToolbarComponent {
     closePoll = output<void>();
     reopenPoll = output<void>();
     showComments = output<void>();
+    refresh = output<void>();
 
     protected readonly showCloseConfirm = signal(false);
 }

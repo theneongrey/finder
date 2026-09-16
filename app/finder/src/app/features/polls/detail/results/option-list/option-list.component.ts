@@ -4,6 +4,7 @@ import {
     computed,
     input,
     model,
+    output,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
@@ -43,6 +44,8 @@ export class OptionListComponent {
     showSortButton = input(true);
 
     sort = model<SortMode>('top');
+
+    openComments = output<OptionDetail>();
 
     private readonly commentCountByOption = computed(() => {
         const counts = new Map<string, number>();

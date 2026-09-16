@@ -524,8 +524,11 @@
             "confirmEnd": "Ja, beenden",
             "confirmEndShort": "Ja",
             "comments": "Kommentare",
+            "refresh": "Aktualisieren",
             "commentsTitle": "Kommentare zur Umfrage",
             "hideComments": "Kommentare ausblenden",
+            "commentsFilterPoll": "Umfrage",
+            "commentsFilterAll": "Alle",
             "noComments": "Noch keine Kommentare. Schreib den ersten!",
             "commentPlaceholder": "Kommentar schreiben…",
             "submitComment": "Kommentieren",
@@ -541,7 +544,15 @@
                 "yesno": "Ja / Nein",
                 "rating": "Bewertung",
                 "date": "Terminumfrage"
-            }
+            },
+            "save": "Speichern",
+            "delete": "Löschen",
+            "confirmDelete": "Ja, löschen",
+            "confirmDeleteShort": "Löschen",
+            "editNamePlaceholder": "Titel der Abstimmung",
+            "editDescriptionPlaceholder": "Beschreibung (optional)",
+            "deletePrompt": "Diese Abstimmung endgültig löschen?",
+            "deletePoll": "Abstimmung löschen"
         },
         "lastVote": {
             "label": "Letzte Stimme",

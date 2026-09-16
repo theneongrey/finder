@@ -168,6 +168,67 @@ export const PollDetailStore = signalStore(
             ),
         ),
 
+        updatePollDetails: rxMethod<{
+            pollId: string;
+            name: string;
+            description: string;
+        }>(
+            pipe(
+                switchMap((poll) =>
+                    store.projectService
+                        .updatePoll(poll.pollId, poll.name, poll.description)
+                        .pipe(
+                            tapResponse({
+                                next: (updatedPoll) => {
+                                    const currentPoll = store.currentPoll();
+                                    if (currentPoll?.id !== poll.pollId) {
+                                        return;
+                                    }
+                                    patchState(store, {
+                                        currentPoll: {
+                                            ...currentPoll,
+                                            name: updatedPoll.name,
+                                            description:
+                                                updatedPoll.description,
+                                        },
+                                    });
+                                },
+                                error: (error) => {
+                                    store.loggerService.log(
+                                        '[PollDetailStore] Error while updating poll details',
+                                        error,
+                                    );
+                                },
+                            }),
+                        ),
+                ),
+            ),
+        ),
+
+        deletePoll: rxMethod<string>(
+            pipe(
+                switchMap((pollSlug) =>
+                    store.projectService.deletePoll(pollSlug).pipe(
+                        tapResponse({
+                            next: () => {
+                                store.loggerService.debug(
+                                    `[PollDetailStore] Deleted poll`,
+                                    pollSlug,
+                                );
+                                store.router.navigate(['/polls']);
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error while deleting a poll',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
+                ),
+            ),
+        ),
+
         addOption: rxMethod<{
             pollId: string;
             text: string;

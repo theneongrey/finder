@@ -82,6 +82,13 @@ export class PollService {
         );
     }
 
+    deletePoll(pollSlug: string) {
+        this.loggerService.debug(`[PollService] deleting poll ${pollSlug}`);
+        return this.httpClient.delete(
+            `${this.baseUrl}/api/project/poll/${pollSlug}`,
+        );
+    }
+
     closePoll(pollSlug: string) {
         this.loggerService.debug(`[PollService] closing poll ${pollSlug}`);
         return this.httpClient.post<PollDetail>(

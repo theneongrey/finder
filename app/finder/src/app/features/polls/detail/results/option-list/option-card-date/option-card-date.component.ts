@@ -4,6 +4,7 @@ import {
     computed,
     inject,
     input,
+    output,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
@@ -46,6 +47,8 @@ export class OptionCardDateComponent {
     projectId = input('');
     pollId = input('');
     hideResults = input(false);
+
+    commentsClick = output<void>();
 
     private readonly parsed = computed(() =>
         this.dateFormatService.parse(this.option().text),

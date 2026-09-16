@@ -524,8 +524,11 @@
             "confirmEnd": "Sí, finalizar",
             "confirmEndShort": "Sí",
             "comments": "Comentarios",
+            "refresh": "Actualizar",
             "commentsTitle": "Comentarios de la encuesta",
             "hideComments": "Ocultar comentarios",
+            "commentsFilterPoll": "Encuesta",
+            "commentsFilterAll": "Todos",
             "noComments": "Aún no hay comentarios. ¡Sé el primero!",
             "commentPlaceholder": "Escribe un comentario…",
             "submitComment": "Comentar",
@@ -541,7 +544,15 @@
                 "yesno": "Sí / No",
                 "rating": "Valoración",
                 "date": "Encuesta de fecha"
-            }
+            },
+            "save": "Guardar",
+            "delete": "Eliminar",
+            "confirmDelete": "Sí, eliminar",
+            "confirmDeleteShort": "Eliminar",
+            "editNamePlaceholder": "Título de la encuesta",
+            "editDescriptionPlaceholder": "Descripción (opcional)",
+            "deletePrompt": "¿Eliminar esta encuesta permanentemente?",
+            "deletePoll": "Eliminar encuesta"
         },
         "lastVote": {
             "label": "Último voto",

@@ -31,6 +31,7 @@
                 [projectId]="projectId()"
                 [pollId]="pollId()"
                 [hideResults]="hideResults()"
+                (commentsClick)="openComments.emit(option)"
             />
         } @else {
             <app-option-card
@@ -44,6 +45,7 @@
                 [pollType]="
                     optionType() === OptionType.Rating ? 'rating' : 'yesno'
                 "
+                (commentsClick)="openComments.emit(option)"
             />
         }
     }

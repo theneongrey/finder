@@ -524,8 +524,11 @@
             "confirmEnd": "Yes, end it",
             "confirmEndShort": "Yes",
             "comments": "Comments",
+            "refresh": "Refresh",
             "commentsTitle": "Comments on this poll",
             "hideComments": "Hide comments",
+            "commentsFilterPoll": "Poll",
+            "commentsFilterAll": "All",
             "noComments": "No comments yet. Be the first!",
             "commentPlaceholder": "Write a comment…",
             "submitComment": "Comment",
@@ -541,7 +544,15 @@
                 "yesno": "Yes / No",
                 "rating": "Rating",
                 "date": "Date poll"
-            }
+            },
+            "save": "Save",
+            "delete": "Delete",
+            "confirmDelete": "Yes, delete it",
+            "confirmDeleteShort": "Delete",
+            "editNamePlaceholder": "Poll title",
+            "editDescriptionPlaceholder": "Description (optional)",
+            "deletePrompt": "Delete this poll permanently?",
+            "deletePoll": "Delete poll"
         },
         "lastVote": {
             "label": "Last vote",

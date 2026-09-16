@@ -11,6 +11,7 @@
                 (closePoll)="closePoll()"
                 (reopenPoll)="reopenPoll()"
                 (showComments)="showComments.set(true)"
+                (refresh)="refresh()"
             />
 
             <div class="flex flex-col gap-4 p-4 pb-8 lg:gap-5 lg:p-6">
@@ -18,13 +19,16 @@
                     [name]="poll.name"
                     [description]="poll.description"
                     [isClosed]="poll.isClosed"
+                    [canManage]="canManagePoll()"
                     [typeLabel]="typeLabel()"
                     [statusLabel]="statusLabel()"
                     [closeDateText]="closeDateText()"
                     [commentCount]="poll.comments.length"
                     [sortLabel]="sortLabel()"
                     (toggleSort)="toggleSort()"
-                    (edit)="editPoll()"
+                    (save)="savePollDetails($event)"
+                    (delete)="deletePoll()"
+                    (openComments)="showMobileComments.set(true)"
                 />
 
                 <!-- Separator between header and cards -->
@@ -56,6 +60,7 @@
                     [isClosed]="poll.isClosed"
                     [showSortButton]="false"
                     [(sort)]="sortMode"
+                    (openComments)="openOptionComments($event)"
                 />
             </div>
         </div>
@@ -75,12 +80,37 @@
         </aside>
     </div>
 } @else {
-    <div class="flex h-32 items-center justify-center">
-        <p style="color: var(--text-secondary)">
-            {{ 'project.votesOverview.loading' | translate }}
-        </p>
-    </div>
+    <app-results-skeleton />
 }
+
+<!-- Poll-level comments drawer (mobile only) -->
+<ds-side-drawer
+    [open]="showMobileComments()"
+    (dismissed)="showMobileComments.set(false)"
+>
+    @if (showMobileComments() && poll(); as poll) {
+        <app-comments-section
+            [comments]="poll.comments"
+            (addComment)="addComment($event)"
+            (dismiss)="showMobileComments.set(false)"
+        />
+    }
+</ds-side-drawer>
+
+<!-- Per-option comments drawer (opens from the right) -->
+<ds-side-drawer
+    [open]="commentsOption() !== undefined"
+    (dismissed)="commentsOption.set(undefined)"
+>
+    @if (commentsOption(); as option) {
+        <app-comments-section
+            [comments]="optionComments()"
+            [optionTitle]="commentsOptionTitle()"
+            (addComment)="addOptionComment($event)"
+            (dismiss)="commentsOption.set(undefined)"
+        />
+    }
+</ds-side-drawer>
 
 @if (project(); as project) {
     <app-share-drawer

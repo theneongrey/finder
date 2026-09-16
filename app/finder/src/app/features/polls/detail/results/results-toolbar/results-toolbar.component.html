@@ -42,6 +42,29 @@
     }
 
     <div class="ml-auto flex items-center gap-2 lg:gap-2.5">
+        <!-- Mobile -->
+        <div class="contents lg:hidden">
+            <ds-button
+                variant="neutral"
+                size="sm"
+                icon="refresh"
+                [label]="'project.results.refresh' | translate"
+                data-testid="refresh-btn"
+                (click)="refresh.emit()"
+            />
+        </div>
+        <!-- Desktop -->
+        <div class="hidden lg:contents">
+            <ds-button
+                variant="neutral"
+                icon="refresh"
+                data-testid="refresh-btn"
+                (click)="refresh.emit()"
+            >
+                {{ 'project.results.refresh' | translate }}
+            </ds-button>
+        </div>
+
         @if (canManage()) {
             @if (isClosed()) {
                 <!-- Mobile -->

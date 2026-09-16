@@ -111,6 +111,7 @@
                         size="sm"
                         icon="comment"
                         label="Kommentare"
+                        (click)="commentsClick.emit()"
                     >
                         {{ commentCount() }}
                     </ds-button>

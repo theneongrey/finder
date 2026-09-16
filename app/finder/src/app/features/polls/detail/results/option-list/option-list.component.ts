@@ -63,8 +63,12 @@ export class OptionListComponent {
 
     sortedOptions = computed(() => {
         const opts = [...this.options()];
-        if (this.hideResults() || this.sort() !== 'top') {
+        if (this.hideResults()) {
             return opts;
+        }
+        // "Nach Reihenfolge" shows the options in reverse (newest first).
+        if (this.sort() !== 'top') {
+            return opts.reverse();
         }
         return opts.sort((a, b) =>
             this.optionType() === OptionType.Rating

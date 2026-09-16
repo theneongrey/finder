@@ -45,18 +45,19 @@
             </div>
         </div>
 
-        <!-- Comments sidebar (desktop only) -->
-        @if (showComments()) {
-            <aside
-                class="hidden w-[380px] flex-none self-start lg:sticky lg:top-[60px] lg:block lg:h-[calc(100dvh-60px)]"
-            >
+        <!-- Comments sidebar (desktop only) — width animates open/close -->
+        <aside
+            class="hidden min-w-0 flex-none self-start overflow-hidden transition-[width] duration-300 ease-out motion-reduce:transition-none lg:sticky lg:top-[60px] lg:block lg:h-[calc(100dvh-60px)]"
+            [style.width.px]="showComments() ? 380 : 0"
+        >
+            <div class="h-full w-[380px]">
                 <app-comments-section
                     [comments]="poll.comments"
                     (addComment)="addComment($event)"
                     (dismiss)="showComments.set(false)"
                 />
-            </aside>
-        }
+            </div>
+        </aside>
     </div>
 } @else {
     <div class="flex h-32 items-center justify-center">

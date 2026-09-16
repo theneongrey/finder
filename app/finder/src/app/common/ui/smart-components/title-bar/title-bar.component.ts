@@ -28,6 +28,7 @@ import { NotificationsPanelComponent } from '@smart/notifications-panel/notifica
     templateUrl: './title-bar.component.html',
     styleUrl: './title-bar.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { '[class.title-bar-host--hidden]': 'isScrolled()' },
 })
 export class TitleBarComponent {
     private readonly userStore = inject(UserStore);
@@ -42,6 +43,7 @@ export class TitleBarComponent {
     backFn = this.titleService.backFn;
     progress = this.titleService.progress;
     isHidden = this.titleService.isHidden;
+    action = this.titleService.action;
     hasBack = computed(() => !!(this.backRoute() || this.backFn()));
 
     isScrolled = toSignal(

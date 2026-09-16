@@ -443,6 +443,38 @@
             "loading": "Cargando...",
             "comments": "Comentarios"
         },
+        "results": {
+            "startVoting": "Iniciar votación",
+            "vote": "Votar",
+            "addOption": "Añadir opción",
+            "add": "Añadir",
+            "endPoll": "Finalizar encuesta",
+            "end": "Finalizar",
+            "reopenPoll": "Reabrir encuesta",
+            "reopen": "Reabrir",
+            "cancel": "Cancelar",
+            "confirmEnd": "Sí, finalizar",
+            "confirmEndShort": "Sí",
+            "comments": "Comentarios",
+            "commentsTitle": "Comentarios de la encuesta",
+            "hideComments": "Ocultar comentarios",
+            "noComments": "Aún no hay comentarios. ¡Sé el primero!",
+            "commentPlaceholder": "Escribe un comentario…",
+            "submitComment": "Comentar",
+            "edit": "Editar",
+            "openUntil": "Abierta hasta {{date}}",
+            "sortByApproval": "Por aprobación",
+            "sortByOrder": "Por orden",
+            "status": {
+                "active": "Activo",
+                "closed": "Finalizada"
+            },
+            "type": {
+                "yesno": "Sí / No",
+                "rating": "Valoración",
+                "date": "Encuesta de fecha"
+            }
+        },
         "lastVote": {
             "label": "Último voto",
             "none": "Sin votos hasta ahora",

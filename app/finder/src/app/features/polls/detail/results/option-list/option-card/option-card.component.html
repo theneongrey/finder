@@ -1,156 +1,157 @@
 @if (!hideResults()) {
     <!-- Results mode -->
-    <div
-        class="flex h-full flex-col overflow-hidden rounded-[22px]"
-        style="box-shadow: var(--shadow-card-soft)"
-        [style.border]="
-            isMostVoted()
-                ? '1px solid rgba(31,122,140,.3)'
-                : '1px solid var(--border-hairline-soft)'
-        "
-        [style.background]="'var(--surface-card)'"
-    >
-        <!-- Preview image -->
-        @if (option().meta?.imageUrl) {
-            <img
-                [src]="option().meta!.imageUrl"
-                [alt]="option().text"
-                class="h-[150px] w-full object-cover"
-            />
-        } @else {
-            <div
-                class="flex h-[150px] w-full items-center justify-center text-[13px] font-semibold tracking-wide"
-                style="
-                    color: var(--text-muted);
-                    background-color: #f3f0ea;
-                    background-image: repeating-linear-gradient(
-                        -45deg,
-                        rgba(20, 24, 28, 0.04) 0,
-                        rgba(20, 24, 28, 0.04) 1px,
-                        transparent 1px,
-                        transparent 11px
-                    );
-                "
-            >
-                Vorschaubild
-            </div>
-        }
-
-        <!-- Body -->
-        <div class="flex flex-1 flex-col p-4">
-            <!-- Title + edit -->
-            <div class="flex items-start gap-2">
-                <p
-                    class="min-w-0 flex-1 text-[19px] leading-[1.2] font-bold text-pretty"
-                    style="
-                        font-family: var(--font-display);
-                        letter-spacing: -0.3px;
-                        color: var(--text-primary);
-                    "
-                >
-                    {{ option().text }}
-                </p>
-                <ds-button
-                    variant="ghost"
-                    [size]="32"
-                    icon="edit"
-                    label="Bearbeiten"
+    <div class="group h-full">
+        <ds-card [fill]="true" [padding]="0" [accentBorder]="isMostVoted()">
+            <!-- Preview image -->
+            @if (option().meta?.imageUrl) {
+                <img
+                    [src]="option().meta!.imageUrl"
+                    [alt]="option().text"
+                    class="h-[150px] w-full object-cover"
                 />
-            </div>
-
-            <!-- Creator -->
-            <div class="mt-2 flex items-center gap-2">
-                <app-user-avatar [user]="option().creator" [size]="22" />
-                <span
-                    class="min-w-0 truncate text-[13px]"
-                    style="color: var(--text-secondary)"
-                >
-                    Hinzugefügt von {{ option().creator.name }}
-                </span>
-            </div>
-
-            <!-- Description -->
-            @if (option().description) {
-                <p
-                    class="mt-3 text-[14px] leading-[1.5]"
-                    style="color: var(--text-secondary)"
-                >
-                    {{ option().description }}
-                </p>
             }
 
-            <!-- Link chip -->
-            @if (option().meta?.url) {
-                <div class="mt-3">
-                    <button
-                        type="button"
-                        class="inline-flex max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-semibold"
+            <!-- Body -->
+            <div class="flex flex-1 flex-col p-4">
+                <!-- Title + edit -->
+                <div class="flex items-center gap-2">
+                    <p
+                        class="min-w-0 flex-1 text-[19px] leading-[1.2] font-bold text-pretty"
                         style="
-                            border: 1px solid var(--border-hairline);
-                            color: var(--accent);
+                            font-family: var(--font-display);
+                            letter-spacing: -0.3px;
+                            color: var(--text-primary);
                         "
-                        (click)="openUrl(option().meta!.url)"
                     >
-                        <ds-icon name="link" [size]="13" />
-                        <span class="truncate">{{
-                            option().meta!.siteName || option().meta!.url
-                        }}</span>
-                    </button>
+                        {{ option().text }}
+                    </p>
+                    <span
+                        class="lg:opacity-0 lg:transition-opacity lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
+                    >
+                        <ds-button
+                            variant="ghost"
+                            [size]="32"
+                            icon="edit"
+                            label="Bearbeiten"
+                        />
+                    </span>
                 </div>
-            }
 
-            <!-- Summary row -->
-            <div class="mt-3 flex items-center gap-2">
-                @if (avatarUsers().length) {
-                    <app-avatar-stack
-                        [users]="avatarUsers()"
-                        [max]="3"
-                        size="sm"
-                    />
+                <!-- Creator -->
+                <div class="mt-1 flex items-center gap-2">
+                    <app-user-avatar [user]="option().creator" [size]="22" />
+                    <span
+                        class="min-w-0 truncate text-[13px]"
+                        style="color: var(--text-secondary)"
+                    >
+                        Hinzugefügt von {{ option().creator.name }}
+                    </span>
+                </div>
+
+                <!-- Description -->
+                @if (option().description) {
+                    <p
+                        class="mt-3 text-[14px] leading-[1.5]"
+                        style="color: var(--text-secondary)"
+                    >
+                        {{ option().description }}
+                    </p>
                 }
-                <span
-                    class="min-w-0 flex-1 truncate text-[12.5px] font-semibold"
-                    style="color: var(--text-secondary)"
-                >
-                    @if (pollType() === 'rating') {
-                        @if (ratingsCount()) {
-                            Ø {{ avgLabel() }} ★ · {{ ratingsCount() }}
-                            Bewertungen
-                        } @else {
-                            Keine Bewertungen
-                        }
-                    } @else {
-                        {{ voteLine() }}
+
+                <!-- Link chip -->
+                @if (option().meta?.url) {
+                    <div class="mt-3">
+                        <button
+                            type="button"
+                            class="inline-flex max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-semibold"
+                            style="
+                                border: 1px solid var(--border-hairline);
+                                color: var(--accent);
+                            "
+                            (click)="openUrl(option().meta!.url)"
+                        >
+                            <ds-icon name="link" [size]="13" />
+                            <span class="truncate">{{
+                                option().meta!.siteName || option().meta!.url
+                            }}</span>
+                        </button>
+                    </div>
+                }
+
+                <!-- Summary row (pinned to bottom) -->
+                <div class="mt-auto flex items-center gap-2 pt-3">
+                    @if (avatarUsers().length) {
+                        <app-avatar-stack
+                            [users]="avatarUsers()"
+                            [max]="3"
+                            size="sm"
+                        />
                     }
-                </span>
-            </div>
+                    <span
+                        class="min-w-0 flex-1 truncate text-[12.5px] font-semibold"
+                        style="color: var(--text-secondary)"
+                    >
+                        @if (pollType() === 'rating') {
+                            @if (ratingsCount()) {
+                                Ø {{ avgLabel() }} ★ · {{ ratingsCount() }}
+                                Bewertungen
+                            } @else {
+                                Keine Bewertungen
+                            }
+                        } @else {
+                            {{ voteLine() }}
+                        }
+                    </span>
+                </div>
 
-            <!-- Progress bar -->
-            <div class="mt-2.5">
-                <app-results-progress-bar
-                    [segments]="segments()"
-                    [height]="8"
-                />
-            </div>
+                <!-- Progress bar -->
+                <div class="mt-2.5">
+                    <app-results-progress-bar
+                        [segments]="segments()"
+                        [height]="8"
+                    />
+                </div>
 
-            <!-- Action row -->
-            <div class="mt-auto flex items-center gap-2 pt-4">
-                <ds-button
-                    variant="danger-ghost"
-                    [size]="44"
-                    icon="circle-minus"
-                    label="Ablehnen"
+                <!-- Divider before actions -->
+                <hr
+                    class="mt-4 border-0"
+                    style="border-top: 1px solid var(--border-hairline)"
                 />
-                <div class="flex-1">
-                    <ds-button variant="primary" [fullWidth]="true">
-                        {{ pollType() === 'rating' ? 'Bewerten' : 'Abstimmen' }}
+
+                <!-- Action row -->
+                <div class="flex items-center gap-2 pt-4">
+                    <ds-button
+                        variant="danger-outline"
+                        size="sm"
+                        icon="circle-minus"
+                        label="Ablehnen"
+                    >
+                        0
+                    </ds-button>
+                    <div class="flex-1">
+                        <ds-button
+                            variant="outline"
+                            size="sm"
+                            [fullWidth]="true"
+                        >
+                            {{
+                                pollType() === 'rating'
+                                    ? 'Bewerten'
+                                    : 'Abstimmen'
+                            }}
+                        </ds-button>
+                    </div>
+                    <ds-button
+                        variant="outline"
+                        size="sm"
+                        icon="comment"
+                        label="Kommentare"
+                    >
+                        {{ commentCount() }}
                     </ds-button>
                 </div>
-                <ds-button variant="outline" icon="comment" label="Kommentare">
-                    {{ commentCount() }}
-                </ds-button>
             </div>
-        </div>
+        </ds-card>
     </div>
 } @else {
     <!-- Overview mode -->

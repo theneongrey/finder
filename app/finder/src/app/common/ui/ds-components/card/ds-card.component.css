@@ -22,6 +22,5 @@
 }
 
 .ds-card--accent {
-    border: none;
-    border-left: 4px solid var(--accent);
+    border: 1px solid var(--accent-border);
 }

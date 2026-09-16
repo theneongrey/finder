@@ -85,6 +85,31 @@
             }
         }
 
+        @if (action(); as action) {
+            <div class="title-bar__action">
+                <!-- Mobile: round, icon-only -->
+                <div class="min-[680px]:hidden">
+                    <ds-button
+                        variant="outline"
+                        [size]="36"
+                        [icon]="action.icon"
+                        [label]="action.label"
+                        (click)="action.handler()"
+                    />
+                </div>
+                <!-- Web: icon + label -->
+                <div class="hidden min-[680px]:block">
+                    <ds-button
+                        variant="outline"
+                        size="sm"
+                        [icon]="action.icon"
+                        (click)="action.handler()"
+                        >{{ action.label }}</ds-button
+                    >
+                </div>
+            </div>
+        }
+
         @if (user()?.isAuthenticated) {
             <div class="title-bar__user">
                 <app-notifications-panel />

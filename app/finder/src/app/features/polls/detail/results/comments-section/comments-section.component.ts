@@ -5,9 +5,9 @@ import {
     output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Comment } from '../../../_shared/models/poll-detail.model';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { POLL_LIMITS } from '../../../_shared/models/poll-limits';
@@ -18,11 +18,21 @@ import { TimeSincePipe } from '@common/ui/pipes/time-ago.pipe';
     templateUrl: './comments-section.component.html',
     imports: [
         FormsModule,
+        TranslatePipe,
         TimeSincePipe,
         DsButtonComponent,
-        DsCardComponent,
         DsTextareaComponent,
         UserAvatarComponent,
+    ],
+    styles: [
+        `
+            /* Match the resting textarea height to the 44px send button */
+            :host ::ng-deep .comment-input .ds-ta {
+                min-height: 44px;
+                padding-top: 12px;
+                padding-bottom: 12px;
+            }
+        `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,6 +40,7 @@ export class CommentsSectionComponent {
     protected readonly limits = POLL_LIMITS;
     comments = input<Comment[]>([]);
     addComment = output<string>();
+    dismiss = output<void>();
 
     newCommentText = '';
 

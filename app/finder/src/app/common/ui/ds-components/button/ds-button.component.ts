@@ -18,7 +18,8 @@ export type ButtonVariant =
     | 'teal'
     | 'soft'
     | 'danger'
-    | 'danger-ghost';
+    | 'danger-ghost'
+    | 'danger-outline';
 export type ButtonSize = 'sm' | 'md';
 
 @Component({

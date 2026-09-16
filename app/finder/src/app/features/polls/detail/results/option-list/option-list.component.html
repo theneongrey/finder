@@ -1,32 +1,20 @@
-@if (!hideResults()) {
-    <div class="mb-3 flex items-center justify-between px-1">
-        <h3 style="color: var(--text-primary)">Alle Optionen</h3>
-        <button
-            class="flex h-8 items-center gap-1.5 rounded-[11px] px-3 text-[12.5px] font-bold transition-colors"
-            style="
-                border: 1px solid var(--border-hairline);
-                background: var(--surface-card);
-                color: var(--text-secondary);
-            "
+@if (!hideResults() && showSortButton()) {
+    <div class="mb-3 flex items-center justify-end px-1">
+        <ds-button
+            variant="neutral"
+            size="sm"
+            icon="sort"
             data-testid="results-sort-btn"
             (click)="toggleSort()"
         >
-            <ds-icon name="sort" [size]="13" />
-            {{ sort() === 'top' ? 'Nach Zustimmung' : 'Nach Reihenfolge' }}
-        </button>
+            {{
+                (sort() === 'top'
+                    ? 'project.results.sortByApproval'
+                    : 'project.results.sortByOrder'
+                ) | translate
+            }}
+        </ds-button>
     </div>
-    @if (!isClosed()) {
-        <div class="mb-3">
-            <ds-button
-                variant="subtle"
-                [fullWidth]="true"
-                [routerLink]="['/polls', projectId(), 'vote', pollId()]"
-                [queryParams]="{ revote: true }"
-            >
-                Erneut abstimmen
-            </ds-button>
-        </div>
-    }
 }
 
 <div

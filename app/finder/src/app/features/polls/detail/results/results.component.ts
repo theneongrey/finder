@@ -2,20 +2,19 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
     inject,
     input,
     signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionListComponent } from './option-list/option-list.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
+import { ResultsToolbarComponent } from './results-toolbar/results-toolbar.component';
+import { PollHeaderComponent } from './poll-header/poll-header.component';
 import { TitleBarService } from '@common/services/title-bar.service';
-import { DsButtonComponent } from '@ds/button/ds-button.component';
-import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
-import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { PollRole } from '../../_shared/models/poll-role.enum';
 import { OptionType } from '@common/models/option-type.model';
 import { ShareDrawerComponent } from '@ds/share-drawer/share-drawer.component';
@@ -28,9 +27,8 @@ import { ShareContentComponent } from '../../_shared/ui/share-content/share-cont
         TranslatePipe,
         OptionListComponent,
         CommentsSectionComponent,
-        DsButtonComponent,
-        DsBadgeComponent,
-        DsStatusDotComponent,
+        ResultsToolbarComponent,
+        PollHeaderComponent,
         ShareDrawerComponent,
         ShareContentComponent,
     ],
@@ -55,11 +53,30 @@ export class ResultsComponent {
     readonly shareDrawerTitle = this.translateService.translate(
         'project.share.title',
     );
+    private readonly shareActionLabel = this.translateService.translate(
+        'project.common.share',
+    );
     readonly shareDrawerSubtitle = computed(
         () => `${this.sharePollLabel()} · ${this.poll()?.name ?? ''}`,
     );
 
-    showCloseConfirm = signal(false);
+    showComments = signal(true);
+
+    sortMode = signal<'top' | 'original'>('top');
+
+    private readonly sortByApproval = this.translateService.translate(
+        'project.results.sortByApproval',
+    );
+    private readonly sortByOrder = this.translateService.translate(
+        'project.results.sortByOrder',
+    );
+    readonly sortLabel = computed(() =>
+        this.sortMode() === 'top' ? this.sortByApproval() : this.sortByOrder(),
+    );
+
+    toggleSort() {
+        this.sortMode.update((s) => (s === 'top' ? 'original' : 'top'));
+    }
 
     canManagePoll = computed(() => {
         const project = this.project();
@@ -71,56 +88,53 @@ export class ResultsComponent {
         );
     });
 
+    private readonly typeYesNo = this.translateService.translate(
+        'project.results.type.yesno',
+    );
+    private readonly typeRating = this.translateService.translate(
+        'project.results.type.rating',
+    );
+    private readonly typeDate = this.translateService.translate(
+        'project.results.type.date',
+    );
     readonly typeLabel = computed(() => {
         switch (this.poll()?.optionType) {
             case OptionType.Rating:
-                return 'Bewertung';
+                return this.typeRating();
             case OptionType.Date:
-                return 'Terminumfrage';
+                return this.typeDate();
             default:
-                return 'Ja / Nein';
+                return this.typeYesNo();
         }
     });
 
+    private readonly statusActive = this.translateService.translate(
+        'project.results.status.active',
+    );
+    private readonly statusClosed = this.translateService.translate(
+        'project.results.status.closed',
+    );
     readonly statusLabel = computed(() =>
-        this.poll()?.isClosed ? 'Beendet' : 'Aktiv',
+        this.poll()?.isClosed ? this.statusClosed() : this.statusActive(),
     );
-    readonly statusBg = computed(() =>
-        this.poll()?.isClosed ? '#f1eee9' : '#e2ede1',
-    );
-    readonly statusFg = computed(() =>
-        this.poll()?.isClosed ? '#6f6b66' : '#3f7a4e',
-    );
-    readonly statusDot = computed(() =>
-        this.poll()?.isClosed ? '#b5b0a8' : '#5d9a56',
-    );
-    readonly statusPulse = computed(() => !this.poll()?.isClosed);
 
-    readonly deadlineText = computed(() => {
+    readonly closeDateText = computed(() => {
         const poll = this.poll();
-        if (!poll) {
+        if (!poll?.closeDate) {
             return '';
         }
-        if (poll.isClosed) {
-            return 'Beendet';
-        }
-        if (!poll.closeDate) {
-            return '';
-        }
+        const locale = this.translateService.currentLang() || 'de';
         const d = new Date(poll.closeDate);
-        const now = new Date();
-        const diffMs = d.getTime() - now.getTime();
-        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-        if (diffDays <= 0) {
-            return 'Endet heute';
-        }
-        if (diffDays === 1) {
-            return 'Endet morgen';
-        }
-        if (diffDays <= 7) {
-            return `Endet in ${diffDays} Tagen`;
-        }
-        return `Endet am ${d.toLocaleDateString('de', { day: 'numeric', month: 'short' })}`;
+        const date = d.toLocaleDateString(locale, {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+        });
+        const time = d.toLocaleTimeString(locale, {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+        return `${date}, ${time}`;
     });
 
     constructor() {
@@ -129,6 +143,22 @@ export class ResultsComponent {
         effect(() => {
             this.projectDetailStore.getPoll(this.pollId());
         });
+
+        // Expose "Teilen" in the title bar while the poll is open
+        effect(() => {
+            const poll = this.poll();
+            if (poll && !poll.isClosed) {
+                titleService.setAction({
+                    icon: 'share',
+                    label: this.shareActionLabel(),
+                    handler: () => this.sharePoll(),
+                });
+            } else {
+                titleService.clearAction();
+            }
+        });
+
+        inject(DestroyRef).onDestroy(() => titleService.clearAction());
 
         effect(() => {
             const poll = this.poll();
@@ -143,13 +173,6 @@ export class ResultsComponent {
                 titleService.setBackRoute('/polls');
             }
         });
-
-        this.translateService
-            .stream('project.pollsTab.title')
-            .pipe(takeUntilDestroyed())
-            .subscribe((label: string) => {
-                titleService.setSubtitle(label);
-            });
     }
 
     addComment(content: string) {
@@ -158,11 +181,14 @@ export class ResultsComponent {
 
     closePoll() {
         this.projectDetailStore.closePoll(this.pollId());
-        this.showCloseConfirm.set(false);
     }
 
     reopenPoll() {
         this.projectDetailStore.reopenPoll(this.pollId());
+    }
+
+    editPoll() {
+        // TODO: wire up poll editing once the edit flow exists.
     }
 
     sharePoll() {

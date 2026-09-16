@@ -3,16 +3,15 @@ import {
     Component,
     computed,
     input,
-    signal,
+    model,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { TranslatePipe } from '@ngx-translate/core';
+import { DsButtonComponent } from '@ds/button/ds-button.component';
 import {
     Comment,
     OptionDetail,
     SharedWith,
 } from '../../../_shared/models/poll-detail.model';
-import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionType } from '@common/models/option-type.model';
@@ -23,9 +22,8 @@ type SortMode = 'top' | 'original';
     selector: 'app-option-list',
     templateUrl: './option-list.component.html',
     imports: [
-        RouterLink,
+        TranslatePipe,
         DsButtonComponent,
-        DsIconComponent,
         OptionCardComponent,
         OptionCardDateComponent,
     ],
@@ -42,8 +40,9 @@ export class OptionListComponent {
     optionType = input(OptionType.YesNo);
     hideResults = input(false);
     isClosed = input(false);
+    showSortButton = input(true);
 
-    sort = signal<SortMode>('top');
+    sort = model<SortMode>('top');
 
     private readonly commentCountByOption = computed(() => {
         const counts = new Map<string, number>();

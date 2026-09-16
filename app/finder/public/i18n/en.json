@@ -443,6 +443,38 @@
             "loading": "Loading...",
             "comments": "Comments"
         },
+        "results": {
+            "startVoting": "Start voting",
+            "vote": "Vote",
+            "addOption": "Add option",
+            "add": "Add",
+            "endPoll": "End poll",
+            "end": "End",
+            "reopenPoll": "Reopen poll",
+            "reopen": "Reopen",
+            "cancel": "Cancel",
+            "confirmEnd": "Yes, end it",
+            "confirmEndShort": "Yes",
+            "comments": "Comments",
+            "commentsTitle": "Comments on this poll",
+            "hideComments": "Hide comments",
+            "noComments": "No comments yet. Be the first!",
+            "commentPlaceholder": "Write a comment…",
+            "submitComment": "Comment",
+            "edit": "Edit",
+            "openUntil": "Open until {{date}}",
+            "sortByApproval": "By approval",
+            "sortByOrder": "By order",
+            "status": {
+                "active": "Active",
+                "closed": "Closed"
+            },
+            "type": {
+                "yesno": "Yes / No",
+                "rating": "Rating",
+                "date": "Date poll"
+            }
+        },
         "lastVote": {
             "label": "Last vote",
             "none": "No votes so far",

@@ -8,6 +8,18 @@
     z-index: var(--z-sticky);
 }
 
+/* Hide the title bar while scrolling (mobile only); a page's own sticky
+   sub-bar takes over the top edge. On web (≥ 680px) it always stays. */
+@media (max-width: 679.98px) {
+    :host {
+        transition: transform var(--duration-fast) var(--ease-standard);
+    }
+
+    :host(.title-bar-host--hidden) {
+        transform: translateY(-100%);
+    }
+}
+
 /* ===========================
    Bar layout
    =========================== */
@@ -143,6 +155,21 @@
 }
 
 /* ===========================
+   Action slot (page-provided, e.g. share)
+   =========================== */
+.title-bar__action {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* When an action is present it anchors the right cluster; the user menu
+   should sit right next to it rather than absorbing its own slack. */
+.title-bar:has(.title-bar__action) .title-bar__user {
+    margin-left: 0;
+}
+
+/* ===========================
    User menu
    =========================== */
 .title-bar__user {
@@ -200,6 +227,10 @@
 
     .title-bar__back-btn {
         order: 3;
+    }
+
+    .title-bar__action {
+        order: 6;
     }
 
     .title-bar__user {

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 import {
     ResultsProgressBarComponent,
     ProgressSegment,
@@ -28,6 +29,7 @@ import { DateOptionFormatService } from '../../../../_shared/utils/date-option-f
     imports: [
         RouterLink,
         DsButtonComponent,
+        DsCardComponent,
         ResultsProgressBarComponent,
         AvatarStackComponent,
         UserAvatarComponent,

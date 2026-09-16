@@ -8,6 +8,7 @@ import {
     input,
     signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OptionListComponent } from './option-list/option-list.component';
@@ -37,6 +38,7 @@ import { ShareContentComponent } from '../../_shared/ui/share-content/share-cont
 export class ResultsComponent {
     private readonly projectDetailStore = inject(PollDetailStore);
     private readonly translateService = inject(TranslateService);
+    private readonly router = inject(Router);
 
     readonly OptionType = OptionType;
 
@@ -172,6 +174,16 @@ export class ResultsComponent {
             if (project) {
                 titleService.setBackRoute('/polls');
             }
+        });
+    }
+
+    startVote() {
+        const projectId = this.project()?.id;
+        if (!projectId) {
+            return;
+        }
+        this.router.navigate(['/polls', projectId, 'vote', this.pollId()], {
+            queryParams: { revote: 1 },
         });
     }
 

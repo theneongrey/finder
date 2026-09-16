@@ -1,7 +1,7 @@
 @if (!hideResults()) {
     <!-- Results mode -->
     <div class="group h-full">
-        <ds-card [fill]="true" [padding]="0" [accentBorder]="isMostVoted()">
+        <ds-card [fill]="true" [padding]="0">
             <!-- Preview image -->
             @if (option().meta?.imageUrl) {
                 <img
@@ -148,19 +148,19 @@
 
                 <!-- Action row -->
                 <div class="flex items-center gap-2 pt-4">
-                    <ds-button
-                        variant="danger-outline"
-                        size="sm"
-                        icon="circle-minus"
-                        label="Ablehnen"
-                    >
-                        0
-                    </ds-button>
                     <div class="flex-1">
                         <ds-button
                             variant="outline"
                             size="sm"
                             [fullWidth]="true"
+                            [routerLink]="[
+                                '/polls',
+                                projectId(),
+                                'vote',
+                                pollId(),
+                                option().id,
+                            ]"
+                            [queryParams]="{ revote: 1 }"
                         >
                             {{
                                 pollType() === 'rating'

@@ -6,6 +6,7 @@
                 [canManage]="canManagePoll()"
                 [isClosed]="poll.isClosed"
                 [commentsHidden]="!showComments()"
+                (startVote)="startVote()"
                 (closePoll)="closePoll()"
                 (reopenPoll)="reopenPoll()"
                 (showComments)="showComments.set(true)"

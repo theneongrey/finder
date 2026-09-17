@@ -1,0 +1,6 @@
+/* Match the resting textarea height to the 44px send button */
+:host ::ng-deep .comment-input .ds-ta {
+    min-height: 44px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}

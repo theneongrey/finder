@@ -176,7 +176,14 @@ export const PollDetailStore = signalStore(
             pipe(
                 switchMap((poll) =>
                     store.projectService
-                        .updatePoll(poll.pollId, poll.name, poll.description)
+                        .updatePoll(
+                            poll.pollId,
+                            poll.name,
+                            poll.description,
+                            // Preserve the existing close date — omitting it makes
+                            // the backend clear CloseDate (see UpdatePoll).
+                            store.currentPoll()?.closeDate,
+                        )
                         .pipe(
                             tapResponse({
                                 next: (updatedPoll) => {

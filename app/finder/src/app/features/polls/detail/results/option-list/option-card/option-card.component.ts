@@ -22,6 +22,7 @@ import {
     OptionDetail,
     SharedWith,
 } from '../../../../_shared/models/poll-detail.model';
+import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
 
 @Component({
     selector: 'app-option-card',
@@ -56,44 +57,19 @@ export class OptionCardComponent {
     });
 
     // ── Yes/No ──────────────────────────────────────────────────────
-    readonly yesVotes = computed(() =>
-        this.option().votes.filter((v) => v.choice === '1'),
-    );
+    readonly yesVotes = computed(() => voteTally.yesVotes(this.option()));
 
-    readonly noVotes = computed(() =>
-        this.option().votes.filter((v) => v.choice === '2'),
-    );
+    readonly noVotes = computed(() => voteTally.noVotes(this.option()));
 
-    readonly totalVoters = computed(
-        () =>
-            this.option().votes.filter((v) => parseInt(v.choice ?? '0') > 0)
-                .length,
-    );
+    readonly totalVoters = computed(() => voteTally.totalVoters(this.option()));
 
     // ── Rating ──────────────────────────────────────────────────────
-    readonly averageRating = computed(() => {
-        const rated = this.option().votes.filter(
-            (v) =>
-                v.choice &&
-                !isNaN(parseInt(v.choice)) &&
-                parseInt(v.choice) > 0,
-        );
-        if (!rated.length) {
-            return 0;
-        }
-        return (
-            rated.reduce((s, v) => s + parseInt(v.choice!), 0) / rated.length
-        );
-    });
+    readonly averageRating = computed(() =>
+        voteTally.averageRating(this.option()),
+    );
 
-    readonly ratingsCount = computed(
-        () =>
-            this.option().votes.filter(
-                (v) =>
-                    v.choice &&
-                    !isNaN(parseInt(v.choice)) &&
-                    parseInt(v.choice) > 0,
-            ).length,
+    readonly ratingsCount = computed(() =>
+        voteTally.ratingsCount(this.option()),
     );
 
     readonly avgLabel = computed(() => {
@@ -143,28 +119,8 @@ export class OptionCardComponent {
         return `${yes} × Ja · ${no} × Nein`;
     });
 
-    readonly avatarUsers = computed((): AvatarUser[] => {
-        const voted = this.votedNames();
-        const members = this.members();
-        if (members.length) {
-            return members.map((m) => ({
-                name: m.name,
-                voted: voted.has(m.name),
-            }));
-        }
-        return this.option().votes.map((v) => ({
-            name: v.person,
-            voted: parseInt(v.choice ?? '0') > 0,
-        }));
-    });
-
-    private readonly votedNames = computed(
-        () =>
-            new Set(
-                this.option()
-                    .votes.filter((v) => parseInt(v.choice ?? '0') > 0)
-                    .map((v) => v.person),
-            ),
+    readonly avatarUsers = computed((): AvatarUser[] =>
+        voteTally.avatarUsers(this.option(), this.members()),
     );
 
     protected openUrl(url: string) {

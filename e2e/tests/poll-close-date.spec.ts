@@ -20,13 +20,13 @@ test.describe('Poll close date', () => {
     await page.waitForURL('**/polls');
 
     // Find an OPEN "Close Date E2E Test Poll" (exclude old closed ones from prior runs).
-    // The whole card is clickable and always navigates to the results page — use that
-    // to derive the poll slug from the URL.
+    // The card's "Open" CTA navigates to the results page — use it to derive the poll
+    // slug from the URL.
     const openPollCard = page.locator('app-poll-item')
       .filter({ hasText: 'Close Date E2E Test Poll' })
       .filter({ hasNotText: /\bclosed\b|\bbeendet\b/i }) // exclude prior-run closed polls
       .first();
-    await openPollCard.locator('ds-card > div').first().click();
+    await openPollCard.locator('[data-testid="open-poll-btn"]').click();
     await page.waitForURL(/\/polls\/[^/]+\/results\/[^/]+/);
     // URL: /polls/<projectSlug>/results/<pollSlug>
     const match = new URL(page.url()).pathname.match(/\/results\/([^/]+)/);

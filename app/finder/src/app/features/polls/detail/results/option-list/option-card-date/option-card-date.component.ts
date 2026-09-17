@@ -23,6 +23,7 @@ import {
     SharedWith,
 } from '../../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
+import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
 
 @Component({
     selector: 'app-option-card-date',
@@ -61,23 +62,13 @@ export class OptionCardDateComponent {
         this.dateFormatService.subLabelFromEntry(this.parsed()),
     );
 
-    readonly yesVotes = computed(() =>
-        this.option().votes.filter((v) => v.choice === '1'),
-    );
+    readonly yesVotes = computed(() => voteTally.yesVotes(this.option()));
 
-    readonly maybeVotes = computed(() =>
-        this.option().votes.filter((v) => v.choice === '3'),
-    );
+    readonly maybeVotes = computed(() => voteTally.maybeVotes(this.option()));
 
-    readonly noVotes = computed(() =>
-        this.option().votes.filter((v) => v.choice === '2'),
-    );
+    readonly noVotes = computed(() => voteTally.noVotes(this.option()));
 
-    readonly totalVoters = computed(
-        () =>
-            this.option().votes.filter((v) => parseInt(v.choice ?? '0') > 0)
-                .length,
-    );
+    readonly totalVoters = computed(() => voteTally.totalVoters(this.option()));
 
     readonly segments = computed((): ProgressSegment[] => {
         const total = this.totalVoters();
@@ -115,27 +106,7 @@ export class OptionCardDateComponent {
         return parts.join(' · ');
     });
 
-    readonly avatarUsers = computed((): AvatarUser[] => {
-        const voted = this.votedNames();
-        const members = this.members();
-        if (members.length) {
-            return members.map((m) => ({
-                name: m.name,
-                voted: voted.has(m.name),
-            }));
-        }
-        return this.option().votes.map((v) => ({
-            name: v.person,
-            voted: parseInt(v.choice ?? '0') > 0,
-        }));
-    });
-
-    private readonly votedNames = computed(
-        () =>
-            new Set(
-                this.option()
-                    .votes.filter((v) => parseInt(v.choice ?? '0') > 0)
-                    .map((v) => v.person),
-            ),
+    readonly avatarUsers = computed((): AvatarUser[] =>
+        voteTally.avatarUsers(this.option(), this.members()),
     );
 }

@@ -25,6 +25,7 @@ type CommentFilter = 'poll' | 'all';
 @Component({
     selector: 'app-comments-section',
     templateUrl: './comments-section.component.html',
+    styleUrl: './comments-section.component.css',
     host: { class: 'block h-full' },
     imports: [
         FormsModule,
@@ -34,16 +35,6 @@ type CommentFilter = 'poll' | 'all';
         DsTextareaComponent,
         DsSegmentedControlComponent,
         UserAvatarComponent,
-    ],
-    styles: [
-        `
-            /* Match the resting textarea height to the 44px send button */
-            :host ::ng-deep .comment-input .ds-ta {
-                min-height: 44px;
-                padding-top: 12px;
-                padding-bottom: 12px;
-            }
-        `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

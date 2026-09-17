@@ -61,24 +61,30 @@ export class ResultsComponent {
 
     showAddOption = signal(false);
 
-    readonly addPanelDateType = computed<DateOptionType | undefined>(() => {
+    /**
+     * Sub-type/time config for the add-option panel. Date polls share one
+     * config across all options, so the first option is enough — no need to
+     * re-parse the whole list.
+     */
+    private readonly addPanelFirstEntry = computed(() => {
         const poll = this.poll();
-        if (!poll || poll.optionType !== OptionType.Date) {
+        const first = poll?.options[0];
+        if (!first || poll?.optionType !== OptionType.Date) {
             return undefined;
         }
-        const first = poll.options[0];
-        return first ? this.dateFormat.parse(first.text).type : 'date';
+        return this.dateFormat.parse(first.text);
     });
 
-    readonly addPanelShowTime = computed(() => {
-        const poll = this.poll();
-        if (!poll || poll.optionType !== OptionType.Date) {
-            return false;
+    readonly addPanelDateType = computed<DateOptionType | undefined>(() => {
+        if (this.poll()?.optionType !== OptionType.Date) {
+            return undefined;
         }
-        return poll.options.some(
-            (o) => this.dateFormat.parse(o.text).startTime !== undefined,
-        );
+        return this.addPanelFirstEntry()?.type ?? 'date';
     });
+
+    readonly addPanelShowTime = computed(
+        () => this.addPanelFirstEntry()?.startTime !== undefined,
+    );
 
     poll = this.projectDetailStore.currentPoll;
     project = this.projectDetailStore.currentProject;
@@ -186,22 +192,8 @@ export class ResultsComponent {
     );
 
     readonly closeDateText = computed(() => {
-        const poll = this.poll();
-        if (!poll?.closeDate) {
-            return '';
-        }
-        const locale = this.translateService.currentLang() || 'de';
-        const d = new Date(poll.closeDate);
-        const date = d.toLocaleDateString(locale, {
-            weekday: 'short',
-            day: 'numeric',
-            month: 'short',
-        });
-        const time = d.toLocaleTimeString(locale, {
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-        return `${date}, ${time}`;
+        const closeDate = this.poll()?.closeDate;
+        return closeDate ? this.dateFormat.formatCloseDate(closeDate) : '';
     });
 
     constructor() {

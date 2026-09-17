@@ -58,8 +58,7 @@
                     [projectId]="project()?.id ?? ''"
                     [pollId]="pollId()"
                     [isClosed]="poll.isClosed"
-                    [showSortButton]="false"
-                    [(sort)]="sortMode"
+                    [sort]="sortMode()"
                     (openComments)="openOptionComments($event)"
                 />
             </div>

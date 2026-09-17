@@ -1,22 +1,3 @@
-@if (!hideResults() && showSortButton()) {
-    <div class="mb-3 flex items-center justify-end px-1">
-        <ds-button
-            variant="neutral"
-            size="sm"
-            icon="sort"
-            data-testid="results-sort-btn"
-            (click)="toggleSort()"
-        >
-            {{
-                (sort() === 'top'
-                    ? 'project.results.sortByApproval'
-                    : 'project.results.sortByOrder'
-                ) | translate
-            }}
-        </ds-button>
-    </div>
-}
-
 <div
     class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,430px),1fr))] gap-4"
     data-testid="results-option-list"

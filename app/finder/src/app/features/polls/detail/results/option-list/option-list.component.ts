@@ -3,11 +3,8 @@ import {
     Component,
     computed,
     input,
-    model,
     output,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { DsButtonComponent } from '@ds/button/ds-button.component';
 import {
     Comment,
     OptionDetail,
@@ -16,18 +13,14 @@ import {
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionType } from '@common/models/option-type.model';
+import * as voteTally from '../../../_shared/utils/vote-tally.utils';
 
 type SortMode = 'top' | 'original';
 
 @Component({
     selector: 'app-option-list',
     templateUrl: './option-list.component.html',
-    imports: [
-        TranslatePipe,
-        DsButtonComponent,
-        OptionCardComponent,
-        OptionCardDateComponent,
-    ],
+    imports: [OptionCardComponent, OptionCardDateComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionListComponent {
@@ -41,9 +34,8 @@ export class OptionListComponent {
     optionType = input(OptionType.YesNo);
     hideResults = input(false);
     isClosed = input(false);
-    showSortButton = input(true);
 
-    sort = model<SortMode>('top');
+    sort = input<SortMode>('top');
 
     openComments = output<OptionDetail>();
 
@@ -75,38 +67,17 @@ export class OptionListComponent {
         }
         return opts.sort((a, b) =>
             this.optionType() === OptionType.Rating
-                ? this.getAverageRating(b) - this.getAverageRating(a)
-                : this.getYesVotes(b).length - this.getYesVotes(a).length,
+                ? voteTally.averageRating(b) - voteTally.averageRating(a)
+                : voteTally.yesVotes(b).length - voteTally.yesVotes(a).length,
         );
     });
-
-    toggleSort() {
-        this.sort.update((s) => (s === 'top' ? 'original' : 'top'));
-    }
-
-    getYesVotes(option: OptionDetail) {
-        return option.votes.filter((vote) => vote.choice === '1');
-    }
-
-    getAverageRating(option: OptionDetail): number {
-        const rated = option.votes.filter(
-            (v) => v.choice && parseInt(v.choice) > 0,
-        );
-        if (!rated.length) {
-            return 0;
-        }
-        return (
-            rated.reduce((sum, v) => sum + parseInt(v.choice!), 0) /
-            rated.length
-        );
-    }
 
     private readonly topScore = computed(() => {
         const opts = this.options();
         if (this.optionType() === OptionType.Rating) {
-            return Math.max(0, ...opts.map((o) => this.getAverageRating(o)));
+            return Math.max(0, ...opts.map((o) => voteTally.averageRating(o)));
         }
-        return Math.max(0, ...opts.map((o) => this.getYesVotes(o).length));
+        return Math.max(0, ...opts.map((o) => voteTally.yesVotes(o).length));
     });
 
     hasMostVotes(option: OptionDetail): boolean {
@@ -115,8 +86,8 @@ export class OptionListComponent {
             return false;
         }
         if (this.optionType() === OptionType.Rating) {
-            return this.getAverageRating(option) === top;
+            return voteTally.averageRating(option) === top;
         }
-        return this.getYesVotes(option).length === top;
+        return voteTally.yesVotes(option).length === top;
     }
 }

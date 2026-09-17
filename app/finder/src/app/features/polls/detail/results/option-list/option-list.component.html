@@ -27,6 +27,8 @@
                     optionType() === OptionType.Rating ? 'rating' : 'yesno'
                 "
                 (commentsClick)="openComments.emit(option)"
+                (saveEdit)="saveEdit.emit($event)"
+                (deleteOption)="deleteOption.emit($event)"
             />
         }
     }

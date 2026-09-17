@@ -38,6 +38,12 @@ export class OptionListComponent {
     sort = input<SortMode>('top');
 
     openComments = output<OptionDetail>();
+    saveEdit = output<{
+        optionId: string;
+        text: string;
+        description: string;
+    }>();
+    deleteOption = output<{ optionId: string }>();
 
     private readonly commentCountByOption = computed(() => {
         const counts = new Map<string, number>();

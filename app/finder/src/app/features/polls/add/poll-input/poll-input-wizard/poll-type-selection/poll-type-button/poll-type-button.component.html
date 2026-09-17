@@ -6,8 +6,12 @@
 >
     @if (layout() === 'grid') {
         <span class="flex w-full items-center justify-between">
-            <span class="type-icon" [class.type-icon--selected]="isSelected()">
-                <ds-icon [name]="iconName()" [size]="25" />
+            <span
+                class="type-icon"
+                [style.background]="iconBg()"
+                [style.color]="iconColor()"
+            >
+                <ds-icon [name]="iconName()" [size]="25" [color]="iconColor()" />
             </span>
             <span
                 class="type-radio"
@@ -25,8 +29,12 @@
             }}</span>
         </span>
     } @else {
-        <span class="type-icon" [class.type-icon--selected]="isSelected()">
-            <ds-icon [name]="iconName()" [size]="22" />
+        <span
+            class="type-icon"
+            [style.background]="iconBg()"
+            [style.color]="iconColor()"
+        >
+            <ds-icon [name]="iconName()" [size]="22" [color]="iconColor()" />
         </span>
         <span class="flex min-w-0 flex-1 flex-col text-left">
             <span class="type-name">{{ nameKey() | translate }}</span>

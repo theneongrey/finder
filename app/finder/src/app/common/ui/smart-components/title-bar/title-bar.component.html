@@ -26,7 +26,7 @@
                 </div>
             }
 
-            <!-- Web (≥ 680px): logo + breadcrumb replaces back button -->
+            <!-- Web (≥ 680px): logo shown alongside the title/subtitle block -->
             <div class="title-bar__brand title-bar__brand--web-only">
                 <a href="/" class="title-bar__logo-link">
                     <img
@@ -37,34 +37,6 @@
                     />
                 </a>
             </div>
-            @if (subtitle()) {
-                <span
-                    class="title-bar__sep title-bar__sep--lead"
-                    aria-hidden="true"
-                ></span>
-                <button
-                    class="title-bar__web-label title-bar__web-label--breadcrumb cursor-pointer border-none bg-transparent p-0"
-                    (click)="onBack()"
-                >
-                    {{ subtitle() }}
-                </button>
-                <span class="title-bar__sep" aria-hidden="true"></span>
-                @if (title() === undefined) {
-                    <hlm-skeleton class="my-auto h-4 w-32" />
-                } @else {
-                    <span class="title-bar__web-label">{{ title() }}</span>
-                }
-            } @else if (!titleDisabled()) {
-                <span
-                    class="title-bar__sep title-bar__sep--lead"
-                    aria-hidden="true"
-                ></span>
-                @if (title() === undefined) {
-                    <hlm-skeleton class="my-auto h-4 w-32" />
-                } @else {
-                    <span class="title-bar__web-label">{{ title() }}</span>
-                }
-            }
         } @else {
             <div class="title-bar__brand">
                 <a href="/" class="title-bar__logo-link">

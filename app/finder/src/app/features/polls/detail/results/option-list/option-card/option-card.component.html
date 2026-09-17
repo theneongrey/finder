@@ -13,7 +13,26 @@
 
             <!-- Body -->
             <div class="relative flex flex-1 flex-col p-4">
-                @if (isTextOnly()) {
+                @if (editing()) {
+                    <!-- Edit form -->
+                    <div class="flex flex-col gap-2.5">
+                        <ds-input
+                            data-testid="option-edit-text"
+                            [ngModel]="editText()"
+                            (ngModelChange)="editText.set($event)"
+                            name="optionText"
+                            [maxlength]="limits.optionTextLength"
+                        />
+                        <ds-textarea
+                            data-testid="option-edit-description"
+                            [autoResize]="true"
+                            [ngModel]="editDescription()"
+                            (ngModelChange)="editDescription.set($event)"
+                            name="optionDescription"
+                            [maxlength]="limits.optionDescriptionLength"
+                        />
+                    </div>
+                } @else if (isTextOnly()) {
                     <!-- Text-only option: hero title, centered -->
                     <span
                         class="absolute top-3 right-3 z-[1] lg:opacity-0 lg:transition-opacity lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
@@ -23,6 +42,7 @@
                             [size]="32"
                             icon="edit"
                             label="Bearbeiten"
+                            (click)="startEdit()"
                         />
                     </span>
                     <div
@@ -60,24 +80,89 @@
                                 [size]="32"
                                 icon="edit"
                                 label="Bearbeiten"
+                                (click)="startEdit()"
                             />
                         </span>
                     </div>
                 }
 
+                @if (editing()) {
+                    <!-- Edit action row -->
+                    @if (deleteConfirm()) {
+                        <div class="mt-4 flex items-center gap-2">
+                            <span
+                                class="min-w-0 flex-1 text-[13px]"
+                                style="color: var(--text-secondary)"
+                            >
+                                Option wirklich löschen?
+                            </span>
+                            <ds-button
+                                variant="ghost"
+                                size="sm"
+                                (click)="deleteConfirm.set(false)"
+                            >
+                                Abbrechen
+                            </ds-button>
+                            <ds-button
+                                variant="danger"
+                                size="sm"
+                                data-testid="option-delete-confirm"
+                                (click)="confirmDelete()"
+                            >
+                                Löschen
+                            </ds-button>
+                        </div>
+                    } @else {
+                        <div class="mt-4 flex items-center gap-2">
+                            <ds-button
+                                variant="danger-outline"
+                                size="sm"
+                                icon="trash"
+                                label="Option löschen"
+                                data-testid="option-delete"
+                                (click)="deleteConfirm.set(true)"
+                            />
+                            <div class="ml-auto flex items-center gap-2">
+                                <ds-button
+                                    variant="neutral"
+                                    size="sm"
+                                    data-testid="option-edit-cancel"
+                                    (click)="cancelEdit()"
+                                >
+                                    Abbrechen
+                                </ds-button>
+                                <ds-button
+                                    variant="primary"
+                                    size="sm"
+                                    [disabled]="!editText().trim()"
+                                    data-testid="option-edit-save"
+                                    (click)="submitEdit()"
+                                >
+                                    Speichern
+                                </ds-button>
+                            </div>
+                        </div>
+                    }
+                }
+
                 <!-- Creator -->
-                <div class="mt-1 flex items-center gap-2">
+                <div class="mt-1 mb-2 flex items-center gap-2">
                     <app-user-avatar [user]="option().creator" [size]="22" />
                     <span
                         class="min-w-0 truncate text-[13px]"
                         style="color: var(--text-secondary)"
                     >
-                        Hinzugefügt von {{ option().creator.name }}
+                        {{
+                            editing()
+                                ? 'Ursprünglich hinzugefügt von'
+                                : 'Hinzugefügt von'
+                        }}
+                        {{ option().creator.name }}
                     </span>
                 </div>
 
                 <!-- Description -->
-                @if (option().description) {
+                @if (!editing() && option().description) {
                     <p
                         class="mt-3 text-[14px] leading-[1.5]"
                         style="color: var(--text-secondary)"
@@ -87,7 +172,7 @@
                 }
 
                 <!-- Link chip -->
-                @if (option().meta?.url) {
+                @if (!editing() && option().meta?.url) {
                     <div class="mt-3">
                         <button
                             type="button"
@@ -106,79 +191,98 @@
                     </div>
                 }
 
-                <!-- Summary row (pinned to bottom) -->
-                <div class="mt-auto flex items-center gap-2 pt-3">
-                    @if (avatarUsers().length) {
-                        <app-avatar-stack
-                            [users]="avatarUsers()"
-                            [max]="3"
-                            size="sm"
-                        />
-                    }
-                    <span
-                        class="min-w-0 flex-1 truncate text-[12.5px] font-semibold"
-                        style="color: var(--text-secondary)"
-                    >
-                        @if (pollType() === 'rating') {
-                            @if (ratingsCount()) {
-                                Ø {{ avgLabel() }} ★ · {{ ratingsCount() }}
-                                Bewertungen
-                            } @else {
-                                Keine Bewertungen
-                            }
-                        } @else {
-                            {{ voteLine() }}
-                        }
-                    </span>
-                </div>
-
-                <!-- Progress bar -->
-                <div class="mt-2.5">
-                    <app-results-progress-bar
-                        [segments]="segments()"
-                        [height]="8"
+                @if (!editing()) {
+                    <!-- Divider before results summary (pinned to bottom) -->
+                    <hr
+                        class="mt-auto border-0"
+                        style="border-top: 1px solid var(--border-hairline)"
                     />
-                </div>
 
-                <!-- Divider before actions -->
-                <hr
-                    class="mt-4 border-0"
-                    style="border-top: 1px solid var(--border-hairline)"
-                />
+                    <!-- Voted count + percentage -->
+                    <div class="mt-3.5 flex items-center justify-between gap-2">
+                        <span
+                            class="text-[13px] leading-none font-bold"
+                            style="color: var(--text-primary)"
+                        >
+                            {{ votedCount() }} von {{ totalParticipants() }} haben
+                            abgestimmt
+                        </span>
+                        <span
+                            class="text-[12.5px] leading-none font-semibold"
+                            style="color: var(--text-muted)"
+                        >
+                            {{ votedPercent() }}%
+                        </span>
+                    </div>
 
-                <!-- Action row -->
-                <div class="flex items-center gap-2 pt-4">
-                    <div class="flex-1">
+                    <!-- Progress bar -->
+                    <div class="mt-2">
+                        <app-results-progress-bar
+                            [segments]="segments()"
+                            [height]="8"
+                        />
+                    </div>
+
+                    <!-- Avatars + summary line -->
+                    <div class="mt-2.5 flex items-center gap-2">
+                        @if (avatarUsers().length) {
+                            <app-avatar-stack
+                                [users]="avatarUsers()"
+                                [max]="5"
+                                size="sm"
+                            />
+                        }
+                        <span
+                            class="min-w-0 flex-1 truncate text-[12.5px] font-semibold"
+                            style="color: var(--text-secondary)"
+                        >
+                            @if (pollType() === 'rating') {
+                                @if (ratingsCount()) {
+                                    Ø {{ avgLabel() }} ★ · {{ ratingsCount() }}
+                                    Bewertungen
+                                } @else {
+                                    Keine Bewertungen
+                                }
+                            } @else {
+                                {{ voteLine() }}
+                            }
+                        </span>
+                    </div>
+
+                    <!-- Action row -->
+                    <div class="flex items-center gap-2 pt-4">
+                        <div class="flex-1">
+                            <ds-button
+                                variant="outline"
+                                size="sm"
+                                [fullWidth]="true"
+                                [routerLink]="[
+                                    '/polls',
+                                    projectId(),
+                                    'vote',
+                                    pollId(),
+                                    option().id,
+                                ]"
+                                [queryParams]="{ revote: 1 }"
+                            >
+                                {{
+                                    pollType() === 'rating'
+                                        ? 'Bewerten'
+                                        : 'Abstimmen'
+                                }}
+                            </ds-button>
+                        </div>
                         <ds-button
                             variant="outline"
                             size="sm"
-                            [fullWidth]="true"
-                            [routerLink]="[
-                                '/polls',
-                                projectId(),
-                                'vote',
-                                pollId(),
-                                option().id,
-                            ]"
-                            [queryParams]="{ revote: 1 }"
+                            icon="comment"
+                            label="Kommentare"
+                            (click)="commentsClick.emit()"
                         >
-                            {{
-                                pollType() === 'rating'
-                                    ? 'Bewerten'
-                                    : 'Abstimmen'
-                            }}
+                            {{ commentCount() }}
                         </ds-button>
                     </div>
-                    <ds-button
-                        variant="outline"
-                        size="sm"
-                        icon="comment"
-                        label="Kommentare"
-                        (click)="commentsClick.emit()"
-                    >
-                        {{ commentCount() }}
-                    </ds-button>
-                </div>
+                }
             </div>
         </ds-card>
     </div>

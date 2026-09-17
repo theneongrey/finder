@@ -15,12 +15,15 @@ import {
 } from '../../_shared/models/date-option.model';
 import { UrlValidationService } from '../../_shared/utils/url-validation.service';
 import { POLL_LIMITS } from '../../_shared/models/poll-limits';
+import { VisibilityType } from '../../_shared/models/poll-detail.model';
 
 @Injectable()
 export class PollInputStateService {
     private readonly projectDetailStore = inject(PollDetailStore);
     readonly projectListStore = inject(PollListStore);
     private readonly sharingStore = inject(SharingStore);
+
+    readonly VisibilityType = VisibilityType;
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly urlValidation = inject(UrlValidationService);
@@ -42,6 +45,11 @@ export class PollInputStateService {
     );
 
     readonly pendingInvites = signal<PendingInvite[]>([]);
+    readonly shareTiming = signal<'later' | 'now'>('later');
+    readonly visibility = signal<VisibilityType>(
+        VisibilityType.VisibleForSelectedOnly,
+    );
+    readonly sharingContacts = this.sharingStore.sharingContactsSuggestion;
 
     private sharesApplied = false;
 
@@ -104,6 +112,17 @@ export class PollInputStateService {
 
     readonly isPollCreating: Signal<boolean> = this.pollCreating;
 
+    /**
+     * Single-step creation only requires a title; the poll type always has a
+     * default and options are added later on the results page.
+     */
+    readonly canCreate = computed(
+        (): boolean =>
+            !!this.question() &&
+            this.optionType() !== undefined &&
+            !this.pollCreating(),
+    );
+
     private editDataLoaded = false;
     readonly editLoading = signal(true);
 
@@ -165,6 +184,21 @@ export class PollInputStateService {
         this.projectListStore.clearCreatedProject();
         this.sharesApplied = false;
         this.pendingInvites.set([]);
+        this.shareTiming.set('later');
+        this.visibility.set(VisibilityType.VisibleForSelectedOnly);
+    }
+
+    addPendingInvite(invite: PendingInvite): void {
+        this.pendingInvites.update((invites) => [
+            ...invites.filter((i) => i.email !== invite.email),
+            invite,
+        ]);
+    }
+
+    removePendingInvite(email: string): void {
+        this.pendingInvites.update((invites) =>
+            invites.filter((i) => i.email !== email),
+        );
     }
 
     preselectYesNo(): void {
@@ -174,40 +208,53 @@ export class PollInputStateService {
         }
     }
 
-    tryApplySharesAfterCreation(): boolean {
+    /**
+     * Runs once the poll has been created. When the user chose "share now",
+     * the remembered visibility and invites are applied. Either way we route
+     * to the poll's results page, flagging a fresh creation so the share-link
+     * bar can be shown.
+     */
+    applySharesAndNavigate(): void {
         const created = this.createdProject();
         if (!created || this.sharesApplied) {
-            return false;
+            return;
         }
         this.sharesApplied = true;
         this.pollCreating.set(false);
-        for (const invite of this.pendingInvites()) {
-            this.sharingStore.share({
-                email: invite.email,
-                permissionType: invite.role,
-                projectId: created.projectId,
-            });
+
+        if (this.shareTiming() === 'now') {
+            if (this.visibility() === VisibilityType.VisibleForEverybody) {
+                this.sharingStore.updateVisibilityType({
+                    projectId: created.projectId,
+                    type: this.visibility(),
+                });
+            }
+            for (const invite of this.pendingInvites()) {
+                this.sharingStore.share({
+                    email: invite.email,
+                    permissionType: invite.role,
+                    projectId: created.projectId,
+                });
+            }
         }
-        return true;
+
+        this.router.navigate(
+            ['/polls', created.projectId, 'results', created.pollId],
+            { queryParams: { created: 1 } },
+        );
     }
 
     loadSharingContacts(): void {
         this.sharingStore.loadGeneralContacts();
     }
 
-    onTypeSelected(
-        type: OptionType,
-        wizardStep: ReturnType<typeof signal<number>>,
-    ): void {
+    onTypeSelected(type: OptionType): void {
         this.optionType.set(type);
         if (type === OptionType.YesNo) {
             this.options.set([{ text: '', description: '' }]);
         }
         if (type === OptionType.Date) {
             this.onAppointmentDateTypeChange('date');
-        }
-        if (wizardStep() === 1) {
-            wizardStep.set(2);
         }
     }
 
@@ -332,44 +379,20 @@ export class PollInputStateService {
 
     submitStandalone(): void {
         const optionType = this.optionType();
-        if (optionType === undefined || !this.isValid()) {
+        if (optionType === undefined || !this.canCreate()) {
             return;
         }
 
         this.pollCreating.set(true);
 
-        if (optionType === OptionType.Date) {
-            const options = this.dateOptions()
-                .filter((o) => this.dateOptionFormat.isValid(o))
-                .map((o) => ({
-                    text: this.dateOptionFormat.serialize(o),
-                    description: '',
-                }));
-
-            this.projectListStore.addStandalonePoll({
-                name: this.question(),
-                description: this.description(),
-                optionType: OptionType.Date,
-                closeDate: this.closeDate(),
-                options,
-            });
-        } else {
-            const options = this.options()
-                .filter((o) => !!o.text)
-                .map((o) => ({
-                    text: o.text,
-                    description: o.description,
-                    meta: o.meta,
-                }));
-
-            this.projectListStore.addStandalonePoll({
-                name: this.question(),
-                description: this.description(),
-                optionType,
-                closeDate: this.closeDate(),
-                options,
-            });
-        }
+        // Options are added later on the results page — the poll is created bare.
+        this.projectListStore.addStandalonePoll({
+            name: this.question(),
+            description: this.description(),
+            optionType,
+            closeDate: this.closeDate(),
+            options: [],
+        });
     }
 
     submitEdit(

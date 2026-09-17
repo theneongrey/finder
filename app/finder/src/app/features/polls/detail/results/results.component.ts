@@ -15,7 +15,9 @@ import { OptionListComponent } from './option-list/option-list.component';
 import { ResultsSkeletonComponent } from './results-skeleton/results-skeleton.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
 import { ResultsToolbarComponent } from './results-toolbar/results-toolbar.component';
+import { ResultsShareBarComponent } from './results-share-bar/results-share-bar.component';
 import { PollHeaderComponent } from './poll-header/poll-header.component';
+import { environment } from '@common/env/environment';
 import { TitleBarService } from '@common/services/title-bar.service';
 import { PollRole } from '../../_shared/models/poll-role.enum';
 import { OptionType } from '@common/models/option-type.model';
@@ -40,6 +42,7 @@ import { UserStore } from '@common/data/user.store';
         ResultsSkeletonComponent,
         CommentsSectionComponent,
         ResultsToolbarComponent,
+        ResultsShareBarComponent,
         PollHeaderComponent,
         ShareDrawerComponent,
         DsSideDrawerComponent,
@@ -59,7 +62,16 @@ export class ResultsComponent {
 
     pollId = input('');
 
+    /** Set (via ?created=1) when arriving straight after poll creation. */
+    created = input<string | undefined>(undefined);
+
     showAddOption = signal(false);
+
+    /** Share-link bar shown once, right after the poll was created. */
+    readonly showShareBar = signal(false);
+    readonly shareLink = computed(
+        () => `${environment.baseUrl}/p/${this.project()?.id}`,
+    );
 
     /**
      * Sub-type/time config for the add-option panel. Date polls share one
@@ -232,6 +244,17 @@ export class ResultsComponent {
                 titleService.setBackRoute('/polls');
             }
         });
+
+        // Reveal the share-link bar once when the user lands here right after
+        // creating the poll (?created=1). Only auto-opens a single time so a
+        // manual dismiss sticks.
+        let shareBarShown = false;
+        effect(() => {
+            if (!shareBarShown && this.created() && this.project()) {
+                shareBarShown = true;
+                this.showShareBar.set(true);
+            }
+        });
     }
 
     startVote() {
@@ -250,6 +273,18 @@ export class ResultsComponent {
 
     openOptionComments(option: OptionDetail) {
         this.commentsOption.set(option);
+    }
+
+    saveOptionEdit(edit: {
+        optionId: string;
+        text: string;
+        description: string;
+    }) {
+        this.projectDetailStore.updateOption(edit);
+    }
+
+    deleteOption(request: { optionId: string }) {
+        this.projectDetailStore.deleteOption(request);
     }
 
     addOptionComment(content: string) {

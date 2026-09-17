@@ -213,7 +213,8 @@
             "edit": "Edit",
             "delete": "Delete",
             "share": "Share",
-            "vote": "Vote"
+            "vote": "Vote",
+            "close": "Close"
         },
         "roles": {
             "unknown": "Unknown",
@@ -330,6 +331,7 @@
             "inviteMore": "Invite more",
             "roleLabel": "Role for new invites",
             "linkNote": "Anyone joining via link joins as a viewer. You can grant more permissions in the 'Access' tab.",
+            "linkNoteBeforeCreate": "Anyone joining via link joins as a voter. The link is generated once the poll is created.",
             "recentLabel": "Frequently shared",
             "noContact": "No contact found – invite via email",
             "pollLabel": "Poll"
@@ -361,6 +363,13 @@
             "shareSub": "Invite people or share the link — you can also do this later.",
             "typeTitle": "What should be decided?",
             "typeSub": "Choose the poll type — you'll fill in the rest next.",
+            "typeEyebrow": "Poll type",
+            "singleSubtitle": "Ask your question and pick a type — you'll add options next.",
+            "shareTimingLabel": "When to share?",
+            "shareLater": "Share later",
+            "shareNow": "Share now",
+            "shareLaterHint": "Finish your poll first, then share it — anytime via 'Share'.",
+            "createHintNoTitle": "Give your poll a title.",
             "addDescriptionCta": "Add description",
             "autoClose": "Auto-close",
             "autoCloseIn3Days": "in 3 days",
@@ -536,6 +545,7 @@
             "openUntil": "Open until {{date}}",
             "sortByApproval": "By approval",
             "sortByOrder": "By order",
+            "shareBarTitle": "Your poll is ready — share the link:",
             "status": {
                 "active": "Active",
                 "closed": "Closed"

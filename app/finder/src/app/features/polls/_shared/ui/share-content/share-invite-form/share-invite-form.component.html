@@ -10,6 +10,7 @@
             [ngModel]="contactEmail() ?? ''"
             (ngModelChange)="onEmailInput($event)"
             [readonly]="sharingInProgress()"
+            [clearable]="true"
         />
         <ds-button
             variant="dark"
@@ -90,18 +91,25 @@
         </p>
         <div class="flex flex-col gap-0.5">
             @for (invite of pendingInvites(); track invite.email) {
-                <div class="flex items-center gap-3 rounded-xl px-1 py-1.5">
+                <div class="flex items-center gap-2 rounded-xl px-1 py-1.5">
                     <app-user-avatar
                         [user]="{ name: invite.name || invite.email }"
                     />
                     <span
-                        class="flex-1 truncate text-sm font-semibold text-[var(--text-primary)]"
+                        class="min-w-0 flex-1 truncate text-sm font-semibold text-[var(--text-primary)]"
                         >{{ invite.name || invite.email }}</span
                     >
+                    <ds-badge [tone]="getRoleBadgeTone(invite.role)" size="lg">
+                        {{
+                            'project.roles.' + getRoleKey(invite.role)
+                                | translate
+                        }}
+                    </ds-badge>
                     <ds-button
-                        variant="ghost"
+                        variant="danger"
                         [size]="28"
-                        icon="x"
+                        icon="close"
+                        [label]="'project.common.close' | translate"
                         (click)="removeInvite.emit(invite.email)"
                     />
                 </div>

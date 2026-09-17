@@ -305,6 +305,93 @@ export const PollDetailStore = signalStore(
             ),
         ),
 
+        updateOption: rxMethod<{
+            optionId: string;
+            text: string;
+            description: string;
+        }>(
+            pipe(
+                switchMap((request) => {
+                    const currentPoll = store.currentPoll();
+                    // Preserve the existing meta — omitting it makes the backend
+                    // clear the option's link/image (see UpdateOption).
+                    const meta = currentPoll?.options.find(
+                        (o) => o.id === request.optionId,
+                    )?.meta;
+                    return store.projectService
+                        .updateOption(
+                            request.optionId,
+                            request.text,
+                            request.description,
+                            meta,
+                        )
+                        .pipe(
+                            tapResponse({
+                                next: (option) => {
+                                    const poll = store.currentPoll();
+                                    if (!poll) {
+                                        return;
+                                    }
+                                    patchState(store, {
+                                        currentPoll: {
+                                            ...poll,
+                                            options: poll.options.map((o) =>
+                                                o.id !== request.optionId
+                                                    ? o
+                                                    : {
+                                                          ...o,
+                                                          text: option.text,
+                                                          description:
+                                                              option.description,
+                                                          meta: option.meta,
+                                                      },
+                                            ),
+                                        },
+                                    });
+                                },
+                                error: (error) => {
+                                    store.loggerService.log(
+                                        '[PollDetailStore] Error while updating an option',
+                                        error,
+                                    );
+                                },
+                            }),
+                        );
+                }),
+            ),
+        ),
+
+        deleteOption: rxMethod<{ optionId: string }>(
+            pipe(
+                switchMap((request) =>
+                    store.projectService.deleteOption(request.optionId).pipe(
+                        tapResponse({
+                            next: () => {
+                                const poll = store.currentPoll();
+                                if (!poll) {
+                                    return;
+                                }
+                                patchState(store, {
+                                    currentPoll: {
+                                        ...poll,
+                                        options: poll.options.filter(
+                                            (o) => o.id !== request.optionId,
+                                        ),
+                                    },
+                                });
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error while deleting an option',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
+                ),
+            ),
+        ),
+
         vote: rxMethod<{ optionId: string; choice: string }>(
             pipe(
                 switchMap((vote) =>

@@ -213,7 +213,8 @@
             "edit": "Bearbeiten",
             "delete": "Löschen",
             "share": "Teilen",
-            "vote": "Abstimmen"
+            "vote": "Abstimmen",
+            "close": "Schließen"
         },
         "roles": {
             "unknown": "Unbekannt",
@@ -330,6 +331,7 @@
             "inviteMore": "Weitere einladen",
             "roleLabel": "Rolle für neue Einladungen",
             "linkNote": "Wer über den Link beitritt, kommt als Abstimmender rein. Mehr Rechte vergibst du im Tab „Zugriff”.",
+            "linkNoteBeforeCreate": "Wer über den Link beitritt, kommt als Abstimmender rein. Der Link wird erstellt, sobald die Umfrage angelegt ist.",
             "recentLabel": "Zuletzt oft geteilt",
             "noContact": "Kein Kontakt gefunden – per E-Mail einladen",
             "pollLabel": "Umfrage"
@@ -361,6 +363,13 @@
             "shareSub": "Lade Leute ein oder teile den Link — du kannst das auch später noch tun.",
             "typeTitle": "Was soll entschieden werden?",
             "typeSub": "Wähle die Art der Umfrage — den Rest füllst du im nächsten Schritt aus.",
+            "typeEyebrow": "Art der Umfrage",
+            "singleSubtitle": "Frage stellen, Typ wählen, fertig — Optionen fügst du danach hinzu.",
+            "shareTimingLabel": "Wann teilen?",
+            "shareLater": "Später teilen",
+            "shareNow": "Jetzt teilen",
+            "shareLaterHint": "Stelle deine Umfrage erst fertig, dann teilst du sie — jederzeit über „Teilen”.",
+            "createHintNoTitle": "Gib deiner Umfrage einen Titel.",
             "addDescriptionCta": "Beschreibung hinzufügen",
             "autoClose": "Automatisch schließen",
             "autoCloseIn3Days": "in 3 Tagen",
@@ -536,6 +545,7 @@
             "openUntil": "Offen bis {{date}}",
             "sortByApproval": "Nach Zustimmung",
             "sortByOrder": "Nach Reihenfolge",
+            "shareBarTitle": "Deine Umfrage ist bereit — teile den Link:",
             "status": {
                 "active": "Aktiv",
                 "closed": "Beendet"

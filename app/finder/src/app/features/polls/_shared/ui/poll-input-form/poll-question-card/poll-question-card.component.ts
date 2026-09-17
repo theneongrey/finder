@@ -42,6 +42,7 @@ export class PollQuestionCardComponent {
     description = input.required<string>();
     descriptionChange = output<string>();
     isClosed = input<boolean>(false);
+    forceShowDescription = input<boolean>(false);
 
     showDescription = signal(false);
 

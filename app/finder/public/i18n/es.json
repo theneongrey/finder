@@ -213,7 +213,8 @@
             "edit": "Editar",
             "delete": "Eliminar",
             "share": "Compartir",
-            "vote": "Votar"
+            "vote": "Votar",
+            "close": "Cerrar"
         },
         "roles": {
             "unknown": "Desconocido",
@@ -330,6 +331,7 @@
             "inviteMore": "Invitar más",
             "roleLabel": "Rol para nuevas invitaciones",
             "linkNote": "Quien se una mediante el enlace entrará como observador. Puedes otorgar más permisos en la pestaña 'Acceso'.",
+            "linkNoteBeforeCreate": "Quien se una mediante el enlace entrará como votante. El enlace se genera una vez creada la encuesta.",
             "recentLabel": "Compartido frecuentemente",
             "noContact": "Contacto no encontrado – invitar por correo",
             "pollLabel": "Encuesta"
@@ -361,6 +363,13 @@
             "shareSub": "Invita a personas o comparte el enlace — también puedes hacerlo más tarde.",
             "typeTitle": "¿Qué se debe decidir?",
             "typeSub": "Elige el tipo de encuesta — el resto lo completas después.",
+            "typeEyebrow": "Tipo de encuesta",
+            "singleSubtitle": "Haz tu pregunta y elige un tipo — las opciones las añades después.",
+            "shareTimingLabel": "¿Cuándo compartir?",
+            "shareLater": "Compartir después",
+            "shareNow": "Compartir ahora",
+            "shareLaterHint": "Termina tu encuesta primero y luego compártela — en cualquier momento con 'Compartir'.",
+            "createHintNoTitle": "Dale un título a tu encuesta.",
             "addDescriptionCta": "Añadir descripción",
             "autoClose": "Cierre automático",
             "autoCloseIn3Days": "en 3 días",
@@ -536,6 +545,7 @@
             "openUntil": "Abierta hasta {{date}}",
             "sortByApproval": "Por aprobación",
             "sortByOrder": "Por orden",
+            "shareBarTitle": "Tu encuesta está lista — comparte el enlace:",
             "status": {
                 "active": "Activo",
                 "closed": "Finalizada"

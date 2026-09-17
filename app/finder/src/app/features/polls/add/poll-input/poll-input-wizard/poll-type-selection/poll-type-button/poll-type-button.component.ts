@@ -21,6 +21,8 @@ export class PollTypeButtonComponent {
     selectedType = input<OptionType | undefined>(undefined);
     layout = input<'list' | 'grid'>('list');
     iconName = input.required<string>();
+    iconBg = input.required<string>();
+    iconColor = input.required<string>();
     nameKey = input.required<string>();
     descKey = input.required<string>();
     testId = input.required<string>();

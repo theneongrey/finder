@@ -20,13 +20,7 @@ import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { OptionTypeBadgeComponent } from '@smart/option-type-badge/option-type-badge.component';
 import { PollItemTimeComponent } from './poll-item-time/poll-item-time.component';
 import { PollItemProgressComponent } from './poll-item-progress/poll-item-progress.component';
-
-export interface ParticipantAvatar {
-    initial: string;
-    bg: string;
-    fg: string;
-    voted: boolean;
-}
+import { AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
 
 @Component({
     selector: 'app-poll-item',
@@ -91,11 +85,9 @@ export class PollItemComponent {
             : 0;
     });
 
-    readonly participantAvatars = computed<ParticipantAvatar[]>(() =>
-        this.poll().participants.map((p, i) => ({
-            initial: p.name.charAt(0).toUpperCase(),
-            bg: `var(--person-${(i % 4) + 1}-bg)`,
-            fg: `var(--person-${(i % 4) + 1}-fg)`,
+    readonly avatarUsers = computed<AvatarUser[]>(() =>
+        this.poll().participants.map((p) => ({
+            name: p.name,
             voted: p.votingStatus !== PollVotingStatus.None,
         })),
     );

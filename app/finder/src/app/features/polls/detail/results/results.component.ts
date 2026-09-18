@@ -28,8 +28,13 @@ import {
     AddOptionPanelComponent,
     NewOptionPayload,
 } from './option-input/add-option-panel/add-option-panel.component';
+import { EmptyOptionsComponent } from './empty-options/empty-options.component';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
-import { DateOptionType } from '../../_shared/models/date-option.model';
+import {
+    DateOptionType,
+    isDateOptionType,
+    optionTypeToDateType,
+} from '../../_shared/models/date-option.model';
 import { OptionDetail } from '../../_shared/models/poll-detail.model';
 import { UserStore } from '@common/data/user.store';
 
@@ -48,6 +53,7 @@ import { UserStore } from '@common/data/user.store';
         DsSideDrawerComponent,
         ShareContentComponent,
         AddOptionPanelComponent,
+        EmptyOptionsComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -81,18 +87,16 @@ export class ResultsComponent {
     private readonly addPanelFirstEntry = computed(() => {
         const poll = this.poll();
         const first = poll?.options[0];
-        if (!first || poll?.optionType !== OptionType.Date) {
+        const dateType = optionTypeToDateType(poll?.optionType);
+        if (!first || !dateType) {
             return undefined;
         }
-        return this.dateFormat.parse(first.text);
+        return this.dateFormat.parse(first.text, dateType);
     });
 
-    readonly addPanelDateType = computed<DateOptionType | undefined>(() => {
-        if (this.poll()?.optionType !== OptionType.Date) {
-            return undefined;
-        }
-        return this.addPanelFirstEntry()?.type ?? 'date';
-    });
+    readonly addPanelDateType = computed<DateOptionType | undefined>(() =>
+        optionTypeToDateType(this.poll()?.optionType),
+    );
 
     readonly addPanelShowTime = computed(
         () => this.addPanelFirstEntry()?.startTime !== undefined,
@@ -129,9 +133,10 @@ export class ResultsComponent {
         if (!option) {
             return '';
         }
-        if (this.poll()?.optionType === OptionType.Date) {
+        const dateType = optionTypeToDateType(this.poll()?.optionType);
+        if (dateType) {
             return this.dateFormat.labelFromEntry(
-                this.dateFormat.parse(option.text),
+                this.dateFormat.parse(option.text, dateType),
             );
         }
         return option.text;
@@ -183,14 +188,14 @@ export class ResultsComponent {
         'project.results.type.date',
     );
     readonly typeLabel = computed(() => {
-        switch (this.poll()?.optionType) {
-            case OptionType.Rating:
-                return this.typeRating();
-            case OptionType.Date:
-                return this.typeDate();
-            default:
-                return this.typeYesNo();
+        const optionType = this.poll()?.optionType;
+        if (optionType === OptionType.Rating) {
+            return this.typeRating();
         }
+        if (isDateOptionType(optionType)) {
+            return this.typeDate();
+        }
+        return this.typeYesNo();
     });
 
     private readonly statusActive = this.translateService.translate(

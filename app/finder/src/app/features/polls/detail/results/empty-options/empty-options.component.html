@@ -1,0 +1,84 @@
+<div
+    class="flex flex-col items-center rounded-[20px] px-6 py-14 text-center transition-colors lg:py-16"
+    [class.cursor-pointer]="interactive()"
+    [class.hover:border-[var(--accent)]]="interactive()"
+    style="
+        border: 1.5px dashed var(--border-hairline);
+        background: #fff;
+    "
+    [attr.role]="interactive() ? 'button' : null"
+    [attr.tabindex]="interactive() ? 0 : null"
+    data-testid="results-empty-options"
+    (click)="onCardClick()"
+    (keydown.enter)="onCardClick()"
+    (keydown.space)="$event.preventDefault(); onCardClick()"
+>
+    <!-- Plus emblem with soft glow -->
+    <div class="relative mb-7" style="width: 84px; height: 84px">
+        <div
+            class="absolute inset-0"
+            style="
+                background: radial-gradient(
+                    ellipse,
+                    rgba(207, 230, 232, 0.7) 0%,
+                    transparent 70%
+                );
+                transform: scale(1.6);
+                pointer-events: none;
+            "
+        ></div>
+        <div
+            class="absolute inset-0 flex items-center justify-center rounded-full"
+            style="
+                background: var(--accent);
+                box-shadow: 0 6px 18px rgba(31, 122, 140, 0.35);
+            "
+        >
+            <ds-icon name="plus" [size]="34" color="#fff" />
+        </div>
+    </div>
+
+    <!-- Heading -->
+    <h2
+        style="
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        "
+    >
+        {{ 'project.results.emptyOptionsHeading' | translate }}
+    </h2>
+
+    <!-- Description -->
+    <p
+        style="
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 360px;
+            line-height: 1.55;
+        "
+        [style.margin-bottom]="canManage() && !isClosed() ? '28px' : '0'"
+    >
+        @if (canManage() && !isClosed()) {
+            {{ 'project.results.emptyOptionsText' | translate }}
+        } @else {
+            {{ 'project.results.emptyOptionsTextVoter' | translate }}
+        }
+    </p>
+
+    <!-- CTA (managers, open polls only) -->
+    @if (canManage() && !isClosed()) {
+        <ds-button
+            variant="primary"
+            [noGlow]="true"
+            icon="plus"
+            data-testid="empty-options-add-btn"
+            (click)="$event.stopPropagation(); addOption.emit()"
+        >
+            {{ 'project.results.addOption' | translate }}
+        </ds-button>
+    }
+</div>

@@ -57,19 +57,27 @@
                     />
                 }
 
-                <app-option-list
-                    [options]="poll.options"
-                    [optionType]="poll.optionType"
-                    [members]="project()?.sharedWith ?? []"
-                    [comments]="poll.comments"
-                    [projectId]="project()?.id ?? ''"
-                    [pollId]="pollId()"
-                    [isClosed]="poll.isClosed"
-                    [sort]="sortMode()"
-                    (openComments)="openOptionComments($event)"
-                    (saveEdit)="saveOptionEdit($event)"
-                    (deleteOption)="deleteOption($event)"
-                />
+                @if (poll.options.length === 0 && !showAddOption()) {
+                    <app-empty-options
+                        [canManage]="canManagePoll()"
+                        [isClosed]="poll.isClosed"
+                        (addOption)="showAddOption.set(true)"
+                    />
+                } @else {
+                    <app-option-list
+                        [options]="poll.options"
+                        [optionType]="poll.optionType"
+                        [members]="project()?.sharedWith ?? []"
+                        [comments]="poll.comments"
+                        [projectId]="project()?.id ?? ''"
+                        [pollId]="pollId()"
+                        [isClosed]="poll.isClosed"
+                        [sort]="sortMode()"
+                        (openComments)="openOptionComments($event)"
+                        (saveEdit)="saveOptionEdit($event)"
+                        (deleteOption)="deleteOption($event)"
+                    />
+                }
             </div>
         </div>
 

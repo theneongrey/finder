@@ -12,7 +12,7 @@
             [disabled]="isDisabled() || loading()"
             [readOnly]="readonly()"
             [style.background]="background()"
-            [style.paddingRight]="loading() ? '36px' : null"
+            [style.paddingRight]="loading() || showClear() ? '36px' : null"
             [class.ds-input--error]="!!error() || invalid()"
             [attr.aria-invalid]="!!error() || invalid() || null"
             [attr.title]="title() ?? null"
@@ -24,6 +24,16 @@
         />
         @if (loading()) {
             <div class="ds-input-spinner" aria-hidden="true"></div>
+        } @else if (showClear()) {
+            <button
+                type="button"
+                class="ds-input-clear"
+                tabindex="-1"
+                aria-label="Clear"
+                (click)="clear()"
+            >
+                <ds-icon name="close" [size]="14" />
+            </button>
         }
     </div>
     @if (error()) {

@@ -1,0 +1,75 @@
+<div class="lg:flex">
+    <!-- Main column -->
+    <div class="min-w-0 lg:flex-1">
+        <!-- Sticky toolbar -->
+        <div
+            class="sticky top-0 z-[9] flex items-center gap-2 border-b border-[color:var(--border-hairline)] bg-[var(--bg-sheet)] px-4 py-2.5 min-[680px]:top-[60px] lg:gap-2.5 lg:px-6 lg:py-3.5"
+        >
+            <div class="bar bar--btn w-[128px]"></div>
+            <div class="bar bar--btn w-[112px]"></div>
+            <div class="bar bar--btn ml-auto w-[116px]"></div>
+        </div>
+
+        <div class="flex flex-col gap-4 p-4 pb-8 lg:gap-5 lg:p-6">
+            <!-- Title / subtitle section -->
+            <div class="flex flex-col gap-3">
+                <div class="bar bar--title"></div>
+                <div class="bar bar--subtitle"></div>
+                <div class="mt-1 flex items-center gap-2.5">
+                    <div class="bar bar--pill w-[78px]"></div>
+                    <div class="bar bar--pill w-[64px]"></div>
+                    <div class="bar bar--pill ml-auto w-[120px]"></div>
+                </div>
+            </div>
+
+            <!-- Separator between header and cards -->
+            <hr class="h-px border-0 bg-[var(--border-hairline)]" />
+
+            <!-- Card grid -->
+            <div
+                class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,430px),1fr))] gap-4"
+            >
+                <ds-poll-card-skeleton [count]="4" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments sidebar (desktop only) -->
+    <aside
+        class="hidden w-[380px] min-w-0 flex-none self-start overflow-hidden lg:sticky lg:top-[60px] lg:block lg:h-[calc(100dvh-60px)]"
+    >
+        <div
+            class="flex h-full w-[380px] flex-col border-l border-[color:var(--border-hairline)]"
+        >
+            <!-- Header -->
+            <div class="px-5 pt-5 pb-3">
+                <div class="bar bar--pill h-[16px] w-[110px]"></div>
+            </div>
+
+            <!-- Comment list -->
+            <div class="flex flex-1 flex-col gap-5 px-5 pt-1 pb-3">
+                @for (item of [1, 2, 3, 4]; track $index) {
+                    <div class="flex gap-2.5">
+                        <div class="avatar"></div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-baseline gap-2">
+                                <div
+                                    class="bar bar--pill h-[13px] w-[90px]"
+                                ></div>
+                                <div
+                                    class="bar bar--pill bar--light h-[12px] w-[40px]"
+                                ></div>
+                            </div>
+                            <div
+                                class="bar bar--pill bar--light mt-2 h-[12px] w-full"
+                            ></div>
+                            <div
+                                class="bar bar--pill bar--light mt-1.5 h-[12px] w-[70%]"
+                            ></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </aside>
+</div>

@@ -121,8 +121,10 @@
     /* Semantic state colors */
     --positive: var(--green-900);
     --positive-strong: var(--green-700);
+    --positive-maybe: #e0b45c;
     --negative: var(--red-900);
     --negative-strong: var(--red-700);
+    --negative-soft: #e3a7a2;
     --warning: var(--amber-900);
 
     /* Semantic status aliases — for component use */

@@ -46,6 +46,22 @@ export const routes: Routes = [
         children: authRoutes,
     },
     {
+        path: 'privacy',
+        loadComponent: () =>
+            import('./features/legal/privacy/privacy.component').then(
+                (m) => m.PrivacyComponent,
+            ),
+        data: { backRoute: '/' },
+    },
+    {
+        path: 'imprint',
+        loadComponent: () =>
+            import('./features/legal/imprint/imprint.component').then(
+                (m) => m.ImprintComponent,
+            ),
+        data: { backRoute: '/' },
+    },
+    {
         path: 'logout',
         loadComponent: () =>
             import('./features/logout/logout.component').then(

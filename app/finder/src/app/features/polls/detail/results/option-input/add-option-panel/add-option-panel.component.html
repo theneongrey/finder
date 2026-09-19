@@ -1,0 +1,65 @@
+<div class="flex flex-col gap-2" data-testid="add-option-panel">
+    @if (isDateType()) {
+        @switch (dateType()) {
+            @case ('weekday') {
+                <app-option-card-weekday
+                    [option]="dateDraft()"
+                    [index]="0"
+                    [initialShowTime]="showTime()"
+                    (optionChange)="dateDraft.set($event)"
+                />
+            }
+            @case ('date') {
+                <app-option-card-date
+                    [option]="dateDraft()"
+                    [index]="0"
+                    [initialShowTime]="showTime()"
+                    (optionChange)="dateDraft.set($event)"
+                />
+            }
+            @case ('date-range') {
+                <app-option-card-date-range
+                    [option]="dateDraft()"
+                    [index]="0"
+                    [initialShowTime]="showTime()"
+                    (optionChange)="dateDraft.set($event)"
+                />
+            }
+            @case ('time') {
+                <app-option-card-time
+                    [option]="dateDraft()"
+                    [index]="0"
+                    (optionChange)="dateDraft.set($event)"
+                />
+            }
+            @case ('time-range') {
+                <app-option-card-time-range
+                    [option]="dateDraft()"
+                    [index]="0"
+                    (optionChange)="dateDraft.set($event)"
+                />
+            }
+        }
+    } @else {
+        <app-option-card
+            [option]="textDraft()"
+            [index]="0"
+            (optionChange)="textDraft.set($event)"
+        />
+    }
+
+    <div class="flex items-center justify-end gap-2 px-1">
+        <ds-button variant="ghost" (click)="cancelled.emit()">
+            {{ 'project.common.cancel' | translate }}
+        </ds-button>
+        <ds-button
+            variant="primary"
+            icon="plus"
+            data-testid="add-option-submit"
+            [disabled]="!isValid()"
+            (click)="submit()"
+        >
+            {{ 'project.results.add' | translate }}
+        </ds-button>
+    </div>
+</div>

@@ -26,6 +26,30 @@
         transform: translateY(-50%) rotate(360deg);
     }
 }
+.ds-input-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+        background var(--duration-fast) var(--ease-standard),
+        color var(--duration-fast) var(--ease-standard);
+}
+.ds-input-clear:hover {
+    background: var(--sand-100);
+    color: var(--text-secondary);
+}
 .ds-input-label {
     font-family: var(--font-body);
     font-size: var(--fs-ui-sm);

@@ -13,9 +13,16 @@ import { forkJoin, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { PollService } from './poll.service';
 import { Router } from '@angular/router';
-import { Comment, Project, PollDetail } from '../models/poll-detail.model';
+import {
+    Comment,
+    CommentAuthor,
+    OptionDetail,
+    Project,
+    PollDetail,
+} from '../models/poll-detail.model';
 import { sharingEvents } from './sharing.events';
 import { LoggerService } from '@common/services/logger.service';
+import { OptionType } from '@common/models/option-type.model';
 
 export const PollDetailStore = signalStore(
     { providedIn: 'root' },
@@ -79,6 +86,7 @@ export const PollDetailStore = signalStore(
             pollId: string;
             name: string;
             description: string;
+            optionType?: OptionType;
             closeDate?: string;
             options: {
                 id?: string;
@@ -102,6 +110,7 @@ export const PollDetailStore = signalStore(
                             poll.name,
                             poll.description,
                             poll.closeDate,
+                            poll.optionType,
                         )
                         .pipe(
                             switchMap(() => {
@@ -158,6 +167,232 @@ export const PollDetailStore = signalStore(
                                 },
                             }),
                         ),
+                ),
+            ),
+        ),
+
+        updatePollDetails: rxMethod<{
+            pollId: string;
+            name: string;
+            description: string;
+        }>(
+            pipe(
+                switchMap((poll) =>
+                    store.projectService
+                        .updatePoll(
+                            poll.pollId,
+                            poll.name,
+                            poll.description,
+                            // Preserve the existing close date — omitting it makes
+                            // the backend clear CloseDate (see UpdatePoll).
+                            store.currentPoll()?.closeDate,
+                        )
+                        .pipe(
+                            tapResponse({
+                                next: (updatedPoll) => {
+                                    const currentPoll = store.currentPoll();
+                                    if (currentPoll?.id !== poll.pollId) {
+                                        return;
+                                    }
+                                    patchState(store, {
+                                        currentPoll: {
+                                            ...currentPoll,
+                                            name: updatedPoll.name,
+                                            description:
+                                                updatedPoll.description,
+                                        },
+                                    });
+                                },
+                                error: (error) => {
+                                    store.loggerService.log(
+                                        '[PollDetailStore] Error while updating poll details',
+                                        error,
+                                    );
+                                },
+                            }),
+                        ),
+                ),
+            ),
+        ),
+
+        // Standalone polls are backed 1:1 by a project, so deleting the poll
+        // means deleting its whole project.
+        deleteProject: rxMethod<string>(
+            pipe(
+                switchMap((projectId) =>
+                    store.projectService.deleteProject(projectId).pipe(
+                        tapResponse({
+                            next: () => {
+                                store.loggerService.debug(
+                                    `[PollDetailStore] Deleted project`,
+                                    projectId,
+                                );
+                                store.router.navigate(['/polls']);
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error while deleting a project',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
+                ),
+            ),
+        ),
+
+        addOption: rxMethod<{
+            pollId: string;
+            text: string;
+            description: string;
+            meta?: {
+                url: string;
+                title?: string;
+                description?: string;
+                imageUrl?: string;
+                siteName?: string;
+            };
+            creator: CommentAuthor;
+        }>(
+            pipe(
+                switchMap((request) =>
+                    store.projectService
+                        .addOption(
+                            request.pollId,
+                            request.text,
+                            request.description,
+                            request.meta
+                                ? {
+                                      url: request.meta.url,
+                                      title: request.meta.title ?? '',
+                                      description:
+                                          request.meta.description ?? '',
+                                      imageUrl: request.meta.imageUrl ?? '',
+                                      siteName: request.meta.siteName ?? '',
+                                  }
+                                : undefined,
+                        )
+                        .pipe(
+                            tapResponse({
+                                next: (option) => {
+                                    const currentPoll = store.currentPoll();
+                                    if (currentPoll?.id !== request.pollId) {
+                                        return;
+                                    }
+                                    const newOption: OptionDetail = {
+                                        id: option.id,
+                                        text: option.text,
+                                        description: option.description,
+                                        meta: option.meta,
+                                        votes: [],
+                                        choice: null,
+                                        creator: request.creator,
+                                    };
+                                    patchState(store, {
+                                        currentPoll: {
+                                            ...currentPoll,
+                                            options: [
+                                                ...currentPoll.options,
+                                                newOption,
+                                            ],
+                                        },
+                                    });
+                                },
+                                error: (error) => {
+                                    store.loggerService.log(
+                                        '[PollDetailStore] Error while adding an option',
+                                        error,
+                                    );
+                                },
+                            }),
+                        ),
+                ),
+            ),
+        ),
+
+        updateOption: rxMethod<{
+            optionId: string;
+            text: string;
+            description: string;
+        }>(
+            pipe(
+                switchMap((request) => {
+                    const currentPoll = store.currentPoll();
+                    // Preserve the existing meta — omitting it makes the backend
+                    // clear the option's link/image (see UpdateOption).
+                    const meta = currentPoll?.options.find(
+                        (o) => o.id === request.optionId,
+                    )?.meta;
+                    return store.projectService
+                        .updateOption(
+                            request.optionId,
+                            request.text,
+                            request.description,
+                            meta,
+                        )
+                        .pipe(
+                            tapResponse({
+                                next: (option) => {
+                                    const poll = store.currentPoll();
+                                    if (!poll) {
+                                        return;
+                                    }
+                                    patchState(store, {
+                                        currentPoll: {
+                                            ...poll,
+                                            options: poll.options.map((o) =>
+                                                o.id !== request.optionId
+                                                    ? o
+                                                    : {
+                                                          ...o,
+                                                          text: option.text,
+                                                          description:
+                                                              option.description,
+                                                          meta: option.meta,
+                                                      },
+                                            ),
+                                        },
+                                    });
+                                },
+                                error: (error) => {
+                                    store.loggerService.log(
+                                        '[PollDetailStore] Error while updating an option',
+                                        error,
+                                    );
+                                },
+                            }),
+                        );
+                }),
+            ),
+        ),
+
+        deleteOption: rxMethod<{ optionId: string }>(
+            pipe(
+                switchMap((request) =>
+                    store.projectService.deleteOption(request.optionId).pipe(
+                        tapResponse({
+                            next: () => {
+                                const poll = store.currentPoll();
+                                if (!poll) {
+                                    return;
+                                }
+                                patchState(store, {
+                                    currentPoll: {
+                                        ...poll,
+                                        options: poll.options.filter(
+                                            (o) => o.id !== request.optionId,
+                                        ),
+                                    },
+                                });
+                            },
+                            error: (error) => {
+                                store.loggerService.log(
+                                    '[PollDetailStore] Error while deleting an option',
+                                    error,
+                                );
+                            },
+                        }),
+                    ),
                 ),
             ),
         ),

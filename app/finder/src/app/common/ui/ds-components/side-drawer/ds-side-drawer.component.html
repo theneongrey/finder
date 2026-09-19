@@ -1,0 +1,13 @@
+<hlm-sheet
+    [state]="open() ? 'open' : 'closed'"
+    side="right"
+    (stateChanged)="onStateChanged($event)"
+>
+    <hlm-sheet-content
+        *hlmSheetPortal
+        class="ds-drawer-panel"
+        [showCloseButton]="false"
+    >
+        <ng-content />
+    </hlm-sheet-content>
+</hlm-sheet>

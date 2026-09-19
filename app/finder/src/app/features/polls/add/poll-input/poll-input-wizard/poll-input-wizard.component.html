@@ -1,272 +1,209 @@
+<!-- ═══════════════════════════════════════════
+     Reusable blocks (shared between web & mobile)
+═══════════════════════════════════════════ -->
+<ng-template #formBlock>
+    <app-poll-question-card
+        mode="standalone"
+        [question]="state.question()"
+        (questionChange)="state.question.set($event)"
+        [description]="state.description()"
+        (descriptionChange)="state.description.set($event)"
+        [forceShowDescription]="true"
+    />
+
+    @if (revealType()) {
+        <div [class.reveal]="!isDesktop()">
+            <p
+                class="label mb-2.5 tracking-[var(--tracking-eyebrow-lg)] text-[color:var(--text-muted)]"
+            >
+                {{ 'project.pollInput.typeEyebrow' | translate }}
+            </p>
+            <app-poll-type-selection
+                [layout]="isDesktop() ? 'grid' : 'list'"
+                [selectedType]="selectedCategory()"
+                (typeSelected)="onTypeSelected($event)"
+            />
+
+            @if (isDateCategory()) {
+                <app-appointment-type-selection
+                    class="appt-types-animate mt-3 block"
+                    animate.enter="appt-types-enter"
+                    animate.leave="appt-types-leave"
+                    [selectedType]="state.appointmentDateType()"
+                    [showTime]="state.showTime()"
+                    [showTimeToggle]="true"
+                    (typeSelected)="state.onAppointmentDateTypeChange($event)"
+                    (showTimeChange)="state.onToggleTime($event)"
+                />
+            }
+        </div>
+    }
+
+    @if (revealRest()) {
+        <app-poll-close-settings
+            class="block"
+            [class.reveal]="!isDesktop()"
+            mode="standalone"
+            [closeDate]="state.closeDate()"
+            (closeDateChange)="state.closeDate.set($event)"
+        />
+    }
+</ng-template>
+
+<ng-template #shareBlock>
+    <p
+        class="label tracking-[var(--tracking-eyebrow-lg)] text-[color:var(--text-muted)]"
+    >
+        {{ 'project.pollInput.shareTimingLabel' | translate }}
+    </p>
+    <ds-segmented-control
+        class="mt-2 block"
+        [options]="shareTimingOptions()"
+        [value]="state.shareTiming()"
+        (valueChange)="onShareTimingChange($event)"
+    />
+
+    @if (state.shareTiming() === 'later') {
+        <div
+            class="mt-3.5 flex items-start gap-[9px] rounded-[var(--radius-lg)] border border-[var(--border-hairline-soft)] bg-[rgba(255,255,255,.6)] px-[14px] py-[13px]"
+        >
+            <span class="mt-px">
+                <ds-icon
+                    name="info"
+                    [size]="16"
+                    [color]="'var(--text-muted)'"
+                />
+            </span>
+            <span
+                class="text-[length:var(--fs-caption)] leading-[var(--leading-normal)] text-[color:var(--text-secondary)]"
+            >
+                {{ 'project.pollInput.shareLaterHint' | translate }}
+            </span>
+        </div>
+    } @else {
+        <div class="mt-5">
+            <ds-card [accentBorder]="false" [padding]="16">
+                <app-share-access-tab
+                    [visibilityOptions]="visibilityOptions()"
+                    [selectedVisibility]="selectedVisibilityStr()"
+                    [isPublic]="isPublic()"
+                    [shareLink]="''"
+                    [preCreation]="true"
+                    (visibilityChange)="onVisibilityChange($event)"
+                />
+                <div
+                    class="mt-3.5 border-t border-[var(--border-hairline-soft)] pt-3.5"
+                >
+                    <app-share-invite-form
+                        [projectId]="''"
+                        [contacts]="state.sharingContacts()"
+                        [sharingInProgress]="false"
+                        [deferred]="true"
+                        [pendingInvites]="state.pendingInvites()"
+                        (pendingInvite)="state.addPendingInvite($event)"
+                        (removeInvite)="state.removePendingInvite($event)"
+                    />
+                </div>
+            </ds-card>
+        </div>
+    }
+</ng-template>
+
 @if (isDesktop()) {
     <!-- ═══════════════════════════════════════════
-         WEB WIZARD
+         WEB — two columns + bottom bar
     ═══════════════════════════════════════════ -->
-
-    <!-- Step indicator bar -->
-    <ds-sub-header class="flex flex-wrap items-center gap-2.5">
-        <div class="flex items-center gap-1.5">
-            @for (s of webSteps(); track s.num) {
-                <div
-                    class="flex items-center gap-2.5 rounded-[10px] px-1.5 py-2"
-                    [class.bg-[#f7f5f1]]="s.isCurrent"
-                >
-                    <span
-                        class="flex h-6 w-6 flex-none items-center justify-center rounded-full border-[1.6px] text-[12px] font-bold transition-[background,border-color] duration-[180ms]"
-                        [class.bg-transparent]="!s.isCurrent && !s.isDone"
-                        [class.border-[rgba(20,24,28,.18)]]="
-                            !s.isCurrent && !s.isDone
-                        "
-                        [class.text-[#a39e96]]="!s.isCurrent && !s.isDone"
-                        [class.bg-[var(--accent)]]="s.isCurrent"
-                        [class.border-[var(--accent)]]="s.isCurrent"
-                        [class.text-white]="s.isCurrent"
-                    >
-                        @if (s.isDone) {
-                            <ds-icon name="check" [size]="11" color="#1f7a8c" />
-                        } @else {
-                            <span>{{ s.num }}</span>
-                        }
-                    </span>
-                    <span class="min-w-0 flex-1">
-                        <span
-                            class="block text-[13.5px] font-bold"
-                            [class.text-[#1d2227]]="s.isCurrent"
-                            [class.text-[#79756f]]="!s.isCurrent"
-                            >{{ s.titleKey | translate }}</span
-                        >
-                        @if (s.subKey) {
-                            <span
-                                class="mt-px block text-[11.5px] text-[#a39e96]"
-                                >{{ s.subKey | translate }}</span
-                            >
-                        }
-                    </span>
-                </div>
-            }
-        </div>
-    </ds-sub-header>
-
-    <!-- Scrollable content + content header -->
     <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <!-- Content header: back + big title | discard + CTA -->
-        <div
-            class="flex flex-none items-end justify-between gap-6 px-8 pt-6 pb-0"
-        >
-            <div>
-                <div class="flex items-center gap-2.5">
-                    @if (wizardStep() === 2) {
-                        <ds-button
-                            [size]="34"
-                            variant="surface"
-                            [square]="true"
-                            icon="chevron-left"
-                            [label]="'common.back' | translate"
-                            (click)="prevStep()"
-                        />
-                    }
-                    <h1
-                        class="font-display text-[30px] leading-[1.05] font-bold tracking-[-0.8px] text-[#1d2227]"
-                    >
-                        {{ webContentTitleKey() | translate }}
-                    </h1>
-                </div>
-                <p class="mt-1.5 text-[14.5px] text-[#79756f]">
-                    {{ webContentSubtitle() }}
-                </p>
-            </div>
-
-            <div class="flex flex-none items-center gap-2.5">
-                @if (wizardStep() !== 3) {
-                    <ds-button variant="neutral" (click)="discard()">
-                        {{ 'project.pollInput.discard' | translate }}
-                    </ds-button>
-                }
-                <ds-button
-                    variant="primary"
-                    [disabled]="!canProceed()"
-                    data-testid="wizard-cta"
-                    (click)="onCta()"
-                    >{{ ctaLabel() | translate }}</ds-button
-                >
-            </div>
+        <div class="flex-none px-8 pt-6 pb-4">
+            <h1
+                class="font-display text-[30px] leading-[1.05] font-bold tracking-[-0.8px] text-[color:var(--text-primary)]"
+            >
+                {{ 'project.pollInput.typeTitle' | translate }}
+            </h1>
+            <p class="mt-1.5 text-[14.5px] text-[color:var(--text-muted)]">
+                {{ 'project.pollInput.singleSubtitle' | translate }}
+            </p>
         </div>
 
-        <!-- Scrollable page area -->
+        <!-- Form + share share one scroll area; share sits next to the inputs
+             at ≥1020px and stacks below on narrower widths. -->
         <div class="min-h-0 flex-1 overflow-y-auto px-8 pb-8">
-            @if (wizardStep() === 1) {
-                <!-- Step 1: type grid -->
-                <div class="pt-5">
-                    <app-poll-type-selection
-                        layout="grid"
-                        [selectedType]="state.optionType()"
-                        (typeSelected)="onTypeSelected($event)"
-                    />
+            <div
+                class="flex max-w-[800px] flex-col gap-6 min-[1020px]:max-w-none min-[1020px]:flex-row min-[1020px]:items-start"
+            >
+                <div
+                    class="flex flex-col gap-4 min-[1020px]:max-w-[800px] min-[1020px]:flex-1"
+                >
+                    <ng-container [ngTemplateOutlet]="formBlock" />
                 </div>
-            } @else if (wizardStep() === 2) {
-                <!-- Step 2: poll details, max-w 1000px -->
-                <div class="max-w-[1000px]">
-                    <app-poll-input-form
-                        [optionType]="state.optionType()!"
-                        mode="standalone"
-                        [isValid]="state.isValid()"
-                        [question]="state.question()"
-                        (questionChange)="state.question.set($event)"
-                        [description]="state.description()"
-                        (descriptionChange)="state.description.set($event)"
-                        [closeDate]="state.closeDate()"
-                        (closeDateChange)="state.closeDate.set($event)"
-                        [options]="state.options()"
-                        [dateOptions]="state.dateOptions()"
-                        [appointmentDateType]="state.appointmentDateType()"
-                        (appointmentDateTypeChange)="
-                            state.onAppointmentDateTypeChange($event)
-                        "
-                        (add)="state.addOption()"
-                        (remove)="state.removeOption($event)"
-                        (weekdayToggle)="state.toggleWeekday($event)"
-                        (optionsChange)="state.onOptionsChange($event)"
-                        (dateOptionsChange)="state.onDateOptionsChange($event)"
-                        (formSubmit)="onCta()"
-                        [hideCta]="true"
-                    />
+                <div class="min-[1020px]:w-[380px] min-[1020px]:shrink-0">
+                    <ng-container [ngTemplateOutlet]="shareBlock" />
                 </div>
-            } @else {
-                <!-- Step 3: sharing -->
-                <div class="pt-1.5">
-                    @if (state.createdProject(); as project) {
-                        <div class="flex items-start gap-8">
-                            <div class="max-w-[640px] min-w-0 flex-1">
-                                <app-share-content
-                                    [projectId]="project.projectId"
-                                    [sharedWith]="project.sharedWith"
-                                    [visibilityType]="project.visibilityType"
-                                    [hideTabs]="true"
-                                />
-                            </div>
-                            <div class="mt-3.5 w-[400px] shrink-0">
-                                <app-share-members-list
-                                    [projectId]="project.projectId"
-                                    [members]="project.sharedWith"
-                                    [isPublic]="
-                                        project.visibilityType ===
-                                        VisibilityType.VisibleForEverybody
-                                    "
-                                    [hideInviteButton]="true"
-                                />
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
+            </div>
         </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div
+        class="flex flex-none items-center justify-between gap-6 border-t border-[var(--border-hairline-soft)] bg-[var(--cream-200)] px-8 py-4"
+    >
+        <p class="text-[13.5px] text-[color:var(--text-muted)]">
+            @if (!state.question()) {
+                {{ 'project.pollInput.createHintNoTitle' | translate }}
+            }
+        </p>
+        <ds-button
+            variant="primary"
+            [disabled]="!state.canCreate()"
+            data-testid="wizard-cta"
+            (click)="onCreate()"
+            >{{ 'project.pollInput.createPoll' | translate }}</ds-button
+        >
     </div>
 } @else {
     <!-- ═══════════════════════════════════════════
-         MOBILE WIZARD
+         MOBILE — stacked, button at the end
     ═══════════════════════════════════════════ -->
-
-    <!-- Scrollable content area (fills space above sticky CTA) -->
-    <div class="pb-[110px]">
-        @switch (wizardStep()) {
-            @case (1) {
-                <div class="px-[18px] pt-5 pb-4">
-                    <h1
-                        class="font-display text-wrap-pretty text-[27px] leading-[1.1] font-bold tracking-[-0.7px] text-[#1d2227]"
-                    >
-                        {{ 'project.pollInput.typeTitle' | translate }}
-                    </h1>
-                    <p
-                        class="text-wrap-pretty mt-1.5 text-[14px] text-[#79756f]"
-                    >
-                        {{ 'project.pollInput.typeSub' | translate }}
-                    </p>
-                </div>
-                <div class="px-[18px]">
-                    <app-poll-type-selection
-                        layout="list"
-                        [selectedType]="state.optionType()"
-                        (typeSelected)="onTypeSelected($event)"
-                    />
-                </div>
-            }
-
-            @case (2) {
-                <div class="px-[18px]">
-                    <app-poll-input-form
-                        [optionType]="state.optionType()!"
-                        mode="standalone"
-                        [isValid]="state.isValid()"
-                        [question]="state.question()"
-                        (questionChange)="state.question.set($event)"
-                        [description]="state.description()"
-                        (descriptionChange)="state.description.set($event)"
-                        [closeDate]="state.closeDate()"
-                        (closeDateChange)="state.closeDate.set($event)"
-                        [options]="state.options()"
-                        [dateOptions]="state.dateOptions()"
-                        [appointmentDateType]="state.appointmentDateType()"
-                        (appointmentDateTypeChange)="
-                            state.onAppointmentDateTypeChange($event)
-                        "
-                        (add)="state.addOption()"
-                        (remove)="state.removeOption($event)"
-                        (weekdayToggle)="state.toggleWeekday($event)"
-                        (optionsChange)="state.onOptionsChange($event)"
-                        (dateOptionsChange)="state.onDateOptionsChange($event)"
-                        (formSubmit)="onCta()"
-                        [hideCta]="true"
-                    />
-                </div>
-            }
-
-            @case (3) {
-                <div class="px-[18px] pt-5">
-                    <h2
-                        class="font-display text-wrap-pretty text-[24px] leading-[1.12] font-bold tracking-[-0.6px] text-[#1d2227]"
-                    >
-                        {{ 'project.pollInput.shareTitle' | translate }}
-                    </h2>
-                    <p
-                        class="text-wrap-pretty mt-1.5 text-[14px] text-[#79756f]"
-                    >
-                        {{ 'project.pollInput.shareSub' | translate }}
-                    </p>
-                    @if (state.createdProject(); as project) {
-                        <app-share-content
-                            [projectId]="project.projectId"
-                            [sharedWith]="project.sharedWith"
-                            [visibilityType]="project.visibilityType"
-                            [hideTabs]="true"
-                        />
-                        <div class="mt-4">
-                            <app-share-members-list
-                                [projectId]="project.projectId"
-                                [members]="project.sharedWith"
-                                [isPublic]="
-                                    project.visibilityType ===
-                                    VisibilityType.VisibleForEverybody
-                                "
-                                [hideInviteButton]="true"
-                            />
-                        </div>
-                    }
-                </div>
-            }
-        }
-    </div>
-
-    <!-- Sticky CTA -->
-    <div
-        class="fixed right-0 bottom-0 left-0 z-10 bg-gradient-to-t from-[var(--bg-page)] from-46% to-transparent px-5 pt-3.5 pb-[22px]"
-    >
-        <ds-button
-            variant="primary"
-            [fullWidth]="true"
-            [disabled]="!canProceed()"
-            data-testid="wizard-cta"
-            (click)="onCta()"
-            >{{ ctaLabel() | translate }}</ds-button
+    <div class="px-[18px] pt-5 pb-8">
+        <h1
+            class="font-display text-wrap-pretty text-[27px] leading-[1.1] font-bold tracking-[-0.7px] text-[color:var(--text-primary)]"
         >
+            {{ 'project.pollInput.typeTitle' | translate }}
+        </h1>
+        <p
+            class="text-wrap-pretty mt-1.5 text-[14px] text-[color:var(--text-muted)]"
+        >
+            {{ 'project.pollInput.singleSubtitle' | translate }}
+        </p>
+
+        <div class="mt-5 flex flex-col gap-4">
+            <ng-container [ngTemplateOutlet]="formBlock" />
+
+            @if (revealRest()) {
+                <div
+                    class="reveal mt-1 border-t border-[var(--border-hairline-soft)] pt-4"
+                >
+                    <ng-container [ngTemplateOutlet]="shareBlock" />
+                </div>
+            }
+        </div>
+
+        <div class="mt-6">
+            @if (!state.question()) {
+                <p
+                    class="mb-2.5 text-center text-[13px] text-[color:var(--text-muted)]"
+                >
+                    {{ 'project.pollInput.createHintNoTitle' | translate }}
+                </p>
+            }
+            <ds-button
+                variant="primary"
+                [fullWidth]="true"
+                [disabled]="!state.canCreate()"
+                data-testid="wizard-cta"
+                (click)="onCreate()"
+                >{{ 'project.pollInput.createPoll' | translate }}</ds-button
+            >
+        </div>
     </div>
 }

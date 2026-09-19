@@ -67,11 +67,6 @@
     border-radius: 17px;
 }
 
-.type-icon--selected {
-    background: var(--accent);
-    color: #fff;
-}
-
 .type-name {
     display: block;
     font-family: var(--font-display);

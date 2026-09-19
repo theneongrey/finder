@@ -23,8 +23,12 @@ export class AuthStepIndicatorComponent {
         const current = this.step();
         const last = this.total();
         return (i: number) => {
-            if (i > current) return 'bg-[var(--sand-200)]';
-            if (i === last && current === last) return 'bg-[#5d9a56]';
+            if (i > current) {
+                return 'bg-[var(--sand-200)]';
+            }
+            if (i === last && current === last) {
+                return 'bg-[#5d9a56]';
+            }
             return 'bg-[var(--accent)]';
         };
     });

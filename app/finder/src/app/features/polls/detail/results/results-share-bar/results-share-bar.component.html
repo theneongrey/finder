@@ -1,0 +1,26 @@
+<div
+    class="flex items-center gap-3 border-b border-[var(--border-hairline-soft)] bg-[rgba(31,122,140,.06)] px-4 py-2.5 lg:px-6"
+>
+    <span class="hidden shrink-0 sm:block">
+        <ds-icon name="link" [size]="16" color="var(--accent)" />
+    </span>
+    <div class="min-w-0 flex-1">
+        <p class="text-[13px] font-bold text-[color:var(--text-primary)]">
+            {{ 'project.results.shareBarTitle' | translate }}
+        </p>
+        <p class="truncate text-[12.5px] text-[color:var(--text-secondary)]">
+            {{ shareLink() }}
+        </p>
+    </div>
+    <ds-button variant="primary" size="sm" [noGlow]="true" (click)="copy()">{{
+        'project.share.copy' | translate
+    }}</ds-button>
+    <ds-button
+        variant="ghost"
+        [size]="30"
+        [square]="true"
+        icon="close"
+        [label]="'project.common.close' | translate"
+        (click)="dismiss.emit()"
+    />
+</div>

@@ -4,59 +4,60 @@ import {
     computed,
     inject,
     input,
-    signal,
+    output,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 import {
     ResultsProgressBarComponent,
     ProgressSegment,
 } from '../results-progress-bar/results-progress-bar.component';
-import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import {
     AvatarStackComponent,
     AvatarUser,
 } from '@smart/avatar-stack/avatar-stack.component';
+import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import {
     OptionDetail,
     SharedWith,
 } from '../../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
-
-interface VoteGroup {
-    label: string;
-    bg: string;
-    fg: string;
-    names: string;
-}
+import { DateOptionType } from '../../../../_shared/models/date-option.model';
+import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
 
 @Component({
     selector: 'app-option-card-date',
     templateUrl: './option-card-date.component.html',
     imports: [
         RouterLink,
+        TranslatePipe,
         DsButtonComponent,
+        DsCardComponent,
         ResultsProgressBarComponent,
         AvatarStackComponent,
-        DsIconComponent,
+        UserAvatarComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardDateComponent {
     private readonly dateFormatService = inject(DateOptionFormatService);
+    private readonly translate = inject(TranslateService);
 
     option = input.required<OptionDetail>();
+    dateType = input.required<DateOptionType>();
     members = input<SharedWith[]>([]);
+    commentCount = input(0);
     isMostVoted = input(false);
     projectId = input('');
     pollId = input('');
     hideResults = input(false);
-    rank = input(0);
 
-    expanded = signal(false);
+    commentsClick = output<void>();
 
     private readonly parsed = computed(() =>
-        this.dateFormatService.parse(this.option().text),
+        this.dateFormatService.parse(this.option().text, this.dateType()),
     );
 
     readonly label = computed(() =>
@@ -66,30 +67,13 @@ export class OptionCardDateComponent {
         this.dateFormatService.subLabelFromEntry(this.parsed()),
     );
 
-    readonly yesVotes = computed(() =>
-        this.option().votes.filter((v) => v.choice === '1'),
-    );
+    readonly yesVotes = computed(() => voteTally.yesVotes(this.option()));
 
-    readonly maybeVotes = computed(() =>
-        this.option().votes.filter((v) => v.choice === '3'),
-    );
+    readonly maybeVotes = computed(() => voteTally.maybeVotes(this.option()));
 
-    readonly noVotes = computed(() =>
-        this.option().votes.filter((v) => v.choice === '2'),
-    );
+    readonly noVotes = computed(() => voteTally.noVotes(this.option()));
 
-    readonly totalVoters = computed(
-        () =>
-            this.option().votes.filter((v) => parseInt(v.choice ?? '0') > 0)
-                .length,
-    );
-
-    readonly yesPercent = computed(() => {
-        const total = this.totalVoters();
-        return total > 0
-            ? Math.round((this.yesVotes().length / total) * 100)
-            : 0;
-    });
+    readonly totalVoters = computed(() => voteTally.totalVoters(this.option()));
 
     readonly segments = computed((): ProgressSegment[] => {
         const total = this.totalVoters();
@@ -103,11 +87,11 @@ export class OptionCardDateComponent {
             },
             {
                 percent: (this.maybeVotes().length / total) * 100,
-                color: '#e0b45c',
+                color: 'var(--positive-maybe)',
             },
             {
                 percent: (this.noVotes().length / total) * 100,
-                color: '#e3a7a2',
+                color: 'var(--negative-soft)',
             },
         ].filter((s) => s.percent > 0);
     });
@@ -117,80 +101,16 @@ export class OptionCardDateComponent {
         const maybe = this.maybeVotes().length;
         const no = this.noVotes().length;
         if (!yes && !maybe && !no) {
-            return 'Keine Stimmen';
+            return this.translate.instant('project.results.noVotes');
         }
-        const parts = [
-            `${yes} × kann`,
-            `${maybe} × vielleicht`,
-            `${no} × kann nicht`,
-        ];
-        return parts.join(' · ');
+        return this.translate.instant('project.results.voteLineDate', {
+            yes,
+            maybe,
+            no,
+        });
     });
 
-    readonly avatarUsers = computed((): AvatarUser[] => {
-        const voted = this.votedNames();
-        const members = this.members();
-        if (members.length) {
-            return members.map((m) => ({
-                name: m.name,
-                voted: voted.has(m.name),
-            }));
-        }
-        return this.option().votes.map((v) => ({
-            name: v.person,
-            voted: parseInt(v.choice ?? '0') > 0,
-        }));
-    });
-
-    private readonly votedNames = computed(
-        () =>
-            new Set(
-                this.option()
-                    .votes.filter((v) => parseInt(v.choice ?? '0') > 0)
-                    .map((v) => v.person),
-            ),
+    readonly avatarUsers = computed((): AvatarUser[] =>
+        voteTally.avatarUsers(this.option(), this.members()),
     );
-
-    readonly groups = computed((): VoteGroup[] => {
-        const groups: VoteGroup[] = [];
-        const yes = this.yesVotes();
-        const maybe = this.maybeVotes();
-        const no = this.noVotes();
-        if (yes.length) {
-            groups.push({
-                label: 'Kann',
-                bg: '#e2ede1',
-                fg: '#3f7a4e',
-                names: yes.map((v) => v.person).join(', '),
-            });
-        }
-        if (maybe.length) {
-            groups.push({
-                label: 'Vielleicht',
-                bg: '#f6e7cf',
-                fg: '#a8742a',
-                names: maybe.map((v) => v.person).join(', '),
-            });
-        }
-        if (no.length) {
-            groups.push({
-                label: 'Kann nicht',
-                bg: '#fdf3f1',
-                fg: '#c1453f',
-                names: no.map((v) => v.person).join(', '),
-            });
-        }
-        const open = this.members().filter(
-            (m) => !this.votedNames().has(m.name),
-        );
-        if (open.length) {
-            groups.push({
-                label: 'Offen',
-                bg: '#f1eee9',
-                fg: '#8a8681',
-                names: open.map((m) => m.name).join(', '),
-            });
-        }
-        return groups;
-    });
 }

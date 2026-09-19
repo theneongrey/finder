@@ -116,17 +116,8 @@ public static class ProjectApi
                         return Results.BadRequest("closeDate must be in the future");
                     }
 
-                    var result = await projectService.UpdatePoll(slug, request.Name, request.Description, request.CloseDate);
+                    var result = await projectService.UpdatePoll(slug, request.Name, request.Description, request.CloseDate, request.OptionType);
                     return !result.IsSuccess ? Results.StatusCode(result.Code) : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
-                })
-            .RequireAuthorization();
-
-        // Delete poll
-        app.MapDelete("/api/project/poll/{slug}",
-                async (string slug, ProjectService projectService) =>
-                {
-                    var result = await projectService.DeletePoll(slug);
-                    return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
                 })
             .RequireAuthorization();
 

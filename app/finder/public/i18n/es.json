@@ -1,4 +1,70 @@
 {
+    "legal": {
+        "privacy": {
+            "title": "Política de privacidad",
+            "lastUpdated": "Última actualización: 16 de septiembre de 2026",
+            "intro": "La protección de tus datos personales es importante para nosotros. En esta política te informamos sobre qué datos tratamos cuando usas Votean, con qué fines y sobre qué base jurídica. La versión alemana es la jurídicamente vinculante.",
+            "sections": {
+                "controller": {
+                    "heading": "Responsable",
+                    "body": "El responsable del tratamiento de datos en este sitio web es:\n\npixel-fusion.de\nCorreo electrónico: {{email}}"
+                },
+                "dataCategories": {
+                    "heading": "Qué datos tratamos",
+                    "body": "• Datos de cuenta: tu dirección de correo electrónico y, si los facilitas, tu nombre, foto de perfil e idioma preferido.\n• Datos de inicio de sesión: enlaces y códigos de un solo uso que generamos y almacenamos brevemente para el acceso sin contraseña.\n• Datos de contenido: encuestas, proyectos, opciones de respuesta, comentarios y los votos que emites, vinculados a tu cuenta.\n• Permisos: tu rol (votante, gestor, propietario) dentro de un proyecto.\n• Notificaciones: registros y ajustes de las notificaciones que recibes.\n• Metadatos: marcas de tiempo de creación y última modificación de un registro."
+                },
+                "purposes": {
+                    "heading": "Fines y bases jurídicas",
+                    "body": "Tratamos tus datos para prestarte el servicio, autenticarte, guardar tus encuestas y votos y notificarte sobre eventos relevantes. La base jurídica es la ejecución del contrato de uso o de medidas precontractuales (art. 6(1)(b) RGPD). La medición anónima de uso se basa en nuestro interés legítimo en un funcionamiento seguro y adecuado (art. 6(1)(f) RGPD)."
+                },
+                "analytics": {
+                    "heading": "Medición de uso con Umami",
+                    "body": "Para el análisis estadístico del uso empleamos Umami, una herramienta de analítica respetuosa con la privacidad que alojamos nosotros mismos. Umami funciona sin cookies, no almacena direcciones IP, no recopila datos personales y no te rastrea entre distintos sitios web. Solo se registra información anonimizada como páginas vistas, procedencia, navegador, sistema operativo, tipo de dispositivo y país de origen. No es posible identificar a personas concretas."
+                },
+                "email": {
+                    "heading": "Envío de correos electrónicos",
+                    "body": "Para el inicio de sesión y las notificaciones enviamos correos a la dirección que facilites. El envío se realiza a través de un proveedor de SMTP que trata estos correos por cuenta nuestra."
+                },
+                "cookies": {
+                    "heading": "Cookies y almacenamiento local",
+                    "body": "Votean no utiliza cookies de seguimiento ni de marketing. Para el inicio de sesión solo se almacena un token estrictamente necesario en el almacenamiento local de tu navegador para que sigas conectado. Al no usarse cookies ni rastreadores no esenciales, no se requiere ningún banner de consentimiento."
+                },
+                "retention": {
+                    "heading": "Plazo de conservación",
+                    "body": "Conservamos tus datos mientras exista tu cuenta o mientras sea necesario para cumplir los fines descritos. Los enlaces y códigos de acceso se conservan solo brevemente y caducan tras poco tiempo. A petición, eliminamos tus datos salvo que existan obligaciones legales de conservación."
+                },
+                "rights": {
+                    "heading": "Tus derechos",
+                    "body": "Tienes derecho de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición. También tienes derecho a presentar una reclamación ante una autoridad de control de protección de datos. Para ejercer tus derechos puedes contactarnos en cualquier momento."
+                },
+                "contact": {
+                    "heading": "Contacto de privacidad",
+                    "body": "Para consultas sobre protección de datos o para ejercer tus derechos, contáctanos en: {{email}}"
+                }
+            }
+        },
+        "imprint": {
+            "title": "Aviso legal",
+            "sections": {
+                "provider": {
+                    "heading": "Información conforme al § 5 TMG",
+                    "body": "pixel-fusion.de"
+                },
+                "contact": {
+                    "heading": "Contacto",
+                    "body": "Correo electrónico: {{email}}"
+                },
+                "responsible": {
+                    "heading": "Responsable del contenido",
+                    "body": "pixel-fusion.de"
+                },
+                "disclaimer": {
+                    "heading": "Responsabilidad por los contenidos",
+                    "body": "Los contenidos de estas páginas se han elaborado con el mayor cuidado. No obstante, no podemos garantizar que sean exactos, completos o estén actualizados. De los contenidos creados por los usuarios o de los sitios web externos enlazados son responsables exclusivamente sus respectivos operadores."
+                }
+            }
+        }
+    },
     "notifications": {
         "title": "Notificaciones",
         "markAllRead": "todo leído",
@@ -147,7 +213,8 @@
             "edit": "Editar",
             "delete": "Eliminar",
             "share": "Compartir",
-            "vote": "Votar"
+            "vote": "Votar",
+            "close": "Cerrar"
         },
         "roles": {
             "unknown": "Desconocido",
@@ -228,6 +295,8 @@
                 "pollOverview": "Los resultados",
                 "voteOverview": "Al Resumen",
                 "voteNow": "Votar ahora",
+                "open": "Echar un vistazo",
+                "openClosed": "Ver cómo quedó",
                 "viewProgress": "Ver resultados actuales",
                 "statusOpen": "Activa",
                 "statusClosed": "Cerrada",
@@ -262,6 +331,7 @@
             "inviteMore": "Invitar más",
             "roleLabel": "Rol para nuevas invitaciones",
             "linkNote": "Quien se una mediante el enlace entrará como observador. Puedes otorgar más permisos en la pestaña 'Acceso'.",
+            "linkNoteBeforeCreate": "Quien se una mediante el enlace entrará como votante. El enlace se genera una vez creada la encuesta.",
             "recentLabel": "Compartido frecuentemente",
             "noContact": "Contacto no encontrado – invitar por correo",
             "pollLabel": "Encuesta"
@@ -293,6 +363,13 @@
             "shareSub": "Invita a personas o comparte el enlace — también puedes hacerlo más tarde.",
             "typeTitle": "¿Qué se debe decidir?",
             "typeSub": "Elige el tipo de encuesta — el resto lo completas después.",
+            "typeEyebrow": "Tipo de encuesta",
+            "singleSubtitle": "Haz tu pregunta y elige un tipo — las opciones las añades después.",
+            "shareTimingLabel": "¿Cuándo compartir?",
+            "shareLater": "Compartir después",
+            "shareNow": "Compartir ahora",
+            "shareLaterHint": "Termina tu encuesta primero y luego compártela — en cualquier momento con 'Compartir'.",
+            "createHintNoTitle": "Dale un título a tu encuesta.",
             "addDescriptionCta": "Añadir descripción",
             "autoClose": "Cierre automático",
             "autoCloseIn3Days": "en 3 días",
@@ -323,6 +400,7 @@
                 "removeTime": "Eliminar hora",
                 "timePerOption": "Hora por opción",
                 "timePerOptionHint": "Añade una hora a cada opción de fecha",
+                "timePerOptionHintOff": "Desactivado: las opciones son de todo el día",
                 "endBeforeStart": "La fecha de fin debe ser posterior al {{date}}.",
                 "addOption": "Añadir fecha",
                 "appointmentTypeLabel": "Tipo de opciones de fecha",
@@ -442,6 +520,65 @@
             "newComment": "Nuevo comentario...",
             "loading": "Cargando...",
             "comments": "Comentarios"
+        },
+        "results": {
+            "startVoting": "Iniciar votación",
+            "vote": "Votar",
+            "addOption": "Añadir opción",
+            "add": "Añadir",
+            "emptyOptionsHeading": "Aún no hay opciones",
+            "emptyOptionsText": "Añade la primera opción para que todos puedan votar en la encuesta.",
+            "emptyOptionsTextVoter": "En cuanto se añada la primera opción, podréis votar todos juntos aquí.",
+            "endPoll": "Finalizar encuesta",
+            "end": "Finalizar",
+            "reopenPoll": "Reabrir encuesta",
+            "reopen": "Reabrir",
+            "cancel": "Cancelar",
+            "confirmEnd": "Sí, finalizar",
+            "confirmEndShort": "Sí",
+            "comments": "Comentarios",
+            "refresh": "Actualizar",
+            "commentsTitle": "Comentarios de la encuesta",
+            "hideComments": "Ocultar comentarios",
+            "commentsFilterPoll": "Encuesta",
+            "commentsFilterAll": "Todos",
+            "noComments": "Aún no hay comentarios. ¡Sé el primero!",
+            "commentPlaceholder": "Escribe un comentario…",
+            "submitComment": "Comentar",
+            "edit": "Editar",
+            "openUntil": "Abierta hasta {{date}}",
+            "sortByApproval": "Por aprobación",
+            "sortByOrder": "Por orden",
+            "shareBarTitle": "Tu encuesta está lista — comparte el enlace:",
+            "status": {
+                "active": "Activo",
+                "closed": "Finalizada"
+            },
+            "type": {
+                "yesno": "Sí / No",
+                "rating": "Valoración",
+                "date": "Encuesta de fecha"
+            },
+            "save": "Guardar",
+            "delete": "Eliminar",
+            "confirmDelete": "Sí, eliminar",
+            "confirmDeleteShort": "Eliminar",
+            "editNamePlaceholder": "Título de la encuesta",
+            "editDescriptionPlaceholder": "Descripción (opcional)",
+            "deletePrompt": "¿Eliminar esta encuesta permanentemente?",
+            "deletePoll": "Eliminar encuesta",
+            "deleteOption": "Eliminar opción",
+            "deleteOptionPrompt": "¿Eliminar esta opción?",
+            "addedBy": "Añadido por",
+            "originallyAddedBy": "Añadido originalmente por",
+            "revote": "Votar de nuevo",
+            "rate": "Valorar",
+            "noVotes": "Sin votos",
+            "noRatings": "Sin valoraciones",
+            "ratingSummary": "{{count}} valoraciones · Ø {{avg}} de 5",
+            "ratingsAvgLine": "Ø {{avg}} ★ · {{count}} valoraciones",
+            "voteLineYesNo": "{{yes}} × sí · {{no}} × no",
+            "voteLineDate": "{{yes}} × puede · {{maybe}} × quizás · {{no}} × no puede"
         },
         "lastVote": {
             "label": "Último voto",

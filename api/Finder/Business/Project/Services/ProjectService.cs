@@ -254,7 +254,7 @@ public class ProjectService
         return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null)
+    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null, OptionType? optionType = null)
     {
         var poll = await _dbContext.Polls
             .Include(t => t.Project).ThenInclude(p => p.Creator)
@@ -285,6 +285,10 @@ public class ProjectService
         poll.Name = name.StripHtml();
         poll.Description = description.StripHtml();
         poll.CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null;
+        if (optionType.HasValue)
+        {
+            poll.OptionType = optionType.Value;
+        }
 
         if (poll.Project.IsStandalone)
         {
@@ -298,25 +302,6 @@ public class ProjectService
             oldName, poll.Name, oldDescription, poll.Description);
 
         return Result<Poll>.Success(poll);
-    }
-
-    public async Task<Result> DeletePoll(string slug)
-    {
-        var deletedPolls = await _dbContext.Polls
-            .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
-                                                               t.Project.Permissions.Any(permission =>
-                                                                   permission.Person.Id == UserId &&
-                                                                   permission.PermissionType >=
-                                                                   PermissionType.Maintainer)))
-            .ExecuteDeleteAsync();
-
-        if (deletedPolls == 0)
-        {
-            return Result.Fail(404);
-        }
-
-        await _dbContext.SaveChangesAsync();
-        return Result.Success();
     }
 
     public async Task<Result<Poll>> GetPoll(string slug)

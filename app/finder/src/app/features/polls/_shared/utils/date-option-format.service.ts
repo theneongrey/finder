@@ -1,13 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DateOptionEntry } from '../models/date-option.model';
+import { DateOptionEntry, DateOptionType } from '../models/date-option.model';
 
 @Injectable({ providedIn: 'root' })
 export class DateOptionFormatService {
     private readonly translateService = inject(TranslateService);
 
-    parse(text: string, id?: string): DateOptionEntry {
-        return parseDateOptionText(text, id);
+    parse(
+        text: string,
+        dateType: DateOptionType,
+        id?: string,
+    ): DateOptionEntry {
+        return parseDateOptionText(text, dateType, id);
     }
 
     serialize(entry: DateOptionEntry): string {
@@ -59,12 +63,12 @@ export class DateOptionFormatService {
         return d;
     }
 
-    formatLabel(text: string): string {
-        return this.labelFromEntry(parseDateOptionText(text));
+    formatLabel(text: string, dateType: DateOptionType): string {
+        return this.labelFromEntry(parseDateOptionText(text, dateType));
     }
 
-    formatSubLabel(text: string): string | null {
-        return this.subLabelFromEntry(parseDateOptionText(text));
+    formatSubLabel(text: string, dateType: DateOptionType): string | null {
+        return this.subLabelFromEntry(parseDateOptionText(text, dateType));
     }
 
     labelFromEntry(p: DateOptionEntry): string {
@@ -150,51 +154,53 @@ function parseTimeString(timeStr: string): Date {
     return d;
 }
 
-function parseDateOptionText(text: string, id?: string): DateOptionEntry {
+/**
+ * Parses a prefix-less option text. The sub-type is no longer encoded in the
+ * text — it comes from the poll's OptionType — so the values are read
+ * positionally according to `dateType`.
+ */
+function parseDateOptionText(
+    text: string,
+    dateType: DateOptionType,
+    id?: string,
+): DateOptionEntry {
     const parts = text.split(';');
-    const type = parts[0] as DateOptionEntry['type'];
 
-    switch (type) {
+    switch (dateType) {
         case 'weekday':
             return {
                 id,
                 type: 'weekday',
-                weekday: parseInt(parts[1]),
-                startTime: parts[2] ? parseTimeString(parts[2]) : undefined,
+                weekday: parseInt(parts[0]),
+                startTime: parts[1] ? parseTimeString(parts[1]) : undefined,
             };
-        case 'date':
-            return {
-                id,
-                type: 'date',
-                date: new Date(parseInt(parts[1])),
-                startTime: parts[2] ? parseTimeString(parts[2]) : undefined,
-            };
-        case 'date-range':
-            return {
-                id,
-                type: 'date-range',
-                date: new Date(parseInt(parts[1])),
-                endDate: new Date(parseInt(parts[2])),
-                startTime: parts[3] ? parseTimeString(parts[3]) : undefined,
-                endTime: parts[4] ? parseTimeString(parts[4]) : undefined,
-            };
-        case 'time':
-            return { id, type: 'time', startTime: parseTimeString(parts[1]) };
-        case 'time-range':
-            return {
-                id,
-                type: 'time-range',
-                startTime: parseTimeString(parts[1]),
-                endTime: parseTimeString(parts[2]),
-            };
-        default: {
+        case 'date': {
             const ts = parseInt(parts[0]);
             return {
                 id,
                 type: 'date',
                 date: isNaN(ts) ? undefined : new Date(ts),
+                startTime: parts[1] ? parseTimeString(parts[1]) : undefined,
             };
         }
+        case 'date-range':
+            return {
+                id,
+                type: 'date-range',
+                date: new Date(parseInt(parts[0])),
+                endDate: new Date(parseInt(parts[1])),
+                startTime: parts[2] ? parseTimeString(parts[2]) : undefined,
+                endTime: parts[3] ? parseTimeString(parts[3]) : undefined,
+            };
+        case 'time':
+            return { id, type: 'time', startTime: parseTimeString(parts[0]) };
+        case 'time-range':
+            return {
+                id,
+                type: 'time-range',
+                startTime: parseTimeString(parts[0]),
+                endTime: parseTimeString(parts[1]),
+            };
     }
 }
 
@@ -202,18 +208,18 @@ function serializeDateOption(entry: DateOptionEntry): string {
     const time = entry.startTime ? ';' + formatHHMM(entry.startTime) : '';
     switch (entry.type) {
         case 'weekday':
-            return `weekday;${entry.weekday}${time}`;
+            return `${entry.weekday}${time}`;
         case 'date':
-            return `date;${entry.date!.getTime()}${time}`;
+            return `${entry.date!.getTime()}${time}`;
         case 'date-range': {
             const endTime = entry.endTime
                 ? ';' + formatHHMM(entry.endTime)
                 : '';
-            return `date-range;${entry.date!.getTime()};${entry.endDate!.getTime()}${time}${endTime}`;
+            return `${entry.date!.getTime()};${entry.endDate!.getTime()}${time}${endTime}`;
         }
         case 'time':
-            return `time;${formatHHMM(entry.startTime!)}`;
+            return `${formatHHMM(entry.startTime!)}`;
         case 'time-range':
-            return `time-range;${formatHHMM(entry.startTime!)};${formatHHMM(entry.endTime!)}`;
+            return `${formatHHMM(entry.startTime!)};${formatHHMM(entry.endTime!)}`;
     }
 }

@@ -13,6 +13,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsSegmentedControlComponent } from '@ds/segmented-control/ds-segmented-control.component';
+import { DsBadgeComponent, BadgeTone } from '@ds/badge/ds-badge.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { SharingStore } from '../../../data/sharing.store';
 import { SharingContact } from '../../../models/poll-detail.model';
@@ -33,6 +34,7 @@ export interface PendingInvite {
         DsButtonComponent,
         DsInputComponent,
         DsSegmentedControlComponent,
+        DsBadgeComponent,
         UserAvatarComponent,
     ],
 })
@@ -93,7 +95,10 @@ export class ShareInviteFormComponent {
     });
 
     private readonly availableContacts = computed(() => {
-        const excluded = new Set(this.excludedEmails());
+        const excluded = new Set([
+            ...this.excludedEmails(),
+            ...this.pendingInvites().map((p) => p.email),
+        ]);
         return this.contacts().filter((c) => !excluded.has(c.email));
     });
 
@@ -142,6 +147,15 @@ export class ShareInviteFormComponent {
         this.contactEmail.set(contact.email);
         this.dropdownVisible.set(false);
         this.invite();
+    }
+
+    /** Pending-invite roles use the 0-based permission type (0/1/2). */
+    getRoleKey(role: number): string {
+        return role === 2 ? 'owner' : role === 1 ? 'maintainer' : 'voter';
+    }
+
+    getRoleBadgeTone(role: number): BadgeTone {
+        return role === 2 ? 'manager' : role === 1 ? 'contributor' : 'viewer';
     }
 
     invite() {

@@ -22,7 +22,7 @@
         }
     </div>
 
-    @if (canHaveTime()) {
+    @if (canHaveTime() && showTimeToggle()) {
         <button
             type="button"
             class="mt-[10px] flex w-full cursor-pointer items-center gap-3 rounded-[14px] border border-[rgba(20,24,28,.06)] bg-[#fdfcfa] px-[14px] py-3 text-left"
@@ -37,7 +37,12 @@
                 <span
                     class="mt-0.5 block text-[12.5px] text-[color:var(--text-muted)]"
                 >
-                    {{ 'project.pollInput.date.timePerOptionHint' | translate }}
+                    {{
+                        (showTime()
+                            ? 'project.pollInput.date.timePerOptionHint'
+                            : 'project.pollInput.date.timePerOptionHintOff'
+                        ) | translate
+                    }}
                 </span>
             </span>
             <span

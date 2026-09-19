@@ -2,10 +2,7 @@
     class="flex flex-col items-center rounded-[20px] px-6 py-14 text-center transition-colors lg:py-16"
     [class.cursor-pointer]="interactive()"
     [class.hover:border-[var(--accent)]]="interactive()"
-    style="
-        border: 1.5px dashed var(--border-hairline);
-        background: #fff;
-    "
+    style="border: 1.5px dashed var(--border-hairline); background: #fff"
     [attr.role]="interactive() ? 'button' : null"
     [attr.tabindex]="interactive() ? 0 : null"
     data-testid="results-empty-options"

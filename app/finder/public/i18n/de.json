@@ -400,6 +400,7 @@
                 "removeTime": "Uhrzeit entfernen",
                 "timePerOption": "Uhrzeit je Option",
                 "timePerOptionHint": "Jeder Option eine Uhrzeit hinzufügen",
+                "timePerOptionHintOff": "Aus: Optionen zählen ganztägig",
                 "endBeforeStart": "Das Enddatum muss nach dem {{date}} liegen.",
                 "addOption": "Termin hinzufügen",
                 "appointmentTypeLabel": "Art der Terminoptionen",

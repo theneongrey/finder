@@ -5,24 +5,16 @@
         <ds-icon name="link" [size]="16" color="var(--accent)" />
     </span>
     <div class="min-w-0 flex-1">
-        <p
-            class="text-[13px] font-bold text-[color:var(--text-primary)]"
-        >
+        <p class="text-[13px] font-bold text-[color:var(--text-primary)]">
             {{ 'project.results.shareBarTitle' | translate }}
         </p>
-        <p
-            class="truncate text-[12.5px] text-[color:var(--text-secondary)]"
-        >
+        <p class="truncate text-[12.5px] text-[color:var(--text-secondary)]">
             {{ shareLink() }}
         </p>
     </div>
-    <ds-button
-        variant="primary"
-        size="sm"
-        [noGlow]="true"
-        (click)="copy()"
-        >{{ 'project.share.copy' | translate }}</ds-button
-    >
+    <ds-button variant="primary" size="sm" [noGlow]="true" (click)="copy()">{{
+        'project.share.copy' | translate
+    }}</ds-button>
     <ds-button
         variant="ghost"
         [size]="30"

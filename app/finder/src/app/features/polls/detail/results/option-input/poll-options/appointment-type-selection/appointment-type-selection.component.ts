@@ -19,6 +19,9 @@ import { DateOptionType } from '../../../../../_shared/models/date-option.model'
 export class AppointmentTypeSelectionComponent {
     selectedType = input<DateOptionType | undefined>(undefined);
     showTime = input<boolean>(false);
+    // The per-option time toggle is only relevant where options exist; the add
+    // wizard defers options, so it can hide it.
+    showTimeToggle = input<boolean>(true);
     typeSelected = output<DateOptionType>();
     showTimeChange = output<boolean>();
 

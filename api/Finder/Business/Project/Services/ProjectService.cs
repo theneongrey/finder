@@ -254,7 +254,7 @@ public class ProjectService
         return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null)
+    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null, OptionType? optionType = null)
     {
         var poll = await _dbContext.Polls
             .Include(t => t.Project).ThenInclude(p => p.Creator)
@@ -285,6 +285,10 @@ public class ProjectService
         poll.Name = name.StripHtml();
         poll.Description = description.StripHtml();
         poll.CloseDate = closeDate.HasValue ? DateTime.SpecifyKind(closeDate.Value, DateTimeKind.Utc) : null;
+        if (optionType.HasValue)
+        {
+            poll.OptionType = optionType.Value;
+        }
 
         if (poll.Project.IsStandalone)
         {

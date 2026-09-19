@@ -13,6 +13,7 @@ import { map } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollInputStateService } from '../poll-input-state.service';
 import { PollTypeSelectionComponent } from './poll-type-selection/poll-type-selection.component';
+import { AppointmentTypeSelectionComponent } from '../../../detail/results/option-input/poll-options/appointment-type-selection/appointment-type-selection.component';
 import { PollQuestionCardComponent } from '../../../_shared/ui/poll-input-form/poll-question-card/poll-question-card.component';
 import { PollCloseSettingsComponent } from '../../../_shared/ui/poll-input-form/poll-close-settings/poll-close-settings.component';
 import { ShareAccessFormComponent } from '../../../_shared/ui/share-content/share-access-form/share-access-form.component';
@@ -26,6 +27,7 @@ import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { TitleBarService } from '@common/services/title-bar.service';
 import { OptionType } from '@common/models/option-type.model';
+import { isDateOptionType } from '../../../_shared/models/date-option.model';
 import { VisibilityType } from '../../../_shared/models/poll-detail.model';
 
 @Component({
@@ -36,6 +38,7 @@ import { VisibilityType } from '../../../_shared/models/poll-detail.model';
     imports: [
         NgTemplateOutlet,
         PollTypeSelectionComponent,
+        AppointmentTypeSelectionComponent,
         PollQuestionCardComponent,
         PollCloseSettingsComponent,
         ShareAccessFormComponent,
@@ -86,6 +89,20 @@ export class PollInputWizardComponent {
         },
     ]);
 
+    /**
+     * Any date-family OptionType maps back to the single "Date" category so the
+     * top-level type button stays highlighted while a sub-type is chosen.
+     */
+    readonly selectedCategory = computed<OptionType | undefined>(() =>
+        isDateOptionType(this.state.optionType())
+            ? OptionType.Date
+            : this.state.optionType(),
+    );
+
+    readonly isDateCategory = computed(() =>
+        isDateOptionType(this.state.optionType()),
+    );
+
     readonly selectedVisibilityStr = computed(() =>
         this.state.visibility() === VisibilityType.VisibleForEverybody
             ? 'open'
@@ -106,9 +123,7 @@ export class PollInputWizardComponent {
         () => this.isDesktop() || this.state.question().trim().length >= 3,
     );
 
-    readonly revealRest = computed(
-        () => this.isDesktop() || this.typeChosen(),
-    );
+    readonly revealRest = computed(() => this.isDesktop() || this.typeChosen());
 
     constructor() {
         effect(() => {

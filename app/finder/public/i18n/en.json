@@ -400,6 +400,7 @@
                 "removeTime": "Remove time",
                 "timePerOption": "Time per option",
                 "timePerOptionHint": "Add a time to each date option",
+                "timePerOptionHintOff": "Off: options count as all-day",
                 "endBeforeStart": "End date must be after {{date}}.",
                 "addOption": "Add date",
                 "appointmentTypeLabel": "Type of date options",

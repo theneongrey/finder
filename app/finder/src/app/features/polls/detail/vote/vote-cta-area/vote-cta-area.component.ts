@@ -13,6 +13,7 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { VoteCommentButtonComponent } from '../vote-comment-button/vote-comment-button.component';
 import { OptionType } from '@common/models/option-type.model';
+import { isDateOptionType } from '../../../_shared/models/date-option.model';
 
 const RATING_LABEL_KEYS: Record<number, string> = {
     1: 'project.vote.ratingLabel.1',
@@ -40,6 +41,7 @@ export class VoteCtaAreaComponent {
     readonly ratingStars = [1, 2, 3, 4, 5];
 
     optionType = input(OptionType.YesNo);
+    readonly isDateType = computed(() => isDateOptionType(this.optionType()));
     pollId = input('');
     optionId = input('');
     optionText = input<string | undefined>(undefined);

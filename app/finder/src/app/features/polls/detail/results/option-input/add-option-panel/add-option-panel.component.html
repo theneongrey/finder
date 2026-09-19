@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-2" data-testid="add-option-panel">
-    @if (optionType() === OptionType.Date) {
+    @if (isDateType()) {
         @switch (dateType()) {
             @case ('weekday') {
                 <app-option-card-weekday

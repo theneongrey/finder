@@ -23,6 +23,7 @@ import {
     SharedWith,
 } from '../../../../_shared/models/poll-detail.model';
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
+import { DateOptionType } from '../../../../_shared/models/date-option.model';
 import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
 
 @Component({
@@ -42,6 +43,7 @@ export class OptionCardDateComponent {
     private readonly dateFormatService = inject(DateOptionFormatService);
 
     option = input.required<OptionDetail>();
+    dateType = input.required<DateOptionType>();
     members = input<SharedWith[]>([]);
     commentCount = input(0);
     isMostVoted = input(false);
@@ -52,7 +54,7 @@ export class OptionCardDateComponent {
     commentsClick = output<void>();
 
     private readonly parsed = computed(() =>
-        this.dateFormatService.parse(this.option().text),
+        this.dateFormatService.parse(this.option().text, this.dateType()),
     );
 
     readonly label = computed(() =>

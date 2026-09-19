@@ -16,6 +16,10 @@ import {
     AnswerSummaryItem,
 } from './vote-answer-summary/vote-answer-summary.component';
 import { OptionType } from '@common/models/option-type.model';
+import {
+    isDateOptionType,
+    optionTypeToDateType,
+} from '../../../_shared/models/date-option.model';
 import { OptionTypeBadgeComponent } from '@smart/option-type-badge/option-type-badge.component';
 
 @Component({
@@ -88,7 +92,8 @@ export class VoteSidebarComponent {
         const options = this.poll()?.options ?? [];
         const type = this.poll()?.optionType ?? OptionType.YesNo;
         const currentId = this.optionId();
-        const isDate = type === OptionType.Date;
+        const dateType = optionTypeToDateType(type);
+        const isDate = isDateOptionType(type);
         const isRating = type === OptionType.Rating;
         return options.map((o) => {
             const choiceNum = parseInt(o.choice ?? '0');
@@ -121,7 +126,10 @@ export class VoteSidebarComponent {
             const isCurrent = o.id === currentId;
             return {
                 id: o.id,
-                label: isDate ? this.dateFormat.formatLabel(o.text) : o.text,
+                label:
+                    isDate && dateType
+                        ? this.dateFormat.formatLabel(o.text, dateType)
+                        : o.text,
                 badgeBg,
                 badgeFg,
                 dotBg,

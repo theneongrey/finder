@@ -21,6 +21,7 @@ import { OptionEntry } from '../poll-options/poll-options.component';
 import {
     DateOptionEntry,
     DateOptionType,
+    isDateOptionType,
 } from '../../../../_shared/models/date-option.model';
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
 import { UrlValidationService } from '../../../../_shared/utils/url-validation.service';
@@ -62,6 +63,8 @@ export class AddOptionPanelComponent {
     dateType = input<DateOptionType | undefined>(undefined);
     showTime = input<boolean>(false);
 
+    readonly isDateType = computed(() => isDateOptionType(this.optionType()));
+
     add = output<NewOptionPayload>();
     cancelled = output<void>();
 
@@ -79,7 +82,7 @@ export class AddOptionPanelComponent {
     }
 
     readonly isValid = computed(() => {
-        if (this.optionType() === OptionType.Date) {
+        if (isDateOptionType(this.optionType())) {
             return this.dateFormat.isValid(this.dateDraft());
         }
         const draft = this.textDraft();
@@ -94,7 +97,7 @@ export class AddOptionPanelComponent {
         if (!this.isValid()) {
             return;
         }
-        if (this.optionType() === OptionType.Date) {
+        if (isDateOptionType(this.optionType())) {
             this.add.emit({
                 text: this.dateFormat.serialize(this.dateDraft()),
                 description: '',

@@ -20,9 +20,20 @@
             </p>
             <app-poll-type-selection
                 [layout]="isDesktop() ? 'grid' : 'list'"
-                [selectedType]="state.optionType()"
+                [selectedType]="selectedCategory()"
                 (typeSelected)="onTypeSelected($event)"
             />
+
+            @if (isDateCategory()) {
+                <app-appointment-type-selection
+                    class="mt-3 block"
+                    [selectedType]="state.appointmentDateType()"
+                    [showTime]="state.showTime()"
+                    [showTimeToggle]="true"
+                    (typeSelected)="state.onAppointmentDateTypeChange($event)"
+                    (showTimeChange)="state.onToggleTime($event)"
+                />
+            }
         </div>
     }
 
@@ -55,7 +66,11 @@
             class="mt-3.5 flex items-start gap-[9px] rounded-[var(--radius-lg)] border border-[var(--border-hairline-soft)] bg-[rgba(255,255,255,.6)] px-[14px] py-[13px]"
         >
             <span class="mt-px">
-                <ds-icon name="info" [size]="16" [color]="'var(--text-muted)'" />
+                <ds-icon
+                    name="info"
+                    [size]="16"
+                    [color]="'var(--text-muted)'"
+                />
             </span>
             <span
                 class="text-[length:var(--fs-caption)] leading-[var(--leading-normal)] text-[color:var(--text-secondary)]"

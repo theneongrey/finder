@@ -3,9 +3,10 @@
     data-testid="results-option-list"
 >
     @for (option of sortedOptions(); track option.id) {
-        @if (optionType() === OptionType.Date) {
+        @if (isDateType()) {
             <app-option-card-date
                 [option]="option"
+                [dateType]="dateType()!"
                 [members]="members()"
                 [commentCount]="commentCount(option)"
                 [isMostVoted]="hasMostVotes(option)"

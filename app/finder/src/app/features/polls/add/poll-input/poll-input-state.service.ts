@@ -12,6 +12,10 @@ import { OptionEntry } from '../../detail/results/option-input/poll-options/poll
 import {
     DateOptionEntry,
     DateOptionType,
+    dateTypeToOptionType,
+    isDateOptionType,
+    optionTypeHasTime,
+    optionTypeToDateType,
 } from '../../_shared/models/date-option.model';
 import { UrlValidationService } from '../../_shared/utils/url-validation.service';
 import { POLL_LIMITS } from '../../_shared/models/poll-limits';
@@ -76,6 +80,9 @@ export class PollInputStateService {
     readonly appointmentDateType = signal<DateOptionType | undefined>(
         undefined,
     );
+    // Whether each option carries a time-of-day. Persisted via the concrete
+    // OptionType (e.g. Date vs DateWithTime), not as a separate field.
+    readonly showTime = signal<boolean>(false);
     readonly removedOptionIds = signal<string[]>([]);
     private readonly pollCreating = signal(false);
 
@@ -89,7 +96,7 @@ export class PollInputStateService {
         if (type === undefined) {
             return false;
         }
-        if (type === OptionType.Date) {
+        if (isDateOptionType(type)) {
             const dateType = this.appointmentDateType();
             if (!dateType) {
                 return false;
@@ -147,17 +154,15 @@ export class PollInputStateService {
         this.description.set(currentPoll.description);
         this.closeDate.set(currentPoll.closeDate);
 
-        if (currentPoll.optionType === OptionType.Date) {
-            const entries = currentPoll.options.length
-                ? currentPoll.options.map((o) =>
-                      this.dateOptionFormat.parse(o.text, o.id),
-                  )
-                : [];
-
-            if (entries.length > 0) {
-                this.appointmentDateType.set(entries[0].type);
-                this.dateOptions.set(entries);
-            }
+        if (isDateOptionType(currentPoll.optionType)) {
+            const dateType = optionTypeToDateType(currentPoll.optionType)!;
+            this.appointmentDateType.set(dateType);
+            this.showTime.set(optionTypeHasTime(currentPoll.optionType));
+            this.dateOptions.set(
+                currentPoll.options.map((o) =>
+                    this.dateOptionFormat.parse(o.text, dateType, o.id),
+                ),
+            );
         } else {
             this.options.set(
                 currentPoll.options.length
@@ -249,16 +254,26 @@ export class PollInputStateService {
     }
 
     onTypeSelected(type: OptionType): void {
+        // The wizard offers three categories (YesNo / Rating / Date); the Date
+        // category maps to a granular date OptionType via the sub-type picker.
+        if (isDateOptionType(type)) {
+            // Default to single-date, but keep the current sub-type if the user
+            // is already on a date poll (re-clicking the category button).
+            if (!isDateOptionType(this.optionType())) {
+                this.onAppointmentDateTypeChange('date');
+            }
+            return;
+        }
         this.optionType.set(type);
         if (type === OptionType.YesNo) {
             this.options.set([{ text: '', description: '' }]);
         }
-        if (type === OptionType.Date) {
-            this.onAppointmentDateTypeChange('date');
-        }
     }
 
     onAppointmentDateTypeChange(newType: DateOptionType): void {
+        // The sub-type + the per-option time flag together map to the concrete
+        // OptionType (e.g. 'date' + time → DateWithTime).
+        this.optionType.set(dateTypeToOptionType(newType, this.showTime()));
         const oldType = this.appointmentDateType();
         if (oldType === newType) {
             return;
@@ -279,6 +294,41 @@ export class PollInputStateService {
         this.appointmentDateType.set(newType);
     }
 
+    onToggleTime(value: boolean): void {
+        this.showTime.set(value);
+        const dateType = this.appointmentDateType();
+        if (dateType) {
+            this.optionType.set(dateTypeToOptionType(dateType, value));
+        }
+        if (value) {
+            const start = this.dateOptionFormat.nextFullHour();
+            this.dateOptions.update((opts) =>
+                opts.map((o) => {
+                    if (o.startTime) {
+                        return o;
+                    }
+                    const changes: Partial<DateOptionEntry> = {
+                        startTime: start,
+                    };
+                    if (o.type === 'date-range' && !o.endTime) {
+                        const end = new Date(start);
+                        end.setHours(end.getHours() + 1);
+                        changes.endTime = end;
+                    }
+                    return { ...o, ...changes };
+                }),
+            );
+        } else {
+            this.dateOptions.update((opts) =>
+                opts.map((o) => ({
+                    ...o,
+                    startTime: undefined,
+                    endTime: undefined,
+                })),
+            );
+        }
+    }
+
     toggleWeekday(weekday: number): void {
         const opts = this.dateOptions();
         const existingIndex = opts.findIndex((o) => o.weekday === weekday);
@@ -291,16 +341,17 @@ export class PollInputStateService {
                 o.filter((_, i) => i !== existingIndex),
             );
         } else {
-            this.dateOptions.update((o) => [
-                ...o,
-                { type: 'weekday', weekday },
-            ]);
+            const entry: DateOptionEntry = { type: 'weekday', weekday };
+            if (this.showTime()) {
+                entry.startTime = this.dateOptionFormat.nextFullHour();
+            }
+            this.dateOptions.update((o) => [...o, entry]);
         }
     }
 
     addOption(): void {
         const type = this.optionType();
-        if (type === OptionType.Date) {
+        if (isDateOptionType(type)) {
             const dateType = this.appointmentDateType();
             if (!dateType) {
                 return;
@@ -322,10 +373,17 @@ export class PollInputStateService {
                     { type: 'time-range', startTime: start, endTime: end },
                 ]);
             } else {
-                this.dateOptions.update((opts) => [
-                    ...opts,
-                    { type: dateType },
-                ]);
+                const entry: DateOptionEntry = { type: dateType };
+                if (this.showTime()) {
+                    const start = this.dateOptionFormat.nextFullHour();
+                    entry.startTime = start;
+                    if (dateType === 'date-range') {
+                        const end = new Date(start);
+                        end.setHours(end.getHours() + 1);
+                        entry.endTime = end;
+                    }
+                }
+                this.dateOptions.update((opts) => [...opts, entry]);
             }
         } else {
             this.options.update((opts) => [
@@ -337,7 +395,7 @@ export class PollInputStateService {
 
     removeOption(index: number): void {
         const type = this.optionType();
-        if (type === OptionType.Date) {
+        if (isDateOptionType(type)) {
             const removed = this.dateOptions()[index];
             if (removed?.id) {
                 this.removedOptionIds.update((ids) => [...ids, removed.id!]);
@@ -409,7 +467,7 @@ export class PollInputStateService {
             return;
         }
 
-        if (optionType === OptionType.Date) {
+        if (isDateOptionType(optionType)) {
             const options = this.dateOptions()
                 .filter((o) => this.dateOptionFormat.isValid(o))
                 .map((o) => ({
@@ -423,6 +481,7 @@ export class PollInputStateService {
                 pollId,
                 name: this.question(),
                 description: this.description(),
+                optionType,
                 closeDate: this.closeDate(),
                 options,
                 removedOptionIds: this.removedOptionIds(),
@@ -442,6 +501,7 @@ export class PollInputStateService {
                 pollId,
                 name: this.question(),
                 description: this.description(),
+                optionType,
                 closeDate: this.closeDate(),
                 options,
                 removedOptionIds: this.removedOptionIds(),

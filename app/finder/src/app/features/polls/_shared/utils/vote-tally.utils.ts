@@ -33,7 +33,9 @@ export function averageRating(option: OptionDetail): number {
     if (!rated.length) {
         return 0;
     }
-    return rated.reduce((sum, v) => sum + parseInt(v.choice!), 0) / rated.length;
+    return (
+        rated.reduce((sum, v) => sum + parseInt(v.choice!), 0) / rated.length
+    );
 }
 
 export function ratingsCount(option: OptionDetail): number {

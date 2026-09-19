@@ -22,6 +22,7 @@ import {
 } from '../models/poll-detail.model';
 import { sharingEvents } from './sharing.events';
 import { LoggerService } from '@common/services/logger.service';
+import { OptionType } from '@common/models/option-type.model';
 
 export const PollDetailStore = signalStore(
     { providedIn: 'root' },
@@ -85,6 +86,7 @@ export const PollDetailStore = signalStore(
             pollId: string;
             name: string;
             description: string;
+            optionType?: OptionType;
             closeDate?: string;
             options: {
                 id?: string;
@@ -108,6 +110,7 @@ export const PollDetailStore = signalStore(
                             poll.name,
                             poll.description,
                             poll.closeDate,
+                            poll.optionType,
                         )
                         .pipe(
                             switchMap(() => {

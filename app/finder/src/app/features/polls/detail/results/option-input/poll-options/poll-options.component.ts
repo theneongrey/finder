@@ -24,6 +24,7 @@ import { DateOptionFormatService } from '../../../../_shared/utils/date-option-f
 import {
     DateOptionEntry,
     DateOptionType,
+    isDateOptionType,
 } from '../../../../_shared/models/date-option.model';
 
 export interface OptionEntry {
@@ -77,6 +78,8 @@ export class PollOptionsComponent {
     weekdayToggle = output<number>();
     dateOptionsChange = output<DateOptionEntry[]>();
     optionsChange = output<OptionEntry[]>();
+
+    readonly isDateType = computed(() => isDateOptionType(this.optionType()));
 
     addCardAnimating = signal(false);
     firstEntryShowsTime = signal(false);

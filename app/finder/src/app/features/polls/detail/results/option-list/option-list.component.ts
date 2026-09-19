@@ -13,6 +13,10 @@ import {
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionType } from '@common/models/option-type.model';
+import {
+    isDateOptionType,
+    optionTypeToDateType,
+} from '../../../_shared/models/date-option.model';
 import * as voteTally from '../../../_shared/utils/vote-tally.utils';
 
 type SortMode = 'top' | 'original';
@@ -36,6 +40,9 @@ export class OptionListComponent {
     isClosed = input(false);
 
     sort = input<SortMode>('top');
+
+    readonly isDateType = computed(() => isDateOptionType(this.optionType()));
+    readonly dateType = computed(() => optionTypeToDateType(this.optionType()));
 
     openComments = output<OptionDetail>();
     saveEdit = output<{

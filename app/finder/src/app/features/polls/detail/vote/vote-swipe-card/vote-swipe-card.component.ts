@@ -2,6 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     effect,
     ElementRef,
     input,
@@ -17,6 +18,10 @@ import { VoteCardImageComponent } from '../vote-card-image/vote-card-image.compo
 import { VoteCardTextComponent } from '../vote-card-text/vote-card-text.component';
 import { VoteCardDateComponent } from '../vote-card-date/vote-card-date.component';
 import { OptionType } from '../../../../../common/models/option-type.model';
+import {
+    isDateOptionType,
+    optionTypeToDateType,
+} from '../../../_shared/models/date-option.model';
 
 @Component({
     selector: 'app-vote-swipe-card',
@@ -45,6 +50,9 @@ export class VoteSwipeCardComponent implements AfterViewInit {
     optionType = input(OptionType.YesNo);
     option = input<OptionDetail | undefined>(undefined);
     allOptionTexts = input<string[]>([]);
+
+    readonly isDateType = computed(() => isDateOptionType(this.optionType()));
+    readonly dateType = computed(() => optionTypeToDateType(this.optionType()));
 
     voted = output<boolean>();
 

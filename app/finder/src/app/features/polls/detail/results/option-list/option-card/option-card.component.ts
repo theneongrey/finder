@@ -57,7 +57,11 @@ export class OptionCardComponent {
     pollType = input<'yesno' | 'rating'>('yesno');
 
     commentsClick = output<void>();
-    saveEdit = output<{ optionId: string; text: string; description: string }>();
+    saveEdit = output<{
+        optionId: string;
+        text: string;
+        description: string;
+    }>();
     deleteOption = output<{ optionId: string }>();
 
     protected readonly limits = POLL_LIMITS;

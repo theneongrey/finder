@@ -33,6 +33,7 @@ import { DateOptionFormatService } from '../../_shared/utils/date-option-format.
 import {
     DateOptionType,
     isDateOptionType,
+    optionTypeHasTime,
     optionTypeToDateType,
 } from '../../_shared/models/date-option.model';
 import { OptionDetail } from '../../_shared/models/poll-detail.model';
@@ -81,25 +82,15 @@ export class ResultsComponent {
 
     /**
      * Sub-type/time config for the add-option panel. Date polls share one
-     * config across all options, so the first option is enough — no need to
-     * re-parse the whole list.
+     * config across all options: the sub-type and whether options carry a
+     * time-of-day both come from the poll's concrete OptionType.
      */
-    private readonly addPanelFirstEntry = computed(() => {
-        const poll = this.poll();
-        const first = poll?.options[0];
-        const dateType = optionTypeToDateType(poll?.optionType);
-        if (!first || !dateType) {
-            return undefined;
-        }
-        return this.dateFormat.parse(first.text, dateType);
-    });
-
     readonly addPanelDateType = computed<DateOptionType | undefined>(() =>
         optionTypeToDateType(this.poll()?.optionType),
     );
 
-    readonly addPanelShowTime = computed(
-        () => this.addPanelFirstEntry()?.startTime !== undefined,
+    readonly addPanelShowTime = computed(() =>
+        optionTypeHasTime(this.poll()?.optionType),
     );
 
     poll = this.projectDetailStore.currentPoll;

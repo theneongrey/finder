@@ -400,6 +400,7 @@
                 "removeTime": "Eliminar hora",
                 "timePerOption": "Hora por opción",
                 "timePerOptionHint": "Añade una hora a cada opción de fecha",
+                "timePerOptionHintOff": "Desactivado: las opciones son de todo el día",
                 "endBeforeStart": "La fecha de fin debe ser posterior al {{date}}.",
                 "addOption": "Añadir fecha",
                 "appointmentTypeLabel": "Tipo de opciones de fecha",

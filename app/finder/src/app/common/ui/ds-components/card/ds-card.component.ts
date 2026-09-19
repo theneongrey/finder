@@ -13,5 +13,4 @@ export class DsCardComponent {
     padding = input<number>(20);
     accentBorder = input<boolean>(false);
     fill = input<boolean>(false);
-    clickable = input<boolean>(false);
 }

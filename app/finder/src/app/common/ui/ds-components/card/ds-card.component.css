@@ -24,17 +24,3 @@
 .ds-card--accent {
     border: 1px solid var(--accent-border);
 }
-
-.ds-card--clickable {
-    cursor: pointer;
-    border: 1px solid color-mix(in srgb, var(--primary) 45%, white);
-    box-shadow: var(--shadow-accent-btn);
-    transition:
-        box-shadow 160ms ease,
-        border-color 160ms ease,
-        transform 120ms ease;
-}
-.ds-card--clickable:active {
-    transform: scale(0.985);
-    box-shadow: var(--shadow-card-soft);
-}

@@ -12,25 +12,13 @@
                 [selectedType]="selectedType()"
                 [layout]="layout()"
                 [iconName]="pt.iconName"
+                [iconBg]="pt.iconBg"
+                [iconColor]="pt.iconColor"
                 [nameKey]="pt.nameKey"
                 [descKey]="pt.descKey"
                 [testId]="pt.testId"
                 (typeSelected)="typeSelected.emit($event)"
             />
         }
-    </div>
-
-    <div
-        class="mt-[18px] flex items-start gap-[9px] rounded-[var(--radius-lg)] border border-[var(--border-hairline-soft)] bg-[rgba(255,255,255,.6)] px-[14px] py-[13px]"
-        [class]="layout() === 'grid' ? 'max-w-[940px]' : ''"
-    >
-        <span class="mt-px"
-            ><ds-icon name="info" [size]="16" [color]="'var(--text-muted)'"
-        /></span>
-        <span
-            class="text-[length:var(--fs-caption)] leading-[var(--leading-normal)] text-[color:var(--text-secondary)]"
-        >
-            {{ 'project.detail.pollTypes.hint' | translate }}
-        </span>
     </div>
 </div>

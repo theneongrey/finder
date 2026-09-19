@@ -8,6 +8,18 @@
     z-index: var(--z-sticky);
 }
 
+/* Hide the title bar while scrolling (mobile only); a page's own sticky
+   sub-bar takes over the top edge. On web (≥ 680px) it always stays. */
+@media (max-width: 679.98px) {
+    :host {
+        transition: transform var(--duration-fast) var(--ease-standard);
+    }
+
+    :host(.title-bar-host--hidden) {
+        transform: translateY(-100%);
+    }
+}
+
 /* ===========================
    Bar layout
    =========================== */
@@ -135,11 +147,18 @@
 }
 
 /* ===========================
-   Web breadcrumb labels (mobile: hidden)
+   Action slot (page-provided, e.g. share)
    =========================== */
-.title-bar__sep,
-.title-bar__web-label {
-    display: none;
+.title-bar__action {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* When an action is present it anchors the right cluster; the user menu
+   should sit right next to it rather than absorbing its own slack. */
+.title-bar:has(.title-bar__action) .title-bar__user {
+    margin-left: 0;
 }
 
 /* ===========================
@@ -165,10 +184,13 @@
         box-shadow: none;
     }
 
-    /* Title replaced by logo + breadcrumb; back button stays visible */
-    .title-bar__info,
+    /* Web: logo + back button + stacked title/subtitle (no breadcrumb) */
     .title-bar__mobile-label {
         display: none;
+    }
+
+    .title-bar__info {
+        order: 4;
     }
 
     .title-bar__brand--web-only {
@@ -184,46 +206,16 @@
         pointer-events: auto;
     }
 
-    .title-bar__sep {
-        display: block;
-        width: 1px;
-        height: 20px;
-        background: rgba(20, 24, 28, 0.1);
-        flex-shrink: 0;
-        order: 5;
-    }
-
-    /* Web ordering: logo | back breadcrumb | title | user menu */
-    .title-bar__sep--lead {
-        order: 2;
-    }
-
+    /* Web ordering: logo | back button | title/subtitle | action | user menu */
     .title-bar__back-btn {
         order: 3;
     }
 
-    .title-bar__user {
-        order: 7;
-    }
-
-    .title-bar__web-label {
-        display: block;
-        font-size: 13.5px;
-        font-weight: var(--weight-bold);
-        color: var(--text-primary);
-        white-space: nowrap;
-        text-decoration: none;
+    .title-bar__action {
         order: 6;
     }
 
-    .title-bar__web-label--breadcrumb {
-        color: var(--accent);
-        cursor: pointer;
-        transition: color var(--duration-fast) var(--ease-standard);
-        order: 4;
-    }
-
-    .title-bar__web-label--breadcrumb:hover {
-        color: var(--teal-alt-fg);
+    .title-bar__user {
+        order: 7;
     }
 }

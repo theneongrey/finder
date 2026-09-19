@@ -33,6 +33,7 @@ export class ShareAccessFormComponent {
     selectedVisibility = input.required<string>();
     isPublic = input.required<boolean>();
     shareLink = input.required<string>();
+    preCreation = input<boolean>(false);
 
     visibilityChange = output<string>();
 

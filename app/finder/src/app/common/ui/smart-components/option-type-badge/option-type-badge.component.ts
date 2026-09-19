@@ -30,6 +30,49 @@ const CONFIG: Record<
         bg: 'var(--person-4-bg)',
         fg: 'var(--person-4-fg)',
     },
+    // All granular date sub-types share the "appointment" badge.
+    [OptionType.Weekday]: {
+        icon: 'calendar',
+        labelKey: 'project.detail.pollTypes.appointment',
+        bg: 'var(--person-4-bg)',
+        fg: 'var(--person-4-fg)',
+    },
+    [OptionType.DateRange]: {
+        icon: 'calendar',
+        labelKey: 'project.detail.pollTypes.appointment',
+        bg: 'var(--person-4-bg)',
+        fg: 'var(--person-4-fg)',
+    },
+    [OptionType.Time]: {
+        icon: 'calendar',
+        labelKey: 'project.detail.pollTypes.appointment',
+        bg: 'var(--person-4-bg)',
+        fg: 'var(--person-4-fg)',
+    },
+    [OptionType.TimeRange]: {
+        icon: 'calendar',
+        labelKey: 'project.detail.pollTypes.appointment',
+        bg: 'var(--person-4-bg)',
+        fg: 'var(--person-4-fg)',
+    },
+    [OptionType.DateWithTime]: {
+        icon: 'calendar',
+        labelKey: 'project.detail.pollTypes.appointment',
+        bg: 'var(--person-4-bg)',
+        fg: 'var(--person-4-fg)',
+    },
+    [OptionType.WeekdayWithTime]: {
+        icon: 'calendar',
+        labelKey: 'project.detail.pollTypes.appointment',
+        bg: 'var(--person-4-bg)',
+        fg: 'var(--person-4-fg)',
+    },
+    [OptionType.DateRangeWithTime]: {
+        icon: 'calendar',
+        labelKey: 'project.detail.pollTypes.appointment',
+        bg: 'var(--person-4-bg)',
+        fg: 'var(--person-4-fg)',
+    },
 };
 
 @Component({

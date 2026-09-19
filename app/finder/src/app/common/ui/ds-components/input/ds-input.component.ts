@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     forwardRef,
     input,
@@ -10,10 +11,11 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HlmInput } from '@spartan-ng/helm/input';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 
 @Component({
     selector: 'ds-input',
-    imports: [HlmInput],
+    imports: [HlmInput, DsIconComponent],
     templateUrl: './ds-input.component.html',
     styleUrl: './ds-input.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,11 +38,21 @@ export class DsInputComponent implements ControlValueAccessor {
     invalid = input<boolean>(false);
     readonly = input(false);
     loading = input(false);
+    clearable = input(false);
 
     readonly inputBlur = output<void>();
 
     protected readonly value = signal('');
     protected readonly isDisabled = signal(false);
+
+    protected readonly showClear = computed(
+        () =>
+            this.clearable() &&
+            !!this.value() &&
+            !this.readonly() &&
+            !this.isDisabled() &&
+            !this.loading(),
+    );
 
     private readonly inputEl =
         viewChild<ElementRef<HTMLInputElement>>('inputEl');
@@ -80,5 +92,11 @@ export class DsInputComponent implements ControlValueAccessor {
     protected handleBlur(): void {
         this.onTouched();
         this.inputBlur.emit();
+    }
+
+    protected clear(): void {
+        this.value.set('');
+        this.onChange('');
+        this.focus();
     }
 }

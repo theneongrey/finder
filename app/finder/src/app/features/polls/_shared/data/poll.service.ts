@@ -74,11 +74,19 @@ export class PollService {
         name: string,
         description: string,
         closeDate?: string,
+        optionType?: OptionType,
     ) {
         this.loggerService.debug(`[PollService] updating poll ${pollId}`);
         return this.httpClient.put<PollDetail>(
             `${this.baseUrl}/api/project/poll/${pollId}`,
-            { name, description, closeDate },
+            { name, description, closeDate, optionType },
+        );
+    }
+
+    deletePoll(pollSlug: string) {
+        this.loggerService.debug(`[PollService] deleting poll ${pollSlug}`);
+        return this.httpClient.delete(
+            `${this.baseUrl}/api/project/poll/${pollSlug}`,
         );
     }
 

@@ -1,4 +1,70 @@
 {
+    "legal": {
+        "privacy": {
+            "title": "Privacy Policy",
+            "lastUpdated": "Last updated: September 16, 2026",
+            "intro": "Protecting your personal data matters to us. This policy explains which data we process when you use Votean, for which purposes and on what legal basis. The German version is the legally authoritative one.",
+            "sections": {
+                "controller": {
+                    "heading": "Controller",
+                    "body": "The controller responsible for data processing on this website is:\n\npixel-fusion.de\nEmail: {{email}}"
+                },
+                "dataCategories": {
+                    "heading": "What data we process",
+                    "body": "• Account data: your email address and, where provided, your name, profile picture and preferred language.\n• Sign-in data: one-time login links and codes we generate and store briefly for passwordless sign-in.\n• Content data: polls, projects, answer options, comments and the votes you cast, each linked to your account.\n• Permissions: your role (voter, maintainer, owner) within a project.\n• Notifications: records and settings for the notifications you receive.\n• Metadata: timestamps for when a record was created and last changed."
+                },
+                "purposes": {
+                    "heading": "Purposes and legal bases",
+                    "body": "We process your data to provide the service, sign you in, store your polls and votes and notify you about relevant events. The legal basis is the performance of the usage contract or pre-contractual steps (Art. 6(1)(b) GDPR). Anonymous usage measurement is based on our legitimate interest in a secure and needs-based operation (Art. 6(1)(f) GDPR)."
+                },
+                "analytics": {
+                    "heading": "Usage measurement with Umami",
+                    "body": "For statistical analysis of usage we use Umami, a privacy-friendly analytics tool we host ourselves. Umami works without cookies, stores no IP addresses, collects no personal data and does not track you across websites. Only anonymized information such as page views, referrer, browser, operating system, device type and country of origin is recorded. Individual users cannot be identified."
+                },
+                "email": {
+                    "heading": "Email delivery",
+                    "body": "For sign-in and notifications we send emails to the address you provide. Delivery is handled by an SMTP service provider that processes these emails on our behalf."
+                },
+                "cookies": {
+                    "heading": "Cookies and local storage",
+                    "body": "Votean sets no tracking or marketing cookies. For sign-in we only store a strictly necessary token in your browser's local storage so you stay logged in. Because no non-essential cookies or trackers are used, no consent banner is required."
+                },
+                "retention": {
+                    "heading": "Retention period",
+                    "body": "We keep your data for as long as your account exists or as needed to fulfil the purposes described above. Login links and codes are kept only briefly and expire after a short time. On request we delete your data unless statutory retention obligations apply."
+                },
+                "rights": {
+                    "heading": "Your rights",
+                    "body": "You have the right to access, rectification, erasure, restriction of processing, data portability and objection. You also have the right to lodge a complaint with a data protection supervisory authority. To exercise your rights you can contact us at any time."
+                },
+                "contact": {
+                    "heading": "Privacy contact",
+                    "body": "For questions about data protection or to exercise your rights, contact us at: {{email}}"
+                }
+            }
+        },
+        "imprint": {
+            "title": "Legal Notice",
+            "sections": {
+                "provider": {
+                    "heading": "Information pursuant to § 5 TMG",
+                    "body": "pixel-fusion.de"
+                },
+                "contact": {
+                    "heading": "Contact",
+                    "body": "Email: {{email}}"
+                },
+                "responsible": {
+                    "heading": "Responsible for the content",
+                    "body": "pixel-fusion.de"
+                },
+                "disclaimer": {
+                    "heading": "Liability for content",
+                    "body": "The contents of these pages were created with the greatest care. However, we cannot guarantee that the content is accurate, complete or up to date. Content created by users or linked external websites is the sole responsibility of their respective operators."
+                }
+            }
+        }
+    },
     "notifications": {
         "title": "Notifications",
         "markAllRead": "all read",
@@ -147,7 +213,8 @@
             "edit": "Edit",
             "delete": "Delete",
             "share": "Share",
-            "vote": "Vote"
+            "vote": "Vote",
+            "close": "Close"
         },
         "roles": {
             "unknown": "Unknown",
@@ -228,6 +295,8 @@
                 "pollOverview": "Show results",
                 "voteOverview": "To Overview",
                 "voteNow": "Vote now",
+                "open": "Take a look",
+                "openClosed": "See how it went",
                 "viewProgress": "View current standings",
                 "statusOpen": "Open",
                 "statusClosed": "Closed",
@@ -262,6 +331,7 @@
             "inviteMore": "Invite more",
             "roleLabel": "Role for new invites",
             "linkNote": "Anyone joining via link joins as a viewer. You can grant more permissions in the 'Access' tab.",
+            "linkNoteBeforeCreate": "Anyone joining via link joins as a voter. The link is generated once the poll is created.",
             "recentLabel": "Frequently shared",
             "noContact": "No contact found – invite via email",
             "pollLabel": "Poll"
@@ -293,6 +363,13 @@
             "shareSub": "Invite people or share the link — you can also do this later.",
             "typeTitle": "What should be decided?",
             "typeSub": "Choose the poll type — you'll fill in the rest next.",
+            "typeEyebrow": "Poll type",
+            "singleSubtitle": "Ask your question and pick a type — you'll add options next.",
+            "shareTimingLabel": "When to share?",
+            "shareLater": "Share later",
+            "shareNow": "Share now",
+            "shareLaterHint": "Finish your poll first, then share it — anytime via 'Share'.",
+            "createHintNoTitle": "Give your poll a title.",
             "addDescriptionCta": "Add description",
             "autoClose": "Auto-close",
             "autoCloseIn3Days": "in 3 days",
@@ -323,6 +400,7 @@
                 "removeTime": "Remove time",
                 "timePerOption": "Time per option",
                 "timePerOptionHint": "Add a time to each date option",
+                "timePerOptionHintOff": "Off: options count as all-day",
                 "endBeforeStart": "End date must be after {{date}}.",
                 "addOption": "Add date",
                 "appointmentTypeLabel": "Type of date options",
@@ -442,6 +520,53 @@
             "newComment": "New comment...",
             "loading": "Loading...",
             "comments": "Comments"
+        },
+        "results": {
+            "startVoting": "Start voting",
+            "vote": "Vote",
+            "addOption": "Add option",
+            "add": "Add",
+            "emptyOptionsHeading": "No options yet",
+            "emptyOptionsText": "Add the first option so everyone can start voting in the poll.",
+            "emptyOptionsTextVoter": "Once the first option is added, you can all vote together here.",
+            "endPoll": "End poll",
+            "end": "End",
+            "reopenPoll": "Reopen poll",
+            "reopen": "Reopen",
+            "cancel": "Cancel",
+            "confirmEnd": "Yes, end it",
+            "confirmEndShort": "Yes",
+            "comments": "Comments",
+            "refresh": "Refresh",
+            "commentsTitle": "Comments on this poll",
+            "hideComments": "Hide comments",
+            "commentsFilterPoll": "Poll",
+            "commentsFilterAll": "All",
+            "noComments": "No comments yet. Be the first!",
+            "commentPlaceholder": "Write a comment…",
+            "submitComment": "Comment",
+            "edit": "Edit",
+            "openUntil": "Open until {{date}}",
+            "sortByApproval": "By approval",
+            "sortByOrder": "By order",
+            "shareBarTitle": "Your poll is ready — share the link:",
+            "status": {
+                "active": "Active",
+                "closed": "Closed"
+            },
+            "type": {
+                "yesno": "Yes / No",
+                "rating": "Rating",
+                "date": "Date poll"
+            },
+            "save": "Save",
+            "delete": "Delete",
+            "confirmDelete": "Yes, delete it",
+            "confirmDeleteShort": "Delete",
+            "editNamePlaceholder": "Poll title",
+            "editDescriptionPlaceholder": "Description (optional)",
+            "deletePrompt": "Delete this poll permanently?",
+            "deletePoll": "Delete poll"
         },
         "lastVote": {
             "label": "Last vote",

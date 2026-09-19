@@ -1,28 +1,62 @@
-<div>
-    <div class="mb-3 hidden items-center justify-between px-1 lg:flex">
-        <h3 class="text-[var(--text-primary)]">Kommentare</h3>
-        @if (comments().length) {
-            <span
-                class="inline-flex h-6 items-center rounded-[8px] bg-[var(--sand-100)] px-2.5 text-[12px] font-bold text-[var(--text-secondary)]"
-            >
-                {{ comments().length }}
-            </span>
-        }
+<div
+    class="flex h-full flex-col"
+    style="border-left: 1px solid var(--border-hairline)"
+>
+    <!-- Header -->
+    <div class="flex items-start justify-between px-5 pt-5 pb-3">
+        <div class="min-w-0">
+            <span class="label">{{
+                'project.results.commentsTitle' | translate
+            }}</span>
+            @if (optionTitle(); as title) {
+                <p
+                    class="mt-1 truncate text-[19px] leading-[1.2] font-bold"
+                    style="
+                        font-family: var(--font-display);
+                        letter-spacing: -0.3px;
+                        color: var(--text-primary);
+                    "
+                >
+                    {{ title }}
+                </p>
+            }
+        </div>
+        <ds-button
+            variant="ghost"
+            [size]="30"
+            icon="close"
+            [label]="'project.results.hideComments' | translate"
+            data-testid="hide-comments-btn"
+            (click)="dismiss.emit()"
+        />
     </div>
 
-    <ds-card [padding]="0">
-        <!-- Comment list -->
-        @if (comments().length) {
-            <div class="flex flex-col gap-2.5 p-4 pb-3">
-                @for (comment of comments(); track comment.id) {
-                    <ds-card [padding]="14">
-                        <div class="flex items-center gap-2.5">
-                            <app-user-avatar
-                                [user]="authorUser(comment.author)"
-                                [size]="30"
-                            />
+    <!-- Poll-level filter: poll-only vs. all comments -->
+    @if (optionTitle() === undefined) {
+        <div class="px-5 pb-3">
+            <ds-segmented-control
+                size="sm"
+                [options]="filterOptions()"
+                [value]="filter()"
+                (valueChange)="onFilterChange($event)"
+                data-testid="comments-filter"
+            />
+        </div>
+    }
+
+    <!-- Comment list -->
+    @if (visibleComments().length) {
+        <div class="flex flex-1 flex-col gap-5 overflow-y-auto px-5 pt-1 pb-3">
+            @for (comment of visibleComments(); track comment.id) {
+                <div class="flex gap-2.5">
+                    <app-user-avatar
+                        [user]="authorUser(comment.author)"
+                        [size]="30"
+                    />
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-baseline gap-2">
                             <span
-                                class="min-w-0 flex-1 truncate text-[14px] font-bold text-[var(--text-primary)]"
+                                class="truncate text-[13.5px] font-bold text-[var(--text-primary)]"
                             >
                                 {{ comment.author.name }}
                             </span>
@@ -33,16 +67,10 @@
                             </span>
                         </div>
 
-                        @if (comment.quote) {
+                        @if (comment.quote && !optionTitle()) {
                             <div
-                                class="mt-2 inline-flex h-6 max-w-full items-center gap-1.5 overflow-hidden rounded-[8px] bg-[var(--cream-200)] px-2.5 text-[11.5px] font-bold text-[var(--ink-500)]"
+                                class="mt-1.5 inline-flex h-6 max-w-full items-center overflow-hidden rounded-[8px] bg-[var(--cream-200)] px-2.5 text-[11.5px] font-bold text-[var(--ink-500)]"
                             >
-                                <img
-                                    src="logo-icon.svg"
-                                    width="12"
-                                    height="12"
-                                    alt="Votean"
-                                />
                                 <span class="truncate">{{
                                     comment.quote
                                 }}</span>
@@ -50,43 +78,44 @@
                         }
 
                         <p
-                            class="mt-2 text-[14px] leading-[1.5] text-pretty text-[var(--text-body)]"
+                            class="mt-1 text-[13.5px] leading-[1.45] text-pretty text-[var(--text-body)]"
                         >
                             {{ comment.content }}
                         </p>
-                    </ds-card>
-                }
-            </div>
-        } @else {
-            <div class="flex items-center justify-center px-4 py-8">
-                <p class="text-center text-[13.5px] text-[var(--text-muted)]">
-                    Noch keine Kommentare. Schreib den ersten!
-                </p>
-            </div>
-        }
+                    </div>
+                </div>
+            }
+        </div>
+    } @else {
+        <div class="flex flex-1 items-center justify-center px-5">
+            <p class="text-center text-[13.5px] text-[var(--text-muted)]">
+                {{ 'project.results.noComments' | translate }}
+            </p>
+        </div>
+    }
 
-        <!-- Comment input -->
-        <div class="border-t border-[var(--border-hairline)] p-4 pt-3">
+    <!-- Comment input -->
+    <div class="flex items-end gap-2 px-4 pt-2 pb-5">
+        <div class="comment-input flex-1">
             <ds-textarea
                 data-testid="results-comment-input"
-                [placeholder]="'Kommentar schreiben…'"
+                [placeholder]="'project.results.commentPlaceholder' | translate"
                 [autoResize]="true"
                 [rows]="1"
                 [maxlength]="limits.commentContentLength"
                 [(ngModel)]="newCommentText"
                 (keydown.enter)="onEnterKey($event)"
             />
-            <div class="mt-2 flex justify-end">
-                <ds-button
-                    data-testid="results-comment-submit"
-                    variant="primary"
-                    size="sm"
-                    [disabled]="!newCommentText.trim()"
-                    (click)="submitComment()"
-                >
-                    Kommentieren
-                </ds-button>
-            </div>
         </div>
-    </ds-card>
+        <ds-button
+            variant="primary"
+            [size]="44"
+            [square]="true"
+            icon="arrow-right"
+            [label]="'project.results.submitComment' | translate"
+            data-testid="results-comment-submit"
+            [disabled]="!newCommentText.trim()"
+            (click)="submitComment()"
+        />
+    </div>
 </div>

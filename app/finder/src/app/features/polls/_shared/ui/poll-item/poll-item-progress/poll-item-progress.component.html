@@ -18,19 +18,11 @@
     </div>
     <ds-progress-bar [percent]="progressPercent()" [height]="6" />
 
-    @if (participantAvatars().length > 0) {
-        <div class="mt-1.5 flex flex-wrap items-center gap-[7px]">
-            @for (a of participantAvatars(); track $index) {
-                <ds-avatar
-                    [initial]="a.initial"
-                    [bg]="a.bg"
-                    [fg]="a.fg"
-                    size="sm"
-                    [voted]="a.voted"
-                />
-            }
+    @if (avatarUsers().length > 0) {
+        <div class="mt-2.5 flex items-center gap-2">
+            <app-avatar-stack [users]="avatarUsers()" [max]="5" size="sm" />
             <span
-                class="ml-[2px] text-[var(--fs-caption)] text-[var(--text-muted)]"
+                class="min-w-0 flex-1 truncate text-[var(--fs-caption)] text-[var(--text-muted)]"
             >
                 {{ missingVotersText() }}
             </span>

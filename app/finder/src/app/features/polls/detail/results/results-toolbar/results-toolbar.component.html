@@ -1,0 +1,160 @@
+<div
+    class="sticky top-0 z-[9] flex items-center gap-2 px-4 py-2.5 min-[680px]:top-[60px] lg:gap-2.5 lg:px-6 lg:py-3.5"
+    style="
+        background: var(--bg-sheet);
+        border-bottom: 1px solid var(--border-hairline);
+    "
+    data-testid="results-toolbar"
+>
+    @if (canManage() && !isClosed()) {
+        <!-- Mobile -->
+        <div class="contents lg:hidden">
+            <ds-button
+                variant="primary"
+                size="sm"
+                icon="check"
+                (click)="startVote.emit()"
+            >
+                {{ 'project.results.vote' | translate }}
+            </ds-button>
+            <ds-button
+                variant="neutral"
+                size="sm"
+                icon="plus"
+                (click)="addOption.emit()"
+            >
+                {{ 'project.results.add' | translate }}
+            </ds-button>
+        </div>
+        <!-- Desktop -->
+        <div class="hidden lg:contents">
+            <ds-button
+                variant="primary"
+                icon="check"
+                (click)="startVote.emit()"
+            >
+                {{ 'project.results.startVoting' | translate }}
+            </ds-button>
+            <ds-button variant="neutral" icon="plus" (click)="addOption.emit()">
+                {{ 'project.results.addOption' | translate }}
+            </ds-button>
+        </div>
+    }
+
+    <div class="ml-auto flex items-center gap-2 lg:gap-2.5">
+        <!-- Mobile -->
+        <div class="contents lg:hidden">
+            <ds-button
+                variant="neutral"
+                size="sm"
+                icon="refresh"
+                [label]="'project.results.refresh' | translate"
+                data-testid="refresh-btn"
+                (click)="refresh.emit()"
+            />
+        </div>
+        <!-- Desktop -->
+        <div class="hidden lg:contents">
+            <ds-button
+                variant="neutral"
+                icon="refresh"
+                data-testid="refresh-btn"
+                (click)="refresh.emit()"
+            >
+                {{ 'project.results.refresh' | translate }}
+            </ds-button>
+        </div>
+
+        @if (canManage()) {
+            @if (isClosed()) {
+                <!-- Mobile -->
+                <div class="contents lg:hidden">
+                    <ds-button
+                        variant="neutral"
+                        size="sm"
+                        data-testid="reopen-poll-btn"
+                        (click)="reopenPoll.emit()"
+                    >
+                        {{ 'project.results.reopen' | translate }}
+                    </ds-button>
+                </div>
+                <!-- Desktop -->
+                <div class="hidden lg:contents">
+                    <ds-button
+                        variant="neutral"
+                        data-testid="reopen-poll-btn"
+                        (click)="reopenPoll.emit()"
+                    >
+                        {{ 'project.results.reopenPoll' | translate }}
+                    </ds-button>
+                </div>
+            } @else if (showCloseConfirm()) {
+                <ds-button
+                    variant="ghost"
+                    size="sm"
+                    (click)="showCloseConfirm.set(false)"
+                >
+                    {{ 'project.results.cancel' | translate }}
+                </ds-button>
+                <!-- Mobile -->
+                <div class="contents lg:hidden">
+                    <ds-button
+                        variant="danger"
+                        size="sm"
+                        data-testid="close-poll-confirm-btn"
+                        (click)="closePoll.emit(); showCloseConfirm.set(false)"
+                    >
+                        {{ 'project.results.confirmEndShort' | translate }}
+                    </ds-button>
+                </div>
+                <!-- Desktop -->
+                <div class="hidden lg:contents">
+                    <ds-button
+                        variant="danger"
+                        data-testid="close-poll-confirm-btn"
+                        (click)="closePoll.emit(); showCloseConfirm.set(false)"
+                    >
+                        {{ 'project.results.confirmEnd' | translate }}
+                    </ds-button>
+                </div>
+            } @else {
+                <!-- Mobile -->
+                <div class="contents lg:hidden">
+                    <ds-button
+                        variant="danger-outline"
+                        size="sm"
+                        icon="circle-minus"
+                        data-testid="close-poll-btn"
+                        (click)="showCloseConfirm.set(true)"
+                    >
+                        {{ 'project.results.end' | translate }}
+                    </ds-button>
+                </div>
+                <!-- Desktop -->
+                <div class="hidden lg:contents">
+                    <ds-button
+                        variant="danger-outline"
+                        icon="circle-minus"
+                        data-testid="close-poll-btn"
+                        (click)="showCloseConfirm.set(true)"
+                    >
+                        {{ 'project.results.endPoll' | translate }}
+                    </ds-button>
+                </div>
+            }
+        }
+
+        @if (commentsHidden()) {
+            <div class="hidden lg:contents">
+                <ds-button
+                    variant="neutral"
+                    icon="comment"
+                    data-testid="show-comments-btn"
+                    (click)="showComments.emit()"
+                >
+                    {{ 'project.results.comments' | translate }}
+                </ds-button>
+            </div>
+        }
+    </div>
+</div>

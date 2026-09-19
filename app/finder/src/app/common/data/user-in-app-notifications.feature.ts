@@ -45,13 +45,28 @@ export function withInAppNotificationsFeature() {
             const userService = inject(UserService);
             const loggerService = inject(LoggerService);
 
+            const sameNotifications = (
+                a: InAppNotification[],
+                b: InAppNotification[],
+            ) =>
+                a.length === b.length &&
+                a.every((n, i) => n.id === b[i].id && n.read === b[i].read);
+
             const loadNotifications = () =>
                 userService.getInAppNotifications().pipe(
                     tapResponse({
-                        next: (inAppNotifications) =>
-                            patchState(store, {
-                                unreadNotifications: inAppNotifications,
-                            }),
+                        next: (inAppNotifications) => {
+                            if (
+                                !sameNotifications(
+                                    inAppNotifications,
+                                    store.unreadNotifications(),
+                                )
+                            ) {
+                                patchState(store, {
+                                    unreadNotifications: inAppNotifications,
+                                });
+                            }
+                        },
                         error: (error) =>
                             loggerService.error(
                                 '[UserStore] Error loading in-app notifications',
@@ -136,22 +151,7 @@ export function withInAppNotificationsFeature() {
                     pipe(
                         switchMap(() =>
                             timer(0, 30_000).pipe(
-                                switchMap(() =>
-                                    userService.getInAppNotifications().pipe(
-                                        tapResponse({
-                                            next: (inAppNotifications) =>
-                                                patchState(store, {
-                                                    unreadNotifications:
-                                                        inAppNotifications,
-                                                }),
-                                            error: (error) =>
-                                                loggerService.error(
-                                                    '[UserStore] Error polling in-app notifications',
-                                                    error,
-                                                ),
-                                        }),
-                                    ),
-                                ),
+                                switchMap(() => loadNotifications()),
                             ),
                         ),
                     ),

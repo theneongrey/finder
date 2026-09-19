@@ -29,6 +29,10 @@ import { PublicPollMemberSidebarComponent } from './public-poll-member-sidebar/p
 import { PublicPollGuestSidebarComponent } from './public-poll-guest-sidebar/public-poll-guest-sidebar.component';
 import { OptionDisplay, ParticipantDisplay } from './public-poll.models';
 import { OptionType } from '@common/models/option-type.model';
+import {
+    isDateOptionType,
+    optionTypeToDateType,
+} from '../polls/_shared/models/date-option.model';
 
 @Component({
     selector: 'app-public-poll',
@@ -84,18 +88,25 @@ export class PublicPollComponent implements OnInit {
         if (!preview) {
             return [];
         }
-        const isDate = preview.optionType === OptionType.Date;
+        const dateType = optionTypeToDateType(preview.optionType);
+        const isDate = isDateOptionType(preview.optionType);
         const maxVotes = Math.max(
             ...preview.options.map((o) => o.voteCount),
             1,
         );
         return preview.options.map((o) => ({
             id: o.id,
-            text: isDate ? this.dateFormatService.formatLabel(o.text) : o.text,
-            description: isDate
-                ? (this.dateFormatService.formatSubLabel(o.text) ??
-                  o.description)
-                : o.description,
+            text:
+                isDate && dateType
+                    ? this.dateFormatService.formatLabel(o.text, dateType)
+                    : o.text,
+            description:
+                isDate && dateType
+                    ? (this.dateFormatService.formatSubLabel(
+                          o.text,
+                          dateType,
+                      ) ?? o.description)
+                    : o.description,
             voteCount: o.voteCount,
             pct: Math.round((o.voteCount / maxVotes) * 100) + '%',
             isLead: o.voteCount > 0 && o.voteCount === maxVotes,

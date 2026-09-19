@@ -5,7 +5,10 @@ import {
     inject,
     input,
 } from '@angular/core';
-import { DateOptionEntry } from '../../../_shared/models/date-option.model';
+import {
+    DateOptionEntry,
+    DateOptionType,
+} from '../../../_shared/models/date-option.model';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
 import { VoteCardDateWeekdayComponent } from './vote-card-date-weekday/vote-card-date-weekday.component';
 import { VoteCardDateDateComponent } from './vote-card-date-date/vote-card-date-date.component';
@@ -30,17 +33,18 @@ export class VoteCardDateComponent {
     private readonly dateOptionFormat = inject(DateOptionFormatService);
 
     text = input('');
+    dateType = input.required<DateOptionType>();
     allOptionTexts = input<string[]>([]);
 
     parsed = computed<DateOptionEntry>(() =>
-        this.dateOptionFormat.parse(this.text()),
+        this.dateOptionFormat.parse(this.text(), this.dateType()),
     );
 
     otherWeekdays = computed<Set<number>>(() => {
         const current = this.parsed().weekday;
         const days = new Set<number>();
         for (const t of this.allOptionTexts()) {
-            const entry = this.dateOptionFormat.parse(t);
+            const entry = this.dateOptionFormat.parse(t, this.dateType());
             if (
                 entry.type === 'weekday' &&
                 entry.weekday !== undefined &&
@@ -63,7 +67,7 @@ export class VoteCardDateComponent {
             : undefined;
         const days = new Set<number>();
         for (const t of this.allOptionTexts()) {
-            const entry = this.dateOptionFormat.parse(t);
+            const entry = this.dateOptionFormat.parse(t, this.dateType());
             if (entry.type === 'date' && entry.date) {
                 const d = new Date(
                     entry.date.getFullYear(),

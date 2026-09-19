@@ -17,7 +17,7 @@
                 class="vote-stamp vote-stamp--yes pointer-events-none"
                 [style.opacity]="rightCueOpacity()"
             >
-                @if (optionType() === OptionType.Date) {
+                @if (isDateType()) {
                     {{ 'project.vote.stampCan' | translate }}
                 } @else if (optionType() === OptionType.Rating) {
                     <ds-icon
@@ -35,7 +35,7 @@
                 class="vote-stamp vote-stamp--no pointer-events-none"
                 [style.opacity]="leftCueOpacity()"
             >
-                @if (optionType() === OptionType.Date) {
+                @if (isDateType()) {
                     {{ 'project.votesOverview.voteLabel.no' | translate }}
                 } @else if (optionType() === OptionType.Rating) {
                     <ds-icon name="star" [size]="20" color="var(--negative)" />
@@ -45,9 +45,10 @@
             </span>
 
             <!-- Card content -->
-            @if (optionType() === OptionType.Date) {
+            @if (isDateType()) {
                 <app-vote-card-date
                     [text]="option()?.text ?? ''"
+                    [dateType]="dateType()!"
                     [allOptionTexts]="allOptionTexts()"
                 />
             } @else if (option()?.meta?.imageUrl) {

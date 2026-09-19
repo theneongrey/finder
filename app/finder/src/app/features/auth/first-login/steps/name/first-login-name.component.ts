@@ -101,7 +101,9 @@ export class FirstLoginNameComponent {
 
     submit(): void {
         const name = this.nameValue().trim();
-        if (!name) return;
+        if (!name) {
+            return;
+        }
         this.saving.set(true);
         this.userStore.updateProfile({
             name,

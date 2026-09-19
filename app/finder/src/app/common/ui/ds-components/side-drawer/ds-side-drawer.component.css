@@ -1,0 +1,12 @@
+.ds-drawer-panel {
+    width: min(88vw, 420px) !important;
+    max-width: 420px !important;
+    background: var(--bg-sheet);
+    box-shadow: var(--shadow-sheet);
+    font-family: var(--font-body);
+    /* The projected content owns its own padding and scroll region */
+    padding: 0;
+    border: none;
+    gap: 0;
+    overflow: hidden;
+}

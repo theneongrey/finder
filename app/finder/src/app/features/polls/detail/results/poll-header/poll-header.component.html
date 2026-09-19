@@ -1,0 +1,198 @@
+@if (editing()) {
+    <!-- ── EDIT FORM (mobile + desktop) ─────────────────────────── -->
+    <div
+        class="flex flex-col gap-2.5 lg:max-w-[600px]"
+        data-testid="poll-edit-form"
+    >
+        <ds-input
+            data-testid="poll-edit-name"
+            [ngModel]="editName()"
+            (ngModelChange)="editName.set($event)"
+            name="pollName"
+            [maxlength]="limits.questionLength"
+            [placeholder]="'project.results.editNamePlaceholder' | translate"
+        />
+        <ds-textarea
+            data-testid="poll-edit-description"
+            [autoResize]="true"
+            [ngModel]="editDescription()"
+            (ngModelChange)="editDescription.set($event)"
+            name="pollDescription"
+            [maxlength]="limits.descriptionLength"
+            [placeholder]="
+                'project.results.editDescriptionPlaceholder' | translate
+            "
+        />
+
+        @if (deleteConfirm()) {
+            <div class="flex items-center gap-2 pt-0.5">
+                <span
+                    class="min-w-0 flex-1 text-[13px]"
+                    style="color: var(--text-secondary)"
+                >
+                    {{ 'project.results.deletePrompt' | translate }}
+                </span>
+                <ds-button
+                    variant="ghost"
+                    size="sm"
+                    (click)="deleteConfirm.set(false)"
+                >
+                    {{ 'project.results.cancel' | translate }}
+                </ds-button>
+                <ds-button
+                    variant="danger"
+                    size="sm"
+                    data-testid="poll-delete-confirm-btn"
+                    (click)="confirmDelete()"
+                >
+                    {{ 'project.results.confirmDelete' | translate }}
+                </ds-button>
+            </div>
+        } @else {
+            <div class="flex items-center gap-2 pt-0.5">
+                <ds-button
+                    variant="danger-outline"
+                    size="sm"
+                    icon="trash"
+                    data-testid="poll-delete-btn"
+                    (click)="deleteConfirm.set(true)"
+                >
+                    {{ 'project.results.deletePoll' | translate }}
+                </ds-button>
+                <div class="ml-auto flex items-center gap-2">
+                    <ds-button
+                        variant="neutral"
+                        size="sm"
+                        data-testid="poll-edit-cancel"
+                        (click)="cancelEdit()"
+                    >
+                        {{ 'project.results.cancel' | translate }}
+                    </ds-button>
+                    <ds-button
+                        variant="primary"
+                        size="sm"
+                        [disabled]="!editName().trim()"
+                        data-testid="poll-edit-save"
+                        (click)="saveEdit()"
+                    >
+                        {{ 'project.results.save' | translate }}
+                    </ds-button>
+                </div>
+            </div>
+        }
+    </div>
+} @else {
+    <!-- ── MOBILE (<lg) ─────────────────────────────────────────── -->
+    <div class="flex flex-col gap-2.5 lg:hidden">
+        <div class="flex items-start gap-1.5">
+            <h1
+                class="min-w-0 text-[23px] leading-[1.15] font-bold text-pretty"
+                style="letter-spacing: -0.5px; color: var(--text-primary)"
+            >
+                {{ name() }}
+            </h1>
+            @if (canManage()) {
+                <ds-button
+                    variant="ghost"
+                    [size]="30"
+                    icon="edit"
+                    [label]="'project.results.edit' | translate"
+                    data-testid="poll-edit-btn"
+                    (click)="startEdit()"
+                />
+            }
+        </div>
+        @if (description()) {
+            <p
+                class="text-[14px] leading-[1.5] text-pretty"
+                style="color: var(--text-secondary)"
+            >
+                {{ description() }}
+            </p>
+        }
+        <div class="flex items-center gap-2">
+            @if (!isClosed() && closeDateText()) {
+                <span
+                    class="flex min-w-0 items-center gap-1.5 truncate text-[13px]"
+                    style="color: var(--text-secondary)"
+                >
+                    <ds-icon name="clock" [size]="14" />
+                    {{
+                        'project.results.openUntil'
+                            | translate: { date: closeDateText() }
+                    }}
+                </span>
+            } @else {
+                <span class="text-[13px]" style="color: var(--text-secondary)">
+                    {{ statusLabel() }}
+                </span>
+            }
+            <div class="ml-auto shrink-0">
+                <ds-button
+                    variant="soft"
+                    size="sm"
+                    icon="comment"
+                    data-testid="poll-comments-btn"
+                    (click)="openComments.emit()"
+                >
+                    {{ commentCount() }}
+                </ds-button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── DESKTOP (≥lg) ────────────────────────────────────────── -->
+    <div class="hidden flex-col gap-3 lg:flex">
+        <div class="flex items-start gap-2">
+            <h1
+                class="min-w-0 text-[32px] leading-[1.14] font-bold text-pretty"
+                style="letter-spacing: -0.8px; color: var(--text-primary)"
+            >
+                {{ name() }}
+            </h1>
+            @if (canManage()) {
+                <ds-button
+                    variant="ghost"
+                    [size]="34"
+                    icon="edit"
+                    [label]="'project.results.edit' | translate"
+                    data-testid="poll-edit-btn-desktop"
+                    (click)="startEdit()"
+                />
+            }
+        </div>
+        @if (description()) {
+            <p
+                class="text-[15px] leading-[1.5] text-pretty"
+                style="color: var(--text-secondary)"
+            >
+                {{ description() }}
+            </p>
+        }
+        <div class="flex items-center gap-2.5">
+            <ds-badge tone="neutral">{{ typeLabel() }}</ds-badge>
+            <ds-status-dot [tone]="isClosed() ? 'muted' : 'positive'">{{
+                statusLabel()
+            }}</ds-status-dot>
+            @if (!isClosed() && closeDateText()) {
+                <span class="text-[13px]" style="color: var(--text-secondary)">
+                    {{
+                        'project.results.openUntil'
+                            | translate: { date: closeDateText() }
+                    }}
+                </span>
+            }
+            <div class="ml-auto">
+                <ds-button
+                    variant="neutral"
+                    size="sm"
+                    icon="sort"
+                    data-testid="results-sort-btn"
+                    (click)="toggleSort.emit()"
+                >
+                    {{ sortLabel() }}
+                </ds-button>
+            </div>
+        </div>
+    </div>
+}

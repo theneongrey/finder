@@ -9,6 +9,12 @@ import { filter } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+export interface TitleBarAction {
+    icon: string;
+    label: string;
+    handler: () => void;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -28,6 +34,8 @@ export class TitleBarService {
     progress = this.#progress.asReadonly();
     #isHidden = signal<boolean>(false);
     isHidden = this.#isHidden.asReadonly();
+    #action = signal<TitleBarAction | undefined>(undefined);
+    action = this.#action.asReadonly();
 
     constructor() {
         this.router.events
@@ -61,6 +69,14 @@ export class TitleBarService {
 
     setProgress(value: number | undefined): void {
         this.#progress.set(value);
+    }
+
+    setAction(action: TitleBarAction | undefined): void {
+        this.#action.set(action);
+    }
+
+    clearAction(): void {
+        this.#action.set(undefined);
     }
 
     clearTitle(): void {

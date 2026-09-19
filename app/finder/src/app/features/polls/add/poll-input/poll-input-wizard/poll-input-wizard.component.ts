@@ -6,33 +6,47 @@ import {
     inject,
     signal,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollInputStateService } from '../poll-input-state.service';
 import { PollTypeSelectionComponent } from './poll-type-selection/poll-type-selection.component';
+import { AppointmentTypeSelectionComponent } from '../../../detail/results/option-input/poll-options/appointment-type-selection/appointment-type-selection.component';
+import { PollQuestionCardComponent } from '../../../_shared/ui/poll-input-form/poll-question-card/poll-question-card.component';
+import { PollCloseSettingsComponent } from '../../../_shared/ui/poll-input-form/poll-close-settings/poll-close-settings.component';
+import { ShareAccessFormComponent } from '../../../_shared/ui/share-content/share-access-form/share-access-form.component';
+import { ShareInviteFormComponent } from '../../../_shared/ui/share-content/share-invite-form/share-invite-form.component';
+import {
+    DsSegmentedControlComponent,
+    SegmentOption,
+} from '@ds/segmented-control/ds-segmented-control.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
+import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
-import { DsSubHeaderComponent } from '@ds/sub-header/ds-sub-header.component';
-import { ShareContentComponent } from '../../../_shared/ui/share-content/share-content.component';
-import { ShareMembersListComponent } from '../../../_shared/ui/share-content/share-members-list/share-members-list.component';
-import { PollInputFormComponent } from '../../../_shared/ui/poll-input-form/poll-input-form.component';
 import { TitleBarService } from '@common/services/title-bar.service';
 import { OptionType } from '@common/models/option-type.model';
+import { isDateOptionType } from '../../../_shared/models/date-option.model';
 import { VisibilityType } from '../../../_shared/models/poll-detail.model';
 
 @Component({
     selector: 'app-poll-input-wizard',
     templateUrl: './poll-input-wizard.component.html',
+    styleUrl: './poll-input-wizard.component.css',
+    host: { class: 'flex flex-col min-[680px]:h-[calc(100dvh_-_61px)]' },
     imports: [
+        NgTemplateOutlet,
         PollTypeSelectionComponent,
-        PollInputFormComponent,
-        ShareContentComponent,
-        ShareMembersListComponent,
+        AppointmentTypeSelectionComponent,
+        PollQuestionCardComponent,
+        PollCloseSettingsComponent,
+        ShareAccessFormComponent,
+        ShareInviteFormComponent,
+        DsSegmentedControlComponent,
         DsButtonComponent,
+        DsCardComponent,
         DsIconComponent,
-        DsSubHeaderComponent,
         TranslatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,11 +56,6 @@ export class PollInputWizardComponent {
     private readonly titleService = inject(TitleBarService);
     private readonly translateService = inject(TranslateService);
 
-    readonly OptionType = OptionType;
-    readonly VisibilityType = VisibilityType;
-
-    readonly wizardStep = signal(1);
-
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 680px)')
@@ -54,219 +63,119 @@ export class PollInputWizardComponent {
         { initialValue: false },
     );
 
-    readonly optionTypeLabel = computed(() => {
-        const type = this.state.optionType();
-        if (type === OptionType.YesNo) {
-            return 'project.detail.pollTypes.yesNo';
-        }
-        if (type === OptionType.Date) {
-            return 'project.detail.pollTypes.appointment';
-        }
-        if (type === OptionType.Rating) {
-            return 'project.detail.pollTypes.rating';
-        }
-        return '';
-    });
+    readonly shareTimingOptions = computed<SegmentOption[]>(() => [
+        {
+            value: 'later',
+            label: this.translateService.instant(
+                'project.pollInput.shareLater',
+            ),
+        },
+        {
+            value: 'now',
+            label: this.translateService.instant('project.pollInput.shareNow'),
+        },
+    ]);
 
-    readonly step2Label = computed(() => {
-        const type = this.state.optionType();
-        if (type === OptionType.Date) {
-            return 'project.pollInput.stepOptionsDate';
-        }
-        if (type === OptionType.Rating) {
-            return 'project.pollInput.stepOptionsRating';
-        }
-        return 'project.pollInput.stepOptions';
-    });
+    readonly visibilityOptions = computed<SegmentOption[]>(() => [
+        {
+            value: 'invite-only',
+            label: this.translateService.instant('project.share.inviteOnly'),
+            icon: 'lock',
+        },
+        {
+            value: 'open',
+            label: this.translateService.instant('project.share.open'),
+            icon: 'globe',
+        },
+    ]);
 
-    readonly ctaLabel = computed((): string => {
-        const step = this.wizardStep();
-        if (step === 1) {
-            return 'project.pollInput.next';
-        }
-        if (step === 2) {
-            return 'project.pollInput.createPoll';
-        }
-        return 'project.pollInput.done'; // step 3: finish
-    });
+    /**
+     * Any date-family OptionType maps back to the single "Date" category so the
+     * top-level type button stays highlighted while a sub-type is chosen.
+     */
+    readonly selectedCategory = computed<OptionType | undefined>(() =>
+        isDateOptionType(this.state.optionType())
+            ? OptionType.Date
+            : this.state.optionType(),
+    );
 
-    readonly canProceed = computed((): boolean => {
-        const step = this.wizardStep();
-        if (step === 1) {
-            return this.state.optionType() !== undefined;
-        }
-        if (step === 2) {
-            return this.state.isValid() && !this.state.isPollCreating();
-        }
-        if (step === 3) {
-            return true;
-        }
-        return true;
-    });
+    readonly isDateCategory = computed(() =>
+        isDateOptionType(this.state.optionType()),
+    );
 
-    readonly webSteps = computed(() => {
-        const step = this.wizardStep();
-        return [
-            {
-                num: '1',
-                titleKey: 'project.pollInput.stepArt',
-                subKey: this.optionTypeLabel(),
-                isDone: step > 1,
-                isCurrent: step === 1,
-            },
-            {
-                num: '2',
-                titleKey: this.step2Label(),
-                subKey: '',
-                isDone: step > 2,
-                isCurrent: step === 2,
-            },
-            {
-                num: '3',
-                titleKey: 'project.pollInput.stepShare',
-                subKey: '',
-                isDone: false,
-                isCurrent: step === 3,
-            },
-        ];
-    });
+    readonly selectedVisibilityStr = computed(() =>
+        this.state.visibility() === VisibilityType.VisibleForEverybody
+            ? 'open'
+            : 'invite-only',
+    );
 
-    readonly webContentTitleKey = computed((): string => {
-        const step = this.wizardStep();
-        if (step === 1) {
-            return 'project.pollInput.typeTitle';
-        }
-        if (step === 2) {
-            return this.step2Label();
-        }
-        return 'project.pollInput.shareTitle';
-    });
+    readonly isPublic = computed(
+        () => this.state.visibility() === VisibilityType.VisibleForEverybody,
+    );
 
-    readonly webContentSubtitle = computed((): string => {
-        const step = this.wizardStep();
-        if (step === 1) {
-            return this.translateService.instant(
-                'project.pollInput.webStep1Title',
-            );
-        }
-        if (step === 2) {
-            return this.state.optionType() === OptionType.Date
-                ? this.translateService.instant(
-                      'project.pollInput.webStep2TitleDate',
-                  )
-                : this.translateService.instant(
-                      'project.pollInput.webStep2TitleGeneric',
-                  );
-        }
-        return this.translateService.instant('project.pollInput.webStep3Title');
-    });
+    /**
+     * Mobile only reveals sections progressively to keep the first view calm.
+     * On desktop everything is visible from the start.
+     */
+    private readonly typeChosen = signal(false);
+
+    readonly revealType = computed(
+        () => this.isDesktop() || this.state.question().trim().length >= 3,
+    );
+
+    readonly revealRest = computed(() => this.isDesktop() || this.typeChosen());
 
     constructor() {
         effect(() => {
             this.state.initStandaloneMode();
         });
 
-        effect(
-            () => {
+        // Preselect a default type on desktop only; mobile reveals the type
+        // picker progressively and waits for an explicit choice.
+        effect(() => {
+            if (this.isDesktop()) {
                 this.state.preselectYesNo();
-            },
-            { allowSignalWrites: true },
-        );
-
-        effect(
-            () => {
-                if (this.state.tryApplySharesAfterCreation()) {
-                    this.wizardStep.set(3);
-                }
-            },
-            { allowSignalWrites: true },
-        );
+            }
+        });
 
         effect(() => {
             this.state.loadSharingContacts();
         });
 
         effect(() => {
-            const step = this.wizardStep();
-            const desktop = this.isDesktop();
+            this.state.applySharesAndNavigate();
+        });
 
-            if (desktop) {
-                this.titleService.setProgress(undefined);
-                this.titleService.setTitle(
-                    this.translateService.instant(
-                        'project.standaloneInput.addNew.cto',
-                    ),
-                );
-                this.titleService.setSubtitle(
-                    this.translateService.instant(
-                        'project.pollInput.pollsOverviewLabel',
-                    ),
-                );
-                return;
-            }
-
-            const step2Name = this.translateService.instant(this.step2Label());
-            const step1Name = this.translateService.instant(
-                'project.pollInput.stepArt',
-            );
-            const step3Name = this.translateService.instant(
-                'project.pollInput.stepShare',
-            );
-            const stepNames = [step1Name, step2Name, step3Name];
-            const titles = [
+        effect(() => {
+            this.titleService.setProgress(undefined);
+            this.titleService.setBackFn(undefined);
+            this.titleService.setBackRoute('/polls');
+            this.titleService.setTitle(
                 this.translateService.instant(
                     'project.standaloneInput.addNew.cto',
                 ),
-                step2Name,
-                step3Name,
-            ];
-
-            this.titleService.setTitle(titles[step - 1]);
-            this.titleService.setSubtitle(
-                this.translateService.instant(
-                    'project.pollInput.mobileStepSubtitle',
-                    {
-                        step,
-                        total: 3,
-                        name: stepNames[step - 1],
-                    },
-                ),
-            );
-            this.titleService.setProgress(Math.round((step / 3) * 100));
-            this.titleService.setBackFn(
-                step === 2 ? () => this.prevStep() : undefined,
             );
         });
     }
 
     onTypeSelected(type: OptionType): void {
-        this.state.onTypeSelected(type, this.wizardStep);
+        this.state.onTypeSelected(type);
+        this.typeChosen.set(true);
     }
 
-    onCta(): void {
-        const step = this.wizardStep();
-
-        if (step === 1) {
-            this.wizardStep.set(2);
-            return;
-        }
-
-        if (step === 2) {
-            this.state.submitStandalone();
-            return;
-        }
-
-        // step 3: finish
-        this.state.finishAndNavigate();
+    onShareTimingChange(value: string): void {
+        this.state.shareTiming.set(value === 'now' ? 'now' : 'later');
     }
 
-    prevStep(): void {
-        if (this.wizardStep() > 1) {
-            this.wizardStep.update((s) => s - 1);
-        }
+    onVisibilityChange(value: string): void {
+        this.state.visibility.set(
+            value === 'open'
+                ? VisibilityType.VisibleForEverybody
+                : VisibilityType.VisibleForSelectedOnly,
+        );
     }
 
-    discard(): void {
-        this.state.finishAndNavigate();
+    onCreate(): void {
+        this.state.submitStandalone();
     }
 }

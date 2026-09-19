@@ -28,9 +28,10 @@
         name="question"
         [maxlength]="limits.questionLength"
         [readonly]="isClosed()"
+        [clearable]="true"
     />
 
-    @if (showDescription()) {
+    @if (showDescription() || forceShowDescription()) {
         <div class="mt-3">
             <div class="mb-[7px] flex items-center justify-between">
                 <p
@@ -38,12 +39,14 @@
                 >
                     {{ 'project.pollInput.yesNo.description' | translate }}
                 </p>
-                <ds-button
-                    [size]="24"
-                    variant="ghost"
-                    icon="close"
-                    (click)="onDescriptionBlur()"
-                />
+                @if (!forceShowDescription()) {
+                    <ds-button
+                        [size]="24"
+                        variant="ghost"
+                        icon="close"
+                        (click)="onDescriptionBlur()"
+                    />
+                }
             </div>
             <ds-textarea
                 #descriptionTextarea
@@ -61,7 +64,7 @@
         </div>
     }
 
-    @if (!showDescription() && !isClosed()) {
+    @if (!showDescription() && !isClosed() && !forceShowDescription()) {
         <div class="mt-2">
             <ds-button
                 variant="ghost"

@@ -1,0 +1,44 @@
+.add-option-animate {
+    overflow: hidden;
+}
+
+.add-option-enter {
+    animation: addOptionEnter 220ms var(--ease-standard, ease-out);
+}
+
+@keyframes addOptionEnter {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        max-height: 600px;
+        transform: translateY(0);
+    }
+}
+
+.add-option-leave {
+    animation: addOptionLeave 180ms ease-in forwards;
+}
+
+@keyframes addOptionLeave {
+    from {
+        opacity: 1;
+        max-height: 600px;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-6px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .add-option-enter,
+    .add-option-leave {
+        animation: none;
+    }
+}

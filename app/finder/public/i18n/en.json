@@ -566,7 +566,19 @@
             "editNamePlaceholder": "Poll title",
             "editDescriptionPlaceholder": "Description (optional)",
             "deletePrompt": "Delete this poll permanently?",
-            "deletePoll": "Delete poll"
+            "deletePoll": "Delete poll",
+            "deleteOption": "Delete option",
+            "deleteOptionPrompt": "Delete this option?",
+            "addedBy": "Added by",
+            "originallyAddedBy": "Originally added by",
+            "revote": "Vote again",
+            "rate": "Rate",
+            "noVotes": "No votes",
+            "noRatings": "No ratings",
+            "ratingSummary": "{{count}} ratings · Ø {{avg}} of 5",
+            "ratingsAvgLine": "Ø {{avg}} ★ · {{count}} ratings",
+            "voteLineYesNo": "{{yes}} × yes · {{no}} × no",
+            "voteLineDate": "{{yes}} × can · {{maybe}} × maybe · {{no}} × can't"
         },
         "lastVote": {
             "label": "Last vote",

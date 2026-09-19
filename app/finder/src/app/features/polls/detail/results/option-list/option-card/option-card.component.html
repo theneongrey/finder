@@ -41,7 +41,7 @@
                             variant="ghost"
                             [size]="32"
                             icon="edit"
-                            label="Bearbeiten"
+                            [label]="'project.results.edit' | translate"
                             (click)="startEdit()"
                         />
                     </span>
@@ -49,12 +49,7 @@
                         class="flex flex-1 items-center justify-center px-2 py-4"
                     >
                         <p
-                            class="text-center text-[23px] leading-[1.2] font-bold text-pretty"
-                            style="
-                                font-family: var(--font-display);
-                                letter-spacing: -0.3px;
-                                color: var(--text-primary);
-                            "
+                            class="font-display text-center text-[23px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty text-[color:var(--text-primary)]"
                         >
                             {{ option().text }}
                         </p>
@@ -63,12 +58,7 @@
                     <!-- Title + edit -->
                     <div class="flex items-center gap-2">
                         <p
-                            class="min-w-0 flex-1 text-[19px] leading-[1.2] font-bold text-pretty"
-                            style="
-                                font-family: var(--font-display);
-                                letter-spacing: -0.3px;
-                                color: var(--text-primary);
-                            "
+                            class="font-display min-w-0 flex-1 text-[19px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty text-[color:var(--text-primary)]"
                         >
                             {{ option().text }}
                         </p>
@@ -79,7 +69,7 @@
                                 variant="ghost"
                                 [size]="32"
                                 icon="edit"
-                                label="Bearbeiten"
+                                [label]="'project.results.edit' | translate"
                                 (click)="startEdit()"
                             />
                         </span>
@@ -91,17 +81,19 @@
                     @if (deleteConfirm()) {
                         <div class="mt-4 flex items-center gap-2">
                             <span
-                                class="min-w-0 flex-1 text-[13px]"
-                                style="color: var(--text-secondary)"
+                                class="min-w-0 flex-1 text-[13px] text-[color:var(--text-secondary)]"
                             >
-                                Option wirklich löschen?
+                                {{
+                                    'project.results.deleteOptionPrompt'
+                                        | translate
+                                }}
                             </span>
                             <ds-button
                                 variant="ghost"
                                 size="sm"
                                 (click)="deleteConfirm.set(false)"
                             >
-                                Abbrechen
+                                {{ 'project.results.cancel' | translate }}
                             </ds-button>
                             <ds-button
                                 variant="danger"
@@ -109,7 +101,7 @@
                                 data-testid="option-delete-confirm"
                                 (click)="confirmDelete()"
                             >
-                                Löschen
+                                {{ 'project.results.delete' | translate }}
                             </ds-button>
                         </div>
                     } @else {
@@ -118,7 +110,9 @@
                                 variant="danger-outline"
                                 size="sm"
                                 icon="trash"
-                                label="Option löschen"
+                                [label]="
+                                    'project.results.deleteOption' | translate
+                                "
                                 data-testid="option-delete"
                                 (click)="deleteConfirm.set(true)"
                             />
@@ -129,7 +123,7 @@
                                     data-testid="option-edit-cancel"
                                     (click)="cancelEdit()"
                                 >
-                                    Abbrechen
+                                    {{ 'project.results.cancel' | translate }}
                                 </ds-button>
                                 <ds-button
                                     variant="primary"
@@ -138,7 +132,7 @@
                                     data-testid="option-edit-save"
                                     (click)="submitEdit()"
                                 >
-                                    Speichern
+                                    {{ 'project.results.save' | translate }}
                                 </ds-button>
                             </div>
                         </div>
@@ -149,13 +143,13 @@
                 <div class="mt-1 mb-2 flex items-center gap-2">
                     <app-user-avatar [user]="option().creator" [size]="22" />
                     <span
-                        class="min-w-0 truncate text-[13px]"
-                        style="color: var(--text-secondary)"
+                        class="min-w-0 truncate text-[13px] text-[color:var(--text-secondary)]"
                     >
                         {{
                             editing()
-                                ? 'Ursprünglich hinzugefügt von'
-                                : 'Hinzugefügt von'
+                                ? ('project.results.originallyAddedBy'
+                                  | translate)
+                                : ('project.results.addedBy' | translate)
                         }}
                         {{ option().creator.name }}
                     </span>
@@ -164,8 +158,7 @@
                 <!-- Description -->
                 @if (!editing() && option().description) {
                     <p
-                        class="mt-3 text-[14px] leading-[1.5]"
-                        style="color: var(--text-secondary)"
+                        class="mt-3 text-[14px] leading-[1.5] text-[color:var(--text-secondary)]"
                     >
                         {{ option().description }}
                     </p>
@@ -176,11 +169,7 @@
                     <div class="mt-3">
                         <button
                             type="button"
-                            class="inline-flex max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-semibold"
-                            style="
-                                border: 1px solid var(--border-hairline);
-                                color: var(--accent);
-                            "
+                            class="inline-flex max-w-full cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border-hairline)] px-3 py-1.5 text-[12.5px] font-semibold text-[color:var(--accent)]"
                             (click)="openUrl(option().meta!.url)"
                         >
                             <ds-icon name="link" [size]="13" />
@@ -194,22 +183,25 @@
                 @if (!editing()) {
                     <!-- Divider before results summary (pinned to bottom) -->
                     <hr
-                        class="mt-auto border-0"
-                        style="border-top: 1px solid var(--border-hairline)"
+                        class="mt-auto border-t border-[color:var(--border-hairline)]"
                     />
 
                     <!-- Voted count + percentage -->
                     <div class="mt-3.5 flex items-center justify-between gap-2">
                         <span
-                            class="text-[13px] leading-none font-bold"
-                            style="color: var(--text-primary)"
+                            class="text-[13px] leading-none font-bold text-[color:var(--text-primary)]"
                         >
-                            {{ votedCount() }} von
-                            {{ totalParticipants() }} haben abgestimmt
+                            {{
+                                'project.lastVote.voted'
+                                    | translate
+                                        : {
+                                              count: votedCount(),
+                                              total: totalParticipants(),
+                                          }
+                            }}
                         </span>
                         <span
-                            class="text-[12.5px] leading-none font-semibold"
-                            style="color: var(--text-muted)"
+                            class="text-[12.5px] leading-none font-semibold text-[color:var(--text-muted)]"
                         >
                             {{ votedPercent() }}%
                         </span>
@@ -233,15 +225,22 @@
                             />
                         }
                         <span
-                            class="min-w-0 flex-1 truncate text-[12.5px] font-semibold"
-                            style="color: var(--text-secondary)"
+                            class="min-w-0 flex-1 truncate text-[12.5px] font-semibold text-[color:var(--text-secondary)]"
                         >
                             @if (pollType() === 'rating') {
                                 @if (ratingsCount()) {
-                                    Ø {{ avgLabel() }} ★ · {{ ratingsCount() }}
-                                    Bewertungen
+                                    {{
+                                        'project.results.ratingsAvgLine'
+                                            | translate
+                                                : {
+                                                      avg: avgLabel(),
+                                                      count: ratingsCount(),
+                                                  }
+                                    }}
                                 } @else {
-                                    Keine Bewertungen
+                                    {{
+                                        'project.results.noRatings' | translate
+                                    }}
                                 }
                             } @else {
                                 {{ voteLine() }}
@@ -266,9 +265,10 @@
                                 [queryParams]="{ revote: 1 }"
                             >
                                 {{
-                                    pollType() === 'rating'
-                                        ? 'Bewerten'
-                                        : 'Abstimmen'
+                                    (pollType() === 'rating'
+                                        ? 'project.results.rate'
+                                        : 'project.results.vote'
+                                    ) | translate
                                 }}
                             </ds-button>
                         </div>
@@ -276,7 +276,7 @@
                             variant="outline"
                             size="sm"
                             icon="comment"
-                            label="Kommentare"
+                            [label]="'project.results.comments' | translate"
                             (click)="commentsClick.emit()"
                         >
                             {{ commentCount() }}
@@ -289,19 +289,14 @@
 } @else {
     <!-- Overview mode -->
     <div
-        class="rounded-[22px] p-4"
-        style="
-            background: var(--surface-card);
-            border: 1px solid var(--border-hairline-soft);
-            box-shadow: var(--shadow-card-soft);
-        "
+        class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card-soft)]"
     >
         <div class="mb-3 flex flex-col gap-1">
-            <p class="text-[15px] font-bold" style="color: var(--text-primary)">
+            <p class="text-[15px] font-bold text-[color:var(--text-primary)]">
                 {{ option().text }}
             </p>
             @if (option().description) {
-                <p class="text-[13px]" style="color: var(--text-secondary)">
+                <p class="text-[13px] text-[color:var(--text-secondary)]">
                     {{ option().description }}
                 </p>
             }
@@ -319,7 +314,7 @@
                         option().id,
                     ]"
                 >
-                    Erneut abstimmen
+                    {{ 'project.results.revote' | translate }}
                 </ds-button>
             </div>
         } @else {
@@ -334,7 +329,7 @@
                     option().id,
                 ]"
             >
-                Abstimmen
+                {{ 'project.results.vote' | translate }}
             </ds-button>
         }
     </div>

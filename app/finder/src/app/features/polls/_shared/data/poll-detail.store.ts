@@ -215,21 +215,23 @@ export const PollDetailStore = signalStore(
             ),
         ),
 
-        deletePoll: rxMethod<string>(
+        // Standalone polls are backed 1:1 by a project, so deleting the poll
+        // means deleting its whole project.
+        deleteProject: rxMethod<string>(
             pipe(
-                switchMap((pollSlug) =>
-                    store.projectService.deletePoll(pollSlug).pipe(
+                switchMap((projectId) =>
+                    store.projectService.deleteProject(projectId).pipe(
                         tapResponse({
                             next: () => {
                                 store.loggerService.debug(
-                                    `[PollDetailStore] Deleted poll`,
-                                    pollSlug,
+                                    `[PollDetailStore] Deleted project`,
+                                    projectId,
                                 );
                                 store.router.navigate(['/polls']);
                             },
                             error: (error) => {
                                 store.loggerService.log(
-                                    '[PollDetailStore] Error while deleting a poll',
+                                    '[PollDetailStore] Error while deleting a project',
                                     error,
                                 );
                             },

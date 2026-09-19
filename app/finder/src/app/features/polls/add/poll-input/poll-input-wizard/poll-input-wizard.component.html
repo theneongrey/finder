@@ -116,11 +116,11 @@
     <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div class="flex-none px-8 pt-6 pb-4">
             <h1
-                class="font-display text-[30px] leading-[1.05] font-bold tracking-[-0.8px] text-[#1d2227]"
+                class="font-display text-[30px] leading-[1.05] font-bold tracking-[-0.8px] text-[color:var(--text-primary)]"
             >
                 {{ 'project.pollInput.typeTitle' | translate }}
             </h1>
-            <p class="mt-1.5 text-[14.5px] text-[#79756f]">
+            <p class="mt-1.5 text-[14.5px] text-[color:var(--text-muted)]">
                 {{ 'project.pollInput.singleSubtitle' | translate }}
             </p>
         </div>
@@ -147,7 +147,7 @@
     <div
         class="flex flex-none items-center justify-between gap-6 border-t border-[var(--border-hairline-soft)] bg-[var(--cream-200)] px-8 py-4"
     >
-        <p class="text-[13.5px] text-[#79756f]">
+        <p class="text-[13.5px] text-[color:var(--text-muted)]">
             @if (!state.question()) {
                 {{ 'project.pollInput.createHintNoTitle' | translate }}
             }
@@ -166,11 +166,13 @@
     ═══════════════════════════════════════════ -->
     <div class="px-[18px] pt-5 pb-8">
         <h1
-            class="font-display text-wrap-pretty text-[27px] leading-[1.1] font-bold tracking-[-0.7px] text-[#1d2227]"
+            class="font-display text-wrap-pretty text-[27px] leading-[1.1] font-bold tracking-[-0.7px] text-[color:var(--text-primary)]"
         >
             {{ 'project.pollInput.typeTitle' | translate }}
         </h1>
-        <p class="text-wrap-pretty mt-1.5 text-[14px] text-[#79756f]">
+        <p
+            class="text-wrap-pretty mt-1.5 text-[14px] text-[color:var(--text-muted)]"
+        >
             {{ 'project.pollInput.singleSubtitle' | translate }}
         </p>
 
@@ -188,7 +190,9 @@
 
         <div class="mt-6">
             @if (!state.question()) {
-                <p class="mb-2.5 text-center text-[13px] text-[#79756f]">
+                <p
+                    class="mb-2.5 text-center text-[13px] text-[color:var(--text-muted)]"
+                >
                     {{ 'project.pollInput.createHintNoTitle' | translate }}
                 </p>
             }

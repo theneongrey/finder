@@ -17,8 +17,7 @@
 <div class="link-card-outer" [class.link-card-outer--open]="isPublic()">
     @if (!preCreation()) {
         <div
-            class="mt-3 flex items-center gap-2 rounded-[16px] border border-[var(--border-hairline-soft)] bg-white px-3 py-2"
-            style="box-shadow: var(--shadow-card-soft)"
+            class="mt-3 flex items-center gap-2 rounded-[16px] border border-[var(--border-hairline-soft)] bg-white px-3 py-2 shadow-[var(--shadow-card-soft)]"
         >
             <span
                 class="min-w-0 flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap text-[var(--text-secondary)]"
@@ -38,8 +37,7 @@
             <ds-icon name="info" [size]="14" color="var(--text-muted)" />
         </span>
         <span
-            class="leading-relaxed text-[var(--text-secondary)]"
-            style="font-size: var(--fs-caption)"
+            class="text-[length:var(--fs-caption)] leading-relaxed text-[var(--text-secondary)]"
             >{{
                 (preCreation()
                     ? 'project.share.linkNoteBeforeCreate'

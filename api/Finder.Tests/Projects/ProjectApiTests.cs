@@ -151,6 +151,21 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
     }
 
     [Fact]
+    public async Task DeleteProject_WhenOwner_AlsoDeletesPoll()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id);
+        var poll = await _factory.SeedPoll(project.Id);
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var deleteResponse = await client.DeleteAsync($"/api/project/{project.Id}");
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+
+        var pollResponse = await client.GetAsync($"/api/project/poll/{poll.Id}");
+        Assert.Equal(HttpStatusCode.NotFound, pollResponse.StatusCode);
+    }
+
+    [Fact]
     public async Task DeleteProject_WhenNotOwner_Returns404()
     {
         var owner = await _factory.SeedUser();

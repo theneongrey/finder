@@ -566,7 +566,19 @@
             "editNamePlaceholder": "Titel der Abstimmung",
             "editDescriptionPlaceholder": "Beschreibung (optional)",
             "deletePrompt": "Diese Abstimmung endgültig löschen?",
-            "deletePoll": "Abstimmung löschen"
+            "deletePoll": "Abstimmung löschen",
+            "deleteOption": "Option löschen",
+            "deleteOptionPrompt": "Option wirklich löschen?",
+            "addedBy": "Hinzugefügt von",
+            "originallyAddedBy": "Ursprünglich hinzugefügt von",
+            "revote": "Erneut abstimmen",
+            "rate": "Bewerten",
+            "noVotes": "Keine Stimmen",
+            "noRatings": "Keine Bewertungen",
+            "ratingSummary": "{{count}} Bewertungen · Ø {{avg}} von 5",
+            "ratingsAvgLine": "Ø {{avg}} ★ · {{count}} Bewertungen",
+            "voteLineYesNo": "{{yes}} × Ja · {{no}} × Nein",
+            "voteLineDate": "{{yes}} × kann · {{maybe}} × vielleicht · {{no}} × kann nicht"
         },
         "lastVote": {
             "label": "Letzte Stimme",

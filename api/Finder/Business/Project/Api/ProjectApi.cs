@@ -121,15 +121,6 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
 
-        // Delete poll
-        app.MapDelete("/api/project/poll/{slug}",
-                async (string slug, ProjectService projectService) =>
-                {
-                    var result = await projectService.DeletePoll(slug);
-                    return !result.IsSuccess ? Results.NotFound() : Results.NoContent();
-                })
-            .RequireAuthorization();
-
         // Add option
         app.MapPost("/api/project/poll/option",
                 async ([FromBody] AddOptionToPollRequest request, ProjectService projectService, UserService userService) =>

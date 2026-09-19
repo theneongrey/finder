@@ -304,25 +304,6 @@ public class ProjectService
         return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result> DeletePoll(string slug)
-    {
-        var deletedPolls = await _dbContext.Polls
-            .Where(t => t.Id == SlugHelper.ExtractId(slug) && (t.Project.Creator.Id == UserId ||
-                                                               t.Project.Permissions.Any(permission =>
-                                                                   permission.Person.Id == UserId &&
-                                                                   permission.PermissionType >=
-                                                                   PermissionType.Maintainer)))
-            .ExecuteDeleteAsync();
-
-        if (deletedPolls == 0)
-        {
-            return Result.Fail(404);
-        }
-
-        await _dbContext.SaveChangesAsync();
-        return Result.Success();
-    }
-
     public async Task<Result<Poll>> GetPoll(string slug)
     {
         var poll = await _dbContext.Polls

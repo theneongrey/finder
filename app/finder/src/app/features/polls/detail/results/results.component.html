@@ -39,10 +39,7 @@
                 />
 
                 <!-- Separator between header and cards -->
-                <hr
-                    class="h-px border-0"
-                    style="background: var(--border-hairline)"
-                />
+                <hr class="h-px border-0 bg-[var(--border-hairline)]" />
 
                 @if (canManagePoll() && !poll.isClosed && showAddOption()) {
                     <app-add-option-panel

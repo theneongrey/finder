@@ -163,56 +163,6 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
-    // --- DELETE /api/project/poll/{id} ---
-
-    [Fact]
-    public async Task DeletePoll_WhenCreator_Returns204()
-    {
-        var user = await _factory.SeedUser();
-        var project = await _factory.SeedProject(user.Id);
-        var poll = await _factory.SeedPoll(project.Id);
-        using var client = _factory.CreateAuthenticatedClient(user.Id);
-
-        var response = await client.DeleteAsync($"/api/project/poll/{poll.Id}");
-
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task DeletePoll_WhenNotPermitted_Returns404()
-    {
-        var owner = await _factory.SeedUser();
-        var other = await _factory.SeedUser();
-        var project = await _factory.SeedProject(owner.Id);
-        var poll = await _factory.SeedPoll(project.Id);
-        using var client = _factory.CreateAuthenticatedClient(other.Id);
-
-        var response = await client.DeleteAsync($"/api/project/poll/{poll.Id}");
-
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task DeletePoll_WhenNotFound_Returns404()
-    {
-        var user = await _factory.SeedUser();
-        using var client = _factory.CreateAuthenticatedClient(user.Id);
-
-        var response = await client.DeleteAsync($"/api/project/poll/{Guid.NewGuid()}");
-
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task DeletePoll_WhenUnauthenticated_Returns401()
-    {
-        using var client = _factory.CreateClient();
-
-        var response = await client.DeleteAsync($"/api/project/poll/{Guid.NewGuid()}");
-
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
     // --- POST /api/project/poll/option ---
 
     [Fact]

@@ -1,9 +1,5 @@
 <div
-    class="sticky top-0 z-[9] flex items-center gap-2 px-4 py-2.5 min-[680px]:top-[60px] lg:gap-2.5 lg:px-6 lg:py-3.5"
-    style="
-        background: var(--bg-sheet);
-        border-bottom: 1px solid var(--border-hairline);
-    "
+    class="sticky top-0 z-[9] flex items-center gap-2 border-b border-[color:var(--border-hairline)] bg-[var(--bg-sheet)] px-4 py-2.5 min-[680px]:top-[60px] lg:gap-2.5 lg:px-6 lg:py-3.5"
     data-testid="results-toolbar"
 >
     @if (canManage() && !isClosed()) {

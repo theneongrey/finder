@@ -325,7 +325,11 @@ export class ResultsComponent {
     }
 
     deletePoll() {
-        this.projectDetailStore.deletePoll(this.pollId());
+        const projectId = this.project()?.id;
+        if (!projectId) {
+            return;
+        }
+        this.projectDetailStore.deleteProject(projectId);
     }
 
     sharePoll() {

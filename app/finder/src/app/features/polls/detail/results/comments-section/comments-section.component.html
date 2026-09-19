@@ -1,6 +1,5 @@
 <div
-    class="flex h-full flex-col"
-    style="border-left: 1px solid var(--border-hairline)"
+    class="flex h-full flex-col border-l border-[color:var(--border-hairline)]"
 >
     <!-- Header -->
     <div class="flex items-start justify-between px-5 pt-5 pb-3">
@@ -10,12 +9,7 @@
             }}</span>
             @if (optionTitle(); as title) {
                 <p
-                    class="mt-1 truncate text-[19px] leading-[1.2] font-bold"
-                    style="
-                        font-family: var(--font-display);
-                        letter-spacing: -0.3px;
-                        color: var(--text-primary);
-                    "
+                    class="font-display mt-1 truncate text-[19px] leading-[1.2] font-bold tracking-[-0.3px] text-[color:var(--text-primary)]"
                 >
                     {{ title }}
                 </p>

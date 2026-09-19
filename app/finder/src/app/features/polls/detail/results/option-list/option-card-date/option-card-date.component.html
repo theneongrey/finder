@@ -13,46 +13,28 @@
 
             <!-- Body -->
             <div class="flex flex-1 flex-col p-4">
-                <!-- Title + edit -->
-                <div class="flex items-center gap-2">
-                    <span class="min-w-0 flex-1">
-                        <span
-                            class="block text-[19px] leading-[1.2] font-bold text-pretty"
-                            style="
-                                font-family: var(--font-display);
-                                letter-spacing: -0.3px;
-                                color: var(--text-primary);
-                            "
-                            >{{ label() }}</span
-                        >
-                        @if (subLabel(); as sub) {
-                            <span
-                                class="mt-0.5 block text-[13px]"
-                                style="color: var(--text-secondary)"
-                                >{{ sub }}</span
-                            >
-                        }
-                    </span>
+                <!-- Title -->
+                <div class="min-w-0">
                     <span
-                        class="lg:opacity-0 lg:transition-opacity lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
+                        class="font-display block text-[19px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty text-[color:var(--text-primary)]"
+                        >{{ label() }}</span
                     >
-                        <ds-button
-                            variant="ghost"
-                            [size]="32"
-                            icon="edit"
-                            label="Bearbeiten"
-                        />
-                    </span>
+                    @if (subLabel(); as sub) {
+                        <span
+                            class="mt-0.5 block text-[13px] text-[color:var(--text-secondary)]"
+                            >{{ sub }}</span
+                        >
+                    }
                 </div>
 
                 <!-- Creator -->
                 <div class="mt-1 flex items-center gap-2">
                     <app-user-avatar [user]="option().creator" [size]="22" />
                     <span
-                        class="min-w-0 truncate text-[13px]"
-                        style="color: var(--text-secondary)"
+                        class="min-w-0 truncate text-[13px] text-[color:var(--text-secondary)]"
                     >
-                        Hinzugefügt von {{ option().creator.name }}
+                        {{ 'project.results.addedBy' | translate }}
+                        {{ option().creator.name }}
                     </span>
                 </div>
 
@@ -66,8 +48,7 @@
                         />
                     }
                     <span
-                        class="min-w-0 flex-1 truncate text-[12.5px] font-semibold"
-                        style="color: var(--text-secondary)"
+                        class="min-w-0 flex-1 truncate text-[12.5px] font-semibold text-[color:var(--text-secondary)]"
                     >
                         {{ voteLine() }}
                     </span>
@@ -83,8 +64,7 @@
 
                 <!-- Divider before actions -->
                 <hr
-                    class="mt-4 border-0"
-                    style="border-top: 1px solid var(--border-hairline)"
+                    class="mt-4 border-t border-[color:var(--border-hairline)]"
                 />
 
                 <!-- Action row -->
@@ -103,14 +83,14 @@
                             ]"
                             [queryParams]="{ revote: 1 }"
                         >
-                            Abstimmen
+                            {{ 'project.results.vote' | translate }}
                         </ds-button>
                     </div>
                     <ds-button
                         variant="outline"
                         size="sm"
                         icon="comment"
-                        label="Kommentare"
+                        [label]="'project.results.comments' | translate"
                         (click)="commentsClick.emit()"
                     >
                         {{ commentCount() }}
@@ -122,19 +102,14 @@
 } @else {
     <!-- Overview mode -->
     <div
-        class="rounded-[22px] p-4"
-        style="
-            background: var(--surface-card);
-            border: 1px solid var(--border-hairline-soft);
-            box-shadow: var(--shadow-card-soft);
-        "
+        class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card-soft)]"
     >
         <div class="mb-3 flex flex-col gap-1">
-            <p class="text-[15px] font-bold" style="color: var(--text-primary)">
+            <p class="text-[15px] font-bold text-[color:var(--text-primary)]">
                 {{ label() }}
             </p>
             @if (subLabel(); as sub) {
-                <p class="text-[13px]" style="color: var(--text-secondary)">
+                <p class="text-[13px] text-[color:var(--text-secondary)]">
                     {{ sub }}
                 </p>
             }
@@ -152,7 +127,7 @@
                         option().id,
                     ]"
                 >
-                    Erneut abstimmen
+                    {{ 'project.results.revote' | translate }}
                 </ds-button>
             </div>
         } @else {
@@ -167,7 +142,7 @@
                     option().id,
                 ]"
             >
-                Abstimmen
+                {{ 'project.results.vote' | translate }}
             </ds-button>
         }
     </div>

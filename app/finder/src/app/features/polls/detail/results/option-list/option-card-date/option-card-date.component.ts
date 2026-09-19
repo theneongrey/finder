@@ -7,6 +7,7 @@ import {
     output,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import {
@@ -31,6 +32,7 @@ import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
     templateUrl: './option-card-date.component.html',
     imports: [
         RouterLink,
+        TranslatePipe,
         DsButtonComponent,
         DsCardComponent,
         ResultsProgressBarComponent,
@@ -41,6 +43,7 @@ import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
 })
 export class OptionCardDateComponent {
     private readonly dateFormatService = inject(DateOptionFormatService);
+    private readonly translate = inject(TranslateService);
 
     option = input.required<OptionDetail>();
     dateType = input.required<DateOptionType>();
@@ -84,11 +87,11 @@ export class OptionCardDateComponent {
             },
             {
                 percent: (this.maybeVotes().length / total) * 100,
-                color: '#e0b45c',
+                color: 'var(--positive-maybe)',
             },
             {
                 percent: (this.noVotes().length / total) * 100,
-                color: '#e3a7a2',
+                color: 'var(--negative-soft)',
             },
         ].filter((s) => s.percent > 0);
     });
@@ -98,14 +101,13 @@ export class OptionCardDateComponent {
         const maybe = this.maybeVotes().length;
         const no = this.noVotes().length;
         if (!yes && !maybe && !no) {
-            return 'Keine Stimmen';
+            return this.translate.instant('project.results.noVotes');
         }
-        const parts = [
-            `${yes} × kann`,
-            `${maybe} × vielleicht`,
-            `${no} × kann nicht`,
-        ];
-        return parts.join(' · ');
+        return this.translate.instant('project.results.voteLineDate', {
+            yes,
+            maybe,
+            no,
+        });
     });
 
     readonly avatarUsers = computed((): AvatarUser[] =>

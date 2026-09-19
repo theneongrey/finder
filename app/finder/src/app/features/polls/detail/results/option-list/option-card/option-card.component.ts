@@ -2,12 +2,14 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    inject,
     input,
     output,
     signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
@@ -35,6 +37,7 @@ import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
     imports: [
         FormsModule,
         RouterLink,
+        TranslatePipe,
         DsButtonComponent,
         DsCardComponent,
         DsInputComponent,
@@ -47,6 +50,8 @@ import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionCardComponent {
+    private readonly translate = inject(TranslateService);
+
     option = input.required<OptionDetail>();
     members = input<SharedWith[]>([]);
     commentCount = input(0);
@@ -164,7 +169,7 @@ export class OptionCardComponent {
             },
             {
                 percent: (this.noVotes().length / total) * 100,
-                color: '#e3a7a2',
+                color: 'var(--negative-soft)',
             },
         ].filter((s) => s.percent > 0);
     });
@@ -173,16 +178,22 @@ export class OptionCardComponent {
         if (this.pollType() === 'rating') {
             const count = this.ratingsCount();
             if (!count) {
-                return 'Keine Bewertungen';
+                return this.translate.instant('project.results.noRatings');
             }
-            return `${count} Bewertungen · Ø ${this.averageRating().toFixed(1).replace('.', ',')} von 5`;
+            return this.translate.instant('project.results.ratingSummary', {
+                count,
+                avg: this.averageRating().toFixed(1).replace('.', ','),
+            });
         }
         const yes = this.yesVotes().length;
         const no = this.noVotes().length;
         if (!yes && !no) {
-            return 'Keine Stimmen';
+            return this.translate.instant('project.results.noVotes');
         }
-        return `${yes} × Ja · ${no} × Nein`;
+        return this.translate.instant('project.results.voteLineYesNo', {
+            yes,
+            no,
+        });
     });
 
     readonly avatarUsers = computed((): AvatarUser[] =>

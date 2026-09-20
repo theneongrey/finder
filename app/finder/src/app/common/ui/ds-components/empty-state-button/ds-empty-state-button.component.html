@@ -1,13 +1,30 @@
 @if (layout() === 'tile') {
-    <button hlmBtn type="button" class="ds-esb-tile" (click)="clicked.emit()">
-        <span class="ds-esb-tile__icon-wrap">
+    <button
+        hlmBtn
+        type="button"
+        class="flex! h-auto! w-full cursor-pointer flex-col items-center gap-[9px] rounded-[var(--radius-xl)]! border-[1.5px]! border-dashed border-[var(--sand-500)]! bg-white/40! px-2! py-[18px]! [font-family:var(--font-body)] whitespace-normal"
+        (click)="clicked.emit()"
+    >
+        <span
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-tint)]"
+        >
             <ds-icon [name]="icon()" [size]="19" color="var(--accent)" />
         </span>
-        <span class="ds-esb-tile__label">{{ label() }}</span>
+        <span
+            class="text-center leading-[1.2] font-bold text-[var(--fs-ui)] text-[var(--ink-700)]"
+            >{{ label() }}</span
+        >
     </button>
 } @else {
-    <button hlmBtn type="button" class="ds-esb-row" (click)="clicked.emit()">
-        <span class="ds-esb-row__icon">
+    <button
+        hlmBtn
+        type="button"
+        class="flex! h-auto! w-full cursor-pointer items-center justify-center gap-2.5 rounded-[var(--radius-3xl)]! border-[1.5px]! border-dashed border-[var(--sand-500)]! bg-white/40! p-6! [font-family:var(--font-body)] font-bold text-[var(--fs-body)] text-[var(--ink-600)]!"
+        (click)="clicked.emit()"
+    >
+        <span
+            class="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-[var(--accent)]"
+        >
             <ds-icon [name]="icon()" [size]="18" color="#fff" />
         </span>
         {{ label() }}

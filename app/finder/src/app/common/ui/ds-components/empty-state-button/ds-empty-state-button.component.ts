@@ -13,7 +13,6 @@ export type EmptyStateLayout = 'row' | 'tile';
     selector: 'ds-empty-state-button',
     imports: [DsIconComponent, HlmButton],
     templateUrl: './ds-empty-state-button.component.html',
-    styleUrl: './ds-empty-state-button.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { style: 'display: contents;' },
 })

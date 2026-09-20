@@ -122,6 +122,11 @@ Wait for direction before proceeding.
 
 **Icon catalogue (23 names):** `logo` `chevron-left` `chevron-right` `arrow-right` `kebab` `comment` `share` `edit` `trash` `lock` `users` `calendar` `clock` `refresh` `play` `send` `trophy` `close` `check` `heart` `grid` `folder` `checklist` `plus`
 
+**Icons: use `<ds-icon>`, not inline `<svg>`.** Any icon you render goes through `<ds-icon name="…">` — never paste raw `<svg>…</svg>` markup into a template. This is a recurring review finding. When you need an icon:
+1. If it's in the catalogue above → `<ds-icon name="…">`.
+2. If the icon you need isn't in the catalogue → **add it to the `ICONS` registry in `ds-icon.component.ts`**, then reference it by name. Don't inline the SVG as a shortcut.
+3. **Only exception:** a reference design renders an SVG with a visual `<ds-icon>` genuinely cannot express (e.g. simultaneous independent `fill` + `stroke` colours). Then reproduce it inline and leave a one-line comment saying why it can't be a `ds-icon`.
+
 **ds-* wraps Spartan UI** for interaction (overlay, focus management). Never strip Spartan imports from ds-* component files.
 
 ### Layer 2 — Common Smart Components (`@smart/*`)

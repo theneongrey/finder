@@ -1,7 +1,7 @@
-.ds-tabs-host {
-    display: block;
-}
-
+/* Layout of the count bubble lives in the template (Tailwind). These rules stay
+   as CSS because they override SpartanNG's line-variant tab styling through
+   [data-state] attribute selectors + !important, which Tailwind's ! modifier
+   cannot beat reliably (same specificity/importance as Spartan's own utilities). */
 .ds-tabs {
     display: flex;
     gap: 24px;
@@ -19,6 +19,7 @@
     background: none;
     font-family: var(--font-body);
     font-weight: var(--weight-semibold);
+    font-size: var(--fs-body);
     cursor: pointer;
     color: var(--text-muted) !important;
     padding: 0 0 12px;
@@ -35,25 +36,11 @@
     height: auto !important;
     flex: unset !important;
 }
+.ds-tab--sm {
+    font-size: var(--fs-body-sm);
+}
 .ds-tab[data-state='active'] {
     font-weight: var(--weight-bold) !important;
     color: var(--text-primary) !important;
     border-bottom-color: var(--accent) !important;
-}
-.ds-tab-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    font-size: var(--fs-micro);
-    font-weight: var(--weight-bold);
-    background: var(--sand-300);
-    color: var(--text-secondary);
-    padding: 0 6px;
-    border-radius: 99px;
-}
-.ds-tab-count--active {
-    background: var(--accent-tint);
-    color: var(--accent);
 }

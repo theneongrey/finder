@@ -1,13 +1,7 @@
-.ds-input-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-}
-.ds-input-field-wrap {
-    position: relative;
-    width: 100%;
-}
+/* Wrapper, label, error and clear-button styling live in the template (Tailwind).
+   These rules stay as CSS: the hlmInput base overrides SpartanNG defaults, and the
+   :focus / ::placeholder / :disabled states + the spinner keyframes cannot be
+   expressed as utility classes. */
 .ds-input-spinner {
     position: absolute;
     right: 12px;
@@ -26,36 +20,6 @@
         transform: translateY(-50%) rotate(360deg);
     }
 }
-.ds-input-clear {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: none;
-    border-radius: 50%;
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition:
-        background var(--duration-fast) var(--ease-standard),
-        color var(--duration-fast) var(--ease-standard);
-}
-.ds-input-clear:hover {
-    background: var(--sand-100);
-    color: var(--text-secondary);
-}
-.ds-input-label {
-    font-family: var(--font-body);
-    font-size: var(--fs-ui-sm);
-    font-weight: var(--weight-semibold);
-    color: var(--text-secondary);
-}
 .ds-input {
     width: 100%;
     box-sizing: border-box;
@@ -70,8 +34,10 @@
     /* Override SpartanNG Tailwind defaults */
     height: auto;
     min-height: unset;
-    shadow: none;
     box-shadow: none;
+}
+.ds-input--has-affix {
+    padding-right: 36px;
 }
 .ds-input::placeholder {
     color: var(--text-muted);
@@ -94,8 +60,4 @@
 }
 .ds-input--readonly:focus {
     border-color: var(--border-hairline-strong);
-}
-.ds-input-error {
-    font-size: var(--fs-caption-sm);
-    color: var(--negative);
 }

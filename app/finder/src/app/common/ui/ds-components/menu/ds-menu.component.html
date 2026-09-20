@@ -3,11 +3,12 @@
 </div>
 
 <ng-template #menuPanel>
-    <hlm-dropdown-menu class="ds-menu-panel">
+    <hlm-dropdown-menu data-testid="menu-panel">
         @for (item of items(); track item.label) {
             <div class="m-1.5">
                 <button
                     hlmDropdownMenuItem
+                    data-testid="menu-item"
                     class="flex w-full cursor-pointer! items-center gap-2.5! rounded-[var(--radius-xs)]! px-2.5! py-[9px]! text-left [font-family:var(--font-body)] font-semibold text-[var(--fs-ui)]! transition-colors duration-[120ms] ease-[var(--ease-standard)] hover:bg-[var(--sand-100)]!"
                     [class]="
                         item.danger

@@ -1,166 +1,55 @@
 # Implement Backend Skill
 
-Rules and reference for implementing ASP.NET Core 9 backend files in this project (`api/Finder/`). Follow these conventions exactly — do not deviate unless explicitly told to. This is the backend counterpart to `/implement-frontend`.
+Project-specific conventions and recurring pitfalls for the ASP.NET Core 9 backend (`api/Finder/`). Backend counterpart to `/implement-frontend`. Assumes you already know idiomatic C#/EF — this only covers what's specific to this repo or has bitten past PRs.
 
 ---
 
-## Feature-Based Layout
+## Layout
 
-All domain code lives under `Business/<Feature>/` (existing features: `Auth`, `Permission`, `Preview`, `Project`, `Shared`, `User`). A new entity, service, DTO, or endpoint belongs inside the relevant feature folder — never at the top level or in a shared bucket "for now".
-
-Each feature follows a fixed internal layout:
+All domain code lives under `Business/<Feature>/` (`Auth`, `Permission`, `Preview`, `Project`, `Shared`, `User`). Each feature uses this fixed layout — put new files in the matching folder, never top-level:
 
 ```
-Business/<Feature>/
-  Entities/         — domain models (inherit BaseEntity)
-  Configuration/    — EF Core IEntityTypeConfiguration<T> per entity
-  Api/
-    Requests/       — request DTOs (one class per file)
-    Responses/      — response DTOs + ToXxxResponse() mapper extensions
-    <Feature>Api.cs — Minimal API endpoint registration
-  Services/         — business logic
-  Setup/            — SetupExtensions.cs (DI) + strongly-typed options classes
+Entities/         — models, inherit BaseEntity
+Configuration/    — IEntityTypeConfiguration<T> per entity
+Api/
+  Requests/       — request DTOs
+  Responses/      — response DTOs + ToXxxResponse() mappers (same file as the DTO)
+  <Feature>Api.cs — Minimal API registration (WithXxxApi() extension)
+Services/         — business logic
+Setup/            — SetupExtensions.cs (AddXxxServices) + IOptions classes
 ```
 
-There is **no controller layer** — endpoints are Minimal APIs.
+No controllers. Endpoints are Minimal APIs wired in `Program.cs`.
 
 ---
 
-## Endpoints — thin handlers, logic in services
+## Project conventions
 
-Endpoints are registered in a `<Feature>Api.cs` file as an extension method (`WithProjectApi()`, `WithUserApi()`, …) and wired in `Program.cs`. The handler's only job is: bind the request, call a service, map the result to a response, return `Results.*`.
-
-```csharp
-app.MapGet("/api/project/{slug}", async (string slug, ProjectService projectService, UserService userService) =>
-    {
-        var project = await projectService.GetBySlug(slug);
-        return project is null
-            ? Results.NotFound()
-            : Results.Ok(project.ToProjectResponse(userService.GetUserId()));
-    })
-    .RequireAuthorization();
-```
-
-- **Never put business logic — EF queries, mutations, validation, orchestration — directly in a handler.** It goes in a service class under `Services/`. (This is a recurring review finding.)
-- Services are constructor-injected into the handler lambda; never `new SomeService()`.
-- Protect endpoints with `.RequireAuthorization()` unless the route is deliberately public (public poll/preview routes).
+- **Handlers stay thin** — bind, call a service, map, return `Results.*`. No EF queries, mutations, or validation in the endpoint lambda; that logic goes in a `Services/` class. *(Recurred: #367.)*
+- **Response mapping** — no AutoMapper. Every response DTO has a `static ToXxxResponse(this Entity …)` extension in its own file.
+- **DI** — register services in the feature's `Setup/SetupExtensions.cs` (`AddXxxServices`), not scattered in `Program.cs`.
+- **Entities** inherit `BaseEntity`; `Created`/`Edited` are set automatically by `AppDbContext` — never by hand.
+- **Migrations** — always `dotnet ef migrations add <Name>` (never hand-written). They auto-apply via `Database.Migrate()`; never `EnsureCreated()`.
+- **Config** — bind via strongly-typed `IOptions<T>` classes in `Setup/`.
 
 ---
 
-## Services
+## Recurring pitfalls
 
-- All business logic and I/O lives here. One service per cohesive responsibility.
-- **Async all the way** — every method doing I/O is `async Task<T>` and uses `await`. Never call `.Result` or `.Wait()` on a `Task`.
-- **Set-based EF operations** — to delete/update many rows, use `ExecuteDeleteAsync` / `ExecuteUpdateAsync` (single round-trip). Never load a collection into memory just to `RemoveRange` it or to count it (`CountAsync`, not `.ToList().Count`). Avoid queries inside loops (N+1) — batch them.
-- **Service dependency direction** — a general orchestrator (e.g. `ProjectNotificationService`) triggers specialized senders (a `*MailService`), not the reverse. Keep specialized senders free of any dependency on the general notification service.
+- **SQLite tests vs Postgres** — the app runs on PostgreSQL, tests on SQLite. A provider-specific mapping (e.g. `jsonb`) breaks SQLite tests; add a value converter so both work. *(#388)*
+- **Set-based EF** — use `ExecuteDeleteAsync` / `ExecuteUpdateAsync`; don't load a collection into memory just to `RemoveRange`/count it. *(#367)*
+- **HTML-encode user input** — project/user/recipient/free-text values written into email or notification templates must go through `System.Net.WebUtility.HtmlEncode(value)`. *(#358)*
+- **Multi-language templates** (`Business/Shared/Templates/{en,de,es}/`) — when you touch one, translate all three fully. The `en/` file must be entirely English (`lang="en"`, `<title>Finder</title>`, English preheader/badge/body/CTA); German remnants or a stale app name ship visibly wrong. *(#358)*
+- **No bare `!`** — don't null-forgive to silence a warning; use an explicit fallback (`?? []`, `?? throw …`) that documents intent, or comment why null is impossible. *(#388)*
+- **Service dependency direction** — a general orchestrator (`*NotificationService`) triggers specialized senders (`*MailService`), not the reverse. *(#367)*
 
 ---
 
-## Entities & Migrations
-
-- New entities inherit `BaseEntity` so `Created`/`Edited` are set automatically in `AppDbContext.SaveChangesAsync`. Never set those fields by hand.
-- Each entity gets an `IEntityTypeConfiguration<T>` in `Configuration/`.
-- **Migrations are always generated by tooling**, never hand-written:
+## Before done
 
 ```bash
 cd api/Finder
-dotnet ef migrations add <MigrationName>
+dotnet format    # required before committing
+dotnet build
+dotnet test      # includes the SQLite-backed tests
 ```
-
-- Migrations auto-apply at startup via `Database.Migrate()`. Never call `Database.EnsureCreated()`.
-- The app runs on PostgreSQL (Npgsql); tests run on SQLite. When adding a column with a provider-specific mapping (e.g. `jsonb`), add a value converter so both providers work — a native `jsonb` mapping breaks SQLite tests.
-
----
-
-## Response Mapping
-
-No AutoMapper. Each response DTO has a static `ToXxxResponse()` extension method in the **same file** as the DTO, under `Api/Responses/`:
-
-```csharp
-public static ProjectResponse ToProjectResponse(this Entities.Project project, Guid? userId)
-{
-    return new ProjectResponse
-    {
-        Id = project.Id.ToString(),
-        Name = project.Name,
-        Polls = project.Polls.OrderBy(p => p.Created)
-            .Select(p => p.ToProjectResponsePoll(userId)).ToArray(),
-    };
-}
-```
-
-A new response DTO without a matching `ToXxxResponse()` is incomplete.
-
----
-
-## Dependency Injection
-
-Register services in the feature's `Setup/SetupExtensions.cs` via an `Add<Feature>Services()` extension method, then call it once in `Program.cs`:
-
-```csharp
-public static IServiceCollection AddProjectServices(this IServiceCollection services)
-{
-    services.AddScoped<ProjectService>();
-    services.AddScoped<ProjectNotificationService>();
-    services.AddSingleton<PollUpdateNotificationQueue>();
-    return services;
-}
-```
-
-Never scatter `services.Add*` calls directly in `Program.cs`.
-
----
-
-## Configuration
-
-- Bind configuration through strongly-typed options classes (`IOptions<T>`) placed in `Setup/`. No magic strings reaching into `IConfiguration` from services.
-
----
-
-## Security
-
-- **Encode user-controlled input written into HTML** — project names, user names, recipient/free-text values inserted into email or notification templates must go through `System.Net.WebUtility.HtmlEncode(value)` before substitution. Unencoded values are an HTML-injection vector. (Recurring review finding.)
-- User input in raw SQL must be parameterized — never string-concatenate into `FromSqlRaw`.
-
----
-
-## Multi-language Templates
-
-Email/notification templates live under `Business/Shared/Templates/<lang>/` for `en`, `de`, `es`.
-
-- When you add or change a template, change **every** language's copy — an `en/` file must be fully English (correct `lang="en"` attribute, `<title>Finder</title>`, English preheader, badge, body, CTA). German remnants or a stale app name shipped in an `en/` file is a visible bug and a recurring review finding.
-- User-facing values injected into templates still need `HtmlEncode` (see Security).
-
----
-
-## Nullability
-
-- Project runs with nullable reference types on. Don't add `#nullable disable`.
-- Avoid the bare null-forgiving `!` operator to silence a warning. Prefer an explicit fallback that documents intent: `?? []`, `?? throw new InvalidOperationException(...)`. If a `!` is genuinely unavoidable, add a comment explaining why the value can't be null. (Recurring review finding.)
-
----
-
-## Code Quality Checks (run before reporting done)
-
-- Build is clean: `cd api/Finder && dotnet build`.
-- Tests pass, including SQLite-backed tests: `dotnet test`.
-- No business logic left in an endpoint handler.
-- Every new response DTO has a `ToXxxResponse()` mapper; no AutoMapper.
-- New services registered in `Setup/SetupExtensions.cs`, not `Program.cs`.
-- New entities inherit `BaseEntity`; `Created`/`Edited` not set manually.
-- Migration was generated via `dotnet ef migrations add`, not hand-written.
-- No `.Result` / `.Wait()`; no load-then-`RemoveRange`.
-- User input written to HTML is `HtmlEncode`d.
-- No bare `!` / `#nullable disable` without explanation.
-- Format the backend before committing: `cd api/Finder && dotnet format`.
-
----
-
-## Escalation
-
-Stop and inform the user when:
-
-- A change requires deviating from a pattern in `CLAUDE.md` or this skill.
-- A schema change would require a data migration beyond a straightforward column add.
-- A provider difference (PostgreSQL vs SQLite in tests) forces a non-obvious mapping decision.
-- The same implementation attempt has failed three times.

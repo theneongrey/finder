@@ -13,7 +13,6 @@ export interface MenuItem {
     selector: 'ds-menu',
     imports: [...HlmDropdownMenuImports, DsIconComponent],
     templateUrl: './ds-menu.component.html',
-    styleUrl: './ds-menu.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { style: 'display: contents' },
 })

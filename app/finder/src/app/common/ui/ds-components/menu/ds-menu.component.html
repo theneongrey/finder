@@ -1,17 +1,20 @@
-<div [hlmDropdownMenuTrigger]="menuPanel" class="ds-menu-trigger">
+<div [hlmDropdownMenuTrigger]="menuPanel" class="inline-flex cursor-pointer">
     <ng-content />
 </div>
 
 <ng-template #menuPanel>
-    <hlm-dropdown-menu class="ds-menu-panel">
+    <hlm-dropdown-menu data-testid="menu-panel">
         @for (item of items(); track item.label) {
             <div class="m-1.5">
                 <button
                     hlmDropdownMenuItem
-                    [style.color]="
-                        item.danger ? 'var(--negative)' : 'var(--ink-700)'
+                    data-testid="menu-item"
+                    class="flex w-full cursor-pointer! items-center gap-2.5! rounded-[var(--radius-xs)]! px-2.5! py-[9px]! text-left [font-family:var(--font-body)] font-semibold text-[var(--fs-ui)]! transition-colors duration-[120ms] ease-[var(--ease-standard)] hover:bg-[var(--sand-100)]!"
+                    [class]="
+                        item.danger
+                            ? 'text-[var(--negative)]!'
+                            : 'text-[var(--ink-700)]!'
                     "
-                    class="ds-menu-item"
                     (click)="item.onClick()"
                 >
                     <ds-icon [name]="item.icon" [size]="15" />

@@ -10,7 +10,6 @@ import { HlmProgressImports } from '@spartan-ng/helm/progress';
     selector: 'ds-progress-bar',
     imports: [...HlmProgressImports],
     templateUrl: './ds-progress-bar.component.html',
-    styleUrl: './ds-progress-bar.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { style: 'display: block; width: 100%;' },
 })

@@ -2,8 +2,11 @@
     hlmProgress
     [value]="clamped()"
     [max]="100"
-    class="ds-progress-track"
+    class="w-full overflow-hidden rounded-full bg-[var(--cream-300)]!"
     [style.height.px]="height()"
 >
-    <div hlmProgressIndicator class="ds-progress-fill"></div>
+    <div
+        hlmProgressIndicator
+        class="h-full rounded-full bg-[var(--accent)]! duration-[180ms] ease-[var(--ease-standard)]"
+    ></div>
 </div>

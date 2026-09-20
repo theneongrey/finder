@@ -98,9 +98,9 @@ test.describe('Design system showcase (/ux)', () => {
     const trigger = page.locator('[data-testid="menu-trigger"] button');
     await trigger.click();
 
-    // hlmDropdownMenuTrigger portals .ds-menu-panel into the CDK overlay —
+    // hlmDropdownMenuTrigger portals the panel into the CDK overlay —
     // it is not a descendant of [data-testid="menu"]
-    const panel = page.locator('.ds-menu-panel');
+    const panel = page.locator('[data-testid="menu-panel"]');
     await expect(panel).toBeVisible();
 
     await page.keyboard.press('Escape');

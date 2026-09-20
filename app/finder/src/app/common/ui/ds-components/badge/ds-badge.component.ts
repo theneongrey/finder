@@ -17,40 +17,28 @@ export type BadgeTone =
     | 'success';
 export type BadgeSize = 'sm' | 'md' | 'lg';
 
-const BADGE_STYLES: Record<BadgeTone, { background: string; color: string }> = {
-    accent: { background: 'var(--accent-tint)', color: 'var(--accent)' },
-    neutral: { background: 'var(--sand-100)', color: 'var(--ink-400)' },
-    warning: { background: 'var(--amber-100)', color: 'var(--warning)' },
-    viewer: { background: 'var(--sand-100)', color: 'var(--ink-400)' },
-    contributor: { background: 'var(--accent-tint)', color: 'var(--accent)' },
-    manager: {
-        background: 'var(--purple-badge-bg)',
-        color: 'var(--purple-fg)',
-    },
-    success: {
-        background: 'var(--green-badge-bg)',
-        color: 'var(--green-badge-fg)',
-    },
+// `!` modifiers override the utility classes HlmBadge injects (bg-primary,
+// text-primary-foreground, px-2 py-0.5, text-xs) which share our specificity.
+const BADGE_TONE_CLASSES: Record<BadgeTone, string> = {
+    accent: 'bg-[var(--accent-tint)]! text-[var(--accent)]!',
+    neutral: 'bg-[var(--sand-100)]! text-[var(--ink-400)]!',
+    warning: 'bg-[var(--amber-100)]! text-[var(--warning)]!',
+    viewer: 'bg-[var(--sand-100)]! text-[var(--ink-400)]!',
+    contributor: 'bg-[var(--accent-tint)]! text-[var(--accent)]!',
+    manager: 'bg-[var(--purple-badge-bg)]! text-[var(--purple-fg)]!',
+    success: 'bg-[var(--green-badge-bg)]! text-[var(--green-badge-fg)]!',
 };
 
-const SIZE_STYLES: Record<
-    BadgeSize,
-    { padding: string; fontSize: string; minHeight: string }
-> = {
-    sm: { padding: '0 6px', fontSize: 'var(--fs-micro)', minHeight: '20px' },
-    md: { padding: '6px 13px', fontSize: 'var(--fs-ui-sm)', minHeight: 'auto' },
-    lg: {
-        padding: '5px 11px',
-        fontSize: 'var(--fs-caption-sm)',
-        minHeight: '26px',
-    },
+const BADGE_SIZE_CLASSES: Record<BadgeSize, string> = {
+    sm: 'px-1.5! py-0! text-[var(--fs-micro)]! min-h-[20px]',
+    md: 'px-[13px]! py-1.5! text-[var(--fs-ui-sm)]! min-h-[auto]',
+    lg: 'px-[11px]! py-[5px]! text-[var(--fs-caption-sm)]! min-h-[26px]',
 };
 
 @Component({
     selector: 'ds-badge',
     imports: [DsIconComponent, HlmBadge],
     templateUrl: './ds-badge.component.html',
-    styleUrl: './ds-badge.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { style: 'display: contents' },
 })
@@ -59,10 +47,10 @@ export class DsBadgeComponent {
     size = input<BadgeSize>('md');
     icon = input<string | undefined>(undefined);
 
-    protected readonly style = computed(
-        () => BADGE_STYLES[this.tone()] ?? BADGE_STYLES['neutral'],
+    protected readonly toneClass = computed(
+        () => BADGE_TONE_CLASSES[this.tone()] ?? BADGE_TONE_CLASSES['neutral'],
     );
-    protected readonly sizes = computed(
-        () => SIZE_STYLES[this.size()] ?? SIZE_STYLES['md'],
+    protected readonly sizeClass = computed(
+        () => BADGE_SIZE_CLASSES[this.size()] ?? BADGE_SIZE_CLASSES['md'],
     );
 }

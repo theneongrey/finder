@@ -1,11 +1,7 @@
 <span
     hlmBadge
-    [style.background]="style().background"
-    [style.color]="style().color"
-    [style.padding]="sizes().padding"
-    [style.font-size]="sizes().fontSize"
-    [style.min-height]="sizes().minHeight"
-    class="ds-badge-pill"
+    class="box-border inline-flex items-center justify-center gap-1.5! rounded-[var(--radius-xs)]! [font-family:var(--font-body)] font-bold! whitespace-nowrap"
+    [class]="toneClass() + ' ' + sizeClass()"
 >
     @if (icon()) {
         <ds-icon [name]="icon()!" [size]="12" />

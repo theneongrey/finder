@@ -241,7 +241,6 @@ export const ICON_NAMES = Object.keys(ICONS);
 @Component({
     selector: 'ds-icon',
     templateUrl: './ds-icon.component.html',
-    styleUrl: './ds-icon.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { style: 'display: contents' },
 })

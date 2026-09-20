@@ -1,5 +1,8 @@
 using System.Data.Common;
+using System.Net;
 using System.Threading.RateLimiting;
+using DnsClient;
+using DnsClient.Protocol;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Preview.Services.PreviewHelper;
@@ -20,6 +23,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
 
 
 namespace Finder.Tests.Infrastructure;
@@ -87,7 +91,64 @@ public class FinderApiFactory : WebApplicationFactory<Program>
                 options.DefaultSignInScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignOutScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
             });
+
+            ConfigureEmailValidationDoubles(services);
         });
+    }
+
+    // The invalid-domain email used by tests to force email validation to fail (no MX record).
+    public const string NoMxEmailDomain = "blocked-no-mx.test";
+
+    // EmailValidationService does a real DNS MX lookup and fetches a disposable-domain
+    // blocklist over HTTP. Replace both dependencies with deterministic doubles so the API
+    // suite never touches the network: any domain resolves with an MX record (valid) except
+    // the NoMxEmailDomain sentinel, and the blocklist fetch returns an empty list.
+    private static void ConfigureEmailValidationDoubles(IServiceCollection services)
+    {
+        var lookupClient = Substitute.For<ILookupClient>();
+        lookupClient
+            .QueryAsync(Arg.Any<string>(), Arg.Any<QueryType>(), Arg.Any<QueryClass>(), Arg.Any<CancellationToken>())
+            .Returns(_ => Task.FromResult(MakeDnsResponse(withMx: true)));
+        lookupClient
+            .QueryAsync(NoMxEmailDomain, Arg.Any<QueryType>(), Arg.Any<QueryClass>(), Arg.Any<CancellationToken>())
+            .Returns(_ => Task.FromResult(MakeDnsResponse(withMx: false)));
+
+        // ILookupClient is consumed by the singleton EmailValidationService, so it must also
+        // be a singleton — Replace() registers scoped, which would fail scope validation.
+        var lookupDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(ILookupClient));
+        if (lookupDescriptor != null)
+        {
+            services.Remove(lookupDescriptor);
+        }
+        services.AddSingleton<ILookupClient>(lookupClient);
+
+        services.AddHttpClient("EmailValidation")
+            .ConfigurePrimaryHttpMessageHandler(() => new EmptyBlocklistHandler());
+    }
+
+    private static IDnsQueryResponse MakeDnsResponse(bool withMx)
+    {
+        var answers = new List<DnsResourceRecord>();
+        if (withMx)
+        {
+            var info = new ResourceRecordInfo("example.com", ResourceRecordType.MX, QueryClass.IN, 300, 0);
+            answers.Add(new MxRecord(info, 10, DnsString.Parse("mail.example.com.")));
+        }
+
+        var response = Substitute.For<IDnsQueryResponse>();
+        response.Answers.Returns(answers);
+        return response;
+    }
+
+    private sealed class EmptyBlocklistHandler : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+            => Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(string.Empty)
+            });
     }
 
     protected override IHost CreateHost(IHostBuilder builder)

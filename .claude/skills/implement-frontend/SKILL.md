@@ -45,7 +45,29 @@ All components must use `changeDetection: ChangeDetectionStrategy.OnPush`.
 - Always use Angular 17+ control flow: `@if`, `@for`, `@switch` — never `*ngIf` / `*ngFor`.
 - `@for` always requires a `track` expression.
 - Never use `document.getElementById` or `document.querySelector` — use `@ViewChild` or `ElementRef`.
-- When the project uses `TranslatePipe` (`| translate`), never hardcode display strings in templates.
+- Every interactive control you render must be wired. A `<button>` / `<ds-button>` with no `(click)` (or `[routerLink]`), or an `@Input`/`@Output` you declare but never bind, is a bug — either wire it or don't render it. Do not ship placeholder controls that silently do nothing.
+
+---
+
+## Design Tokens — never hardcode colours
+
+The project defines all colours, type sizes, radii, and spacing as CSS custom properties in `src/app/common/styles/tokens/` (`_colors.css` etc.). **These tokens are the source of truth — read them, don't invent values.**
+
+- Never write a raw hex, `rgb()`, or `rgba()` colour in a template or component CSS. Use the token: `text-[var(--text-primary)]`, `bg-[var(--bg-panel)]`, `border-[var(--border-hairline-soft)]`.
+- Common colour tokens: `--text-primary`, `--text-secondary`, `--text-muted`, `--text-tertiary`, `--accent`, `--bg-app`, `--bg-panel`, `--bg-sheet`, `--surface-card`, `--border-hairline`, `--border-hairline-soft`, `--positive`, `--negative`, `--warning`. If you think you need a colour that has no token, stop and ask — don't hardcode one.
+- Tokens flip automatically for dark surfaces (see the `.on-dark` overrides in `_colors.css`); a hardcoded hex will not, so hardcoding also breaks theming.
+- A reference design file's raw hex values (`#1d2227`, `#79756f`, …) are the *intent* — translate each one to its matching token, don't copy the literal into the Angular template.
+
+---
+
+## i18n — all user-facing copy goes through ngx-translate
+
+This project ships in **English, German, and Spanish**. Any visible string that is not behind a translation key ships untranslated (and past PRs have leaked raw German into English builds — this is the single most common review finding). Rules:
+
+- **Templates:** never hardcode a display string. Use `{{ 'some.key' | translate }}` or the `translate` pipe/directive. This includes button labels, headings, confirm-dialog copy, empty-state text, and creator/attribution lines.
+- **TypeScript** (computed properties, toasts, dynamically built strings): resolve via `TranslateService.instant('some.key')` — never return a raw literal like `'Keine Stimmen'` from a `computed()`.
+- **New keys:** add them to **every** language file — `public/i18n/en.json`, `de.json`, and `es.json` — not just one. A key present only in `de.json` renders as the raw key (or falls back to English) for other locales.
+- Grep the existing files in `public/i18n/` for a matching key before inventing a new one.
 
 ---
 
@@ -99,6 +121,11 @@ Wait for direction before proceeding.
 | Vote buttons | `<ds-vote-buttons>` | outputs: `yes`, `no`, `skip` |
 
 **Icon catalogue (23 names):** `logo` `chevron-left` `chevron-right` `arrow-right` `kebab` `comment` `share` `edit` `trash` `lock` `users` `calendar` `clock` `refresh` `play` `send` `trophy` `close` `check` `heart` `grid` `folder` `checklist` `plus`
+
+**Icons: use `<ds-icon>`, not inline `<svg>`.** Any icon you render goes through `<ds-icon name="…">` — never paste raw `<svg>…</svg>` markup into a template. This is a recurring review finding. When you need an icon:
+1. If it's in the catalogue above → `<ds-icon name="…">`.
+2. If the icon you need isn't in the catalogue → **add it to the `ICONS` registry in `ds-icon.component.ts`**, then reference it by name. Don't inline the SVG as a shortcut.
+3. **Only exception:** a reference design renders an SVG with a visual `<ds-icon>` genuinely cannot express (e.g. simultaneous independent `fill` + `stroke` colours). Then reproduce it inline and leave a one-line comment saying why it can't be a `ds-icon`.
 
 **ds-* wraps Spartan UI** for interaction (overlay, focus management). Never strip Spartan imports from ds-* component files.
 

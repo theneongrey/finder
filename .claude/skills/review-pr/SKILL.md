@@ -59,13 +59,24 @@ For every changed `.component.ts` file:
 - `[routerLink]` on a non-anchor, non-button element → check if it works as intended
 - Inline `[style.x]="hardcoded-value"` for things that could be CSS classes
 
-**i18n**
-- Hardcoded display strings in templates (German or otherwise) that are not behind `| translate` → flag only if the project uses ngx-translate (check for `TranslatePipe` usage in the same file)
+**i18n** (this project ships en/de/es — the most common recurring finding across past PRs)
+- Hardcoded display strings in templates (German or otherwise) not behind `| translate` → flag
+- Raw display literals returned from a `computed()` / method in the `.ts` (e.g. `return 'Keine Stimmen'`) → should go through `TranslateService.instant('key')`
+- A translation key added to only one of `public/i18n/{en,de,es}.json` → flag the missing locales; it will render the raw key or fall back for other languages
+- Backend email/notification templates under `api/Finder/Business/Shared/Templates/<lang>/` → the `en/` file must be fully English (check `lang="…"` attr, `<title>`, preheader, badge, body, CTA). German remnants or a stale app name in an `en/` file is `[must-fix]` — it ships visibly wrong copy
 
 **Design system**
 - `ds-*` components that import from `@spartan-ng/helm/*` → make sure the Spartan import is still present (ds-* wraps Spartan, never strips it)
 - Inline SVGs repeated in multiple places that could use `<ds-icon>`
 - Custom button CSS classes when `<ds-button>` already exists
+- Raw `<button>` markup in a feature/smart component where `<ds-button>` / `<ds-icon-button>` would cover the variant → flag; the design system button is the default
+
+**Orphaned interactive controls**
+- A `<button>` / `<ds-button>` with no `(click)` handler and no `[routerLink]` → it renders but does nothing; flag as `[must-fix]` (wire it or remove it)
+- `@Input()` / `@Output()` declared but never bound anywhere (grep `<selector`) → dead API surface
+
+**Design tokens**
+- Raw hex / `rgb()` / `rgba()` colours in a template or component CSS → should reference a token (`var(--text-primary)`, `var(--bg-panel)`, `var(--border-hairline-soft)`, …) defined in `src/app/common/styles/tokens/`. Hardcoded colours also break the dark-surface theming that the tokens handle automatically.
 
 ### B — CSS Quality
 
@@ -171,7 +182,15 @@ For every changed `.cs` file under `api/Finder/`:
 - `new SomeService()` used instead of constructor injection → bypasses DI
 
 **Nullability**
-- `#nullable disable` or `!` null-forgiving operators added without explanation → flag
+- `#nullable disable` or `!` null-forgiving operators added without explanation → flag. Prefer an explicit fallback (`?? []`, `?? throw …`) that documents the intent over a bare `!`
+
+**Query efficiency**
+- A collection loaded into memory (`ToListAsync` / `.ToList()`) only to `RemoveRange`/mutate/count → use a set-based EF operation instead (`ExecuteDeleteAsync`, `ExecuteUpdateAsync`, `CountAsync`). Flag load-then-discard patterns.
+- Query inside a loop (N+1) → batch it.
+
+**Security / injection**
+- User-controlled values (project/user/recipient names, free-text) interpolated into HTML — email templates, notification bodies — without encoding → HTML injection. Require `System.Net.WebUtility.HtmlEncode(value)` on substitution. Flag as `[should-fix]`/`[must-fix]` depending on reach.
+- User input concatenated into raw SQL / `FromSqlRaw` → parameterize.
 
 ---
 

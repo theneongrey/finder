@@ -85,12 +85,7 @@ Stage only the files changed by the fix. Create a single commit:
 
 ```bash
 git add <changed files>
-git commit -m "$(cat <<'EOF'
-fix(<scope>): <short description of what was fixed>
-
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-EOF
-)"
+git commit -m "fix(<scope>): <short description of what was fixed>"
 git push -u origin fix/<short-bug-description>
 ```
 

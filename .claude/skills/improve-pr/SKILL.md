@@ -89,8 +89,6 @@ Apply all **Apply** changes. Follow `CLAUDE.md` conventions strictly — do not 
 
 ```
 fix(pr<number>): address review comments
-
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 ```
 
 Push the branch:

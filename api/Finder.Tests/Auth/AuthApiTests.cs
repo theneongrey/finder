@@ -110,14 +110,25 @@ public class AuthApiTests : IClassFixture<FinderApiFactory>
     }
 
     [Fact]
-    public async Task RequestLoginMail_WithUnknownEmail_ReturnsForbid()
+    public async Task RequestLoginMail_WithInvalidDomain_ReturnsForbid()
     {
         using var client = _factory.CreateClient();
 
         var response = await client.PostAsJsonAsync("/api/auth/requestLoginMail",
-            new { email = $"{Guid.NewGuid()}@unknown.com", redirectUrl = (string?)null });
+            new { email = $"{Guid.NewGuid()}@{FinderApiFactory.NoMxEmailDomain}", redirectUrl = (string?)null });
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task RequestLoginMail_WithNewValidEmail_ReturnsOk()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.PostAsJsonAsync("/api/auth/requestLoginMail",
+            new { email = $"{Guid.NewGuid()}@example.com", redirectUrl = (string?)null });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     // --- POST /api/auth/tokenLogin ---

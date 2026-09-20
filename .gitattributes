@@ -1,0 +1,20 @@
+# Normalize line endings for all text files to LF in the repository.
+# This makes checkouts deterministic regardless of each machine's
+# core.autocrlf / core.eol settings and prevents phantom CRLF/LF diffs.
+* text=auto eol=lf
+
+# Explicitly mark binary assets so Git never tries to normalize them.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.pdf binary
+*.zip binary

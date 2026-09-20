@@ -45,11 +45,16 @@
     justify-content: center;
     gap: 5px;
     transition: color var(--duration-fast) var(--ease-standard);
+    padding: 9px 8px;
+    font-size: var(--fs-ui-sm);
     /* Override SpartanNG ToggleGroupItem defaults */
     height: auto !important;
     min-width: unset !important;
-    padding: unset;
     border-radius: var(--radius-xs) !important;
+}
+.ds-seg-btn--sm {
+    padding: 8px 4px;
+    font-size: var(--fs-caption);
 }
 .ds-seg-btn[data-state='on'],
 .ds-seg-btn[aria-pressed='true'] {

@@ -10,7 +10,6 @@ import { DsIconComponent } from '../icon/ds-icon.component';
     selector: 'ds-vote-buttons',
     imports: [DsIconComponent],
     templateUrl: './ds-vote-buttons.component.html',
-    styleUrl: './ds-vote-buttons.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { style: 'display: block;' },
 })

@@ -32,4 +32,9 @@ export class DsAvatarComponent {
     });
     protected readonly fontSize = computed(() => Math.round(this.px() * 0.4));
     protected readonly isPending = computed(() => this.voted() === false);
+    protected readonly borderClass = computed(() =>
+        this.isPending()
+            ? 'border-[1.5px] border-dashed border-[var(--sand-400)]'
+            : 'border-[2.5px] border-solid border-[var(--white)]',
+    );
 }

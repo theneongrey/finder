@@ -17,7 +17,6 @@ export interface AvatarUser {
     selector: 'app-avatar-stack',
     imports: [UserAvatarComponent, HlmButton],
     templateUrl: './avatar-stack.component.html',
-    styleUrl: './avatar-stack.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { style: 'display: contents' },
 })

@@ -1,15 +1,14 @@
-<div class="ds-avatar-wrap">
+<div class="relative inline-flex shrink-0">
     <hlm-avatar
-        class="ds-avatar-circle"
+        class="ds-avatar-circle box-border shrink-0 rounded-[var(--radius-circle)]!"
+        [class]="borderClass()"
         [style.width.px]="px()"
         [style.height.px]="px()"
         [style.min-width.px]="px()"
-        [class.ds-avatar-pending]="isPending()"
-        [class.ds-avatar-ring]="!isPending()"
     >
         <span
             hlmAvatarFallback
-            class="ds-avatar-fallback"
+            class="rounded-[var(--radius-circle)] [font-family:var(--font-body)] font-bold select-none"
             [style.background]="isPending() ? 'var(--cream-50)' : bg()"
             [style.color]="isPending() ? 'var(--sand-500)' : fg()"
             [style.font-size.px]="fontSize()"
@@ -17,7 +16,9 @@
         >
     </hlm-avatar>
     @if (voted() === true) {
-        <span class="ds-avatar-badge">
+        <span
+            class="absolute right-[-2px] bottom-[-2px] box-border flex h-[13px] w-[13px] items-center justify-center rounded-full border-2 border-solid border-[var(--white)] bg-[#5d9a56]"
+        >
             <ds-icon name="check" [size]="7" color="#fff" />
         </span>
     }

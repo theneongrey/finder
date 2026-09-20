@@ -1,12 +1,12 @@
-<div class="avatar-stack">
+<div class="flex pl-[7px]">
     @for (u of shown(); track $index) {
-        <div class="avatar-stack__item">
+        <div class="-ml-[7px]">
             <app-user-avatar [user]="u" [size]="px()" [voted]="u.voted" />
         </div>
     }
     @if (extra() > 0) {
         <div
-            class="avatar-stack__overflow"
+            class="-ml-[7px] box-border flex items-center justify-center rounded-[var(--radius-circle)] border-[2.5px] border-solid border-white bg-[var(--sand-200)] [font-family:var(--font-body)] font-bold text-[var(--ink-500)]"
             [style.width.px]="px()"
             [style.height.px]="px()"
             [style.font-size.px]="overflowFontSize()"
@@ -17,7 +17,7 @@
     @if (showAdd()) {
         <button
             hlmBtn
-            class="avatar-stack__add"
+            class="-ml-[7px] box-border flex! cursor-pointer items-center justify-center rounded-[var(--radius-circle)]! border-[1.5px] border-dashed border-[var(--sand-500)]! bg-white! p-0! text-[18px] leading-none font-medium text-[var(--accent)]!"
             [style.width.px]="px()"
             [style.height.px]="px()"
             [attr.aria-label]="addLabel()"

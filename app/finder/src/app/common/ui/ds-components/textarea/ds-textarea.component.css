@@ -1,15 +1,7 @@
-.ds-ta-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-}
-.ds-ta-label {
-    font-family: var(--font-body);
-    font-size: var(--fs-ui-sm);
-    font-weight: var(--weight-semibold);
-    color: var(--text-secondary);
-}
+/* Wrapper, label and error styling live in the template (Tailwind). These rules
+   stay as CSS: the hlmTextarea base overrides SpartanNG defaults, and the :focus /
+   ::placeholder / :disabled states + custom scrollbar cannot be expressed as
+   utility classes. */
 .ds-ta {
     width: 100%;
     box-sizing: border-box;
@@ -58,8 +50,4 @@
 .ds-ta:disabled {
     opacity: 0.5;
     cursor: default;
-}
-.ds-ta-error {
-    font-size: var(--fs-caption-sm);
-    color: var(--negative);
 }

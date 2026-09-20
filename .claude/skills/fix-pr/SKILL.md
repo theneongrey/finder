@@ -243,9 +243,9 @@ All fixes applied. Commit them now?
 If yes, create a single commit:
 ```
 fix(pr<number>): address review findings
-
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 ```
+
+Never add a `Co-Authored-By` / "Generated with Claude Code" attribution line to the commit message.
 
 ---
 

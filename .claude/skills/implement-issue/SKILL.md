@@ -104,8 +104,10 @@ Follow the plan. Adhere to all conventions in `CLAUDE.md` and the project's exis
 #### Frontend (Angular)
 Follow all rules in the `/implement-frontend` skill:
 - **Tailwind utility classes over custom CSS** — prefer inline Tailwind classes in templates; only add a `.component.css` file when Tailwind cannot express the styling (complex animations, unavoidable third-party overrides).
+- **Design tokens, not raw colours** — use `var(--text-primary)`, `var(--bg-panel)`, etc. (see `src/app/common/styles/tokens/`); never hardcode a hex/rgba.
+- **i18n every string** — all user-facing copy goes through `| translate` / `TranslateService.instant`, with keys added to all of `public/i18n/{en,de,es}.json`. This is the most common review finding — don't leak raw German.
 - Two-file component default (`.ts` + `.html`); no `styleUrl` unless a CSS file is genuinely required.
-- ds-* design system layer, OnPush change detection, `signal<T | undefined>`, Angular 17+ control flow (`@if`/`@for`).
+- ds-* design system layer, OnPush change detection, `signal<T | undefined>`, Angular 17+ control flow (`@if`/`@for`). Every interactive control must be wired (no dead buttons).
 - **Run prettier before every frontend commit:**
 
 ```bash
@@ -121,6 +123,10 @@ cd app/finder && npx prettier --write "src/**/*.{ts,html,css}"
 - **BaseEntity** — new entities should inherit `BaseEntity` so `Created`/`Edited` are set automatically by `AppDbContext`.
 - **DI registration** — register new services in the feature's `Setup/<Feature>Setup.cs` extension method; do not scatter `services.Add*` calls in `Program.cs`.
 - **No magic strings** — bind configuration via strongly-typed options classes (`IOptions<T>`).
+- **Encode user input in HTML** — any user-controlled value written into an email/notification template must go through `System.Net.WebUtility.HtmlEncode` to prevent injection.
+- **Set-based EF operations** — bulk delete/update via `ExecuteDeleteAsync`/`ExecuteUpdateAsync`; don't load rows into memory just to `RemoveRange` them.
+- **No bare `!`** — avoid unexplained null-forgiving operators; prefer an explicit fallback (`?? []`, `?? throw`) that documents intent.
+- **Service dependency direction** — a general orchestrator (e.g. a `*NotificationService`) triggers specialized senders (mail), not the reverse; keep specialized services free of dependencies on the general one.
 
 ### When you hit a problem
 
@@ -177,9 +183,9 @@ Each commit must leave the codebase in a buildable state. Never commit half-fini
 
 ```
 <type>(<scope>): <short summary>
-
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 ```
+
+Never add a `Co-Authored-By` / "Generated with Claude Code" attribution line to the commit message.
 
 ---
 

@@ -33,23 +33,9 @@ Feature-based domain structure under `Business/`:
 - `Permission/` — per-project permissions (Voter / Maintainer / Owner)
 - `Shared/` — `BaseEntity` (auto-sets `Created`/`Edited` in `AppDbContext.SaveChangesAsync`), shared services
 
-Each domain follows this internal layout:
-```
-Entities/         — domain models
-Configuration/    — EF Core IEntityTypeConfiguration
-Api/
-  Requests/       — request DTOs
-  Responses/      — response DTOs + mapper extension methods (ToXxxResponse)
-  <Domain>Api.cs  — Minimal API endpoint registration
-Services/         — business logic
-Setup/            — DI extension method (e.g. AddProjectServices)
-```
+Each domain follows a fixed internal layout (`Entities/`, `Configuration/`, `Api/`, `Services/`, `Setup/`). Endpoints are registered in `Program.cs` via extension methods (`WithProjectApi()`, etc.); there is no controller layer. The database is PostgreSQL via Npgsql EF Core 9, with migrations auto-applied at startup.
 
-Endpoints are registered in `Program.cs` via extension methods (`WithProjectApi()`, etc.). There is no controller layer.
-
-**Database:** PostgreSQL via Npgsql EF Core 9. Migrations live in `Migrations/` and are auto-applied at startup via `Database.Migrate()`.
-
-**Response mapping:** No AutoMapper — each response type has a static `ToXxxResponse()` extension method in the `Responses/` file alongside the DTO class.
+For backend implementation conventions (folder layout, service/handler split, response mappers, migrations, DI, security), invoke the `/implement-backend` skill.
 
 ### Frontend — `app/finder/`
 
@@ -70,6 +56,10 @@ _services/  — HttpClient services
 **Auth flow:** email → code → token. The `AuthGuard` (`userAuthentication`) protects routes; the backend issues tokens validated on each request.
 
 For implementation conventions (file structure, component layers, ds-* usage), invoke the `/implement-frontend` skill.
+
+**Two rules that apply to every UI change:**
+- **Colours come from design tokens** — use `var(--text-primary)`, `var(--bg-panel)`, etc. (defined in `src/app/common/styles/tokens/`). Never hardcode a hex/rgba; hardcoded colours also break dark-surface theming.
+- **All user-facing copy is translated** — every visible string goes through ngx-translate (`| translate` / `TranslateService.instant`), with keys added to all of `public/i18n/{en,de,es}.json`. No hardcoded display strings (this is the most common review finding).
 
 ## Style rules
 

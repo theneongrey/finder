@@ -26,7 +26,7 @@ export async function logout(page: Page) {
     if (!await avatar.isVisible()) return; // not logged in — nothing to do
   }
   await avatar.click();
-  // ds-menu renders plain <button> elements — match logout label in any locale
-  await page.locator('.ds-menu-item').filter({ hasText: /logout|abmelden/i }).click();
+  // The avatar opens the notifications panel; logout is a plain <button> — match its label in any locale
+  await page.locator('.cdk-overlay-container button').filter({ hasText: /logout|abmelden/i }).first().click();
   await page.waitForURL(/\/(de|en|es)(\/|$)|auth\/request-email/);
 }

@@ -185,8 +185,6 @@ Each commit must leave the codebase in a buildable state. Never commit half-fini
 <type>(<scope>): <short summary>
 ```
 
-Never add a `Co-Authored-By` / "Generated with Claude Code" attribution line to the commit message.
-
 ---
 
 ## Step 5 — Push and Create the Pull Request

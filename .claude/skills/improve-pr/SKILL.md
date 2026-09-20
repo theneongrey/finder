@@ -91,8 +91,6 @@ Apply all **Apply** changes. Follow `CLAUDE.md` conventions strictly — do not 
 fix(pr<number>): address review comments
 ```
 
-Never add a `Co-Authored-By` / "Generated with Claude Code" attribution line to the commit message.
-
 Push the branch:
 
 ```bash

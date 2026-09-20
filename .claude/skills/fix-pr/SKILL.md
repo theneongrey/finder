@@ -245,8 +245,6 @@ If yes, create a single commit:
 fix(pr<number>): address review findings
 ```
 
-Never add a `Co-Authored-By` / "Generated with Claude Code" attribution line to the commit message.
-
 ---
 
 ## Escalation

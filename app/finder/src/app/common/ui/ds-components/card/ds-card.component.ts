@@ -19,6 +19,9 @@ export class DsCardComponent {
     fill = input<boolean>(false);
 
     // `!` modifiers override HlmCard's default border/display/overflow utilities.
+    // (HlmCard's `ring-1 ring-foreground/10` is neutralised with `ring-0!` in the
+    // template — otherwise it renders a hard 1px currentColor ring that reads as a
+    // black border and swamps the soft card shadow.)
     protected readonly variantClass = computed(() => {
         const border = this.accentBorder()
             ? 'border-[var(--accent-border)]!'

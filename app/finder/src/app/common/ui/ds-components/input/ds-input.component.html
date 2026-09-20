@@ -1,8 +1,11 @@
-<div class="ds-input-wrap">
+<div class="flex w-full flex-col gap-1.5">
     @if (label()) {
-        <label class="ds-input-label">{{ label() }}</label>
+        <label
+            class="[font-family:var(--font-body)] text-[length:var(--fs-ui-sm)] font-semibold text-[var(--text-secondary)]"
+            >{{ label() }}</label
+        >
     }
-    <div class="ds-input-field-wrap">
+    <div class="relative w-full">
         <input
             #inputEl
             hlmInput
@@ -12,8 +15,8 @@
             [disabled]="isDisabled() || loading()"
             [readOnly]="readonly()"
             [style.background]="background()"
-            [style.paddingRight]="loading() || showClear() ? '36px' : null"
             [class.ds-input--error]="!!error() || invalid()"
+            [class.ds-input--has-affix]="loading() || showClear()"
             [attr.aria-invalid]="!!error() || invalid() || null"
             [attr.title]="title() ?? null"
             [attr.maxlength]="maxlength() ?? null"
@@ -27,7 +30,7 @@
         } @else if (showClear()) {
             <button
                 type="button"
-                class="ds-input-clear"
+                class="absolute top-1/2 right-2 flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-none bg-transparent p-0 text-[var(--text-muted)] transition-[background,color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:bg-[var(--sand-100)] hover:text-[var(--text-secondary)]"
                 tabindex="-1"
                 aria-label="Clear"
                 (click)="clear()"
@@ -37,6 +40,9 @@
         }
     </div>
     @if (error()) {
-        <span class="ds-input-error">{{ error() }}</span>
+        <span
+            class="text-[length:var(--fs-caption-sm)] text-[var(--negative)]"
+            >{{ error() }}</span
+        >
     }
 </div>

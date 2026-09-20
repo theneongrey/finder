@@ -1,22 +1,11 @@
+/* Base layout is in the template (Tailwind). Variant + spinner rules stay here:
+   token overrides of hlmBtn with :hover/:disabled/icon-only combos. */
+
+/* Neutralise hlmBtn's default `h-9`. Kept as CSS (not Tailwind `h-auto!`) so the
+   inline [style.height] on icon-only buttons still wins — an !important utility
+   would override that inline height and collapse icon-only buttons. */
 .ds-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
     height: auto;
-    font-family: var(--font-body);
-    font-weight: var(--weight-bold);
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-    transition: opacity var(--duration-fast) var(--ease-standard);
-    border: none;
-    outline: none;
-}
-.ds-btn:disabled {
-    cursor: default;
-    opacity: 0.5;
 }
 
 /* Variant overrides — override SpartanNG Tailwind defaults */

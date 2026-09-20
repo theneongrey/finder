@@ -8,7 +8,6 @@ import {
 @Component({
     selector: 'ds-stepper',
     templateUrl: './ds-stepper.component.html',
-    styleUrl: './ds-stepper.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { style: 'display: block' },
 })

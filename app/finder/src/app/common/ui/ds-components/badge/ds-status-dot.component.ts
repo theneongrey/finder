@@ -17,19 +17,14 @@ export type StatusTone = 'positive' | 'muted';
 export class DsStatusDotComponent {
     tone = input<StatusTone>('positive');
 
-    protected readonly pillBg = computed(() =>
+    protected readonly wrapClass = computed(() =>
         this.tone() === 'positive'
-            ? 'var(--green-badge-bg)'
-            : 'var(--cream-300)',
+            ? 'bg-[var(--green-badge-bg)] text-[var(--green-badge-fg)]'
+            : 'bg-[var(--cream-300)] text-[var(--text-muted)]',
     );
-    protected readonly pillFg = computed(() =>
+    protected readonly dotClass = computed(() =>
         this.tone() === 'positive'
-            ? 'var(--green-badge-fg)'
-            : 'var(--text-muted)',
-    );
-    protected readonly dotColor = computed(() =>
-        this.tone() === 'positive'
-            ? 'var(--positive-strong)'
-            : 'var(--sand-500)',
+            ? 'bg-[var(--positive-strong)]'
+            : 'bg-[var(--sand-500)]',
     );
 }

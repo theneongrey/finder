@@ -1,5 +1,8 @@
-<div class="stepper">
+<div class="flex items-center gap-[7px]">
     @for (bar of bars(); track $index) {
-        <span class="stepper__bar" [style.background]="bar"></span>
+        <span
+            class="h-1 flex-1 rounded-full transition-colors duration-[260ms] ease-[ease]"
+            [style.background]="bar"
+        ></span>
     }
 </div>

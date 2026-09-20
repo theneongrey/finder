@@ -1,6 +1,5 @@
-/* Base layout lives in the template (Tailwind). Variant + spinner rules stay
-   here because they are token-reference overrides of SpartanNG hlmBtn defaults
-   (with :hover / :disabled / icon-only combinations Tailwind can't express). */
+/* Base layout is in the template (Tailwind). Variant + spinner rules stay here:
+   token overrides of hlmBtn with :hover/:disabled/icon-only combos. */
 
 /* Variant overrides — override SpartanNG Tailwind defaults */
 .ds-btn.ds-btn--primary {

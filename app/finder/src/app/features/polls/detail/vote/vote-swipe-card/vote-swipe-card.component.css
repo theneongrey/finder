@@ -33,7 +33,7 @@
     letter-spacing: 0.5px;
     padding: 6px 14px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.9);
+    background: color-mix(in srgb, var(--white) 90%, transparent);
     pointer-events: none;
 }
 
@@ -68,6 +68,7 @@
 
 .hint-overlay {
     border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--ink-900) 88%, transparent);
     transition: opacity 0.3s ease-out;
     animation: vtNudge 4.2s ease-in-out 1.2s infinite;
 }

@@ -14,11 +14,12 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VoteProgressHeaderComponent } from './vote-progress-header/vote-progress-header.component';
 import { VoteSwipeCardComponent } from './vote-swipe-card/vote-swipe-card.component';
 import { VoteCtaAreaComponent } from './vote-cta-area/vote-cta-area.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { FocusTrapDirective } from '@common/ui/directives/focus-trap.directive';
 import { OptionType } from '@common/models/option-type.model';
 
 @Component({
@@ -33,7 +34,12 @@ import { OptionType } from '@common/models/option-type.model';
         TranslatePipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    hostDirectives: [FocusTrapDirective],
     host: {
+        role: 'dialog',
+        'aria-modal': 'true',
+        tabindex: '-1',
+        '[attr.aria-label]': 'ariaLabel()',
         '(window:keydown)': 'onKeyDown($event)',
         '(window:keyup)': 'onKeyUp($event)',
         '(click)': 'onOverlayClick($event)',
@@ -44,6 +50,7 @@ export class PollVoteComponent implements OnDestroy {
     private readonly elementRef = inject(ElementRef);
     private readonly projectDetailStore = inject(PollDetailStore);
     private readonly dateFormat = inject(DateOptionFormatService);
+    private readonly translateService = inject(TranslateService);
 
     readonly OptionType = OptionType;
 
@@ -97,9 +104,9 @@ export class PollVoteComponent implements OnDestroy {
                 return 'var(--accent)';
             }
             if (o.id === currentId) {
-                return '#9fc2cf';
+                return 'var(--accent-border)';
             }
-            return '#e2ded7';
+            return 'var(--cream-400)';
         });
     });
 
@@ -114,6 +121,13 @@ export class PollVoteComponent implements OnDestroy {
             return d;
         }
     });
+
+    /** Accessible name for the dialog — the poll title, or a generic fallback. */
+    readonly ariaLabel = computed(
+        () =>
+            this.poll()?.name ??
+            this.translateService.instant('project.results.vote'),
+    );
 
     private readonly localSkipCounts = signal(new Map<string, number>());
     private readonly hasVotedInSession = signal(false);

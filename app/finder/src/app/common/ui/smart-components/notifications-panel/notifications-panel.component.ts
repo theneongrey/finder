@@ -83,7 +83,6 @@ export class NotificationsPanelComponent {
             '/',
             'polls',
             notification.projectId,
-            'vote',
             notification.pollId,
         ]);
     }

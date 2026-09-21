@@ -68,7 +68,7 @@ export class PollItemComponent {
 
     readonly resultsRoute = computed(() => {
         const poll = this.poll();
-        return ['/polls', poll.projectId, 'results', poll.pollId];
+        return ['/polls', poll.projectId, poll.pollId];
     });
 
     readonly votedCountByStatus = computed(

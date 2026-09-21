@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { USER1, login, logout } from "./helpers";
+import { USER1, login, logout, createStandalonePoll } from "./helpers";
 
 test.describe("Poll favorite toggle", () => {
   test.beforeAll(async ({ browser }) => {
@@ -7,18 +7,12 @@ test.describe("Poll favorite toggle", () => {
     await login(page, USER1);
     await page.waitForLoadState('networkidle');
 
-    // Ensure USER1 has at least one standalone poll (check by vote CTA presence)
-    const anyPoll = page.locator('[data-testid="vote-cta-btn"]').first();
+    // Ensure USER1 has at least one standalone poll (check by open CTA presence)
+    const anyPoll = page.locator('[data-testid="open-poll-btn"]').first();
     if ((await anyPoll.count()) === 0) {
-      await page.goto('/polls/add');
-      await page.waitForURL('**/polls/add');
-      await page.locator('[data-testid="type-btn-yesno"]').click(); // auto-advances to step 2
-      await page.locator('[data-testid="question-input"] input').fill('Favorite Test Poll');
-      await page.locator('app-option-card ds-input input').first().fill('Ja');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
-      await page.waitForSelector('app-share-content');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
-      await page.waitForURL('**/polls');
+      await createStandalonePoll(page, 'Favorite Test Poll');
+      await page.goto('/polls');
+      await page.waitForLoadState('networkidle');
     }
 
     // Ensure no poll is favorited before each run

@@ -9,6 +9,7 @@
                 variant="primary"
                 size="sm"
                 icon="check"
+                data-testid="start-vote-btn"
                 (click)="startVote.emit()"
             >
                 {{ 'project.results.vote' | translate }}
@@ -17,6 +18,7 @@
                 variant="neutral"
                 size="sm"
                 icon="plus"
+                data-testid="add-option-btn"
                 (click)="addOption.emit()"
             >
                 {{ 'project.results.add' | translate }}
@@ -27,11 +29,17 @@
             <ds-button
                 variant="primary"
                 icon="check"
+                data-testid="start-vote-btn"
                 (click)="startVote.emit()"
             >
                 {{ 'project.results.startVoting' | translate }}
             </ds-button>
-            <ds-button variant="neutral" icon="plus" (click)="addOption.emit()">
+            <ds-button
+                variant="neutral"
+                icon="plus"
+                data-testid="add-option-btn"
+                (click)="addOption.emit()"
+            >
                 {{ 'project.results.addOption' | translate }}
             </ds-button>
         </div>

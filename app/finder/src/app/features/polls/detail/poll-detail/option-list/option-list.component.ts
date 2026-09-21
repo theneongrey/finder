@@ -45,6 +45,7 @@ export class OptionListComponent {
     readonly dateType = computed(() => optionTypeToDateType(this.optionType()));
 
     openComments = output<OptionDetail>();
+    startVote = output<{ optionId: string; revote: boolean }>();
     saveEdit = output<{
         optionId: string;
         text: string;

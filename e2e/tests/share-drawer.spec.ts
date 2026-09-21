@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { USER1, USER2, login, logout } from './helpers';
+import { USER1, USER2, login, logout, createStandalonePoll } from './helpers';
 
 // ---------------------------------------------------------------------------
 // #241 — ShareDrawer (BottomSheet) — Einladen / Mitglieder / Sichtbarkeit
@@ -21,15 +21,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
     const shareBtn = page.locator('[data-testid="share-btn"]').first();
     if (await shareBtn.count() === 0) {
-      await page.locator('[data-testid="fab-add-poll"]').click();
-      await page.waitForURL('**/polls/add');
-      await page.locator('[data-testid="type-btn-yesno"]').click();
-      await page.locator('[data-testid="question-input"] input').fill('E2E Share Drawer Poll');
-      await page.locator('app-option-card ds-input input').first().fill('Option A');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
-      await page.waitForSelector('app-share-content');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
-      await page.waitForURL('**/polls');
+      await createStandalonePoll(page, 'E2E Share Drawer Poll');
     }
 
     await logout(page);
@@ -52,7 +44,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
     if (await panel.count() > 0 && await panel.isVisible()) {
       // ds-button has display:contents so descendant selectors through it don't work;
       // the close button is the only <button> inside .ds-sheet-header
-      await page.locator('.ds-sheet-panel .ds-sheet-header button').click();
+      await page.locator('.ds-sheet-panel [data-testid="sheet-close-btn"] button').click();
       await expect(panel).not.toBeVisible();
     }
   }
@@ -143,7 +135,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
     test('close button (ds-icon-button) closes the sheet', async ({ page }) => {
       await openShareDrawer(page);
-      await page.locator('.ds-sheet-panel .ds-sheet-header button').click();
+      await page.locator('.ds-sheet-panel [data-testid="sheet-close-btn"] button').click();
       await expect(page.locator('.ds-sheet-panel')).not.toBeVisible();
     });
 
@@ -188,7 +180,7 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
 
     test('close button closes the drawer on desktop', async ({ page }) => {
       await openShareDrawer(page);
-      await page.locator('.ds-sheet-panel .ds-sheet-header button').click();
+      await page.locator('.ds-sheet-panel [data-testid="sheet-close-btn"] button').click();
       await expect(page.locator('.ds-sheet-panel')).not.toBeVisible();
     });
 

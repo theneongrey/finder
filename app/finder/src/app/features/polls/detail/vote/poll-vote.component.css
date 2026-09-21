@@ -1,0 +1,24 @@
+:host {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: safe center;
+    justify-content: center;
+    padding: 24px 16px;
+    overflow-y: auto;
+    /* Light translucent veil + blur so the detail page stays visible but dimmed. */
+    background: rgba(var(--bg-sheet-rgb), 0.82);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+.vote-content {
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 640px;
+    max-height: 100%;
+    flex-direction: column;
+    gap: 16px;
+}

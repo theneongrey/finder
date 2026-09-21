@@ -14,7 +14,8 @@ test.describe('Startseite (home / landing page)', () => {
   test('Votean logo is visible in nav', async ({ page }) => {
     const logo = page.locator('.nav-logo');
     await expect(logo).toBeVisible();
-    await expect(logo).toContainText('Votean');
+    // The wordmark is rendered as an <img alt="Votean">, not text content.
+    await expect(logo.locator('img[alt="Votean"]')).toBeVisible();
   });
 
   test('hero h1 heading uses display font', async ({ page }) => {

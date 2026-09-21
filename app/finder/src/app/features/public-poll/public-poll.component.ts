@@ -219,7 +219,7 @@ export class PublicPollComponent implements OnInit {
         const info = this.projectInfo();
         const target: Parameters<Router['navigate']>[0] =
             info?.isStandalone && info.pollId
-                ? ['/polls', info.projectId, 'vote', info.pollId]
+                ? ['/polls', info.projectId, info.pollId]
                 : ['/polls'];
         this.router.navigate(target).then((success) => {
             if (!success) {

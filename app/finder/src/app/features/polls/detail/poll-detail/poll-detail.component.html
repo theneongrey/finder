@@ -73,6 +73,7 @@
                         (openComments)="openOptionComments($event)"
                         (saveEdit)="saveOptionEdit($event)"
                         (deleteOption)="deleteOption($event)"
+                        (startVote)="openVoteAt($event)"
                     />
                 }
             </div>
@@ -139,4 +140,17 @@
             [inCard]="false"
         />
     </app-share-drawer>
+}
+
+<!-- Voting overlay — animates in over the results, closes when voting finishes -->
+@if (voteOpen()) {
+    <app-project-vote
+        animate.enter="vote-overlay-enter"
+        animate.leave="vote-overlay-leave"
+        [pollId]="pollId()"
+        [startOptionId]="voteStartOptionId()"
+        [revote]="voteRevote()"
+        (finished)="closeVote()"
+        (dismissed)="closeVote()"
+    />
 }

@@ -255,14 +255,12 @@
                                 variant="outline"
                                 size="sm"
                                 [fullWidth]="true"
-                                [routerLink]="[
-                                    '/polls',
-                                    projectId(),
-                                    'vote',
-                                    pollId(),
-                                    option().id,
-                                ]"
-                                [queryParams]="{ revote: 1 }"
+                                (click)="
+                                    startVote.emit({
+                                        optionId: option().id,
+                                        revote: true,
+                                    })
+                                "
                             >
                                 {{
                                     (pollType() === 'rating'
@@ -306,13 +304,12 @@
                 <ds-button
                     variant="ghost"
                     size="sm"
-                    [routerLink]="[
-                        '/polls',
-                        projectId(),
-                        'vote',
-                        pollId(),
-                        option().id,
-                    ]"
+                    (click)="
+                        startVote.emit({
+                            optionId: option().id,
+                            revote: false,
+                        })
+                    "
                 >
                     {{ 'project.results.revote' | translate }}
                 </ds-button>
@@ -321,13 +318,9 @@
             <ds-button
                 variant="primary"
                 [fullWidth]="true"
-                [routerLink]="[
-                    '/polls',
-                    projectId(),
-                    'vote',
-                    pollId(),
-                    option().id,
-                ]"
+                (click)="
+                    startVote.emit({ optionId: option().id, revote: false })
+                "
             >
                 {{ 'project.results.vote' | translate }}
             </ds-button>

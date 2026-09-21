@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { USER1, login, logout } from './helpers';
+import { USER1, login, logout, createStandalonePoll } from './helpers';
 
 test.describe('Poll close date', () => {
   let pollSlug: string;
@@ -8,29 +8,9 @@ test.describe('Poll close date', () => {
     const page = await browser.newPage();
     await login(page, USER1);
 
-    // Create a standalone poll — the close settings auto-select "1 week" by default
-    await page.goto('/polls/add');
-    await page.waitForURL('**/polls/add');
-    await page.locator('[data-testid="type-btn-yesno"]').click(); // auto-advances to step 2
-    await page.locator('[data-testid="question-input"] input').fill('Close Date E2E Test Poll');
-    await page.locator('app-option-card ds-input input').first().fill('Ja');
-    await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
-    await page.waitForSelector('app-share-content');
-    await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
-    await page.waitForURL('**/polls');
-
-    // Find an OPEN "Close Date E2E Test Poll" (exclude old closed ones from prior runs).
-    // The card's "Open" CTA navigates to the results page — use it to derive the poll
-    // slug from the URL.
-    const openPollCard = page.locator('app-poll-item')
-      .filter({ hasText: 'Close Date E2E Test Poll' })
-      .filter({ hasNotText: /\bclosed\b|\bbeendet\b/i }) // exclude prior-run closed polls
-      .first();
-    await openPollCard.locator('[data-testid="open-poll-btn"]').click();
-    await page.waitForURL(/\/polls\/[^/]+\/results\/[^/]+/);
-    // URL: /polls/<projectSlug>/results/<pollSlug>
-    const match = new URL(page.url()).pathname.match(/\/results\/([^/]+)/);
-    pollSlug = match?.[1] ?? '';
+    // Create a fresh standalone poll — it is open (no close date set on create).
+    const { pollId } = await createStandalonePoll(page, 'Close Date E2E Test Poll');
+    pollSlug = pollId;
 
     await logout(page);
     await page.close();

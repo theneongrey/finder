@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { USER1, login, logout } from './helpers';
+import { USER1, login, logout, createStandalonePoll, addTextOption } from './helpers';
 
 test.describe('Poll voting progress on overview', () => {
   // Ensure USER1 has a standalone "Voting Progress Test Poll" with one option.
@@ -11,15 +11,8 @@ test.describe('Poll voting progress on overview', () => {
 
     const testPoll = page.locator('app-poll-item').filter({ hasText: 'Voting Progress Test Poll' });
     if (await testPoll.count() === 0) {
-      await page.goto('/polls/add');
-      await page.waitForURL('**/polls/add');
-      await page.locator('[data-testid="type-btn-yesno"]').click(); // auto-advances to step 2
-      await page.locator('[data-testid="question-input"] input').fill('Voting Progress Test Poll');
-      await page.locator('app-option-card ds-input input').first().fill('Ja');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
-      await page.waitForSelector('app-share-content');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
-      await page.waitForURL('**/polls');
+      await createStandalonePoll(page, 'Voting Progress Test Poll');
+      await addTextOption(page, 'Ja');
     }
 
     await logout(page);
@@ -34,11 +27,11 @@ test.describe('Poll voting progress on overview', () => {
     await logout(page);
   });
 
-  test('CTA reads "Vote now" (or locale equivalent) for unvoted poll', async ({ page }) => {
+  test('overview shows an open CTA for each poll', async ({ page }) => {
     await page.goto('/polls');
-    // At least one poll must show vote-now CTA
-    const voteBtns = page.locator('app-poll-item [data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i });
-    await expect(voteBtns).not.toHaveCount(0);
+    // At least one poll must show the open CTA (voting is started from the detail page)
+    const openBtns = page.locator('app-poll-item [data-testid="open-poll-btn"]');
+    await expect(openBtns).not.toHaveCount(0);
   });
 
   test('voted-count is visible on each card', async ({ page }) => {
@@ -47,34 +40,18 @@ test.describe('Poll voting progress on overview', () => {
     await expect(page.locator('[data-testid="voted-count"]').first()).toBeVisible();
   });
 
-  test('CTA changes after casting a vote', async ({ page }) => {
-    await page.goto('/polls');
-    const pollCard = page.locator('app-poll-item').filter({ hasText: 'Voting Progress Test Poll' }).first();
-    const ctaBtn = pollCard.locator('[data-testid="vote-cta-btn"]');
+  test('starting a vote opens the overlay on the detail page and it can be dismissed', async ({ page }) => {
+    // Create a fresh poll with one option → deterministic open, owned poll.
+    await createStandalonePoll(page, `Voting Flow E2E ${Date.now()}`);
+    await addTextOption(page, 'Ja');
 
-    // If previously voted in another run, CTA already says "show results" — idempotent pass
-    const ctaText = await ctaBtn.innerText();
-    if (/show results|zeige ergebnisse/i.test(ctaText)) {
-      await expect(ctaBtn).toContainText(/show results|zeige ergebnisse/i);
-      return;
-    }
+    // Voting is an overlay on the detail page — open it from the toolbar.
+    await page.locator('[data-testid="start-vote-btn"] button:visible').first().click();
+    await expect(page.locator('app-project-vote')).toBeVisible();
 
-    // Navigate to vote page via the overview CTA
-    await ctaBtn.click();
-    await page.waitForURL('**/polls/**/vote/**');
-    await page.waitForLoadState('networkidle');
-
-    // Cast a "Yes" vote — desktop viewport: mobile ds-vote-btn is md:hidden
-    await page.locator('button.desktop-vote-btn--yes').first().click();
-    await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
-
-    // Return to overview and verify at least one "Voting Progress Test Poll" CTA changed.
-    // (The list may re-sort after voting so .first() can resolve to a different unvoted duplicate.)
-    await page.goto('/polls');
-    const resultsCtas = page.locator('app-poll-item')
-      .filter({ hasText: 'Voting Progress Test Poll' })
-      .locator('[data-testid="vote-cta-btn"]')
-      .filter({ hasText: /show results|zeige ergebnisse/i });
-    await expect(resultsCtas).not.toHaveCount(0);
+    // Dismissing (Escape) animates it closed, staying on the detail page (no route change).
+    await page.keyboard.press('Escape');
+    await expect(page.locator('app-project-vote')).toHaveCount(0);
+    await expect(page).toHaveURL(/\/polls\/[^/]+\/[^/]+/);
   });
 });

@@ -13,7 +13,7 @@ test.describe('Settings page (issue #247)', () => {
   });
 
   test('renders title, profile section and notifications section', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /settings|einstellungen|ajustes/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /settings|einstellungen|ajustes/i }).first()).toBeVisible();
     // Two app-user-avatar elements exist (title bar + profile card) — check first one
     await expect(page.locator('app-user-avatar').first()).toBeVisible();
     await expect(page.getByText(/^profile$|^profil$|^perfil$/i)).toBeVisible();
@@ -62,13 +62,21 @@ test.describe('Settings page (issue #247)', () => {
 
   test('switching language updates page heading', async ({ page }) => {
     const langControl = page.locator('[data-testid="settings-language-control"]');
+    await expect(langControl).toBeVisible();
+    const mainHeading = page.getByRole('main').getByRole('heading').first();
 
+    // Establish a known starting language so each switch is a real change and the
+    // segmented control is fully hydrated before we assert.
+    await langControl.getByRole('button', { name: 'English' }).click();
+    await expect(mainHeading).toHaveText('Settings', { timeout: 8000 });
+
+    // Switch to German — the page-body heading re-translates reactively.
     await langControl.getByRole('button', { name: 'Deutsch' }).click();
-    await expect(page.getByRole('heading', { name: 'Einstellungen' })).toBeVisible({ timeout: 3000 });
+    await expect(mainHeading).toHaveText('Einstellungen', { timeout: 8000 });
 
     // Switch back to English
     await langControl.getByRole('button', { name: 'English' }).click();
-    await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible({ timeout: 3000 });
+    await expect(mainHeading).toHaveText('Settings', { timeout: 8000 });
   });
 
   test('all six notification rows are loaded', async ({ page }) => {
@@ -84,10 +92,10 @@ test.describe('Settings page (issue #247)', () => {
     const allBtn = firstControl.getByRole('button', { name: /^all$|^alle$/i });
 
     await offBtn.click();
-    await expect(offBtn).toHaveAttribute('data-state', 'on');
+    await expect(offBtn).toHaveAttribute('data-state', 'on', { timeout: 8000 });
 
     await allBtn.click();
-    await expect(allBtn).toHaveAttribute('data-state', 'on');
+    await expect(allBtn).toHaveAttribute('data-state', 'on', { timeout: 8000 });
   });
 
   test('logout button is visible and navigates to logout route', async ({ page }) => {

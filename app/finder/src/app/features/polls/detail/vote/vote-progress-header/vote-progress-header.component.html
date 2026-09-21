@@ -1,17 +1,16 @@
 <div class="px-5 pt-3 md:px-8 md:pt-0">
     <div class="mx-auto w-full max-w-[560px]">
-        <!-- Type badge + deadline row — mobile only -->
-        <div class="mb-3 flex items-center justify-between gap-2 md:hidden">
-            <app-poll-type-badge [type]="optionType()" />
-            @if (closeDateDisplay()) {
+        <!-- Deadline row — mobile only -->
+        @if (closeDateDisplay()) {
+            <div class="mb-3 flex items-center justify-end gap-2 md:hidden">
                 <span
                     class="flex items-center gap-1.5 text-[12.5px] font-[var(--weight-semibold)] text-[var(--text-secondary)]"
                 >
                     <ds-icon name="clock" [size]="13" />
                     {{ closeDateDisplay() }}
                 </span>
-            }
-        </div>
+            </div>
+        }
 
         <div class="mb-2 flex items-baseline justify-between gap-2">
             <span

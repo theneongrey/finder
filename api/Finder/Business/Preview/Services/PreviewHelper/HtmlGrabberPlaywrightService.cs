@@ -93,13 +93,27 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
                 if (DateTime.UtcNow - lastNavigation >=
                     TimeSpan.FromMilliseconds(settleTimeMs))
                 {
-                    // Make sure the final document is loaded.
-                    await page.WaitForLoadStateAsync(
-                        LoadState.Load,
-                        new PageWaitForLoadStateOptions
-                        {
-                            Timeout = 1_000
-                        });
+                    // Navigation has stopped; now give client-side frameworks
+                    // (SPAs) a chance to render before we read the DOM. Waiting
+                    // only for LoadState.Load captures the empty shell of an
+                    // Angular/React app before its bundles execute, so wait for
+                    // the network to go idle instead. If it never fully settles
+                    // (long-polling, analytics beacons, …), fall back to
+                    // whatever has rendered rather than failing the grab.
+                    try
+                    {
+                        await page.WaitForLoadStateAsync(
+                            LoadState.NetworkIdle,
+                            new PageWaitForLoadStateOptions
+                            {
+                                Timeout = (float)TimeSpan
+                                    .FromSeconds(timeoutSeconds).TotalMilliseconds
+                            });
+                    }
+                    catch (TimeoutException)
+                    {
+                        // Network stayed busy; use the DOM as-is.
+                    }
 
                     return;
                 }

@@ -20,4 +20,21 @@ public class HtmlGrabberPlaywrightServiceTests
         Assert.NotNull(result.Payload);
         Assert.Contains("app-home", result.Payload.HtmlContent, StringComparison.OrdinalIgnoreCase);
     }
+
+    [Fact]
+    public async Task GetHtmlContent_ForRedirectingUrl_FollowsRedirectAndReturnsHtml()
+    {
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?> { ["Preview:PlaywrightTimeoutSeconds"] = "20" })
+            .Build();
+        var service = new HtmlGrabberPlaywrightService(config);
+
+        var result = await service.GetHtmlContent("https://amzn.eu/d/0i3d9Aln");
+
+        Assert.True(result.IsSuccess, $"Expected success but got code {result.Code}: {result.ErrorMessasge}");
+        Assert.NotNull(result.Payload);
+        // The short link redirects to a full amazon.* product page.
+        Assert.Contains("amazon", result.Payload.Url, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("<html", result.Payload.HtmlContent, StringComparison.OrdinalIgnoreCase);
+    }
 }

@@ -53,11 +53,12 @@ public class PreviewService
             var htmlPlaywrightResult = await _htmlGrabberPlaywrightService.GetHtmlContent(url);
             if (htmlPlaywrightResult.IsSuccess)
             {
-                htmlContent = htmlPlaywrightResult.Payload!.HtmlContent;
                 url = htmlPlaywrightResult.Payload!.Url;
 
-                if (!httpHtmlResult.IsSuccess || htmlContent.Length != htmlContent.Length)
+                if (!httpHtmlResult.IsSuccess || htmlContent.Length < htmlPlaywrightResult.Payload!.HtmlContent.Length)
                 {
+                    htmlContent = htmlPlaywrightResult.Payload!.HtmlContent;
+                    
                     // Even if the content changed after calling it with playwright, it's most likely the metadata will
                     // not change, but since it's a low-cost operation, try it again.
 

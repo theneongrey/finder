@@ -6,7 +6,6 @@ import {
     input,
     output,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
@@ -31,7 +30,6 @@ import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
     selector: 'app-option-card-date',
     templateUrl: './option-card-date.component.html',
     imports: [
-        RouterLink,
         TranslatePipe,
         DsButtonComponent,
         DsCardComponent,
@@ -55,6 +53,7 @@ export class OptionCardDateComponent {
     hideResults = input(false);
 
     commentsClick = output<void>();
+    startVote = output<{ optionId: string; revote: boolean }>();
 
     private readonly parsed = computed(() =>
         this.dateFormatService.parse(this.option().text, this.dateType()),

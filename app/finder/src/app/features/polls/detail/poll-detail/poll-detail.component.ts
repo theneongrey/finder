@@ -8,7 +8,6 @@ import {
     input,
     signal,
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionListComponent } from './option-list/option-list.component';
@@ -38,11 +37,12 @@ import {
 } from '../../_shared/models/date-option.model';
 import { OptionDetail } from '../../_shared/models/poll-detail.model';
 import { UserStore } from '@common/data/user.store';
+import { PollVoteComponent } from '../vote/poll-vote.component';
 
 @Component({
-    selector: 'app-results',
-    templateUrl: './results.component.html',
-    styleUrl: './results.component.css',
+    selector: 'app-poll-detail',
+    templateUrl: './poll-detail.component.html',
+    styleUrl: './poll-detail.component.css',
     imports: [
         OptionListComponent,
         ResultsSkeletonComponent,
@@ -55,13 +55,13 @@ import { UserStore } from '@common/data/user.store';
         ShareContentComponent,
         AddOptionPanelComponent,
         EmptyOptionsComponent,
+        PollVoteComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResultsComponent {
+export class PollDetailComponent {
     private readonly projectDetailStore = inject(PollDetailStore);
     private readonly translateService = inject(TranslateService);
-    private readonly router = inject(Router);
     private readonly dateFormat = inject(DateOptionFormatService);
     private readonly userStore = inject(UserStore);
 
@@ -73,6 +73,11 @@ export class ResultsComponent {
     created = input<string | undefined>(undefined);
 
     showAddOption = signal(false);
+
+    /** Vote overlay state. */
+    readonly voteOpen = signal(false);
+    readonly voteStartOptionId = signal<string | undefined>(undefined);
+    readonly voteRevote = signal(false);
 
     /** Share-link bar shown once, right after the poll was created. */
     readonly showShareBar = signal(false);
@@ -253,14 +258,25 @@ export class ResultsComponent {
         });
     }
 
+    /** Toolbar entry: revote through every option. */
     startVote() {
-        const projectId = this.project()?.id;
-        if (!projectId) {
-            return;
-        }
-        this.router.navigate(['/polls', projectId, 'vote', this.pollId()], {
-            queryParams: { revote: 1 },
-        });
+        this.voteStartOptionId.set(undefined);
+        this.voteRevote.set(true);
+        this.voteOpen.set(true);
+    }
+
+    /** Option-card entry: start voting at a specific option. */
+    openVoteAt(request: { optionId: string; revote: boolean }) {
+        this.voteStartOptionId.set(request.optionId);
+        this.voteRevote.set(request.revote);
+        this.voteOpen.set(true);
+    }
+
+    closeVote() {
+        this.voteOpen.set(false);
+        // Refresh so option tallies reflect the votes just cast — the store's
+        // vote() only patches the user's own choice, not the aggregate votes.
+        this.projectDetailStore.getPoll(this.pollId());
     }
 
     addComment(content: string) {

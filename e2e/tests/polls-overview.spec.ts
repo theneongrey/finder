@@ -1,39 +1,23 @@
 import { test, expect } from '@playwright/test';
-import { USER1, USER2, login, logout } from './helpers';
+import { USER1, USER2, login, logout, createStandalonePoll, addTextOption } from './helpers';
 
 test.describe('Polls-only overview (simplified MVP)', () => {
   let testProjectId: string;
   let testPollId: string;
 
-  // One-time setup: ensure USER1 has at least one standalone poll with open options.
+  // One-time setup: ensure USER1 has an "E2E Smoke Test Poll" with an open option.
   // Creates one only if none exists, so re-runs are fast and idempotent.
   test.beforeAll(async ({ browser }) => {
     const page = await browser.newPage();
     await login(page, USER1);
-
-    const voteBtn = page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i }).first();
-
-    if (await voteBtn.count() === 0) {
-      await page.goto('/polls/add');
-      await page.waitForURL('**/polls/add');
-      await page.locator('[data-testid="type-btn-yesno"]').click(); // auto-advances to step 2
-      await page.locator('[data-testid="question-input"] input').fill('E2E Smoke Test Poll');
-      await page.locator('app-option-card ds-input input').first().fill('Ja');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
-      await page.waitForSelector('app-share-content');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
-      await page.waitForURL('**/polls');
-    }
-
-    // Navigate to vote page to capture projectId and pollId from the URL
-    await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i }).first().click();
-    await page.waitForURL('**/polls/**/vote/**');
-    const parts = new URL(page.url()).pathname.split('/');
-    // URL shape: /polls/<projectId>/vote/<pollId>/<optionId>
-    testProjectId = parts[2];
-    testPollId = parts[4];
-
     await page.goto('/polls');
+    await page.waitForLoadState('networkidle');
+
+    // Create a fresh poll and capture its ids for the Routing tests (deterministic).
+    const ids = await createStandalonePoll(page, `Overview E2E ${Date.now()}`);
+    testProjectId = ids.projectId;
+    testPollId = ids.pollId;
+
     await logout(page);
     await page.close();
   }, 90000);
@@ -64,7 +48,8 @@ test.describe('Polls-only overview (simplified MVP)', () => {
   test('shows empty state for a user with no standalone polls', async ({ page }) => {
     await login(page, USER2);
     await page.goto('/polls');
-    await expect(page.locator('[data-testid="polls-empty-state"]')).toBeVisible();
+    // The empty overview renders the app-polls-empty-state component.
+    await expect(page.locator('app-polls-empty-state')).toBeVisible();
     await logout(page);
   });
 
@@ -83,14 +68,14 @@ test.describe('Polls-only overview (simplified MVP)', () => {
       await page.locator('[data-testid="fab-add-poll"]').click();
       await page.waitForURL('**/polls/add');
 
-      await page.locator('[data-testid="type-btn-yesno"]').click(); // auto-advances to step 2
+      // Mobile wizard: the type picker reveals after a question is entered.
       await page.locator('[data-testid="question-input"] input').fill('E2E Created Poll');
-      await page.locator('app-option-card ds-input input').first().fill('Ja');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
-      await page.waitForSelector('app-share-content');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
-      await page.waitForURL('**/polls');
+      await page.locator('[data-testid="type-btn-yesno"]').click();
+      await page.locator('[data-testid="wizard-cta"] button').click();
+      await page.waitForURL(/\/polls\/[^/]+\/[^/]+/); // lands on the new poll's detail page
 
+      await page.goto('/polls');
+      await page.waitForLoadState('networkidle');
       // .first() avoids strict-mode violation if a stale "E2E Created Poll" exists from a previous run
       await expect(page.getByText('E2E Created Poll').first()).toBeVisible();
 
@@ -115,17 +100,20 @@ test.describe('Polls-only overview (simplified MVP)', () => {
       await logout(page);
     });
 
-    test('vote button navigates to vote page and casting a vote advances to next step', async ({ page }) => {
-      await page.goto('/polls');
-      await page.locator('[data-testid="vote-cta-btn"]').filter({ hasText: /vote now|jetzt abstimmen/i }).first().click();
-      await page.waitForURL('**/polls/**/vote/**');
-      await page.waitForLoadState('networkidle');
+    test('starting a vote opens the overlay; it can be dismissed', async ({ page }) => {
+      // Create a fresh poll with one option so we land on its detail page with an
+      // open, owned poll (deterministic — no reliance on pre-existing polls).
+      await createStandalonePoll(page, `Vote Flow E2E ${Date.now()}`);
+      await addTextOption(page, 'Ja');
 
-      // Cast a "Yes" vote — desktop viewport: ds-vote-buttons is md:hidden, use desktop button
-      await page.locator('button.desktop-vote-btn--yes').first().click();
+      // Voting is an overlay on the detail page — open it from the toolbar
+      await page.locator('[data-testid="start-vote-btn"] button:visible').first().click();
+      await expect(page.locator('app-project-vote')).toBeVisible();
 
-      // After voting, either advances to the next option or navigates to results
-      await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
+      // Dismissing (Escape) animates it closed, staying on the detail page (no route change)
+      await page.keyboard.press('Escape');
+      await expect(page.locator('app-project-vote')).toHaveCount(0);
+      await expect(page).toHaveURL(/\/polls\/[^/]+\/[^/]+/);
     });
   });
 
@@ -173,7 +161,7 @@ test.describe('Overview redesign (#242)', () => {
     await expect(card.locator('app-poll-type-badge')).toBeVisible();
     await expect(card.locator('ds-status-dot')).toBeVisible();
     await expect(card.locator('ds-progress-bar')).toBeVisible();
-    await expect(card.locator('[data-testid="vote-cta-btn"]')).toBeVisible();
+    await expect(card.locator('[data-testid="open-poll-btn"]')).toBeVisible();
   });
 
   test('mobile (390px): FAB is visible bottom-right', async ({ page }) => {

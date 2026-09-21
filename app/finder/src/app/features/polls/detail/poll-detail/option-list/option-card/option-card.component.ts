@@ -8,7 +8,6 @@ import {
     signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
@@ -36,7 +35,6 @@ import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
     templateUrl: './option-card.component.html',
     imports: [
         FormsModule,
-        RouterLink,
         TranslatePipe,
         DsButtonComponent,
         DsCardComponent,
@@ -62,6 +60,7 @@ export class OptionCardComponent {
     pollType = input<'yesno' | 'rating'>('yesno');
 
     commentsClick = output<void>();
+    startVote = output<{ optionId: string; revote: boolean }>();
     saveEdit = output<{
         optionId: string;
         text: string;

@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DsVoteButtonsComponent } from '@ds/vote-buttons/ds-vote-buttons.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
-import { VoteCommentButtonComponent } from '../vote-comment-button/vote-comment-button.component';
 import { OptionType } from '@common/models/option-type.model';
 import { isDateOptionType } from '../../../_shared/models/date-option.model';
 
@@ -32,7 +31,6 @@ const RATING_LABEL_KEYS: Record<number, string> = {
         DsVoteButtonsComponent,
         DsButtonComponent,
         DsIconComponent,
-        VoteCommentButtonComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

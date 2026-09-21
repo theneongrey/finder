@@ -6,15 +6,14 @@ import {
     input,
     untracked,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { filter, map, startWith } from 'rxjs';
+import { Router } from '@angular/router';
 import { PollDetailStore } from '../_shared/data/poll-detail.store';
 import { UserStore } from '@common/data/user.store';
+import { PollDetailComponent } from './poll-detail/poll-detail.component';
 
 @Component({
     selector: 'app-poll-detail-shell',
-    imports: [RouterOutlet],
+    imports: [PollDetailComponent],
     templateUrl: './detail-shell.component.html',
     host: { class: 'block' },
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,20 +23,8 @@ export class PollDetailShellComponent {
     private readonly router = inject(Router);
     private readonly userStore = inject(UserStore);
 
-    isFullWidth = toSignal(
-        this.router.events.pipe(
-            filter((e) => e instanceof NavigationEnd),
-            startWith(null),
-            map(
-                () =>
-                    this.router.url.includes('/edit/') ||
-                    this.router.url.includes('/results/') ||
-                    this.router.url.includes('/vote/'),
-            ),
-        ),
-        { initialValue: false },
-    );
     id = input<string>();
+    pollId = input<string>();
 
     constructor() {
         effect(() => {
@@ -53,7 +40,7 @@ export class PollDetailShellComponent {
         effect(() => {
             const project = this.projectDetailStore.currentProject();
             if (project && this.id() !== project.id) {
-                this.router.navigate(['/polls', project.id], {
+                this.router.navigate(['/polls', project.id, this.pollId()], {
                     replaceUrl: true,
                 });
             }

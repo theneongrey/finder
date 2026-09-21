@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { detailRoutes } from './detail/detail.routes';
 
 export const pollsRoutes: Routes = [
     {
@@ -19,12 +18,11 @@ export const pollsRoutes: Routes = [
         },
     },
     {
-        path: ':id',
+        path: ':id/:pollId',
         loadComponent: () =>
             import('./detail/detail-shell.component').then(
                 (m) => m.PollDetailShellComponent,
             ),
-        children: detailRoutes,
     },
     {
         path: '**',

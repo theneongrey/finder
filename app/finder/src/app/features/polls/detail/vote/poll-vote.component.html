@@ -1,36 +1,37 @@
-<div
-    class="flex min-h-[calc(100dvh-60px)] w-full flex-col md:h-[calc(100dvh-60px)] md:flex-row md:overflow-hidden"
+<button
+    type="button"
+    class="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface-card)] text-[var(--text-secondary)] shadow-[var(--shadow-overlay)] transition-colors hover:text-[var(--text-primary)]"
+    [attr.aria-label]="'project.common.close' | translate"
+    (click)="dismissed.emit()"
 >
-    <app-vote-sidebar [pollId]="pollId()" [optionId]="optionId()" />
+    <ds-icon name="close" [size]="20" />
+</button>
 
-    <div
-        class="flex min-h-0 min-w-0 flex-1 flex-col md:justify-center md:gap-5"
-    >
-        <app-vote-progress-header
-            [optionType]="poll()?.optionType ?? OptionType.YesNo"
-            [closeDateDisplay]="closeDateDisplay()"
-            [currentIndex]="currentOptionIndex()"
-            [total]="totalCount()"
-            [progressPercent]="progressPercent()"
-            [progressSegments]="progressSegments()"
-        />
+<div class="vote-content">
+    <app-vote-progress-header
+        [optionType]="poll()?.optionType ?? OptionType.YesNo"
+        [closeDateDisplay]="closeDateDisplay()"
+        [currentIndex]="currentOptionIndex()"
+        [total]="totalCount()"
+        [progressPercent]="progressPercent()"
+        [progressSegments]="progressSegments()"
+    />
 
-        <app-vote-swipe-card
-            [optionType]="poll()?.optionType ?? OptionType.YesNo"
-            [option]="option()"
-            [allOptionTexts]="allOptionTexts()"
-            (voted)="onVoted($event)"
-        />
+    <app-vote-swipe-card
+        [optionType]="poll()?.optionType ?? OptionType.YesNo"
+        [option]="option()"
+        [allOptionTexts]="allOptionTexts()"
+        (voted)="onVoted($event)"
+    />
 
-        <app-vote-cta-area
-            [optionType]="poll()?.optionType ?? OptionType.YesNo"
-            [pollId]="pollId()"
-            [optionId]="optionId()"
-            [optionText]="option()?.text"
-            (yes)="swipeCardRef().swipeYes()"
-            (no)="swipeCardRef().swipeNo()"
-            (skip)="skip()"
-            (rated)="onRated($event)"
-        />
-    </div>
+    <app-vote-cta-area
+        [optionType]="poll()?.optionType ?? OptionType.YesNo"
+        [pollId]="pollId()"
+        [optionId]="currentOptionId()"
+        [optionText]="option()?.text"
+        (yes)="swipeCardRef().swipeYes()"
+        (no)="swipeCardRef().swipeNo()"
+        (skip)="skip()"
+        (rated)="onRated($event)"
+    />
 </div>

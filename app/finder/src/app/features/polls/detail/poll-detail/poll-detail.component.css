@@ -36,9 +36,41 @@
     }
 }
 
+.vote-overlay-enter {
+    animation: voteOverlayEnter 220ms var(--ease-standard, ease-out);
+}
+
+@keyframes voteOverlayEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.98) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.vote-overlay-leave {
+    animation: voteOverlayLeave 180ms ease-in forwards;
+}
+
+@keyframes voteOverlayLeave {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.98) translateY(8px);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .add-option-enter,
-    .add-option-leave {
+    .add-option-leave,
+    .vote-overlay-enter,
+    .vote-overlay-leave {
         animation: none;
     }
 }

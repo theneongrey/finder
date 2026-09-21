@@ -14,6 +14,7 @@
                 [pollId]="pollId()"
                 [hideResults]="hideResults()"
                 (commentsClick)="openComments.emit(option)"
+                (startVote)="startVote.emit($event)"
             />
         } @else {
             <app-option-card
@@ -30,6 +31,7 @@
                 (commentsClick)="openComments.emit(option)"
                 (saveEdit)="saveEdit.emit($event)"
                 (deleteOption)="deleteOption.emit($event)"
+                (startVote)="startVote.emit($event)"
             />
         }
     }

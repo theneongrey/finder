@@ -67,7 +67,7 @@
         </div>
         <app-vote-answer-summary
             [items]="answerSummary()"
-            (itemClick)="navigateToOption($event)"
+            (itemClick)="optionSelected.emit($event)"
         />
     </div>
 </aside>

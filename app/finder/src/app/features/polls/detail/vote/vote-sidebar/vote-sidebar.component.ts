@@ -4,8 +4,8 @@ import {
     computed,
     inject,
     input,
+    output,
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PollDetailStore } from '../../../_shared/data/poll-detail.store';
 import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
@@ -38,14 +38,14 @@ import { OptionTypeBadgeComponent } from '@smart/option-type-badge/option-type-b
 export class VoteSidebarComponent {
     private readonly store = inject(PollDetailStore);
     private readonly dateFormat = inject(DateOptionFormatService);
-    private readonly router = inject(Router);
 
     pollId = input('');
     optionId = input('');
 
+    optionSelected = output<string>();
+
     readonly OptionType = OptionType;
     readonly poll = this.store.currentPoll;
-    private readonly projectId = this.store.projectId;
 
     readonly closeDateDisplay = computed(() => {
         const d = this.poll()?.closeDate;
@@ -143,14 +143,4 @@ export class VoteSidebarComponent {
             };
         });
     });
-
-    navigateToOption(id: string): void {
-        void this.router.navigate([
-            '/polls/',
-            this.projectId(),
-            'vote',
-            this.pollId(),
-            id,
-        ]);
-    }
 }

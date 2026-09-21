@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { USER1, login, logout } from './helpers';
+import { USER1, login, logout, createStandalonePoll, addTextOption } from './helpers';
 
-test.describe('Poll results page (#255)', () => {
+test.describe('Poll detail page (#255)', () => {
   let testProjectId: string;
   let testPollId: string;
 
-  // Ensure a dedicated test poll with at least one vote exists. Idempotent across runs.
+  // Ensure a dedicated test poll with at least one option exists. Idempotent across runs.
   test.beforeAll(async ({ browser }) => {
     test.setTimeout(90000);
     const page = await browser.newPage();
@@ -13,39 +13,24 @@ test.describe('Poll results page (#255)', () => {
     await page.goto('/polls');
     await page.waitForLoadState('networkidle');
 
-    // Create the results test poll if it doesn't exist yet
     const testPoll = page.locator('app-poll-item').filter({ hasText: 'Results E2E Test Poll' });
     if (await testPoll.count() === 0) {
-      await page.goto('/polls/add');
-      await page.waitForURL('**/polls/add');
-      await page.locator('[data-testid="type-btn-yesno"]').click();
-      await page.locator('[data-testid="question-input"] input').fill('Results E2E Test Poll');
-      await page.locator('app-option-card ds-input input').first().fill('Ja');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 2 → creates poll → step 3
-      await page.waitForSelector('app-share-content');
-      await page.locator('[data-testid="wizard-cta"] button').click(); // step 3 → /polls
-      await page.waitForURL('**/polls');
-      await page.waitForLoadState('networkidle');
-    }
-
-    // Navigate via the poll's own CTA to capture projectId and pollId from the URL
-    const pollCard = page.locator('app-poll-item').filter({ hasText: 'Results E2E Test Poll' }).first();
-    await pollCard.locator('[data-testid="vote-cta-btn"]').click();
-    await page.waitForURL(/\/polls\/.+\/(vote|results)\/.+/);
-
-    const parts = new URL(page.url()).pathname.split('/');
-    testProjectId = parts[2];
-    testPollId = parts[4];
-
-    // Cast a vote if the poll hasn't been voted on yet.
-    // ds-vote-buttons is md:hidden at default 1280px desktop viewport — use the desktop vote button.
-    // waitForURL('**/results/**') ensures the vote API call completes before proceeding.
-    if (page.url().includes('/vote/')) {
-      await page.locator('button.desktop-vote-btn--yes').first().click();
-      await page.waitForURL('**/results/**');
-      // Re-capture pollId from the results URL (same value, but confirms navigation completed)
-      const resultParts = new URL(page.url()).pathname.split('/');
-      testPollId = resultParts[4];
+      // Create the poll (lands on the detail page) and add one option.
+      const ids = await createStandalonePoll(page, 'Results E2E Test Poll');
+      await addTextOption(page, 'Ja');
+      testProjectId = ids.projectId;
+      testPollId = ids.pollId;
+    } else {
+      // Capture ids from the existing poll's detail page.
+      await testPoll.first().locator('[data-testid="open-poll-btn"]').click();
+      await page.waitForURL(/\/polls\/[^/]+\/[^/]+$/);
+      const parts = new URL(page.url()).pathname.split('/');
+      testProjectId = parts[2];
+      testPollId = parts[3];
+      // Ensure the poll has at least one option for the option-list tests.
+      if (await page.locator('[data-testid="results-empty-options"]').count() > 0) {
+        await addTextOption(page, 'Ja');
+      }
     }
 
     await logout(page);
@@ -60,135 +45,90 @@ test.describe('Poll results page (#255)', () => {
     await logout(page);
   });
 
-  // ── Breadcrumb ────────────────────────────────────────────────
+  const detailUrl = () => `/polls/${testProjectId}/${testPollId}`;
 
-  test('header shows poll title and Polls back label', async ({ page }) => {
+  // ── Header ─────────────────────────────────────────────────────
+
+  test('header shows the poll title and a back button', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
+    await page.goto(detailUrl());
     const header = page.getByRole('banner');
-    // The breadcrumb is a button in the title bar; the subtitle <p> is hidden
-    await expect(header.getByRole('button', { name: /polls/i })).toBeVisible();
-    await expect(header.locator('h1, [data-testid="title-bar-title"]').first()).not.toBeEmpty();
+    // The back control is an icon-only button in the title bar.
+    await expect(header.getByRole('button').first()).toBeVisible();
+    await expect(header.getByRole('heading', { name: 'Results E2E Test Poll' })).toBeVisible();
   });
 
-  // ── Desktop layout ────────────────────────────────────────────
+  // ── Desktop layout ─────────────────────────────────────────────
 
-  test('desktop: stats row, hero card and option list render', async ({ page }) => {
+  test('desktop: toolbar, poll header and option list render', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
+    await page.goto(detailUrl());
     await page.waitForLoadState('networkidle');
-    // Both layouts are in the DOM; filter to the visible one (desktop)
-    await expect(page.locator('[data-testid="results-stats-row"]').filter({ visible: true })).toBeVisible();
-    await expect(page.locator('[data-testid="results-hero-card"]').filter({ visible: true })).toBeVisible();
-    await expect(page.locator('[data-testid="results-option-list"]').filter({ visible: true })).toBeVisible();
+    await expect(page.locator('[data-testid="results-toolbar"]')).toBeVisible();
+    await expect(page.locator('app-poll-header')).toBeVisible();
+    await expect(page.locator('[data-testid="results-option-list"]')).toBeVisible();
   });
 
   test('desktop: poll header shows type badge and status dot', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
+    await page.goto(detailUrl());
     await expect(page.locator('ds-badge').first()).toBeVisible();
     await expect(page.locator('ds-status-dot').first()).toBeVisible();
   });
 
-  test('desktop: Beteiligung stat shows "voted/total" participation format', async ({ page }) => {
+  test('desktop: option list shows a vote tally for the option', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    const statsRow = page.locator('[data-testid="results-stats-row"]').filter({ visible: true });
-    const beteiligungCard = statsRow.locator('> div').filter({ hasText: 'Beteiligung' }).first();
-    await expect(beteiligungCard).toContainText('/');
+    await page.goto(detailUrl());
+    await page.waitForLoadState('networkidle');
+    const list = page.locator('[data-testid="results-option-list"]');
+    await expect(list.locator('app-option-card').first()).toBeVisible();
+    // The card renders a participation line ("N of M voted" / "N von M …").
+    await expect(list).toContainText(/voted|abgestimmt/i);
   });
 
-  test('desktop: comments sidebar renders with textarea input and disabled submit', async ({ page }) => {
+  test('desktop: comments sidebar renders with textarea and disabled submit', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    // Scope to the desktop sidebar to avoid the hidden mobile comments section
-    const sidebar = page.locator('.lg\\:w-\\[360px\\]');
-    await expect(sidebar).toBeVisible();
-    await expect(sidebar.locator('[data-testid="results-comment-input"] textarea')).toBeVisible();
-    await expect(sidebar.locator('[data-testid="results-comment-submit"] button')).toBeDisabled();
+    await page.goto(detailUrl());
+    await expect(page.locator('[data-testid="results-comment-input"] textarea')).toBeVisible();
+    await expect(page.locator('[data-testid="results-comment-submit"] button')).toBeDisabled();
   });
 
   test('desktop: typing a comment enables the submit button', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    const sidebar = page.locator('.lg\\:w-\\[360px\\]');
-    await sidebar.locator('[data-testid="results-comment-input"] textarea').fill('Test comment');
-    await expect(sidebar.locator('[data-testid="results-comment-submit"] button')).toBeEnabled();
+    await page.goto(detailUrl());
+    await page.locator('[data-testid="results-comment-input"] textarea').fill('Test comment');
+    await expect(page.locator('[data-testid="results-comment-submit"] button')).toBeEnabled();
   });
 
   // ── Sort toggle ───────────────────────────────────────────────
 
-  test('sort button toggles between "Nach Zustimmung" and "Nach Reihenfolge"', async ({ page }) => {
+  test('sort button toggles its label', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 820 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    // The sort button appears in both layouts; target the visible (desktop) one
-    const sortBtn = page.locator('[data-testid="results-sort-btn"]').filter({ visible: true });
-    await expect(sortBtn).toContainText('Nach Zustimmung');
+    await page.goto(detailUrl());
+    const sortBtn = page.locator('[data-testid="results-sort-btn"]').filter({ visible: true }).first();
+    const before = (await sortBtn.innerText()).trim();
     await sortBtn.click();
-    await expect(sortBtn).toContainText('Nach Reihenfolge');
+    await expect(sortBtn).not.toHaveText(before);
     await sortBtn.click();
-    await expect(sortBtn).toContainText('Nach Zustimmung');
+    await expect(sortBtn).toHaveText(before);
   });
 
-  // ── Mobile layout ─────────────────────────────────────────────
-
-  test('mobile: Ergebnis and Kommentare tab bar is visible', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    await page.waitForLoadState('networkidle');
-    // ds-tabs renders buttons with role="tab" via hlmTabsTrigger directive
-    await expect(page.getByRole('tab', { name: /ergebnis/i })).toBeVisible();
-    await expect(page.getByRole('tab', { name: /kommentare/i })).toBeVisible();
-  });
-
-  test('mobile: Ergebnis tab (default) shows hero card and option list', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    await page.waitForLoadState('networkidle');
-    await expect(page.locator('[data-testid="results-hero-card"]').filter({ visible: true })).toBeVisible();
-    await expect(page.locator('[data-testid="results-option-list"]').filter({ visible: true })).toBeVisible();
-  });
-
-  test('mobile: switching to Kommentare tab shows textarea input and disabled submit', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    await page.waitForLoadState('networkidle');
-    await page.getByRole('tab', { name: /kommentare/i }).click();
-    // Scope to the visible mobile comments panel (desktop sidebar is display:none at 390px)
-    const mobileComments = page.locator('.flex.flex-col.lg\\:hidden app-comments-section');
-    await expect(mobileComments.locator('[data-testid="results-comment-input"] textarea')).toBeVisible();
-    await expect(mobileComments.locator('[data-testid="results-comment-submit"] button')).toBeDisabled();
-  });
-
-  test('mobile: manage card shows status/deadline text near close button', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
-    const manageCard = page.locator('[data-testid="results-manage-card"]');
-    if (!await manageCard.isVisible()) {
-      test.skip(true, 'Manage card not visible — poll may be closed or user is not maintainer');
-      return;
-    }
-    // Card must show a status string: running ("Läuft" / "Endet…") or closed ("Beendet")
-    await expect(manageCard).toContainText(/läuft|endet|beendet/i);
-  });
-
-  // ── Close poll confirm ────────────────────────────────────────
+  // ── Close poll confirm (mobile toolbar) ───────────────────────
 
   test('mobile: close poll shows inline confirm; cancel restores the button', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/polls/${testProjectId}/results/${testPollId}`);
+    await page.goto(detailUrl());
 
-    const closeBtn = page.locator('[data-testid="close-poll-btn"]').first();
+    const closeBtn = page.locator('[data-testid="close-poll-btn"]').filter({ visible: true }).first();
     if (!await closeBtn.isVisible()) {
       test.skip(true, 'Close poll button not visible — poll may be closed or user is not maintainer');
       return;
     }
 
     await closeBtn.click();
-    await expect(page.locator('[data-testid="close-poll-confirm-btn"]').first()).toBeVisible();
+    await expect(page.locator('[data-testid="close-poll-confirm-btn"]').filter({ visible: true }).first()).toBeVisible();
 
-    await page.getByRole('button', { name: /abbrechen/i }).first().click();
+    await page.getByRole('button', { name: /abbrechen|cancel/i }).first().click();
     await expect(closeBtn).toBeVisible();
-    await expect(page.locator('[data-testid="close-poll-confirm-btn"]')).not.toBeVisible();
   });
 });

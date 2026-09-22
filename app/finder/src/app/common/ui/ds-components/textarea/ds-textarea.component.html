@@ -5,20 +5,34 @@
             >{{ label() }}</label
         >
     }
-    <textarea
-        #el
-        hlmTextarea
-        class="ds-ta"
-        [class.ds-ta--error]="!!error()"
-        [class.ds-ta--autoresize]="autoResize()"
-        [placeholder]="placeholder()"
-        [rows]="autoResize() ? 1 : rows()"
-        [attr.maxlength]="maxlength() ?? null"
-        [value]="value()"
-        [disabled]="isDisabled()"
-        (input)="onInput($event)"
-        (blur)="onBlur()"
-    ></textarea>
+    <div class="relative w-full">
+        <textarea
+            #el
+            hlmTextarea
+            class="ds-ta"
+            [class.ds-ta--error]="!!error()"
+            [class.ds-ta--autoresize]="autoResize()"
+            [class.ds-ta--has-clear]="showClear()"
+            [placeholder]="placeholder()"
+            [rows]="autoResize() ? 1 : rows()"
+            [attr.maxlength]="maxlength() ?? null"
+            [value]="value()"
+            [disabled]="isDisabled()"
+            (input)="onInput($event)"
+            (blur)="onBlur()"
+        ></textarea>
+        @if (showClear()) {
+            <button
+                type="button"
+                class="absolute top-2 right-2 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border-none bg-transparent p-0 text-[var(--text-muted)] transition-[background,color] duration-[var(--duration-fast)] ease-[var(--ease-standard)] hover:bg-[var(--sand-100)] hover:text-[var(--text-secondary)]"
+                tabindex="-1"
+                aria-label="Clear"
+                (click)="clear()"
+            >
+                <ds-icon name="close" [size]="14" />
+            </button>
+        }
+    </div>
     @if (error()) {
         <span
             class="text-[length:var(--fs-caption-sm)] text-[var(--negative)]"

@@ -1,10 +1,10 @@
 <div
-    class="sticky top-0 z-[9] flex items-center gap-2 border-b border-[color:var(--border-hairline)] bg-[var(--bg-sheet)] px-4 py-2.5 min-[680px]:top-[60px] lg:gap-2.5 lg:px-6 lg:py-3.5"
+    class="sticky top-0 z-[9] flex items-center gap-2 border-b border-[color:var(--border-hairline)] bg-[var(--bg-sheet)] px-4 py-2.5 min-[680px]:top-[60px] @min-[900px]/detail:gap-2.5 @min-[900px]/detail:px-6 @min-[900px]/detail:py-3.5"
     data-testid="results-toolbar"
 >
     @if (canManage() && !isClosed()) {
-        <!-- Mobile -->
-        <div class="contents lg:hidden">
+        <!-- Compact (narrow column) -->
+        <div class="contents @min-[900px]/detail:hidden">
             <ds-button
                 variant="primary"
                 size="sm"
@@ -24,8 +24,8 @@
                 {{ 'project.results.add' | translate }}
             </ds-button>
         </div>
-        <!-- Desktop -->
-        <div class="hidden lg:contents">
+        <!-- Wide -->
+        <div class="hidden @min-[900px]/detail:contents">
             <ds-button
                 variant="primary"
                 icon="check"
@@ -45,9 +45,9 @@
         </div>
     }
 
-    <div class="ml-auto flex items-center gap-2 lg:gap-2.5">
-        <!-- Mobile -->
-        <div class="contents lg:hidden">
+    <div class="ml-auto flex items-center gap-2 @min-[900px]/detail:gap-2.5">
+        <!-- Compact (narrow column) -->
+        <div class="contents @min-[900px]/detail:hidden">
             <ds-button
                 variant="neutral"
                 size="sm"
@@ -57,8 +57,8 @@
                 (click)="refresh.emit()"
             />
         </div>
-        <!-- Desktop -->
-        <div class="hidden lg:contents">
+        <!-- Wide -->
+        <div class="hidden @min-[900px]/detail:contents">
             <ds-button
                 variant="neutral"
                 icon="refresh"
@@ -71,8 +71,8 @@
 
         @if (canManage()) {
             @if (isClosed()) {
-                <!-- Mobile -->
-                <div class="contents lg:hidden">
+                <!-- Compact (narrow column) -->
+                <div class="contents @min-[900px]/detail:hidden">
                     <ds-button
                         variant="neutral"
                         size="sm"
@@ -82,8 +82,8 @@
                         {{ 'project.results.reopen' | translate }}
                     </ds-button>
                 </div>
-                <!-- Desktop -->
-                <div class="hidden lg:contents">
+                <!-- Wide -->
+                <div class="hidden @min-[900px]/detail:contents">
                     <ds-button
                         variant="neutral"
                         data-testid="reopen-poll-btn"
@@ -100,8 +100,8 @@
                 >
                     {{ 'project.results.cancel' | translate }}
                 </ds-button>
-                <!-- Mobile -->
-                <div class="contents lg:hidden">
+                <!-- Compact (narrow column) -->
+                <div class="contents @min-[900px]/detail:hidden">
                     <ds-button
                         variant="danger"
                         size="sm"
@@ -111,8 +111,8 @@
                         {{ 'project.results.confirmEndShort' | translate }}
                     </ds-button>
                 </div>
-                <!-- Desktop -->
-                <div class="hidden lg:contents">
+                <!-- Wide -->
+                <div class="hidden @min-[900px]/detail:contents">
                     <ds-button
                         variant="danger"
                         data-testid="close-poll-confirm-btn"
@@ -122,8 +122,8 @@
                     </ds-button>
                 </div>
             } @else {
-                <!-- Mobile -->
-                <div class="contents lg:hidden">
+                <!-- Compact (narrow column) -->
+                <div class="contents @min-[900px]/detail:hidden">
                     <ds-button
                         variant="danger-outline"
                         size="sm"
@@ -134,8 +134,8 @@
                         {{ 'project.results.end' | translate }}
                     </ds-button>
                 </div>
-                <!-- Desktop -->
-                <div class="hidden lg:contents">
+                <!-- Wide -->
+                <div class="hidden @min-[900px]/detail:contents">
                     <ds-button
                         variant="danger-outline"
                         icon="circle-minus"
@@ -148,6 +148,8 @@
             }
         }
 
+        <!-- Show-comments button: kept viewport-based because the comments
+             sidebar it toggles only exists at lg+ viewports. -->
         @if (commentsHidden()) {
             <div class="hidden lg:contents">
                 <ds-button

@@ -1,7 +1,7 @@
 @if (editing()) {
     <!-- ── EDIT FORM (mobile + desktop) ─────────────────────────── -->
     <div
-        class="flex flex-col gap-2.5 lg:max-w-[600px]"
+        class="flex flex-col gap-2.5 @min-[900px]/detail:max-w-[600px]"
         data-testid="poll-edit-form"
     >
         <ds-input
@@ -81,8 +81,8 @@
         }
     </div>
 } @else {
-    <!-- ── MOBILE (<lg) ─────────────────────────────────────────── -->
-    <div class="flex flex-col gap-2.5 lg:hidden">
+    <!-- ── COMPACT (narrow column) ──────────────────────────────── -->
+    <div class="flex flex-col gap-2.5 @min-[900px]/detail:hidden">
         <div class="flex items-start gap-1.5">
             <h1
                 class="min-w-0 text-[23px] leading-[1.15] font-bold tracking-[-0.5px] text-pretty text-[color:var(--text-primary)]"
@@ -137,8 +137,8 @@
         </div>
     </div>
 
-    <!-- ── DESKTOP (≥lg) ────────────────────────────────────────── -->
-    <div class="hidden flex-col gap-3 lg:flex">
+    <!-- ── WIDE (≥900px column) ─────────────────────────────────── -->
+    <div class="hidden flex-col gap-3 @min-[900px]/detail:flex">
         <div class="flex items-start gap-2">
             <h1
                 class="min-w-0 text-[32px] leading-[1.14] font-bold tracking-[-0.8px] text-pretty text-[color:var(--text-primary)]"

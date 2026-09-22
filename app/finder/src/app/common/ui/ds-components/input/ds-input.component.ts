@@ -38,16 +38,23 @@ export class DsInputComponent implements ControlValueAccessor {
     invalid = input<boolean>(false);
     readonly = input(false);
     loading = input(false);
-    clearable = input(false);
+    clearable = input(true);
 
     readonly inputBlur = output<void>();
 
     protected readonly value = signal('');
     protected readonly isDisabled = signal(false);
 
+    // Native date/time pickers render their own controls; an overlaid clear
+    // button would collide with them, so it is only offered for text inputs.
+    private readonly supportsClear = computed(() =>
+        ['text', 'email'].includes(this.type()),
+    );
+
     protected readonly showClear = computed(
         () =>
             this.clearable() &&
+            this.supportsClear() &&
             !!this.value() &&
             !this.readonly() &&
             !this.isDisabled() &&

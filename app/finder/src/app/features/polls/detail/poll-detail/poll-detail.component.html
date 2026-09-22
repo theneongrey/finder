@@ -9,6 +9,7 @@
                 [canManage]="canManagePoll()"
                 [isClosed]="poll.isClosed"
                 [commentsHidden]="!showComments()"
+                [refreshing]="refreshing()"
                 (startVote)="startVote()"
                 (addOption)="showAddOption.set(true)"
                 (closePoll)="closePoll()"
@@ -55,6 +56,7 @@
                         [optionType]="poll.optionType"
                         [dateType]="addPanelDateType()"
                         [showTime]="addPanelShowTime()"
+                        [submitting]="optionAdding()"
                         (add)="onAddOption($event)"
                         (cancelled)="showAddOption.set(false)"
                     />
@@ -93,6 +95,7 @@
             <div class="h-full w-[380px]">
                 <app-comments-section
                     [comments]="poll.comments"
+                    [submitting]="commentAdding()"
                     (addComment)="addComment($event)"
                     (dismiss)="showComments.set(false)"
                 />
@@ -111,6 +114,7 @@
     @if (showMobileComments() && poll(); as poll) {
         <app-comments-section
             [comments]="poll.comments"
+            [submitting]="commentAdding()"
             (addComment)="addComment($event)"
             (dismiss)="showMobileComments.set(false)"
         />
@@ -126,6 +130,7 @@
         <app-comments-section
             [comments]="optionComments()"
             [optionTitle]="commentsOptionTitle()"
+            [submitting]="commentAdding()"
             (addComment)="addOptionComment($event)"
             (dismiss)="commentsOption.set(undefined)"
         />

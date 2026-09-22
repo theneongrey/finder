@@ -145,6 +145,7 @@
         <ds-button
             variant="primary"
             [disabled]="!state.canCreate()"
+            [loading]="state.isPollCreating()"
             data-testid="wizard-cta"
             (click)="onCreate()"
             >{{ 'project.pollInput.createPoll' | translate }}</ds-button
@@ -190,6 +191,7 @@
                 variant="primary"
                 [fullWidth]="true"
                 [disabled]="!state.canCreate()"
+                [loading]="state.isPollCreating()"
                 data-testid="wizard-cta"
                 (click)="onCreate()"
                 >{{ 'project.pollInput.createPoll' | translate }}</ds-button

@@ -57,6 +57,7 @@
             icon="plus"
             data-testid="add-option-submit"
             [disabled]="!isValid()"
+            [loading]="submitting()"
             (click)="submit()"
         >
             {{ 'project.results.add' | translate }}

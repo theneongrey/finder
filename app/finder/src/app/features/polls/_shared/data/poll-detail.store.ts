@@ -9,7 +9,7 @@ import {
 import { on, withReducer } from '@ngrx/signals/events';
 import { computed, inject, untracked } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { forkJoin, of, pipe, switchMap, tap } from 'rxjs';
+import { finalize, forkJoin, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { PollService } from './poll.service';
 import { Router } from '@angular/router';
@@ -29,6 +29,9 @@ export const PollDetailStore = signalStore(
     withState({
         currentProject: undefined as Project | undefined,
         currentPoll: undefined as PollDetail | undefined,
+        pollRefreshing: false,
+        optionAdding: false,
+        commentAdding: false,
     }),
     withComputed((store) => ({
         projectId: computed(() => store.currentProject()?.id),
@@ -73,6 +76,7 @@ export const PollDetailStore = signalStore(
                     if (untracked(store.currentPoll)?.id !== id) {
                         patchState(store, { currentPoll: undefined });
                     }
+                    patchState(store, { pollRefreshing: true });
                 }),
                 switchMap((id) =>
                     store.projectService.getPoll(id).pipe(
@@ -87,6 +91,9 @@ export const PollDetailStore = signalStore(
                                 );
                             },
                         }),
+                        finalize(() =>
+                            patchState(store, { pollRefreshing: false }),
+                        ),
                     ),
                 ),
             ),
@@ -266,6 +273,7 @@ export const PollDetailStore = signalStore(
             creator: CommentAuthor;
         }>(
             pipe(
+                tap(() => patchState(store, { optionAdding: true })),
                 switchMap((request) =>
                     store.projectService
                         .addOption(
@@ -316,6 +324,9 @@ export const PollDetailStore = signalStore(
                                     );
                                 },
                             }),
+                            finalize(() =>
+                                patchState(store, { optionAdding: false }),
+                            ),
                         ),
                 ),
             ),
@@ -525,6 +536,7 @@ export const PollDetailStore = signalStore(
             optionId?: string;
         }>(
             pipe(
+                tap(() => patchState(store, { commentAdding: true })),
                 switchMap((comment) =>
                     store.projectService
                         .addComment(
@@ -556,6 +568,9 @@ export const PollDetailStore = signalStore(
                                     );
                                 },
                             }),
+                            finalize(() =>
+                                patchState(store, { commentAdding: false }),
+                            ),
                         ),
                 ),
             ),

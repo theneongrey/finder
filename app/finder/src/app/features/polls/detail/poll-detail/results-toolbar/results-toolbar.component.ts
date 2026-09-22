@@ -23,6 +23,7 @@ export class ResultsToolbarComponent {
     canManage = input(false);
     isClosed = input(false);
     commentsHidden = input(false);
+    refreshing = input(false);
 
     startVote = output<void>();
     addOption = output<void>();

@@ -26,7 +26,7 @@
     </div>
 
     <!-- Poll-level filter: poll-only vs. all comments -->
-    @if (optionTitle() === undefined) {
+    @if (optionTitle() === undefined && hasOptionComments()) {
         <div class="px-5 pb-3">
             <ds-segmented-control
                 size="sm"
@@ -109,6 +109,7 @@
             [label]="'project.results.submitComment' | translate"
             data-testid="results-comment-submit"
             [disabled]="!newCommentText.trim()"
+            [loading]="submitting()"
             (click)="submitComment()"
         />
     </div>

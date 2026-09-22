@@ -7,7 +7,7 @@ import {
     withState,
 } from '@ngrx/signals';
 import { on, withReducer } from '@ngrx/signals/events';
-import { computed, inject } from '@angular/core';
+import { computed, inject, untracked } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
@@ -62,7 +62,18 @@ export const PollDetailStore = signalStore(
 
         getPoll: rxMethod<string>(
             pipe(
-                tap(() => patchState(store, { currentPoll: undefined })),
+                // Only clear when switching to a different poll — refetching the
+                // same poll (refresh, vote overlay open/close) keeps the current
+                // data on screen so the detail page doesn't flash to the skeleton
+                // and re-run entry animations (e.g. the open add-option card).
+                // getPoll is called synchronously from effects, so read the
+                // current poll untracked to avoid the read becoming a dependency
+                // of the caller's effect (which would refetch in a loop).
+                tap((id) => {
+                    if (untracked(store.currentPoll)?.id !== id) {
+                        patchState(store, { currentPoll: undefined });
+                    }
+                }),
                 switchMap((id) =>
                     store.projectService.getPoll(id).pipe(
                         tapResponse({

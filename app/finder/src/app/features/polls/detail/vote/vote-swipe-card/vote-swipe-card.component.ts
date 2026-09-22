@@ -54,6 +54,11 @@ export class VoteSwipeCardComponent implements AfterViewInit {
     readonly isDateType = computed(() => isDateOptionType(this.optionType()));
     readonly dateType = computed(() => optionTypeToDateType(this.optionType()));
 
+    /** Identity of the shown option — reset only when this changes, not when a
+     *  background refetch hands us a new object for the same option (which would
+     *  otherwise re-run the fade-in and flicker the card). */
+    private readonly optionId = computed(() => this.option()?.id);
+
     voted = output<boolean>();
 
     voteCardRef = viewChild.required<ElementRef<HTMLElement>>('voteCard');
@@ -74,7 +79,7 @@ export class VoteSwipeCardComponent implements AfterViewInit {
 
     constructor() {
         effect(() => {
-            this.option();
+            this.optionId();
             this.resetCard();
         });
     }

@@ -3,6 +3,7 @@ import {
     Component,
     ElementRef,
     afterNextRender,
+    computed,
     forwardRef,
     input,
     output,
@@ -11,10 +12,11 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
+import { DsIconComponent } from '@ds/icon/ds-icon.component';
 
 @Component({
     selector: 'ds-textarea',
-    imports: [HlmTextarea],
+    imports: [HlmTextarea, DsIconComponent],
     templateUrl: './ds-textarea.component.html',
     styleUrl: './ds-textarea.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,11 +37,16 @@ export class DsTextareaComponent implements ControlValueAccessor {
     maxlength = input<number | null>(null);
     autoResize = input(false);
     maxHeight = input('200px');
+    clearable = input(true);
 
     blurred = output<void>();
 
     protected readonly value = signal('');
     protected readonly isDisabled = signal(false);
+
+    protected readonly showClear = computed(
+        () => this.clearable() && !!this.value() && !this.isDisabled(),
+    );
 
     private readonly elRef = viewChild<ElementRef<HTMLTextAreaElement>>('el');
     private minHeight = 40;
@@ -85,6 +92,19 @@ export class DsTextareaComponent implements ControlValueAccessor {
     protected onBlur(): void {
         this.onTouched();
         this.blurred.emit();
+    }
+
+    protected clear(): void {
+        this.value.set('');
+        this.onChange('');
+        const el = this.elRef()?.nativeElement;
+        if (el) {
+            el.value = '';
+            if (this.autoResize()) {
+                this.resizeInstant(el);
+            }
+        }
+        this.focus();
     }
 
     writeValue(val: string): void {

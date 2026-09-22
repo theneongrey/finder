@@ -1,7 +1,10 @@
 @if (poll(); as poll) {
     <div class="lg:flex">
-        <!-- Main column -->
-        <div class="min-w-0 lg:flex-1">
+        <!-- Main column — a container so the content switches to its compact
+             (mobile) layout based on the column's own width, not the viewport.
+             This matters when the comments sidebar is open and shrinks the
+             column below the viewport width. -->
+        <div class="@container/detail min-w-0 lg:flex-1">
             <app-results-toolbar
                 [canManage]="canManagePoll()"
                 [isClosed]="poll.isClosed"
@@ -21,7 +24,9 @@
                 />
             }
 
-            <div class="flex flex-col gap-4 p-4 pb-8 lg:gap-5 lg:p-6">
+            <div
+                class="flex flex-col gap-4 p-4 pb-8 @min-[900px]/detail:gap-5 @min-[900px]/detail:p-6"
+            >
                 <app-poll-header
                     [name]="poll.name"
                     [description]="poll.description"

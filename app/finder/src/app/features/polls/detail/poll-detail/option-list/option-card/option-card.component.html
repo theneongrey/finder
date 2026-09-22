@@ -35,7 +35,7 @@
                 } @else if (isTextOnly()) {
                     <!-- Text-only option: hero title, centered -->
                     <span
-                        class="absolute top-3 right-3 z-[1] lg:opacity-0 lg:transition-opacity lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
+                        class="absolute top-3 right-3 z-[1] @min-[900px]/detail:opacity-0 @min-[900px]/detail:transition-opacity @min-[900px]/detail:group-focus-within:opacity-100 @min-[900px]/detail:group-hover:opacity-100"
                     >
                         <ds-button
                             variant="ghost"
@@ -63,7 +63,7 @@
                             {{ option().text }}
                         </p>
                         <span
-                            class="lg:opacity-0 lg:transition-opacity lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
+                            class="@min-[900px]/detail:opacity-0 @min-[900px]/detail:transition-opacity @min-[900px]/detail:group-focus-within:opacity-100 @min-[900px]/detail:group-hover:opacity-100"
                         >
                             <ds-button
                                 variant="ghost"

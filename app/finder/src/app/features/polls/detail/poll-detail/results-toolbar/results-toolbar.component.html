@@ -69,83 +69,81 @@
             </ds-button>
         </div>
 
-        @if (canManage()) {
-            @if (isClosed()) {
-                <!-- Compact (narrow column) -->
-                <div class="contents @min-[900px]/detail:hidden">
-                    <ds-button
-                        variant="neutral"
-                        size="sm"
-                        data-testid="reopen-poll-btn"
-                        (click)="reopenPoll.emit()"
-                    >
-                        {{ 'project.results.reopen' | translate }}
-                    </ds-button>
-                </div>
-                <!-- Wide -->
-                <div class="hidden @min-[900px]/detail:contents">
-                    <ds-button
-                        variant="neutral"
-                        data-testid="reopen-poll-btn"
-                        (click)="reopenPoll.emit()"
-                    >
-                        {{ 'project.results.reopenPoll' | translate }}
-                    </ds-button>
-                </div>
-            } @else if (showCloseConfirm()) {
+        @if (canManage() && isClosed()) {
+            <!-- Compact (narrow column) -->
+            <div class="contents @min-[900px]/detail:hidden">
                 <ds-button
-                    variant="ghost"
+                    variant="neutral"
                     size="sm"
-                    (click)="showCloseConfirm.set(false)"
+                    data-testid="reopen-poll-btn"
+                    (click)="reopenPoll.emit()"
                 >
-                    {{ 'project.results.cancel' | translate }}
+                    {{ 'project.results.reopen' | translate }}
                 </ds-button>
+            </div>
+            <!-- Wide -->
+            <div class="hidden @min-[900px]/detail:contents">
+                <ds-button
+                    variant="neutral"
+                    data-testid="reopen-poll-btn"
+                    (click)="reopenPoll.emit()"
+                >
+                    {{ 'project.results.reopenPoll' | translate }}
+                </ds-button>
+            </div>
+        }
+
+        @if (showCloseConfirm()) {
+            <ds-button
+                variant="ghost"
+                size="sm"
+                (click)="showCloseConfirm.set(false)"
+            >
+                {{ 'project.results.cancel' | translate }}
+            </ds-button>
+            <!-- Compact (narrow column) -->
+            <div class="contents @min-[900px]/detail:hidden">
+                <ds-button
+                    variant="danger"
+                    size="sm"
+                    data-testid="close-poll-confirm-btn"
+                    (click)="closePoll.emit(); showCloseConfirm.set(false)"
+                >
+                    {{ 'project.results.confirmEndShort' | translate }}
+                </ds-button>
+            </div>
+            <!-- Wide -->
+            <div class="hidden @min-[900px]/detail:contents">
+                <ds-button
+                    variant="danger"
+                    data-testid="close-poll-confirm-btn"
+                    (click)="closePoll.emit(); showCloseConfirm.set(false)"
+                >
+                    {{ 'project.results.confirmEnd' | translate }}
+                </ds-button>
+            </div>
+        } @else if (menuItems().length) {
+            <ds-menu [items]="menuItems()">
                 <!-- Compact (narrow column) -->
                 <div class="contents @min-[900px]/detail:hidden">
                     <ds-button
-                        variant="danger"
+                        variant="neutral"
                         size="sm"
-                        data-testid="close-poll-confirm-btn"
-                        (click)="closePoll.emit(); showCloseConfirm.set(false)"
-                    >
-                        {{ 'project.results.confirmEndShort' | translate }}
-                    </ds-button>
+                        icon="kebab"
+                        [label]="'project.results.moreActions' | translate"
+                        data-testid="poll-menu-btn"
+                    />
                 </div>
                 <!-- Wide -->
                 <div class="hidden @min-[900px]/detail:contents">
                     <ds-button
-                        variant="danger"
-                        data-testid="close-poll-confirm-btn"
-                        (click)="closePoll.emit(); showCloseConfirm.set(false)"
-                    >
-                        {{ 'project.results.confirmEnd' | translate }}
-                    </ds-button>
+                        variant="neutral"
+                        icon="kebab"
+                        [label]="'project.results.moreActions' | translate"
+                        data-testid="poll-menu-btn"
+                    />
                 </div>
-            } @else {
-                <!-- Compact (narrow column) -->
-                <div class="contents @min-[900px]/detail:hidden">
-                    <ds-button
-                        variant="danger-outline"
-                        size="sm"
-                        icon="circle-minus"
-                        data-testid="close-poll-btn"
-                        (click)="showCloseConfirm.set(true)"
-                    >
-                        {{ 'project.results.end' | translate }}
-                    </ds-button>
-                </div>
-                <!-- Wide -->
-                <div class="hidden @min-[900px]/detail:contents">
-                    <ds-button
-                        variant="danger-outline"
-                        icon="circle-minus"
-                        data-testid="close-poll-btn"
-                        (click)="showCloseConfirm.set(true)"
-                    >
-                        {{ 'project.results.endPoll' | translate }}
-                    </ds-button>
-                </div>
-            }
+            </ds-menu>
         }
 
         <!-- Show-comments button: kept viewport-based because the comments

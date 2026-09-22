@@ -48,6 +48,12 @@
     padding: 12px 18px;
     font-size: var(--fs-body-xs);
 }
+/* Keep icon-only md neutral buttons (e.g. the kebab menu trigger) the same
+   height as their text siblings, whose taller line-box would otherwise make
+   the icon-only button shorter. */
+.ds-btn.ds-btn--neutral:not(.ds-btn--sm):not(.ds-btn--icon-only) {
+    min-height: 46px;
+}
 .ds-btn.ds-btn--surface {
     background: #fff;
     color: var(--accent);

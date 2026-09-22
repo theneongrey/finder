@@ -530,6 +530,7 @@
             "emptyOptionsText": "Add the first option so everyone can start voting in the poll.",
             "emptyOptionsTextVoter": "Once the first option is added, you can all vote together here.",
             "endPoll": "End poll",
+            "moreActions": "More actions",
             "end": "End",
             "reopenPoll": "Reopen poll",
             "reopen": "Reopen",

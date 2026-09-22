@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    DestroyRef,
     effect,
     inject,
     input,
@@ -109,9 +108,6 @@ export class PollDetailComponent {
     readonly shareDrawerTitle = this.translateService.translate(
         'project.share.title',
     );
-    private readonly shareActionLabel = this.translateService.translate(
-        'project.common.share',
-    );
     readonly shareDrawerSubtitle = computed(
         () => `${this.sharePollLabel()} · ${this.poll()?.name ?? ''}`,
     );
@@ -215,22 +211,6 @@ export class PollDetailComponent {
         effect(() => {
             this.projectDetailStore.getPoll(this.pollId());
         });
-
-        // Expose "Teilen" in the title bar while the poll is open
-        effect(() => {
-            const poll = this.poll();
-            if (poll && !poll.isClosed) {
-                titleService.setAction({
-                    icon: 'share',
-                    label: this.shareActionLabel(),
-                    handler: () => this.sharePoll(),
-                });
-            } else {
-                titleService.clearAction();
-            }
-        });
-
-        inject(DestroyRef).onDestroy(() => titleService.clearAction());
 
         effect(() => {
             const poll = this.poll();

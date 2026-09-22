@@ -26,6 +26,10 @@ export class PollDetailShellComponent {
     id = input<string>();
     pollId = input<string>();
 
+    /** Bound from ?created=1 and forwarded to the detail component so the
+     *  share-link bar shows once right after poll creation. */
+    created = input<string | undefined>(undefined);
+
     constructor() {
         effect(() => {
             const projectId = this.id();

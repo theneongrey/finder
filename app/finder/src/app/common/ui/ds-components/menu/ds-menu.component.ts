@@ -6,6 +6,8 @@ export interface MenuItem {
     icon: string;
     label: string;
     danger?: boolean;
+    /** Draw a divider above this item (skipped when it is the first item). */
+    separatorBefore?: boolean;
     onClick: () => void;
 }
 

@@ -115,20 +115,29 @@ test.describe('Poll detail page (#255)', () => {
 
   // ── Close poll confirm (mobile toolbar) ───────────────────────
 
-  test('mobile: close poll shows inline confirm; cancel restores the button', async ({ page }) => {
+  test('mobile: close poll shows inline confirm; cancel restores the menu', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(detailUrl());
 
-    const closeBtn = page.locator('[data-testid="close-poll-btn"]').filter({ visible: true }).first();
-    if (!await closeBtn.isVisible()) {
-      test.skip(true, 'Close poll button not visible — poll may be closed or user is not maintainer');
+    const menuBtn = page.locator('[data-testid="poll-menu-btn"]').filter({ visible: true }).first();
+    if (!await menuBtn.isVisible()) {
+      test.skip(true, 'Poll menu button not visible — poll may be closed');
       return;
     }
 
-    await closeBtn.click();
+    await menuBtn.click();
+    const endItem = page
+      .locator('[data-testid="menu-item"]', { hasText: /umfrage beenden|end poll|finalizar/i })
+      .first();
+    if (!await endItem.isVisible()) {
+      test.skip(true, 'End poll menu item not available — user is not maintainer');
+      return;
+    }
+
+    await endItem.click();
     await expect(page.locator('[data-testid="close-poll-confirm-btn"]').filter({ visible: true }).first()).toBeVisible();
 
     await page.getByRole('button', { name: /abbrechen|cancel/i }).first().click();
-    await expect(closeBtn).toBeVisible();
+    await expect(menuBtn).toBeVisible();
   });
 });

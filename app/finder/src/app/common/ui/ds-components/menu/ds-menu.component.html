@@ -4,7 +4,13 @@
 
 <ng-template #menuPanel>
     <hlm-dropdown-menu data-testid="menu-panel">
-        @for (item of items(); track item.label) {
+        @for (item of items(); track item.label; let first = $first) {
+            @if (item.separatorBefore && !first) {
+                <div
+                    class="mx-1.5 my-1 h-px bg-[var(--border-hairline)]"
+                    role="separator"
+                ></div>
+            }
             <div class="m-1.5">
                 <button
                     hlmDropdownMenuItem

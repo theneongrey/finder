@@ -62,6 +62,7 @@ export class AddOptionPanelComponent {
     optionType = input.required<OptionType>();
     dateType = input<DateOptionType | undefined>(undefined);
     showTime = input<boolean>(false);
+    submitting = input<boolean>(false);
 
     readonly isDateType = computed(() => isDateOptionType(this.optionType()));
 

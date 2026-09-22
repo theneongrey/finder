@@ -45,6 +45,7 @@ export class CommentsSectionComponent {
     comments = input<Comment[]>([]);
     /** When set, the drawer is scoped to a single option and shows its title. */
     optionTitle = input<string | undefined>(undefined);
+    submitting = input<boolean>(false);
     addComment = output<string>();
     dismiss = output<void>();
 
@@ -64,6 +65,14 @@ export class CommentsSectionComponent {
         { value: 'poll', label: this.pollLabel() },
         { value: 'all', label: this.allLabel() },
     ]);
+
+    /**
+     * The poll/all filter only makes sense when there are option-scoped
+     * comments to reveal; otherwise both tabs show the same list.
+     */
+    readonly hasOptionComments = computed(() =>
+        this.comments().some((c) => c.optionId),
+    );
 
     /** Comments to render: scoped to an option, or filtered at poll level. */
     visibleComments = computed<Comment[]>(() => {

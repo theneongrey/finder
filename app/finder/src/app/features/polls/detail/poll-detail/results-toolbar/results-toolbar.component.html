@@ -52,6 +52,7 @@
                 variant="neutral"
                 size="sm"
                 icon="refresh"
+                [loading]="refreshing()"
                 [label]="'project.results.refresh' | translate"
                 data-testid="refresh-btn"
                 (click)="refresh.emit()"
@@ -62,6 +63,7 @@
             <ds-button
                 variant="neutral"
                 icon="refresh"
+                [loading]="refreshing()"
                 data-testid="refresh-btn"
                 (click)="refresh.emit()"
             >

@@ -100,6 +100,10 @@ export class PollDetailComponent {
     poll = this.projectDetailStore.currentPoll;
     project = this.projectDetailStore.currentProject;
 
+    readonly refreshing = this.projectDetailStore.pollRefreshing;
+    readonly optionAdding = this.projectDetailStore.optionAdding;
+    readonly commentAdding = this.projectDetailStore.commentAdding;
+
     showShareDrawer = signal(false);
 
     private readonly sharePollLabel = this.translateService.translate(

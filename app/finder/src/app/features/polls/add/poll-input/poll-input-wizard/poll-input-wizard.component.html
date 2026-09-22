@@ -38,16 +38,6 @@
             }
         </div>
     }
-
-    @if (revealRest()) {
-        <app-poll-close-settings
-            class="block"
-            [class.reveal]="!isDesktop()"
-            mode="standalone"
-            [closeDate]="state.closeDate()"
-            (closeDateChange)="state.closeDate.set($event)"
-        />
-    }
 </ng-template>
 
 <ng-template #shareBlock>

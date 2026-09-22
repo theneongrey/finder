@@ -15,7 +15,6 @@ import { PollInputStateService } from '../poll-input-state.service';
 import { PollTypeSelectionComponent } from './poll-type-selection/poll-type-selection.component';
 import { AppointmentTypeSelectionComponent } from '../../../detail/poll-detail/option-input/poll-options/appointment-type-selection/appointment-type-selection.component';
 import { PollQuestionCardComponent } from '../../../_shared/ui/poll-input-form/poll-question-card/poll-question-card.component';
-import { PollCloseSettingsComponent } from '../../../_shared/ui/poll-input-form/poll-close-settings/poll-close-settings.component';
 import { ShareAccessFormComponent } from '../../../_shared/ui/share-content/share-access-form/share-access-form.component';
 import { ShareInviteFormComponent } from '../../../_shared/ui/share-content/share-invite-form/share-invite-form.component';
 import {
@@ -40,7 +39,6 @@ import { VisibilityType } from '../../../_shared/models/poll-detail.model';
         PollTypeSelectionComponent,
         AppointmentTypeSelectionComponent,
         PollQuestionCardComponent,
-        PollCloseSettingsComponent,
         ShareAccessFormComponent,
         ShareInviteFormComponent,
         DsSegmentedControlComponent,

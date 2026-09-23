@@ -11,7 +11,7 @@
                 },
                 "dataCategories": {
                     "heading": "What data we process",
-                    "body": "• Account data: your email address and, where provided, your name, profile picture and preferred language.\n• Sign-in data: one-time login links and codes we generate and store briefly for passwordless sign-in.\n• Content data: polls, projects, answer options, comments and the votes you cast, each linked to your account.\n• Permissions: your role (voter, maintainer, owner) within a project.\n• Notifications: records and settings for the notifications you receive.\n• Metadata: timestamps for when a record was created and last changed."
+                    "body": "• Account data: your email address and, where provided, your name, profile picture and preferred language.\n• Sign-in data: one-time login links and codes we generate and store briefly for passwordless sign-in.\n• Content data: polls, projects, answer options, comments and the votes you cast, each linked to your account.\n• Permissions: your role (voter, contributor, owner) within a project.\n• Notifications: records and settings for the notifications you receive.\n• Metadata: timestamps for when a record was created and last changed."
                 },
                 "purposes": {
                     "heading": "Purposes and legal bases",

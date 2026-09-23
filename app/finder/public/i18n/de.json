@@ -11,7 +11,7 @@
                 },
                 "dataCategories": {
                     "heading": "Welche Daten wir verarbeiten",
-                    "body": "• Kontodaten: deine E-Mail-Adresse sowie – sofern angegeben – Name, Profilbild und bevorzugte Sprache.\n• Anmeldedaten: einmalige Anmeldelinks und -codes, die wir zur passwortlosen Anmeldung erzeugen und kurzzeitig speichern.\n• Inhaltsdaten: Umfragen, Projekte, Antwortoptionen, Kommentare und deine abgegebenen Stimmen, jeweils verknüpft mit deinem Konto.\n• Berechtigungen: welche Rolle (Teilnehmer, Verwalter, Eigentümer) du in einem Projekt hast.\n• Benachrichtigungen: Datensätze und Einstellungen zu den Benachrichtigungen, die du erhältst.\n• Metadaten: Zeitpunkte der Erstellung und letzten Änderung eines Datensatzes."
+                    "body": "• Kontodaten: deine E-Mail-Adresse sowie – sofern angegeben – Name, Profilbild und bevorzugte Sprache.\n• Anmeldedaten: einmalige Anmeldelinks und -codes, die wir zur passwortlosen Anmeldung erzeugen und kurzzeitig speichern.\n• Inhaltsdaten: Umfragen, Projekte, Antwortoptionen, Kommentare und deine abgegebenen Stimmen, jeweils verknüpft mit deinem Konto.\n• Berechtigungen: welche Rolle (Abstimmen, Mitwirken, Verwalten) du in einem Projekt hast.\n• Benachrichtigungen: Datensätze und Einstellungen zu den Benachrichtigungen, die du erhältst.\n• Metadaten: Zeitpunkte der Erstellung und letzten Änderung eines Datensatzes."
                 },
                 "purposes": {
                     "heading": "Zwecke und Rechtsgrundlagen",

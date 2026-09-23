@@ -11,7 +11,8 @@ public class PermissionMailService(MailService mailService, LanguageService lang
     public async Task SendPermissionMailAsync(Person recipient, string actionUserName, Project.Entities.Project project,
         PermissionType permissionType, bool isExistingPermission, bool isNewUser)
     {
-        var permissionName = Enum.GetName(permissionType) ?? "Unknown";
+        var permissionName = languageService.Get(
+            $"permission.role.{Enum.GetName(permissionType)?.ToLowerInvariant()}", recipient.Language);
 
         if (isExistingPermission)
         {

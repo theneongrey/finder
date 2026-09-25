@@ -10,6 +10,7 @@ import { environment } from '@common/env/environment';
 import { LoggerService } from '@common/services/logger.service';
 import { UserStore } from '@common/data/user.store';
 import {
+    POLL_ACTIVITY_HEARTBEAT_SECONDS,
     PollChangedNotification,
     PollParticipant,
 } from '../models/poll-realtime.model';
@@ -37,7 +38,8 @@ export class PollRealtimeService {
      * Client heartbeat. While the user interacts with the poll they count as "actively present"
      * server-side, which suppresses their redundant e-mail notifications; once they stop
      * interacting (or background the tab) their activity ages out and notifications resume. Sends
-     * are throttled well under the server idle window so a single interaction keeps them active.
+     * are throttled to POLL_ACTIVITY_HEARTBEAT_SECONDS (kept below the server idle window) so a
+     * single interaction keeps them active.
      */
     private static readonly ACTIVITY_EVENTS = [
         'pointerdown',
@@ -45,7 +47,8 @@ export class PollRealtimeService {
         'scroll',
         'pointermove',
     ];
-    private static readonly ACTIVITY_THROTTLE_MS = 20_000;
+    private static readonly ACTIVITY_THROTTLE_MS =
+        POLL_ACTIVITY_HEARTBEAT_SECONDS * 1000;
     private stopActivityTracking?: () => void;
     private lastActivitySentAt = 0;
 

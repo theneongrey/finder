@@ -84,6 +84,19 @@ public sealed class PollHub : Hub
         }
     }
 
+    /// <summary>
+    /// Client heartbeat: refreshes this connection's last-activity timestamp so the notification
+    /// path treats the user as actively watching (and suppresses their e-mail). No broadcast —
+    /// activity is only read when a notification is about to be sent. No-op if the connection
+    /// hasn't joined the poll, so no access check beyond the group membership is needed.
+    /// </summary>
+    public Task ReportActivity(string pollId)
+    {
+        var id = SlugHelper.ExtractId(pollId);
+        _registry.RecordActivity(id, Context.ConnectionId);
+        return Task.CompletedTask;
+    }
+
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         foreach (var pollId in _registry.Disconnect(Context.ConnectionId))

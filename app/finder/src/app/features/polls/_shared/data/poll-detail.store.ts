@@ -616,6 +616,9 @@ export const PollDetailStore = signalStore(
             const isBaseline = untracked(store.syncToken) === undefined;
 
             if (!poll) {
+                // The baseline delta can land before getPoll resolves currentPoll. That's
+                // safe: getPoll loads the full poll, so here we only need to capture the
+                // token — the next ping reconciles against it.
                 patchState(store, { syncToken: delta.syncToken });
                 return;
             }

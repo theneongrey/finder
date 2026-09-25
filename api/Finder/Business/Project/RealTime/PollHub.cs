@@ -17,6 +17,13 @@ namespace Finder.Business.Project.RealTime;
 public sealed class PollHub : Hub
 {
     public const string PresenceChanged = "PresenceChanged";
+    public const string PollChanged = "PollChanged";
+
+    /// <summary>
+    /// Group a poll's connections share. Used by the hub for presence broadcasts and by
+    /// <see cref="PollChangeNotifier"/> for change pings — single source of truth so both agree.
+    /// </summary>
+    public static string GroupName(string pollId) => $"poll:{pollId}";
 
     private readonly AppDbContext _dbContext;
     private readonly PollPresenceRegistry _registry;
@@ -100,6 +107,4 @@ public sealed class PollHub : Hub
         var id = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return Guid.TryParse(id, out var guid) ? guid : null;
     }
-
-    private static string GroupName(string pollId) => $"poll:{pollId}";
 }

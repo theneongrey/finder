@@ -1,4 +1,5 @@
 using Finder.Business.Project.Entities;
+using Finder.Business.Project.RealTime;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Database;
@@ -10,18 +11,21 @@ public class VoteService
 {
     private readonly AppDbContext _dbContext;
     private readonly UserService _userService;
+    private readonly IPollChangeNotifier _pollChangeNotifier;
 
     private Guid? UserId => _userService.GetUserId();
 
-    public VoteService(AppDbContext dbContext, UserService userService)
+    public VoteService(AppDbContext dbContext, UserService userService, IPollChangeNotifier pollChangeNotifier)
     {
         _dbContext = dbContext;
         _userService = userService;
+        _pollChangeNotifier = pollChangeNotifier;
     }
 
     public async Task<Result> Vote(string optionSlug, string choice)
     {
         var option = await _dbContext.Options
+            .Include(option => option.Poll)
             .Include(option => option.Votes)
             .ThenInclude(vote => vote.Person)
             .FirstOrDefaultAsync(o =>
@@ -53,6 +57,8 @@ public class VoteService
         }
 
         await _dbContext.SaveChangesAsync();
+
+        await _pollChangeNotifier.PollChanged(option.Poll.Id, UserId);
 
         return Result.Success();
     }

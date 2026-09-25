@@ -14,6 +14,7 @@ public static class SetupExtensions
         services.AddScoped<PollChangesBuilder>();
         services.AddSingleton<PollUpdateNotificationQueue>();
         services.AddSingleton<PollPresenceRegistry>();
+        services.AddSingleton<IPollChangeNotifier, PollChangeNotifier>();
 
         return services;
     }

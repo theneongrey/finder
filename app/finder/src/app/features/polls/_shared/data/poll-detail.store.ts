@@ -9,7 +9,7 @@ import {
 import { on, withReducer } from '@ngrx/signals/events';
 import { computed, inject, untracked } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { finalize, forkJoin, of, pipe, switchMap, tap } from 'rxjs';
+import { finalize, forkJoin, mergeMap, of, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { PollService } from './poll.service';
 import { Router } from '@angular/router';
@@ -23,6 +23,7 @@ import {
 import { sharingEvents } from './sharing.events';
 import { LoggerService } from '@common/services/logger.service';
 import { OptionType } from '@common/models/option-type.model';
+import { UserStore } from '@common/data/user.store';
 
 export const PollDetailStore = signalStore(
     { providedIn: 'root' },
@@ -39,6 +40,7 @@ export const PollDetailStore = signalStore(
     withProps(() => ({
         loggerService: inject(LoggerService),
         projectService: inject(PollService),
+        userStore: inject(UserStore),
         router: inject(Router),
     })),
     withMethods((store) => ({
@@ -419,20 +421,53 @@ export const PollDetailStore = signalStore(
             ),
         ),
 
+        // mergeMap (not switchMap): each vote targets a distinct option, so a
+        // rapid follow-up vote must not cancel the in-flight request for the
+        // previous option — that would silently drop the earlier vote.
         vote: rxMethod<{ optionId: string; choice: string }>(
             pipe(
-                switchMap((vote) =>
+                mergeMap((vote) =>
                     store.projectService.vote(vote.optionId, vote.choice).pipe(
                         tapResponse({
                             next: () => {
                                 const currentPoll = store.currentPoll();
                                 if (currentPoll) {
+                                    // The detail page renders tallies from the
+                                    // aggregate votes array, so patch the current
+                                    // user's entry there too — not just `choice`.
+                                    const user = store.userStore.user();
+                                    const person =
+                                        user?.name ?? user?.email ?? '';
                                     const updatedOptions =
-                                        currentPoll.options.map((o) =>
-                                            o.id !== vote.optionId
-                                                ? o
-                                                : { ...o, choice: vote.choice },
-                                        );
+                                        currentPoll.options.map((o) => {
+                                            if (o.id !== vote.optionId) {
+                                                return o;
+                                            }
+                                            const hasVote = o.votes.some(
+                                                (v) => v.person === person,
+                                            );
+                                            const votes = hasVote
+                                                ? o.votes.map((v) =>
+                                                      v.person === person
+                                                          ? {
+                                                                ...v,
+                                                                choice: vote.choice,
+                                                            }
+                                                          : v,
+                                                  )
+                                                : [
+                                                      ...o.votes,
+                                                      {
+                                                          person,
+                                                          choice: vote.choice,
+                                                      },
+                                                  ];
+                                            return {
+                                                ...o,
+                                                choice: vote.choice,
+                                                votes,
+                                            };
+                                        });
                                     patchState(store, {
                                         currentPoll: {
                                             ...currentPoll,

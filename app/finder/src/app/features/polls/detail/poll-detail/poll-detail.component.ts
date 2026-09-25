@@ -2,11 +2,15 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
     inject,
     input,
     signal,
+    untracked,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime } from 'rxjs';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionListComponent } from './option-list/option-list.component';
@@ -37,6 +41,7 @@ import {
 import { OptionDetail } from '../../_shared/models/poll-detail.model';
 import { UserStore } from '@common/data/user.store';
 import { PollVoteComponent } from '../vote/poll-vote.component';
+import { PollRealtimeService } from '../../_shared/data/poll-realtime.service';
 
 @Component({
     selector: 'app-poll-detail',
@@ -63,8 +68,16 @@ export class PollDetailComponent {
     private readonly translateService = inject(TranslateService);
     private readonly dateFormat = inject(DateOptionFormatService);
     private readonly userStore = inject(UserStore);
+    private readonly realtime = inject(PollRealtimeService);
+    private readonly destroyRef = inject(DestroyRef);
 
     readonly OptionType = OptionType;
+
+    /** Live presence roster and the ids of items changed by recent remote updates. */
+    readonly presence = this.realtime.presence;
+    readonly selfId = computed(() => this.userStore.user()?.id);
+    readonly changedOptionIds = this.projectDetailStore.changedOptionIds;
+    readonly changedCommentIds = this.projectDetailStore.changedCommentIds;
 
     pollId = input('');
 
@@ -216,6 +229,47 @@ export class PollDetailComponent {
             this.projectDetailStore.getPoll(this.pollId());
         });
 
+        // Realtime presence + sync, keyed to the active poll. Join on entry, leave the
+        // previous poll when navigating between polls, and re-baseline the sync token so the
+        // first delta doesn't highlight everything.
+        let joinedPollId: string | undefined;
+        effect(() => {
+            const id = this.pollId();
+            untracked(() => {
+                if (joinedPollId === id) {
+                    return;
+                }
+                if (joinedPollId) {
+                    this.realtime.leavePoll(joinedPollId);
+                }
+                this.projectDetailStore.resetRealtimeState();
+                joinedPollId = id;
+                if (id) {
+                    this.realtime.joinPoll(id);
+                    // Baseline: captures the sync token without highlighting.
+                    this.projectDetailStore.mergeDelta(id);
+                }
+            });
+        });
+
+        // Someone else changed the poll → pull the delta. Debounced so a burst of pings
+        // (e.g. multi-option edits) collapses into a single fetch.
+        this.realtime.pollChanged$
+            .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                const id = this.pollId();
+                if (id) {
+                    this.projectDetailStore.mergeDelta(id);
+                }
+            });
+
+        this.destroyRef.onDestroy(() => {
+            if (joinedPollId) {
+                this.realtime.leavePoll(joinedPollId);
+            }
+            this.projectDetailStore.resetRealtimeState();
+        });
+
         effect(() => {
             const poll = this.poll();
             if (poll) {
@@ -277,6 +331,15 @@ export class PollDetailComponent {
         description: string;
     }) {
         this.projectDetailStore.updateOption(edit);
+    }
+
+    /** Edit-guard: defer remote changes to an option while the user edits it. */
+    onEditStart(event: { optionId: string }) {
+        this.projectDetailStore.startEditingOption(event.optionId);
+    }
+
+    onEditEnd(event: { optionId: string }) {
+        this.projectDetailStore.stopEditingOption(event.optionId);
     }
 
     deleteOption(request: { optionId: string }) {

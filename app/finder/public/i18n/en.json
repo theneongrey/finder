@@ -539,6 +539,9 @@
             "confirmEndShort": "Yes",
             "comments": "Comments",
             "refresh": "Refresh",
+            "presence": {
+                "viewing": "{{count}} also viewing"
+            },
             "commentsTitle": "Comments on this poll",
             "hideComments": "Hide comments",
             "commentsFilterPoll": "Poll",

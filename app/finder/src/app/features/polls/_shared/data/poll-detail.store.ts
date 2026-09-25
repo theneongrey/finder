@@ -23,6 +23,10 @@ import {
 import { sharingEvents } from './sharing.events';
 import { LoggerService } from '@common/services/logger.service';
 import { OptionType } from '@common/models/option-type.model';
+import { PollDelta } from '../models/poll-delta.model';
+
+// How long a changed option/comment stays highlighted after a remote update.
+const HIGHLIGHT_DURATION_MS = 2500;
 
 export const PollDetailStore = signalStore(
     { providedIn: 'root' },
@@ -32,6 +36,13 @@ export const PollDetailStore = signalStore(
         pollRefreshing: false,
         optionAdding: false,
         commentAdding: false,
+        // Realtime sync (see mergeDelta): the last server sync token, the ids of items
+        // changed by the most recent remote delta (drive the highlight flash), and the ids
+        // of options the local user is editing (their remote changes are deferred).
+        syncToken: undefined as string | undefined,
+        changedOptionIds: [] as string[],
+        changedCommentIds: [] as string[],
+        editingOptionIds: [] as string[],
     }),
     withComputed((store) => ({
         projectId: computed(() => store.currentProject()?.id),
@@ -576,6 +587,197 @@ export const PollDetailStore = signalStore(
             ),
         ),
     })),
+    withMethods((store) => {
+        // Remote changes to an option the local user is mid-editing are stashed here and
+        // applied once the edit finishes, so in-progress input is never clobbered.
+        const deferredOptions = new Map<string, OptionDetail>();
+        let highlightTimer: ReturnType<typeof setTimeout> | undefined;
+
+        const scheduleHighlightClear = () => {
+            if (highlightTimer) {
+                clearTimeout(highlightTimer);
+            }
+            highlightTimer = setTimeout(() => {
+                patchState(store, {
+                    changedOptionIds: [],
+                    changedCommentIds: [],
+                });
+                highlightTimer = undefined;
+            }, HIGHLIGHT_DURATION_MS);
+        };
+
+        const dedupe = (ids: string[]) => Array.from(new Set(ids));
+
+        const applyDelta = (delta: PollDelta) => {
+            const poll = untracked(store.currentPoll);
+            // The first delta after a poll loads (no token yet) is a baseline: it only
+            // captures the sync token and reconciles data — it must not highlight, or every
+            // item would flash on entry.
+            const isBaseline = untracked(store.syncToken) === undefined;
+
+            if (!poll) {
+                patchState(store, { syncToken: delta.syncToken });
+                return;
+            }
+
+            const editing = untracked(store.editingOptionIds);
+            const changedOptionIds: string[] = [];
+            let options = [...poll.options];
+
+            for (const option of delta.options) {
+                if (editing.includes(option.id)) {
+                    // Defer — apply when the local edit completes (see stopEditingOption).
+                    deferredOptions.set(option.id, option);
+                    continue;
+                }
+                const index = options.findIndex((o) => o.id === option.id);
+                if (index === -1) {
+                    options.push(option);
+                } else {
+                    options[index] = option;
+                }
+                changedOptionIds.push(option.id);
+            }
+
+            // Reconcile hard-deletes: drop options absent from the current id-set, but keep
+            // any the user is editing (their fate is resolved when the edit ends).
+            const keepOptionIds = new Set(delta.currentOptionIds);
+            options = options.filter(
+                (o) => keepOptionIds.has(o.id) || editing.includes(o.id),
+            );
+
+            const changedCommentIds: string[] = [];
+            let comments = [...poll.comments];
+            for (const comment of delta.comments) {
+                const index = comments.findIndex((c) => c.id === comment.id);
+                if (index === -1) {
+                    comments.push(comment);
+                } else {
+                    comments[index] = comment;
+                }
+                changedCommentIds.push(comment.id);
+            }
+            const keepCommentIds = new Set(delta.currentCommentIds);
+            comments = comments.filter((c) => keepCommentIds.has(c.id));
+
+            const pollFields = delta.poll
+                ? {
+                      name: delta.poll.name,
+                      description: delta.poll.description,
+                      optionType: delta.poll.optionType,
+                      closeDate: delta.poll.closeDate,
+                      isClosed: delta.poll.isClosed,
+                  }
+                : {};
+
+            patchState(store, {
+                currentPoll: { ...poll, ...pollFields, options, comments },
+                syncToken: delta.syncToken,
+                changedOptionIds: isBaseline
+                    ? untracked(store.changedOptionIds)
+                    : dedupe([
+                          ...untracked(store.changedOptionIds),
+                          ...changedOptionIds,
+                      ]),
+                changedCommentIds: isBaseline
+                    ? untracked(store.changedCommentIds)
+                    : dedupe([
+                          ...untracked(store.changedCommentIds),
+                          ...changedCommentIds,
+                      ]),
+            });
+
+            if (
+                !isBaseline &&
+                (changedOptionIds.length || changedCommentIds.length)
+            ) {
+                scheduleHighlightClear();
+            }
+        };
+
+        return {
+            // Fetch the changes since the last sync token and patch currentPoll in place.
+            // Unlike getPoll this never blanks currentPoll, so there is no flicker.
+            mergeDelta: rxMethod<string>(
+                pipe(
+                    switchMap((slug) =>
+                        store.projectService
+                            .getPollDelta(slug, untracked(store.syncToken))
+                            .pipe(
+                                tapResponse({
+                                    next: (delta) => applyDelta(delta),
+                                    error: (error) => {
+                                        store.loggerService.log(
+                                            '[PollDetailStore] Error while merging poll delta',
+                                            error,
+                                        );
+                                    },
+                                }),
+                            ),
+                    ),
+                ),
+            ),
+
+            // Edit-guard: while an option id is in the editing set, remote changes to it are
+            // deferred rather than applied over the user's in-progress input.
+            startEditingOption(optionId: string) {
+                const editing = untracked(store.editingOptionIds);
+                if (!editing.includes(optionId)) {
+                    patchState(store, {
+                        editingOptionIds: [...editing, optionId],
+                    });
+                }
+            },
+
+            stopEditingOption(optionId: string) {
+                patchState(store, {
+                    editingOptionIds: untracked(store.editingOptionIds).filter(
+                        (id) => id !== optionId,
+                    ),
+                });
+
+                const deferred = deferredOptions.get(optionId);
+                if (!deferred) {
+                    return;
+                }
+                deferredOptions.delete(optionId);
+
+                const poll = untracked(store.currentPoll);
+                if (!poll) {
+                    return;
+                }
+                const exists = poll.options.some((o) => o.id === optionId);
+                const options = exists
+                    ? poll.options.map((o) =>
+                          o.id === optionId ? deferred : o,
+                      )
+                    : [...poll.options, deferred];
+                patchState(store, {
+                    currentPoll: { ...poll, options },
+                    changedOptionIds: dedupe([
+                        ...untracked(store.changedOptionIds),
+                        optionId,
+                    ]),
+                });
+                scheduleHighlightClear();
+            },
+
+            // Reset realtime state when leaving a poll (see PollDetailComponent teardown).
+            resetRealtimeState() {
+                if (highlightTimer) {
+                    clearTimeout(highlightTimer);
+                    highlightTimer = undefined;
+                }
+                deferredOptions.clear();
+                patchState(store, {
+                    syncToken: undefined,
+                    changedOptionIds: [],
+                    changedCommentIds: [],
+                    editingOptionIds: [],
+                });
+            },
+        };
+    }),
     withReducer(
         on(
             sharingEvents.shared,

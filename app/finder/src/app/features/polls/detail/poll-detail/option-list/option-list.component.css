@@ -1,0 +1,25 @@
+/* Brief ring flash on an option changed by another collaborator. Colours come from design
+   tokens; duration matches HIGHLIGHT_DURATION_MS in poll-detail.store.ts. */
+.poll-item-changed {
+    border-radius: var(--radius-lg);
+    animation: poll-item-flash 2.5s ease-out;
+}
+
+@keyframes poll-item-flash {
+    0% {
+        box-shadow:
+            0 0 0 2px var(--accent),
+            0 0 0 6px var(--accent-tint);
+    }
+    100% {
+        box-shadow:
+            0 0 0 2px transparent,
+            0 0 0 6px transparent;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .poll-item-changed {
+        animation: none;
+    }
+}

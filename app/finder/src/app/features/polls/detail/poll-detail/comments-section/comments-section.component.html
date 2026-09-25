@@ -42,7 +42,10 @@
     @if (visibleComments().length) {
         <div class="flex flex-1 flex-col gap-5 overflow-y-auto px-5 pt-1 pb-3">
             @for (comment of visibleComments(); track comment.id) {
-                <div class="flex gap-2.5">
+                <div
+                    class="flex gap-2.5"
+                    [class.comment-changed]="isChanged(comment)"
+                >
                     <app-user-avatar
                         [user]="authorUser(comment.author)"
                         [size]="30"

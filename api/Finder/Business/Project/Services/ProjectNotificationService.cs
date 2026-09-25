@@ -1,16 +1,32 @@
 using Finder.Business.Auth.Entities;
 using Finder.Business.Project.Entities;
+using Finder.Business.Project.RealTime;
+using Finder.Business.Project.Setup;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Business.User.Services;
+using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Project.Services;
 
 public class ProjectNotificationService(
     InAppNotificationService inAppNotificationService,
     ProjectMailService mailService,
-    NotificationMailGuard notificationMailGuard)
+    NotificationMailGuard notificationMailGuard,
+    PollPresenceRegistry presenceRegistry,
+    IOptions<NotificationOptions> notificationOptions)
 {
+    private readonly TimeSpan _idleThreshold =
+        TimeSpan.FromSeconds(notificationOptions.Value.ActivePresenceIdleSeconds);
+
+    /// <summary>
+    /// A recipient actively present on the poll is watching it live, so a duplicate e-mail is just
+    /// noise — skip it. The in-app notification is still created (persistent record), and a
+    /// present-but-idle or absent recipient falls through and is e-mailed per their settings.
+    /// </summary>
+    private bool IsWatchingLive(Poll poll, Guid recipientId) =>
+        presenceRegistry.IsUserActive(poll.Id, recipientId, _idleThreshold);
+
     public async Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
         Entities.Project project, Poll poll)
     {
@@ -22,6 +38,11 @@ public class ProjectNotificationService(
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
             if (recipient.Role == Role.TestUser)
+            {
+                continue;
+            }
+
+            if (IsWatchingLive(poll, recipient.Id))
             {
                 continue;
             }
@@ -50,6 +71,11 @@ public class ProjectNotificationService(
                 continue;
             }
 
+            if (IsWatchingLive(poll, recipient.Id))
+            {
+                continue;
+            }
+
             if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollReopened, project.Id))
             {
                 continue;
@@ -74,6 +100,11 @@ public class ProjectNotificationService(
                 continue;
             }
 
+            if (IsWatchingLive(poll, recipient.Id))
+            {
+                continue;
+            }
+
             if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollUpdated, project.Id))
             {
                 continue;
@@ -94,6 +125,11 @@ public class ProjectNotificationService(
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
             if (recipient.Role == Role.TestUser)
+            {
+                continue;
+            }
+
+            if (IsWatchingLive(poll, recipient.Id))
             {
                 continue;
             }

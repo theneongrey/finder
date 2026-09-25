@@ -2,6 +2,7 @@ using Finder.Business.Permission.Entities;
 using Finder.Business.Permission.Services;
 using Finder.Business.Project.Api.Requests;
 using Finder.Business.Project.Entities;
+using Finder.Business.Project.RealTime;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Database;
@@ -16,17 +17,20 @@ public class ProjectService
     private readonly PermissionService _permissionService;
     private readonly ProjectNotificationService _projectNotificationService;
     private readonly PollUpdateNotificationQueue _pollUpdateQueue;
+    private readonly IPollChangeNotifier _pollChangeNotifier;
 
     private Guid? UserId => _userService.GetUserId();
 
     public ProjectService(AppDbContext dbContext, UserService userService, PermissionService permissionService,
-        ProjectNotificationService projectNotificationService, PollUpdateNotificationQueue pollUpdateQueue)
+        ProjectNotificationService projectNotificationService, PollUpdateNotificationQueue pollUpdateQueue,
+        IPollChangeNotifier pollChangeNotifier)
     {
         _dbContext = dbContext;
         _userService = userService;
         _permissionService = permissionService;
         _projectNotificationService = projectNotificationService;
         _pollUpdateQueue = pollUpdateQueue;
+        _pollChangeNotifier = pollChangeNotifier;
     }
 
     public async Task<List<Entities.Project>> GetAll()
@@ -301,6 +305,8 @@ public class ProjectService
         _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
             oldName, poll.Name, oldDescription, poll.Description);
 
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+
         return Result<Poll>.Success(poll);
     }
 
@@ -385,6 +391,8 @@ public class ProjectService
 
         _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, creator.Name ?? "Unknown",
             creator.Id);
+
+        await _pollChangeNotifier.PollChanged(poll.Id, creator.Id);
 
         return Result<Option>.Success(option);
     }
@@ -471,6 +479,8 @@ public class ProjectService
         {
             _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown",
                 updateActor.Payload!.Id);
+
+            await _pollChangeNotifier.PollChanged(option.Poll.Id, updateActor.Payload!.Id);
         }
 
         return Result<Option>.Success(option);
@@ -506,6 +516,8 @@ public class ProjectService
         var deleteActor = await _userService.GetUser();
         _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown",
             deleteActor.Payload!.Id);
+
+        await _pollChangeNotifier.PollChanged(pollId, deleteActor.Payload!.Id);
 
         return Result.Success();
     }
@@ -599,6 +611,8 @@ public class ProjectService
         await _projectNotificationService.SendNewCommentNotificationsAsync(
             recipients, user.Name ?? "Unknown", poll.Project, poll, comment.Content);
 
+        await _pollChangeNotifier.PollChanged(poll.Id, user.Id);
+
         return Result<Comment>.Success(comment);
     }
 
@@ -651,6 +665,8 @@ public class ProjectService
         await _projectNotificationService.SendPollClosedNotificationsAsync(
             closeRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
 
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+
         return Result<Poll>.Success(poll);
     }
 
@@ -702,6 +718,8 @@ public class ProjectService
             .ToList();
         await _projectNotificationService.SendPollReopenedNotificationsAsync(
             reopenRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
+
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
 
         return Result<Poll>.Success(poll);
     }

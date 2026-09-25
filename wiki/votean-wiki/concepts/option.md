@@ -21,6 +21,15 @@ sources:
 
 An Option is one choice within a [Poll](poll.md). Users cast [Vote](vote.md) records against options. Each option has a text label, an optional description, and optionally a rich URL preview.
 
+## Creator
+
+Every option has a **required `Creator`** (a `Person`, via `CreatorId`), tracking who added
+it. New options are attributed to the current user at creation time
+(`ProjectService.AddOptionToPoll`); existing rows were backfilled from each option's project
+creator (Option → Poll → Project.Creator) in the `AddOptionCreator` migration. The creator's
+name and picture flow to the frontend on each poll option (`PollResponseOptionCreator`) so the
+voting and result views can attribute options. Added in PR #393.
+
 ## URL Preview (OptionMeta)
 
 If a URL is provided when creating an option, the backend fetches its OpenGraph metadata and stores it as `OptionMeta`:

@@ -7,14 +7,16 @@ status: stable
 generated:
   actor: claude-sonnet-4-6
   date: 2026-08-03
-stale_after: 2027-02-03
+stale_after: 2027-03-25
 sources:
-  - title: ProjectVoteComponent
-    resource: app/finder/src/app/features/project/selected/vote/project-vote.component.ts
-  - title: PollOverviewComponent
-    resource: app/finder/src/app/features/project/selected/poll-overview/poll-overview.component.ts
-  - title: ProjectDetailStore
-    resource: app/finder/src/app/features/project/_shared/data/project-detail.store.ts
+  - title: PollDetailComponent (results = detail page)
+    resource: app/finder/src/app/features/polls/detail/poll-detail/poll-detail.component.ts
+  - title: PollVoteComponent (voting overlay)
+    resource: app/finder/src/app/features/polls/detail/vote/
+  - title: polls feature routes
+    resource: app/finder/src/app/features/polls/polls.routes.ts
+  - title: PollDetailStore
+    resource: app/finder/src/app/features/polls/_shared/data/poll-detail.store.ts
 ---
 
 # Polling
@@ -29,20 +31,42 @@ Polls are the primary decision-making unit in Votean. Each poll belongs to a [Pr
 | 1 | Rating | Each option is rated 1–5 |
 | 2 | Date | Appointment scheduling — options encode date/time values (see [Appointment Polls](appointment-polls.md)) |
 
+## The Poll Detail Page
+
+A poll opens at a single route — `/polls/:id/:pollId` — where **results *is* the detail
+page**. Options render as a grid of cards (text and date variants), with a poll header, a
+results toolbar, and a share bar. There is no longer a separate results-free overview or a
+standalone vote route; the 2026 rebuild collapsed all three into this one page. See the
+[Poll Detail Page Rebuild](../architecture/poll-detail-rebuild.md) decision record for the
+before/after and routing details.
+
+Managing actions (End poll, Share) live behind a kebab (overflow) menu in the results
+toolbar. The detail column uses container queries (`@container/detail`) so it switches to a
+compact layout based on its own width — important because the comments sidebar narrows it
+well below the viewport width.
+
 ## Voting UX
 
-The vote view (`/vote/:pollId/:optionId?`) shows one option at a time as a swipeable card.
+Voting happens in an **animated overlay** on top of the detail page (`PollVoteComponent`) —
+not on its own route. Entry points (the results toolbar, per-option vote/revote buttons, the
+public-poll flow, and in-app notifications) open the overlay; the URL stays
+`/polls/:id/:pollId` throughout. The overlay:
 
-- **Swipe right / tap yes**: cast a positive vote
-- **Swipe left / tap no**: skip (not a vote)
-- **Swipe threshold**: 75px — below this the card snaps back
-- **Visual feedback**: card rotates and fades as it is dragged; left/right cue indicators appear
+- shows one option at a time as a card over a translucent, blurred veil (the detail page
+  stays visible, dimmed);
+- tracks the current option internally and takes `startOptionId` / `revote` inputs;
+- offers **Yes / No** with **Skip** sitting between them (the old reject/maybe button was
+  dropped);
+- closes via the X button, `Escape`, or click-outside, emitting `finished` / `dismissed`.
 
 ### Skip Logic
 
-Skipped options are not ignored permanently. The frontend re-shows each skipped option up to **2 times** before considering it done. Once all options have been voted on or skipped twice, the user is routed to results.
+Skipped options are not ignored permanently. The frontend re-shows each skipped option up to
+**2 times** before considering it done. Once all options have been voted on or skipped
+twice, the overlay closes back to the detail page.
 
-Skip state is stored in the session (not persisted to the server). A page refresh resets the skip counter.
+Skip state is stored in the session (not persisted to the server). A page refresh resets the
+skip counter.
 
 ### Vote Choice Encoding
 
@@ -59,11 +83,9 @@ One vote record per (Person, Option) pair — re-voting overwrites the existing 
 
 ## Revote Mode
 
-Adding `?revote=1` to the vote URL activates revote mode. All options are shown once from the start, regardless of prior votes or skip counts. This lets a user change their mind on every option in a single pass before landing on the results.
-
-## Poll Overview (Without Results)
-
-The `/poll-overview/:pollId` route shows all options without displaying vote counts or trophy badges (`hideResults`). This serves as a hub between voting and results — users can see the options and choose to vote, see results, or start a revote.
+Opening the voting overlay with `revote` set activates revote mode. All options are shown
+once from the start, regardless of prior votes or skip counts. This lets a user change their
+mind on every option in a single pass before returning to the detail page.
 
 ## Comments
 
@@ -75,4 +97,5 @@ All poll types support comments. Users can optionally quote another comment when
 - [Option](../concepts/option.md) — choices within a poll
 - [Vote](../concepts/vote.md) — vote records
 - [Appointment Polls](appointment-polls.md) — the Date option type in detail
+- [Poll Detail Page Rebuild](../architecture/poll-detail-rebuild.md) — the results-as-detail + voting-overlay rework
 - [Project](../concepts/project.md) — polls belong to projects

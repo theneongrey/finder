@@ -38,6 +38,7 @@ Product capabilities from a user perspective.
 - [Permissions](features/permissions.md) — voter / maintainer / owner roles
 - [Appointment Polls](features/appointment-polls.md) — date/time scheduling variant
 - [Public Sharing](features/public-sharing.md) — unauthenticated access via /p/:projectId
+- [Notifications](features/notifications.md) — in-app notification centre, settings, and multi-language email pipeline
 
 ## Architecture
 
@@ -47,6 +48,7 @@ System design and technical decisions.
 - [Frontend](architecture/frontend.md) — Angular 21, standalone components, NgRx Signals
 - [Database](architecture/database.md) — PostgreSQL, EF Core 9, migration strategy
 - [Component Architecture](architecture/component-architecture.md) — three-layer model (ds-*, common smart, domain feature) and placement rules
+- [Poll Detail Page Rebuild](architecture/poll-detail-rebuild.md) — 2026 rework: results = detail page, voting overlay, collapsed vote/results/overview routes
 - [CI/CD](architecture/ci-cd.md) — GitHub Actions pipeline
 - [PrimeNG → Spartan UI Migration](architecture/primeng-to-spartan-migration.md) — why PrimeNG was replaced, migration scope, and Spartan UI approach
 - [Projects Concept Removal (MVP)](architecture/project-removal-mvp.md) — removing multi-poll projects from UI, URLs, and code; backend model preserved

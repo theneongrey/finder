@@ -23,8 +23,9 @@ Votean uses a passwordless flow. No passwords are stored. Every login starts wit
 
 ```
 POST /api/auth/requestLoginMail
+  → EmailValidationService rejects disposable / MX-less domains (403) — no token created
   → creates LoginToken record (token + code, expires 1 hour)
-  → sends email with magic link and OTP
+  → sends email with magic link and OTP (via the MailTemplateService pipeline)
 
   Path A — click link in email:
     POST /api/auth/tokenLogin  { loginToken }
@@ -52,6 +53,25 @@ Authentication state is a cookie named `"login"` with 30-day sliding expiry. The
 - **OTP retry limit**: 3 attempts; code is cleared on the third failure (token still exists but is code-invalid)
 - **Rate limiting**: 5 requests/IP/minute on `requestLoginMail` and `tokenLogin` — returns 429
 - **Logout**: `POST /api/auth/logout` → `SignOutAsync()`, cookie cleared
+
+### Email Domain Validation
+
+`EmailValidationService` (singleton, `Business/Auth/Services/`) runs two checks at the top of
+`LoginService.RequestLoginMail` before any token is created — on failure it returns **403
+Forbidden** (the frontend already handles the `'forbidden'` state), and no email is sent:
+
+1. **Disposable-domain blocklist** — fetched lazily from the public
+   [disposable-email-domains](https://github.com/disposable-email-domains/disposable-email-domains)
+   list, cached in-memory for 7 days with silent refresh (and silent failure if unreachable).
+2. **MX record check** — uses `DnsClient` to confirm the domain has at least one mail server.
+
+Added in PR #352 (fixes #346).
+
+### Email Delivery
+
+Login emails (and all poll/permission notifications) are rendered by `MailTemplateService`
+from embedded, per-language HTML templates with an `en` fallback — see
+[Notifications → Email Templates](notifications.md#email-templates-multi-language).
 
 ## Test Environment Bypass
 
@@ -84,6 +104,7 @@ The auth shell (`AuthShellComponent`) wraps all `/auth/*` routes. On mount it ca
 ## Related
 
 - [Login Token](../concepts/login-token.md) — the short-lived record that backs each login attempt
+- [Notifications](notifications.md) — the email template pipeline and in-app notification centre
 - [User](../concepts/user.md) — the Person entity created or looked up during login
 - [Backend](../architecture/backend.md) — cookie auth scheme configuration
 - [Local Setup](../guides/local-setup.md) — how to run the app and log in during development

@@ -27,14 +27,21 @@ Angular 21 application with fully standalone components (no NgModules) and NgRx 
 
 ```
 src/app/
-  common/         — global stores, auth guard, shared UI, i18n, theme
+  common/         — global stores, auth guard, shared UI (ds-*), i18n, theme
   features/
     auth/         — login, code entry, token login
-    project/      — projects, polls, voting, results
-    home/         — landing page
-    logout/       — logout handler
+    polls/        — overview, single-step add wizard, detail (results + voting overlay)
+    public-poll/  — unauthenticated /p/:projectId access
+    home/         — language redirect + landing page
+    legal/        — privacy + imprint pages
     settings/     — user profile settings
+    design-system/— /ux live component reference (dev only)
+    logout/       — logout handler
 ```
+
+> **Note:** the poll feature was reorganised in the 2026 rebuild — `features/project/…`
+> became `features/polls/…`, and `public-poll` moved to the app level. See the
+> [Poll Detail Page Rebuild](poll-detail-rebuild.md) for the full story.
 
 ## Store Architecture
 
@@ -67,15 +74,22 @@ No separate effects layer. No actions/reducers. State is patched directly inside
 All protected routes are wrapped by `userAuthentication` (AuthGuard). On failure the guard stores the attempted URL in `UserStore` and redirects to `/auth/request-email`, so the user is returned to the original destination after signing in.
 
 Key route groups:
+- `/` — language redirect; `/de`, `/en`, `/es` — landing page per locale
 - `/auth/*` — unauthenticated; handles all login flows
-- `/p/:projectId` — unauthenticated; public project/poll access
-- `/project/*` — protected; dashboard, project detail, voting, results
+- `/privacy`, `/imprint` — unauthenticated legal pages
+- `/p/:projectId` — unauthenticated; public poll access
+- `/ux` — dev-only design-system reference (`devOnly` guard)
+- `/polls/*` — protected; poll overview, create, detail
 - `/settings` — protected; user profile
 
-Poll-specific routes under `/project/detail/:projectId`:
-- `/vote/:pollId` — swipe-based voting
-- `/results/:pollId` — vote results with counts
-- `/poll-overview/:pollId` — options without results (pre-results hub)
+Poll routes under the protected `/polls` shell (`PollsShellComponent`):
+- `/polls` — poll overview / list
+- `/polls/add` — single-step create wizard
+- `/polls/:id/:pollId` — poll detail (results grid); voting runs as an overlay on this
+  page, not a separate route
+
+The old `/vote`, `/results`, and `/poll-overview` routes were removed in the 2026 rebuild —
+see [Poll Detail Page Rebuild](poll-detail-rebuild.md).
 
 ## Standalone Components
 
@@ -109,7 +123,19 @@ Within a feature, components shared across sub-features live in `_shared/ui/`; s
 
 ## UI Library
 
-**Spartan UI + Tailwind CSS 4.** Spartan components (`@spartan-ng/brain` + project-local `@spartan-ng/helm/*` aliases) are imported individually per component. PrimeNG was removed in 2026 after it changed its licensing model and became no longer open source or usable for commercial projects — see [PrimeNG → Spartan Migration](primeng-to-spartan-migration.md) for the full decision record. See [Adding Spartan Components](../guides/adding-spartan-components.md) for how to install new component primitives.
+**Custom `ds-*` design system on top of Spartan UI + Tailwind CSS 4.** The app is built from
+project-local `ds-*` standalone components (`common/ui/ds-components/`, `@ds/*`), which wrap
+Spartan primitives (`@spartan-ng/brain` + `@spartan-ng/helm/*`) with the Votean visual
+language. No PrimeNG (removed in 2026 after a licensing change — see
+[PrimeNG → Spartan Migration](primeng-to-spartan-migration.md)) and no raw `Hlm*` imports in
+feature code.
+
+ds-* components follow a **Tailwind-first styling convention**: styling lives as Tailwind
+utility classes in the template, and a `.component.css` file survives only for rules Tailwind
+cannot express (`@keyframes`, pseudo-elements, Spartan `[data-state]`/`::after` overrides,
+complex `@media` positioning). See [Styling ds-* Components](../guides/styling-ds-components.md)
+for the full convention and [Component Library (ds-*)](../guides/component-library.md) for the
+API reference.
 
 ## Related
 

@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-25 — ingest: Tailwind-first ds-* styling convention (issue #269 / #270)
+Pages touched: guides/styling-ds-components.md (created — Tailwind-first default, when a CSS file is acceptable with the 13 retained-CSS reasons table, no static [style.x] bindings, styles.css cross-component rule, acceptance checklist), guides/component-library.md (added Related link), guides/design-system.md (added Related link), index.md (added Guides entry)
+
+---
+
 ## 2026-08-22 — ingest: app/finder/src/app/features/auth
 Pages touched: features/auth.md (added Frontend Routes section; documented removal of /auth/login route and double-redirect fix; added route table), architecture/frontend.md (updated AuthGuard redirect target from /auth/login to /auth/request-email)
 

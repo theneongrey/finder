@@ -641,6 +641,7 @@ Animated shimmer placeholder shown while poll cards are loading.
 ## Related Pages
 
 - [Design System showcase](design-system.md) — live `/ux` preview of all components
+- [Styling ds-* Components](styling-ds-components.md) — Tailwind-first styling convention
 - [Spartan → ds-* Migration Guide](spartan-to-ds-migration.md) — mapping from old Hlm* imports
 - [Frontend Architecture](../architecture/frontend.md)
 - [Component Architecture](../architecture/component-architecture.md)

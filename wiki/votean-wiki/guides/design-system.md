@@ -104,6 +104,7 @@ No Spartan UI (`Hlm*`) or Font Awesome imports are used. All icons are inline SV
 ## Related Pages
 
 - [Component Library (ds-*)](component-library.md) — selector, inputs, outputs, usage examples for all 15 components
+- [Styling ds-* Components](styling-ds-components.md) — Tailwind-first styling convention (when to use utility classes vs. a CSS file)
 - [Spartan → ds-* Migration Guide](spartan-to-ds-migration.md) — mapping from old Hlm* imports
 - [Frontend Architecture](../architecture/frontend.md)
 - [Local Setup](local-setup.md)

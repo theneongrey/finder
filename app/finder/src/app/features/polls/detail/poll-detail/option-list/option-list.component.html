@@ -3,36 +3,40 @@
     data-testid="results-option-list"
 >
     @for (option of sortedOptions(); track option.id) {
-        @if (isDateType()) {
-            <app-option-card-date
-                [option]="option"
-                [dateType]="dateType()!"
-                [members]="members()"
-                [commentCount]="commentCount(option)"
-                [isMostVoted]="hasMostVotes(option)"
-                [projectId]="projectId()"
-                [pollId]="pollId()"
-                [hideResults]="hideResults()"
-                (commentsClick)="openComments.emit(option)"
-                (startVote)="startVote.emit($event)"
-            />
-        } @else {
-            <app-option-card
-                [option]="option"
-                [members]="members()"
-                [commentCount]="commentCount(option)"
-                [isMostVoted]="hasMostVotes(option)"
-                [projectId]="projectId()"
-                [pollId]="pollId()"
-                [hideResults]="hideResults()"
-                [pollType]="
-                    optionType() === OptionType.Rating ? 'rating' : 'yesno'
-                "
-                (commentsClick)="openComments.emit(option)"
-                (saveEdit)="saveEdit.emit($event)"
-                (deleteOption)="deleteOption.emit($event)"
-                (startVote)="startVote.emit($event)"
-            />
-        }
+        <div [class.poll-item-changed]="isChanged(option)">
+            @if (isDateType()) {
+                <app-option-card-date
+                    [option]="option"
+                    [dateType]="dateType()!"
+                    [members]="members()"
+                    [commentCount]="commentCount(option)"
+                    [isMostVoted]="hasMostVotes(option)"
+                    [projectId]="projectId()"
+                    [pollId]="pollId()"
+                    [hideResults]="hideResults()"
+                    (commentsClick)="openComments.emit(option)"
+                    (startVote)="startVote.emit($event)"
+                />
+            } @else {
+                <app-option-card
+                    [option]="option"
+                    [members]="members()"
+                    [commentCount]="commentCount(option)"
+                    [isMostVoted]="hasMostVotes(option)"
+                    [projectId]="projectId()"
+                    [pollId]="pollId()"
+                    [hideResults]="hideResults()"
+                    [pollType]="
+                        optionType() === OptionType.Rating ? 'rating' : 'yesno'
+                    "
+                    (commentsClick)="openComments.emit(option)"
+                    (saveEdit)="saveEdit.emit($event)"
+                    (deleteOption)="deleteOption.emit($event)"
+                    (startVote)="startVote.emit($event)"
+                    (editStart)="editStart.emit($event)"
+                    (editEnd)="editEnd.emit($event)"
+                />
+            }
+        </div>
     }
 </div>

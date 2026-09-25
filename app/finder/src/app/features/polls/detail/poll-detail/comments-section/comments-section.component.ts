@@ -46,6 +46,8 @@ export class CommentsSectionComponent {
     /** When set, the drawer is scoped to a single option and shows its title. */
     optionTitle = input<string | undefined>(undefined);
     submitting = input<boolean>(false);
+    /** Ids of comments added by a recent remote update — briefly highlighted. */
+    changedCommentIds = input<string[]>([]);
     addComment = output<string>();
     dismiss = output<void>();
 
@@ -108,5 +110,9 @@ export class CommentsSectionComponent {
 
     authorUser(author: Comment['author']): { name: string } {
         return { name: author.name };
+    }
+
+    isChanged(comment: Comment): boolean {
+        return this.changedCommentIds().includes(comment.id);
     }
 }

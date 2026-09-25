@@ -5,3 +5,27 @@
     padding-bottom: 14px;
     line-height: 1.5;
 }
+
+/* Brief background flash on a comment posted by another collaborator. Colours come from
+   design tokens; duration matches HIGHLIGHT_DURATION_MS in poll-detail.store.ts. */
+.comment-changed {
+    border-radius: var(--radius-md);
+    margin: -6px -8px;
+    padding: 6px 8px;
+    animation: comment-flash 2.5s ease-out;
+}
+
+@keyframes comment-flash {
+    0% {
+        background-color: var(--accent-tint);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .comment-changed {
+        animation: none;
+    }
+}

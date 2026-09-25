@@ -24,6 +24,7 @@ type SortMode = 'top' | 'original';
 @Component({
     selector: 'app-option-list',
     templateUrl: './option-list.component.html',
+    styleUrl: './option-list.component.css',
     imports: [OptionCardComponent, OptionCardDateComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,6 +39,8 @@ export class OptionListComponent {
     optionType = input(OptionType.YesNo);
     hideResults = input(false);
     isClosed = input(false);
+    /** Ids of options changed by a recent remote update — briefly highlighted. */
+    changedOptionIds = input<string[]>([]);
 
     sort = input<SortMode>('top');
 
@@ -52,6 +55,12 @@ export class OptionListComponent {
         description: string;
     }>();
     deleteOption = output<{ optionId: string }>();
+    editStart = output<{ optionId: string }>();
+    editEnd = output<{ optionId: string }>();
+
+    isChanged(option: OptionDetail): boolean {
+        return this.changedOptionIds().includes(option.id);
+    }
 
     private readonly commentCountByOption = computed(() => {
         const counts = new Map<string, number>();

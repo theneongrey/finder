@@ -10,11 +10,18 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
+import { PresenceAvatarsComponent } from '../../../_shared/ui/presence-avatars/presence-avatars.component';
+import { PollParticipant } from '../../../_shared/models/poll-realtime.model';
 
 @Component({
     selector: 'app-results-toolbar',
     templateUrl: './results-toolbar.component.html',
-    imports: [TranslatePipe, DsButtonComponent, DsMenuComponent],
+    imports: [
+        TranslatePipe,
+        DsButtonComponent,
+        DsMenuComponent,
+        PresenceAvatarsComponent,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResultsToolbarComponent {
@@ -24,6 +31,8 @@ export class ResultsToolbarComponent {
     isClosed = input(false);
     commentsHidden = input(false);
     refreshing = input(false);
+    presence = input<PollParticipant[]>([]);
+    selfId = input<string | undefined>(undefined);
 
     startVote = output<void>();
     addOption = output<void>();

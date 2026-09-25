@@ -107,6 +107,21 @@ public static class ProjectApi
                 })
             .RequireAuthorization();
 
+        // Get poll delta — changes since the client's last sync token
+        app.MapGet("/api/project/poll/{slug}/delta",
+                async (string slug, [FromQuery] string? since, ProjectService projectService, UserService userService) =>
+                {
+                    DateTime? sinceUtc = DateTimeOffset.TryParse(since, out var parsed)
+                        ? parsed.UtcDateTime
+                        : null;
+
+                    var result = await projectService.GetPollDelta(slug, sinceUtc);
+                    return !result.IsSuccess
+                        ? Results.StatusCode(result.Code)
+                        : Results.Ok(result.Payload!.ToPollDeltaResponse(userService.GetUserId()));
+                })
+            .RequireAuthorization();
+
         // Update poll
         app.MapPut("/api/project/poll/{slug}",
                 async (string slug, [FromBody] UpdatePollRequest request, ProjectService projectService, UserService userService) =>

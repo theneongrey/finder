@@ -338,6 +338,63 @@ public class ProjectService
         return Result<Poll>.Success(poll);
     }
 
+    // Rows committed within this window of the client's token are re-sent even if the token is
+    // technically newer, so nothing is missed at the boundary. The client upserts by id, so a
+    // re-delivered row is harmless.
+    private static readonly TimeSpan DeltaOverlap = TimeSpan.FromSeconds(2);
+
+    public async Task<Result<PollDelta>> GetPollDelta(string slug, DateTime? since)
+    {
+        // Captured before the read so the token the client echoes next time is never ahead of
+        // what this response reflects.
+        var syncToken = DateTime.UtcNow;
+        var sinceCutoff = (since ?? DateTime.MinValue).ToUniversalTime() - DeltaOverlap;
+
+        var poll = await _dbContext.Polls
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Creator)
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Meta)
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Option)
+            .Where(t => t.Id == SlugHelper.ExtractId(slug) && (
+                t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
+                t.Project.Creator.Id == UserId ||
+                t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
+            .SingleOrDefaultAsync();
+
+        if (poll is null)
+        {
+            return Result<PollDelta>.Fail(404);
+        }
+
+        // A vote change stamps Vote.Edited but not Option.Edited, so an option counts as changed
+        // when the option itself or any of its votes changed. The delta re-sends the whole option
+        // (votes included), so the client sees the new tally.
+        var changedOptions = poll.Options
+            .Where(o => o.Edited > sinceCutoff || o.Votes.Any(v => v.Edited > sinceCutoff))
+            .ToList();
+
+        var changedComments = poll.Comments
+            .Where(c => c.Edited > sinceCutoff)
+            .ToList();
+
+        var changedPoll = poll.Edited > sinceCutoff ? poll : null;
+
+        return Result<PollDelta>.Success(new PollDelta(
+            changedPoll,
+            changedOptions,
+            changedComments,
+            poll.Options,
+            poll.Comments,
+            syncToken));
+    }
+
     public async Task<Result<Option>> AddOptionToPoll(AddOptionToPollRequest pollRequest)
     {
         var poll = await _dbContext.Polls

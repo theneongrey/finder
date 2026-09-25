@@ -38,20 +38,25 @@ public sealed class PollHub : Hub
         var id = SlugHelper.ExtractId(pollId);
 
         // Same read predicate as ProjectService.GetPoll: public project OR creator OR any permission.
-        var participant = await _dbContext.Polls
-            .Where(p => p.Id == id && (
+        var hasAccess = await _dbContext.Polls
+            .AnyAsync(p => p.Id == id && (
                 p.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
                 p.Project.Creator.Id == userId ||
-                p.Project.Permissions.Any(permission => permission.PersonKey == userId)))
-            .Select(_ => _dbContext.Persons
-                .Where(person => person.Id == userId)
-                .Select(person => new PollParticipant(person.Id, person.Name, person.Picture))
-                .Single())
+                p.Project.Permissions.Any(permission => permission.PersonKey == userId)));
+
+        if (!hasAccess)
+        {
+            throw new HubException("Forbidden");
+        }
+
+        var participant = await _dbContext.Persons
+            .Where(person => person.Id == userId)
+            .Select(person => new PollParticipant(person.Id, person.Name, person.Picture))
             .SingleOrDefaultAsync();
 
         if (participant is null)
         {
-            throw new HubException("Forbidden");
+            throw new HubException("Unauthorized");
         }
 
         await Groups.AddToGroupAsync(Context.ConnectionId, GroupName(id));

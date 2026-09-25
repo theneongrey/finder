@@ -56,7 +56,9 @@ public sealed class PollHub : Hub
 
         if (participant is null)
         {
-            throw new HubException("Unauthorized");
+            // Authenticated (past [Authorize]) but no matching Person row — a data edge case,
+            // not an auth failure.
+            throw new HubException("User not found");
         }
 
         await Groups.AddToGroupAsync(Context.ConnectionId, GroupName(id));

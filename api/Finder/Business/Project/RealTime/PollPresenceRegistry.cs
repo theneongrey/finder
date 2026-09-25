@@ -105,6 +105,8 @@ public sealed class PollPresenceRegistry
                 return [];
             }
 
+            // Picking an arbitrary connection per user is safe: name/picture are identical
+            // across a single user's tabs, so any of them yields the same roster entry.
             return connections.Values
                 .GroupBy(p => p.UserId)
                 .Select(g => g.First())

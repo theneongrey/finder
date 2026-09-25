@@ -383,6 +383,7 @@
                         variant="primary"
                         [loading]="loadingDemo()"
                         (click)="loadingDemo.set(!loadingDemo())"
+                        data-testid="btn-loading-demo"
                     >
                         {{ loadingDemo() ? 'Lädt…' : 'Loading demo' }}
                     </ds-button>
@@ -468,6 +469,7 @@
                             bg="var(--person-1-bg)"
                             fg="var(--person-1-fg)"
                             size="sm"
+                            data-testid="avatar-sm"
                         />
                         <span class="ds-mono-xs">sm</span>
                     </div>
@@ -477,6 +479,7 @@
                             bg="var(--person-1-bg)"
                             fg="var(--person-1-fg)"
                             size="md"
+                            data-testid="avatar-md"
                         />
                         <span class="ds-mono-xs">md</span>
                     </div>
@@ -486,6 +489,7 @@
                             bg="var(--person-1-bg)"
                             fg="var(--person-1-fg)"
                             size="lg"
+                            data-testid="avatar-lg"
                         />
                         <span class="ds-mono-xs">lg</span>
                     </div>
@@ -528,6 +532,7 @@
                             fg="var(--person-2-fg)"
                             [voted]="true"
                             size="md"
+                            data-testid="avatar-voted"
                         />
                         <span class="ds-mono-xs">voted</span>
                     </div>
@@ -582,7 +587,9 @@
             <div class="ds-section-block">
                 <p class="label mb-3">StatusDot</p>
                 <div class="ds-row-wrap">
-                    <ds-status-dot tone="positive">Läuft</ds-status-dot>
+                    <ds-status-dot tone="positive" data-testid="status-dot-live"
+                        >Läuft</ds-status-dot
+                    >
                     <ds-status-dot tone="muted">Beendet</ds-status-dot>
                 </div>
             </div>
@@ -1003,6 +1010,7 @@
                         (no)="($event)"
                         (skip)="($event)"
                         (maybe)="($event)"
+                        data-testid="vote-buttons-maybe"
                     />
                 </div>
             </div>

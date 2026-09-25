@@ -348,7 +348,9 @@ public class ProjectService
         // Captured before the read so the token the client echoes next time is never ahead of
         // what this response reflects.
         var syncToken = DateTime.UtcNow;
-        var sinceCutoff = (since ?? DateTime.MinValue).ToUniversalTime() - DeltaOverlap;
+        // No token yet → return everything. Otherwise widen the window slightly so rows committed
+        // right at the boundary aren't missed (the client upserts by id, so overlap is harmless).
+        var sinceCutoff = since.HasValue ? since.Value.ToUniversalTime() - DeltaOverlap : DateTime.MinValue;
 
         var poll = await _dbContext.Polls
             .Include(t => t.Options)

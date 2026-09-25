@@ -258,9 +258,9 @@ export class PollDetailComponent {
 
     closeVote() {
         this.voteOpen.set(false);
-        // Refresh so option tallies reflect the votes just cast — the store's
-        // vote() only patches the user's own choice, not the aggregate votes.
-        this.projectDetailStore.getPoll(this.pollId());
+        // No refetch here: vote() patches the store optimistically (choice +
+        // aggregate votes), so tallies are already current. A refetch would
+        // race the vote PUT and could pull stale tallies back in.
     }
 
     addComment(content: string) {

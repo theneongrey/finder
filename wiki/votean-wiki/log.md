@@ -3,6 +3,16 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-25 — ingest: last-50-PR review — UI rebuild + notifications + auth/email + option creator
+Pages touched: architecture/poll-detail-rebuild.md (created — results-as-detail, voting overlay, route collapse, overflow menu, container-query layout, single-step add-poll, shell consolidation; PRs #396/#409/#422/#424/#426/#351), features/polling.md (rewrote Voting UX + detail page + revote to overlay model, removed stale /vote//results//poll-overview routes, updated sources), architecture/frontend.md (rewrote Feature Layout, Routing, and UI Library sections to current /polls routing + ds-* Tailwind-first), features/notifications.md (created — in-app centre, orchestration + mail guard, settings, multi-language templates; PRs #367/#358/#349), features/auth.md (added EmailValidationService disposable/MX check #352 + MailTemplateService delivery), concepts/option.md (added required Creator #393), index.md (added notifications, poll-detail-rebuild links)
+
+---
+
+## 2026-09-25 — ingest: Tailwind-first ds-* styling convention (issue #269 / #270)
+Pages touched: guides/styling-ds-components.md (created — Tailwind-first default, when a CSS file is acceptable with the 13 retained-CSS reasons table, no static [style.x] bindings, styles.css cross-component rule, acceptance checklist), guides/component-library.md (added Related link), guides/design-system.md (added Related link), index.md (added Guides entry)
+
+---
+
 ## 2026-08-22 — ingest: app/finder/src/app/features/auth
 Pages touched: features/auth.md (added Frontend Routes section; documented removal of /auth/login route and double-redirect fix; added route table), architecture/frontend.md (updated AuthGuard redirect target from /auth/login to /auth/request-email)
 

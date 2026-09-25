@@ -38,6 +38,7 @@ Product capabilities from a user perspective.
 - [Permissions](features/permissions.md) — voter / maintainer / owner roles
 - [Appointment Polls](features/appointment-polls.md) — date/time scheduling variant
 - [Public Sharing](features/public-sharing.md) — unauthenticated access via /p/:projectId
+- [Notifications](features/notifications.md) — in-app notification centre, settings, and multi-language email pipeline
 
 ## Architecture
 
@@ -47,6 +48,7 @@ System design and technical decisions.
 - [Frontend](architecture/frontend.md) — Angular 21, standalone components, NgRx Signals
 - [Database](architecture/database.md) — PostgreSQL, EF Core 9, migration strategy
 - [Component Architecture](architecture/component-architecture.md) — three-layer model (ds-*, common smart, domain feature) and placement rules
+- [Poll Detail Page Rebuild](architecture/poll-detail-rebuild.md) — 2026 rework: results = detail page, voting overlay, collapsed vote/results/overview routes
 - [CI/CD](architecture/ci-cd.md) — GitHub Actions pipeline
 - [PrimeNG → Spartan UI Migration](architecture/primeng-to-spartan-migration.md) — why PrimeNG was replaced, migration scope, and Spartan UI approach
 - [Projects Concept Removal (MVP)](architecture/project-removal-mvp.md) — removing multi-poll projects from UI, URLs, and code; backend model preserved
@@ -67,5 +69,6 @@ Developer how-to pages.
 - [Adding a Feature](guides/adding-a-feature.md) — step-by-step walkthrough
 - [Design System](guides/design-system.md) — live component and token reference at /ux (dev only)
 - [Component Library (ds-*)](guides/component-library.md) — API reference for all 21 ds-* Angular components
+- [Styling ds-* Components](guides/styling-ds-components.md) — Tailwind-first convention: when to use utility classes vs. a CSS file
 - [Spartan → ds-* Migration](guides/spartan-to-ds-migration.md) — import mapping and pattern guide for migrating from Hlm* to ds-*
 - [Adding Spartan Components](guides/adding-spartan-components.md) — *(deprecated)* Spartan UI install guide; superseded by ds-*

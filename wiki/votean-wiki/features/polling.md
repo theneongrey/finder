@@ -31,6 +31,10 @@ Polls are the primary decision-making unit in Votean. Each poll belongs to a [Pr
 | 1 | Rating | Each option is rated 1–5 |
 | 2 | Date | Appointment scheduling — options encode date/time values (see [Appointment Polls](appointment-polls.md)) |
 
+The `OptionType` enum was later expanded (migration `ExpandOptionTypeAndStripDatePrefix`) with
+additional date sub-type variants (date-only vs. date+time). See
+[Appointment Polls](appointment-polls.md) for the full set and encoding.
+
 ## The Poll Detail Page
 
 A poll opens at a single route — `/polls/:id/:pollId` — where **results *is* the detail

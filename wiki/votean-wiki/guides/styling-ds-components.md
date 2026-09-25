@@ -26,7 +26,7 @@ express styling with Tailwind utility classes in the template, and only keep a
 
 This page defines that convention. It was established by the migration in
 [issue #270](https://github.com/theneongrey/finder/issues/270) (sub-issues #265–#267),
-which moved all 23 ds-* components to Tailwind-first styling.
+which moved every ds-* component to Tailwind-first styling.
 
 ## 1. Default: Tailwind utility classes in the template
 
@@ -51,8 +51,8 @@ Tailwind classes:
 ## 2. When a CSS file is acceptable
 
 A `.component.css` file is justified **only** for rules Tailwind cannot represent. After
-the migration, 13 of the 23 ds-* components keep a CSS file — each for one of these
-reasons, documented at the top of the file:
+the migration, 13 ds-* components keep a CSS file — each for one of these reasons,
+documented at the top of the file:
 
 | Pattern | Example component | Why it can't be Tailwind |
 |---|---|---|

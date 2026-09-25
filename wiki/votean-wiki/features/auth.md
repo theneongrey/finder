@@ -56,7 +56,7 @@ Authentication state is a cookie named `"login"` with 30-day sliding expiry. The
 
 ### Email Domain Validation
 
-`EmailValidationService` (singleton, `Business/Auth/Services/`) runs two checks at the top of
+`EmailValidationService` (singleton, `Business/Shared/Services/`) runs two checks at the top of
 `LoginService.RequestLoginMail` before any token is created — on failure it returns **403
 Forbidden** (the frontend already handles the `'forbidden'` state), and no email is sent:
 

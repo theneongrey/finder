@@ -11,10 +11,10 @@ stale_after: 2027-02-03
 sources:
   - title: app/finder/src/app
     resource: app/finder/src/app/
-  - title: project-detail.store.ts
-    resource: app/finder/src/app/features/project/_shared/data/project-detail.store.ts
-  - title: project-list.store.ts
-    resource: app/finder/src/app/features/project/_shared/data/project-list.store.ts
+  - title: poll-detail.store.ts
+    resource: app/finder/src/app/features/polls/_shared/data/poll-detail.store.ts
+  - title: poll-list.store.ts
+    resource: app/finder/src/app/features/polls/_shared/data/poll-list.store.ts
   - title: user.store.ts
     resource: app/finder/src/app/common/data/user.store.ts
 ---
@@ -49,9 +49,12 @@ Three NgRx Signals stores manage all application state. Components read from sto
 
 | Store | Scope | Manages |
 |-------|-------|---------|
-| `UserStore` | global (root) | Auth state, current user, language/date format |
-| `ProjectListStore` | global (root) | Projects list, standalone polls list, active overview tab |
-| `ProjectDetailStore` | global (root) | Current project detail, current poll detail |
+| `UserStore` | global (root) | Auth state, current user, language/date format; composes `withInAppNotificationsFeature` |
+| `PollListStore` | global (root) | Polls list, active overview tab |
+| `PollDetailStore` | global (root) | Current poll detail |
+
+`PollListStore` / `PollDetailStore` live in `features/polls/_shared/data/`; `UserStore` in
+`common/data/`. (These were the `Project*` stores before the 2026 poll-feature rename.)
 
 ### Store Pattern
 
@@ -97,7 +100,7 @@ Every component declares its own `imports: []` array. There is no shared module.
 
 ## Event-Driven Sharing Sync
 
-Sharing/permission changes are broadcast via `sharingEvents`. Both `ProjectListStore` and `ProjectDetailStore` subscribe to these events via `withEventReducer` and update their local state independently. This keeps both the overview and the detail view in sync without direct store-to-store communication.
+Sharing/permission changes are broadcast via `sharingEvents`. Both `PollListStore` and `PollDetailStore` subscribe to these events via `withEventReducer` and update their local state independently. This keeps both the overview and the detail view in sync without direct store-to-store communication.
 
 ## Internationalization
 

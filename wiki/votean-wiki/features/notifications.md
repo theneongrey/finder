@@ -38,11 +38,20 @@ the specialized senders:
 - `PermissionNotificationService` — sharing / permission events
 
 These orchestrators trigger the specialized senders (in-app writer + mail sender); the
-specialized services never depend back on the orchestrator. A `NotificationMailGuard` skips
-**email** for `Role.TestUser` accounts, but in-app notifications are still written — so test
-users (`testuser1@neongrey.de`, `testuser2@neongrey.de`) receive in-app notifications even
-though they never get email. Poll updates are debounced/batched through
-`PollUpdateNotificationQueue`.
+specialized services never depend back on the orchestrator. Two separate gates decide whether
+email goes out:
+
+- **TestUser skip** — the orchestrators themselves write the in-app notification first, then
+  `continue` past the mail send for `Role.TestUser` recipients (`if (recipient.Role ==
+  Role.TestUser)` in `ProjectNotificationService` / `PermissionNotificationService`). So test
+  users (`testuser1@neongrey.de`, `testuser2@neongrey.de`) get in-app notifications but never
+  email.
+- **Per-user settings gate** — `NotificationMailGuard.ShouldSendAsync` checks the recipient's
+  `PersonNotificationSetting` (falling back to the `NotificationSetting.DefaultValue`) for the
+  event's `NotificationKey`: `All` sends, `Off` suppresses, and `FavOnly` sends only when the
+  project is one of the recipient's favorites.
+
+Poll updates are debounced/batched through `PollUpdateNotificationQueue`.
 
 ## In-App Notifications
 
@@ -67,7 +76,8 @@ detail page auto-clears that poll's notifications.
 ## Notification Settings
 
 Users choose per-event email preferences, stored as `NotificationSetting` /
-`PersonNotificationSetting` rows with a `NotificationValue` (e.g. `on`, `off`, `favOnly`).
+`PersonNotificationSetting` rows with a `NotificationValue` — `all`, `favOnly`, or `off`
+(serialized camelCase). A missing per-user row falls back to the setting's `DefaultValue`.
 
 | Method | Route | Purpose |
 |---|---|---|

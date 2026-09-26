@@ -33,6 +33,16 @@ public class ProjectService
         _pollChangeNotifier = pollChangeNotifier;
     }
 
+    /// <summary>
+    /// True when the current user may manage (edit/delete options, close, …) the given project:
+    /// its creator, or a Maintainer/Owner permission holder. Requires the project's Creator and
+    /// Permissions (with Person) to be loaded.
+    /// </summary>
+    private bool CanManage(Entities.Project project) =>
+        project.Creator.Id == UserId ||
+        project.Permissions.Any(permission =>
+            permission.Person.Id == UserId && permission.PermissionType >= PermissionType.Maintainer);
+
     public async Task<List<Entities.Project>> GetAll()
     {
         return await _dbContext.Projects
@@ -305,7 +315,13 @@ public class ProjectService
         _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
             oldName, poll.Name, oldDescription, poll.Description);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+        // Name takes priority when both changed — it's the more visible edit.
+        var pollChange = oldName != poll.Name
+            ? new PollChangeInfo(PollChangeKind.PollRenamed, poll.Name)
+            : oldDescription != poll.Description
+                ? new PollChangeInfo(PollChangeKind.PollDescriptionUpdated)
+                : null;
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id, pollChange);
 
         return Result<Poll>.Success(poll);
     }
@@ -388,12 +404,26 @@ public class ProjectService
 
         var changedPoll = poll.Edited > sinceCutoff ? poll : null;
 
+        // Highlight only what changed strictly after the client's token (no overlap). Items re-sent
+        // solely to cover the boundary window are upserted but must not flash again on the client.
+        var strictSince = since?.ToUniversalTime() ?? DateTime.MinValue;
+        var highlightedOptionIds = changedOptions
+            .Where(o => o.Edited > strictSince || o.Votes.Any(v => v.Edited > strictSince))
+            .Select(o => SlugHelper.ToSlug(SlugHelper.OptionSlugName(o.Text), o.Id))
+            .ToList();
+        var highlightedCommentIds = changedComments
+            .Where(c => c.Edited > strictSince)
+            .Select(c => c.Id.ToString())
+            .ToList();
+
         return Result<PollDelta>.Success(new PollDelta(
             changedPoll,
             changedOptions,
             changedComments,
             poll.Options,
             poll.Comments,
+            highlightedOptionIds,
+            highlightedCommentIds,
             syncToken));
     }
 
@@ -451,28 +481,37 @@ public class ProjectService
         _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, creator.Name ?? "Unknown",
             creator.Id);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, creator.Id);
+        await _pollChangeNotifier.PollChanged(poll.Id, creator.Id,
+            new PollChangeInfo(PollChangeKind.OptionAdded, option.Text));
 
         return Result<Option>.Success(option);
     }
 
     public async Task<Result<Option>> UpdateOption(string slug, UpdateOptionRequest request)
     {
+        // View-scoped lookup (404 when unknown/hidden), then a manage check below (403 when the
+        // user may see the poll but not edit it) — so permission failures aren't masked as 404.
         var option = await _dbContext.Options
-            .Include(o => o.Poll)
+            .Include(o => o.Poll).ThenInclude(p => p.Project).ThenInclude(pr => pr.Creator)
+            .Include(o => o.Poll).ThenInclude(p => p.Project).ThenInclude(pr => pr.Permissions)
+                .ThenInclude(perm => perm.Person)
             .Include(o => o.Meta)
             .Include(o => o.Votes)
             .ThenInclude(v => v.Person)
-            .Where(o => o.Id == SlugHelper.ExtractId(slug) && (o.Poll.Project.Creator.Id == UserId ||
-                                                               o.Poll.Project.Permissions.Any(permission =>
-                                                                   permission.Person.Id == UserId &&
-                                                                   permission.PermissionType >=
-                                                                   PermissionType.Maintainer)))
+            .Where(o => o.Id == SlugHelper.ExtractId(slug) && (
+                o.Poll.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
+                o.Poll.Project.Creator.Id == UserId ||
+                o.Poll.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
             .FirstOrDefaultAsync();
 
         if (option is null)
         {
             return Result<Option>.Fail(404);
+        }
+
+        if (!CanManage(option.Poll.Project))
+        {
+            return Result<Option>.Fail(403);
         }
 
         if (option.Poll.CloseDate.HasValue && option.Poll.CloseDate <= DateTime.UtcNow)
@@ -483,8 +522,12 @@ public class ProjectService
         var cleanText = request.Text.StripHtml();
         var cleanDescription = request.Description.StripHtml();
 
+        var oldText = option.Text;
+        var oldDescription = option.Description;
         var textChanged = option.Text != cleanText;
         var descriptionChanged = option.Description != cleanDescription;
+        var descriptionAdded = string.IsNullOrWhiteSpace(oldDescription) &&
+                               !string.IsNullOrWhiteSpace(cleanDescription);
 
         option.Text = cleanText;
         option.Description = cleanDescription;
@@ -539,7 +582,15 @@ public class ProjectService
             _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown",
                 updateActor.Payload!.Id);
 
-            await _pollChangeNotifier.PollChanged(option.Poll.Id, updateActor.Payload!.Id);
+            // Classify the edit so present clients see a specific message. A rename is the most
+            // salient change; otherwise call out a freshly-added description; else it's a generic
+            // update (description reworded, link/image meta changed, …).
+            var optionChange = textChanged
+                ? new PollChangeInfo(PollChangeKind.OptionRenamed, cleanText)
+                : descriptionAdded
+                    ? new PollChangeInfo(PollChangeKind.OptionDescribed, oldText)
+                    : new PollChangeInfo(PollChangeKind.OptionUpdated, oldText);
+            await _pollChangeNotifier.PollChanged(option.Poll.Id, updateActor.Payload!.Id, optionChange);
         }
 
         return Result<Option>.Success(option);
@@ -547,18 +598,26 @@ public class ProjectService
 
     public async Task<Result> DeleteOption(string slug)
     {
+        // Scope the lookup to polls the user can *see* so a genuinely unknown/hidden option is a 404;
+        // the manage check below then distinguishes "you may view but not delete" as a 403.
         var option = await _dbContext.Options
-            .Include(o => o.Poll)
-            .Where(o => o.Id == SlugHelper.ExtractId(slug) && (o.Poll.Project.Creator.Id == UserId ||
-                                                               o.Poll.Project.Permissions.Any(permission =>
-                                                                   permission.Person.Id == UserId &&
-                                                                   permission.PermissionType >=
-                                                                   PermissionType.Maintainer)))
+            .Include(o => o.Poll).ThenInclude(p => p.Project).ThenInclude(pr => pr.Creator)
+            .Include(o => o.Poll).ThenInclude(p => p.Project).ThenInclude(pr => pr.Permissions)
+                .ThenInclude(perm => perm.Person)
+            .Where(o => o.Id == SlugHelper.ExtractId(slug) && (
+                o.Poll.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
+                o.Poll.Project.Creator.Id == UserId ||
+                o.Poll.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
             .FirstOrDefaultAsync();
 
         if (option is null)
         {
             return Result.Fail(404);
+        }
+
+        if (!CanManage(option.Poll.Project))
+        {
+            return Result.Fail(403);
         }
 
         if (option.Poll.CloseDate.HasValue && option.Poll.CloseDate <= DateTime.UtcNow)
@@ -576,7 +635,8 @@ public class ProjectService
         _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown",
             deleteActor.Payload!.Id);
 
-        await _pollChangeNotifier.PollChanged(pollId, deleteActor.Payload!.Id);
+        await _pollChangeNotifier.PollChanged(pollId, deleteActor.Payload!.Id,
+            new PollChangeInfo(PollChangeKind.OptionRemoved, optionText));
 
         return Result.Success();
     }
@@ -670,7 +730,10 @@ public class ProjectService
         await _projectNotificationService.SendNewCommentNotificationsAsync(
             recipients, user.Name ?? "Unknown", poll.Project, poll, comment.Content);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, user.Id);
+        var commentChange = option is not null
+            ? new PollChangeInfo(PollChangeKind.CommentAddedOption, option.Text)
+            : new PollChangeInfo(PollChangeKind.CommentAdded);
+        await _pollChangeNotifier.PollChanged(poll.Id, user.Id, commentChange);
 
         return Result<Comment>.Success(comment);
     }
@@ -724,7 +787,8 @@ public class ProjectService
         await _projectNotificationService.SendPollClosedNotificationsAsync(
             closeRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id,
+            new PollChangeInfo(PollChangeKind.PollClosed));
 
         return Result<Poll>.Success(poll);
     }
@@ -778,7 +842,8 @@ public class ProjectService
         await _projectNotificationService.SendPollReopenedNotificationsAsync(
             reopenRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id,
+            new PollChangeInfo(PollChangeKind.PollReopened));
 
         return Result<Poll>.Success(poll);
     }

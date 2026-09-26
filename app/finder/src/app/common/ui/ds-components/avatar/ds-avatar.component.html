@@ -1,5 +1,11 @@
-<div class="relative inline-flex shrink-0">
+<div
+    class="relative inline-flex h-fit shrink-0"
+    (pointerenter)="onPointerEnter()"
+    (pointerleave)="onPointerLeave()"
+    (click)="onClick()"
+>
     <hlm-avatar
+        #circle
         class="ds-avatar-circle box-border shrink-0 rounded-[var(--radius-circle)]!"
         [class]="borderClass()"
         [style.width.px]="px()"
@@ -21,5 +27,15 @@
         >
             <ds-icon name="check" [size]="7" color="#fff" />
         </span>
+    }
+    @if (tooltip() && tooltipOpen()) {
+        <span
+            class="ds-avatar-tooltip"
+            [class.is-above]="tipPlacement() === 'above'"
+            [style.top.px]="tipTop()"
+            [style.left.px]="tipLeft()"
+            role="tooltip"
+            >{{ tooltip() }}</span
+        >
     }
 </div>

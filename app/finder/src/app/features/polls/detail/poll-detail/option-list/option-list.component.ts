@@ -13,6 +13,8 @@ import {
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionType } from '@common/models/option-type.model';
+import { OptionChangeKind } from '../../../_shared/data/poll-detail.store';
+import { extractSlugId } from '../../../_shared/utils/slug.utils';
 import {
     isDateOptionType,
     optionTypeToDateType,
@@ -39,8 +41,10 @@ export class OptionListComponent {
     optionType = input(OptionType.YesNo);
     hideResults = input(false);
     isClosed = input(false);
-    /** Ids of options changed by a recent remote update — briefly highlighted. */
-    changedOptionIds = input<string[]>([]);
+    /** Whether the current user may edit/delete options (Maintainer+); gates the per-card edit UI. */
+    canManage = input(false);
+    /** Options changed by a recent remote update, keyed by id → change kind (added/updated/removed). */
+    changedOptions = input<Record<string, OptionChangeKind>>({});
 
     sort = input<SortMode>('top');
 
@@ -58,8 +62,14 @@ export class OptionListComponent {
     editStart = output<{ optionId: string }>();
     editEnd = output<{ optionId: string }>();
 
-    isChanged(option: OptionDetail): boolean {
-        return this.changedOptionIds().includes(option.id);
+    changeKind(option: OptionDetail): OptionChangeKind | undefined {
+        return this.changedOptions()[option.id];
+    }
+
+    /** Track by the stable slug id so a title edit updates the card in place (the full slug, which
+     *  encodes the title, changes on rename and would otherwise remount the card). */
+    trackOption(option: OptionDetail): string {
+        return extractSlugId(option.id);
     }
 
     private readonly commentCountByOption = computed(() => {

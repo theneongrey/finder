@@ -13,7 +13,7 @@
     padding: 0 4px;
     border-radius: 99px;
     background: var(--accent);
-    color: var(--accent-fg);
+    color: var(--white);
     font-size: 10px;
     font-weight: var(--weight-bold);
     font-family: var(--font-body);
@@ -34,6 +34,14 @@
     font-family: var(--font-body);
     font-size: var(--fs-ui);
     font-weight: var(--weight-semibold);
+}
+
+/* Cap the notification list so a long history stays scrollable on its own and the
+   Settings/Logout footer below it remains visible without scrolling the whole menu. */
+.notifications-panel__list {
+    max-height: 300px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .notifications-panel__item {

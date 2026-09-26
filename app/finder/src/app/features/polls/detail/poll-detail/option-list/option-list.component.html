@@ -2,8 +2,12 @@
     class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,430px),1fr))] gap-4"
     data-testid="results-option-list"
 >
-    @for (option of sortedOptions(); track option.id) {
-        <div [class.poll-item-changed]="isChanged(option)">
+    @for (option of sortedOptions(); track trackOption(option)) {
+        <div
+            [class.poll-item-added]="changeKind(option) === 'added'"
+            [class.poll-item-updated]="changeKind(option) === 'updated'"
+            [class.poll-item-removed]="changeKind(option) === 'removed'"
+        >
             @if (isDateType()) {
                 <app-option-card-date
                     [option]="option"
@@ -26,6 +30,7 @@
                     [projectId]="projectId()"
                     [pollId]="pollId()"
                     [hideResults]="hideResults()"
+                    [canManage]="canManage()"
                     [pollType]="
                         optionType() === OptionType.Rating ? 'rating' : 'yesno'
                     "

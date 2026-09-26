@@ -58,6 +58,8 @@ export class OptionCardComponent {
     pollId = input('');
     hideResults = input(false);
     pollType = input<'yesno' | 'rating'>('yesno');
+    /** Whether the current user may edit/delete this option (Maintainer+); gates the edit affordance. */
+    canManage = input(false);
 
     commentsClick = output<void>();
     startVote = output<{ optionId: string; revote: boolean }>();

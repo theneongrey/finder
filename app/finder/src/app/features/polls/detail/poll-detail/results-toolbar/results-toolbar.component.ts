@@ -30,17 +30,18 @@ export class ResultsToolbarComponent {
     canManage = input(false);
     isClosed = input(false);
     commentsHidden = input(false);
-    refreshing = input(false);
     presence = input<PollParticipant[]>([]);
     selfId = input<string | undefined>(undefined);
+    /** Current sort label, shown in the overflow menu's sort toggle. */
+    sortLabel = input('');
 
     startVote = output<void>();
     addOption = output<void>();
     closePoll = output<void>();
     reopenPoll = output<void>();
     showComments = output<void>();
-    refresh = output<void>();
     share = output<void>();
+    toggleSort = output<void>();
 
     protected readonly showCloseConfirm = signal(false);
 
@@ -54,14 +55,19 @@ export class ResultsToolbarComponent {
     /** Overflow menu (kebab) shown in place of the standalone close button. */
     protected readonly menuItems = computed<MenuItem[]>(() => {
         const items: MenuItem[] = [];
-        if (this.isClosed()) {
-            return items;
-        }
-        if (this.canManage()) {
+        // Sort toggle: on mobile this menu is the only place to change the ordering (the desktop
+        // header carries its own sort button). Always available, including on closed polls.
+        items.push({
+            icon: 'sort',
+            label: this.sortLabel(),
+            onClick: () => this.toggleSort.emit(),
+        });
+        if (!this.isClosed() && this.canManage()) {
             items.push({
                 icon: 'circle-minus',
                 label: this.endPollLabel(),
                 danger: true,
+                separatorBefore: true,
                 onClick: () => this.showCloseConfirm.set(true),
             });
         }

@@ -58,7 +58,8 @@ public class VoteService
 
         await _dbContext.SaveChangesAsync();
 
-        await _pollChangeNotifier.PollChanged(option.Poll.Id, UserId);
+        await _pollChangeNotifier.PollChanged(option.Poll.Id, UserId,
+            new PollChangeInfo(PollChangeKind.VoteCast));
 
         return Result.Success();
     }

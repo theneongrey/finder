@@ -22,5 +22,9 @@ export interface PollDelta {
     comments: Comment[];
     currentOptionIds: string[];
     currentCommentIds: string[];
+    /** Ids of options/comments changed strictly after the token — only these are flashed. `options`
+     *  and `comments` may be a superset (re-sent to cover the boundary overlap) and are upserted. */
+    highlightedOptionIds: string[];
+    highlightedCommentIds: string[];
     syncToken: string;
 }

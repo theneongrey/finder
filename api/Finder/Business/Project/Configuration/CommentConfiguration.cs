@@ -21,6 +21,7 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder.HasOne(p => p.Option)
             .WithMany()
             .HasForeignKey(p => p.OptionId)
-            .IsRequired(false);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

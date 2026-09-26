@@ -36,6 +36,15 @@ export class PresenceAvatarsComponent {
         () => this.others().length - this.shown().length,
     );
 
+    /** Names of the participants collapsed into the "+N" bubble, for its tooltip. */
+    protected readonly extraNames = computed(() =>
+        this.others()
+            .slice(this.max())
+            .map((p) => p.name)
+            .filter((name): name is string => !!name)
+            .join(', '),
+    );
+
     protected avatarUser(participant: PollParticipant): {
         name: string | undefined;
     } {

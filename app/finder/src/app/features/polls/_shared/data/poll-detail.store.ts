@@ -24,9 +24,18 @@ import { sharingEvents } from './sharing.events';
 import { LoggerService } from '@common/services/logger.service';
 import { OptionType } from '@common/models/option-type.model';
 import { PollDelta } from '../models/poll-delta.model';
+import { extractSlugId } from '../utils/slug.utils';
 
-// How long a changed option/comment stays highlighted after a remote update.
-const HIGHLIGHT_DURATION_MS = 2500;
+// How long a changed option/comment stays highlighted after a remote update. Kept in sync
+// with the flash animation durations in option-list.component.css / comments-section.component.css.
+const HIGHLIGHT_DURATION_MS = 5000;
+
+/**
+ * How a remote delta touched an option, so the UI can colour the flash:
+ * green (added), blue (updated), red (removed). Removed options linger with the
+ * red flash for HIGHLIGHT_DURATION_MS before they are dropped from the list.
+ */
+export type OptionChangeKind = 'added' | 'updated' | 'removed';
 
 export const PollDetailStore = signalStore(
     { providedIn: 'root' },
@@ -40,7 +49,7 @@ export const PollDetailStore = signalStore(
         // changed by the most recent remote delta (drive the highlight flash), and the ids
         // of options the local user is editing (their remote changes are deferred).
         syncToken: undefined as string | undefined,
-        changedOptionIds: [] as string[],
+        changedOptions: {} as Record<string, OptionChangeKind>,
         changedCommentIds: [] as string[],
         editingOptionIds: [] as string[],
     }),
@@ -591,19 +600,73 @@ export const PollDetailStore = signalStore(
         // Remote changes to an option the local user is mid-editing are stashed here and
         // applied once the edit finishes, so in-progress input is never clobbered.
         const deferredOptions = new Map<string, OptionDetail>();
-        let highlightTimer: ReturnType<typeof setTimeout> | undefined;
 
-        const scheduleHighlightClear = () => {
-            if (highlightTimer) {
-                clearTimeout(highlightTimer);
+        // Each highlighted item expires on its own timer, so a fresh change never re-extends
+        // the flash of an item that changed earlier (e.g. adding a card must not re-flash the
+        // cards edited just before it). Keys are 'opt:<id>' / 'cmt:<id>'.
+        const highlightTimers = new Map<
+            string,
+            ReturnType<typeof setTimeout>
+        >();
+
+        const clearHighlightTimers = () => {
+            for (const timer of highlightTimers.values()) {
+                clearTimeout(timer);
             }
-            highlightTimer = setTimeout(() => {
-                patchState(store, {
-                    changedOptionIds: [],
-                    changedCommentIds: [],
-                });
-                highlightTimer = undefined;
-            }, HIGHLIGHT_DURATION_MS);
+            highlightTimers.clear();
+        };
+
+        const cancelHighlightTimer = (key: string) => {
+            const timer = highlightTimers.get(key);
+            if (timer) {
+                clearTimeout(timer);
+                highlightTimers.delete(key);
+            }
+        };
+
+        // Drop an option's highlight once its flash has run its course; a 'removed' option is
+        // only actually dropped from the list now (it lingered so the red flash could play).
+        const expireOption = (id: string) => {
+            const changes = { ...untracked(store.changedOptions) };
+            const kind = changes[id];
+            if (kind === undefined) {
+                return;
+            }
+            delete changes[id];
+            const poll = untracked(store.currentPoll);
+            patchState(store, {
+                changedOptions: changes,
+                ...(kind === 'removed' && poll
+                    ? {
+                          currentPoll: {
+                              ...poll,
+                              options: poll.options.filter((o) => o.id !== id),
+                          },
+                      }
+                    : {}),
+            });
+        };
+
+        const expireComment = (id: string) => {
+            patchState(store, {
+                changedCommentIds: untracked(store.changedCommentIds).filter(
+                    (c) => c !== id,
+                ),
+            });
+        };
+
+        const scheduleHighlightExpiry = (key: string, onExpire: () => void) => {
+            const existing = highlightTimers.get(key);
+            if (existing) {
+                clearTimeout(existing);
+            }
+            highlightTimers.set(
+                key,
+                setTimeout(() => {
+                    highlightTimers.delete(key);
+                    onExpire();
+                }, HIGHLIGHT_DURATION_MS),
+            );
         };
 
         const dedupe = (ids: string[]) => Array.from(new Set(ids));
@@ -624,31 +687,60 @@ export const PollDetailStore = signalStore(
             }
 
             const editing = untracked(store.editingOptionIds);
-            const changedOptionIds: string[] = [];
+            const optionChanges: Record<string, OptionChangeKind> = {};
             let options = [...poll.options];
 
+            // Only ids changed strictly after the token flash; the rest of delta.options may be
+            // re-sent to cover the boundary overlap and must be upserted without re-highlighting.
+            const highlightOptionIds = new Set(delta.highlightedOptionIds);
+
             for (const option of delta.options) {
-                if (editing.includes(option.id)) {
+                // Identity is the trailing slug id, not the whole slug: the slug encodes the title,
+                // so a rename yields a new slug for the same option. Matching on the stable id keeps
+                // a rename a single in-place update instead of an add + delete.
+                const stableId = extractSlugId(option.id);
+                if (editing.some((id) => extractSlugId(id) === stableId)) {
                     // Defer — apply when the local edit completes (see stopEditingOption).
-                    deferredOptions.set(option.id, option);
+                    deferredOptions.set(stableId, option);
                     continue;
                 }
-                const index = options.findIndex((o) => o.id === option.id);
-                if (index === -1) {
+                const index = options.findIndex(
+                    (o) => extractSlugId(o.id) === stableId,
+                );
+                const isNew = index === -1;
+                if (isNew) {
                     options.push(option);
                 } else {
                     options[index] = option;
                 }
-                changedOptionIds.push(option.id);
+                if (highlightOptionIds.has(option.id)) {
+                    optionChanges[option.id] = isNew ? 'added' : 'updated';
+                }
             }
 
-            // Reconcile hard-deletes: drop options absent from the current id-set, but keep
-            // any the user is editing (their fate is resolved when the edit ends).
+            // Reconcile hard-deletes: options absent from the current id-set were removed
+            // remotely. On a live update we keep them on screen (flagged 'removed') so they
+            // get the red flash; the highlight-clear timer drops them once it fires. On the
+            // baseline they're reconciled away silently. Editing options are exempt either way.
             const keepOptionIds = new Set(delta.currentOptionIds);
-            options = options.filter(
-                (o) => keepOptionIds.has(o.id) || editing.includes(o.id),
-            );
+            const removedIds = options
+                .filter(
+                    (o) =>
+                        !keepOptionIds.has(o.id) &&
+                        !editing.some(
+                            (id) => extractSlugId(id) === extractSlugId(o.id),
+                        ),
+                )
+                .map((o) => o.id);
+            if (isBaseline) {
+                options = options.filter((o) => !removedIds.includes(o.id));
+            } else {
+                for (const id of removedIds) {
+                    optionChanges[id] = 'removed';
+                }
+            }
 
+            const highlightCommentIds = new Set(delta.highlightedCommentIds);
             const changedCommentIds: string[] = [];
             let comments = [...poll.comments];
             for (const comment of delta.comments) {
@@ -658,7 +750,9 @@ export const PollDetailStore = signalStore(
                 } else {
                     comments[index] = comment;
                 }
-                changedCommentIds.push(comment.id);
+                if (highlightCommentIds.has(comment.id)) {
+                    changedCommentIds.push(comment.id);
+                }
             }
             const keepCommentIds = new Set(delta.currentCommentIds);
             comments = comments.filter((c) => keepCommentIds.has(c.id));
@@ -673,15 +767,38 @@ export const PollDetailStore = signalStore(
                   }
                 : {};
 
+            // A newly added card takes the spotlight: it should flash on its own, without the
+            // cards edited moments earlier still glowing. So when this delta adds an option, drop
+            // the prior 'updated'/'added' highlights (and cancel their timers). Pending 'removed'
+            // entries are preserved — they must still be dropped from the list when they expire.
+            const hasAdd = Object.values(optionChanges).some(
+                (kind) => kind === 'added',
+            );
+            let nextChangedOptions: Record<string, OptionChangeKind>;
+            if (isBaseline) {
+                nextChangedOptions = untracked(store.changedOptions);
+            } else if (hasAdd) {
+                const prior = untracked(store.changedOptions);
+                const preserved: Record<string, OptionChangeKind> = {};
+                for (const id of Object.keys(prior)) {
+                    if (prior[id] === 'removed') {
+                        preserved[id] = 'removed';
+                    } else if (!(id in optionChanges)) {
+                        cancelHighlightTimer(`opt:${id}`);
+                    }
+                }
+                nextChangedOptions = { ...preserved, ...optionChanges };
+            } else {
+                nextChangedOptions = {
+                    ...untracked(store.changedOptions),
+                    ...optionChanges,
+                };
+            }
+
             patchState(store, {
                 currentPoll: { ...poll, ...pollFields, options, comments },
                 syncToken: delta.syncToken,
-                changedOptionIds: isBaseline
-                    ? untracked(store.changedOptionIds)
-                    : dedupe([
-                          ...untracked(store.changedOptionIds),
-                          ...changedOptionIds,
-                      ]),
+                changedOptions: nextChangedOptions,
                 changedCommentIds: isBaseline
                     ? untracked(store.changedCommentIds)
                     : dedupe([
@@ -690,11 +807,17 @@ export const PollDetailStore = signalStore(
                       ]),
             });
 
-            if (
-                !isBaseline &&
-                (changedOptionIds.length || changedCommentIds.length)
-            ) {
-                scheduleHighlightClear();
+            if (!isBaseline) {
+                for (const id of Object.keys(optionChanges)) {
+                    scheduleHighlightExpiry(`opt:${id}`, () =>
+                        expireOption(id),
+                    );
+                }
+                for (const id of changedCommentIds) {
+                    scheduleHighlightExpiry(`cmt:${id}`, () =>
+                        expireComment(id),
+                    );
+                }
             }
         };
 
@@ -733,48 +856,82 @@ export const PollDetailStore = signalStore(
             },
 
             stopEditingOption(optionId: string) {
+                const stableId = extractSlugId(optionId);
                 patchState(store, {
                     editingOptionIds: untracked(store.editingOptionIds).filter(
                         (id) => id !== optionId,
                     ),
                 });
 
-                const deferred = deferredOptions.get(optionId);
+                // Deferred remote changes are keyed by stable id (a remote rename would arrive
+                // under a different slug), so resolve them by that too.
+                const deferred = deferredOptions.get(stableId);
                 if (!deferred) {
                     return;
                 }
-                deferredOptions.delete(optionId);
+                deferredOptions.delete(stableId);
 
                 const poll = untracked(store.currentPoll);
                 if (!poll) {
                     return;
                 }
-                const exists = poll.options.some((o) => o.id === optionId);
+                const exists = poll.options.some(
+                    (o) => extractSlugId(o.id) === stableId,
+                );
                 const options = exists
                     ? poll.options.map((o) =>
-                          o.id === optionId ? deferred : o,
+                          extractSlugId(o.id) === stableId ? deferred : o,
                       )
                     : [...poll.options, deferred];
+                // The deferred change may carry a new slug (remote rename), so flash under its id.
+                const highlightId = deferred.id;
                 patchState(store, {
                     currentPoll: { ...poll, options },
-                    changedOptionIds: dedupe([
-                        ...untracked(store.changedOptionIds),
-                        optionId,
-                    ]),
+                    changedOptions: {
+                        ...untracked(store.changedOptions),
+                        [highlightId]: exists ? 'updated' : 'added',
+                    },
                 });
-                scheduleHighlightClear();
+                scheduleHighlightExpiry(`opt:${highlightId}`, () =>
+                    expireOption(highlightId),
+                );
+            },
+
+            // Clear the option flashes (e.g. when the local user adds an option): a fresh add
+            // takes the spotlight, so cards edited moments earlier shouldn't keep glowing. Any
+            // options still lingering for their 'removed' flash are dropped now. Comment
+            // highlights are left untouched.
+            clearOptionHighlights() {
+                const changes = untracked(store.changedOptions);
+                const removedIds = Object.keys(changes).filter(
+                    (id) => changes[id] === 'removed',
+                );
+                for (const id of Object.keys(changes)) {
+                    cancelHighlightTimer(`opt:${id}`);
+                }
+                const poll = untracked(store.currentPoll);
+                patchState(store, {
+                    changedOptions: {},
+                    ...(poll && removedIds.length
+                        ? {
+                              currentPoll: {
+                                  ...poll,
+                                  options: poll.options.filter(
+                                      (o) => !removedIds.includes(o.id),
+                                  ),
+                              },
+                          }
+                        : {}),
+                });
             },
 
             // Reset realtime state when leaving a poll (see PollDetailComponent teardown).
             resetRealtimeState() {
-                if (highlightTimer) {
-                    clearTimeout(highlightTimer);
-                    highlightTimer = undefined;
-                }
+                clearHighlightTimers();
                 deferredOptions.clear();
                 patchState(store, {
                     syncToken: undefined,
-                    changedOptionIds: [],
+                    changedOptions: {},
                     changedCommentIds: [],
                     editingOptionIds: [],
                 });

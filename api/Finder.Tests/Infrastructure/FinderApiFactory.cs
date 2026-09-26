@@ -280,6 +280,25 @@ public class FinderApiFactory : WebApplicationFactory<Program>
         return vote;
     }
 
+    /// <summary>
+    /// Rewrites the Edited timestamp of a poll and all its options/comments/votes directly
+    /// (bypassing the SaveChanges auto-stamp) so delta tests can establish a stable baseline
+    /// in the past before performing a mutation.
+    /// </summary>
+    public async Task BackdatePollActivityAsync(string pollId, DateTime edited)
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await db.Polls.Where(p => p.Id == pollId)
+            .ExecuteUpdateAsync(s => s.SetProperty(p => p.Edited, edited));
+        await db.Options.Where(o => o.Poll.Id == pollId)
+            .ExecuteUpdateAsync(s => s.SetProperty(o => o.Edited, edited));
+        await db.Comments.Where(c => c.Poll.Id == pollId)
+            .ExecuteUpdateAsync(s => s.SetProperty(c => c.Edited, edited));
+        await db.Votes.Where(v => v.Option.Poll.Id == pollId)
+            .ExecuteUpdateAsync(s => s.SetProperty(v => v.Edited, edited));
+    }
+
     public async Task SeedPermission(string projectId, Guid userId, PermissionType permissionType)
     {
         using var scope = Services.CreateScope();

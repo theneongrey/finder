@@ -1,5 +1,5 @@
 <div
-    class="sticky top-0 z-[9] flex items-center gap-2 border-b border-[color:var(--border-hairline)] bg-[var(--bg-sheet)] px-4 py-2.5 min-[680px]:top-[60px] @min-[900px]/detail:gap-2.5 @min-[900px]/detail:px-6 @min-[900px]/detail:py-3.5"
+    class="sticky top-[var(--title-bar-offset)] z-[9] flex items-center gap-2 border-b border-[color:var(--border-hairline)] bg-[var(--bg-sheet)] px-4 py-2.5 transition-[top] duration-[var(--duration-fast)] ease-[var(--ease-standard)] @min-[900px]/detail:gap-2.5 @min-[900px]/detail:px-6 @min-[900px]/detail:py-3.5"
     data-testid="results-toolbar"
 >
     @if (!isClosed()) {

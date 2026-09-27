@@ -22,4 +22,15 @@
     --screen-padding: 22px;
     --card-padding: 20px;
     --card-padding-tight: 16px;
+
+    /* Space the title bar currently occupies at the top edge. Sticky page bars
+       offset by this so they slide below it while it's shown. */
+    --title-bar-offset: 60px;
+}
+
+/* The title bar only hides on mobile (see title-bar.component.css). */
+@media (max-width: 679.98px) {
+    :root.title-bar-hidden {
+        --title-bar-offset: 0px;
+    }
 }

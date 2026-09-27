@@ -89,14 +89,15 @@
         <!-- Reduced bar: title + comment button. Sticks under the toolbar on scroll so the
              title and comments stay reachable once the description/meta scroll away. -->
         <div
-            class="sticky top-[54px] z-[8] -mx-4 flex items-center gap-1.5 bg-[var(--bg-sheet)] px-4 py-2 min-[680px]:top-[114px]"
+            #stickyBar
+            class="sticky top-[calc(var(--title-bar-offset)+54px)] z-[8] -mx-4 flex items-center gap-1.5 bg-[var(--bg-sheet)] px-4 py-2 transition-[top] duration-[var(--duration-fast)] ease-[var(--ease-standard)]"
         >
             <h1
                 class="min-w-0 flex-1 truncate text-[23px] leading-[1.15] font-bold tracking-[-0.5px] text-[color:var(--text-primary)]"
             >
                 {{ name() }}
             </h1>
-            @if (canManage()) {
+            @if (canManage() && !stuck()) {
                 <ds-button
                     variant="ghost"
                     [size]="30"

@@ -110,6 +110,11 @@
             "pollSharedSub": "Alguien te añadió a una de sus encuestas.",
             "pollUpdated": "Encuesta actualizada",
             "pollUpdatedSub": "Las opciones o la pregunta de una encuesta cambiaron."
+        },
+        "feedback": {
+            "title": "Comentarios",
+            "show": "Mostrar botón de comentarios",
+            "showSub": "Pequeña pestaña en el borde de la pantalla para informar de errores e ideas."
         }
     },
     "auth": {
@@ -808,5 +813,24 @@
         "shareNudge": "¿Falta alguien? Comparte el enlace para que todos puedan participar.",
         "votedState": "votado",
         "openState": "pendiente"
+    },
+    "feedback": {
+        "tab": "Feedback",
+        "title": "Enviar comentarios",
+        "close": "Cerrar",
+        "types": {
+            "Bug": "Error",
+            "Idea": "Idea",
+            "Other": "Otro"
+        },
+        "placeholder": "¿Qué quieres contarnos?",
+        "disclosure": "Junto con tu mensaje se envían: el tipo, tu comentario, tu nombre y correo electrónico ({{email}}), la fecha y hora, y la página actual ({{page}}).",
+        "cancel": "Cancelar",
+        "send": "Enviar",
+        "hide": "Ocultar botón",
+        "sent": "¡Gracias! Tus comentarios se han enviado.",
+        "sendError": "No se pudieron enviar tus comentarios. Inténtalo de nuevo.",
+        "hidden": "Botón de comentarios oculto. Puedes volver a mostrarlo en los ajustes.",
+        "preferenceError": "No se pudo guardar el ajuste. Inténtalo de nuevo."
     }
 }

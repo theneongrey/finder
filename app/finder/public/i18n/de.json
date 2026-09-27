@@ -110,6 +110,11 @@
             "pollSharedSub": "Jemand hat dich zu einer Umfrage hinzugefügt.",
             "pollUpdated": "Umfrage aktualisiert",
             "pollUpdatedSub": "Optionen oder Frage in einer Umfrage haben sich geändert."
+        },
+        "feedback": {
+            "title": "Feedback",
+            "show": "Feedback-Button anzeigen",
+            "showSub": "Kleiner Feedback-Tab am Bildschirmrand zum Melden von Fehlern und Ideen."
         }
     },
     "auth": {
@@ -808,5 +813,24 @@
         "shareNudge": "Fehlt noch jemand? Teile den Link, damit alle mitentscheiden können.",
         "votedState": "abgestimmt",
         "openState": "offen"
+    },
+    "feedback": {
+        "tab": "Feedback",
+        "title": "Feedback geben",
+        "close": "Schließen",
+        "types": {
+            "Bug": "Bug",
+            "Idea": "Idee",
+            "Other": "Sonstiges"
+        },
+        "placeholder": "Was möchtest du uns sagen?",
+        "disclosure": "Mit deiner Nachricht werden gesendet: der Typ, dein Kommentar, dein Name und deine E-Mail ({{email}}), Datum und Uhrzeit sowie die aktuelle Seite ({{page}}).",
+        "cancel": "Abbrechen",
+        "send": "Absenden",
+        "hide": "Button ausblenden",
+        "sent": "Danke! Dein Feedback wurde gesendet.",
+        "sendError": "Dein Feedback konnte nicht gesendet werden. Bitte versuche es erneut.",
+        "hidden": "Feedback-Button ausgeblendet. Du kannst ihn in den Einstellungen wieder einblenden.",
+        "preferenceError": "Die Einstellung konnte nicht gespeichert werden. Bitte versuche es erneut."
     }
 }

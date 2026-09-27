@@ -46,6 +46,21 @@ Each user stores a language preference (`en`, `de`, `es`). This is set in the us
 
 Users can update their display name and language via `PUT /api/user`. An optional profile picture URL can be stored (sourced externally).
 
+## Blocking
+
+`Person.IsBlocked` (with `BlockedAt`) locks an account permanently. It is currently set only by
+the [feedback](../features/feedback.md#limits-and-blocking) protection, after a third scripted
+submission burst. A blocked person:
+
+- gets `403` from `POST /api/auth/requestLoginMail`, and no mail is sent;
+- can't log in with an existing token or code: the token is deleted and the request returns `401`;
+- loses an existing session. The cookie's `OnValidatePrincipal` asks `BlockedUserCache` (a
+  1-minute `IMemoryCache` entry per person, invalidated when the block is set) and rejects the
+  principal, so the next request is anonymous. An open SignalR connection stays up until it
+  reconnects.
+
+There is no admin UI yet; unblocking is a DB change.
+
 ## Per-Project Roles
 
 System roles are separate from project roles. A user's access to a specific project is controlled by a [Permission](permission.md) record (Voter, Maintainer, Owner) or by being the project Creator.
@@ -55,4 +70,4 @@ System roles are separate from project roles. A user's access to a specific proj
 - [Authentication](../features/auth.md) — how users log in
 - [Login Token](login-token.md) — the record created during the login flow
 - [Permission](permission.md) — per-project role assignment
-- [Feedback](../features/feedback.md) — per-person `FeedbackPreference` (feedback tab hidden or shown)
+- [Feedback](../features/feedback.md) — per-person `FeedbackPreference` (tab hidden, lock, strikes) and the source of blocks

@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-27 — ingest: feedback digest, limits and blocking (stacked on PR #457)
+Pages touched: features/feedback.md (stored submissions, daily 17:00 Europe/Berlin digest via FeedbackDigestWorker, new endpoint codes, Limits and blocking section, tests), concepts/user.md (Blocking section: IsBlocked, login refusal, cookie rejection via BlockedUserCache), architecture/backend.md (OnValidatePrincipal block check, Background Work and Time section)
+
+---
+
 ## 2026-09-27 — ingest: feedback review fixes (PR #457)
 Pages touched: features/feedback.md (hide toast after confirmed save, ordered saves, Settings self-load + fallback, focus management and panel-scoped Esc, compact mobile tab, no HTML stripping, insert-race fallback), guides/component-library.md (ds-switch `label` input)
 

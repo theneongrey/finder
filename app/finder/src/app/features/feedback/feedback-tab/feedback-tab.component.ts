@@ -3,14 +3,15 @@ import {
     Component,
     computed,
     effect,
+    ElementRef,
     inject,
     untracked,
+    viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { toast } from '@spartan-ng/brain/sonner';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UserStore } from '@common/data/user.store';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { FeedbackStore } from '../_data/feedback.store';
@@ -30,7 +31,6 @@ const HIDDEN_ROUTE_PATTERN =
 export class FeedbackTabComponent {
     private readonly userStore = inject(UserStore);
     private readonly feedbackStore = inject(FeedbackStore);
-    private readonly translateService = inject(TranslateService);
     private readonly router = inject(Router);
 
     private readonly url = toSignal(
@@ -49,6 +49,9 @@ export class FeedbackTabComponent {
     protected readonly user = this.userStore.user;
     protected readonly panelOpen = this.feedbackStore.panelOpen;
     protected readonly submitting = this.feedbackStore.submitting;
+
+    private readonly tabButton =
+        viewChild<ElementRef<HTMLButtonElement>>('tabButton');
 
     protected readonly visible = computed(
         () =>
@@ -74,6 +77,16 @@ export class FeedbackTabComponent {
                 }
             });
         });
+
+        // Return focus to the tab when the panel closes (the panel moves focus in on open).
+        let wasOpen = false;
+        effect(() => {
+            const open = this.panelOpen();
+            if (wasOpen && !open) {
+                untracked(() => this.tabButton()?.nativeElement.focus());
+            }
+            wasOpen = open;
+        });
     }
 
     protected toggle(): void {
@@ -93,7 +106,9 @@ export class FeedbackTabComponent {
     }
 
     protected hide(): void {
-        this.feedbackStore.setButtonHidden(true);
-        toast.info(this.translateService.instant('feedback.hidden'));
+        this.feedbackStore.setButtonHidden({
+            buttonHidden: true,
+            notifyHidden: true,
+        });
     }
 }

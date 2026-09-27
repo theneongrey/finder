@@ -101,6 +101,7 @@ export class SettingsComponent {
         effect(() => titleService.setTitle(title()));
 
         this.userStore.loadNotifications();
+        this.feedbackStore.loadPreference();
 
         effect(() => {
             const user = this.user();
@@ -135,7 +136,7 @@ export class SettingsComponent {
     }
 
     onFeedbackButtonChange(visible: boolean): void {
-        this.feedbackStore.setButtonHidden(!visible);
+        this.feedbackStore.setButtonHidden({ buttonHidden: !visible });
     }
 
     logout(): void {

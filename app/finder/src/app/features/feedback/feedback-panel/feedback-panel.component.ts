@@ -1,4 +1,5 @@
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -6,6 +7,7 @@ import {
     input,
     output,
     signal,
+    viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -33,7 +35,8 @@ import {
     ],
     templateUrl: './feedback-panel.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { '(document:keydown.escape)': 'cancelled.emit()' },
+    // Esc only while focus is inside the panel, so it doesn't also close other overlays.
+    host: { '(keydown.escape)': 'cancelled.emit()' },
 })
 export class FeedbackPanelComponent {
     private readonly translateService = inject(TranslateService);
@@ -50,6 +53,8 @@ export class FeedbackPanelComponent {
     protected readonly maxLength = FEEDBACK_MAX_COMMENT_LENGTH;
     protected readonly type = signal<FeedbackType>('Bug');
     protected readonly comment = new FormControl('', { nonNullable: true });
+
+    private readonly textarea = viewChild(DsTextareaComponent);
 
     private readonly commentValue = toSignal(this.comment.valueChanges, {
         initialValue: '',
@@ -72,6 +77,10 @@ export class FeedbackPanelComponent {
         { value: 'Idea', label: this.ideaLabel() },
         { value: 'Other', label: this.otherLabel() },
     ]);
+
+    constructor() {
+        afterNextRender(() => this.textarea()?.focus());
+    }
 
     protected onTypeChange(value: string): void {
         this.type.set(value as FeedbackType);

@@ -2,16 +2,20 @@
     <div
         class="pointer-events-none fixed top-1/2 left-0 z-(--z-dropdown) flex -translate-y-1/2 items-center gap-3"
     >
+        <!-- Icon-only below sm so the tab covers less page content on phones. -->
         <button
+            #tabButton
             data-testid="feedback-tab"
             type="button"
-            class="pointer-events-auto flex flex-col items-center gap-2 rounded-r-(--radius-sm) border border-l-0 border-(--ink-900) bg-(--accent) px-2 py-3 text-(--text-on-accent) shadow-(--shadow-accent-btn) transition-[padding] hover:pl-3"
+            class="pointer-events-auto flex flex-col items-center gap-2 rounded-r-(--radius-sm) border border-l-0 border-(--ink-900) bg-(--accent) px-1.5 py-2.5 text-(--text-on-accent) shadow-(--shadow-accent-btn) transition-[padding] hover:pl-3 sm:px-2 sm:py-3"
+            [attr.aria-label]="'feedback.tab' | translate"
             [attr.aria-expanded]="panelOpen()"
             (click)="toggle()"
         >
             <ds-icon name="comment" [size]="16" />
             <span
-                class="rotate-180 [font-size:var(--fs-caption)] [font-weight:var(--weight-bold)] [writing-mode:vertical-rl]"
+                aria-hidden="true"
+                class="hidden rotate-180 [font-size:var(--fs-caption)] [font-weight:var(--weight-bold)] [writing-mode:vertical-rl] sm:block"
             >
                 {{ 'feedback.tab' | translate }}
             </span>
@@ -19,7 +23,7 @@
 
         @if (panelOpen()) {
             <app-feedback-panel
-                class="pointer-events-auto w-[min(320px,calc(100vw-68px))]"
+                class="pointer-events-auto w-[min(320px,calc(100vw-56px))] sm:w-[min(320px,calc(100vw-68px))]"
                 [page]="page()"
                 [email]="user()?.email ?? ''"
                 [submitting]="submitting()"

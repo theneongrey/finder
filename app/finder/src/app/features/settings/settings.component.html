@@ -197,6 +197,7 @@
                                 data-testid="settings-feedback-switch"
                                 class="shrink-0"
                                 [checked]="!feedbackButtonHidden()"
+                                [label]="'settings.feedback.show' | translate"
                                 (checkedChange)="onFeedbackButtonChange($event)"
                             />
                         }

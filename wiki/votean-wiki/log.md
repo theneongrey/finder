@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-27 — ingest: realtime collaboration (#411 — PRs #439, #440, #444, #447, #450; issue #446)
+Pages touched: architecture/realtime-poll-sync.md (created — signalling-only SignalR decision, PollHub + auth over WS, presence registry, change descriptors, delta endpoint with overlap/highlight sets, PollRealtimeService + heartbeat, store mergeDelta / baseline / highlight / edit-guard, presence UI + toasts), features/notifications.md (added active-presence email suppression + idle config; gate order now via ShouldSendMailAsync), features/polling.md (added Live Collaboration section), architecture/poll-detail-rebuild.md (live-collaboration supporting change), api/index.md (delta endpoint + /hub/poll), index.md, architecture/index.md (added realtime page + missing component-architecture / poll-detail-rebuild entries), features/index.md (added missing notifications entry)
+
+---
+
 ## 2026-09-25 — ingest: last-50-PR review — UI rebuild + notifications + auth/email + option creator
 Pages touched: architecture/poll-detail-rebuild.md (created — results-as-detail, voting overlay, route collapse, overflow menu, container-query layout, single-step add-poll, shell consolidation; PRs #396/#409/#422/#424/#426/#351), features/polling.md (rewrote Voting UX + detail page + revote to overlay model, removed stale /vote//results//poll-overview routes, updated sources), architecture/frontend.md (rewrote Feature Layout, Routing, and UI Library sections to current /polls routing + ds-* Tailwind-first), features/notifications.md (created — in-app centre, orchestration + mail guard, settings, multi-language templates; PRs #367/#358/#349), features/auth.md (added EmailValidationService disposable/MX check #352 + MailTemplateService delivery), concepts/option.md (added required Creator #393), index.md (added notifications, poll-detail-rebuild links)
 

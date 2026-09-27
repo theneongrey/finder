@@ -15,6 +15,10 @@ sources:
     resource: https://github.com/theneongrey/finder/pull/358
   - title: "PR #349 — settings page redesign (notification settings)"
     resource: https://github.com/theneongrey/finder/pull/349
+  - title: "PR #447 — idle detection + suppress notifications while active on poll"
+    resource: https://github.com/theneongrey/finder/pull/447
+  - title: ProjectNotificationService
+    resource: api/Finder/Business/Project/Services/ProjectNotificationService.cs
   - title: InAppNotificationService
     resource: api/Finder/Business/User/Services/InAppNotificationService.cs
   - title: MailTemplateService
@@ -38,20 +42,63 @@ the specialized senders:
 - `PermissionNotificationService` — sharing / permission events
 
 These orchestrators trigger the specialized senders (in-app writer + mail sender); the
-specialized services never depend back on the orchestrator. Two separate gates decide whether
-email goes out:
+specialized services never depend back on the orchestrator. The in-app notification is always
+written first; then these gates, in order, decide whether email goes out (for poll events they
+live together in `ProjectNotificationService.ShouldSendMailAsync`):
 
-- **TestUser skip** — the orchestrators themselves write the in-app notification first, then
-  `continue` past the mail send for `Role.TestUser` recipients (`if (recipient.Role ==
-  Role.TestUser)` in `ProjectNotificationService` / `PermissionNotificationService`). So test
-  users (`testuser1@neongrey.de`, `testuser2@neongrey.de`) get in-app notifications but never
+- **TestUser skip** — `Role.TestUser` recipients never get email (in
+  `ProjectNotificationService` / `PermissionNotificationService`). So test users
+  (`testuser1@neongrey.de`, `testuser2@neongrey.de`) get in-app notifications but never
   email.
+- **Active-presence skip** (poll events only) — a recipient actively watching the poll page gets
+  no email; see [Active-presence email suppression](#active-presence-email-suppression).
 - **Per-user settings gate** — `NotificationMailGuard.ShouldSendAsync` checks the recipient's
   `PersonNotificationSetting` (falling back to the `NotificationSetting.DefaultValue`) for the
   event's `NotificationKey`: `All` sends, `Off` suppresses, and `FavOnly` sends only when the
   project is one of the recipient's favorites.
 
-Poll updates are debounced/batched through `PollUpdateNotificationQueue`.
+Poll updates are debounced/batched through `PollUpdateNotificationQueue`
+(`Notifications:PollUpdateDebounceSeconds`, default 10 s).
+
+## Active-presence email suppression
+
+A user who is on a poll's detail page sees changes live (see
+[Realtime Poll Sync](../architecture/realtime-poll-sync.md)), so an email about the same change is
+just noise. Poll emails are therefore **suppressed for recipients who are actively present** on
+that poll (PR #447).
+
+- **Email only.** The in-app notification is always created; only the email is skipped.
+- **Per recipient.** Each recipient is checked on their own — others still get email as their
+  settings allow.
+- **Covers all four poll email types** (updated / closed / reopened / new comment) through one
+  check in `ProjectNotificationService`, between the in-app write and `NotificationMailGuard`.
+  Permission emails are unaffected.
+
+### Present vs. active vs. idle
+
+Being on the page is not enough — the user must also be **interacting**:
+
+- `PollPresenceRegistry` keeps a last-activity timestamp per connection. `JoinPoll` stamps it
+  (arriving counts as activity), and the client's `ReportActivity` heartbeat refreshes it.
+- `IsUserActive(pollId, userId, idleThreshold)` is true only if one of the user's connections to
+  that poll showed activity within the threshold.
+- A **present-but-idle** user (no interaction past the threshold, e.g. a backgrounded tab — the
+  client ignores interactions while the tab is hidden) counts as inactive, so their emails
+  resume. An absent user always falls through to their settings.
+
+### Configuration
+
+| Setting | Where | Default | Meaning |
+|---|---|---|---|
+| `Notifications:ActivePresenceIdleSeconds` | `appsettings.json` → `NotificationOptions` | 60 | Server-authoritative idle threshold |
+| `POLL_ACTIVITY_HEARTBEAT_SECONDS` | `poll-realtime.model.ts` | 20 | Client heartbeat throttle |
+
+The two values are deliberately **separate**: the heartbeat only has to stay comfortably below
+the idle threshold, so exposing the server setting to the client just to share one number
+wasn't worth an endpoint.
+
+On the page itself, a change by someone else shows a **live-update toast** while the tab is
+visible — the in-page counterpart to the suppressed email.
 
 ## In-App Notifications
 
@@ -107,4 +154,5 @@ falls back to `en`. User-controlled values interpolated into a template must be 
 - [Authentication](auth.md) — login / magic-link emails use the same template pipeline
 - [Permissions](permissions.md) — sharing events that trigger notifications
 - [Polling](polling.md) — poll events that trigger notifications
+- [Realtime Poll Sync](../architecture/realtime-poll-sync.md) — presence registry and activity heartbeat behind the email suppression
 - [Backend](../architecture/backend.md) — service layout and DI

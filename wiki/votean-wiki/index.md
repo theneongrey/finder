@@ -49,6 +49,7 @@ System design and technical decisions.
 - [Database](architecture/database.md) — PostgreSQL, EF Core 9, migration strategy
 - [Component Architecture](architecture/component-architecture.md) — three-layer model (ds-*, common smart, domain feature) and placement rules
 - [Poll Detail Page Rebuild](architecture/poll-detail-rebuild.md) — 2026 rework: results = detail page, voting overlay, collapsed vote/results/overview routes
+- [Realtime Poll Sync](architecture/realtime-poll-sync.md) — SignalR presence + change pings, REST delta endpoint, in-place merge / highlight / edit-guard
 - [CI/CD](architecture/ci-cd.md) — GitHub Actions pipeline
 - [PrimeNG → Spartan UI Migration](architecture/primeng-to-spartan-migration.md) — why PrimeNG was replaced, migration scope, and Spartan UI approach
 - [Projects Concept Removal (MVP)](architecture/project-removal-mvp.md) — removing multi-poll projects from UI, URLs, and code; backend model preserved

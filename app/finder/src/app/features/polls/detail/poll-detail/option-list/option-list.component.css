@@ -1,16 +1,39 @@
-/* Brief ring flash on an option changed by another collaborator. Colours come from design
-   tokens; the duration is bound inline from HIGHLIGHT_DURATION_MS. */
-.poll-item-changed {
-    border-radius: var(--radius-lg);
-    animation-name: poll-item-flash;
-    animation-timing-function: ease-out;
+/* Flash shown on an option changed by another collaborator. Colours come from design
+   tokens — green (added), accent/teal (updated or new comment), red (removed). The radius
+   matches the card (ds-card uses --radius-3xl) so the ring hugs the card corners. The flash
+   duration is bound inline from HIGHLIGHT_DURATION_MS as --highlight-duration. */
+.poll-item-added,
+.poll-item-updated,
+.poll-item-removed {
+    border-radius: var(--radius-3xl);
 }
 
-@keyframes poll-item-flash {
+/* Added — green ring + a subtle pop in. */
+.poll-item-added {
+    animation:
+        poll-item-flash-added var(--highlight-duration) ease-out,
+        poll-item-pop 0.28s var(--ease-standard);
+}
+
+/* Updated (field change or a new comment on the option) — accent/teal ring. */
+.poll-item-updated {
+    animation:
+        poll-item-flash-updated var(--highlight-duration) ease-out,
+        poll-item-pop 0.28s var(--ease-standard);
+}
+
+/* Removed — red ring, then fades/collapses as it leaves. */
+.poll-item-removed {
+    animation: poll-item-flash-removed var(--highlight-duration) ease-out
+        forwards;
+    pointer-events: none;
+}
+
+@keyframes poll-item-flash-added {
     0% {
         box-shadow:
-            0 0 0 2px var(--accent),
-            0 0 0 6px var(--accent-tint);
+            0 0 0 2px var(--green-700),
+            0 0 0 6px var(--green-100);
     }
     100% {
         box-shadow:
@@ -19,8 +42,57 @@
     }
 }
 
+@keyframes poll-item-flash-updated {
+    0% {
+        box-shadow:
+            0 0 0 2px var(--accent),
+            0 0 0 6px var(--accent-tint-strong);
+    }
+    100% {
+        box-shadow:
+            0 0 0 2px transparent,
+            0 0 0 6px transparent;
+    }
+}
+
+@keyframes poll-item-flash-removed {
+    0% {
+        box-shadow:
+            0 0 0 2px var(--red-700),
+            0 0 0 6px var(--red-200);
+        opacity: 1;
+    }
+    70% {
+        box-shadow:
+            0 0 0 2px var(--red-700),
+            0 0 0 6px var(--red-200);
+        opacity: 1;
+    }
+    100% {
+        box-shadow:
+            0 0 0 2px transparent,
+            0 0 0 6px transparent;
+        opacity: 0.35;
+    }
+}
+
+/* Micro pop for freshly added/updated cards. */
+@keyframes poll-item-pop {
+    0% {
+        transform: scale(0.985);
+    }
+    60% {
+        transform: scale(1.008);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .poll-item-changed {
+    .poll-item-added,
+    .poll-item-updated,
+    .poll-item-removed {
         animation: none;
     }
 }

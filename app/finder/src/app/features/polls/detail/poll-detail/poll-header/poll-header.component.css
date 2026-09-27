@@ -1,0 +1,5 @@
+:host {
+    /* `contents` so the compact reduced bar's containing block is the page content column, not
+       this (short) header host — required for the sticky reduced bar to stay pinned on scroll. */
+    display: contents;
+}

@@ -1,10 +1,11 @@
 <div
-    class="sticky top-0 z-[9] flex items-center gap-2 border-b border-[color:var(--border-hairline)] bg-[var(--bg-sheet)] px-4 py-2.5 min-[680px]:top-[60px] @min-[900px]/detail:gap-2.5 @min-[900px]/detail:px-6 @min-[900px]/detail:py-3.5"
+    class="sticky top-[var(--title-bar-offset)] z-[9] flex items-center gap-2 border-b border-[color:var(--border-hairline)] bg-[var(--bg-sheet)] px-4 py-2.5 transition-[top] duration-[var(--duration-fast)] ease-[var(--ease-standard)] @min-[900px]/detail:gap-2.5 @min-[900px]/detail:px-6 @min-[900px]/detail:py-3.5"
     data-testid="results-toolbar"
 >
-    @if (canManage() && !isClosed()) {
+    @if (!isClosed()) {
         <!-- Compact (narrow column) -->
         <div class="contents @min-[900px]/detail:hidden">
+            <!-- Voting is open to every role, not just maintainers. -->
             <ds-button
                 variant="primary"
                 size="sm"
@@ -14,15 +15,17 @@
             >
                 {{ 'project.results.vote' | translate }}
             </ds-button>
-            <ds-button
-                variant="neutral"
-                size="sm"
-                icon="plus"
-                data-testid="add-option-btn"
-                (click)="addOption.emit()"
-            >
-                {{ 'project.results.add' | translate }}
-            </ds-button>
+            @if (canManage()) {
+                <ds-button
+                    variant="neutral"
+                    size="sm"
+                    icon="plus"
+                    data-testid="add-option-btn"
+                    (click)="addOption.emit()"
+                >
+                    {{ 'project.results.add' | translate }}
+                </ds-button>
+            }
         </div>
         <!-- Wide -->
         <div class="hidden @min-[900px]/detail:contents">
@@ -34,45 +37,22 @@
             >
                 {{ 'project.results.startVoting' | translate }}
             </ds-button>
-            <ds-button
-                variant="neutral"
-                icon="plus"
-                data-testid="add-option-btn"
-                (click)="addOption.emit()"
-            >
-                {{ 'project.results.addOption' | translate }}
-            </ds-button>
+            @if (canManage()) {
+                <ds-button
+                    variant="neutral"
+                    icon="plus"
+                    data-testid="add-option-btn"
+                    (click)="addOption.emit()"
+                >
+                    {{ 'project.results.addOption' | translate }}
+                </ds-button>
+            }
         </div>
     }
 
     <div class="ml-auto flex items-center gap-2 @min-[900px]/detail:gap-2.5">
         <!-- Live presence: who else is on this poll right now. -->
         <app-presence-avatars [participants]="presence()" [selfId]="selfId()" />
-
-        <!-- Compact (narrow column) -->
-        <div class="contents @min-[900px]/detail:hidden">
-            <ds-button
-                variant="neutral"
-                size="sm"
-                icon="refresh"
-                [loading]="refreshing()"
-                [label]="'project.results.refresh' | translate"
-                data-testid="refresh-btn"
-                (click)="refresh.emit()"
-            />
-        </div>
-        <!-- Wide -->
-        <div class="hidden @min-[900px]/detail:contents">
-            <ds-button
-                variant="neutral"
-                icon="refresh"
-                [loading]="refreshing()"
-                data-testid="refresh-btn"
-                (click)="refresh.emit()"
-            >
-                {{ 'project.results.refresh' | translate }}
-            </ds-button>
-        </div>
 
         @if (canManage() && isClosed()) {
             <!-- Compact (narrow column) -->
@@ -127,28 +107,34 @@
                     {{ 'project.results.confirmEnd' | translate }}
                 </ds-button>
             </div>
-        } @else if (menuItems().length) {
-            <ds-menu [items]="menuItems()">
-                <!-- Compact (narrow column) -->
+        } @else {
+            <!-- Compact (narrow column): sort lives here since there's no header sort button. -->
+            @if (menuItemsCompact().length) {
                 <div class="contents @min-[900px]/detail:hidden">
-                    <ds-button
-                        variant="neutral"
-                        size="sm"
-                        icon="kebab"
-                        [label]="'project.results.moreActions' | translate"
-                        data-testid="poll-menu-btn"
-                    />
+                    <ds-menu [items]="menuItemsCompact()">
+                        <ds-button
+                            variant="neutral"
+                            size="sm"
+                            icon="kebab"
+                            [label]="'project.results.moreActions' | translate"
+                            data-testid="poll-menu-btn"
+                        />
+                    </ds-menu>
                 </div>
-                <!-- Wide -->
+            }
+            <!-- Wide: sort is in the poll header, so the menu is actions only. -->
+            @if (menuItems().length) {
                 <div class="hidden @min-[900px]/detail:contents">
-                    <ds-button
-                        variant="neutral"
-                        icon="kebab"
-                        [label]="'project.results.moreActions' | translate"
-                        data-testid="poll-menu-btn"
-                    />
+                    <ds-menu [items]="menuItems()">
+                        <ds-button
+                            variant="neutral"
+                            icon="kebab"
+                            [label]="'project.results.moreActions' | translate"
+                            data-testid="poll-menu-btn"
+                        />
+                    </ds-menu>
                 </div>
-            </ds-menu>
+            }
         }
 
         <!-- Show-comments button: kept viewport-based because the comments

@@ -17,6 +17,9 @@
                 <ds-icon [name]="opt.icon" [size]="14" />
             }
             {{ opt.label }}
+            @if (opt.badge !== undefined) {
+                <span class="ds-seg-badge">{{ opt.badge }}</span>
+            }
         </button>
     }
 </div>

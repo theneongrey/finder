@@ -30,17 +30,18 @@ export class ResultsToolbarComponent {
     canManage = input(false);
     isClosed = input(false);
     commentsHidden = input(false);
-    refreshing = input(false);
     presence = input<PollParticipant[]>([]);
     selfId = input<string | undefined>(undefined);
+    /** Current sort label, shown in the overflow menu's sort toggle. */
+    sortLabel = input('');
 
     startVote = output<void>();
     addOption = output<void>();
     closePoll = output<void>();
     reopenPoll = output<void>();
     showComments = output<void>();
-    refresh = output<void>();
     share = output<void>();
+    toggleSort = output<void>();
 
     protected readonly showCloseConfirm = signal(false);
 
@@ -51,13 +52,14 @@ export class ResultsToolbarComponent {
         'project.common.share',
     );
 
-    /** Overflow menu (kebab) shown in place of the standalone close button. */
-    protected readonly menuItems = computed<MenuItem[]>(() => {
+    /** End-poll + share — the management actions the kebab carries at every width. Both are
+     *  Maintainer/Owner-only, so for a plain voter this list is empty. */
+    private readonly actionItems = computed<MenuItem[]>(() => {
         const items: MenuItem[] = [];
-        if (this.isClosed()) {
+        if (!this.canManage()) {
             return items;
         }
-        if (this.canManage()) {
+        if (!this.isClosed()) {
             items.push({
                 icon: 'circle-minus',
                 label: this.endPollLabel(),
@@ -68,9 +70,30 @@ export class ResultsToolbarComponent {
         items.push({
             icon: 'share',
             label: this.shareLabel(),
-            separatorBefore: true,
+            separatorBefore: items.length > 0,
             onClick: () => this.share.emit(),
         });
         return items;
+    });
+
+    /** Desktop kebab: the sort toggle lives in the poll header, so the menu is actions only. */
+    protected readonly menuItems = this.actionItems;
+
+    /**
+     * Mobile kebab: there's no header sort button at this width, so the menu leads with the sort
+     * toggle followed by the shared actions.
+     */
+    protected readonly menuItemsCompact = computed<MenuItem[]>(() => {
+        const sortItem: MenuItem = {
+            icon: 'sort',
+            label: this.sortLabel(),
+            onClick: () => this.toggleSort.emit(),
+        };
+        return [
+            sortItem,
+            ...this.actionItems().map((item, i) =>
+                i === 0 ? { ...item, separatorBefore: true } : item,
+            ),
+        ];
     });
 }

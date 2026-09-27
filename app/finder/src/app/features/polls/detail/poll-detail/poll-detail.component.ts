@@ -42,6 +42,25 @@ import { OptionDetail } from '../../_shared/models/poll-detail.model';
 import { UserStore } from '@common/data/user.store';
 import { PollVoteComponent } from '../vote/poll-vote.component';
 import { PollRealtimeService } from '../../_shared/data/poll-realtime.service';
+import {
+    PollChangedNotification,
+    PollChangeInfo,
+} from '../../_shared/models/poll-realtime.model';
+import { toast } from '@spartan-ng/brain/sonner';
+
+type SortMode = 'top' | 'original';
+
+/** localStorage key prefix for the per-poll sort choice. */
+const POLL_SORT_STORAGE_PREFIX = 'poll-sort:';
+
+/** Change kinds whose `target` is an option's raw text (formatted for date polls before display). */
+const OPTION_TARGET_KINDS = new Set([
+    'optionRemoved',
+    'optionRenamed',
+    'optionDescribed',
+    'optionUpdated',
+    'commentAddedOption',
+]);
 
 @Component({
     selector: 'app-poll-detail',
@@ -76,8 +95,22 @@ export class PollDetailComponent {
     /** Live presence roster and the ids of items changed by recent remote updates. */
     readonly presence = this.realtime.presence;
     readonly selfId = computed(() => this.userStore.user()?.id);
-    readonly changedOptionIds = this.projectDetailStore.changedOptionIds;
+    readonly changedOptions = this.projectDetailStore.changedOptions;
+    /** Options for the list: the poll's options plus removed ones still playing their flash. */
+    readonly displayOptions = this.projectDetailStore.displayOptions;
     readonly changedCommentIds = this.projectDetailStore.changedCommentIds;
+
+    /** True while a recently-added poll-level comment (no option) is still flashing — drives the
+     *  header comment button highlight. Option-level comment flashes live on the option cards. */
+    readonly pollCommentHighlight = computed(() => {
+        const ids = new Set(this.changedCommentIds());
+        if (ids.size === 0) {
+            return false;
+        }
+        return (this.poll()?.comments ?? []).some(
+            (c) => ids.has(c.id) && !c.optionId,
+        );
+    });
 
     pollId = input('');
 
@@ -113,7 +146,6 @@ export class PollDetailComponent {
     poll = this.projectDetailStore.currentPoll;
     project = this.projectDetailStore.currentProject;
 
-    readonly refreshing = this.projectDetailStore.pollRefreshing;
     readonly optionAdding = this.projectDetailStore.optionAdding;
     readonly commentAdding = this.projectDetailStore.commentAdding;
 
@@ -139,17 +171,18 @@ export class PollDetailComponent {
 
     readonly commentsOptionTitle = computed(() => {
         const option = this.commentsOption();
-        if (!option) {
-            return '';
-        }
-        const dateType = optionTypeToDateType(this.poll()?.optionType);
-        if (dateType) {
-            return this.dateFormat.labelFromEntry(
-                this.dateFormat.parse(option.text, dateType),
-            );
-        }
-        return option.text;
+        return option ? this.optionLabel(option.text) : '';
     });
+
+    /** Display label for an option's raw text — date polls store a positional encoding. */
+    private optionLabel(text: string): string {
+        const dateType = optionTypeToDateType(this.poll()?.optionType);
+        return dateType
+            ? this.dateFormat.labelFromEntry(
+                  this.dateFormat.parse(text, dateType),
+              )
+            : text;
+    }
 
     readonly optionComments = computed(() => {
         const option = this.commentsOption();
@@ -161,7 +194,7 @@ export class PollDetailComponent {
         );
     });
 
-    sortMode = signal<'top' | 'original'>('top');
+    sortMode = signal<SortMode>('top');
 
     private readonly sortByApproval = this.translateService.translate(
         'project.results.sortByApproval',
@@ -174,7 +207,21 @@ export class PollDetailComponent {
     );
 
     toggleSort() {
-        this.sortMode.update((s) => (s === 'top' ? 'original' : 'top'));
+        const next: SortMode = this.sortMode() === 'top' ? 'original' : 'top';
+        this.sortMode.set(next);
+        this.persistSortMode(next);
+    }
+
+    /** Per-poll sort choice, remembered across visits. */
+    private sortStorageKey(pollId: string): string {
+        return `${POLL_SORT_STORAGE_PREFIX}${pollId}`;
+    }
+
+    private persistSortMode(mode: SortMode): void {
+        const id = this.pollId();
+        if (id) {
+            localStorage.setItem(this.sortStorageKey(id), mode);
+        }
     }
 
     canManagePoll = computed(() => {
@@ -229,6 +276,17 @@ export class PollDetailComponent {
             this.projectDetailStore.getPoll(this.pollId());
         });
 
+        // Restore the sort choice remembered for this poll (defaults to "top").
+        effect(() => {
+            const id = this.pollId();
+            const stored = id
+                ? localStorage.getItem(this.sortStorageKey(id))
+                : null;
+            untracked(() =>
+                this.sortMode.set(stored === 'original' ? 'original' : 'top'),
+            );
+        });
+
         // Realtime presence + sync, keyed to the active poll. Join on entry, leave the
         // previous poll when navigating between polls, and re-baseline the sync token so the
         // first delta doesn't highlight everything.
@@ -256,10 +314,11 @@ export class PollDetailComponent {
         // (e.g. multi-option edits) collapses into a single fetch.
         this.realtime.pollChanged$
             .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
+            .subscribe((change) => {
                 const id = this.pollId();
                 if (id) {
                     this.projectDetailStore.mergeDelta(id);
+                    this.notifyActiveUpdate(change);
                 }
             });
 
@@ -359,6 +418,9 @@ export class PollDetailComponent {
     }
 
     onAddOption(payload: NewOptionPayload) {
+        // Adding a card takes the spotlight — clear any lingering flashes on cards changed
+        // moments earlier so only the new one draws attention.
+        this.projectDetailStore.clearOptionHighlights();
         this.projectDetailStore.addOption({
             pollId: this.pollId(),
             text: payload.text,
@@ -399,7 +461,64 @@ export class PollDetailComponent {
         this.showShareDrawer.set(true);
     }
 
-    refresh() {
-        this.projectDetailStore.getPoll(this.pollId());
+    /**
+     * A collaborator changed the poll while the user is here. If the tab is in the foreground
+     * (i.e. the user is not idle) we surface an in-app toast instead of leaning on the async
+     * e-mail/notification, which the server suppresses for actively-present users anyway. A
+     * backgrounded tab counts as idle, so we stay quiet and let the normal notification handle it.
+     */
+    private notifyActiveUpdate(change: PollChangedNotification) {
+        if (typeof document !== 'undefined' && document.hidden) {
+            return;
+        }
+        // Votes are the most frequent change and already show live on the option cards, so a
+        // toast per vote would just be noise on a busy poll.
+        if (change.change?.kind === 'voteCast') {
+            return;
+        }
+        const actorName = this.presence().find(
+            (p) => p.userId === change.actorUserId,
+        )?.name;
+        const message = this.buildUpdateMessage(actorName, change.change);
+        // `toast-update` is a global class (src/styles.css) that renders this live-update
+        // toast as a dark pill. Per-toast `style` is not honoured by this sonner build, and
+        // the global toast rule uses !important — so styling has to go through a class.
+        toast(message, { class: 'toast-update' });
+    }
+
+    /**
+     * Compose the toast copy from the change descriptor: a specific line per change kind
+     * ("added an option", "renamed the poll", …), falling back to a generic message when the
+     * actor is unknown or the kind isn't recognised.
+     */
+    private buildUpdateMessage(
+        actorName: string | undefined,
+        change: PollChangeInfo | undefined,
+    ): string {
+        if (!actorName) {
+            return this.translateService.instant(
+                'project.results.updateToast.genericNoName',
+            );
+        }
+        const key = change?.kind
+            ? `project.results.updateToast.${change.kind}`
+            : 'project.results.updateToast.generic';
+        const target = change?.target ?? '';
+        const message = this.translateService.instant(key, {
+            name: actorName,
+            target: OPTION_TARGET_KINDS.has(change?.kind ?? '')
+                ? this.optionLabel(target)
+                : target,
+        });
+        // ngx-translate echoes the key back when it's missing — fall back to the generic line
+        // so an unknown/new kind never shows a raw translation key.
+        return message === key
+            ? this.translateService.instant(
+                  'project.results.updateToast.generic',
+                  {
+                      name: actorName,
+                  },
+              )
+            : message;
     }
 }

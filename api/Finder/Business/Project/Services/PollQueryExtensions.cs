@@ -55,13 +55,12 @@ public static class PollQueryExtensions
                                                                           PermissionType.Maintainer)));
     }
 
-    /// <summary>The option with this slug, if the user is the project creator or at least a Maintainer.</summary>
-    public static IQueryable<Option> WhereMaintainableBy(this IQueryable<Option> query, string slug, Guid? userId)
+    /// <summary>The option with this slug, if its project is public or the user is its creator or has any permission.</summary>
+    public static IQueryable<Option> WhereReadableBy(this IQueryable<Option> query, string slug, Guid? userId)
     {
-        return query.Where(o => o.Id == SlugHelper.ExtractId(slug) && (o.Poll.Project.Creator.Id == userId ||
-                                                                      o.Poll.Project.Permissions.Any(permission =>
-                                                                          permission.Person.Id == userId &&
-                                                                          permission.PermissionType >=
-                                                                          PermissionType.Maintainer)));
+        return query.Where(o => o.Id == SlugHelper.ExtractId(slug) && (
+            o.Poll.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
+            o.Poll.Project.Creator.Id == userId ||
+            o.Poll.Project.Permissions.Any(permission => permission.PersonKey == userId)));
     }
 }

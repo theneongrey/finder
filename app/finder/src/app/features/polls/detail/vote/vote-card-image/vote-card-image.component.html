@@ -16,7 +16,9 @@
         {{ text() }}
     </p>
     @if (description()) {
-        <p class="text-[length:var(--fs-body-xs)] text-[var(--text-secondary)]">
+        <p
+            class="text-[length:var(--fs-body-xs)] whitespace-pre-line text-[var(--text-secondary)]"
+        >
             {{ description() }}
         </p>
     }

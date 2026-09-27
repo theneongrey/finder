@@ -36,6 +36,16 @@ export class UserAvatarComponent {
     user = input.required<{ name: string | undefined }>();
     size = input<'normal' | 'large' | 'xlarge' | number>('normal');
     voted = input<boolean | undefined>(undefined);
+    /** Optional hover tooltip label. Defaults to the user's name when true. */
+    tooltip = input<string | boolean | undefined>(undefined);
+
+    protected readonly tooltipLabel = computed(() => {
+        const t = this.tooltip();
+        if (t === true) {
+            return this.user().name;
+        }
+        return typeof t === 'string' ? t : undefined;
+    });
 
     protected readonly initial = computed(
         () => this.user().name?.[0]?.toUpperCase() ?? '',

@@ -66,8 +66,16 @@ export class CommentsSectionComponent {
     );
 
     filterOptions = computed<SegmentOption[]>(() => [
-        { value: 'poll', label: this.pollLabel() },
-        { value: 'all', label: this.allLabel() },
+        {
+            value: 'poll',
+            label: this.pollLabel(),
+            badge: this.comments().filter((c) => !c.optionId).length,
+        },
+        {
+            value: 'all',
+            label: this.allLabel(),
+            badge: this.comments().length,
+        },
     ]);
 
     /**

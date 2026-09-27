@@ -111,7 +111,13 @@ public class PollService
         _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
             oldName, poll.Name, oldDescription, poll.Description);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+        // Name takes priority when both changed — it's the more visible edit.
+        var pollChange = oldName != poll.Name
+            ? new PollChangeInfo(PollChangeKind.PollRenamed, poll.Name)
+            : oldDescription != poll.Description
+                ? new PollChangeInfo(PollChangeKind.PollDescriptionUpdated)
+                : null;
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id, pollChange);
 
         return Result<Poll>.Success(poll);
     }
@@ -163,12 +169,26 @@ public class PollService
 
         var changedPoll = poll.Edited > sinceCutoff ? poll : null;
 
+        // Highlight only what changed strictly after the client's token (no overlap). Items re-sent
+        // solely to cover the boundary window are upserted but must not flash again on the client.
+        var strictSince = since?.ToUniversalTime() ?? DateTime.MinValue;
+        var highlightedOptionIds = changedOptions
+            .Where(o => o.Edited > strictSince || o.Votes.Any(v => v.Edited > strictSince))
+            .Select(o => SlugHelper.ToSlug(SlugHelper.OptionSlugName(o.Text), o.Id))
+            .ToList();
+        var highlightedCommentIds = changedComments
+            .Where(c => c.Edited > strictSince)
+            .Select(c => c.Id.ToString())
+            .ToList();
+
         return Result<PollDelta>.Success(new PollDelta(
             changedPoll,
             changedOptions,
             changedComments,
             poll.Options,
             poll.Comments,
+            highlightedOptionIds,
+            highlightedCommentIds,
             syncToken));
     }
 
@@ -193,7 +213,8 @@ public class PollService
         await _projectNotificationService.SendPollClosedNotificationsAsync(
             GetRecipients(poll, actor.Payload!.Id), actor.Payload!.Name ?? "Unknown", poll.Project, poll);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id,
+            new PollChangeInfo(PollChangeKind.PollClosed));
 
         return Result<Poll>.Success(poll);
     }
@@ -219,7 +240,8 @@ public class PollService
         await _projectNotificationService.SendPollReopenedNotificationsAsync(
             GetRecipients(poll, actor.Payload!.Id), actor.Payload!.Name ?? "Unknown", poll.Project, poll);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id,
+            new PollChangeInfo(PollChangeKind.PollReopened));
 
         return Result<Poll>.Success(poll);
     }

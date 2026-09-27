@@ -1,3 +1,4 @@
+using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Api.Requests;
 using Finder.Business.Project.Entities;
 using Finder.Business.Project.RealTime;
@@ -25,6 +26,16 @@ public class OptionService
         _pollUpdateQueue = pollUpdateQueue;
         _pollChangeNotifier = pollChangeNotifier;
     }
+
+    /// <summary>
+    /// True when the current user may manage (edit/delete options, close, …) the given project:
+    /// its creator, or a Maintainer/Owner permission holder. Requires the project's Creator and
+    /// Permissions (with Person) to be loaded.
+    /// </summary>
+    private bool CanManage(Entities.Project project) =>
+        project.Creator.Id == UserId ||
+        project.Permissions.Any(permission =>
+            permission.Person.Id == UserId && permission.PermissionType >= PermissionType.Maintainer);
 
     public async Task<Result<Option>> AddOptionToPoll(AddOptionToPollRequest pollRequest)
     {
@@ -76,24 +87,34 @@ public class OptionService
         _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, creator.Name ?? "Unknown",
             creator.Id);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, creator.Id);
+        await _pollChangeNotifier.PollChanged(poll.Id, creator.Id,
+            new PollChangeInfo(PollChangeKind.OptionAdded, option.Text));
 
         return Result<Option>.Success(option);
     }
 
     public async Task<Result<Option>> UpdateOption(string slug, UpdateOptionRequest request)
     {
+        // View-scoped lookup (404 when unknown/hidden), then a manage check below (403 when the
+        // user may see the poll but not edit it) — so permission failures aren't masked as 404.
         var option = await _dbContext.Options
-            .Include(o => o.Poll)
+            .Include(o => o.Poll).ThenInclude(p => p.Project).ThenInclude(pr => pr.Creator)
+            .Include(o => o.Poll).ThenInclude(p => p.Project).ThenInclude(pr => pr.Permissions)
+                .ThenInclude(perm => perm.Person)
             .Include(o => o.Meta)
             .Include(o => o.Votes)
             .ThenInclude(v => v.Person)
-            .WhereMaintainableBy(slug, UserId)
+            .WhereReadableBy(slug, UserId)
             .FirstOrDefaultAsync();
 
         if (option is null)
         {
             return Result<Option>.Fail(404);
+        }
+
+        if (!CanManage(option.Poll.Project))
+        {
+            return Result<Option>.Fail(403);
         }
 
         if (option.Poll.CloseDate.HasValue && option.Poll.CloseDate <= DateTime.UtcNow)
@@ -104,8 +125,12 @@ public class OptionService
         var cleanText = request.Text.StripHtml();
         var cleanDescription = request.Description.StripHtml();
 
+        var oldText = option.Text;
+        var oldDescription = option.Description;
         var textChanged = option.Text != cleanText;
         var descriptionChanged = option.Description != cleanDescription;
+        var descriptionAdded = string.IsNullOrWhiteSpace(oldDescription) &&
+                               !string.IsNullOrWhiteSpace(cleanDescription);
 
         option.Text = cleanText;
         option.Description = cleanDescription;
@@ -160,7 +185,15 @@ public class OptionService
             _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown",
                 updateActor.Payload!.Id);
 
-            await _pollChangeNotifier.PollChanged(option.Poll.Id, updateActor.Payload!.Id);
+            // Classify the edit so present clients see a specific message. A rename is the most
+            // salient change; otherwise call out a freshly-added description; else it's a generic
+            // update (description reworded, link/image meta changed, …).
+            var optionChange = textChanged
+                ? new PollChangeInfo(PollChangeKind.OptionRenamed, cleanText)
+                : descriptionAdded
+                    ? new PollChangeInfo(PollChangeKind.OptionDescribed, oldText)
+                    : new PollChangeInfo(PollChangeKind.OptionUpdated, oldText);
+            await _pollChangeNotifier.PollChanged(option.Poll.Id, updateActor.Payload!.Id, optionChange);
         }
 
         return Result<Option>.Success(option);
@@ -168,14 +201,23 @@ public class OptionService
 
     public async Task<Result> DeleteOption(string slug)
     {
+        // Scope the lookup to polls the user can *see* so a genuinely unknown/hidden option is a 404;
+        // the manage check below then distinguishes "you may view but not delete" as a 403.
         var option = await _dbContext.Options
-            .Include(o => o.Poll)
-            .WhereMaintainableBy(slug, UserId)
+            .Include(o => o.Poll).ThenInclude(p => p.Project).ThenInclude(pr => pr.Creator)
+            .Include(o => o.Poll).ThenInclude(p => p.Project).ThenInclude(pr => pr.Permissions)
+                .ThenInclude(perm => perm.Person)
+            .WhereReadableBy(slug, UserId)
             .FirstOrDefaultAsync();
 
         if (option is null)
         {
             return Result.Fail(404);
+        }
+
+        if (!CanManage(option.Poll.Project))
+        {
+            return Result.Fail(403);
         }
 
         if (option.Poll.CloseDate.HasValue && option.Poll.CloseDate <= DateTime.UtcNow)
@@ -193,7 +235,8 @@ public class OptionService
         _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown",
             deleteActor.Payload!.Id);
 
-        await _pollChangeNotifier.PollChanged(pollId, deleteActor.Payload!.Id);
+        await _pollChangeNotifier.PollChanged(pollId, deleteActor.Payload!.Id,
+            new PollChangeInfo(PollChangeKind.OptionRemoved, optionText));
 
         return Result.Success();
     }

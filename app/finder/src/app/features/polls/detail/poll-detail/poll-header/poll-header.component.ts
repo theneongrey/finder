@@ -1,9 +1,14 @@
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
+    ElementRef,
+    inject,
     input,
     output,
     signal,
+    viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -23,6 +28,7 @@ export interface PollDetailsEdit {
 @Component({
     selector: 'app-poll-header',
     templateUrl: './poll-header.component.html',
+    styleUrl: './poll-header.component.css',
     imports: [
         FormsModule,
         TranslatePipe,
@@ -44,6 +50,8 @@ export class PollHeaderComponent {
     statusLabel = input('');
     closeDateText = input('');
     commentCount = input(0);
+    /** Flash the comment button when a poll-level comment was just added remotely. */
+    commentHighlight = input(false);
     sortLabel = input('');
 
     save = output<PollDetailsEdit>();
@@ -52,6 +60,35 @@ export class PollHeaderComponent {
     openComments = output<void>();
 
     protected readonly limits = POLL_LIMITS;
+
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly stickyBar =
+        viewChild<ElementRef<HTMLElement>>('stickyBar');
+    /** True while the compact header is pinned (scrolled). In that reduced state we drop the edit
+     *  affordance, leaving just the title and comment button. */
+    protected readonly stuck = signal(false);
+
+    constructor() {
+        // Detect the "stuck" state without a layout-affecting sentinel: the bar is pinned once it
+        // sits at its sticky offset. The offset moves with the title bar (--title-bar-offset), so
+        // compare against the live computed `top` rather than a fixed margin.
+        afterNextRender(() => {
+            const el = this.stickyBar()?.nativeElement;
+            if (!el) {
+                return;
+            }
+            const update = () =>
+                this.stuck.set(
+                    window.scrollY > 0 &&
+                        el.getBoundingClientRect().top <=
+                            parseFloat(getComputedStyle(el).top) + 0.5,
+                );
+            window.addEventListener('scroll', update, { passive: true });
+            this.destroyRef.onDestroy(() =>
+                window.removeEventListener('scroll', update),
+            );
+        });
+    }
 
     protected readonly editing = signal(false);
     protected readonly deleteConfirm = signal(false);

@@ -51,8 +51,13 @@ export class OptionCardComponent {
     index = input.required<number>();
     canRemove = input<boolean>(false);
     readonly = input<boolean>(false);
+    /** When true, Enter in the title confirms the option (see confirm) — or, if the text is a
+     *  URL, fetches its preview first instead of confirming. Used by the inline add-option panel. */
+    confirmOnEnter = input<boolean>(false);
     remove = output<void>();
     optionChange = output<OptionEntry>();
+    /** Emitted when the user presses Enter on a non-URL title while confirmOnEnter is set. */
+    confirm = output<void>();
 
     protected readonly titleOverLimit = computed(
         () => this.option().text.length > POLL_LIMITS.optionTextLength,
@@ -118,6 +123,26 @@ export class OptionCardComponent {
     applyTitleUrl() {
         this.showTitleUrlButton.set(false);
         this.onTitleBlur();
+    }
+
+    /**
+     * Enter in the title (add-option panel only): if the text is a URL, fetch its preview
+     * instead of creating the option; otherwise confirm and let the parent create it.
+     */
+    onTitleEnter(event: Event) {
+        if (!this.confirmOnEnter() || this.readonly() || this.urlLoading()) {
+            return;
+        }
+        event.preventDefault();
+        const text = this.option().text.trim();
+        if (!text) {
+            return;
+        }
+        if (this.urlValidation.isValid(text)) {
+            this.applyTitleUrl();
+            return;
+        }
+        this.confirm.emit();
     }
 
     toggleDescription() {

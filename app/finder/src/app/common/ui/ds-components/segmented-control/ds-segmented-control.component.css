@@ -61,3 +61,24 @@
     font-weight: var(--weight-bold);
     color: var(--text-primary);
 }
+
+/* Counter badge next to the label */
+.ds-seg-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--radius-circle);
+    background: var(--cream-200);
+    color: var(--text-tertiary);
+    font-size: var(--fs-caption);
+    font-weight: var(--weight-bold);
+    line-height: 1;
+}
+.ds-seg-btn[data-state='on'] .ds-seg-badge,
+.ds-seg-btn[aria-pressed='true'] .ds-seg-badge {
+    background: var(--cream-300);
+    color: var(--text-primary);
+}

@@ -44,7 +44,9 @@
         <app-option-card
             [option]="textDraft()"
             [index]="0"
+            [confirmOnEnter]="true"
             (optionChange)="textDraft.set($event)"
+            (confirm)="submit()"
         />
     }
 

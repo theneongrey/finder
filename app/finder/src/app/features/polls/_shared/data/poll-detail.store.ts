@@ -9,7 +9,7 @@ import {
 import { on, withReducer } from '@ngrx/signals/events';
 import { computed, inject, untracked } from '@angular/core';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { finalize, pipe, switchMap, tap } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { PollService } from './poll.service';
 import { Router } from '@angular/router';
@@ -24,7 +24,6 @@ import { withPollRealtimeSyncFeature } from './poll-realtime-sync.feature';
 interface PollDetailState {
     currentProject: Project | undefined;
     currentPoll: PollDetail | undefined;
-    pollRefreshing: boolean;
 }
 
 export const PollDetailStore = signalStore(
@@ -34,7 +33,6 @@ export const PollDetailStore = signalStore(
     withState<PollDetailState>({
         currentProject: undefined,
         currentPoll: undefined,
-        pollRefreshing: false,
     }),
     withComputed((store) => ({
         projectId: computed(() => store.currentProject()?.id),
@@ -69,7 +67,7 @@ export const PollDetailStore = signalStore(
         getPoll: rxMethod<string>(
             pipe(
                 // Only clear when switching to a different poll — refetching the
-                // same poll (refresh, vote overlay open/close) keeps the current
+                // same poll (vote overlay open/close) keeps the current
                 // data on screen so the detail page doesn't flash to the skeleton
                 // and re-run entry animations (e.g. the open add-option card).
                 // getPoll is called synchronously from effects, so read the
@@ -79,7 +77,6 @@ export const PollDetailStore = signalStore(
                     if (untracked(store.currentPoll)?.id !== id) {
                         patchState(store, { currentPoll: undefined });
                     }
-                    patchState(store, { pollRefreshing: true });
                 }),
                 switchMap((id) =>
                     store.projectService.getPoll(id).pipe(
@@ -94,9 +91,6 @@ export const PollDetailStore = signalStore(
                                 );
                             },
                         }),
-                        finalize(() =>
-                            patchState(store, { pollRefreshing: false }),
-                        ),
                     ),
                 ),
             ),

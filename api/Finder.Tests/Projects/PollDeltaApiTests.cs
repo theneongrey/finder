@@ -163,6 +163,48 @@ public class PollDeltaApiTests : IClassFixture<FinderApiFactory>
     }
 
     [Fact]
+    public async Task GetDelta_ItemsResentForOverlapWindow_AreNotHighlighted()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id);
+        var poll = await _factory.SeedPoll(project.Id);
+        var opt1 = await _factory.SeedOption(poll.Id, "Option 1");
+        var opt2 = await _factory.SeedOption(poll.Id, "Option 2");
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+        await client.PostAsJsonAsync("/api/project/poll/comment",
+            new { pollId = poll.Id, content = "Before the token" });
+
+        // Everything existing lands just before the token — inside the delta's overlap window, so it
+        // is re-sent, but it did not change after the token and must not be flagged for highlight.
+        var since = DateTime.UtcNow;
+        await _factory.BackdatePollActivityAsync(poll.Id, since.AddSeconds(-1));
+
+        var update = await client.PutAsJsonAsync($"/api/project/poll/option/{opt2.Id}",
+            new { text = "Option 2 edited", description = "" });
+        Assert.Equal(HttpStatusCode.OK, update.StatusCode);
+        await client.PostAsJsonAsync("/api/project/poll/comment",
+            new { pollId = poll.Id, content = "After the token" });
+
+        var response = await client.GetAsync(DeltaUrl(poll.Id, since));
+
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.Equal(2, json["options"]!.AsArray().Count);
+        Assert.Equal(2, json["comments"]!.AsArray().Count);
+
+        var highlightedOptions = json["highlightedOptionIds"]!.AsArray()
+            .Select(n => n!.GetValue<string>()).ToList();
+        Assert.Single(highlightedOptions);
+        Assert.EndsWith(opt2.Id, highlightedOptions[0]);
+        Assert.DoesNotContain(highlightedOptions, id => id.EndsWith(opt1.Id));
+
+        var highlightedComments = json["highlightedCommentIds"]!.AsArray();
+        Assert.Single(highlightedComments);
+        var afterComment = json["comments"]!.AsArray()
+            .Single(c => c!["content"]!.GetValue<string>() == "After the token");
+        Assert.Equal(afterComment!["id"]!.GetValue<string>(), highlightedComments[0]!.GetValue<string>());
+    }
+
+    [Fact]
     public async Task GetDelta_WithoutSince_ReturnsAllCurrent()
     {
         var user = await _factory.SeedUser();

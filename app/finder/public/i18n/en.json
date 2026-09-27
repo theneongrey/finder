@@ -538,7 +538,6 @@
             "confirmEnd": "Yes, end it",
             "confirmEndShort": "Yes",
             "comments": "Comments",
-            "refresh": "Refresh",
             "presence": {
                 "viewing": "{{count}} also viewing"
             },
@@ -546,6 +545,21 @@
             "hideComments": "Hide comments",
             "commentsFilterPoll": "Poll",
             "commentsFilterAll": "All",
+            "updateToast": {
+                "optionAdded": "{{name}} added an option",
+                "optionRemoved": "{{name}} removed the option “{{target}}”",
+                "optionRenamed": "{{name}} renamed an option to “{{target}}”",
+                "optionDescribed": "{{name}} added a description to “{{target}}”",
+                "optionUpdated": "{{name}} updated the option “{{target}}”",
+                "pollRenamed": "{{name}} renamed the poll to “{{target}}”",
+                "pollDescriptionUpdated": "{{name}} updated the poll description",
+                "commentAdded": "{{name}} added a comment",
+                "commentAddedOption": "{{name}} commented on “{{target}}”",
+                "pollClosed": "{{name}} closed the poll",
+                "pollReopened": "{{name}} reopened the poll",
+                "generic": "{{name}} updated this poll",
+                "genericNoName": "This poll was just updated"
+            },
             "noComments": "No comments yet. Be the first!",
             "commentPlaceholder": "Write a comment…",
             "submitComment": "Comment",

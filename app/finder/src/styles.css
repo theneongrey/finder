@@ -222,6 +222,14 @@ input.invalid {
     color: var(--text-primary) !important;
     border: 1px solid var(--border-hairline) !important;
     box-shadow: var(--shadow-overlay) !important;
+    border-radius: var(--radius-2xl) !important;
+}
+/* Live-update toast (someone edited the poll while you're viewing it) — dark pill.
+   Higher specificity than the base rule above so it overrides the light surface. */
+[data-sonner-toaster] [data-sonner-toast].toast-update {
+    background: var(--surface-card-dark) !important;
+    color: var(--text-on-dark-primary) !important;
+    border-color: var(--surface-card-dark) !important;
 }
 [data-sonner-toaster] [data-sonner-toast][data-type='success'] {
     background: var(--green-badge-bg) !important;

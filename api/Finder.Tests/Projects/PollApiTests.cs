@@ -225,7 +225,7 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
     }
 
     [Fact]
-    public async Task UpdateOption_WhenNotPermitted_Returns404()
+    public async Task UpdateOption_WhenVoter_Returns403()
     {
         var owner = await _factory.SeedUser();
         var other = await _factory.SeedUser();
@@ -234,6 +234,21 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
         var option = await _factory.SeedOption(poll.Id);
         await _factory.SeedPermission(project.Id, other.Id, PermissionType.Voter);
         using var client = _factory.CreateAuthenticatedClient(other.Id);
+
+        var response = await client.PutAsJsonAsync($"/api/project/poll/option/{option.Id}", new { text = "Hacked" });
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateOption_WhenNoAccess_Returns404()
+    {
+        var owner = await _factory.SeedUser();
+        var outsider = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        var poll = await _factory.SeedPoll(project.Id);
+        var option = await _factory.SeedOption(poll.Id);
+        using var client = _factory.CreateAuthenticatedClient(outsider.Id);
 
         var response = await client.PutAsJsonAsync($"/api/project/poll/option/{option.Id}", new { text = "Hacked" });
 
@@ -275,6 +290,41 @@ public class PollApiTests : IClassFixture<FinderApiFactory>
         var response = await client.DeleteAsync($"/api/project/poll/option/{option.Id}");
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task DeleteOption_WhenVoter_Returns403()
+    {
+        var owner = await _factory.SeedUser();
+        var other = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        var poll = await _factory.SeedPoll(project.Id);
+        var option = await _factory.SeedOption(poll.Id);
+        await _factory.SeedPermission(project.Id, other.Id, PermissionType.Voter);
+        using var client = _factory.CreateAuthenticatedClient(other.Id);
+
+        var response = await client.DeleteAsync($"/api/project/poll/option/{option.Id}");
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task DeleteOption_WithComments_DeletesOptionAndItsComments()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id);
+        var poll = await _factory.SeedPoll(project.Id);
+        var option = await _factory.SeedOption(poll.Id);
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+        var comment = await client.PostAsJsonAsync("/api/project/poll/comment",
+            new { pollId = poll.Id, content = "On the option", optionId = option.Id });
+        Assert.Equal(HttpStatusCode.OK, comment.StatusCode);
+
+        var response = await client.DeleteAsync($"/api/project/poll/option/{option.Id}");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        var pollResponse = await client.GetFromJsonAsync<JsonNode>($"/api/project/poll/{poll.Id}");
+        Assert.Empty(pollResponse!["comments"]!.AsArray());
     }
 
     [Fact]

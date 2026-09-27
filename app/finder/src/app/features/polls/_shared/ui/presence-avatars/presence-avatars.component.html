@@ -2,10 +2,6 @@
     <div
         class="flex items-center"
         data-testid="presence-avatars"
-        [attr.title]="
-            'project.results.presence.viewing'
-                | translate: { count: others().length }
-        "
         [attr.aria-label]="
             'project.results.presence.viewing'
                 | translate: { count: others().length }
@@ -17,12 +13,14 @@
                     <app-user-avatar
                         [user]="avatarUser(participant)"
                         [size]="27"
+                        [tooltip]="participant.name"
                     />
                 </div>
             }
             @if (extra() > 0) {
                 <div
                     class="-ml-[6px] box-border flex h-[27px] w-[27px] items-center justify-center rounded-[var(--radius-circle)] border-[2.5px] border-solid border-[var(--bg-sheet)] bg-[var(--sand-200)] text-[10px] font-bold text-[var(--ink-500)]"
+                    [attr.title]="extraNames()"
                 >
                     +{{ extra() }}
                 </div>

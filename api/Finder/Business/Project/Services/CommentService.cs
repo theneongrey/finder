@@ -75,7 +75,10 @@ public class CommentService
         await _projectNotificationService.SendNewCommentNotificationsAsync(
             recipients, user.Name ?? "Unknown", poll.Project, poll, comment.Content);
 
-        await _pollChangeNotifier.PollChanged(poll.Id, user.Id);
+        var commentChange = option is not null
+            ? new PollChangeInfo(PollChangeKind.CommentAddedOption, option.Text)
+            : new PollChangeInfo(PollChangeKind.CommentAdded);
+        await _pollChangeNotifier.PollChanged(poll.Id, user.Id, commentChange);
 
         return Result<Comment>.Success(comment);
     }

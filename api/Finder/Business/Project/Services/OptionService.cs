@@ -122,6 +122,11 @@ public class OptionService
             return Result<Option>.Fail(409);
         }
 
+        if (request.Version.HasValue && request.Version.Value != option.Version)
+        {
+            return Result<Option>.Fail(412);
+        }
+
         var cleanText = request.Text.StripHtml();
         var cleanDescription = request.Description.StripHtml();
 
@@ -176,7 +181,20 @@ public class OptionService
             option.Meta = null;
         }
 
-        await _dbContext.SaveChangesAsync();
+        if (textChanged || descriptionChanged || metaChanged)
+        {
+            option.Version++;
+        }
+
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            // Someone else's edit committed between our read and write.
+            return Result<Option>.Fail(412);
+        }
 
         var updateActor = await _userService.GetUser();
 

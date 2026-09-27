@@ -32,6 +32,7 @@ public class PollResponseOption
     public required PollResponseVote[] Votes { get; set; }
     public required string? Choice { get; set; }
     public required PollResponseOptionCreator Creator { get; set; }
+    public required int Version { get; set; }
 }
 
 public class PollResponse
@@ -44,6 +45,7 @@ public class PollResponse
     public required CommentResponse[] Comments { get; set; }
     public DateTime? CloseDate { get; set; }
     public required bool IsClosed { get; set; }
+    public required int Version { get; set; }
 }
 
 public static class PollMapper
@@ -78,7 +80,8 @@ public static class PollMapper
             {
                 Name = option.Creator.Name ?? "Unknown",
                 Picture = option.Creator.Picture
-            }
+            },
+            Version = option.Version
         };
     }
 
@@ -96,7 +99,8 @@ public static class PollMapper
                 .Select(c => c.ToCommentResponse())
                 .ToArray(),
             CloseDate = poll.CloseDate.HasValue ? DateTime.SpecifyKind(poll.CloseDate.Value, DateTimeKind.Utc) : null,
-            IsClosed = poll.CloseDate != null && poll.CloseDate <= DateTime.UtcNow
+            IsClosed = poll.CloseDate != null && poll.CloseDate <= DateTime.UtcNow,
+            Version = poll.Version
         };
     }
 }

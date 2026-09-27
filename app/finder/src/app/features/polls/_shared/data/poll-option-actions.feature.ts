@@ -19,6 +19,7 @@ import {
     Project,
 } from '../models/poll-detail.model';
 import { OptionMetaInput, toOptionMeta } from '../utils/option-meta.utils';
+import { isEditConflict } from '../utils/edit-conflict.utils';
 
 /** The option a voter should land on next: the first unvoted one, else the latest skipped. */
 function findNextOpenOptionId(options: OptionDetail[]): string | undefined {
@@ -52,6 +53,7 @@ export function withPollOptionActionsFeature() {
             state: type<{
                 currentPoll: PollDetail | undefined;
                 currentProject: Project | undefined;
+                editConflictCount: number;
             }>(),
         },
         withState({ optionAdding: false }),
@@ -132,19 +134,21 @@ export function withPollOptionActionsFeature() {
                 }>(
                     pipe(
                         switchMap((request) => {
-                            // Preserve the existing meta — omitting it makes the backend
-                            // clear the option's link/image (see UpdateOption).
-                            const meta = store
+                            const current = store
                                 .currentPoll()
                                 ?.options.find(
                                     (o) => o.id === request.optionId,
-                                )?.meta;
+                                );
+                            // Preserve the existing meta — omitting it makes the backend
+                            // clear the option's link/image (see UpdateOption). Send the
+                            // version being edited so a concurrent edit isn't overwritten.
                             return pollService
                                 .updateOption(
                                     request.optionId,
                                     request.text,
                                     request.description,
-                                    meta,
+                                    current?.meta,
+                                    current?.version,
                                 )
                                 .pipe(
                                     tapResponse({
@@ -167,12 +171,22 @@ export function withPollOptionActionsFeature() {
                                                                       description:
                                                                           option.description,
                                                                       meta: option.meta,
+                                                                      version:
+                                                                          option.version,
                                                                   },
                                                     ),
                                                 },
                                             });
                                         },
                                         error: (error) => {
+                                            if (isEditConflict(error)) {
+                                                patchState(store, {
+                                                    editConflictCount:
+                                                        store.editConflictCount() +
+                                                        1,
+                                                });
+                                                return;
+                                            }
                                             loggerService.log(
                                                 '[PollDetailStore] Error while updating an option',
                                                 error,

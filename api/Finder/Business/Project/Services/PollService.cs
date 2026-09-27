@@ -69,7 +69,7 @@ public class PollService
         return Result<Poll>.Success(poll);
     }
 
-    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null, OptionType? optionType = null)
+    public async Task<Result<Poll>> UpdatePoll(string slug, string name, string description, DateTime? closeDate = null, OptionType? optionType = null, int? expectedVersion = null)
     {
         var poll = await _dbContext.Polls
             .IncludeProjectMembers()
@@ -89,6 +89,11 @@ public class PollService
             return Result<Poll>.Fail(409);
         }
 
+        if (expectedVersion.HasValue && expectedVersion.Value != poll.Version)
+        {
+            return Result<Poll>.Fail(412);
+        }
+
         var oldName = poll.Name;
         var oldDescription = poll.Description;
 
@@ -105,7 +110,11 @@ public class PollService
             poll.Project.Name = name.StripHtml();
         }
 
-        await _dbContext.SaveChangesAsync();
+        poll.Version++;
+        if (!await TrySaveVersionedAsync())
+        {
+            return Result<Poll>.Fail(412);
+        }
 
         var actor = await _userService.GetUser();
         _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
@@ -207,8 +216,12 @@ public class PollService
 
         var actor = await _userService.GetUser();
         poll.CloseDate = DateTime.UtcNow;
+        poll.Version++;
         AddStatusChange(poll, PollStatusAction.Closed, actor.Payload!);
-        await _dbContext.SaveChangesAsync();
+        if (!await TrySaveVersionedAsync())
+        {
+            return Result<Poll>.Fail(412);
+        }
 
         await _projectNotificationService.SendPollClosedNotificationsAsync(
             GetRecipients(poll, actor.Payload!.Id), actor.Payload!.Name ?? "Unknown", poll.Project, poll);
@@ -234,8 +247,12 @@ public class PollService
 
         var actor = await _userService.GetUser();
         poll.CloseDate = null;
+        poll.Version++;
         AddStatusChange(poll, PollStatusAction.Reopened, actor.Payload!);
-        await _dbContext.SaveChangesAsync();
+        if (!await TrySaveVersionedAsync())
+        {
+            return Result<Poll>.Fail(412);
+        }
 
         await _projectNotificationService.SendPollReopenedNotificationsAsync(
             GetRecipients(poll, actor.Payload!.Id), actor.Payload!.Name ?? "Unknown", poll.Project, poll);
@@ -257,6 +274,23 @@ public class PollService
         };
         poll.StatusChanges.Add(statusChange);
         _dbContext.PollStatusChanges.Add(statusChange);
+    }
+
+    /// <summary>
+    /// Saves, reporting false when the row's <c>Version</c> concurrency token changed underneath us
+    /// (another request committed an edit between our read and our write).
+    /// </summary>
+    private async Task<bool> TrySaveVersionedAsync()
+    {
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return false;
+        }
     }
 
     /// <summary>Everyone on the poll's project except the actor.</summary>

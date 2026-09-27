@@ -48,6 +48,7 @@ public class ProjectResponseOption
     public PollResponseOptionMeta? Meta { get; set; }
     public required int Votes { get; set; }
     public required string? Choice { get; set; }
+    public required int Version { get; set; }
 }
 
 public class ProjectSharedWith
@@ -167,6 +168,7 @@ public static class ProjectMapper
             },
             Votes = option.Votes.Count,
             Choice = option.Votes.FirstOrDefault(v => v.Person.Id == userId)?.Choice,
+            Version = option.Version,
         };
     }
 

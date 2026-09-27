@@ -9,6 +9,9 @@ public class PollConfiguration : IEntityTypeConfiguration<Poll>
     public void Configure(EntityTypeBuilder<Poll> builder)
     {
         builder.HasKey(p => p.Id);
+
+        builder.Property(p => p.Version)
+            .IsConcurrencyToken();
         builder.Property(p => p.Id).HasMaxLength(8);
 
         builder.Property(p => p.Name)

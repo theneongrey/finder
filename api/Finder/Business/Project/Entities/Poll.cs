@@ -24,6 +24,12 @@ public class Poll : BaseEntity
     public required OptionType OptionType { get; set; }
     public DateTime? CloseDate { get; set; }
 
+    /// <summary>
+    /// Optimistic-concurrency token: bumped on every edit. Clients echo the version they edited;
+    /// a mismatch means someone else changed it first (412).
+    /// </summary>
+    public int Version { get; set; }
+
     public required Project Project { get; set; }
     public List<Option> Options { get; set; } = [];
     public List<Comment> Comments { get; set; } = [];

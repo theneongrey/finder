@@ -545,6 +545,7 @@
             "hideComments": "Ocultar comentarios",
             "commentsFilterPoll": "Encuesta",
             "commentsFilterAll": "Todos",
+            "editConflict": "Otra persona lo cambió al mismo tiempo, así que tu cambio no se guardó. Ahora ves la versión más reciente.",
             "updateToast": {
                 "optionAdded": "{{name}} añadió una opción",
                 "optionRemoved": "{{name}} eliminó la opción «{{target}}»",

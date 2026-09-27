@@ -22,7 +22,7 @@ public static class SetupExtensions
         {
             options.AddPolicy("preview", httpContext =>
                 RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    partitionKey: Shared.Setup.SetupExtensions.ClientIpPartitionKey(httpContext),
                     factory: _ => new FixedWindowRateLimiterOptions
                     {
                         PermitLimit = 5,

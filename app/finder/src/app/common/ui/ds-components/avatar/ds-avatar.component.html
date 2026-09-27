@@ -6,6 +6,8 @@
 >
     <hlm-avatar
         #circle
+        [attr.role]="tooltip() ? 'img' : null"
+        [attr.aria-label]="tooltip()"
         class="ds-avatar-circle box-border shrink-0 rounded-[var(--radius-circle)]!"
         [class]="borderClass()"
         [style.width.px]="px()"

@@ -65,8 +65,12 @@ export class DsAvatarComponent {
     private hideTimer?: ReturnType<typeof setTimeout>;
     private minVisibleUntil = 0;
 
+    // The tooltip is fixed-positioned from the rect at open time, so it would drift off the avatar
+    // on scroll — close it instead (capture phase also catches scrolling containers).
+    private readonly onScroll = () => this.hide();
+
     constructor() {
-        inject(DestroyRef).onDestroy(() => this.clearHideTimer());
+        inject(DestroyRef).onDestroy(() => this.hide());
     }
 
     protected onPointerEnter(): void {
@@ -95,7 +99,20 @@ export class DsAvatarComponent {
             this.minVisibleUntil,
             Date.now() + minVisibleMs,
         );
+        if (!this.tooltipOpen()) {
+            window.addEventListener('scroll', this.onScroll, {
+                passive: true,
+                capture: true,
+            });
+        }
         this.tooltipOpen.set(true);
+    }
+
+    private hide(): void {
+        this.clearHideTimer();
+        window.removeEventListener('scroll', this.onScroll, { capture: true });
+        this.tooltipOpen.set(false);
+        this.minVisibleUntil = 0;
     }
 
     /** Anchor the tooltip to the avatar circle, flipping above when there's no room below. */
@@ -122,11 +139,7 @@ export class DsAvatarComponent {
     private scheduleHide(delayMs: number): void {
         this.clearHideTimer();
         const remaining = Math.max(delayMs, this.minVisibleUntil - Date.now());
-        this.hideTimer = setTimeout(() => {
-            this.tooltipOpen.set(false);
-            this.minVisibleUntil = 0;
-            this.hideTimer = undefined;
-        }, remaining);
+        this.hideTimer = setTimeout(() => this.hide(), remaining);
     }
 
     private clearHideTimer(): void {

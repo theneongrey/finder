@@ -65,7 +65,7 @@
                     />
                 }
 
-                @if (poll.options.length === 0 && !showAddOption()) {
+                @if (displayOptions().length === 0 && !showAddOption()) {
                     <app-empty-options
                         [canManage]="canManagePoll()"
                         [isClosed]="poll.isClosed"
@@ -73,7 +73,7 @@
                     />
                 } @else {
                     <app-option-list
-                        [options]="poll.options"
+                        [options]="displayOptions()"
                         [optionType]="poll.optionType"
                         [members]="project()?.sharedWith ?? []"
                         [comments]="poll.comments"

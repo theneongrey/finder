@@ -538,7 +538,6 @@
             "confirmEnd": "Yes, end it",
             "confirmEndShort": "Yes",
             "comments": "Comments",
-            "refresh": "Refresh",
             "presence": {
                 "viewing": "{{count}} also viewing"
             },
@@ -556,7 +555,6 @@
                 "pollDescriptionUpdated": "{{name}} updated the poll description",
                 "commentAdded": "{{name}} added a comment",
                 "commentAddedOption": "{{name}} commented on “{{target}}”",
-                "voteCast": "{{name}} voted",
                 "pollClosed": "{{name}} closed the poll",
                 "pollReopened": "{{name}} reopened the poll",
                 "generic": "{{name}} updated this poll",

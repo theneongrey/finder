@@ -53,6 +53,15 @@ type SortMode = 'top' | 'original';
 /** localStorage key prefix for the per-poll sort choice. */
 const POLL_SORT_STORAGE_PREFIX = 'poll-sort:';
 
+/** Change kinds whose `target` is an option's raw text (formatted for date polls before display). */
+const OPTION_TARGET_KINDS = new Set([
+    'optionRemoved',
+    'optionRenamed',
+    'optionDescribed',
+    'optionUpdated',
+    'commentAddedOption',
+]);
+
 @Component({
     selector: 'app-poll-detail',
     templateUrl: './poll-detail.component.html',
@@ -87,6 +96,8 @@ export class PollDetailComponent {
     readonly presence = this.realtime.presence;
     readonly selfId = computed(() => this.userStore.user()?.id);
     readonly changedOptions = this.projectDetailStore.changedOptions;
+    /** Options for the list: the poll's options plus removed ones still playing their flash. */
+    readonly displayOptions = this.projectDetailStore.displayOptions;
     readonly changedCommentIds = this.projectDetailStore.changedCommentIds;
 
     /** True while a recently-added poll-level comment (no option) is still flashing — drives the
@@ -160,17 +171,18 @@ export class PollDetailComponent {
 
     readonly commentsOptionTitle = computed(() => {
         const option = this.commentsOption();
-        if (!option) {
-            return '';
-        }
-        const dateType = optionTypeToDateType(this.poll()?.optionType);
-        if (dateType) {
-            return this.dateFormat.labelFromEntry(
-                this.dateFormat.parse(option.text, dateType),
-            );
-        }
-        return option.text;
+        return option ? this.optionLabel(option.text) : '';
     });
+
+    /** Display label for an option's raw text — date polls store a positional encoding. */
+    private optionLabel(text: string): string {
+        const dateType = optionTypeToDateType(this.poll()?.optionType);
+        return dateType
+            ? this.dateFormat.labelFromEntry(
+                  this.dateFormat.parse(text, dateType),
+              )
+            : text;
+    }
 
     readonly optionComments = computed(() => {
         const option = this.commentsOption();
@@ -459,6 +471,11 @@ export class PollDetailComponent {
         if (typeof document !== 'undefined' && document.hidden) {
             return;
         }
+        // Votes are the most frequent change and already show live on the option cards, so a
+        // toast per vote would just be noise on a busy poll.
+        if (change.change?.kind === 'voteCast') {
+            return;
+        }
         const actorName = this.presence().find(
             (p) => p.userId === change.actorUserId,
         )?.name;
@@ -486,9 +503,12 @@ export class PollDetailComponent {
         const key = change?.kind
             ? `project.results.updateToast.${change.kind}`
             : 'project.results.updateToast.generic';
+        const target = change?.target ?? '';
         const message = this.translateService.instant(key, {
             name: actorName,
-            target: change?.target ?? '',
+            target: OPTION_TARGET_KINDS.has(change?.kind ?? '')
+                ? this.optionLabel(target)
+                : target,
         });
         // ngx-translate echoes the key back when it's missing — fall back to the generic line
         // so an unknown/new kind never shows a raw translation key.

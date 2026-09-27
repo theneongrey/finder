@@ -37,12 +37,16 @@ const HIGHLIGHT_DURATION_MS = 5000;
  */
 export type OptionChangeKind = 'added' | 'updated' | 'removed';
 
+interface LingeringOption {
+    option: OptionDetail;
+    index: number;
+}
+
 export const PollDetailStore = signalStore(
     { providedIn: 'root' },
     withState({
         currentProject: undefined as Project | undefined,
         currentPoll: undefined as PollDetail | undefined,
-        pollRefreshing: false,
         optionAdding: false,
         commentAdding: false,
         // Realtime sync (see mergeDelta): the last server sync token, the ids of items
@@ -52,9 +56,24 @@ export const PollDetailStore = signalStore(
         changedOptions: {} as Record<string, OptionChangeKind>,
         changedCommentIds: [] as string[],
         editingOptionIds: [] as string[],
+        // Options removed remotely, kept on screen (with their former list index) only while
+        // their red 'removed' flash plays. They are already gone from currentPoll.options, so
+        // voting and results never see them — only displayOptions renders them.
+        lingeringOptions: [] as LingeringOption[],
     }),
     withComputed((store) => ({
         projectId: computed(() => store.currentProject()?.id),
+        /** The poll's options plus any still-flashing removed ones, at their former position. */
+        displayOptions: computed(() => {
+            const options = [...(store.currentPoll()?.options ?? [])];
+            const lingering = [...store.lingeringOptions()].sort(
+                (a, b) => a.index - b.index,
+            );
+            for (const { option, index } of lingering) {
+                options.splice(Math.min(index, options.length), 0, option);
+            }
+            return options;
+        }),
     })),
     withProps(() => ({
         loggerService: inject(LoggerService),
@@ -86,7 +105,7 @@ export const PollDetailStore = signalStore(
         getPoll: rxMethod<string>(
             pipe(
                 // Only clear when switching to a different poll — refetching the
-                // same poll (refresh, vote overlay open/close) keeps the current
+                // same poll (vote overlay open/close) keeps the current
                 // data on screen so the detail page doesn't flash to the skeleton
                 // and re-run entry animations (e.g. the open add-option card).
                 // getPoll is called synchronously from effects, so read the
@@ -96,7 +115,6 @@ export const PollDetailStore = signalStore(
                     if (untracked(store.currentPoll)?.id !== id) {
                         patchState(store, { currentPoll: undefined });
                     }
-                    patchState(store, { pollRefreshing: true });
                 }),
                 switchMap((id) =>
                     store.projectService.getPoll(id).pipe(
@@ -111,9 +129,6 @@ export const PollDetailStore = signalStore(
                                 );
                             },
                         }),
-                        finalize(() =>
-                            patchState(store, { pollRefreshing: false }),
-                        ),
                     ),
                 ),
             ),
@@ -625,7 +640,7 @@ export const PollDetailStore = signalStore(
         };
 
         // Drop an option's highlight once its flash has run its course; a 'removed' option is
-        // only actually dropped from the list now (it lingered so the red flash could play).
+        // only taken off screen now (it lingered so the red flash could play).
         const expireOption = (id: string) => {
             const changes = { ...untracked(store.changedOptions) };
             const kind = changes[id];
@@ -633,15 +648,13 @@ export const PollDetailStore = signalStore(
                 return;
             }
             delete changes[id];
-            const poll = untracked(store.currentPoll);
             patchState(store, {
                 changedOptions: changes,
-                ...(kind === 'removed' && poll
+                ...(kind === 'removed'
                     ? {
-                          currentPoll: {
-                              ...poll,
-                              options: poll.options.filter((o) => o.id !== id),
-                          },
+                          lingeringOptions: untracked(
+                              store.lingeringOptions,
+                          ).filter((l) => l.option.id !== id),
                       }
                     : {}),
             });
@@ -719,24 +732,30 @@ export const PollDetailStore = signalStore(
             }
 
             // Reconcile hard-deletes: options absent from the current id-set were removed
-            // remotely. On a live update we keep them on screen (flagged 'removed') so they
-            // get the red flash; the highlight-clear timer drops them once it fires. On the
-            // baseline they're reconciled away silently. Editing options are exempt either way.
+            // remotely, so they leave currentPoll.options right away. On a live update they're
+            // parked in lingeringOptions (flagged 'removed') so the list can still show the red
+            // flash until the highlight timer drops them; on the baseline they just go. Editing
+            // options are exempt either way.
             const keepOptionIds = new Set(delta.currentOptionIds);
-            const removedIds = options
+            const removed = options
+                .map((option, index) => ({ option, index }))
                 .filter(
-                    (o) =>
-                        !keepOptionIds.has(o.id) &&
+                    ({ option }) =>
+                        !keepOptionIds.has(option.id) &&
                         !editing.some(
-                            (id) => extractSlugId(id) === extractSlugId(o.id),
+                            (id) =>
+                                extractSlugId(id) === extractSlugId(option.id),
                         ),
-                )
-                .map((o) => o.id);
-            if (isBaseline) {
-                options = options.filter((o) => !removedIds.includes(o.id));
-            } else {
-                for (const id of removedIds) {
-                    optionChanges[id] = 'removed';
+                );
+            options = options.filter(
+                (o) => !removed.some((r) => r.option.id === o.id),
+            );
+            const lingeringOptions = isBaseline
+                ? untracked(store.lingeringOptions)
+                : [...untracked(store.lingeringOptions), ...removed];
+            if (!isBaseline) {
+                for (const { option } of removed) {
+                    optionChanges[option.id] = 'removed';
                 }
             }
 
@@ -809,6 +828,7 @@ export const PollDetailStore = signalStore(
 
             patchState(store, {
                 currentPoll: { ...poll, ...pollFields, options, comments },
+                lingeringOptions,
                 syncToken: delta.syncToken,
                 changedOptions: nextChangedOptions,
                 changedCommentIds: isBaseline
@@ -914,27 +934,10 @@ export const PollDetailStore = signalStore(
             // options still lingering for their 'removed' flash are dropped now. Comment
             // highlights are left untouched.
             clearOptionHighlights() {
-                const changes = untracked(store.changedOptions);
-                const removedIds = Object.keys(changes).filter(
-                    (id) => changes[id] === 'removed',
-                );
-                for (const id of Object.keys(changes)) {
+                for (const id of Object.keys(untracked(store.changedOptions))) {
                     cancelHighlightTimer(`opt:${id}`);
                 }
-                const poll = untracked(store.currentPoll);
-                patchState(store, {
-                    changedOptions: {},
-                    ...(poll && removedIds.length
-                        ? {
-                              currentPoll: {
-                                  ...poll,
-                                  options: poll.options.filter(
-                                      (o) => !removedIds.includes(o.id),
-                                  ),
-                              },
-                          }
-                        : {}),
-                });
+                patchState(store, { changedOptions: {}, lingeringOptions: [] });
             },
 
             // Reset realtime state when leaving a poll (see PollDetailComponent teardown).
@@ -946,6 +949,7 @@ export const PollDetailStore = signalStore(
                     changedOptions: {},
                     changedCommentIds: [],
                     editingOptionIds: [],
+                    lingeringOptions: [],
                 });
             },
         };

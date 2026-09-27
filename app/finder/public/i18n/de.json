@@ -538,7 +538,6 @@
             "confirmEnd": "Ja, beenden",
             "confirmEndShort": "Ja",
             "comments": "Kommentare",
-            "refresh": "Aktualisieren",
             "presence": {
                 "viewing": "{{count}} weitere sehen zu"
             },
@@ -556,7 +555,6 @@
                 "pollDescriptionUpdated": "{{name}} hat die Umfragebeschreibung aktualisiert",
                 "commentAdded": "{{name}} hat einen Kommentar geschrieben",
                 "commentAddedOption": "{{name}} hat „{{target}}“ kommentiert",
-                "voteCast": "{{name}} hat abgestimmt",
                 "pollClosed": "{{name}} hat die Umfrage beendet",
                 "pollReopened": "{{name}} hat die Umfrage wieder geöffnet",
                 "generic": "{{name}} hat diese Umfrage aktualisiert",

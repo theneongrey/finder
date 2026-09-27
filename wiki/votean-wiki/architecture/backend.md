@@ -87,6 +87,11 @@ The `PreviewService` fetches OpenGraph metadata from URLs provided for image-typ
 
 An `"auth"` policy limits auth endpoints to **5 requests/IP/minute**. Exceeded requests return 429.
 
+## Deployment Model
+
+The API deliberately runs as a single instance. In-memory presence, SignalR groups and rate-limiter
+counters depend on that. See [Single-Instance Deployment](single-instance.md).
+
 ## Related
 
 - [Database](database.md) — EF Core configuration and PostgreSQL

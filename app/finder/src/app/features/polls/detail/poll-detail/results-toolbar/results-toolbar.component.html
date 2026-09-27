@@ -46,6 +46,9 @@
     }
 
     <div class="ml-auto flex items-center gap-2 @min-[900px]/detail:gap-2.5">
+        <!-- Live presence: who else is on this poll right now. -->
+        <app-presence-avatars [participants]="presence()" [selfId]="selfId()" />
+
         <!-- Compact (narrow column) -->
         <div class="contents @min-[900px]/detail:hidden">
             <ds-button

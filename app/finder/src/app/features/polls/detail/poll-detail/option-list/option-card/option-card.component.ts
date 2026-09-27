@@ -67,6 +67,10 @@ export class OptionCardComponent {
         description: string;
     }>();
     deleteOption = output<{ optionId: string }>();
+    // Edit-guard: announce when this option enters/leaves inline editing so remote updates to
+    // it can be deferred while the user is typing.
+    editStart = output<{ optionId: string }>();
+    editEnd = output<{ optionId: string }>();
 
     protected readonly limits = POLL_LIMITS;
 
@@ -80,16 +84,19 @@ export class OptionCardComponent {
         this.editText.set(this.option().text);
         this.editDescription.set(this.option().description ?? '');
         this.editing.set(true);
+        this.editStart.emit({ optionId: this.option().id });
     }
 
     protected cancelEdit(): void {
         this.editing.set(false);
+        this.editEnd.emit({ optionId: this.option().id });
     }
 
     protected confirmDelete(): void {
         this.deleteOption.emit({ optionId: this.option().id });
         this.deleteConfirm.set(false);
         this.editing.set(false);
+        this.editEnd.emit({ optionId: this.option().id });
     }
 
     protected submitEdit(): void {
@@ -103,6 +110,7 @@ export class OptionCardComponent {
             description: this.editDescription().trim(),
         });
         this.editing.set(false);
+        this.editEnd.emit({ optionId: this.option().id });
     }
 
     /** Option carries only its title — no description, image or link. */

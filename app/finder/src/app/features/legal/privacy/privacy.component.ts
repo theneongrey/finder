@@ -42,8 +42,7 @@ export class PrivacyComponent implements OnInit {
 
     ngOnInit(): void {
         const lang = this.route.snapshot.data['lang'] as
-            | SupportedLanguage
-            | undefined;
+            SupportedLanguage | undefined;
         if (lang) {
             this.translate.use(lang);
             setStoredLanguage(lang);

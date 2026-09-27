@@ -539,6 +539,9 @@
             "confirmEndShort": "Ja",
             "comments": "Kommentare",
             "refresh": "Aktualisieren",
+            "presence": {
+                "viewing": "{{count}} weitere sehen zu"
+            },
             "commentsTitle": "Kommentare zur Umfrage",
             "hideComments": "Kommentare ausblenden",
             "commentsFilterPoll": "Umfrage",

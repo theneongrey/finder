@@ -18,12 +18,14 @@ import {
     optionTypeToDateType,
 } from '../../../_shared/models/date-option.model';
 import * as voteTally from '../../../_shared/utils/vote-tally.utils';
+import { HIGHLIGHT_DURATION_MS } from '../../../_shared/data/poll-realtime-sync.feature';
 
 type SortMode = 'top' | 'original';
 
 @Component({
     selector: 'app-option-list',
     templateUrl: './option-list.component.html',
+    styleUrl: './option-list.component.css',
     imports: [OptionCardComponent, OptionCardDateComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,6 +40,9 @@ export class OptionListComponent {
     optionType = input(OptionType.YesNo);
     hideResults = input(false);
     isClosed = input(false);
+    /** Ids of options changed by a recent remote update — briefly highlighted. */
+    changedOptionIds = input<string[]>([]);
+    protected readonly highlightDurationMs = HIGHLIGHT_DURATION_MS;
 
     sort = input<SortMode>('top');
 
@@ -52,6 +57,12 @@ export class OptionListComponent {
         description: string;
     }>();
     deleteOption = output<{ optionId: string }>();
+    editStart = output<{ optionId: string }>();
+    editEnd = output<{ optionId: string }>();
+
+    isChanged(option: OptionDetail): boolean {
+        return this.changedOptionIds().includes(option.id);
+    }
 
     private readonly commentCountByOption = computed(() => {
         const counts = new Map<string, number>();

@@ -1,11 +1,7 @@
 import { OptionType } from '@common/models/option-type.model';
 
 export type DateOptionType =
-    | 'weekday'
-    | 'date'
-    | 'date-range'
-    | 'time'
-    | 'time-range';
+    'weekday' | 'date' | 'date-range' | 'time' | 'time-range';
 
 export interface DateOptionEntry {
     id?: string;

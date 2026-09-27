@@ -10,6 +10,8 @@
                 [isClosed]="poll.isClosed"
                 [commentsHidden]="!showComments()"
                 [refreshing]="refreshing()"
+                [presence]="presence()"
+                [selfId]="selfId()"
                 (startVote)="startVote()"
                 (addOption)="showAddOption.set(true)"
                 (closePoll)="closePoll()"
@@ -78,10 +80,13 @@
                         [pollId]="pollId()"
                         [isClosed]="poll.isClosed"
                         [sort]="sortMode()"
+                        [changedOptionIds]="changedOptionIds()"
                         (openComments)="openOptionComments($event)"
                         (saveEdit)="saveOptionEdit($event)"
                         (deleteOption)="deleteOption($event)"
                         (startVote)="openVoteAt($event)"
+                        (editStart)="onEditStart($event)"
+                        (editEnd)="onEditEnd($event)"
                     />
                 }
             </div>
@@ -96,6 +101,7 @@
                 <app-comments-section
                     [comments]="poll.comments"
                     [submitting]="commentAdding()"
+                    [changedCommentIds]="changedCommentIds()"
                     (addComment)="addComment($event)"
                     (dismiss)="showComments.set(false)"
                 />
@@ -115,6 +121,7 @@
         <app-comments-section
             [comments]="poll.comments"
             [submitting]="commentAdding()"
+            [changedCommentIds]="changedCommentIds()"
             (addComment)="addComment($event)"
             (dismiss)="showMobileComments.set(false)"
         />
@@ -131,6 +138,7 @@
             [comments]="optionComments()"
             [optionTitle]="commentsOptionTitle()"
             [submitting]="commentAdding()"
+            [changedCommentIds]="changedCommentIds()"
             (addComment)="addOptionComment($event)"
             (dismiss)="commentsOption.set(undefined)"
         />

@@ -9,6 +9,9 @@ public static class SetupExtensions
     {
         services.AddSignalR();
         services.AddScoped<ProjectService>();
+        services.AddScoped<PollService>();
+        services.AddScoped<OptionService>();
+        services.AddScoped<CommentService>();
         services.AddScoped<VoteService>();
         services.AddScoped<ProjectMailService>();
         services.AddScoped<ProjectNotificationService>();

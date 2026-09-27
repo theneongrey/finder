@@ -9,6 +9,7 @@ import {
     Project,
     PublicProjectInfo,
 } from '../models/poll-detail.model';
+import { PollDelta } from '../models/poll-delta.model';
 import { environment } from '@common/env/environment';
 import { LoggerService } from '@common/services/logger.service';
 import { OptionType } from '@common/models/option-type.model';
@@ -66,6 +67,17 @@ export class PollService {
         this.loggerService.debug('[PollService] fetching poll');
         return this.httpClient.get<PollDetail>(
             `${this.baseUrl}/api/project/poll/${id}`,
+        );
+    }
+
+    getPollDelta(slug: string, since?: string) {
+        this.loggerService.debug(
+            `[PollService] fetching poll delta for ${slug} since ${since ?? 'start'}`,
+        );
+        const params = since ? { params: { since } } : {};
+        return this.httpClient.get<PollDelta>(
+            `${this.baseUrl}/api/project/poll/${slug}/delta`,
+            params,
         );
     }
 

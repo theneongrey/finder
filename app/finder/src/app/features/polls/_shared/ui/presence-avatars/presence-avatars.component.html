@@ -1,0 +1,32 @@
+@if (others().length) {
+    <div
+        class="flex items-center"
+        data-testid="presence-avatars"
+        [attr.title]="
+            'project.results.presence.viewing'
+                | translate: { count: others().length }
+        "
+        [attr.aria-label]="
+            'project.results.presence.viewing'
+                | translate: { count: others().length }
+        "
+    >
+        <div class="flex pl-[6px]">
+            @for (participant of shown(); track participant.userId) {
+                <div class="-ml-[6px]">
+                    <app-user-avatar
+                        [user]="avatarUser(participant)"
+                        [size]="27"
+                    />
+                </div>
+            }
+            @if (extra() > 0) {
+                <div
+                    class="-ml-[6px] box-border flex h-[27px] w-[27px] items-center justify-center rounded-[var(--radius-circle)] border-[2.5px] border-solid border-[var(--bg-sheet)] bg-[var(--sand-200)] text-[10px] font-bold text-[var(--ink-500)]"
+                >
+                    +{{ extra() }}
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -123,7 +123,8 @@ public class FeedbackApiTests : IClassFixture<FinderApiFactory>
         var sent = Assert.Single(mail.SentMails);
         var t = sent.Template;
         var html = new MailTemplateService().Render(t.Name, t.Language, t.Variables);
-        Assert.Contains("bold &amp; a &lt; b", html);
+        // Kept verbatim (not stripped) but encoded, so it shows as text and can't inject markup.
+        Assert.Contains("&lt;b&gt;bold&lt;/b&gt; &amp; a &lt; b", html);
         Assert.DoesNotContain("<b>bold</b>", html);
     }
 

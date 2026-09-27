@@ -32,14 +32,34 @@ public class FeedbackPreferenceService(AppDbContext dbContext, UserService userS
         }
 
         var preference = await dbContext.FeedbackPreferences.SingleOrDefaultAsync(p => p.PersonId == userId.Value);
-        if (preference is null)
+        if (preference is not null)
         {
-            preference = new FeedbackPreference { PersonId = userId.Value };
-            dbContext.FeedbackPreferences.Add(preference);
+            preference.ButtonHidden = buttonHidden;
+            await dbContext.SaveChangesAsync();
+            return Result<FeedbackPreference>.Success(preference);
         }
 
-        preference.ButtonHidden = buttonHidden;
-        await dbContext.SaveChangesAsync();
+        preference = new FeedbackPreference { PersonId = userId.Value, ButtonHidden = buttonHidden };
+        dbContext.FeedbackPreferences.Add(preference);
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            // A concurrent request inserted the row first (PK violation): update that row instead.
+            dbContext.Entry(preference).State = EntityState.Detached;
+            var updated = await dbContext.FeedbackPreferences
+                .Where(p => p.PersonId == userId.Value)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(p => p.ButtonHidden, buttonHidden)
+                    .SetProperty(p => p.Edited, DateTime.UtcNow));
+            if (updated == 0)
+            {
+                // No row to fall back to, so the failure wasn't a lost insert race.
+                throw;
+            }
+        }
 
         return Result<FeedbackPreference>.Success(preference);
     }

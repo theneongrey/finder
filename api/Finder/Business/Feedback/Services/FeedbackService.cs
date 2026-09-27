@@ -21,7 +21,9 @@ public class FeedbackService(
 
     public async Task<Result> SubmitFeedback(FeedbackType type, string? comment, string? page)
     {
-        var cleanComment = comment?.StripHtml().Trim() ?? string.Empty;
+        // No StripHtml: feedback often quotes markup (e.g. "<ds-switch> is broken"), and every
+        // value is HTML-encoded by MailTemplateService, so the raw text is safe to keep.
+        var cleanComment = comment?.Trim() ?? string.Empty;
         var cleanPage = page?.Trim() ?? string.Empty;
 
         if (!Enum.IsDefined(type)

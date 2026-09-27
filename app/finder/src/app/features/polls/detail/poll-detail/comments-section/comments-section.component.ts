@@ -19,6 +19,7 @@ import {
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
 import { POLL_LIMITS } from '../../../_shared/models/poll-limits';
 import { TimeSincePipe } from '@common/ui/pipes/time-ago.pipe';
+import { HIGHLIGHT_DURATION_MS } from '../../../_shared/data/poll-realtime-sync.feature';
 
 type CommentFilter = 'poll' | 'all';
 
@@ -42,6 +43,7 @@ export class CommentsSectionComponent {
     private readonly translateService = inject(TranslateService);
 
     protected readonly limits = POLL_LIMITS;
+    protected readonly highlightDurationMs = HIGHLIGHT_DURATION_MS;
     comments = input<Comment[]>([]);
     /** When set, the drawer is scoped to a single option and shows its title. */
     optionTitle = input<string | undefined>(undefined);

@@ -44,7 +44,7 @@ public sealed class PollHub : Hub
 
         var id = SlugHelper.ExtractId(pollId);
 
-        // Same read predicate as ProjectService.GetPoll: public project OR creator OR any permission.
+        // Same read predicate as PollQueryExtensions.WhereReadableBy: public project OR creator OR any permission.
         var hasAccess = await _dbContext.Polls
             .AnyAsync(p => p.Id == id && (
                 p.Project.VisibilityType == VisibilityType.VisibleForEverbody ||

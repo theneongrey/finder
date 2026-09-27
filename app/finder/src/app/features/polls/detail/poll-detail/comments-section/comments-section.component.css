@@ -7,12 +7,13 @@
 }
 
 /* Brief background flash on a comment posted by another collaborator. Colours come from
-   design tokens; duration matches HIGHLIGHT_DURATION_MS in poll-detail.store.ts. */
+   design tokens; the duration is bound inline from HIGHLIGHT_DURATION_MS. */
 .comment-changed {
     border-radius: var(--radius-md);
     margin: -6px -8px;
     padding: 6px 8px;
-    animation: comment-flash 2.5s ease-out;
+    animation-name: comment-flash;
+    animation-timing-function: ease-out;
 }
 
 @keyframes comment-flash {

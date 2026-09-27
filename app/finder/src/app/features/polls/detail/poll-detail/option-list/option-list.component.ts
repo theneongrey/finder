@@ -18,6 +18,7 @@ import {
     optionTypeToDateType,
 } from '../../../_shared/models/date-option.model';
 import * as voteTally from '../../../_shared/utils/vote-tally.utils';
+import { HIGHLIGHT_DURATION_MS } from '../../../_shared/data/poll-realtime-sync.feature';
 
 type SortMode = 'top' | 'original';
 
@@ -41,6 +42,7 @@ export class OptionListComponent {
     isClosed = input(false);
     /** Ids of options changed by a recent remote update — briefly highlighted. */
     changedOptionIds = input<string[]>([]);
+    protected readonly highlightDurationMs = HIGHLIGHT_DURATION_MS;
 
     sort = input<SortMode>('top');
 

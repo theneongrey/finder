@@ -3,7 +3,10 @@
     data-testid="results-option-list"
 >
     @for (option of sortedOptions(); track option.id) {
-        <div [class.poll-item-changed]="isChanged(option)">
+        <div
+            [class.poll-item-changed]="isChanged(option)"
+            [style.animation-duration.ms]="highlightDurationMs"
+        >
             @if (isDateType()) {
                 <app-option-card-date
                     [option]="option"

@@ -8,6 +8,9 @@ public static class SetupExtensions
     public static IServiceCollection AddProjectServices(this IServiceCollection services)
     {
         services.AddScoped<ProjectService>();
+        services.AddScoped<PollService>();
+        services.AddScoped<OptionService>();
+        services.AddScoped<CommentService>();
         services.AddScoped<VoteService>();
         services.AddScoped<ProjectMailService>();
         services.AddScoped<ProjectNotificationService>();

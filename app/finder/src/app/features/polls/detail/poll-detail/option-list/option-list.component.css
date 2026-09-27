@@ -1,8 +1,9 @@
 /* Brief ring flash on an option changed by another collaborator. Colours come from design
-   tokens; duration matches HIGHLIGHT_DURATION_MS in poll-detail.store.ts. */
+   tokens; the duration is bound inline from HIGHLIGHT_DURATION_MS. */
 .poll-item-changed {
     border-radius: var(--radius-lg);
-    animation: poll-item-flash 2.5s ease-out;
+    animation-name: poll-item-flash;
+    animation-timing-function: ease-out;
 }
 
 @keyframes poll-item-flash {

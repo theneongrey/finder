@@ -19,21 +19,39 @@ public class ProjectNotificationService(
     private readonly TimeSpan _idleThreshold =
         TimeSpan.FromSeconds(notificationOptions.Value.ActivePresenceIdleSeconds);
 
+    public Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
+        Entities.Project project, Poll poll) =>
+        NotifyAsync(recipients, NotificationKey.PollClosed, actionUserName, project, poll,
+            recipient => mailService.SendPollClosedMailAsync(recipient, actionUserName, project, poll, recipient.Language));
+
+    public Task SendPollReopenedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
+        Entities.Project project, Poll poll) =>
+        NotifyAsync(recipients, NotificationKey.PollReopened, actionUserName, project, poll,
+            recipient => mailService.SendPollReopenedMailAsync(recipient, actionUserName, project, poll, recipient.Language));
+
+    public Task SendPollUpdatedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
+        Entities.Project project, Poll poll, PollUpdateSummary summary) =>
+        NotifyAsync(recipients, NotificationKey.PollUpdated, actionUserName, project, poll,
+            recipient => mailService.SendPollUpdatedMailAsync(recipient, actionUserName, project, poll, summary));
+
+    public Task SendNewCommentNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
+        Entities.Project project, Poll poll, string commentContent) =>
+        NotifyAsync(recipients, NotificationKey.NewComment, actionUserName, project, poll,
+            recipient => mailService.SendNewCommentMailAsync(recipient, actionUserName, project, poll, commentContent));
+
     /// <summary>
-    /// A recipient actively present on the poll is watching it live, so a duplicate e-mail is just
-    /// noise — skip it. The in-app notification is still created (persistent record), and a
-    /// present-but-idle or absent recipient falls through and is e-mailed per their settings.
+    /// Shared per-recipient pipeline: the in-app notification is always created (persistent record);
+    /// the e-mail is skipped for test users, for recipients actively present on the poll (they are
+    /// watching it live, so a duplicate e-mail is just noise), and when the recipient's mail settings
+    /// opt out. A present-but-idle or absent recipient falls through and is e-mailed.
     /// </summary>
-    private bool IsWatchingLive(Poll poll, Guid recipientId) =>
-        presenceRegistry.IsUserActive(poll.Id, recipientId, _idleThreshold);
-
-    public async Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll)
+    private async Task NotifyAsync(IEnumerable<Person> recipients, NotificationKey key, string actionUserName,
+        Entities.Project project, Poll poll, Func<Person, Task> sendMail)
     {
         foreach (var recipient in recipients)
         {
             await inAppNotificationService.CreateAsync(
-                recipient.Id, NotificationKey.PollClosed,
+                recipient.Id, key,
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
@@ -42,104 +60,17 @@ public class ProjectNotificationService(
                 continue;
             }
 
-            if (IsWatchingLive(poll, recipient.Id))
+            if (presenceRegistry.IsUserActive(poll.Id, recipient.Id, _idleThreshold))
             {
                 continue;
             }
 
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollClosed, project.Id))
+            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, key, project.Id))
             {
                 continue;
             }
 
-            await mailService.SendPollClosedMailAsync(recipient, actionUserName, project, poll, recipient.Language);
-        }
-    }
-
-    public async Task SendPollReopenedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll)
-    {
-        foreach (var recipient in recipients)
-        {
-            await inAppNotificationService.CreateAsync(
-                recipient.Id, NotificationKey.PollReopened,
-                projectId: project.Id, pollId: poll.Id,
-                new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
-
-            if (recipient.Role == Role.TestUser)
-            {
-                continue;
-            }
-
-            if (IsWatchingLive(poll, recipient.Id))
-            {
-                continue;
-            }
-
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollReopened, project.Id))
-            {
-                continue;
-            }
-
-            await mailService.SendPollReopenedMailAsync(recipient, actionUserName, project, poll, recipient.Language);
-        }
-    }
-
-    public async Task SendPollUpdatedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll, PollUpdateSummary summary)
-    {
-        foreach (var recipient in recipients)
-        {
-            await inAppNotificationService.CreateAsync(
-                recipient.Id, NotificationKey.PollUpdated,
-                projectId: project.Id, pollId: poll.Id,
-                new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
-
-            if (recipient.Role == Role.TestUser)
-            {
-                continue;
-            }
-
-            if (IsWatchingLive(poll, recipient.Id))
-            {
-                continue;
-            }
-
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollUpdated, project.Id))
-            {
-                continue;
-            }
-
-            await mailService.SendPollUpdatedMailAsync(recipient, actionUserName, project, poll, summary);
-        }
-    }
-
-    public async Task SendNewCommentNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
-        Entities.Project project, Poll poll, string commentContent)
-    {
-        foreach (var recipient in recipients)
-        {
-            await inAppNotificationService.CreateAsync(
-                recipient.Id, NotificationKey.NewComment,
-                projectId: project.Id, pollId: poll.Id,
-                new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
-
-            if (recipient.Role == Role.TestUser)
-            {
-                continue;
-            }
-
-            if (IsWatchingLive(poll, recipient.Id))
-            {
-                continue;
-            }
-
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.NewComment, project.Id))
-            {
-                continue;
-            }
-
-            await mailService.SendNewCommentMailAsync(recipient, actionUserName, project, poll, commentContent);
+            await sendMail(recipient);
         }
     }
 }

@@ -52,31 +52,48 @@ export class ResultsToolbarComponent {
         'project.common.share',
     );
 
-    /** Overflow menu (kebab) shown in place of the standalone close button. */
-    protected readonly menuItems = computed<MenuItem[]>(() => {
+    /** End-poll + share — the management actions the kebab carries at every width. Both are
+     *  Maintainer/Owner-only, so for a plain voter this list is empty. */
+    private readonly actionItems = computed<MenuItem[]>(() => {
         const items: MenuItem[] = [];
-        // Sort toggle: on mobile this menu is the only place to change the ordering (the desktop
-        // header carries its own sort button). Always available, including on closed polls.
-        items.push({
-            icon: 'sort',
-            label: this.sortLabel(),
-            onClick: () => this.toggleSort.emit(),
-        });
-        if (!this.isClosed() && this.canManage()) {
+        if (!this.canManage()) {
+            return items;
+        }
+        if (!this.isClosed()) {
             items.push({
                 icon: 'circle-minus',
                 label: this.endPollLabel(),
                 danger: true,
-                separatorBefore: true,
                 onClick: () => this.showCloseConfirm.set(true),
             });
         }
         items.push({
             icon: 'share',
             label: this.shareLabel(),
-            separatorBefore: true,
+            separatorBefore: items.length > 0,
             onClick: () => this.share.emit(),
         });
         return items;
+    });
+
+    /** Desktop kebab: the sort toggle lives in the poll header, so the menu is actions only. */
+    protected readonly menuItems = this.actionItems;
+
+    /**
+     * Mobile kebab: there's no header sort button at this width, so the menu leads with the sort
+     * toggle followed by the shared actions.
+     */
+    protected readonly menuItemsCompact = computed<MenuItem[]>(() => {
+        const sortItem: MenuItem = {
+            icon: 'sort',
+            label: this.sortLabel(),
+            onClick: () => this.toggleSort.emit(),
+        };
+        return [
+            sortItem,
+            ...this.actionItems().map((item, i) =>
+                i === 0 ? { ...item, separatorBefore: true } : item,
+            ),
+        ];
     });
 }

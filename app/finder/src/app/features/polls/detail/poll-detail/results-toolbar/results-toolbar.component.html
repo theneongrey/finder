@@ -107,28 +107,34 @@
                     {{ 'project.results.confirmEnd' | translate }}
                 </ds-button>
             </div>
-        } @else if (menuItems().length) {
-            <ds-menu [items]="menuItems()">
-                <!-- Compact (narrow column) -->
+        } @else {
+            <!-- Compact (narrow column): sort lives here since there's no header sort button. -->
+            @if (menuItemsCompact().length) {
                 <div class="contents @min-[900px]/detail:hidden">
-                    <ds-button
-                        variant="neutral"
-                        size="sm"
-                        icon="kebab"
-                        [label]="'project.results.moreActions' | translate"
-                        data-testid="poll-menu-btn"
-                    />
+                    <ds-menu [items]="menuItemsCompact()">
+                        <ds-button
+                            variant="neutral"
+                            size="sm"
+                            icon="kebab"
+                            [label]="'project.results.moreActions' | translate"
+                            data-testid="poll-menu-btn"
+                        />
+                    </ds-menu>
                 </div>
-                <!-- Wide -->
+            }
+            <!-- Wide: sort is in the poll header, so the menu is actions only. -->
+            @if (menuItems().length) {
                 <div class="hidden @min-[900px]/detail:contents">
-                    <ds-button
-                        variant="neutral"
-                        icon="kebab"
-                        [label]="'project.results.moreActions' | translate"
-                        data-testid="poll-menu-btn"
-                    />
+                    <ds-menu [items]="menuItems()">
+                        <ds-button
+                            variant="neutral"
+                            icon="kebab"
+                            [label]="'project.results.moreActions' | translate"
+                            data-testid="poll-menu-btn"
+                        />
+                    </ds-menu>
                 </div>
-            </ds-menu>
+            }
         }
 
         <!-- Show-comments button: kept viewport-based because the comments

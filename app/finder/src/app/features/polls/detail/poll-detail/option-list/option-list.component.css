@@ -1,7 +1,7 @@
 /* Flash shown on an option changed by another collaborator. Colours come from design
-   tokens — green (added), blue (updated), red (removed). The radius matches the card
-   (ds-card uses --radius-3xl) so the ring hugs the card corners. Durations match
-   HIGHLIGHT_DURATION_MS in poll-detail.store.ts. */
+   tokens — green (added), accent/teal (updated or new comment), red (removed). The radius
+   matches the card (ds-card uses --radius-3xl) so the ring hugs the card corners. Durations
+   match HIGHLIGHT_DURATION_MS in poll-detail.store.ts. */
 .poll-item-added,
 .poll-item-updated,
 .poll-item-removed {
@@ -15,7 +15,7 @@
         poll-item-pop 0.28s var(--ease-standard);
 }
 
-/* Updated — blue ring. */
+/* Updated (field change or a new comment on the option) — accent/teal ring. */
 .poll-item-updated {
     animation:
         poll-item-flash-updated 5s ease-out,
@@ -44,8 +44,8 @@
 @keyframes poll-item-flash-updated {
     0% {
         box-shadow:
-            0 0 0 2px var(--blue-fg),
-            0 0 0 6px var(--blue-bg);
+            0 0 0 2px var(--accent),
+            0 0 0 6px var(--accent-tint-strong);
     }
     100% {
         box-shadow:

@@ -89,6 +89,18 @@ export class PollDetailComponent {
     readonly changedOptions = this.projectDetailStore.changedOptions;
     readonly changedCommentIds = this.projectDetailStore.changedCommentIds;
 
+    /** True while a recently-added poll-level comment (no option) is still flashing — drives the
+     *  header comment button highlight. Option-level comment flashes live on the option cards. */
+    readonly pollCommentHighlight = computed(() => {
+        const ids = new Set(this.changedCommentIds());
+        if (ids.size === 0) {
+            return false;
+        }
+        return (this.poll()?.comments ?? []).some(
+            (c) => ids.has(c.id) && !c.optionId,
+        );
+    });
+
     pollId = input('');
 
     /** Set (via ?created=1) when arriving straight after poll creation. */

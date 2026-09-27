@@ -40,6 +40,7 @@
                     [statusLabel]="statusLabel()"
                     [closeDateText]="closeDateText()"
                     [commentCount]="poll.comments.length"
+                    [commentHighlight]="pollCommentHighlight()"
                     [sortLabel]="sortLabel()"
                     (toggleSort)="toggleSort()"
                     (save)="savePollDetails($event)"

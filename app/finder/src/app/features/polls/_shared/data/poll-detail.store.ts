@@ -752,6 +752,18 @@ export const PollDetailStore = signalStore(
                 }
                 if (highlightCommentIds.has(comment.id)) {
                     changedCommentIds.push(comment.id);
+                    // A comment on an option also flashes that option (blue) so the change is
+                    // visible in the list, not only in the comments panel. Don't override a
+                    // stronger add/remove flag already set for the same option.
+                    if (comment.optionId) {
+                        const stableId = extractSlugId(comment.optionId);
+                        const opt = options.find(
+                            (o) => extractSlugId(o.id) === stableId,
+                        );
+                        if (opt && !optionChanges[opt.id]) {
+                            optionChanges[opt.id] = 'updated';
+                        }
+                    }
                 }
             }
             const keepCommentIds = new Set(delta.currentCommentIds);

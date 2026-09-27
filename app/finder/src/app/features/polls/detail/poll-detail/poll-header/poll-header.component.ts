@@ -23,6 +23,7 @@ export interface PollDetailsEdit {
 @Component({
     selector: 'app-poll-header',
     templateUrl: './poll-header.component.html',
+    styleUrl: './poll-header.component.css',
     imports: [
         FormsModule,
         TranslatePipe,
@@ -44,6 +45,8 @@ export class PollHeaderComponent {
     statusLabel = input('');
     closeDateText = input('');
     commentCount = input(0);
+    /** Flash the comment button when a poll-level comment was just added remotely. */
+    commentHighlight = input(false);
     sortLabel = input('');
 
     save = output<PollDetailsEdit>();

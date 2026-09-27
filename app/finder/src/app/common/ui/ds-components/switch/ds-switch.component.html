@@ -1,6 +1,7 @@
 <hlm-switch
     [checked]="checked()"
     [size]="hlmSize()"
+    [aria-label]="label() ?? null"
     [disabled]="isDisabled"
     (checkedChange)="onCheckedChange($event)"
     class="ds-switch"

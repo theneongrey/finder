@@ -33,6 +33,8 @@ export type SwitchSize = 'sm' | 'md';
 export class DsSwitchComponent implements ControlValueAccessor {
     size = input<SwitchSize>('md');
     checked = model<boolean>(false);
+    /** Accessible name for the switch, forwarded to hlm-switch's aria-label. */
+    label = input<string | undefined>(undefined);
 
     protected readonly hlmSize = computed(() =>
         this.size() === 'sm' ? ('sm' as const) : ('default' as const),

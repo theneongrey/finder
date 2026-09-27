@@ -10,6 +10,7 @@ import { environment } from '@common/env/environment';
 import { LoggerService } from '@common/services/logger.service';
 import { UserStore } from '@common/data/user.store';
 import {
+    POLL_ACTIVITY_HEARTBEAT_SECONDS,
     PollChangedNotification,
     PollParticipant,
 } from '../models/poll-realtime.model';
@@ -31,6 +32,25 @@ export class PollRealtimeService {
 
     private connection?: HubConnection;
     private activePollId?: string;
+
+    /**
+     * Client heartbeat. While the user interacts with the poll they count as "actively present"
+     * server-side, which suppresses their redundant e-mail notifications; once they stop
+     * interacting (or background the tab) their activity ages out and notifications resume. Sends
+     * are throttled to POLL_ACTIVITY_HEARTBEAT_SECONDS (kept below the server idle window) so a
+     * single interaction keeps them active.
+     */
+    private static readonly ACTIVITY_EVENTS = [
+        'pointerdown',
+        'keydown',
+        'scroll',
+        'pointermove',
+    ];
+    private static readonly ACTIVITY_THROTTLE_MS =
+        POLL_ACTIVITY_HEARTBEAT_SECONDS * 1000;
+    private stopActivityTracking?: () => void;
+    private lastActivitySentAt = 0;
+    private activityInFlight = false;
 
     /** Roster of everyone currently on the active poll (including the local user). */
     readonly presence = signal<PollParticipant[]>([]);
@@ -54,6 +74,9 @@ export class PollRealtimeService {
     /** Connect (if needed) and join the poll's presence group. */
     async joinPoll(pollId: string): Promise<void> {
         this.activePollId = pollId;
+        // Joining already stamps activity server-side, so hold off the first heartbeat.
+        this.lastActivitySentAt = Date.now();
+        this.startActivityTracking();
         try {
             await this.ensureConnected();
             await this.connection!.invoke('JoinPoll', pollId);
@@ -71,6 +94,7 @@ export class PollRealtimeService {
         if (this.activePollId === pollId) {
             this.activePollId = undefined;
         }
+        this.stopActivityTracking?.();
         this.presence.set([]);
         if (this.connection?.state !== HubConnectionState.Connected) {
             return;
@@ -83,6 +107,69 @@ export class PollRealtimeService {
                 pollId,
                 error,
             );
+        }
+    }
+
+    /**
+     * Attach interaction listeners for the active poll. The app is zoneless, so these high-frequency
+     * events (pointermove, scroll) never trigger change detection — the handler only fires a
+     * throttled network ping and touches no signals.
+     */
+    private startActivityTracking(): void {
+        if (this.stopActivityTracking || typeof document === 'undefined') {
+            return;
+        }
+        const handler = () => this.onUserActivity();
+        for (const event of PollRealtimeService.ACTIVITY_EVENTS) {
+            document.addEventListener(event, handler, { passive: true });
+        }
+        this.stopActivityTracking = () => {
+            for (const event of PollRealtimeService.ACTIVITY_EVENTS) {
+                document.removeEventListener(event, handler);
+            }
+            this.stopActivityTracking = undefined;
+        };
+    }
+
+    private onUserActivity(): void {
+        // A backgrounded tab isn't really being watched — let it age into idle server-side.
+        if (document.hidden) {
+            return;
+        }
+        if (
+            this.activityInFlight ||
+            Date.now() - this.lastActivitySentAt <
+                PollRealtimeService.ACTIVITY_THROTTLE_MS
+        ) {
+            return;
+        }
+        void this.sendActivity();
+    }
+
+    /**
+     * The throttle window only advances once a heartbeat actually reaches the server, so a skipped
+     * or failed send is retried on the next interaction instead of letting the user lapse to idle.
+     */
+    private async sendActivity(): Promise<void> {
+        const pollId = this.activePollId;
+        if (
+            !pollId ||
+            this.connection?.state !== HubConnectionState.Connected
+        ) {
+            return;
+        }
+        this.activityInFlight = true;
+        try {
+            await this.connection.invoke('ReportActivity', pollId);
+            this.lastActivitySentAt = Date.now();
+        } catch (error) {
+            this.loggerService.log(
+                '[PollRealtimeService] Failed to report activity',
+                pollId,
+                error,
+            );
+        } finally {
+            this.activityInFlight = false;
         }
     }
 

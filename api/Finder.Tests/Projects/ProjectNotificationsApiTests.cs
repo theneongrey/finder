@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
+using Finder.Business.Project.RealTime;
 using Finder.Business.Project.Setup;
 using Finder.Business.Shared.Services;
 using Finder.Tests.Infrastructure;
@@ -20,7 +21,10 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
 
     // Creates a child factory that replaces MailService with a capturing stub
     // and configures the debounce to 1 second so debounce tests complete quickly.
-    private WebApplicationFactory<Program> CreateFactory(out CapturingMailService mail)
+    // activePresenceIdleSeconds lets presence-suppression tests toggle the idle window
+    // (0 = every present user counts as idle, so notifications are never suppressed).
+    private WebApplicationFactory<Program> CreateFactory(out CapturingMailService mail,
+        int activePresenceIdleSeconds = 60)
     {
         var captured = new CapturingMailService();
         mail = captured;
@@ -34,8 +38,21 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
 
             services.AddSingleton<MailService>(captured);
 
-            services.Configure<NotificationOptions>(o => o.PollUpdateDebounceSeconds = 1);
+            services.Configure<NotificationOptions>(o =>
+            {
+                o.PollUpdateDebounceSeconds = 1;
+                o.ActivePresenceIdleSeconds = activePresenceIdleSeconds;
+            });
         }));
+    }
+
+    // Marks a user as actively present on a poll by joining the singleton presence registry the
+    // notification path reads — the same seam a live hub connection would populate, without the
+    // socket timing.
+    private static void MarkPresent(WebApplicationFactory<Program> factory, string pollId, Person person)
+    {
+        var registry = factory.Services.GetRequiredService<PollPresenceRegistry>();
+        registry.Join(pollId, $"conn-{person.Id}", new PollParticipant(person.Id, person.Name, person.Picture));
     }
 
     private static HttpClient AuthenticatedClient(WebApplicationFactory<Program> factory, Guid userId)
@@ -325,5 +342,56 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
         var pollUpdatedMails = mail.SentMails.Where(m => m.Template.Name == "poll-updated").ToList();
         Assert.Single(pollUpdatedMails);
         Assert.Equal(voter.Email, pollUpdatedMails[0].RecipientEmail);
+    }
+
+    // --- Active-presence email suppression ---
+
+    [Fact]
+    public async Task ClosePoll_RecipientActivelyPresent_SkipsEmailButStillCreatesInApp()
+    {
+        var owner = await _factory.SeedUser();
+        var voter = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        await _factory.SeedPermission(project.Id, voter.Id, PermissionType.Voter);
+        var poll = await _factory.SeedPoll(project.Id);
+
+        using var factory = CreateFactory(out var mail);
+        using var ownerClient = AuthenticatedClient(factory, owner.Id);
+        using var voterClient = AuthenticatedClient(factory, voter.Id);
+
+        // Voter is actively watching the poll live → their e-mail should be suppressed.
+        MarkPresent(factory, poll.Id, voter);
+
+        await ownerClient.PostAsync($"/api/polls/{poll.Id}/close", null);
+
+        Assert.Empty(mail.SentMails);
+
+        // The in-app notification is still created — presence only suppresses e-mail.
+        var response = await voterClient.GetAsync("/api/user/notifications");
+        var notifications = JsonNode.Parse(await response.Content.ReadAsStringAsync())!.AsArray();
+        Assert.Single(notifications);
+        Assert.Equal("PollClosed", notifications[0]!["key"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task ClosePoll_RecipientPresentButIdle_StillReceivesEmail()
+    {
+        var owner = await _factory.SeedUser();
+        var voter = await _factory.SeedUser();
+        var project = await _factory.SeedProject(owner.Id);
+        await _factory.SeedPermission(project.Id, voter.Id, PermissionType.Voter);
+        var poll = await _factory.SeedPoll(project.Id);
+
+        // Idle window of 0 → a present user is always considered idle, so e-mails are not suppressed.
+        using var factory = CreateFactory(out var mail, activePresenceIdleSeconds: 0);
+        using var ownerClient = AuthenticatedClient(factory, owner.Id);
+
+        MarkPresent(factory, poll.Id, voter);
+
+        await ownerClient.PostAsync($"/api/polls/{poll.Id}/close", null);
+
+        Assert.Single(mail.SentMails);
+        Assert.Equal(voter.Email, mail.SentMails[0].RecipientEmail);
+        Assert.Equal("poll-closed", mail.SentMails[0].Template.Name);
     }
 }

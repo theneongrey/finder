@@ -7,9 +7,10 @@ import {
     withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { finalize, pipe, switchMap, tap } from 'rxjs';
+import { finalize, mergeMap, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { LoggerService } from '@common/services/logger.service';
+import { UserStore } from '@common/data/user.store';
 import { PollService } from './poll.service';
 import {
     CommentAuthor,
@@ -28,6 +29,22 @@ function findNextOpenOptionId(options: OptionDetail[]): string | undefined {
     return (nextUnvoted ?? nextSkipped)?.id;
 }
 
+/**
+ * Apply the local user's vote to an option. The detail page renders tallies from the aggregate
+ * votes array, so the user's entry there is patched too — not just `choice`.
+ */
+function applyOwnVote(
+    option: OptionDetail,
+    person: string,
+    choice: string,
+): OptionDetail {
+    const hasVote = option.votes.some((v) => v.person === person);
+    const votes = hasVote
+        ? option.votes.map((v) => (v.person === person ? { ...v, choice } : v))
+        : [...option.votes, { person, choice }];
+    return { ...option, choice, votes };
+}
+
 /** Option-level actions on the current poll: add, edit, delete and vote. */
 export function withPollOptionActionsFeature() {
     return signalStoreFeature(
@@ -41,6 +58,7 @@ export function withPollOptionActionsFeature() {
         withMethods((store) => {
             const pollService = inject(PollService);
             const loggerService = inject(LoggerService);
+            const userStore = inject(UserStore);
 
             return {
                 addOption: rxMethod<{
@@ -199,9 +217,12 @@ export function withPollOptionActionsFeature() {
                     ),
                 ),
 
+                // mergeMap (not switchMap): each vote targets a distinct option, so a
+                // rapid follow-up vote must not cancel the in-flight request for the
+                // previous option — that would silently drop the earlier vote.
                 vote: rxMethod<{ optionId: string; choice: string }>(
                     pipe(
-                        switchMap((vote) =>
+                        mergeMap((vote) =>
                             pollService.vote(vote.optionId, vote.choice).pipe(
                                 tapResponse({
                                     next: () => {
@@ -209,14 +230,18 @@ export function withPollOptionActionsFeature() {
                                         if (!currentPoll) {
                                             return;
                                         }
+                                        const user = userStore.user();
+                                        const person =
+                                            user?.name ?? user?.email ?? '';
                                         const updatedOptions =
                                             currentPoll.options.map((o) =>
                                                 o.id !== vote.optionId
                                                     ? o
-                                                    : {
-                                                          ...o,
-                                                          choice: vote.choice,
-                                                      },
+                                                    : applyOwnVote(
+                                                          o,
+                                                          person,
+                                                          vote.choice,
+                                                      ),
                                             );
                                         patchState(store, {
                                             currentPoll: {

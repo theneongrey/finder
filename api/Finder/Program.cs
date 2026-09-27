@@ -11,7 +11,6 @@ using Finder.Business.Permission.Setup;
 using Finder.Business.Preview.Api;
 using Finder.Business.Preview.Setup;
 using Finder.Business.Project.Api;
-using Finder.Business.Project.RealTime;
 using Finder.Business.Project.Setup;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
@@ -26,7 +25,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddCors();
-builder.Services.AddSignalR();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton(sp =>
@@ -86,7 +84,7 @@ app.WithProjectApi();
 app.WithPermissionApi();
 app.WithUserApi();
 app.WithUrlPreviewApi();
-app.MapHub<PollHub>("/hub/poll").RequireAuthorization();
+app.MapProjectHubs();
 
 if (app.Environment.IsDevelopment())
 {

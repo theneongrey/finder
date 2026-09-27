@@ -17,8 +17,10 @@ sources:
     resource: app/finder/src/app/features/polls/polls.routes.ts
   - title: PollDetailStore
     resource: app/finder/src/app/features/polls/_shared/data/poll-detail.store.ts
-  - title: "PR #444 / #450 — live collaboration on the poll detail page"
+  - title: "PR #444 — live collaboration on the poll detail page"
     resource: https://github.com/theneongrey/finder/pull/444
+  - title: "PR #450 — live collaboration UX fine-tuning"
+    resource: https://github.com/theneongrey/finder/pull/450
 ---
 
 # Polling

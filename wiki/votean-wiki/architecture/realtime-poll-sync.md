@@ -123,8 +123,9 @@ purely additive to the e-mail flow (`PollUpdateNotificationQueue`).
 - **`actorUserId`** lets the originating client ignore its own echo.
 - **`change`** is a `PollChangeInfo { kind, target? }` descriptor (PR #450). `kind` is one of the
   `PollChangeKind` constants (`optionAdded`, `optionRenamed`, `commentAddedOption`, `voteCast`,
-  `pollClosed`, …) and maps 1:1 onto the client's `project.results.updateToast.*` i18n keys;
-  `target` is the affected option/poll title where the message interpolates it. It is a label,
+  `pollClosed`, …); the client uses it as the key under `project.results.updateToast.*` for the
+  live-update toast. `voteCast` has no toast key (votes aren't toasted), and the extra
+  `generic` / `genericNoName` keys cover a ping without a known kind or actor name. `target` is the affected option/poll title where the message interpolates it. It is a label,
   not data — the client still fetches the delta.
 - **Best-effort:** a broadcast failure is logged, never surfaced — the write has already
   committed, and a 500 would make the caller retry a successful mutation.

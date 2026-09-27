@@ -6,6 +6,8 @@ namespace Finder.Business.Preview.Setup;
 
 public static class SetupExtensions
 {
+    private const int MaxPreviewResponseBytes = 5 * 1024 * 1024;
+
     public static IServiceCollection AddPreviewServices(this IServiceCollection services)
     {
         services.AddScoped<IHtmlGrabberPlaywrightService, HtmlGrabberPlaywrightService>();
@@ -33,10 +35,17 @@ public static class SetupExtensions
         });
 
         services.AddHttpClient("PreviewClient", client =>
-        {
-            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
-            client.Timeout = TimeSpan.FromSeconds(5);
-        });
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+                client.Timeout = TimeSpan.FromSeconds(5);
+                client.MaxResponseContentBufferSize = MaxPreviewResponseBytes;
+            })
+            // SSRF guard: every connection (including redirect targets) must go to a public address.
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            {
+                ConnectCallback = OutboundUrlGuard.ConnectToPublicAddressAsync,
+                MaxAutomaticRedirections = 5
+            });
 
         return services;
     }

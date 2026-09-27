@@ -47,10 +47,9 @@
         }}
     </p>
 
-    <div class="flex gap-2">
+    <div class="grid grid-cols-2 gap-2">
         <ds-button
             data-testid="feedback-cancel"
-            class="flex-1"
             variant="outline"
             [fullWidth]="true"
             (click)="cancelled.emit()"
@@ -59,7 +58,6 @@
         </ds-button>
         <ds-button
             data-testid="feedback-send"
-            class="flex-1"
             variant="primary"
             [fullWidth]="true"
             [disabled]="!canSend()"

@@ -84,6 +84,7 @@ app.WithProjectApi();
 app.WithPermissionApi();
 app.WithUserApi();
 app.WithUrlPreviewApi();
+app.MapProjectHubs();
 
 if (app.Environment.IsDevelopment())
 {

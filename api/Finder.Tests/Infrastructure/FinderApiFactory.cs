@@ -80,6 +80,7 @@ public class FinderApiFactory : WebApplicationFactory<Program>
             {
                 options.AddPolicy("auth", _ => RateLimitPartition.GetNoLimiter("auth"));
                 options.AddPolicy("preview", _ => RateLimitPartition.GetNoLimiter("preview"));
+                options.AddPolicy("feedback", _ => RateLimitPartition.GetNoLimiter("feedback"));
             });
 
             services.PostConfigure<AuthenticationOptions>(options =>

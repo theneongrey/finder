@@ -1,3 +1,5 @@
+using System.Text.Json;
+using Finder.Business.Project.Entities;
 using Finder.Business.Project.Setup;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
@@ -20,15 +22,17 @@ public record PollUpdateSummary(
         OptionsModified;
 }
 
-public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOptions<NotificationOptions> options)
+/// <summary>
+/// Debounces "poll updated" e-mails: edits to a poll accumulate in its <see cref="PendingPollUpdate"/>
+/// row, and every edit pushes the due time out by the debounce window. <see cref="PollUpdateDispatcher"/>
+/// fires rows once they are due. State lives in the database, so pending notifications survive restarts.
+/// </summary>
+public class PollUpdateNotificationQueue(AppDbContext dbContext, IOptions<NotificationOptions> options)
 {
-    private readonly int _debounceMs = options.Value.PollUpdateDebounceSeconds * 1000;
-    private readonly object _lock = new();
-    private readonly Dictionary<string, PollDebounceEntry> _pending = new();
+    private readonly TimeSpan _debounce = TimeSpan.FromSeconds(options.Value.PollUpdateDebounceSeconds);
 
-    public void EnqueuePollUpdate(string pollId, string actionUserName, Guid actionUserId,
-        string oldName, string newName, string oldDescription, string newDescription)
-    {
+    public Task EnqueuePollUpdate(string pollId, string actionUserName, Guid actionUserId,
+        string oldName, string newName, string oldDescription, string newDescription) =>
         EnqueueChange(pollId, actionUserName, actionUserId, changes =>
         {
             changes.FirstOldName ??= oldName;
@@ -38,21 +42,17 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
                 changes.DescriptionChanged = true;
             }
         });
-    }
 
-    public void EnqueueOptionAdded(string pollId, string optionId, string optionText,
-        string actionUserName, Guid actionUserId)
-    {
+    public Task EnqueueOptionAdded(string pollId, string optionId, string optionText,
+        string actionUserName, Guid actionUserId) =>
         EnqueueChange(pollId, actionUserName, actionUserId, changes =>
         {
             changes.NetOptionsRemoved.Remove(optionId);
             changes.NetOptionsAdded[optionId] = optionText;
         });
-    }
 
-    public void EnqueueOptionRemoved(string pollId, string optionId, string optionText,
-        string actionUserName, Guid actionUserId)
-    {
+    public Task EnqueueOptionRemoved(string pollId, string optionId, string optionText,
+        string actionUserName, Guid actionUserId) =>
         EnqueueChange(pollId, actionUserName, actionUserId, changes =>
         {
             if (!changes.NetOptionsAdded.Remove(optionId))
@@ -60,117 +60,47 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
                 changes.NetOptionsRemoved[optionId] = optionText;
             }
         });
-    }
 
-    public void EnqueueOptionModified(string pollId, string actionUserName, Guid actionUserId)
-    {
-        EnqueueChange(pollId, actionUserName, actionUserId, changes =>
-        {
-            changes.OptionsModified = true;
-        }); 
-    }
+    public Task EnqueueOptionModified(string pollId, string actionUserName, Guid actionUserId) =>
+        EnqueueChange(pollId, actionUserName, actionUserId, changes => changes.OptionsModified = true);
 
-    private void EnqueueChange(string pollId, string actionUserName, Guid actionUserId, Action<PollChanges> applyChange)
+    private async Task EnqueueChange(string pollId, string actionUserName, Guid actionUserId,
+        Action<PollChanges> applyChange)
     {
-        lock (_lock)
+        // Two edits to the same poll can race to insert its row; the loser re-reads and merges.
+        for (var attempt = 0; ; attempt++)
         {
-            if (!_pending.TryGetValue(pollId, out var entry))
+            var pending = await dbContext.PendingPollUpdates.SingleOrDefaultAsync(p => p.PollId == pollId);
+            var changes = pending is null
+                ? new PollChanges()
+                : JsonSerializer.Deserialize<PollChanges>(pending.Changes) ?? new PollChanges();
+
+            changes.ActionUserName = actionUserName;
+            changes.ActionUserId = actionUserId;
+            applyChange(changes);
+
+            if (pending is null)
             {
-                entry = new PollDebounceEntry();
-                _pending[pollId] = entry;
+                pending = new PendingPollUpdate { PollId = pollId, Changes = "" };
+                dbContext.PendingPollUpdates.Add(pending);
             }
-            else
+
+            pending.Changes = JsonSerializer.Serialize(changes);
+            pending.DueAt = DateTime.UtcNow + _debounce;
+
+            try
             {
-                entry.Cts.Cancel();
-                entry.Cts.Dispose();
-                entry.Cts = new CancellationTokenSource();
-            }
-
-            entry.Changes.ActionUserName = actionUserName;
-            entry.Changes.ActionUserId = actionUserId;
-            applyChange(entry.Changes);
-
-            var cts = entry.Cts;
-            var changes = entry.Changes;
-
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    await Task.Delay(_debounceMs, cts.Token);
-                    lock (_lock)
-                    {
-                        // Bail if a newer enqueue replaced our CTS — it will fire instead.
-                        if (!_pending.TryGetValue(pollId, out var current) || !ReferenceEquals(current.Cts, cts))
-                        {
-                            return;
-                        }
-
-                        _pending.Remove(pollId);
-                    }
-                    await FireAsync(pollId, changes);
-                }
-                catch (OperationCanceledException) { }
-            });
-        }
-    }
-
-    private async Task FireAsync(string pollId, PollChanges changes)
-    {
-        try
-        {
-            using var scope = scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            var mailService = scope.ServiceProvider.GetRequiredService<ProjectNotificationService>();
-
-            var poll = await dbContext.Polls
-                .Include(p => p.Project).ThenInclude(proj => proj.Creator)
-                .Include(p => p.Project).ThenInclude(proj => proj.Permissions).ThenInclude(perm => perm.Person)
-                .Where(p => p.Id == pollId)
-                .FirstOrDefaultAsync();
-
-            if (poll is null)
-            {
+                await dbContext.SaveChangesAsync();
                 return;
             }
-
-            var nameChanged = changes.FirstOldName is not null && changes.FirstOldName != changes.LastNewName;
-            var summary = new PollUpdateSummary(
-                NameChanged: nameChanged,
-                OldName: changes.FirstOldName ?? "",
-                NewName: changes.LastNewName ?? poll.Name,
-                DescriptionChanged: changes.DescriptionChanged,
-                OptionsAdded: [.. changes.NetOptionsAdded.Values],
-                OptionsRemoved: [.. changes.NetOptionsRemoved.Values],
-                OptionsModified: changes.OptionsModified
-            );
-
-            if (!summary.HasChanges)
+            catch (DbUpdateException) when (attempt == 0)
             {
-                return;
+                dbContext.Entry(pending).State = EntityState.Detached;
             }
-
-            var recipients = poll.Project.Permissions
-                .Select(p => p.Person)
-                .Append(poll.Project.Creator)
-                .Where(p => p.Id != changes.ActionUserId)
-                .ToList();
-
-            await mailService.SendPollUpdatedNotificationsAsync(recipients, changes.ActionUserName, poll.Project, poll, summary);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error in PollUpdateNotificationQueue: " + ex.Message);
         }
     }
 
-    private class PollDebounceEntry
-    {
-        public CancellationTokenSource Cts { get; set; } = new();
-        public PollChanges Changes { get; } = new();
-    }
-
-    private class PollChanges
+    public class PollChanges
     {
         public string ActionUserName { get; set; } = "";
         public Guid ActionUserId { get; set; }
@@ -178,7 +108,7 @@ public class PollUpdateNotificationQueue(IServiceScopeFactory scopeFactory, IOpt
         public string? LastNewName { get; set; }
         public bool DescriptionChanged { get; set; }
         public bool OptionsModified { get; set; }
-        public Dictionary<string, string> NetOptionsAdded { get; } = new();
-        public Dictionary<string, string> NetOptionsRemoved { get; } = new();
+        public Dictionary<string, string> NetOptionsAdded { get; set; } = new();
+        public Dictionary<string, string> NetOptionsRemoved { get; set; } = new();
     }
 }

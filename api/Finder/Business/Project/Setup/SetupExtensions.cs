@@ -5,7 +5,7 @@ namespace Finder.Business.Project.Setup;
 
 public static class SetupExtensions
 {
-    public static IServiceCollection AddProjectServices(this IServiceCollection services)
+    public static IServiceCollection AddProjectServices(this IServiceCollection services, bool runBackgroundDispatchers)
     {
         services.AddSignalR();
         services.AddScoped<ProjectService>();
@@ -16,7 +16,12 @@ public static class SetupExtensions
         services.AddScoped<ProjectMailService>();
         services.AddScoped<ProjectNotificationService>();
         services.AddScoped<PollChangesBuilder>();
-        services.AddSingleton<PollUpdateNotificationQueue>();
+        services.AddScoped<PollUpdateNotificationQueue>();
+        services.AddSingleton<PollUpdateDispatcher>();
+        if (runBackgroundDispatchers)
+        {
+            services.AddHostedService(sp => sp.GetRequiredService<PollUpdateDispatcher>());
+        }
         services.AddSingleton<PollPresenceRegistry>();
         services.AddSingleton<IPollChangeNotifier, PollChangeNotifier>();
 

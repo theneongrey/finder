@@ -3,6 +3,16 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-27 — ingest: atomic poll-update claim (PR #463 follow-up)
+Pages touched: features/notifications.md (claim + in-app + outbox commit in one transaction, 1 min retry; link to single-instance), architecture/single-instance.md (debounce/mail row updated to post-#463 DB-backed queues)
+
+---
+
+## 2026-09-27 — ingest: persisted mail outbox + poll-update queue
+Pages touched: features/notifications.md (added "Delivery: persisted queues, never inline" — OutboxMails + MailOutboxDispatcher with retry/backoff, PendingPollUpdates + PollUpdateDispatcher, single-instance assumption, explicit draining in tests)
+
+---
+
 ## 2026-09-27 — ingest: architecture review decisions (single instance, E2E-only frontend)
 Pages touched: architecture/single-instance.md (created — decision record, process-local state table, scale-out checklist), guides/testing.md (frontend unit tests: none by design, rationale, revisit trigger), architecture/ci-cd.md (link to the testing decision), architecture/realtime-poll-sync.md (presence process-local by design → link), architecture/backend.md (Deployment Model section), architecture/index.md, index.md
 

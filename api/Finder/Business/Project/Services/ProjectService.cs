@@ -2,6 +2,7 @@ using Finder.Business.Permission.Entities;
 using Finder.Business.Permission.Services;
 using Finder.Business.Project.Api.Requests;
 using Finder.Business.Project.Entities;
+using Finder.Business.Project.RealTime;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
 using Finder.Database;
@@ -16,17 +17,20 @@ public class ProjectService
     private readonly PermissionService _permissionService;
     private readonly ProjectNotificationService _projectNotificationService;
     private readonly PollUpdateNotificationQueue _pollUpdateQueue;
+    private readonly IPollChangeNotifier _pollChangeNotifier;
 
     private Guid? UserId => _userService.GetUserId();
 
     public ProjectService(AppDbContext dbContext, UserService userService, PermissionService permissionService,
-        ProjectNotificationService projectNotificationService, PollUpdateNotificationQueue pollUpdateQueue)
+        ProjectNotificationService projectNotificationService, PollUpdateNotificationQueue pollUpdateQueue,
+        IPollChangeNotifier pollChangeNotifier)
     {
         _dbContext = dbContext;
         _userService = userService;
         _permissionService = permissionService;
         _projectNotificationService = projectNotificationService;
         _pollUpdateQueue = pollUpdateQueue;
+        _pollChangeNotifier = pollChangeNotifier;
     }
 
     public async Task<List<Entities.Project>> GetAll()
@@ -301,6 +305,8 @@ public class ProjectService
         _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
             oldName, poll.Name, oldDescription, poll.Description);
 
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+
         return Result<Poll>.Success(poll);
     }
 
@@ -330,6 +336,65 @@ public class ProjectService
         }
 
         return Result<Poll>.Success(poll);
+    }
+
+    // Rows committed within this window of the client's token are re-sent even if the token is
+    // technically newer, so nothing is missed at the boundary. The client upserts by id, so a
+    // re-delivered row is harmless.
+    private static readonly TimeSpan DeltaOverlap = TimeSpan.FromSeconds(2);
+
+    public async Task<Result<PollDelta>> GetPollDelta(string slug, DateTime? since)
+    {
+        // Captured before the read so the token the client echoes next time is never ahead of
+        // what this response reflects.
+        var syncToken = DateTime.UtcNow;
+        // No token yet → return everything. Otherwise widen the window slightly so rows committed
+        // right at the boundary aren't missed (the client upserts by id, so overlap is harmless).
+        var sinceCutoff = since.HasValue ? since.Value.ToUniversalTime() - DeltaOverlap : DateTime.MinValue;
+
+        var poll = await _dbContext.Polls
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Creator)
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Meta)
+            .Include(t => t.Options)
+            .ThenInclude(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Person)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.Option)
+            .Where(t => t.Id == SlugHelper.ExtractId(slug) && (
+                t.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
+                t.Project.Creator.Id == UserId ||
+                t.Project.Permissions.Any(permission => permission.PersonKey == UserId)))
+            .SingleOrDefaultAsync();
+
+        if (poll is null)
+        {
+            return Result<PollDelta>.Fail(404);
+        }
+
+        // A vote change stamps Vote.Edited but not Option.Edited, so an option counts as changed
+        // when the option itself or any of its votes changed. The delta re-sends the whole option
+        // (votes included), so the client sees the new tally.
+        var changedOptions = poll.Options
+            .Where(o => o.Edited > sinceCutoff || o.Votes.Any(v => v.Edited > sinceCutoff))
+            .ToList();
+
+        var changedComments = poll.Comments
+            .Where(c => c.Edited > sinceCutoff)
+            .ToList();
+
+        var changedPoll = poll.Edited > sinceCutoff ? poll : null;
+
+        return Result<PollDelta>.Success(new PollDelta(
+            changedPoll,
+            changedOptions,
+            changedComments,
+            poll.Options,
+            poll.Comments,
+            syncToken));
     }
 
     public async Task<Result<Option>> AddOptionToPoll(AddOptionToPollRequest pollRequest)
@@ -385,6 +450,8 @@ public class ProjectService
 
         _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, creator.Name ?? "Unknown",
             creator.Id);
+
+        await _pollChangeNotifier.PollChanged(poll.Id, creator.Id);
 
         return Result<Option>.Success(option);
     }
@@ -471,6 +538,8 @@ public class ProjectService
         {
             _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown",
                 updateActor.Payload!.Id);
+
+            await _pollChangeNotifier.PollChanged(option.Poll.Id, updateActor.Payload!.Id);
         }
 
         return Result<Option>.Success(option);
@@ -506,6 +575,8 @@ public class ProjectService
         var deleteActor = await _userService.GetUser();
         _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown",
             deleteActor.Payload!.Id);
+
+        await _pollChangeNotifier.PollChanged(pollId, deleteActor.Payload!.Id);
 
         return Result.Success();
     }
@@ -599,6 +670,8 @@ public class ProjectService
         await _projectNotificationService.SendNewCommentNotificationsAsync(
             recipients, user.Name ?? "Unknown", poll.Project, poll, comment.Content);
 
+        await _pollChangeNotifier.PollChanged(poll.Id, user.Id);
+
         return Result<Comment>.Success(comment);
     }
 
@@ -651,6 +724,8 @@ public class ProjectService
         await _projectNotificationService.SendPollClosedNotificationsAsync(
             closeRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
 
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
+
         return Result<Poll>.Success(poll);
     }
 
@@ -702,6 +777,8 @@ public class ProjectService
             .ToList();
         await _projectNotificationService.SendPollReopenedNotificationsAsync(
             reopenRecipients, actor.Payload!.Name ?? "Unknown", poll.Project, poll);
+
+        await _pollChangeNotifier.PollChanged(poll.Id, actor.Payload!.Id);
 
         return Result<Poll>.Success(poll);
     }

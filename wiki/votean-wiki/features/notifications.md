@@ -6,7 +6,7 @@ tags: [notifications, email, in-app, feature, backend, frontend]
 status: stable
 generated:
   actor: claude-opus-4-8
-  date: 2026-09-25
+  date: 2026-09-27
 stale_after: 2027-03-25
 sources:
   - title: "PR #367 — in-app notification system"
@@ -23,6 +23,10 @@ sources:
     resource: api/Finder/Business/User/Services/InAppNotificationService.cs
   - title: MailTemplateService
     resource: api/Finder/Business/Shared/Services/MailTemplateService.cs
+  - title: MailOutbox / MailOutboxDispatcher
+    resource: api/Finder/Business/Shared/Services/MailOutboxDispatcher.cs
+  - title: PollUpdateNotificationQueue / PollUpdateDispatcher
+    resource: api/Finder/Business/Project/Services/PollUpdateDispatcher.cs
   - title: user-in-app-notifications feature (polling store)
     resource: app/finder/src/app/common/data/user-in-app-notifications.feature.ts
 ---
@@ -59,6 +63,26 @@ live together in `ProjectNotificationService.ShouldSendMailAsync`):
 
 Poll updates are debounced/batched through `PollUpdateNotificationQueue`
 (`Notifications:PollUpdateDebounceSeconds`, default 10 s).
+
+### Delivery: persisted queues, never inline
+
+No request talks to SMTP. Both queues live in the database so they survive deploys and restarts:
+
+- **Mail outbox.** Mail senders call `MailOutbox.EnqueueAsync(mail)`, which stores the `Mail`
+  (subject, recipient, template name + variables) as JSON in `OutboxMails` and wakes
+  `MailOutboxDispatcher`. The dispatcher renders the template and sends it through `MailService`.
+  Delivered rows are deleted. A failed send is retried with exponential backoff (1 min, doubling,
+  capped at 1 h). After 8 attempts the row is parked with its `LastError` and an error is logged.
+  The dispatcher also polls every 30 s, so nothing waits on a signal that was lost.
+- **Poll-update debounce.** Each edit merges into the poll's `PendingPollUpdates` row and pushes
+  its `DueAt` out by the debounce window. `PollUpdateDispatcher` checks every second, claims due
+  rows (a delete that only succeeds if `DueAt` is unchanged) and hands the summary to
+  `ProjectNotificationService`, which applies the gates above and enqueues the mails.
+
+Both dispatchers assume a **single API instance**. With several instances, rows would need
+claiming with `SELECT … FOR UPDATE SKIP LOCKED`. In the `Testing` environment the background loops
+are off; integration tests call `PollUpdateDispatcher.ProcessDueAsync()` and
+`MailOutboxDispatcher.DrainAsync()` explicitly before asserting on sent mail.
 
 ## Active-presence email suppression
 

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace Finder.Tests.Infrastructure;
 
-public sealed class CapturingMailService()
+public class CapturingMailService()
     : MailService(
         Options.Create(new SmtpOptions { Host = "localhost", Port = 25, User = "test@test.com", Password = "test" }),
         new MailTemplateService())

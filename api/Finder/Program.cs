@@ -52,6 +52,14 @@ builder.Services.AddSingleton<ILookupClient, LookupClient>();
 builder.Services.AddSingleton<EmailValidationService>();
 builder.Services.AddSingleton<MailTemplateService>();
 builder.Services.AddSingleton<MailService>();
+// Integration tests drain the outbox and poll-update queue explicitly instead of via background loops.
+var runBackgroundDispatchers = !builder.Environment.IsEnvironment("Testing");
+builder.Services.AddScoped<MailOutbox>();
+builder.Services.AddSingleton<MailOutboxDispatcher>();
+if (runBackgroundDispatchers)
+{
+    builder.Services.AddHostedService(sp => sp.GetRequiredService<MailOutboxDispatcher>());
+}
 builder.Services.Configure<I18nOptions>(builder.Configuration.GetSection("I18n"));
 builder.Services.AddSingleton<LanguageService>();
 builder.Services.AddHttpClient("EmailValidation", client =>
@@ -62,7 +70,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<NotificationMailGuard>();
 
 builder.Services.AddAuthServices(builder.Configuration, builder.Environment.IsDevelopment());
-builder.Services.AddProjectServices();
+builder.Services.AddProjectServices(runBackgroundDispatchers);
 builder.Services.AddPermissionServices();
 builder.Services.AddUserServices();
 builder.Services.AddPreviewServices();

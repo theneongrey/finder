@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-27 — ingest: persisted mail outbox + poll-update queue
+Pages touched: features/notifications.md (added "Delivery: persisted queues, never inline" — OutboxMails + MailOutboxDispatcher with retry/backoff, PendingPollUpdates + PollUpdateDispatcher, single-instance assumption, explicit draining in tests)
+
+---
+
 ## 2026-09-27 — ingest: realtime collaboration (#411 — PRs #439, #440, #444, #447, #450; issue #446)
 Pages touched: architecture/realtime-poll-sync.md (created — signalling-only SignalR decision, PollHub + auth over WS, presence registry, change descriptors, delta endpoint with overlap/highlight sets, PollRealtimeService + heartbeat, store mergeDelta / baseline / highlight / edit-guard, presence UI + toasts), features/notifications.md (added active-presence email suppression + idle config; gate order now via ShouldSendMailAsync), features/polling.md (added Live Collaboration section), architecture/poll-detail-rebuild.md (live-collaboration supporting change), api/index.md (delta endpoint + /hub/poll), index.md, architecture/index.md (added realtime page + missing component-architecture / poll-detail-rebuild entries), features/index.md (added missing notifications entry)
 

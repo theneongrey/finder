@@ -4,9 +4,12 @@ using System.Text.Json.Nodes;
 using Finder.Business.Auth.Entities;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Project.RealTime;
+using Finder.Business.Project.Services;
 using Finder.Business.Project.Setup;
 using Finder.Business.Shared.Services;
+using Finder.Database;
 using Finder.Tests.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -26,6 +29,10 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
     private WebApplicationFactory<Program> CreateFactory(out CapturingMailService mail,
         int activePresenceIdleSeconds = 60)
     {
+        // The fixture's database is shared by every test in this class; start each test with empty
+        // queues so a drain only delivers what this test produced.
+        ClearNotificationQueues();
+
         var captured = new CapturingMailService();
         mail = captured;
         return _factory.WithWebHostBuilder(b => b.ConfigureServices(services =>
@@ -55,6 +62,22 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
         registry.Join(pollId, $"conn-{person.Id}", new PollParticipant(person.Id, person.Name, person.Picture));
     }
 
+    private void ClearNotificationQueues()
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.OutboxMails.ExecuteDelete();
+        db.PendingPollUpdates.ExecuteDelete();
+    }
+
+    // Mail goes through the outbox and poll-update debounce queue; run both synchronously so the
+    // assertions see exactly what would have been sent.
+    private static async Task DrainNotificationsAsync(WebApplicationFactory<Program> factory)
+    {
+        await factory.Services.GetRequiredService<PollUpdateDispatcher>().ProcessDueAsync();
+        await factory.Services.GetRequiredService<MailOutboxDispatcher>().DrainAsync();
+    }
+
     private static HttpClient AuthenticatedClient(WebApplicationFactory<Program> factory, Guid userId)
     {
         var client = factory.CreateClient();
@@ -79,6 +102,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
         var response = await client.PostAsync($"/api/polls/{poll.Id}/close", null);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await DrainNotificationsAsync(factory);
         Assert.Single(mail.SentMails);
         Assert.Equal(voter.Email, mail.SentMails[0].RecipientEmail);
         Assert.Equal("poll-closed", mail.SentMails[0].Template.Name);
@@ -96,6 +120,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
 
         await client.PostAsync($"/api/polls/{poll.Id}/close", null);
 
+        await DrainNotificationsAsync(factory);
         Assert.Empty(mail.SentMails);
     }
 
@@ -113,6 +138,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
 
         await client.PostAsync($"/api/polls/{poll.Id}/close", null);
 
+        await DrainNotificationsAsync(factory);
         Assert.Empty(mail.SentMails);
     }
 
@@ -133,6 +159,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
         var response = await client.PostAsync($"/api/polls/{poll.Id}/reopen", null);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await DrainNotificationsAsync(factory);
         Assert.Single(mail.SentMails);
         Assert.Equal(voter.Email, mail.SentMails[0].RecipientEmail);
         Assert.Equal("poll-reopened", mail.SentMails[0].Template.Name);
@@ -159,6 +186,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
         });
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await DrainNotificationsAsync(factory);
         Assert.Single(mail.SentMails);
         Assert.Equal(owner.Email, mail.SentMails[0].RecipientEmail);
         Assert.Equal("new-comment", mail.SentMails[0].Template.Name);
@@ -182,6 +210,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
             $"/api/permission/{project.Id}/{Uri.EscapeDataString(voter.Email)}");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await DrainNotificationsAsync(factory);
         Assert.Single(mail.SentMails);
         Assert.Equal(voter.Email, mail.SentMails[0].RecipientEmail);
         Assert.Equal("permission-removed", mail.SentMails[0].Template.Name);
@@ -208,6 +237,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
         });
 
         // Notification is debounced — no immediate send
+        await DrainNotificationsAsync(factory);
         Assert.DoesNotContain(mail.SentMails, m => m.Template.Name == "poll-updated");
     }
 
@@ -250,6 +280,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
 
         await ownerClient.PostAsync($"/api/polls/{poll.Id}/close", null);
 
+        await DrainNotificationsAsync(factory);
         Assert.Empty(mail.SentMails);
 
         var response = await testUserClient.GetAsync("/api/user/notifications");
@@ -339,6 +370,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
         // Wait for debounce window (1s) plus a small margin
         await Task.Delay(1500);
 
+        await DrainNotificationsAsync(factory);
         var pollUpdatedMails = mail.SentMails.Where(m => m.Template.Name == "poll-updated").ToList();
         Assert.Single(pollUpdatedMails);
         Assert.Equal(voter.Email, pollUpdatedMails[0].RecipientEmail);
@@ -364,6 +396,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
 
         await ownerClient.PostAsync($"/api/polls/{poll.Id}/close", null);
 
+        await DrainNotificationsAsync(factory);
         Assert.Empty(mail.SentMails);
 
         // The in-app notification is still created — presence only suppresses e-mail.
@@ -390,6 +423,7 @@ public class ProjectNotificationsApiTests : IClassFixture<FinderApiFactory>
 
         await ownerClient.PostAsync($"/api/polls/{poll.Id}/close", null);
 
+        await DrainNotificationsAsync(factory);
         Assert.Single(mail.SentMails);
         Assert.Equal(voter.Email, mail.SentMails[0].RecipientEmail);
         Assert.Equal("poll-closed", mail.SentMails[0].Template.Name);

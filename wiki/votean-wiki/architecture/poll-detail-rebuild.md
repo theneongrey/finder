@@ -92,6 +92,10 @@ vote URL.
   with deferred sharing, and the auto-close ("automatisch schließen") card was removed from
   creation — new polls are created without an auto-close date, though the shared
   `poll-close-settings` component still exists for editing.
+- **Live collaboration (#411: PRs #439/#440/#444/#447/#450).** The page syncs live between
+  concurrent users — presence avatars, in-place delta merge with highlights, and an edit-guard —
+  so seeing others' changes no longer depends on the manual *Refresh* button, which stays as a
+  fallback. See [Realtime Poll Sync](realtime-poll-sync.md).
 - **Shell consolidation (PR #351).** `<app-title-bar>` moved up into `polls-shell` so it
   renders exactly once, and the `public-poll` feature was relocated to
   `features/public-poll/` because its `/p/:projectId` route lives at the app level, outside
@@ -123,3 +127,4 @@ the suite from ~25 min to ~6 min and removing login flakiness. See
 - [Frontend Architecture](frontend.md) — routes, stores, component layers
 - [Appointment Polls](../features/appointment-polls.md) — the date option cards in the grid
 - [Public Sharing](../features/public-sharing.md) — the relocated public-poll flow
+- [Realtime Poll Sync](realtime-poll-sync.md) — live presence and change sync on this page

@@ -114,7 +114,8 @@
         "feedback": {
             "title": "Comentarios",
             "show": "Mostrar botón de comentarios",
-            "showSub": "Pequeña pestaña en el borde de la pantalla para informar de errores e ideas."
+            "showSub": "Pequeña pestaña en el borde de la pantalla para informar de errores e ideas.",
+            "disabledUntil": "Los comentarios están desactivados temporalmente para tu cuenta hasta el {{date}}."
         }
     },
     "auth": {
@@ -828,8 +829,10 @@
         "cancel": "Cancelar",
         "send": "Enviar",
         "hide": "Ocultar botón",
-        "sent": "¡Gracias! Tus comentarios se han enviado.",
+        "sent": "¡Gracias! Tus comentarios se enviarán al equipo.",
         "sendError": "No se pudieron enviar tus comentarios. Inténtalo de nuevo.",
+        "limitReached": "Has enviado muchos comentarios recientemente. Inténtalo de nuevo más tarde.",
+        "disabled": "Los comentarios están desactivados temporalmente para tu cuenta.",
         "hidden": "Botón de comentarios oculto. Puedes volver a mostrarlo en los ajustes.",
         "preferenceError": "No se pudo guardar el ajuste. Inténtalo de nuevo."
     }

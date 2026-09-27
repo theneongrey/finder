@@ -7,7 +7,7 @@ import {
     signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs';
 import { Router } from '@angular/router';
@@ -42,6 +42,7 @@ import { FeedbackStore } from '../feedback/_data/feedback.store';
 @Component({
     selector: 'app-settings',
     imports: [
+        DatePipe,
         NgTemplateOutlet,
         ReactiveFormsModule,
         TitleBarComponent,
@@ -74,6 +75,8 @@ export class SettingsComponent {
     readonly notifications = this.userStore.notifications;
     readonly notificationsLoading = this.userStore.notificationsLoading;
     readonly feedbackButtonHidden = this.feedbackStore.buttonHidden;
+    readonly feedbackDisabled = this.feedbackStore.feedbackDisabled;
+    readonly feedbackDisabledUntil = this.feedbackStore.feedbackDisabledUntil;
 
     protected readonly languageOptions = LANGUAGE_OPTIONS;
 

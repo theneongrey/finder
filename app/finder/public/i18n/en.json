@@ -114,7 +114,8 @@
         "feedback": {
             "title": "Feedback",
             "show": "Show feedback button",
-            "showSub": "Small feedback tab at the screen edge for reporting bugs and ideas."
+            "showSub": "Small feedback tab at the screen edge for reporting bugs and ideas.",
+            "disabledUntil": "Feedback is temporarily disabled for your account until {{date}}."
         }
     },
     "auth": {
@@ -828,8 +829,10 @@
         "cancel": "Cancel",
         "send": "Send",
         "hide": "Hide button",
-        "sent": "Thanks! Your feedback has been sent.",
+        "sent": "Thanks! Your feedback will be passed on to the team.",
         "sendError": "Your feedback could not be sent. Please try again.",
+        "limitReached": "You've sent a lot of feedback recently. Please try again later.",
+        "disabled": "Feedback is temporarily disabled for your account.",
         "hidden": "Feedback button hidden. You can show it again in the settings.",
         "preferenceError": "The setting could not be saved. Please try again."
     }

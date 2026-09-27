@@ -57,6 +57,7 @@ export class FeedbackTabComponent {
         () =>
             !!this.user()?.isAuthenticated &&
             this.feedbackStore.buttonHidden() === false &&
+            !this.feedbackStore.feedbackDisabled() &&
             !HIDDEN_ROUTE_PATTERN.test(this.page()),
     );
 

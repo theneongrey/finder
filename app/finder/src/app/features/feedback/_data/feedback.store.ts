@@ -1,7 +1,9 @@
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     patchState,
     signalStore,
+    withComputed,
     withMethods,
     withProps,
     withState,
@@ -20,9 +22,17 @@ export const FeedbackStore = signalStore(
     withState({
         /** undefined until the preference has been loaded for the current user. */
         buttonHidden: undefined as boolean | undefined,
+        /** ISO timestamp until which the server refuses feedback (scripted-burst protection). */
+        feedbackDisabledUntil: undefined as string | undefined,
         panelOpen: false,
         submitting: false,
     }),
+    withComputed(({ feedbackDisabledUntil }) => ({
+        feedbackDisabled: computed(() => {
+            const until = feedbackDisabledUntil();
+            return !!until && new Date(until).getTime() > Date.now();
+        }),
+    })),
     withProps(() => ({
         feedbackService: inject(FeedbackService),
         loggerService: inject(LoggerService),
@@ -33,6 +43,33 @@ export const FeedbackStore = signalStore(
         let confirmedButtonHidden: boolean | undefined;
         let pendingSaves = 0;
 
+        const loadPreference = rxMethod<void>(
+            pipe(
+                switchMap(() =>
+                    store.feedbackService.getPreference().pipe(
+                        tapResponse({
+                            next: ({ buttonHidden, feedbackDisabledUntil }) => {
+                                confirmedButtonHidden = buttonHidden;
+                                patchState(store, {
+                                    buttonHidden,
+                                    feedbackDisabledUntil,
+                                });
+                            },
+                            error: (error) => {
+                                store.loggerService.error(
+                                    '[FeedbackStore] Error loading preference',
+                                    error,
+                                );
+                                // Fall back to the default (shown) so Settings isn't stuck on a skeleton.
+                                confirmedButtonHidden = false;
+                                patchState(store, { buttonHidden: false });
+                            },
+                        }),
+                    ),
+                ),
+            ),
+        );
+
         return {
             openPanel(): void {
                 patchState(store, { panelOpen: true });
@@ -42,29 +79,7 @@ export const FeedbackStore = signalStore(
                 patchState(store, { panelOpen: false });
             },
 
-            loadPreference: rxMethod<void>(
-                pipe(
-                    switchMap(() =>
-                        store.feedbackService.getPreference().pipe(
-                            tapResponse({
-                                next: ({ buttonHidden }) => {
-                                    confirmedButtonHidden = buttonHidden;
-                                    patchState(store, { buttonHidden });
-                                },
-                                error: (error) => {
-                                    store.loggerService.error(
-                                        '[FeedbackStore] Error loading preference',
-                                        error,
-                                    );
-                                    // Fall back to the default (shown) so Settings isn't stuck on a skeleton.
-                                    confirmedButtonHidden = false;
-                                    patchState(store, { buttonHidden: false });
-                                },
-                            }),
-                        ),
-                    ),
-                ),
-            ),
+            loadPreference,
 
             // Optimistic: the UI updates immediately. Saves run in order (concatMap), and only once
             // the last queued save settles is the state aligned with what the server confirmed.
@@ -142,17 +157,39 @@ export const FeedbackStore = signalStore(
                                         ),
                                     );
                                 },
-                                error: (error) => {
+                                error: (error: HttpErrorResponse) => {
                                     store.loggerService.error(
                                         '[FeedbackStore] Error submitting feedback',
                                         error,
                                     );
                                     patchState(store, { submitting: false });
-                                    toast.error(
-                                        store.translateService.instant(
-                                            'feedback.sendError',
-                                        ),
-                                    );
+                                    switch (error.status) {
+                                        case 429:
+                                            toast.error(
+                                                store.translateService.instant(
+                                                    'feedback.limitReached',
+                                                ),
+                                            );
+                                            break;
+                                        case 403:
+                                            // Disabled server-side; reload to learn until when (hides the tab).
+                                            patchState(store, {
+                                                panelOpen: false,
+                                            });
+                                            toast.error(
+                                                store.translateService.instant(
+                                                    'feedback.disabled',
+                                                ),
+                                            );
+                                            loadPreference();
+                                            break;
+                                        default:
+                                            toast.error(
+                                                store.translateService.instant(
+                                                    'feedback.sendError',
+                                                ),
+                                            );
+                                    }
                                 },
                             }),
                         ),
@@ -164,6 +201,7 @@ export const FeedbackStore = signalStore(
                 confirmedButtonHidden = undefined;
                 patchState(store, {
                     buttonHidden: undefined,
+                    feedbackDisabledUntil: undefined,
                     panelOpen: false,
                     submitting: false,
                 });

@@ -10,6 +10,9 @@ public interface IImageSizeService
 
 public class ImageSizeService : IImageSizeService
 {
+    // JPEG dimensions sit after EXIF/ICC segments, which regularly exceed a few KB.
+    private const int MaxHeaderBytes = 64 * 1024;
+
     private readonly IHttpClientFactory _httpClientFactory;
 
     public ImageSizeService(IHttpClientFactory httpClientFactory)
@@ -28,7 +31,7 @@ public class ImageSizeService : IImageSizeService
         {
             using var client = _httpClientFactory.CreateClient("PreviewClient");
             using var request = new HttpRequestMessage(HttpMethod.Get, imageUrl);
-            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(0, 2047);
+            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(0, MaxHeaderBytes - 1);
 
             using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             if (!response.IsSuccessStatusCode)
@@ -37,11 +40,26 @@ public class ImageSizeService : IImageSizeService
             }
 
             await using var stream = await response.Content.ReadAsStreamAsync();
-            var buffer = new byte[2048];
-            var bytesRead = await stream.ReadAsync(buffer.AsMemory());
-            var bytes = buffer[..bytesRead];
+            var buffer = new byte[MaxHeaderBytes];
+            var length = 0;
+            (int Width, int Height)? size = null;
+            // Read incrementally and stop as soon as the header parses — usually within the first chunk.
+            while (length < buffer.Length)
+            {
+                var read = await stream.ReadAsync(buffer.AsMemory(length));
+                if (read == 0)
+                {
+                    break;
+                }
 
-            var size = ParseImageSize(bytes);
+                length += read;
+                size = ParseImageSize(buffer[..length]);
+                if (size.HasValue)
+                {
+                    break;
+                }
+            }
+
             return size.HasValue
                 ? Result<ImageSize>.Success(new ImageSize(size.Value.Width, size.Value.Height))
                 : Result<ImageSize>.Fail(422, "Could not determine image dimensions");
@@ -96,7 +114,7 @@ public class ImageSizeService : IImageSizeService
         return (w, h);
     }
 
-    // JPEG: scan for SOF markers (C0/C1/C2) — height at +5, width at +7 (big-endian)
+    // JPEG: scan for SOF markers (C0–CF except C4/C8/CC) — height at +5, width at +7 (big-endian)
     private static (int Width, int Height)? ParseJpeg(byte[] b)
     {
         var i = 2;
@@ -108,7 +126,21 @@ public class ImageSizeService : IImageSizeService
             }
 
             var marker = b[i + 1];
-            if (marker is 0xC0 or 0xC1 or 0xC2)
+            // fill bytes before a marker
+            if (marker == 0xFF)
+            {
+                i++;
+                continue;
+            }
+
+            // standalone markers (TEM, RSTn) carry no length
+            if (marker is 0x01 or >= 0xD0 and <= 0xD7)
+            {
+                i += 2;
+                continue;
+            }
+
+            if (marker is >= 0xC0 and <= 0xCF and not (0xC4 or 0xC8 or 0xCC))
             {
                 var h = (b[i + 5] << 8) | b[i + 6];
                 var w = (b[i + 7] << 8) | b[i + 8];

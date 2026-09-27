@@ -7,6 +7,7 @@ public static class SetupExtensions
 {
     public static IServiceCollection AddProjectServices(this IServiceCollection services)
     {
+        services.AddSignalR();
         services.AddScoped<ProjectService>();
         services.AddScoped<VoteService>();
         services.AddScoped<ProjectMailService>();
@@ -16,5 +17,12 @@ public static class SetupExtensions
         services.AddSingleton<PollPresenceRegistry>();
 
         return services;
+    }
+
+    public static WebApplication MapProjectHubs(this WebApplication app)
+    {
+        app.MapHub<PollHub>("/hub/poll").RequireAuthorization();
+
+        return app;
     }
 }

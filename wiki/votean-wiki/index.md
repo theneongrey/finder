@@ -50,6 +50,7 @@ System design and technical decisions.
 - [Component Architecture](architecture/component-architecture.md) — three-layer model (ds-*, common smart, domain feature) and placement rules
 - [Poll Detail Page Rebuild](architecture/poll-detail-rebuild.md) — 2026 rework: results = detail page, voting overlay, collapsed vote/results/overview routes
 - [Realtime Poll Sync](architecture/realtime-poll-sync.md) — SignalR presence + change pings, REST delta endpoint, in-place merge / highlight / edit-guard
+- [Single-Instance Deployment](architecture/single-instance.md) — one API instance by design; in-memory state that relies on it; scale-out checklist
 - [CI/CD](architecture/ci-cd.md) — GitHub Actions pipeline
 - [PrimeNG → Spartan UI Migration](architecture/primeng-to-spartan-migration.md) — why PrimeNG was replaced, migration scope, and Spartan UI approach
 - [Projects Concept Removal (MVP)](architecture/project-removal-mvp.md) — removing multi-poll projects from UI, URLs, and code; backend model preserved
@@ -66,7 +67,7 @@ Endpoint contracts and request/response shapes.
 Developer how-to pages.
 
 - [Local Setup](guides/local-setup.md) — running backend and frontend locally
-- [Testing](guides/testing.md) — unit tests, integration tests, e2e tests
+- [Testing](guides/testing.md) — backend integration tests, e2e tests; frontend is E2E-only by design
 - [Adding a Feature](guides/adding-a-feature.md) — step-by-step walkthrough
 - [Design System](guides/design-system.md) — live component and token reference at /ux (dev only)
 - [Component Library (ds-*)](guides/component-library.md) — API reference for all 21 ds-* Angular components

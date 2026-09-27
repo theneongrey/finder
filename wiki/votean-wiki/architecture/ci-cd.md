@@ -38,7 +38,7 @@ The `build` job only runs when `test` passes. A failing backend test blocks the 
 ## What's Not in CI
 
 - **E2E tests (Playwright)** are not part of the pipeline — they require a running backend and frontend, and run locally only.
-- **Frontend unit tests** (`ng test`) are not in CI either — no spec files currently exist in the Angular source tree.
+- **Frontend unit tests** (`ng test`) are not in CI either. The frontend is E2E-only by design (see [Testing](../guides/testing.md#frontend-unit-tests--none-by-design)).
 
 ## Related
 

@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-27 — ingest: feedback feature (issue #326)
+Pages touched: features/feedback.md (created — left-edge tab, panel with inline disclosure + cancel, hide/re-enable via Settings, Business/Feedback endpoints, FeedbackPreference entity, feedback mail template, tests), features/index.md, index.md (added Feedback), architecture/backend.md (Feedback domain, per-domain rate-limit policies, enum JSON converter note for Minimal APIs), concepts/user.md (Related link), guides/component-library.md (ds-switch one-way usage + double-toggle fix)
+
+---
+
 ## 2026-09-25 — ingest: last-50-PR review — UI rebuild + notifications + auth/email + option creator
 Pages touched: architecture/poll-detail-rebuild.md (created — results-as-detail, voting overlay, route collapse, overflow menu, container-query layout, single-step add-poll, shell consolidation; PRs #396/#409/#422/#424/#426/#351), features/polling.md (rewrote Voting UX + detail page + revote to overlay model, removed stale /vote//results//poll-overview routes, updated sources), architecture/frontend.md (rewrote Feature Layout, Routing, and UI Library sections to current /polls routing + ds-* Tailwind-first), features/notifications.md (created — in-app centre, orchestration + mail guard, settings, multi-language templates; PRs #367/#358/#349), features/auth.md (added EmailValidationService disposable/MX check #352 + MailTemplateService delivery), concepts/option.md (added required Creator #393), index.md (added notifications, poll-detail-rebuild links)
 

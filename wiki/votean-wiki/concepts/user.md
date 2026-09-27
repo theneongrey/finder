@@ -55,3 +55,4 @@ System roles are separate from project roles. A user's access to a specific proj
 - [Authentication](../features/auth.md) — how users log in
 - [Login Token](login-token.md) — the record created during the login flow
 - [Permission](permission.md) — per-project role assignment
+- [Feedback](../features/feedback.md) — per-person `FeedbackPreference` (feedback tab hidden or shown)

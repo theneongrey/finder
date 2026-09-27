@@ -391,7 +391,12 @@ On/off toggle. Implements `ControlValueAccessor` and `model()` for two-way bindi
 
 <!-- Reactive forms -->
 <ds-switch [formControl]="notifControl" />
+
+<!-- One-way + event (settings feedback toggle) -->
+<ds-switch [checked]="!hidden()" (checkedChange)="onChange($event)" />
 ```
+
+Clicks and keyboard input are handled by the inner `hlm-switch`, which reports through `checkedChange`. The host element has no `(click)` handler: an earlier host `toggle()` flipped the value a second time on every click, leaving the model out of sync with what the switch showed (fixed in #326).
 
 ---
 

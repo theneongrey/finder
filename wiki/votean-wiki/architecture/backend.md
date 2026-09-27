@@ -35,7 +35,7 @@ Business/<Domain>/
   Setup/            — DI extension method (e.g. AddProjectServices())
 ```
 
-Domains: `Auth`, `Project`, `Permission`, `User`, `Preview`, `Shared`.
+Domains: `Auth`, `Project`, `Permission`, `User`, `Preview`, `Feedback`, `Shared`.
 
 Endpoints are registered in `Program.cs` via extension methods (`WithProjectApi()`, etc.).
 
@@ -86,6 +86,12 @@ The `PreviewService` fetches OpenGraph metadata from URLs provided for image-typ
 ## Rate Limiting
 
 An `"auth"` policy limits auth endpoints to **5 requests/IP/minute**. Exceeded requests return 429.
+
+Each domain registers its own fixed-window policy in its `Setup/`: `"preview"` (URL previews) and `"feedback"` (`POST /api/feedback`, see [Feedback](../features/feedback.md)) use the same 5/IP/minute shape. `FinderApiFactory` in the test project replaces every policy with a no-limit one, so a new policy must be added there too.
+
+## Enum JSON in Minimal APIs
+
+`Program.cs` adds `JsonStringEnumConverter` only via `AddControllers().AddJsonOptions(...)`, which Minimal API endpoints don't use. Enums exchanged as strings therefore carry their own attribute, e.g. `[JsonConverter(typeof(JsonStringEnumConverter<FeedbackType>))]` (same for `NotificationValue`).
 
 ## Related
 

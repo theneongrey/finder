@@ -17,3 +17,4 @@ Product capabilities documented from a user and developer perspective.
 - [Permissions](permissions.md)
 - [Appointment Polls](appointment-polls.md)
 - [Public Sharing](public-sharing.md)
+- [Feedback](feedback.md)

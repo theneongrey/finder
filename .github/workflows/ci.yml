@@ -41,14 +41,14 @@ jobs:
           dotnet-version: '9.x'
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '24.14'
 
-      - name: npm install, build
+      - name: npm ci, build
         working-directory: ./app/finder
         run: |
-          npm install
+          npm ci
           npm run build:production
 
       - name: Build with dotnet

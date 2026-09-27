@@ -1,6 +1,9 @@
+using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Finder.Business.Auth.Services;
 using Finder.Business.Shared.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Finder.Business.Auth.Setup;
 
@@ -13,6 +16,7 @@ public static class SetupExtensions
         services.AddScoped<LoginService>();
         services.AddScoped<LoginMailService>();
         services.AddScoped<SeedingService>();
+        services.AddSingleton<BlockedUserCache>();
 
         services.AddAuthorization();
         services.AddAuthentication().AddCookie(o =>
@@ -26,6 +30,22 @@ public static class SetupExtensions
                     c.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     return Task.FromResult<object?>(null);
                 };
+            // Drops the session of a blocked person on their next request (cookies last 30 days).
+            o.Events.OnValidatePrincipal = async context =>
+            {
+                var id = context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!Guid.TryParse(id, out var personId))
+                {
+                    return;
+                }
+
+                var blockedUserCache = context.HttpContext.RequestServices.GetRequiredService<BlockedUserCache>();
+                if (await blockedUserCache.IsBlocked(personId))
+                {
+                    context.RejectPrincipal();
+                    await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                }
+            };
         });
 
         services.AddRateLimiter(options =>

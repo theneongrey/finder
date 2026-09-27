@@ -29,6 +29,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddCors();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton(sp =>
     new NpgsqlDataSourceBuilder(sp.GetRequiredService<IConfiguration>().GetConnectionString("Database"))
         .EnableDynamicJson()
@@ -68,7 +70,7 @@ builder.Services.AddProjectServices();
 builder.Services.AddPermissionServices();
 builder.Services.AddUserServices();
 builder.Services.AddPreviewServices();
-builder.Services.AddFeedbackServices(builder.Configuration);
+builder.Services.AddFeedbackServices(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 

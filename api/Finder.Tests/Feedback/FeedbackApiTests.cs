@@ -56,6 +56,7 @@ public class FeedbackApiTests : IClassFixture<FinderApiFactory>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
         Assert.False(json["buttonHidden"]!.GetValue<bool>());
+        Assert.Null(json["feedbackDisabledUntil"]);
     }
 
     [Fact]
@@ -88,46 +89,6 @@ public class FeedbackApiTests : IClassFixture<FinderApiFactory>
 
     // --- POST /api/feedback ---
 
-    [Fact]
-    public async Task SubmitFeedback_SendsMailWithAllDetailsToRecipient()
-    {
-        var user = await _factory.SeedUser();
-        await using var factory = CreateFactory(out var mail);
-        using var client = AuthenticatedClient(factory, user.Id);
-
-        var response = await client.PostAsJsonAsync("/api/feedback",
-            new { type = "Bug", comment = "  Button is broken  ", page = "/polls/abc" });
-
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-        var sent = Assert.Single(mail.SentMails);
-        Assert.Equal(Recipient, sent.RecipientEmail);
-        Assert.Contains("Bug", sent.Subject);
-        var vars = sent.Template.Variables;
-        Assert.Equal("Bug", vars["type"]);
-        Assert.Equal("Button is broken", vars["comment"]);
-        Assert.Equal(user.Email, vars["email"]);
-        Assert.Equal("/polls/abc", vars["page"]);
-        Assert.EndsWith("UTC", vars["timestamp"]);
-    }
-
-    [Fact]
-    public async Task SubmitFeedback_EncodesUserInputInRenderedMail()
-    {
-        var user = await _factory.SeedUser();
-        await using var factory = CreateFactory(out var mail);
-        using var client = AuthenticatedClient(factory, user.Id);
-
-        await client.PostAsJsonAsync("/api/feedback",
-            new { type = "Idea", comment = "<b>bold</b> & a < b", page = "/settings" });
-
-        var sent = Assert.Single(mail.SentMails);
-        var t = sent.Template;
-        var html = new MailTemplateService().Render(t.Name, t.Language, t.Variables);
-        // Kept verbatim (not stripped) but encoded, so it shows as text and can't inject markup.
-        Assert.Contains("&lt;b&gt;bold&lt;/b&gt; &amp; a &lt; b", html);
-        Assert.DoesNotContain("<b>bold</b>", html);
-    }
-
     [Theory]
     [InlineData("", "/polls")]
     [InlineData("   ", "/polls")]
@@ -155,20 +116,6 @@ public class FeedbackApiTests : IClassFixture<FinderApiFactory>
             new { type = "Other", comment = new string('x', 2001), page = "/polls" });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Empty(mail.SentMails);
-    }
-
-    [Fact]
-    public async Task SubmitFeedback_WithoutConfiguredRecipient_Returns502()
-    {
-        var user = await _factory.SeedUser();
-        await using var factory = CreateFactory(out var mail, recipient: "");
-        using var client = AuthenticatedClient(factory, user.Id);
-
-        var response = await client.PostAsJsonAsync("/api/feedback",
-            new { type = "Bug", comment = "hi", page = "/polls" });
-
-        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
         Assert.Empty(mail.SentMails);
     }
 

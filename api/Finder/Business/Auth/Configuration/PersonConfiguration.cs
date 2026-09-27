@@ -25,5 +25,8 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.Property(n => n.Language)
             .HasMaxLength(10)
             .HasDefaultValue("en");
+
+        builder.Property(n => n.IsBlocked)
+            .HasDefaultValue(false);
     }
 }

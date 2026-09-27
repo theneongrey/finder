@@ -46,6 +46,11 @@ public class LoginService
             return Result<string?>.Fail(404);
         }
 
+        if (loginToken.Person.IsBlocked)
+        {
+            return await RejectBlocked(loginToken);
+        }
+
         return await SignIn(loginToken);
     }
 
@@ -63,6 +68,11 @@ public class LoginService
             return Result<string?>.Fail(401);
         }
 
+        if (loginToken.Person.IsBlocked)
+        {
+            return await RejectBlocked(loginToken);
+        }
+
         if (loginToken.Code != cleanCode)
         {
             loginToken.Retries++;
@@ -76,6 +86,14 @@ public class LoginService
         }
 
         return await SignIn(loginToken);
+    }
+
+    // A token can predate the block, so it's removed instead of being usable later.
+    private async Task<Result<string?>> RejectBlocked(LoginToken loginToken)
+    {
+        _dbContext.Remove(loginToken);
+        await _dbContext.SaveChangesAsync();
+        return Result<string?>.Fail(401);
     }
 
     private bool IsTokenExpired(LoginToken loginToken)
@@ -118,7 +136,7 @@ public class LoginService
         var cleanEmail = email.Trim().ToLower();
 
         var person = await _userService.GetOrCreatePersonByEmail(cleanEmail, false);
-        if (!person.IsSuccess)
+        if (!person.IsSuccess || person.Payload is null or { IsBlocked: true })
         {
             return Result.Fail(403);
         }

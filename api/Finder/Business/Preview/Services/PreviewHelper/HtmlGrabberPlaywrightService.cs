@@ -1,3 +1,4 @@
+using System.Net;
 using Finder.Business.Preview.Models;
 using Finder.Business.Shared;
 using Microsoft.Playwright;
@@ -12,20 +13,41 @@ public interface IHtmlGrabberPlaywrightService
 public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
 {
     private readonly IConfiguration _configuration;
+    private readonly Func<string, int, CancellationToken, Task<IPAddress[]?>> _resolveAllowed;
 
     public HtmlGrabberPlaywrightService(IConfiguration configuration)
+        : this(configuration, GuardedForwardProxy.ResolvePublicOnly)
+    {
+    }
+
+    /// <summary>Test seam: replaces the SSRF address policy used by the browser's proxy.</summary>
+    public HtmlGrabberPlaywrightService(IConfiguration configuration,
+        Func<string, int, CancellationToken, Task<IPAddress[]?>> resolveAllowed)
     {
         _configuration = configuration;
+        _resolveAllowed = resolveAllowed;
     }
 
     public async Task<Result<PlaywrightResult>> GetHtmlContent(string url)
     {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !OutboundUrlGuard.IsAllowedScheme(uri))
+        {
+            return Result<PlaywrightResult>.Fail(400, "URL not allowed");
+        }
+
         var timeoutSeconds = _configuration.GetValue<int?>("Preview:PlaywrightTimeoutSeconds") ?? 5;
+
+        // SSRF guard: all browser traffic goes through a loopback proxy that only connects to public
+        // addresses. Enforcing this at the network layer also covers redirects (which Playwright's
+        // route handler never sees), sub-resources, WebSockets and DNS rebinding.
+        await using var proxy = new GuardedForwardProxy(_resolveAllowed);
 
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new()
         {
             Headless = true,
+            // Playwright adds <-loopback> to the bypass list, so localhost targets go through the proxy too.
+            Proxy = new Proxy { Server = proxy.Address },
             Args = new[]
             {
                 "--disable-blink-features=AutomationControlled",
@@ -50,14 +72,34 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
         await context.AddInitScriptAsync(
             "Object.defineProperty(navigator, 'webdriver', { get: () => undefined });");
 
+        // Non-network schemes (file:, ftp:, …) never reach the proxy, so block them in the browser.
+        await context.RouteAsync(
+            request => !Uri.TryCreate(request, UriKind.Absolute, out var target) ||
+                       !(OutboundUrlGuard.IsAllowedScheme(target) || target.Scheme is "data" or "blob"),
+            route => route.AbortAsync("blockedbyclient"));
+
         var page = await context.NewPageAsync();
-        await page.GotoAsync(url, new PageGotoOptions
+        try
         {
-            WaitUntil = WaitUntilState.Commit
-        });
+            await page.GotoAsync(url, new PageGotoOptions
+            {
+                WaitUntil = WaitUntilState.Commit
+            });
+        }
+        catch (PlaywrightException ex) when (ex.Message.Contains("ERR_BLOCKED_BY_CLIENT") ||
+                                             ex.Message.Contains("ERR_TUNNEL_CONNECTION_FAILED"))
+        {
+            return Result<PlaywrightResult>.Fail(400, "URL not allowed");
+        }
 
         // Wait until navigation activity has settled.
         await WaitForPageToSettleAsync(page, 500, timeoutSeconds);
+
+        // For plain http the proxy's refusal renders as a page; never hand that back as content.
+        if (proxy.WasBlocked(page.Url))
+        {
+            return Result<PlaywrightResult>.Fail(400, "URL not allowed");
+        }
 
         var html = await page.ContentAsync();
         if (!html.Contains("html"))
@@ -67,7 +109,7 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
 
         return Result<PlaywrightResult>.Success(new PlaywrightResult(html, page.Url));
     }
-    
+
     private static async Task WaitForPageToSettleAsync(IPage page, int settleTimeMs, int timeoutSeconds)
     {
         var lastNavigation = DateTime.UtcNow;

@@ -110,8 +110,8 @@ cleanup. Each entry holds the participant (`{ userId, name, picture }`) and a
 **last-activity timestamp** used by idle detection.
 
 - The roster is **deduplicated by user**, so several tabs of one person show as one avatar.
-- Presence is process-local — it assumes a single API instance (a scale-out would need a
-  SignalR backplane and a shared registry).
+- Presence is process-local **by design**: the API runs as a single instance (see
+  [Single-Instance Deployment](single-instance.md) for the rationale and the scale-out checklist).
 
 ### Change signalling
 

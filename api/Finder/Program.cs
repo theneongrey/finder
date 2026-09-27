@@ -14,6 +14,7 @@ using Finder.Business.Project.Api;
 using Finder.Business.Project.Setup;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
+using Finder.Business.Shared.Setup;
 using Finder.Business.User.Api;
 using Finder.Business.User.Setup;
 using Finder.Database;
@@ -27,6 +28,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddCors();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddProxyForwarding(builder.Configuration);
 builder.Services.AddSingleton(sp =>
     new NpgsqlDataSourceBuilder(sp.GetRequiredService<IConfiguration>().GetConnectionString("Database"))
         .EnableDynamicJson()
@@ -82,6 +84,14 @@ if (!app.Environment.IsEnvironment("Testing"))
     using var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
     var db = scope.ServiceProvider.GetService<AppDbContext>()!;
     db.Database.Migrate();
+}
+
+// Must run first so everything below (HSTS, cookies, rate limiting) sees the real client IP and scheme.
+app.UseForwardedHeaders();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
 }
 
 app.UseAuthentication();

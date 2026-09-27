@@ -78,10 +78,10 @@ The `UserService` caches the authenticated user per HTTP request (`_cachedId`, `
 
 ## Preview Service
 
-The `PreviewService` fetches OpenGraph metadata from URLs provided for image-type options:
-- 5-second HTTP timeout per URL
-- Fallback chain: `og:` properties → `twitter:` properties → standard `<meta>` tags
-- Relative image URLs are resolved to absolute before storing
+`GET /api/preview` turns a URL into title, description, image and site name for option
+pre-filling: plain HTTP first, a pooled headless Chromium second, the URL slug last, with an
+SSRF guard on every connection and an in-memory result cache. It answers with whatever it could
+find and only fails for URLs it must not fetch. Details: [Link Preview](link-preview.md).
 
 ## Rate Limiting
 

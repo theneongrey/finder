@@ -50,6 +50,7 @@ System design and technical decisions.
 - [Component Architecture](architecture/component-architecture.md) — three-layer model (ds-*, common smart, domain feature) and placement rules
 - [Poll Detail Page Rebuild](architecture/poll-detail-rebuild.md) — 2026 rework: results = detail page, voting overlay, collapsed vote/results/overview routes
 - [Realtime Poll Sync](architecture/realtime-poll-sync.md) — SignalR presence + change pings, REST delta endpoint, in-place merge / highlight / edit-guard
+- [Link Preview](architecture/link-preview.md) — URL → title/description/image pipeline: HTTP first, pooled headless browser, URL-slug fallback, SSRF guard, cache
 - [Single-Instance Deployment](architecture/single-instance.md) — one API instance by design; in-memory state that relies on it; scale-out checklist
 - [CI/CD](architecture/ci-cd.md) — GitHub Actions pipeline
 - [PrimeNG → Spartan UI Migration](architecture/primeng-to-spartan-migration.md) — why PrimeNG was replaced, migration scope, and Spartan UI approach

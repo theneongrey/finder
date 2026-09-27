@@ -23,7 +23,13 @@ public class PreviewService
 
     public async Task<Result<Models.Preview>> GetPreviewAsync(string url)
     {
-        if (string.IsNullOrWhiteSpace(url) || !Uri.TryCreate(url, UriKind.Absolute, out _))
+        if (string.IsNullOrWhiteSpace(url) || !Uri.TryCreate(url, UriKind.Absolute, out var uri))
+        {
+            return Result<Models.Preview>.Fail(400, "Invalid URL");
+        }
+
+        // Only http(s). The fetchers additionally refuse to connect to non-public addresses.
+        if (!OutboundUrlGuard.IsAllowedScheme(uri))
         {
             return Result<Models.Preview>.Fail(400, "Invalid URL");
         }
@@ -32,7 +38,7 @@ public class PreviewService
         var httpHtmlResult = await _htmlGrabberHttpClientService.GetHtmlContent(url);
         var htmlContent = httpHtmlResult.Payload!;
         Models.Preview? preview = null;
-        
+
         if (httpHtmlResult.IsSuccess)
         {
             var metaResult = _previewGrabberMetaService.GetPreview(htmlContent, new Uri(url));
@@ -42,9 +48,9 @@ public class PreviewService
                 if (metaResult.Payload!.HasImage)
                 {
                     return metaResult;
-                }    
+                }
             }
-            
+
         }
 
         // 2. If the plain HTTP client does not work, maybe it's an SPA, try it with playwright
@@ -58,7 +64,7 @@ public class PreviewService
                 if (!httpHtmlResult.IsSuccess || htmlContent.Length < htmlPlaywrightResult.Payload!.HtmlContent.Length)
                 {
                     htmlContent = htmlPlaywrightResult.Payload!.HtmlContent;
-                    
+
                     // Even if the content changed after calling it with playwright, it's most likely the metadata will
                     // not change, but since it's a low-cost operation, try it again.
 

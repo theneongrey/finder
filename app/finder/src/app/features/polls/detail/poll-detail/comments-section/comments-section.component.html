@@ -45,6 +45,7 @@
                 <div
                     class="flex gap-2.5"
                     [class.comment-changed]="isChanged(comment)"
+                    [style.animation-duration.ms]="highlightDurationMs"
                 >
                     <app-user-avatar
                         [user]="authorUser(comment.author)"

@@ -1,4 +1,4 @@
-import { inject, Injectable, NgZone, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import {
     HubConnection,
     HubConnectionBuilder,
@@ -29,7 +29,6 @@ import {
 export class PollRealtimeService {
     private readonly loggerService = inject(LoggerService);
     private readonly userStore = inject(UserStore);
-    private readonly zone = inject(NgZone);
 
     private connection?: HubConnection;
     private activePollId?: string;
@@ -51,6 +50,7 @@ export class PollRealtimeService {
         POLL_ACTIVITY_HEARTBEAT_SECONDS * 1000;
     private stopActivityTracking?: () => void;
     private lastActivitySentAt = 0;
+    private activityInFlight = false;
 
     /** Roster of everyone currently on the active poll (including the local user). */
     readonly presence = signal<PollParticipant[]>([]);
@@ -111,20 +111,18 @@ export class PollRealtimeService {
     }
 
     /**
-     * Attach interaction listeners for the active poll. Runs outside the Angular zone so the
-     * high-frequency events (pointermove, scroll) never trigger change detection — the handler only
-     * fires a throttled network ping and touches no signals.
+     * Attach interaction listeners for the active poll. The app is zoneless, so these high-frequency
+     * events (pointermove, scroll) never trigger change detection — the handler only fires a
+     * throttled network ping and touches no signals.
      */
     private startActivityTracking(): void {
         if (this.stopActivityTracking || typeof document === 'undefined') {
             return;
         }
         const handler = () => this.onUserActivity();
-        this.zone.runOutsideAngular(() => {
-            for (const event of PollRealtimeService.ACTIVITY_EVENTS) {
-                document.addEventListener(event, handler, { passive: true });
-            }
-        });
+        for (const event of PollRealtimeService.ACTIVITY_EVENTS) {
+            document.addEventListener(event, handler, { passive: true });
+        }
         this.stopActivityTracking = () => {
             for (const event of PollRealtimeService.ACTIVITY_EVENTS) {
                 document.removeEventListener(event, handler);
@@ -138,17 +136,20 @@ export class PollRealtimeService {
         if (document.hidden) {
             return;
         }
-        const now = Date.now();
         if (
-            now - this.lastActivitySentAt <
-            PollRealtimeService.ACTIVITY_THROTTLE_MS
+            this.activityInFlight ||
+            Date.now() - this.lastActivitySentAt <
+                PollRealtimeService.ACTIVITY_THROTTLE_MS
         ) {
             return;
         }
-        this.lastActivitySentAt = now;
         void this.sendActivity();
     }
 
+    /**
+     * The throttle window only advances once a heartbeat actually reaches the server, so a skipped
+     * or failed send is retried on the next interaction instead of letting the user lapse to idle.
+     */
     private async sendActivity(): Promise<void> {
         const pollId = this.activePollId;
         if (
@@ -157,14 +158,18 @@ export class PollRealtimeService {
         ) {
             return;
         }
+        this.activityInFlight = true;
         try {
             await this.connection.invoke('ReportActivity', pollId);
+            this.lastActivitySentAt = Date.now();
         } catch (error) {
             this.loggerService.log(
                 '[PollRealtimeService] Failed to report activity',
                 pollId,
                 error,
             );
+        } finally {
+            this.activityInFlight = false;
         }
     }
 

@@ -19,14 +19,6 @@ public class ProjectNotificationService(
     private readonly TimeSpan _idleThreshold =
         TimeSpan.FromSeconds(notificationOptions.Value.ActivePresenceIdleSeconds);
 
-    /// <summary>
-    /// A recipient actively present on the poll is watching it live, so a duplicate e-mail is just
-    /// noise — skip it. The in-app notification is still created (persistent record), and a
-    /// present-but-idle or absent recipient falls through and is e-mailed per their settings.
-    /// </summary>
-    private bool IsWatchingLive(Poll poll, Guid recipientId) =>
-        presenceRegistry.IsUserActive(poll.Id, recipientId, _idleThreshold);
-
     public async Task SendPollClosedNotificationsAsync(IEnumerable<Person> recipients, string actionUserName,
         Entities.Project project, Poll poll)
     {
@@ -37,22 +29,10 @@ public class ProjectNotificationService(
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
-            if (recipient.Role == Role.TestUser)
+            if (await ShouldSendMailAsync(recipient, NotificationKey.PollClosed, project, poll))
             {
-                continue;
+                await mailService.SendPollClosedMailAsync(recipient, actionUserName, project, poll, recipient.Language);
             }
-
-            if (IsWatchingLive(poll, recipient.Id))
-            {
-                continue;
-            }
-
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollClosed, project.Id))
-            {
-                continue;
-            }
-
-            await mailService.SendPollClosedMailAsync(recipient, actionUserName, project, poll, recipient.Language);
         }
     }
 
@@ -66,22 +46,10 @@ public class ProjectNotificationService(
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
-            if (recipient.Role == Role.TestUser)
+            if (await ShouldSendMailAsync(recipient, NotificationKey.PollReopened, project, poll))
             {
-                continue;
+                await mailService.SendPollReopenedMailAsync(recipient, actionUserName, project, poll, recipient.Language);
             }
-
-            if (IsWatchingLive(poll, recipient.Id))
-            {
-                continue;
-            }
-
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollReopened, project.Id))
-            {
-                continue;
-            }
-
-            await mailService.SendPollReopenedMailAsync(recipient, actionUserName, project, poll, recipient.Language);
         }
     }
 
@@ -95,22 +63,10 @@ public class ProjectNotificationService(
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
-            if (recipient.Role == Role.TestUser)
+            if (await ShouldSendMailAsync(recipient, NotificationKey.PollUpdated, project, poll))
             {
-                continue;
+                await mailService.SendPollUpdatedMailAsync(recipient, actionUserName, project, poll, summary);
             }
-
-            if (IsWatchingLive(poll, recipient.Id))
-            {
-                continue;
-            }
-
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.PollUpdated, project.Id))
-            {
-                continue;
-            }
-
-            await mailService.SendPollUpdatedMailAsync(recipient, actionUserName, project, poll, summary);
         }
     }
 
@@ -124,22 +80,31 @@ public class ProjectNotificationService(
                 projectId: project.Id, pollId: poll.Id,
                 new Dictionary<string, string> { ["user"] = actionUserName, ["poll"] = poll.Name });
 
-            if (recipient.Role == Role.TestUser)
+            if (await ShouldSendMailAsync(recipient, NotificationKey.NewComment, project, poll))
             {
-                continue;
+                await mailService.SendNewCommentMailAsync(recipient, actionUserName, project, poll, commentContent);
             }
-
-            if (IsWatchingLive(poll, recipient.Id))
-            {
-                continue;
-            }
-
-            if (!await notificationMailGuard.ShouldSendAsync(recipient.Id, NotificationKey.NewComment, project.Id))
-            {
-                continue;
-            }
-
-            await mailService.SendNewCommentMailAsync(recipient, actionUserName, project, poll, commentContent);
         }
+    }
+
+    /// <summary>
+    /// Whether the recipient should also get an e-mail. Test users never do; a recipient actively
+    /// present on the poll is watching it live, so a duplicate e-mail is just noise. A present-but-idle
+    /// or absent recipient falls through to their mail settings.
+    /// </summary>
+    private async Task<bool> ShouldSendMailAsync(Person recipient, NotificationKey key, Entities.Project project,
+        Poll poll)
+    {
+        if (recipient.Role == Role.TestUser)
+        {
+            return false;
+        }
+
+        if (presenceRegistry.IsUserActive(poll.Id, recipient.Id, _idleThreshold))
+        {
+            return false;
+        }
+
+        return await notificationMailGuard.ShouldSendAsync(recipient.Id, key, project.Id);
     }
 }

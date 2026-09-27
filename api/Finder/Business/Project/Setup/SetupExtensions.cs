@@ -7,7 +7,11 @@ public static class SetupExtensions
 {
     public static IServiceCollection AddProjectServices(this IServiceCollection services)
     {
+        services.AddSignalR();
         services.AddScoped<ProjectService>();
+        services.AddScoped<PollService>();
+        services.AddScoped<OptionService>();
+        services.AddScoped<CommentService>();
         services.AddScoped<VoteService>();
         services.AddScoped<ProjectMailService>();
         services.AddScoped<ProjectNotificationService>();
@@ -17,5 +21,12 @@ public static class SetupExtensions
         services.AddSingleton<IPollChangeNotifier, PollChangeNotifier>();
 
         return services;
+    }
+
+    public static WebApplication MapProjectHubs(this WebApplication app)
+    {
+        app.MapHub<PollHub>("/hub/poll").RequireAuthorization();
+
+        return app;
     }
 }

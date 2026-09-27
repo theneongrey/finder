@@ -13,13 +13,16 @@ import {
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionType } from '@common/models/option-type.model';
-import { OptionChangeKind } from '../../../_shared/data/poll-detail.store';
 import { extractSlugId } from '../../../_shared/utils/slug.utils';
 import {
     isDateOptionType,
     optionTypeToDateType,
 } from '../../../_shared/models/date-option.model';
 import * as voteTally from '../../../_shared/utils/vote-tally.utils';
+import {
+    HIGHLIGHT_DURATION_MS,
+    OptionChangeKind,
+} from '../../../_shared/data/poll-realtime-sync.feature';
 
 type SortMode = 'top' | 'original';
 
@@ -45,6 +48,7 @@ export class OptionListComponent {
     canManage = input(false);
     /** Options changed by a recent remote update, keyed by id → change kind (added/updated/removed). */
     changedOptions = input<Record<string, OptionChangeKind>>({});
+    protected readonly highlightDurationMs = HIGHLIGHT_DURATION_MS;
 
     sort = input<SortMode>('top');
 

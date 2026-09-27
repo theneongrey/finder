@@ -77,9 +77,11 @@ No request talks to SMTP. Both queues live in the database so they survive deplo
 - **Poll-update debounce.** Each edit merges into the poll's `PendingPollUpdates` row and pushes
   its `DueAt` out by the debounce window. `PollUpdateDispatcher` checks every second, claims due
   rows (a delete that only succeeds if `DueAt` is unchanged) and hands the summary to
-  `ProjectNotificationService`, which applies the gates above and enqueues the mails.
+  `ProjectNotificationService`, which applies the gates above and enqueues the mails. The claim,
+  the in-app notifications and the outbox rows commit in **one transaction**: if anything fails,
+  the row is rolled back and retried 1 min later, so an update is never lost between the queues.
 
-Both dispatchers assume a **single API instance**. With several instances, rows would need
+Both dispatchers assume a **single API instance** (see [Single Instance](../architecture/single-instance.md)). With several instances, rows would need
 claiming with `SELECT … FOR UPDATE SKIP LOCKED`. In the `Testing` environment the background loops
 are off; integration tests call `PollUpdateDispatcher.ProcessDueAsync()` and
 `MailOutboxDispatcher.DrainAsync()` explicitly before asserting on sent mail.

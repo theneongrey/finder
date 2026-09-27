@@ -33,14 +33,19 @@ backend. Users can hide the tab and turn it back on in Settings.
 
 1. The tab (`app-feedback-tab`) is mounted once in `app.component.html`, so it appears on every
    screen while the user is authenticated. It stays hidden on the landing pages (`/`, `/de`,
-   `/en`, `/es`), `/auth/*` and `/logout`, and when the user has hidden it.
+   `/en`, `/es`), `/auth/*` and `/logout`, and when the user has hidden it. Below the `sm`
+   breakpoint it shrinks to an icon-only handle (with an `aria-label`) so it covers less of
+   the page.
 2. Clicking the tab opens a panel (`app-feedback-panel`) next to it:
    - type: **Bug / Idea / Other** (`ds-segmented-control`)
    - comment (`ds-textarea`, max 2000 characters)
    - an **inline disclosure** listing exactly what is sent: type, comment, name and email, date
      and time, and the current page (the user's email and the page path are filled in)
    - **Cancel** (also ✕ and Esc) and **Send**
-   - **Hide button**, which hides the tab and shows a toast pointing to Settings
+   - **Hide button**, which hides the tab. Once the save succeeds, a toast points to Settings.
+
+   Focus moves into the textarea when the panel opens and back to the tab when it closes. Esc
+   is handled on the panel itself, so it only closes the panel while focus is inside it.
 3. After a successful send, the panel closes and a success toast appears. On failure, the panel
    stays open with the text intact and an error toast appears.
 
@@ -52,10 +57,15 @@ The "hidden" flag is stored per person in the `FeedbackPreferences` table (see B
 A missing row means the default: the tab is shown. The Settings page has a **Feedback** card with
 a `ds-switch` labelled "Show feedback button" to switch it back on.
 
-`FeedbackStore.setButtonHidden` is optimistic: the tab reacts immediately and the previous value
-is restored, with an error toast, if the request fails. The preference is loaded when a user
-logs in and reset on logout or account switch, keyed on the user's email so profile edits don't
-trigger a reload.
+`FeedbackStore.setButtonHidden` is optimistic: the tab reacts immediately. Saves run in order
+(`concatMap`). Once the last queued save settles, the state is set to the last value the server
+confirmed, so a failed save rolls back with an error toast and fast toggling can't leave the UI
+out of sync with the DB.
+
+The preference is loaded when a user logs in, keyed on their email so profile edits don't
+trigger a reload, and reset on logout or account switch. Settings also loads it, so the card
+works independently of the tab. A failed load falls back to the default (shown) rather than
+leaving the switch on a skeleton.
 
 ## Backend
 
@@ -72,12 +82,14 @@ All three require authentication. `POST` also uses the `"feedback"` rate-limit p
 (5 requests/IP/minute).
 
 - **Entity:** `FeedbackPreference { PersonId (PK, FK → Person, cascade), ButtonHidden }`
-  inherits `BaseEntity`. Migration: `AddFeedbackPreference`.
+  inherits `BaseEntity`. Migration: `AddFeedbackPreference`. If two first-time saves race,
+  the loser's insert fails the primary-key check and falls back to an update of the row the
+  other request created.
 - **`FeedbackType`** enum (`Bug`, `Idea`, `Other`) has its own
   `[JsonConverter(typeof(JsonStringEnumConverter<FeedbackType>))]`. The global string-enum
   converter in `Program.cs` is only registered for MVC controllers, not for Minimal APIs.
-- **Mail:** `FeedbackService` validates the input (trimmed, HTML-stripped comment of 1–2000
-  characters; page of 1–500 characters; defined enum value) and loads the user. It then sends
+- **Mail:** `FeedbackService` validates the input (trimmed comment of 1–2000 characters, kept
+  verbatim rather than HTML-stripped, since bug reports often quote markup; page of 1–500 characters; defined enum value) and loads the user. It then sends
   the `feedback` template (English only) through the shared `MailService`. All values go
   through `MailTemplate.Variables`, so `MailTemplateService` HTML-encodes them (see
   [Notifications](notifications.md)). The timestamp is server UTC.

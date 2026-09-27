@@ -384,6 +384,7 @@ On/off toggle. Implements `ControlValueAccessor` and `model()` for two-way bindi
 |---|---|---|---|
 | `size` | `'sm' \| 'md'` | `'md'` | Physical size of the toggle |
 | `checked` | `boolean` (model) | `false` | Two-way checked state |
+| `label` | `string \| undefined` | `undefined` | Accessible name, forwarded to `hlm-switch`'s `aria-label`. Set it when no visible `<label>` is associated. |
 
 ```html
 <!-- Two-way binding -->
@@ -393,7 +394,7 @@ On/off toggle. Implements `ControlValueAccessor` and `model()` for two-way bindi
 <ds-switch [formControl]="notifControl" />
 
 <!-- One-way + event (settings feedback toggle) -->
-<ds-switch [checked]="!hidden()" (checkedChange)="onChange($event)" />
+<ds-switch [checked]="!hidden()" [label]="'settings.feedback.show' | translate" (checkedChange)="onChange($event)" />
 ```
 
 Clicks and keyboard input are handled by the inner `hlm-switch`, which reports through `checkedChange`. The host element has no `(click)` handler: an earlier host `toggle()` flipped the value a second time on every click, leaving the model out of sync with what the switch showed (fixed in #326).

@@ -51,6 +51,7 @@ export class PollRealtimeService {
         POLL_ACTIVITY_HEARTBEAT_SECONDS * 1000;
     private stopActivityTracking?: () => void;
     private lastActivitySentAt = 0;
+    private activityInFlight = false;
 
     /** Roster of everyone currently on the active poll (including the local user). */
     readonly presence = signal<PollParticipant[]>([]);
@@ -138,17 +139,20 @@ export class PollRealtimeService {
         if (document.hidden) {
             return;
         }
-        const now = Date.now();
         if (
-            now - this.lastActivitySentAt <
-            PollRealtimeService.ACTIVITY_THROTTLE_MS
+            this.activityInFlight ||
+            Date.now() - this.lastActivitySentAt <
+                PollRealtimeService.ACTIVITY_THROTTLE_MS
         ) {
             return;
         }
-        this.lastActivitySentAt = now;
         void this.sendActivity();
     }
 
+    /**
+     * The throttle window only advances once a heartbeat actually reaches the server, so a skipped
+     * or failed send is retried on the next interaction instead of letting the user lapse to idle.
+     */
     private async sendActivity(): Promise<void> {
         const pollId = this.activePollId;
         if (
@@ -157,14 +161,18 @@ export class PollRealtimeService {
         ) {
             return;
         }
+        this.activityInFlight = true;
         try {
             await this.connection.invoke('ReportActivity', pollId);
+            this.lastActivitySentAt = Date.now();
         } catch (error) {
             this.loggerService.log(
                 '[PollRealtimeService] Failed to report activity',
                 pollId,
                 error,
             );
+        } finally {
+            this.activityInFlight = false;
         }
     }
 

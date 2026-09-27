@@ -156,7 +156,9 @@ public sealed class PollPresenceRegistry
                 return false;
             }
 
-            return connections.Values.Any(e => e.Participant.UserId == userId && e.LastActivityUtc >= cutoff);
+            // Strictly after the cutoff: activity stamped at exactly "now" with a zero window counts
+            // as idle, so the result never depends on the clock ticking between stamp and check.
+            return connections.Values.Any(e => e.Participant.UserId == userId && e.LastActivityUtc > cutoff);
         }
     }
 }

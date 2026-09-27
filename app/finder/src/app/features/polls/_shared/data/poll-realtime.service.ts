@@ -1,4 +1,4 @@
-import { inject, Injectable, NgZone, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import {
     HubConnection,
     HubConnectionBuilder,
@@ -29,7 +29,6 @@ import {
 export class PollRealtimeService {
     private readonly loggerService = inject(LoggerService);
     private readonly userStore = inject(UserStore);
-    private readonly zone = inject(NgZone);
 
     private connection?: HubConnection;
     private activePollId?: string;
@@ -112,20 +111,18 @@ export class PollRealtimeService {
     }
 
     /**
-     * Attach interaction listeners for the active poll. Runs outside the Angular zone so the
-     * high-frequency events (pointermove, scroll) never trigger change detection — the handler only
-     * fires a throttled network ping and touches no signals.
+     * Attach interaction listeners for the active poll. The app is zoneless, so these high-frequency
+     * events (pointermove, scroll) never trigger change detection — the handler only fires a
+     * throttled network ping and touches no signals.
      */
     private startActivityTracking(): void {
         if (this.stopActivityTracking || typeof document === 'undefined') {
             return;
         }
         const handler = () => this.onUserActivity();
-        this.zone.runOutsideAngular(() => {
-            for (const event of PollRealtimeService.ACTIVITY_EVENTS) {
-                document.addEventListener(event, handler, { passive: true });
-            }
-        });
+        for (const event of PollRealtimeService.ACTIVITY_EVENTS) {
+            document.addEventListener(event, handler, { passive: true });
+        }
         this.stopActivityTracking = () => {
             for (const event of PollRealtimeService.ACTIVITY_EVENTS) {
                 document.removeEventListener(event, handler);

@@ -75,7 +75,7 @@ builder.Services.AddAuthServices(builder.Configuration, builder.Environment.IsDe
 builder.Services.AddProjectServices(runBackgroundDispatchers);
 builder.Services.AddPermissionServices();
 builder.Services.AddUserServices();
-builder.Services.AddPreviewServices();
+builder.Services.AddPreviewServices(builder.Configuration);
 
 var app = builder.Build();
 

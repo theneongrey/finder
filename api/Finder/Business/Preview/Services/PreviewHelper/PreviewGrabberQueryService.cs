@@ -42,7 +42,7 @@ public class PreviewGrabberQueryService
                 imageUrl = new Uri(baseUrl, imageUrl).ToString();
             }
 
-            return Result<Models.Preview>.Success(new Models.Preview(title, description, imageUrl, siteName));
+            return Result<Models.Preview>.Success(new Models.Preview(title, description, imageUrl, baseUrl.AbsoluteUri) { SiteName = siteName });
         }
 
         return Result<Models.Preview>.Fail(500, "Not implemented");

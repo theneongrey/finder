@@ -1,6 +1,10 @@
+using System.Net;
+using System.Text;
 using System.Threading.RateLimiting;
 using Finder.Business.Preview.Services;
 using Finder.Business.Preview.Services.PreviewHelper;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Preview.Setup;
 
@@ -8,8 +12,23 @@ public static class SetupExtensions
 {
     private const int MaxPreviewResponseBytes = 5 * 1024 * 1024;
 
-    public static IServiceCollection AddPreviewServices(this IServiceCollection services)
+    // Keep in step with a current desktop Chrome; bot filters flag outdated or truncated user agents.
+    private const string BrowserUserAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36";
+
+    public static IServiceCollection AddPreviewServices(this IServiceCollection services, IConfiguration configuration)
     {
+        // Legacy pages still declare charsets like windows-1252, which .NET Core only knows via this provider.
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+        services.Configure<PreviewOptions>(configuration.GetSection(PreviewOptions.SectionName));
+        services.AddKeyedSingleton<IMemoryCache>(PreviewService.CacheServiceKey, (provider, _) =>
+            new MemoryCache(new MemoryCacheOptions
+            {
+                SizeLimit = provider.GetRequiredService<IOptions<PreviewOptions>>().Value.CacheMaxEntries
+            }));
+
+        services.AddSingleton<PlaywrightBrowserProvider>();
         services.AddScoped<IHtmlGrabberPlaywrightService, HtmlGrabberPlaywrightService>();
         services.AddScoped<IHtmlGrabberHttpClientService, HtmlGrabberHttpClientService>();
         services.AddScoped<PreviewGrabberMetaService>();
@@ -34,9 +53,18 @@ public static class SetupExtensions
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
         });
 
-        services.AddHttpClient("PreviewClient", client =>
+        services.AddHttpClient(HtmlGrabberHttpClientService.ClientName, client =>
             {
-                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+                // The header set of a regular browser navigation; requests with only a user agent stand out.
+                var headers = client.DefaultRequestHeaders;
+                headers.TryAddWithoutValidation("User-Agent", BrowserUserAgent);
+                headers.TryAddWithoutValidation("Accept",
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
+                headers.TryAddWithoutValidation("Upgrade-Insecure-Requests", "1");
+                headers.TryAddWithoutValidation("Sec-Fetch-Dest", "document");
+                headers.TryAddWithoutValidation("Sec-Fetch-Mode", "navigate");
+                headers.TryAddWithoutValidation("Sec-Fetch-Site", "none");
+                headers.TryAddWithoutValidation("Sec-Fetch-User", "?1");
                 client.Timeout = TimeSpan.FromSeconds(5);
                 client.MaxResponseContentBufferSize = MaxPreviewResponseBytes;
             })
@@ -44,7 +72,9 @@ public static class SetupExtensions
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
                 ConnectCallback = OutboundUrlGuard.ConnectToPublicAddressAsync,
-                MaxAutomaticRedirections = 5
+                MaxAutomaticRedirections = 5,
+                // Sends Accept-Encoding and transparently decompresses — smaller, faster, and browser-like.
+                AutomaticDecompression = DecompressionMethods.All
             });
 
         return services;

@@ -1,70 +1,66 @@
 using System.Net;
 using Finder.Business.Preview.Models;
+using Finder.Business.Preview.Setup;
 using Finder.Business.Shared;
+using Microsoft.Extensions.Options;
 using Microsoft.Playwright;
 
 namespace Finder.Business.Preview.Services.PreviewHelper;
 
 public interface IHtmlGrabberPlaywrightService
 {
-    Task<Result<PlaywrightResult>> GetHtmlContent(string url);
+    Task<Result<FetchedHtml>> GetHtmlContent(string url, string acceptLanguage);
 }
 
 public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
 {
-    private readonly IConfiguration _configuration;
+    private const int NavigationSettleMilliseconds = 500;
+
+    // Only the DOM is read, so skip everything that only matters for painting the page.
+    private static readonly HashSet<string> BlockedResourceTypes = ["image", "media", "font", "stylesheet"];
+
+    private readonly PreviewOptions _options;
+    private readonly PlaywrightBrowserProvider _browserProvider;
     private readonly Func<string, int, CancellationToken, Task<IPAddress[]?>> _resolveAllowed;
 
-    public HtmlGrabberPlaywrightService(IConfiguration configuration)
-        : this(configuration, GuardedForwardProxy.ResolvePublicOnly)
+    public HtmlGrabberPlaywrightService(IOptions<PreviewOptions> options, PlaywrightBrowserProvider browserProvider)
+        : this(options, browserProvider, GuardedForwardProxy.ResolvePublicOnly)
     {
     }
 
     /// <summary>Test seam: replaces the SSRF address policy used by the browser's proxy.</summary>
-    public HtmlGrabberPlaywrightService(IConfiguration configuration,
+    public HtmlGrabberPlaywrightService(IOptions<PreviewOptions> options, PlaywrightBrowserProvider browserProvider,
         Func<string, int, CancellationToken, Task<IPAddress[]?>> resolveAllowed)
     {
-        _configuration = configuration;
+        _options = options.Value;
+        _browserProvider = browserProvider;
         _resolveAllowed = resolveAllowed;
     }
 
-    public async Task<Result<PlaywrightResult>> GetHtmlContent(string url)
+    public async Task<Result<FetchedHtml>> GetHtmlContent(string url, string acceptLanguage)
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !OutboundUrlGuard.IsAllowedScheme(uri))
         {
-            return Result<PlaywrightResult>.Fail(400, "URL not allowed");
+            return Result<FetchedHtml>.Fail(400, "URL not allowed");
         }
-
-        var timeoutSeconds = _configuration.GetValue<int?>("Preview:PlaywrightTimeoutSeconds") ?? 5;
 
         // SSRF guard: all browser traffic goes through a loopback proxy that only connects to public
         // addresses. Enforcing this at the network layer also covers redirects (which Playwright's
         // route handler never sees), sub-resources, WebSockets and DNS rebinding.
         await using var proxy = new GuardedForwardProxy(_resolveAllowed);
 
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new()
+        await using var lease = await _browserProvider.AcquireAsync();
+        await using var context = await lease.Browser.NewContextAsync(new BrowserNewContextOptions
         {
-            Headless = true,
             // Playwright adds <-loopback> to the bypass list, so localhost targets go through the proxy too.
             Proxy = new Proxy { Server = proxy.Address },
-            Args = new[]
-            {
-                "--disable-blink-features=AutomationControlled",
-                "--disable-features=IsolateOrigins,site-per-process"
-            }
-        });
-
-        var context = await browser.NewContextAsync(new BrowserNewContextOptions
-        {
-            UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-                        "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-            Locale = "en-US",
+            UserAgent = lease.UserAgent,
+            Locale = PreviewLanguage.PrimaryLocale(acceptLanguage),
             TimezoneId = "Europe/Berlin",
             ViewportSize = new ViewportSize { Width = 1920, Height = 1080 },
             ExtraHTTPHeaders = new Dictionary<string, string>
             {
-                ["Accept-Language"] = "en-US,en;q=0.9"
+                ["Accept-Language"] = acceptLanguage
             }
         });
 
@@ -78,39 +74,58 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
                        !(OutboundUrlGuard.IsAllowedScheme(target) || target.Scheme is "data" or "blob"),
             route => route.AbortAsync("blockedbyclient"));
 
+        // Registered last, so it runs first; everything it lets through falls back to the scheme guard above.
+        await context.RouteAsync("**/*", route =>
+            BlockedResourceTypes.Contains(route.Request.ResourceType)
+                ? route.AbortAsync("blockedbyclient")
+                : route.FallbackAsync());
+
         var page = await context.NewPageAsync();
         try
         {
             await page.GotoAsync(url, new PageGotoOptions
             {
-                WaitUntil = WaitUntilState.Commit
+                WaitUntil = WaitUntilState.Commit,
+                Timeout = (float)TimeSpan.FromSeconds(_options.PlaywrightTimeoutSeconds).TotalMilliseconds
             });
         }
         catch (PlaywrightException ex) when (ex.Message.Contains("ERR_BLOCKED_BY_CLIENT") ||
                                              ex.Message.Contains("ERR_TUNNEL_CONNECTION_FAILED"))
         {
-            return Result<PlaywrightResult>.Fail(400, "URL not allowed");
+            return Result<FetchedHtml>.Fail(400, "URL not allowed");
         }
-
-        // Wait until navigation activity has settled.
-        await WaitForPageToSettleAsync(page, 500, timeoutSeconds);
-
-        // For plain http the proxy's refusal renders as a page; never hand that back as content.
-        if (proxy.WasBlocked(page.Url))
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
         {
-            return Result<PlaywrightResult>.Fail(400, "URL not allowed");
+            return Result<FetchedHtml>.Fail(502, "Failed to fetch from url");
         }
 
-        var html = await page.ContentAsync();
-        if (!html.Contains("html"))
+        try
         {
-            return Result<PlaywrightResult>.Fail(500, "Failed to fetch from url");
-        }
+            // Wait until navigation activity has settled.
+            await WaitForPageToSettleAsync(page);
 
-        return Result<PlaywrightResult>.Success(new PlaywrightResult(html, page.Url));
+            // For plain http the proxy's refusal renders as a page; never hand that back as content.
+            if (proxy.WasBlocked(page.Url))
+            {
+                return Result<FetchedHtml>.Fail(400, "URL not allowed");
+            }
+
+            var html = await page.ContentAsync();
+            if (!html.Contains("html"))
+            {
+                return Result<FetchedHtml>.Fail(500, "Failed to fetch from url");
+            }
+
+            return Result<FetchedHtml>.Success(new FetchedHtml(html, page.Url));
+        }
+        catch (Exception ex) when (ex is PlaywrightException or TimeoutException)
+        {
+            // Navigation never settled (endless redirects) or the page crashed/closed mid-read.
+            return Result<FetchedHtml>.Fail(504, "Page did not settle in time");
+        }
     }
 
-    private static async Task WaitForPageToSettleAsync(IPage page, int settleTimeMs, int timeoutSeconds)
+    private async Task WaitForPageToSettleAsync(IPage page)
     {
         var lastNavigation = DateTime.UtcNow;
 
@@ -126,30 +141,29 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
 
         try
         {
-            var timeout = TimeSpan.FromSeconds(timeoutSeconds);
+            var timeout = TimeSpan.FromSeconds(_options.PlaywrightTimeoutSeconds);
 
             while (DateTime.UtcNow - lastNavigation < timeout)
             {
                 await page.WaitForTimeoutAsync(100);
 
                 if (DateTime.UtcNow - lastNavigation >=
-                    TimeSpan.FromMilliseconds(settleTimeMs))
+                    TimeSpan.FromMilliseconds(NavigationSettleMilliseconds))
                 {
                     // Navigation has stopped; now give client-side frameworks
                     // (SPAs) a chance to render before we read the DOM. Waiting
                     // only for LoadState.Load captures the empty shell of an
                     // Angular/React app before its bundles execute, so wait for
-                    // the network to go idle instead. If it never fully settles
-                    // (long-polling, analytics beacons, …), fall back to
-                    // whatever has rendered rather than failing the grab.
+                    // the network to go idle instead. Many pages never fully settle
+                    // (long-polling, analytics beacons, …), so this wait is capped
+                    // short and then we use whatever has rendered.
                     try
                     {
                         await page.WaitForLoadStateAsync(
                             LoadState.NetworkIdle,
                             new PageWaitForLoadStateOptions
                             {
-                                Timeout = (float)TimeSpan
-                                    .FromSeconds(timeoutSeconds).TotalMilliseconds
+                                Timeout = _options.PlaywrightNetworkIdleMilliseconds
                             });
                     }
                     catch (TimeoutException)
@@ -162,7 +176,7 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
             }
 
             throw new TimeoutException(
-                $"Navigation did not settle within {timeoutSeconds}s. " +
+                $"Navigation did not settle within {_options.PlaywrightTimeoutSeconds}s. " +
                 $"Current URL: {page.Url}");
         }
         finally

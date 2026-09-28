@@ -2,13 +2,20 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Finder.Business.Preview.Services.PreviewHelper;
-using Microsoft.Extensions.Configuration;
+using Finder.Business.Preview.Setup;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Finder.Tests.Preview;
 
-public class OutboundUrlGuardTests
+public class OutboundUrlGuardTests : IAsyncLifetime
 {
+    private readonly PlaywrightBrowserProvider _browserProvider = new(Options.Create(new PreviewOptions()));
+
+    public Task InitializeAsync() => Task.CompletedTask;
+
+    public async Task DisposeAsync() => await _browserProvider.DisposeAsync();
+
     [Theory]
     [InlineData("127.0.0.1")]
     [InlineData("10.1.2.3")]
@@ -66,7 +73,7 @@ public class OutboundUrlGuardTests
     {
         using var listener = StartListener(out var port);
 
-        var result = await new HtmlGrabberPlaywrightService(CreateConfig()).GetHtmlContent($"http://127.0.0.1:{port}/");
+        var result = await new HtmlGrabberPlaywrightService(CreateOptions(), _browserProvider).GetHtmlContent($"http://127.0.0.1:{port}/", PreviewLanguage.Default);
 
         Assert.False(result.IsSuccess);
         Assert.False(listener.Pending());
@@ -79,7 +86,7 @@ public class OutboundUrlGuardTests
         await File.WriteAllTextAsync(file, "<html><head><title>secret</title></head></html>");
         try
         {
-            var result = await new HtmlGrabberPlaywrightService(CreateConfig()).GetHtmlContent(new Uri(file).AbsoluteUri);
+            var result = await new HtmlGrabberPlaywrightService(CreateOptions(), _browserProvider).GetHtmlContent(new Uri(file).AbsoluteUri, PreviewLanguage.Default);
 
             Assert.False(result.IsSuccess);
         }
@@ -99,10 +106,10 @@ public class OutboundUrlGuardTests
 
         // Treat the redirector as "public" and everything else as internal, so the only way the
         // blocked listener gets hit is if the redirect target escapes the check.
-        var grabber = new HtmlGrabberPlaywrightService(CreateConfig(),
+        var grabber = new HtmlGrabberPlaywrightService(CreateOptions(), _browserProvider,
             (_, port, _) => Task.FromResult(port == redirectorPort ? new[] { IPAddress.Loopback } : null));
 
-        var result = await grabber.GetHtmlContent($"http://127.0.0.1:{redirectorPort}/");
+        var result = await grabber.GetHtmlContent($"http://127.0.0.1:{redirectorPort}/", PreviewLanguage.Default);
         await cts.CancelAsync();
         await serverTask;
 
@@ -141,10 +148,8 @@ public class OutboundUrlGuardTests
         }
     }
 
-    private static IConfiguration CreateConfig() =>
-        new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["Preview:PlaywrightTimeoutSeconds"] = "10" })
-            .Build();
+    private static IOptions<PreviewOptions> CreateOptions() =>
+        Options.Create(new PreviewOptions { PlaywrightTimeoutSeconds = 10 });
 
     // A raw TCP listener: Pending() tells us whether anything even attempted to connect.
     private static TcpListener StartListener(out int port)

@@ -3,6 +3,16 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-28 — ingest: PR #498 review follow-ups (link preview)
+Pages touched: architecture/link-preview.md (5 s deadline covers body reads, short TTL for incomplete previews + dedicated size-limited cache, browser recycling with leases, site isolation re-enabled, new config keys)
+
+---
+
+## 2026-09-27 — ingest: link preview pipeline rework (branch feature/preview-service-improvements)
+Pages touched: architecture/link-preview.md (created — pipeline, extraction sources, JSON-LD, image ranking + parallel probing, pooled browser, SSRF guard, bot protection, config), architecture/backend.md (Preview Service section replaced by summary + link), concepts/option.md (URL Preview section corrected: frontend fetches, fields may be partial), api/index.md (/api/preview contract), architecture/single-instance.md (preview cache + pooled browser as process-local state), architecture/index.md, index.md
+
+---
+
 ## 2026-09-27 — ingest: atomic poll-update claim (PR #463 follow-up)
 Pages touched: features/notifications.md (claim + in-app + outbox commit in one transaction, 1 min retry; link to single-instance), architecture/single-instance.md (debounce/mail row updated to post-#463 DB-backed queues)
 

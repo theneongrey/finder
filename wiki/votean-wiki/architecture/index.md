@@ -18,6 +18,7 @@ System design, technical decisions, and component relationships.
 - [Component Architecture](component-architecture.md) — three-layer component model
 - [Poll Detail Page Rebuild](poll-detail-rebuild.md) — results = detail page, voting overlay
 - [Realtime Poll Sync](realtime-poll-sync.md) — live presence and change sync on the poll detail page
+- [Link Preview](link-preview.md) — URL → title/description/image pipeline: HTTP, pooled headless browser, URL fallback, SSRF guard
 - [Single-Instance Deployment](single-instance.md) — decision record: one API instance by design; what relies on it and the scale-out checklist
 - [CI/CD](ci-cd.md)
 - [PrimeNG → Spartan UI Migration](primeng-to-spartan-migration.md) — why PrimeNG was replaced

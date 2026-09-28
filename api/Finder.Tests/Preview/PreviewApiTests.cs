@@ -20,12 +20,12 @@ public class PreviewApiTests : IClassFixture<FinderApiFactory>
 
         /*
         var httpGrabber = Substitute.For<IHtmlGrabberHttpClientService>();
-        httpGrabber.GetHtmlContent(Arg.Any<string>())
-            .Returns(Result<string>.Fail(500, string.Empty));
+        httpGrabber.GetHtmlContent(Arg.Any<string>(), Arg.Any<string>())
+            .Returns(Result<FetchedHtml>.Fail(500, string.Empty));
 
         var playwrightGrabber = Substitute.For<IHtmlGrabberPlaywrightService>();
-        playwrightGrabber.GetHtmlContent(Arg.Any<string>())
-            .Returns(Result<PlaywrightResult>.Success(new  (mockHtml, "https://www.amazon.de/dp/B0FVX89SVD?ref=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&ref_=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&social_share=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&th=1")));
+        playwrightGrabber.GetHtmlContent(Arg.Any<string>(), Arg.Any<string>())
+            .Returns(Result<FetchedHtml>.Success(new  (mockHtml, "https://www.amazon.de/dp/B0FVX89SVD?ref=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&ref_=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&social_share=cm_sw_r_cso_cp_apin_dp_Y8GHHFGB7B0Z8HCR2A36&th=1")));
 
         var user = await _factory.SeedUser();
 

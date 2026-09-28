@@ -80,7 +80,7 @@ sources:
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/api/preview` | Fetch OpenGraph metadata for a URL (query param: `url`) |
+| `GET` | `/api/preview` | Link preview for a URL (query param: `url`; honours `Accept-Language`) → `{ title, description, imageUrl, siteName }`. 200 with partial data when a site is uncooperative; 400 only for unsafe URLs. See [Link Preview](../architecture/link-preview.md) |
 
 ## Realtime hub (`/hub/poll`)
 

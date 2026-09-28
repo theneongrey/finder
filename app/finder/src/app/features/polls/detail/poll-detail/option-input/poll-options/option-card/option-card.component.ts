@@ -253,7 +253,15 @@ export class OptionCardComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (preview) => {
-                    if (preview.imageUrl) {
+                    // The API also answers with partial previews (e.g. no image), so the
+                    // loading state must end regardless of which fields came back.
+                    this.previewLoading.set(false);
+                    this.initialUrl = normalized;
+                    if (
+                        preview.imageUrl ||
+                        preview.title ||
+                        preview.description
+                    ) {
                         const entry = this.option();
                         const updatedEntry: OptionEntry = {
                             ...entry,
@@ -267,8 +275,6 @@ export class OptionCardComponent {
                         }
                         this.optionChange.emit(updatedEntry);
                         this.previewData.set(preview);
-                        this.previewLoading.set(false);
-                        this.initialUrl = normalized;
                     }
                 },
                 error: () => {

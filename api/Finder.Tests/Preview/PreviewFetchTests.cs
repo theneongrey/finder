@@ -20,11 +20,68 @@ public class PreviewFetchTests
         }
     }
 
-    private static IHttpClientFactory FactoryFor(HttpMessageHandler handler)
+    /// <summary>Sends the first bytes, then never sends more — like a server dripping the body.</summary>
+    private sealed class StallingStream(byte[] prefix) : MemoryStream(prefix)
+    {
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            var read = await base.ReadAsync(buffer, cancellationToken);
+            if (read > 0)
+            {
+                return read;
+            }
+
+            await Task.Delay(Timeout.Infinite, cancellationToken);
+            return 0;
+        }
+    }
+
+    private static IHttpClientFactory FactoryFor(HttpMessageHandler handler, TimeSpan? timeout = null)
     {
         var factory = Substitute.For<IHttpClientFactory>();
-        factory.CreateClient(Arg.Any<string>()).Returns(_ => new HttpClient(handler, disposeHandler: false));
+        factory.CreateClient(Arg.Any<string>()).Returns(_ =>
+        {
+            var client = new HttpClient(handler, disposeHandler: false);
+            if (timeout is { } t)
+            {
+                client.Timeout = t;
+            }
+
+            return client;
+        });
         return factory;
+    }
+
+    private static HttpResponseMessage StallingResponse(byte[] prefix, string mediaType)
+    {
+        var content = new StreamContent(new StallingStream(prefix));
+        content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+        return new HttpResponseMessage(HttpStatusCode.OK) { Content = content };
+    }
+
+    [Fact]
+    public async Task HttpGrabber_GivesUp_WhenTheBodyStalls()
+    {
+        var handler = new StubHandler(_ => StallingResponse("<html><head><title>x"u8.ToArray(), "text/html"));
+
+        var fetch = new HtmlGrabberHttpClientService(FactoryFor(handler, TimeSpan.FromMilliseconds(300)))
+            .GetHtmlContent("https://example.com/", PreviewLanguage.Default);
+
+        Assert.Same(fetch, await Task.WhenAny(fetch, Task.Delay(TimeSpan.FromSeconds(10))));
+        Assert.False((await fetch).IsSuccess);
+    }
+
+    [Fact]
+    public async Task ImageSize_GivesUp_WhenTheBodyStalls()
+    {
+        // A JPEG whose header never arrives past the SOI marker and the start of a segment.
+        var handler = new StubHandler(_ => StallingResponse([0xFF, 0xD8, 0xFF, 0xE1, 0x40, 0x00, 0, 0, 0, 0, 0, 0], "image/jpeg"));
+
+        var probe = new ImageSizeService(FactoryFor(handler, TimeSpan.FromMilliseconds(300)))
+            .GetImageSizeAsync("https://cdn.test/photo.jpg");
+
+        Assert.Same(probe, await Task.WhenAny(probe, Task.Delay(TimeSpan.FromSeconds(10))));
+        Assert.False((await probe).IsSuccess);
     }
 
     [Fact]

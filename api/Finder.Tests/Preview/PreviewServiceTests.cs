@@ -21,9 +21,9 @@ public class PreviewServiceTests
     private readonly IHtmlGrabberPlaywrightService _browser = Substitute.For<IHtmlGrabberPlaywrightService>();
     private readonly IPreviewImageCandidateService _images = Substitute.For<IPreviewImageCandidateService>();
 
-    private PreviewService CreateService() =>
+    private PreviewService CreateService(PreviewOptions? options = null) =>
         new(_http, new PreviewGrabberMetaService(), _browser, _images,
-            new MemoryCache(new MemoryCacheOptions()), Options.Create(new PreviewOptions()),
+            new MemoryCache(new MemoryCacheOptions { SizeLimit = 100 }), Options.Create(options ?? new PreviewOptions()),
             NullLogger<PreviewService>.Instance);
 
     private void HttpReturns(string html, string url = HotelUrl) =>
@@ -146,6 +146,32 @@ public class PreviewServiceTests
         var second = await service.GetPreviewAsync(HotelUrl, "de-DE,de;q=0.9");
 
         Assert.Equal("Adlon", second.Payload!.Title);
+        await _http.Received(1).GetHtmlContent(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [Fact]
+    public async Task IncompletePreview_IsCachedOnlyBriefly()
+    {
+        // A title without image or description — e.g. a bot-challenge interstitial.
+        HttpReturns("<html><head><title>Access denied</title></head></html>");
+        BrowserFails();
+        var service = CreateService(new PreviewOptions { PartialCacheMinutes = 0 });
+
+        await service.GetPreviewAsync(HotelUrl);
+        await service.GetPreviewAsync(HotelUrl);
+
+        await _http.Received(2).GetHtmlContent(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [Fact]
+    public async Task CompletePreview_IgnoresThePartialCacheTime()
+    {
+        HttpReturns("""<html><head><meta property="og:title" content="Adlon"><meta property="og:description" content="Hotel"><meta property="og:image" content="/a.jpg"></head></html>""");
+        var service = CreateService(new PreviewOptions { PartialCacheMinutes = 0 });
+
+        await service.GetPreviewAsync(HotelUrl);
+        await service.GetPreviewAsync(HotelUrl);
+
         await _http.Received(1).GetHtmlContent(Arg.Any<string>(), Arg.Any<string>());
     }
 

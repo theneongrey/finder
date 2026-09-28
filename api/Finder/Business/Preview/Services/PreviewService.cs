@@ -10,6 +10,9 @@ namespace Finder.Business.Preview.Services;
 
 public class PreviewService
 {
+    /// <summary>DI key of the preview's own size-limited <see cref="IMemoryCache"/>.</summary>
+    public const string CacheServiceKey = "preview";
+
     private readonly PreviewGrabberMetaService _previewGrabberMetaService;
     private readonly IHtmlGrabberPlaywrightService _htmlGrabberPlaywrightService;
     private readonly IPreviewImageCandidateService _previewImageCandidateService;
@@ -22,7 +25,7 @@ public class PreviewService
         PreviewGrabberMetaService previewGrabberMetaService,
         IHtmlGrabberPlaywrightService htmlGrabberPlaywrightService,
         IPreviewImageCandidateService previewImageCandidateService,
-        IMemoryCache cache,
+        [FromKeyedServices(CacheServiceKey)] IMemoryCache cache,
         IOptions<PreviewOptions> options,
         ILogger<PreviewService> logger)
     {
@@ -74,7 +77,18 @@ public class PreviewService
 
         // Whatever is still missing comes from the URL itself.
         var preview = outcome.Preview.FillFrom(UrlPreviewFallback.FromUrl(new Uri(outcome.Preview.Url)));
-        _cache.Set(cacheKey, preview, TimeSpan.FromMinutes(_options.CacheMinutes));
+
+        // Incomplete previews may be a bot-challenge page, so they are only kept briefly. 0 disables caching.
+        var ttl = preview.IsComplete ? _options.CacheMinutes : Math.Min(_options.CacheMinutes, _options.PartialCacheMinutes);
+        if (ttl > 0)
+        {
+            _cache.Set(cacheKey, preview, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(ttl),
+                Size = 1
+            });
+        }
+
         return Result<Models.Preview>.Success(preview);
     }
 

@@ -15,4 +15,13 @@ public class PreviewOptions
 
     /// <summary>How long a fetched preview is reused for the same URL and language.</summary>
     public int CacheMinutes { get; set; } = 360;
+
+    /// <summary>
+    /// How long an incomplete preview (no title, description or image) is reused. Kept short: it may be a
+    /// bot-challenge page, and the real page may be reachable soon.
+    /// </summary>
+    public int PartialCacheMinutes { get; set; } = 10;
+
+    /// <summary>Upper bound for the number of cached previews.</summary>
+    public int CacheMaxEntries { get; set; } = 1000;
 }

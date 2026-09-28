@@ -3,6 +3,8 @@ using System.Text;
 using System.Threading.RateLimiting;
 using Finder.Business.Preview.Services;
 using Finder.Business.Preview.Services.PreviewHelper;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Preview.Setup;
 
@@ -20,7 +22,11 @@ public static class SetupExtensions
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         services.Configure<PreviewOptions>(configuration.GetSection(PreviewOptions.SectionName));
-        services.AddMemoryCache();
+        services.AddKeyedSingleton<IMemoryCache>(PreviewService.CacheServiceKey, (provider, _) =>
+            new MemoryCache(new MemoryCacheOptions
+            {
+                SizeLimit = provider.GetRequiredService<IOptions<PreviewOptions>>().Value.CacheMaxEntries
+            }));
 
         services.AddSingleton<PlaywrightBrowserProvider>();
         services.AddScoped<IHtmlGrabberPlaywrightService, HtmlGrabberPlaywrightService>();

@@ -35,7 +35,10 @@ public partial class HtmlGrabberHttpClientService : IHtmlGrabberHttpClientServic
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.TryAddWithoutValidation("Accept-Language", acceptLanguage);
 
-            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            // With ResponseHeadersRead the client timeout ends at the headers; this deadline also covers the body,
+            // so a server dripping bytes can't hold the request open.
+            using var cts = new CancellationTokenSource(client.Timeout);
+            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
             if (!response.IsSuccessStatusCode)
             {
                 return Result<FetchedHtml>.Fail((int)response.StatusCode, "Could not fetch html content");
@@ -47,7 +50,7 @@ public partial class HtmlGrabberHttpClientService : IHtmlGrabberHttpClientServic
                 return Result<FetchedHtml>.Fail(415, "not a valid html page");
             }
 
-            var bytes = await ReadCappedAsync(response.Content);
+            var bytes = await ReadCappedAsync(response.Content, cts.Token);
             var html = Decode(bytes, response.Content.Headers.ContentType?.CharSet);
             if (!html.Contains("<html", StringComparison.OrdinalIgnoreCase) &&
                 !html.Contains("<head", StringComparison.OrdinalIgnoreCase))
@@ -66,13 +69,13 @@ public partial class HtmlGrabberHttpClientService : IHtmlGrabberHttpClientServic
         }
     }
 
-    private static async Task<byte[]> ReadCappedAsync(HttpContent content)
+    private static async Task<byte[]> ReadCappedAsync(HttpContent content, CancellationToken cancellationToken)
     {
-        await using var stream = await content.ReadAsStreamAsync();
+        await using var stream = await content.ReadAsStreamAsync(cancellationToken);
         using var buffer = new MemoryStream();
         var chunk = new byte[81920];
         int read;
-        while (buffer.Length < MaxHtmlBytes && (read = await stream.ReadAsync(chunk)) > 0)
+        while (buffer.Length < MaxHtmlBytes && (read = await stream.ReadAsync(chunk, cancellationToken)) > 0)
         {
             buffer.Write(chunk, 0, (int)Math.Min(read, MaxHtmlBytes - buffer.Length));
         }

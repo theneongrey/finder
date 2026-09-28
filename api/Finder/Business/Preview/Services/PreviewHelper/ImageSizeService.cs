@@ -33,20 +33,22 @@ public class ImageSizeService : IImageSizeService
             using var request = new HttpRequestMessage(HttpMethod.Get, imageUrl);
             request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(0, MaxHeaderBytes - 1);
 
-            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            // The client timeout ends at the headers; this deadline also covers reading the body.
+            using var cts = new CancellationTokenSource(client.Timeout);
+            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
             if (!response.IsSuccessStatusCode)
             {
                 return Result<ImageSize>.Fail(500, "Failed to fetch image");
             }
 
-            await using var stream = await response.Content.ReadAsStreamAsync();
+            await using var stream = await response.Content.ReadAsStreamAsync(cts.Token);
             var buffer = new byte[MaxHeaderBytes];
             var length = 0;
             (int Width, int Height)? size = null;
             // Read incrementally and stop as soon as the header parses — usually within the first chunk.
             while (length < buffer.Length)
             {
-                var read = await stream.ReadAsync(buffer.AsMemory(length));
+                var read = await stream.ReadAsync(buffer.AsMemory(length), cts.Token);
                 if (read == 0)
                 {
                     break;

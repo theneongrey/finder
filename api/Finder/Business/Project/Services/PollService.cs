@@ -108,7 +108,7 @@ public class PollService
         await _dbContext.SaveChangesAsync();
 
         var actor = await _userService.GetUser();
-        _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
+        await _pollUpdateQueue.EnqueuePollUpdate(poll.Id, actor.Payload!.Name ?? "Unknown", actor.Payload!.Id,
             oldName, poll.Name, oldDescription, poll.Description);
 
         // Name takes priority when both changed — it's the more visible edit.

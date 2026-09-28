@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Project.Services;
 
-public class ProjectMailService(MailService mailService, LanguageService languageService, PollChangesBuilder pollChangesBuilder, IOptions<AppOptions> appOptions)
+public class ProjectMailService(MailOutbox mailOutbox, LanguageService languageService, PollChangesBuilder pollChangesBuilder, IOptions<AppOptions> appOptions)
 {
     public async Task SendPollClosedMailAsync(Person recipient, string actionUserName,
         Entities.Project project, Poll poll, string language = "en")
@@ -66,13 +66,6 @@ public class ProjectMailService(MailService mailService, LanguageService languag
             new MailTemplate(templateName, recipient.Language, variables, preheader, rawHtml)
         );
 
-        try
-        {
-            await mailService.SendAsync(mail);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error while sending mail: " + ex.Message);
-        }
+        await mailOutbox.EnqueueAsync(mail);
     }
 }

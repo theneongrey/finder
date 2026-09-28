@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Auth.Services;
 
-public class LoginMailService(MailService mailService, LanguageService languageService, IOptions<LoginOptions> loginOptions)
+public class LoginMailService(MailOutbox mailOutbox, LanguageService languageService, IOptions<LoginOptions> loginOptions)
 {
     private readonly LoginOptions _loginOptions = loginOptions.Value;
 
@@ -35,13 +35,6 @@ public class LoginMailService(MailService mailService, LanguageService languageS
             }, languageService.Get(preheaderKey))
         );
 
-        try
-        {
-            await mailService.SendAsync(mail);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error while sending mail: " + ex.Message);
-        }
+        await mailOutbox.EnqueueAsync(mail);
     }
 }

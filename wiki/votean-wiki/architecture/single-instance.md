@@ -41,7 +41,7 @@ only because there is a single process.
 | SignalR groups (`poll:{id}`) | group membership per connection | `PollChanged` pings only reach clients on the instance that handled the write |
 | Rate limiter (`auth`, `preview` policies) | fixed-window counters | limits apply per instance, so the effective limit multiplies |
 | Link preview cache + pooled Chromium ([Link Preview](link-preview.md)) | cached previews per URL, one headless browser per process | harmless: each instance warms its own cache and runs its own browser (memory per instance) |
-| Poll-update debounce and mail sending ([Notifications](../features/notifications.md)) | today an in-memory debounce queue. With PR #463 this becomes DB-backed dispatchers that claim rows without row locks | today: pending debounces live only on the instance that queued them. After #463: two instances could pick up the same row and send a mail twice |
+| Poll-update debounce and mail sending ([Notifications](../features/notifications.md#delivery-persisted-queues-never-inline)) | DB-backed queues (`PendingPollUpdates`, `OutboxMails`) drained by in-process dispatchers that claim rows without row locks | two instances could pick up the same row and send a mail twice; claiming would need `FOR UPDATE SKIP LOCKED` |
 
 ## What a scale-out would require
 

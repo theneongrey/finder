@@ -26,6 +26,8 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<NotificationSetting> NotificationSettings { get; set; }
     public DbSet<PersonNotificationSetting> PersonNotificationSettings { get; set; }
     public DbSet<UserNotification> UserNotifications { get; set; }
+    public DbSet<OutboxMail> OutboxMails { get; set; }
+    public DbSet<PendingPollUpdate> PendingPollUpdates { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

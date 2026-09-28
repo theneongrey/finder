@@ -84,7 +84,7 @@ public class OptionService
 
         await _dbContext.SaveChangesAsync();
 
-        _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, creator.Name ?? "Unknown",
+        await _pollUpdateQueue.EnqueueOptionAdded(poll.Id, option.Id, option.Text, creator.Name ?? "Unknown",
             creator.Id);
 
         await _pollChangeNotifier.PollChanged(poll.Id, creator.Id,
@@ -182,7 +182,7 @@ public class OptionService
 
         if (textChanged || descriptionChanged || metaChanged)
         {
-            _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown",
+            await _pollUpdateQueue.EnqueueOptionModified(option.Poll.Id, updateActor.Payload!.Name ?? "Unknown",
                 updateActor.Payload!.Id);
 
             // Classify the edit so present clients see a specific message. A rename is the most
@@ -232,7 +232,7 @@ public class OptionService
         await _dbContext.SaveChangesAsync();
 
         var deleteActor = await _userService.GetUser();
-        _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown",
+        await _pollUpdateQueue.EnqueueOptionRemoved(pollId, optionId, optionText, deleteActor.Payload!.Name ?? "Unknown",
             deleteActor.Payload!.Id);
 
         await _pollChangeNotifier.PollChanged(pollId, deleteActor.Payload!.Id,

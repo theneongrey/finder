@@ -50,13 +50,34 @@ public class VoteService
             };
             option.Votes.Add(newVote);
             _dbContext.Votes.Add(newVote);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                // A concurrent request (double-click, second tab) inserted this person's vote first;
+                // the unique (OptionId, PersonId) index rejected ours. Update the winner instead.
+                _dbContext.Entry(newVote).State = EntityState.Detached;
+                option.Votes.Remove(newVote);
+
+                var existing = await _dbContext.Votes
+                    .SingleOrDefaultAsync(v => v.Option.Id == option.Id && v.Person.Id == user.Id);
+                if (existing is null)
+                {
+                    throw;
+                }
+
+                existing.Choice = choice;
+                await _dbContext.SaveChangesAsync();
+            }
         }
         else
         {
             vote.Choice = choice;
+            await _dbContext.SaveChangesAsync();
         }
-
-        await _dbContext.SaveChangesAsync();
 
         await _pollChangeNotifier.PollChanged(option.Poll.Id, UserId,
             new PollChangeInfo(PollChangeKind.VoteCast));

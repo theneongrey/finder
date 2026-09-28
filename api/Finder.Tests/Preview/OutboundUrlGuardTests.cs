@@ -10,7 +10,7 @@ namespace Finder.Tests.Preview;
 
 public class OutboundUrlGuardTests : IAsyncLifetime
 {
-    private readonly PlaywrightBrowserProvider _browserProvider = new();
+    private readonly PlaywrightBrowserProvider _browserProvider = new(Options.Create(new PreviewOptions()));
 
     public Task InitializeAsync() => Task.CompletedTask;
 

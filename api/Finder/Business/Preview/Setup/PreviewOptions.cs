@@ -13,6 +13,12 @@ public class PreviewOptions
     /// </summary>
     public int PlaywrightNetworkIdleMilliseconds { get; set; } = 2500;
 
+    /// <summary>The pooled browser is relaunched after rendering this many previews.</summary>
+    public int BrowserMaxContexts { get; set; } = 200;
+
+    /// <summary>The pooled browser is relaunched once it has been running this long.</summary>
+    public int BrowserMaxAgeMinutes { get; set; } = 360;
+
     /// <summary>How long a fetched preview is reused for the same URL and language.</summary>
     public int CacheMinutes { get; set; } = 360;
 

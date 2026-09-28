@@ -1,13 +1,14 @@
 using Finder.Business.Preview.Services.PreviewHelper;
 using Finder.Business.Preview.Setup;
 using Microsoft.Extensions.Options;
+using Microsoft.Playwright;
 using Xunit;
 
 namespace Finder.Tests.Preview;
 
 public class HtmlGrabberPlaywrightServiceTests : IAsyncLifetime
 {
-    private readonly PlaywrightBrowserProvider _browserProvider = new();
+    private readonly PlaywrightBrowserProvider _browserProvider = new(Options.Create(new PreviewOptions()));
 
     public Task InitializeAsync() => Task.CompletedTask;
 
@@ -44,10 +45,34 @@ public class HtmlGrabberPlaywrightServiceTests : IAsyncLifetime
         var service = CreateService();
 
         var first = await service.GetHtmlContent("http://pixel-fusion.de", PreviewLanguage.Default);
-        var browser = await _browserProvider.GetBrowserAsync();
+        IBrowser browser;
+        await using (var lease = await _browserProvider.AcquireAsync())
+        {
+            browser = lease.Browser;
+        }
+
         var second = await service.GetHtmlContent("http://pixel-fusion.de", PreviewLanguage.Default);
 
         Assert.True(first.IsSuccess && second.IsSuccess);
-        Assert.Same(browser, await _browserProvider.GetBrowserAsync());
+        await using var last = await _browserProvider.AcquireAsync();
+        Assert.Same(browser, last.Browser);
+    }
+
+    [Fact]
+    public async Task BrowserProvider_RecyclesTheBrowser_OnlyAfterInFlightLeasesEnd()
+    {
+        await using var provider = new PlaywrightBrowserProvider(Options.Create(new PreviewOptions { BrowserMaxContexts = 1 }));
+
+        var inFlight = await provider.AcquireAsync();
+        await using var next = await provider.AcquireAsync();
+
+        Assert.NotSame(inFlight.Browser, next.Browser);
+        Assert.False(string.IsNullOrEmpty(next.UserAgent));
+        Assert.True(inFlight.Browser.IsConnected, "a retired browser must stay open while a preview still uses it");
+
+        await inFlight.DisposeAsync();
+
+        Assert.False(inFlight.Browser.IsConnected);
+        Assert.True(next.Browser.IsConnected);
     }
 }

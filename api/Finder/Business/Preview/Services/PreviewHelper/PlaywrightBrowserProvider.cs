@@ -1,61 +1,79 @@
+using Finder.Business.Preview.Setup;
+using Microsoft.Extensions.Options;
 using Microsoft.Playwright;
 
 namespace Finder.Business.Preview.Services.PreviewHelper;
 
 /// <summary>
-/// Keeps one headless Chromium alive for the lifetime of the app. Starting the Playwright driver and a browser
-/// costs seconds, while a fresh <see cref="IBrowserContext"/> per preview costs milliseconds and still isolates
-/// cookies and storage between requests. The browser is relaunched if it crashes or disconnects.
+/// Keeps one headless Chromium alive across requests. Starting the Playwright driver and a browser costs seconds,
+/// while a fresh <see cref="IBrowserContext"/> per preview costs milliseconds and still isolates cookies and storage
+/// between requests. The browser is relaunched when it crashes or disconnects, and recycled after
+/// <see cref="PreviewOptions.BrowserMaxContexts"/> previews or <see cref="PreviewOptions.BrowserMaxAgeMinutes"/>,
+/// since a long-running Chromium rendering untrusted pages grows in memory and keeps renderer state around.
 /// </summary>
 public sealed class PlaywrightBrowserProvider : IAsyncDisposable
 {
     private readonly SemaphoreSlim _lock = new(1, 1);
+    private readonly PreviewOptions _options;
+    private readonly List<BrowserInstance> _retired = [];
     private IPlaywright? _playwright;
-    private IBrowser? _browser;
-    private GuardedForwardProxy? _launchProxy;
+    private BrowserInstance? _current;
 
-    /// <summary>A regular desktop Chrome user agent matching the launched browser's real version.</summary>
-    public string UserAgent { get; private set; } = string.Empty;
-
-    public async Task<IBrowser> GetBrowserAsync()
+    public PlaywrightBrowserProvider(IOptions<PreviewOptions> options)
     {
-        if (_browser is { IsConnected: true })
-        {
-            return _browser;
-        }
+        _options = options.Value;
+    }
 
+    /// <summary>
+    /// Hands out the current browser for one preview. Dispose the lease when done: a recycled browser is only
+    /// closed once every lease on it has been released, so in-flight previews are never cut off.
+    /// </summary>
+    public async Task<BrowserLease> AcquireAsync()
+    {
         await _lock.WaitAsync();
         try
         {
-            if (_browser is { IsConnected: true })
+            if (_current is null || !_current.Browser.IsConnected || IsDue(_current))
             {
-                return _browser;
+                await RetireCurrentAsync();
+                _current = await LaunchAsync();
             }
 
-            await CloseBrowserAsync();
-
-            _playwright ??= await Playwright.CreateAsync();
-
-            // Every context brings its own guarded proxy. This browser-wide one is the fail-safe for anything
-            // that would not use the context's proxy: it enforces the same public-addresses-only policy.
-            _launchProxy = new GuardedForwardProxy(GuardedForwardProxy.ResolvePublicOnly);
-            _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-            {
-                Headless = true,
-                Proxy = new Proxy { Server = _launchProxy.Address },
-                Args =
-                [
-                    "--disable-blink-features=AutomationControlled",
-                    "--disable-features=IsolateOrigins,site-per-process"
-                ]
-            });
-            UserAgent = BuildUserAgent(_browser.Version);
-
-            return _browser;
+            _current.ContextsIssued++;
+            _current.ActiveLeases++;
+            return new BrowserLease(this, _current);
         }
         finally
         {
             _lock.Release();
+        }
+    }
+
+    private bool IsDue(BrowserInstance instance) =>
+        instance.ContextsIssued >= _options.BrowserMaxContexts ||
+        DateTime.UtcNow - instance.LaunchedAt >= TimeSpan.FromMinutes(_options.BrowserMaxAgeMinutes);
+
+    private async Task<BrowserInstance> LaunchAsync()
+    {
+        _playwright ??= await Playwright.CreateAsync();
+
+        // Every context brings its own guarded proxy. This browser-wide one is the fail-safe for anything
+        // that would not use the context's proxy: it enforces the same public-addresses-only policy.
+        var launchProxy = new GuardedForwardProxy(GuardedForwardProxy.ResolvePublicOnly);
+        try
+        {
+            var browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+            {
+                Headless = true,
+                Proxy = new Proxy { Server = launchProxy.Address },
+                Args = ["--disable-blink-features=AutomationControlled"]
+            });
+            return new BrowserInstance(browser, launchProxy, BuildUserAgent(browser.Version));
+        }
+        catch
+        {
+            await launchProxy.DisposeAsync();
+            throw;
         }
     }
 
@@ -70,26 +88,40 @@ public sealed class PlaywrightBrowserProvider : IAsyncDisposable
         return $"Mozilla/5.0 ({platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{major}.0.0.0 Safari/537.36";
     }
 
-    private async Task CloseBrowserAsync()
+    /// <summary>Takes the current browser out of rotation; it closes now if idle, else when its last lease ends.</summary>
+    private async Task RetireCurrentAsync()
     {
-        if (_browser is not null)
+        if (_current is null)
         {
-            try
-            {
-                await _browser.CloseAsync();
-            }
-            catch (PlaywrightException)
-            {
-                // already gone
-            }
-
-            _browser = null;
+            return;
         }
 
-        if (_launchProxy is not null)
+        var instance = _current;
+        _current = null;
+        if (instance.ActiveLeases == 0)
         {
-            await _launchProxy.DisposeAsync();
-            _launchProxy = null;
+            await instance.CloseAsync();
+        }
+        else
+        {
+            _retired.Add(instance);
+        }
+    }
+
+    private async Task ReleaseAsync(BrowserInstance instance)
+    {
+        await _lock.WaitAsync();
+        try
+        {
+            instance.ActiveLeases--;
+            if (instance.ActiveLeases == 0 && _retired.Remove(instance))
+            {
+                await instance.CloseAsync();
+            }
+        }
+        finally
+        {
+            _lock.Release();
         }
     }
 
@@ -98,13 +130,72 @@ public sealed class PlaywrightBrowserProvider : IAsyncDisposable
         await _lock.WaitAsync();
         try
         {
-            await CloseBrowserAsync();
+            await RetireCurrentAsync();
+            foreach (var instance in _retired)
+            {
+                await instance.CloseAsync();
+            }
+
+            _retired.Clear();
             _playwright?.Dispose();
             _playwright = null;
         }
         finally
         {
             _lock.Release();
+        }
+    }
+
+    internal sealed class BrowserInstance(IBrowser browser, GuardedForwardProxy launchProxy, string userAgent)
+    {
+        public IBrowser Browser { get; } = browser;
+        public string UserAgent { get; } = userAgent;
+        public DateTime LaunchedAt { get; } = DateTime.UtcNow;
+        public int ContextsIssued { get; set; }
+        public int ActiveLeases { get; set; }
+
+        public async Task CloseAsync()
+        {
+            try
+            {
+                await Browser.CloseAsync();
+            }
+            catch (PlaywrightException)
+            {
+                // already gone
+            }
+
+            await launchProxy.DisposeAsync();
+        }
+    }
+
+    /// <summary>One preview's use of a browser. Disposing it lets a recycled browser close.</summary>
+    public sealed class BrowserLease : IAsyncDisposable
+    {
+        private readonly PlaywrightBrowserProvider _provider;
+        private readonly BrowserInstance _instance;
+        private bool _released;
+
+        internal BrowserLease(PlaywrightBrowserProvider provider, BrowserInstance instance)
+        {
+            _provider = provider;
+            _instance = instance;
+        }
+
+        public IBrowser Browser => _instance.Browser;
+
+        /// <summary>A regular desktop Chrome user agent matching this browser's real version.</summary>
+        public string UserAgent => _instance.UserAgent;
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_released)
+            {
+                return;
+            }
+
+            _released = true;
+            await _provider.ReleaseAsync(_instance);
         }
     }
 }

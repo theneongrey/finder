@@ -49,12 +49,12 @@ public class HtmlGrabberPlaywrightService : IHtmlGrabberPlaywrightService
         // route handler never sees), sub-resources, WebSockets and DNS rebinding.
         await using var proxy = new GuardedForwardProxy(_resolveAllowed);
 
-        var browser = await _browserProvider.GetBrowserAsync();
-        await using var context = await browser.NewContextAsync(new BrowserNewContextOptions
+        await using var lease = await _browserProvider.AcquireAsync();
+        await using var context = await lease.Browser.NewContextAsync(new BrowserNewContextOptions
         {
             // Playwright adds <-loopback> to the bypass list, so localhost targets go through the proxy too.
             Proxy = new Proxy { Server = proxy.Address },
-            UserAgent = _browserProvider.UserAgent,
+            UserAgent = lease.UserAgent,
             Locale = PreviewLanguage.PrimaryLocale(acceptLanguage),
             TimezoneId = "Europe/Berlin",
             ViewportSize = new ViewportSize { Width = 1920, Height = 1080 },

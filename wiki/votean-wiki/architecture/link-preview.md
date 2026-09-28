@@ -39,12 +39,14 @@ the other fields.
 ## Pipeline
 
 1. **SSRF pre-check** — `OutboundUrlGuard.IsSafeAsync` rejects unsafe targets before any fetch.
-2. **Cache** — results are kept in `IMemoryCache` per URL + primary language
-   (`Preview:CacheMinutes`, default 6 h). URL-only fallbacks are not cached, since the site may be
-   reachable next time.
+2. **Cache** — results are kept in the preview's own size-limited `IMemoryCache` per URL + primary
+   language (`Preview:CacheMinutes`, default 6 h). Incomplete previews (missing title, description
+   or image) are kept only for `Preview:PartialCacheMinutes` (default 10 min), since they may be a
+   bot-challenge page; URL-only fallbacks are not cached at all.
 3. **Plain HTTP** (`HtmlGrabberHttpClientService`) — browser-like header set, the user's
    `Accept-Language`, gzip/brotli, reads at most 2 MB, honours the charset from the header or
-   `<meta charset>`, and reports the final URL after redirects. If this yields a title and an
+   `<meta charset>`, and reports the final URL after redirects. One 5 s deadline covers headers
+   and body, so a server dripping bytes can't hold the request open. If this yields a title and an
    image, the pipeline stops here — the common case, typically well under a second.
 4. **Headless browser** (`HtmlGrabberPlaywrightService`) — only when something is still missing,
    HTTP was blocked, or the page is client-rendered. It also follows JavaScript / meta-refresh
@@ -84,14 +86,18 @@ When no image is declared, `PreviewImageOnlyFinder` ranks the page's images:
   share words with the title; demotes logos, avatars and ads.
 
 `PreviewImageCandidateService` then probes the top five candidates **in parallel** with
-`ImageSizeService` (reads up to 64 KB, so JPEG dimensions behind large EXIF blocks are found)
+`ImageSizeService` (reads up to 64 KB under the same 5 s deadline, so JPEG dimensions behind large EXIF blocks are found)
 and returns the best-ranked one that is at least 100×100 and roughly card-shaped.
 
 ## Headless browser
 
-- **One pooled Chromium** (`PlaywrightBrowserProvider`, singleton) for the app's lifetime,
-  relaunched if it disconnects. Each request gets a fresh `BrowserContext` (isolated cookies),
-  which costs milliseconds instead of the seconds a browser launch takes.
+- **One pooled Chromium** (`PlaywrightBrowserProvider`, singleton), relaunched if it disconnects
+  and recycled after `Preview:BrowserMaxContexts` previews or `Preview:BrowserMaxAgeMinutes`, so a
+  long-running browser rendering untrusted pages neither grows in memory nor keeps renderer state
+  around. Each preview holds a lease; a retired browser closes only once its last lease is
+  released, so in-flight previews are never cut off. Each request gets a fresh `BrowserContext`
+  (isolated cookies), which costs milliseconds instead of the seconds a browser launch takes.
+  Chromium's default site isolation is left on.
 - **Images, media, fonts and stylesheets are aborted** — only the DOM is read.
 - **Waiting**: a settle loop waits until main-frame navigations stop (handles redirect chains),
   then waits for network idle for at most `Preview:PlaywrightNetworkIdleMilliseconds`
@@ -121,7 +127,11 @@ link-preview crawlers was considered and deliberately not done.
 |-----|---------|---------|
 | `Preview:PlaywrightTimeoutSeconds` | 10 | Max time for navigation to settle |
 | `Preview:PlaywrightNetworkIdleMilliseconds` | 2500 | Cap on the network-idle wait after settling |
-| `Preview:CacheMinutes` | 360 | Lifetime of a cached preview |
+| `Preview:BrowserMaxContexts` | 200 | Previews rendered before the browser is relaunched |
+| `Preview:BrowserMaxAgeMinutes` | 360 | Browser age after which it is relaunched |
+| `Preview:CacheMinutes` | 360 | Lifetime of a cached complete preview |
+| `Preview:PartialCacheMinutes` | 10 | Lifetime of a cached incomplete preview (0 disables) |
+| `Preview:CacheMaxEntries` | 1000 | Upper bound for cached previews |
 
 The endpoint is rate-limited by the `preview` policy (5 requests / IP / minute). The cache and
 the pooled browser are process-local — see [Single-Instance Deployment](single-instance.md).

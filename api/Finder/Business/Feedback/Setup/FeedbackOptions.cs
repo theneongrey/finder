@@ -2,6 +2,9 @@ namespace Finder.Business.Feedback.Setup;
 
 public class FeedbackOptions
 {
+    /// <summary>Global switch for the in-app feedback tab; the frontend reads it via GET /api/feedback/config.</summary>
+    public bool ShowButton { get; set; } = true;
+
     /// <summary>Address that receives the daily feedback digest.</summary>
     public required string RecipientEmail { get; set; }
 

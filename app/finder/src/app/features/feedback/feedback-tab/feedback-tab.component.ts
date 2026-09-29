@@ -56,6 +56,7 @@ export class FeedbackTabComponent {
     protected readonly visible = computed(
         () =>
             !!this.user()?.isAuthenticated &&
+            this.feedbackStore.buttonEnabled() === true &&
             this.feedbackStore.buttonHidden() === false &&
             !this.feedbackStore.feedbackDisabled() &&
             !HIDDEN_ROUTE_PATTERN.test(this.page()),
@@ -74,6 +75,7 @@ export class FeedbackTabComponent {
             untracked(() => {
                 this.feedbackStore.reset();
                 if (userKey) {
+                    this.feedbackStore.loadConfig();
                     this.feedbackStore.loadPreference();
                 }
             });

@@ -20,6 +20,8 @@ import { SubmitFeedbackRequest } from '../_models/feedback.model';
 export const FeedbackStore = signalStore(
     { providedIn: 'root' },
     withState({
+        /** Server-wide switch (appsettings `Feedback:ShowButton`); undefined until loaded. */
+        buttonEnabled: undefined as boolean | undefined,
         /** undefined until the preference has been loaded for the current user. */
         buttonHidden: undefined as boolean | undefined,
         /** ISO timestamp until which the server refuses feedback (scripted-burst protection). */
@@ -70,6 +72,29 @@ export const FeedbackStore = signalStore(
             ),
         );
 
+        const loadConfig = rxMethod<void>(
+            pipe(
+                switchMap(() =>
+                    store.feedbackService.getConfig().pipe(
+                        tapResponse({
+                            next: ({ showButton }) =>
+                                patchState(store, {
+                                    buttonEnabled: showButton,
+                                }),
+                            error: (error) => {
+                                store.loggerService.error(
+                                    '[FeedbackStore] Error loading config',
+                                    error,
+                                );
+                                // It's a kill switch: without an answer, keep the feature off.
+                                patchState(store, { buttonEnabled: false });
+                            },
+                        }),
+                    ),
+                ),
+            ),
+        );
+
         return {
             openPanel(): void {
                 patchState(store, { panelOpen: true });
@@ -79,6 +104,7 @@ export const FeedbackStore = signalStore(
                 patchState(store, { panelOpen: false });
             },
 
+            loadConfig,
             loadPreference,
 
             // Optimistic: the UI updates immediately. Saves run in order (concatMap), and only once
@@ -200,6 +226,7 @@ export const FeedbackStore = signalStore(
             reset(): void {
                 confirmedButtonHidden = undefined;
                 patchState(store, {
+                    buttonEnabled: undefined,
                     buttonHidden: undefined,
                     feedbackDisabledUntil: undefined,
                     panelOpen: false,

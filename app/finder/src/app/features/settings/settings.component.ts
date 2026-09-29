@@ -74,6 +74,7 @@ export class SettingsComponent {
     readonly selectedLanguage = signal<SupportedLanguage>(getStoredLanguage());
     readonly notifications = this.userStore.notifications;
     readonly notificationsLoading = this.userStore.notificationsLoading;
+    readonly feedbackButtonEnabled = this.feedbackStore.buttonEnabled;
     readonly feedbackButtonHidden = this.feedbackStore.buttonHidden;
     readonly feedbackDisabled = this.feedbackStore.feedbackDisabled;
     readonly feedbackDisabledUntil = this.feedbackStore.feedbackDisabledUntil;
@@ -104,6 +105,7 @@ export class SettingsComponent {
         effect(() => titleService.setTitle(title()));
 
         this.userStore.loadNotifications();
+        this.feedbackStore.loadConfig();
         this.feedbackStore.loadPreference();
 
         effect(() => {

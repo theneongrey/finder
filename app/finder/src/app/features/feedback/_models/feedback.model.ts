@@ -6,6 +6,11 @@ export interface SubmitFeedbackRequest {
     page: string;
 }
 
+/** Server-wide feedback settings (appsettings `Feedback`). */
+export interface FeedbackConfig {
+    showButton: boolean;
+}
+
 export interface FeedbackPreference {
     buttonHidden: boolean;
     /** ISO timestamp; set while feedback is disabled after a burst of submissions. */

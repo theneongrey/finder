@@ -43,6 +43,46 @@ public class FeedbackApiTests : IClassFixture<FinderApiFactory>
         return client;
     }
 
+    // --- GET /api/feedback/config ---
+
+    [Fact]
+    public async Task GetConfig_ByDefault_ShowsButton()
+    {
+        var user = await _factory.SeedUser();
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var response = await client.GetAsync("/api/feedback/config");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.True(json["showButton"]!.GetValue<bool>());
+    }
+
+    [Fact]
+    public async Task GetConfig_WhenDisabledInSettings_HidesButton()
+    {
+        var user = await _factory.SeedUser();
+        using var factory = _factory.WithWebHostBuilder(b => b.ConfigureServices(services =>
+            services.Configure<FeedbackOptions>(o => o.ShowButton = false)));
+        using var client = AuthenticatedClient(factory, user.Id);
+
+        var response = await client.GetAsync("/api/feedback/config");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.False(json["showButton"]!.GetValue<bool>());
+    }
+
+    [Fact]
+    public async Task GetConfig_Unauthenticated_ReturnsUnauthorized()
+    {
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("/api/feedback/config");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
     // --- GET/PUT /api/feedback/preference ---
 
     [Fact]

@@ -30,12 +30,9 @@
             >
                 {{ 'project.pollInput.date.startTime' | translate }}
             </span>
-            <ds-input
-                class="w-[120px]"
-                type="time"
-                name="add-option-time"
-                [ngModel]="timeValue()"
-                (ngModelChange)="setTime($event)"
+            <ds-time-picker
+                [value]="timeValue()"
+                (valueChange)="setTime($event)"
                 data-testid="date-option-time"
             />
             @for (time of quickTimes(); track time) {

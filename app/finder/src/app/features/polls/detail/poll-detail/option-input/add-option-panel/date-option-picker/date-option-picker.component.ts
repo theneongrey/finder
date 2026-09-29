@@ -10,11 +10,10 @@ import {
     signal,
     untracked,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsCalendarComponent } from '@ds/calendar/ds-calendar.component';
 import { DsChipComponent } from '@ds/chip/ds-chip.component';
-import { DsInputComponent } from '@ds/input/ds-input.component';
+import { DsTimePickerComponent } from '@ds/time-picker/ds-time-picker.component';
 import { DateOptionEntry } from '../../../../../_shared/models/date-option.model';
 import { DateOptionFormatService } from '../../../../../_shared/utils/date-option-format.service';
 
@@ -28,11 +27,10 @@ import { DateOptionFormatService } from '../../../../../_shared/utils/date-optio
     selector: 'app-date-option-picker',
     templateUrl: './date-option-picker.component.html',
     imports: [
-        FormsModule,
         TranslatePipe,
         DsCalendarComponent,
         DsChipComponent,
-        DsInputComponent,
+        DsTimePickerComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -124,9 +122,7 @@ export class DateOptionPickerComponent {
         this.valueChange.emit({ ...this.value(), date: day });
     }
 
-    setTime(value: string): void {
-        // A native time input emits '' while a segment is being cleared; keep the
-        // previous time instead of letting the default-time effect snap it back.
+    setTime(value: string | undefined): void {
         if (!value) {
             return;
         }

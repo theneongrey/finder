@@ -1,0 +1,60 @@
+<hlm-popover
+    class="contents"
+    align="start"
+    sideOffset="6"
+    [state]="popoverState()"
+    (stateChanged)="popoverState.set($event)"
+>
+    <button
+        hlmPopoverTrigger
+        type="button"
+        data-testid="time-picker-trigger"
+        class="flex h-[42px] cursor-pointer items-center gap-2 rounded-[var(--radius-sm)] border border-[var(--border-hairline-strong)] bg-[var(--surface-card)] px-3.5 [font-family:var(--font-body)] text-[length:var(--fs-body-xs)] font-bold text-[var(--text-primary)] tabular-nums transition-colors outline-none hover:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)]"
+    >
+        <ds-icon name="clock" [size]="14" [color]="'var(--accent)'" />
+        @if (value()) {
+            {{ value() }}
+        } @else {
+            <span class="text-[var(--text-muted)]">{{ placeholder() }}</span>
+        }
+    </button>
+
+    <hlm-popover-content
+        class="w-fit! gap-3! rounded-[var(--radius-md)]! border border-[var(--border-hairline)] bg-[var(--surface-card)]! p-3! text-[var(--text-primary)]! shadow-[var(--shadow-overlay)]! ring-0!"
+        data-testid="time-picker-panel"
+        *hlmPopoverPortal="let ctx"
+    >
+        <div class="grid grid-cols-6 gap-1">
+            @for (h of hours; track h) {
+                <button
+                    type="button"
+                    data-testid="time-picker-hour"
+                    class="flex h-9 min-w-11 cursor-pointer items-center justify-center rounded-[10px] border border-[var(--border-hairline)] bg-[var(--surface-card)] px-2 text-[length:var(--fs-body-sm)] font-bold text-[var(--text-primary)] tabular-nums transition-colors outline-none select-none hover:bg-[var(--bg-panel)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] data-[selected=true]:border-[var(--accent)] data-[selected=true]:bg-[var(--accent)] data-[selected=true]:text-[var(--text-on-accent)]"
+                    [attr.data-selected]="h === hour()"
+                    [attr.aria-pressed]="h === hour()"
+                    (click)="selectHour(h)"
+                >
+                    {{ h }}
+                </button>
+            }
+        </div>
+        <div
+            class="h-px bg-[var(--border-hairline-soft)]"
+            role="separator"
+        ></div>
+        <div class="grid grid-cols-4 gap-1">
+            @for (m of minutes(); track m) {
+                <button
+                    type="button"
+                    data-testid="time-picker-minute"
+                    class="flex h-9 min-w-11 cursor-pointer items-center justify-center rounded-[10px] border border-[var(--border-hairline)] bg-[var(--surface-card)] px-2 text-[length:var(--fs-body-sm)] font-bold text-[var(--text-primary)] tabular-nums transition-colors outline-none select-none hover:bg-[var(--bg-panel)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] data-[selected=true]:border-[var(--accent)] data-[selected=true]:bg-[var(--accent)] data-[selected=true]:text-[var(--text-on-accent)]"
+                    [attr.data-selected]="m === minute()"
+                    [attr.aria-pressed]="m === minute()"
+                    (click)="selectMinute(m)"
+                >
+                    :{{ m }}
+                </button>
+            }
+        </div>
+    </hlm-popover-content>
+</hlm-popover>

@@ -98,7 +98,9 @@ test.describe('Poll detail: add date option via calendar', () => {
     await expect(panel(page).locator('[data-testid="date-option-duplicate"]')).toBeVisible();
     await expect(submit(page)).toBeDisabled();
 
-    await panel(page).locator('[data-testid="date-option-time"] input').fill('20:00');
+    await panel(page).locator('[data-testid="time-picker-trigger"]').click();
+    await page.locator('[data-testid="time-picker-hour"]', { hasText: '20' }).click();
+    await page.locator('[data-testid="time-picker-minute"]', { hasText: ':00' }).click();
     await expect(panel(page).locator('[data-testid="date-option-duplicate"]')).toBeHidden();
     await submit(page).click();
 

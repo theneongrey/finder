@@ -4,7 +4,7 @@ Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
 ## 2026-09-29 — ingest: calendar picker for adding date options (feature/date-option-calendar)
-Pages touched: guides/component-library.md (new ds-calendar: Spartan BrnCalendar host directive, `highlightDays` for taken days, hidden arrow at `min`)
+Pages touched: guides/component-library.md (new ds-calendar: Spartan BrnCalendar host directive, `highlightDays` for taken days, hidden arrow at `min`; new ds-time-picker with 15-min steps; ds-card `bare`; ds-chip `locked`)
 
 ---
 

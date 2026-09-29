@@ -297,6 +297,27 @@ Used by the poll-detail add panel for calendar-day polls (`date-option-picker`).
 
 ---
 
+## ds-time-picker
+
+**Selector:** `<ds-time-picker>`
+**File:** `time-picker/ds-time-picker.component.ts`
+
+Time selection in the ds style instead of the native `type="time"` input. A field-like trigger (clock icon + `HH:MM`) opens a Spartan popover with a 6×4 hour grid and a row of minute steps, using the same cell style as ds-calendar. Picking an hour keeps the minute (or falls back to `:00`); picking a minute closes the popover.
+
+| Input | Type | Default | Description |
+|---|---|---|---|
+| `value` | `string \| undefined` (model) | `undefined` | `HH:MM`, 24h |
+| `stepMinutes` | `number` | `15` | Minute granularity (15 → `:00 :15 :30 :45`) |
+| `placeholder` | `string` | `'--:--'` | Shown while no time is set |
+
+```html
+<ds-time-picker [value]="time()" (valueChange)="time.set($event)" />
+```
+
+The `hlm-popover` host is `display: contents` — as an inline wrapper around the block trigger it otherwise intercepts pointer hit-testing (Playwright clicks fail). Used by `date-option-picker` for timed calendar-day polls.
+
+---
+
 ## ds-chip
 
 **Selector:** `<ds-chip>`

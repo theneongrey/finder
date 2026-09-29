@@ -10,6 +10,7 @@ public class FeedbackPreferenceConfiguration : IEntityTypeConfiguration<Feedback
     {
         builder.HasKey(p => p.PersonId);
         builder.Property(p => p.ButtonHidden).HasDefaultValue(false);
+        builder.Property(p => p.ScriptStrikes).HasDefaultValue(0);
 
         builder.HasOne(p => p.Person)
             .WithOne()

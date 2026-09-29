@@ -74,6 +74,8 @@ No JWT. The backend issues a cookie named `"login"` on successful sign-in:
 - Sliding expiry: 30 days
 - Claims: `NameIdentifier` (PersonId as GUID string), `Role` (integer)
 
+`OnValidatePrincipal` rejects the cookie of a [blocked](../concepts/user.md#blocking) person. It uses the singleton `BlockedUserCache` (1-minute cache), so a request doesn't cost an extra query each time.
+
 The `UserService` caches the authenticated user per HTTP request (`_cachedId`, `_cachedUser`) to avoid multiple DB lookups within a single request.
 
 ## Preview Service
@@ -88,6 +90,10 @@ find and only fails for URLs it must not fetch. Details: [Link Preview](link-pre
 An `"auth"` policy limits auth endpoints to **5 requests/IP/minute**. Exceeded requests return 429.
 
 Each domain registers its own fixed-window policy in its `Setup/`: `"preview"` (URL previews) and `"feedback"` (`POST /api/feedback`, see [Feedback](../features/feedback.md)) use the same 5/IP/minute shape. `FinderApiFactory` in the test project replaces every policy with a no-limit one, so a new policy must be added there too.
+
+## Background Work and Time
+
+`FeedbackDigestWorker` is the first `BackgroundService`: a `PeriodicTimer` loop that creates a scope per tick and logs failures without stopping. Hosted services that shouldn't run in tests are skipped when the environment is `Testing`. `Program.cs` registers `TimeProvider.System` and `AddMemoryCache()`. Time-dependent services take a `TimeProvider` so tests can swap in `FakeTimeProvider` (`Microsoft.Extensions.TimeProvider.Testing`). The debounced poll-update mails (`PollUpdateNotificationQueue`) still use a fire-and-forget `Task.Delay`.
 
 ## Enum JSON in Minimal APIs
 

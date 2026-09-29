@@ -7,7 +7,7 @@ import {
     signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs';
 import { Router } from '@angular/router';
@@ -42,6 +42,7 @@ import { FeedbackStore } from '../feedback/_data/feedback.store';
 @Component({
     selector: 'app-settings',
     imports: [
+        DatePipe,
         NgTemplateOutlet,
         ReactiveFormsModule,
         TitleBarComponent,
@@ -73,9 +74,12 @@ export class SettingsComponent {
     readonly selectedLanguage = signal<SupportedLanguage>(getStoredLanguage());
     readonly notifications = this.userStore.notifications;
     readonly notificationsLoading = this.userStore.notificationsLoading;
+    readonly feedbackButtonEnabled = this.feedbackStore.buttonEnabled;
     readonly feedbackButtonHidden = this.feedbackStore.buttonHidden;
     readonly feedbackPreferenceLoadFailed =
         this.feedbackStore.preferenceLoadFailed;
+    readonly feedbackDisabled = this.feedbackStore.feedbackDisabled;
+    readonly feedbackDisabledUntil = this.feedbackStore.feedbackDisabledUntil;
 
     protected readonly languageOptions = LANGUAGE_OPTIONS;
 
@@ -103,6 +107,7 @@ export class SettingsComponent {
         effect(() => titleService.setTitle(title()));
 
         this.userStore.loadNotifications();
+        this.feedbackStore.loadConfig();
         this.feedbackStore.loadPreference();
 
         effect(() => {

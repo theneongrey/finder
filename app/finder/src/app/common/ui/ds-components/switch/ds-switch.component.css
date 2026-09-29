@@ -1,14 +1,14 @@
-/* Override SpartanNG switch colors with our design tokens */
-:host ::ng-deep brn-switch {
+/* Override SpartanNG switch colors with our design tokens. The track is the inner
+   button[role=switch] — <brn-switch> itself is display:contents and paints nothing. The off track
+   can be overridden via --ds-switch-off-bg (inherited), e.g. a darker sand on a white card. */
+:host ::ng-deep button[role='switch'] {
     --tw-ring-color: var(--accent);
 }
-:host ::ng-deep brn-switch[data-checked='true'],
-:host ::ng-deep brn-switch[data-state='checked'] {
+:host ::ng-deep button[role='switch'][data-state='checked'] {
     background: var(--accent) !important;
 }
-:host ::ng-deep brn-switch[data-checked='false'],
-:host ::ng-deep brn-switch[data-state='unchecked'] {
-    background: var(--cream-400) !important;
+:host ::ng-deep button[role='switch'][data-state='unchecked'] {
+    background: var(--ds-switch-off-bg, var(--cream-400)) !important;
 }
 :host ::ng-deep brn-switch-thumb {
     background: #fff !important;

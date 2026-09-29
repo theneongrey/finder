@@ -3,8 +3,18 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-29 — ingest: feedback kill switch and UI polish (feature/326-feedback-digest-limits)
+Pages touched: features/feedback.md (tab at 3/4 height, `Feedback:ShowButton` + `GET /api/feedback/config`, Settings card gated on it), guides/component-library.md (ds-switch colours target the track button, `--ds-switch-off-bg` override)
+
+---
+
 ## 2026-09-28 — ingest: PR #498 review follow-ups (link preview)
 Pages touched: architecture/link-preview.md (5 s deadline covers body reads, short TTL for incomplete previews + dedicated size-limited cache, browser recycling with leases, site isolation re-enabled, new config keys)
+
+---
+
+## 2026-09-27 — ingest: feedback digest, limits and blocking (stacked on PR #457)
+Pages touched: features/feedback.md (stored submissions, daily 17:00 Europe/Berlin digest via FeedbackDigestWorker, new endpoint codes, Limits and blocking section, tests), concepts/user.md (Blocking section: IsBlocked, login refusal, cookie rejection via BlockedUserCache), architecture/backend.md (OnValidatePrincipal block check, Background Work and Time section)
 
 ---
 

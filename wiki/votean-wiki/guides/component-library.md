@@ -397,6 +397,8 @@ On/off toggle. Implements `ControlValueAccessor` and `model()` for two-way bindi
 <ds-switch [checked]="!hidden()" [label]="'settings.feedback.show' | translate" (checkedChange)="onChange($event)" />
 ```
 
+**Colours:** the track is the inner `button[role=switch]` (`<brn-switch>` is `display: contents` and paints nothing): accent when on, `--cream-400` when off. On a white surface, override the off track by setting `--ds-switch-off-bg` on an ancestor, e.g. the Settings page uses `[--ds-switch-off-bg:var(--sand-500)]`.
+
 Clicks and keyboard input are handled by the inner `hlm-switch`, which reports through `checkedChange`. The host element has no `(click)` handler: an earlier host `toggle()` flipped the value a second time on every click, leaving the model out of sync with what the switch showed (fixed in #326).
 
 ---

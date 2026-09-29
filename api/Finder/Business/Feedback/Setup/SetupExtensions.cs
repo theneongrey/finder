@@ -5,12 +5,20 @@ namespace Finder.Business.Feedback.Setup;
 
 public static class SetupExtensions
 {
-    public static IServiceCollection AddFeedbackServices(this IServiceCollection services, ConfigurationManager configuration)
+    public static IServiceCollection AddFeedbackServices(this IServiceCollection services, ConfigurationManager configuration, IHostEnvironment environment)
     {
         services.Configure<FeedbackOptions>(configuration.GetSection("Feedback"));
 
         services.AddScoped<FeedbackPreferenceService>();
         services.AddScoped<FeedbackService>();
+        services.AddScoped<FeedbackLimitService>();
+        services.AddScoped<FeedbackDigestService>();
+
+        // Tests drive FeedbackDigestService directly with a fake clock instead.
+        if (!environment.IsEnvironment("Testing"))
+        {
+            services.AddHostedService<FeedbackDigestWorker>();
+        }
 
         services.AddRateLimiter(options =>
         {

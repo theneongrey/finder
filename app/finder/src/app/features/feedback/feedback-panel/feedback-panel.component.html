@@ -68,12 +68,14 @@
         </ds-button>
     </div>
 
-    <button
-        data-testid="feedback-hide"
-        type="button"
-        class="self-center [font-size:var(--fs-caption)] [font-weight:var(--weight-semibold)] text-(--text-tertiary) transition-colors hover:text-(--text-secondary)"
-        (click)="hide.emit()"
-    >
-        {{ 'feedback.hide' | translate }}
-    </button>
+    <div class="self-center">
+        <ds-button
+            data-testid="feedback-hide"
+            variant="ghost"
+            size="sm"
+            (click)="hide.emit()"
+        >
+            {{ 'feedback.hide' | translate }}
+        </ds-button>
+    </div>
 </div>

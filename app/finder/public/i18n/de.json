@@ -114,7 +114,8 @@
         "feedback": {
             "title": "Feedback",
             "show": "Feedback-Button anzeigen",
-            "showSub": "Kleiner Feedback-Tab am Bildschirmrand zum Melden von Fehlern und Ideen."
+            "showSub": "Kleiner Feedback-Tab am Bildschirmrand zum Melden von Fehlern und Ideen.",
+            "disabledUntil": "Feedback ist für dein Konto bis {{date}} vorübergehend deaktiviert."
         }
     },
     "auth": {
@@ -846,8 +847,10 @@
         "cancel": "Abbrechen",
         "send": "Absenden",
         "hide": "Button ausblenden",
-        "sent": "Danke! Dein Feedback wurde gesendet.",
+        "sent": "Danke! Dein Feedback wird an das Team weitergegeben.",
         "sendError": "Dein Feedback konnte nicht gesendet werden. Bitte versuche es erneut.",
+        "limitReached": "Du hast in letzter Zeit viel Feedback gesendet. Bitte versuche es später noch einmal.",
+        "disabled": "Feedback ist für dein Konto vorübergehend deaktiviert.",
         "hidden": "Feedback-Button ausgeblendet. Du kannst ihn in den Einstellungen wieder einblenden.",
         "preferenceError": "Die Einstellung konnte nicht gespeichert werden. Bitte versuche es erneut."
     }

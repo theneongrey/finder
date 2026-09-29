@@ -69,7 +69,7 @@ test.describe('Feedback tab (issue #326)', () => {
 
   test('hiding the tab persists and it can be re-enabled in settings', async ({ page }) => {
     await page.getByTestId('feedback-tab').click();
-    await page.getByTestId('feedback-hide').click();
+    await page.getByTestId('feedback-hide').locator('button').click();
     await expect(page.getByTestId('feedback-tab')).toBeHidden();
 
     await page.reload();
@@ -87,5 +87,54 @@ test.describe('Feedback tab (issue #326)', () => {
     await page.reload();
     await page.waitForLoadState('networkidle');
     await expect(page.getByTestId('feedback-tab')).toBeVisible();
+  });
+
+  test('hitting the submission limit shows an error and keeps the panel open', async ({ page }) => {
+    await page.route('**/api/feedback', (route) => route.fulfill({ status: 429 }));
+
+    await page.getByTestId('feedback-tab').click();
+    await page.getByTestId('feedback-comment').locator('textarea').fill('E2E limit');
+    await page.getByTestId('feedback-send').click();
+
+    await expect(page.locator('[data-sonner-toast][data-type="error"]')).toBeVisible();
+    // The comment is kept so the user can send it later.
+    await expect(page.getByTestId('feedback-panel')).toBeVisible();
+    await expect(page.getByTestId('feedback-tab')).toBeVisible();
+  });
+
+  test('a disabled account gets an error and the tab disappears', async ({ page }) => {
+    const until = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    await page.route('**/api/feedback', (route) => route.fulfill({ status: 403 }));
+    // After the 403 the store reloads the preference to learn until when feedback is disabled.
+    await page.route('**/api/feedback/preference', (route) =>
+      route.request().method() === 'GET'
+        ? route.fulfill({ json: { buttonHidden: false, feedbackDisabledUntil: until } })
+        : route.continue(),
+    );
+
+    await page.getByTestId('feedback-tab').click();
+    await page.getByTestId('feedback-comment').locator('textarea').fill('E2E disabled');
+    await page.getByTestId('feedback-send').click();
+
+    await expect(page.locator('[data-sonner-toast][data-type="error"]')).toBeVisible();
+    await expect(page.getByTestId('feedback-panel')).toBeHidden();
+    await expect(page.getByTestId('feedback-tab')).toBeHidden();
+  });
+
+  test('while disabled the tab is hidden and settings explain until when', async ({ page }) => {
+    const until = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    await page.route('**/api/feedback/preference', (route) =>
+      route.request().method() === 'GET'
+        ? route.fulfill({ json: { buttonHidden: false, feedbackDisabledUntil: until } })
+        : route.continue(),
+    );
+
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByTestId('feedback-tab')).toBeHidden();
+
+    await page.goto('/settings');
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByTestId('settings-feedback-disabled')).toBeVisible();
   });
 });

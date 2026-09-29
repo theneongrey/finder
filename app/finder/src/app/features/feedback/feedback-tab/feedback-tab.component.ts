@@ -6,6 +6,7 @@ import {
     ElementRef,
     inject,
     untracked,
+    signal,
     viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -18,6 +19,9 @@ import { FeedbackStore } from '../_data/feedback.store';
 import { FeedbackPanelComponent } from '../feedback-panel/feedback-panel.component';
 import { SubmitFeedbackRequest } from '../_models/feedback.model';
 
+/** Minimum gap (px) between the panel and the viewport's top/bottom edge. */
+const PANEL_MARGIN = 16;
+
 /** Routes where the tab never shows, even for a logged-in user (landing + auth flow). */
 const HIDDEN_ROUTE_PATTERN =
     /^\/(?:(?:de|en|es)\/?)?$|^\/(?:auth|logout)(?:\/|$)/;
@@ -26,6 +30,7 @@ const HIDDEN_ROUTE_PATTERN =
     selector: 'app-feedback-tab',
     imports: [TranslatePipe, DsIconComponent, FeedbackPanelComponent],
     templateUrl: './feedback-tab.component.html',
+    styleUrl: './feedback-tab.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeedbackTabComponent {
@@ -52,11 +57,19 @@ export class FeedbackTabComponent {
 
     private readonly tabButton =
         viewChild<ElementRef<HTMLButtonElement>>('tabButton');
+    private readonly panel = viewChild('panel', {
+        read: ElementRef<HTMLElement>,
+    });
+
+    /** Panel offset from the tab wrapper: centred on the tab, kept PANEL_MARGIN inside the viewport. */
+    protected readonly panelTop = signal<number | undefined>(undefined);
 
     protected readonly visible = computed(
         () =>
             !!this.user()?.isAuthenticated &&
+            this.feedbackStore.buttonEnabled() === true &&
             this.feedbackStore.buttonHidden() === false &&
+            !this.feedbackStore.feedbackDisabled() &&
             !HIDDEN_ROUTE_PATTERN.test(this.page()),
     );
 
@@ -73,8 +86,26 @@ export class FeedbackTabComponent {
             untracked(() => {
                 this.feedbackStore.reset();
                 if (userKey) {
+                    this.feedbackStore.loadConfig();
                     this.feedbackStore.loadPreference();
                 }
+            });
+        });
+
+        // Place the panel whenever it opens, changes height (type switch, textarea growth) or the
+        // viewport resizes. ResizeObserver also fires once on observe, before the first paint.
+        effect((onCleanup) => {
+            const el = this.panel()?.nativeElement;
+            if (!el) {
+                return;
+            }
+            const place = () => this.panelTop.set(this.clampedPanelTop(el));
+            const observer = new ResizeObserver(place);
+            observer.observe(el);
+            window.addEventListener('resize', place);
+            onCleanup(() => {
+                observer.disconnect();
+                window.removeEventListener('resize', place);
             });
         });
 
@@ -87,6 +118,22 @@ export class FeedbackTabComponent {
             }
             wasOpen = open;
         });
+    }
+
+    private clampedPanelTop(panel: HTMLElement): number {
+        // The panel is absolutely positioned inside the tab wrapper, so its top is wrapper-relative.
+        const parent = panel.parentElement;
+        if (!parent) {
+            return 0;
+        }
+        const wrapper = parent.getBoundingClientRect();
+        const height = panel.offsetHeight;
+        const centred = wrapper.top + wrapper.height / 2 - height / 2;
+        const top = Math.max(
+            PANEL_MARGIN,
+            Math.min(centred, window.innerHeight - PANEL_MARGIN - height),
+        );
+        return top - wrapper.top;
     }
 
     protected toggle(): void {

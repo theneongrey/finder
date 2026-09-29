@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@common/env/environment';
 import {
+    FeedbackConfig,
     FeedbackPreference,
     SubmitFeedbackRequest,
 } from '../_models/feedback.model';
@@ -12,6 +13,12 @@ import {
 export class FeedbackService {
     private readonly httpClient = inject(HttpClient);
     private readonly baseUrl = environment.baseUrl;
+
+    getConfig() {
+        return this.httpClient.get<FeedbackConfig>(
+            `${this.baseUrl}/api/feedback/config`,
+        );
+    }
 
     getPreference() {
         return this.httpClient.get<FeedbackPreference>(

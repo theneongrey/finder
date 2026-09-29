@@ -21,7 +21,7 @@ This document provides project conventions, environment commands, and architectu
 
 ### Local Test Authentication
 - Credentials: `testuser1@neongrey.de` or `testuser2@neongrey.de`
-- Auth bypass code URL: `http://localhost:4200/auth/token-login?token=1234`
+- Auth bypass code URL: `http://localhost:4200/auth/token-login?token=1234` (or code `123456`)
 - If already logged in when starting a test session, log out first.
 
 ---

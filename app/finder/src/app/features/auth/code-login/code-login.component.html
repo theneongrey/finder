@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="verifyCode()" class="flex flex-col gap-0">
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-0">
     <div
         data-testid="code-login-heading"
         class="[font-family:var(--font-display)] text-[27px] leading-[1.1] font-bold tracking-[-0.6px] [color:var(--text-primary)] lg:text-[30px] lg:tracking-[-0.7px]"
@@ -14,26 +14,40 @@
     </p>
 
     <div class="mt-[22px]">
-        <ds-input-otp formControlName="code" [length]="6" [groupSize]="3" />
+        <ds-input-otp
+            data-testid="code-login-code"
+            formControlName="code"
+            [invalid]="hasError()"
+            [length]="6"
+            [groupSize]="3"
+        />
     </div>
 
-    @if (hasError()) {
-        <div
-            class="flex items-center gap-[6px] pt-[10px] text-[13px] font-semibold [color:var(--negative)]"
-        >
-            <ds-icon name="warning" [size]="14" color="var(--negative)" />
-            <span>{{ 'auth.codeLogin.invalidCode' | translate }}</span>
-        </div>
-    }
+    <!-- Always rendered so screen readers announce the message when it appears. -->
+    <div role="alert" data-testid="code-login-error">
+        @if (hasError()) {
+            <div
+                class="flex items-center gap-[6px] pt-[10px] text-[13px] font-semibold [color:var(--negative)]"
+            >
+                <ds-icon name="warning" [size]="14" color="var(--negative)" />
+                <span>{{ errorKey() | translate }}</span>
+            </div>
+        }
+    </div>
 
     <div class="mt-[16px]">
         <ds-button
             variant="primary"
             [fullWidth]="true"
-            [disabled]="form.invalid"
+            [disabled]="form.invalid && !codeVoided()"
             data-testid="code-login-submit"
         >
-            {{ 'auth.codeLogin.submit' | translate }}
+            {{
+                (codeVoided()
+                    ? 'auth.codeLogin.requestNewCode'
+                    : 'auth.codeLogin.submit'
+                ) | translate
+            }}
         </ds-button>
     </div>
 </form>

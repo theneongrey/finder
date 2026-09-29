@@ -150,7 +150,11 @@ public class LoginService
 
     private async Task<LoginToken> CreateLoginTokenForPerson(Person person, string? redirectUrl)
     {
-        var newTokenValue = _loginOptions.AuthToken ?? Guid.NewGuid().ToString("N").ToLower();
+        // Dev shortcuts (fixed token/code) only apply to test users. Real accounts always get
+        // random values, so a test-user login can't clear a real user's pending code.
+        var useStaticValues = person.Role == Role.TestUser;
+        var staticToken = useStaticValues ? _loginOptions.AuthToken : null;
+        var newTokenValue = staticToken ?? Guid.NewGuid().ToString("N").ToLower();
 
         var existingTokens = await _dbContext.LoginTokens
             .Where(t => t.Person.Id == person.Id)
@@ -161,7 +165,10 @@ public class LoginService
             await _dbContext.SaveChangesAsync();
         }
 
-        await DeleteStaticDevTokenConflict(newTokenValue);
+        if (staticToken != null)
+        {
+            await DeleteStaticDevTokenConflict(staticToken);
+        }
 
         var loginToken = new LoginToken
         {
@@ -169,7 +176,7 @@ public class LoginService
             Person = person,
             RedirectUrl = redirectUrl,
             Token = newTokenValue,
-            Code = GetRandomSixDigitCode(),
+            Code = (useStaticValues ? _loginOptions.AuthCode : null) ?? GetRandomSixDigitCode(),
             Retries = 0,
         };
         _dbContext.LoginTokens.Add(loginToken);
@@ -182,17 +189,10 @@ public class LoginService
         return loginToken;
     }
 
-    // In dev mode, AuthToken is a fixed static value shared across all users.
-    // If another user holds a token with that value, inserting a new one would violate
-    // the unique index. This method clears any such conflict before insertion.
+    // The static dev token is shared by all test users. If another test user holds a token with
+    // that value, inserting a new one would violate the unique index, so clear it first.
     private async Task DeleteStaticDevTokenConflict(string tokenValue)
     {
-        // the static auth token is set on dev mode only to test the login flow.
-        if (_loginOptions.AuthToken == null)
-        {
-            return;
-        }
-
         var conflict = await _dbContext.LoginTokens
             .Where(t => t.Token == tokenValue)
             .ToListAsync();

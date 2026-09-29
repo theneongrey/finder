@@ -87,7 +87,8 @@ Tests follow the AAA pattern (Arrange, Act, Assert) and validate both happy-path
 export const USER1 = 'testuser1@neongrey.de'
 export const USER2 = 'testuser2@neongrey.de'
 
-// login: navigates to request-email, submits, then bypasses code via token-login?token=1234
+// login: authenticates via the API (requestLoginMail + tokenLogin with the dev token 1234).
+// Only auth-login.spec.ts drives the real UI login (email → code 123456).
 export async function login(page: Page, email: string): Promise<void>
 
 // logout: clicks avatar menu, follows Logout link

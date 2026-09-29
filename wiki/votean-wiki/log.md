@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-29 — ingest: dev login shortcuts limited to test users (fix/dev-login-test-users)
+Pages touched: features/auth.md, guides/local-setup.md (fixed token/code only for Role.TestUser, new `Login:AuthCode` = 123456), guides/testing.md (API login helper, one UI login test), guides/component-library.md (ds-input-otp `invalid`)
+
+---
+
 ## 2026-09-29 — ingest: feedback kill switch and UI polish (feature/326-feedback-digest-limits)
 Pages touched: features/feedback.md (tab at 3/4 height, `Feedback:ShowButton` + `GET /api/feedback/config`, Settings card gated on it), guides/component-library.md (ds-switch colours target the track button, `--ds-switch-off-bg` override)
 

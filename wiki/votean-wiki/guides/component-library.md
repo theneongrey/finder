@@ -362,6 +362,7 @@ OTP / verification-code input with grouped digit boxes. Implements `ControlValue
 |---|---|---|---|
 | `length` | `number` | `6` | Total number of digits |
 | `groupSize` | `number` | `3` | Digits per visual group (separated by a dash) |
+| `invalid` | `boolean` | `false` | Red border on every slot and `aria-invalid`, e.g. after a rejected code |
 
 ```html
 <!-- 6-digit OTP in two groups of 3 -->

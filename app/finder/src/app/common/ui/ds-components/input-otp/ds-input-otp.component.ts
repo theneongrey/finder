@@ -25,11 +25,18 @@ import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
             multi: true,
         },
     ],
-    host: { style: 'display: block; cursor: text', '(click)': 'focus()' },
+    host: {
+        style: 'display: block; cursor: text',
+        '[class.ds-otp--invalid]': 'invalid()',
+        '[attr.aria-invalid]': 'invalid() || null',
+        '(click)': 'focus()',
+    },
 })
 export class DsInputOtpComponent implements ControlValueAccessor {
     length = input(6);
     groupSize = input(3);
+    /** Marks every slot with a red border, e.g. after a rejected code. */
+    invalid = input(false);
 
     protected readonly value = signal('');
     protected readonly isDisabled = signal(false);

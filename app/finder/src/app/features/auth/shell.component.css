@@ -1,0 +1,28 @@
+/* Card shake after a rejected login code. Custom keyframes, so not expressible in Tailwind. */
+.auth-card-shake {
+    animation: auth-card-shake 420ms var(--ease-standard, ease-in-out);
+}
+
+@keyframes auth-card-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    15%,
+    55% {
+        transform: translateX(-8px);
+    }
+    35%,
+    75% {
+        transform: translateX(8px);
+    }
+    90% {
+        transform: translateX(-3px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-card-shake {
+        animation: none;
+    }
+}

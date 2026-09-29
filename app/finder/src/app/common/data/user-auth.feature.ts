@@ -37,6 +37,8 @@ export function withAuthFeature() {
                     | 'rate-limiter',
                 email: undefined as string | undefined,
             },
+            /** Rejected code-login attempts for the current login mail — each increment is one failure. */
+            codeLoginFailures: 0,
         }),
         withProps(() => ({
             userService: inject(UserService),
@@ -76,6 +78,7 @@ export function withAuthFeature() {
                 resetLoginMail() {
                     patchState(store, {
                         loginMail: { email: undefined, state: 'init' },
+                        codeLoginFailures: 0,
                     });
                 },
 
@@ -90,6 +93,7 @@ export function withAuthFeature() {
                                     state: 'sent',
                                     email,
                                 },
+                                codeLoginFailures: 0,
                             }),
                         ),
                         switchMap((email) => {
@@ -170,7 +174,6 @@ export function withAuthFeature() {
 
                 loginByCode: rxMethod<string>(
                     pipe(
-                        distinctUntilChanged(),
                         filter(
                             (loginCode) =>
                                 !!store.loginMail.email() && !!loginCode,
@@ -191,7 +194,14 @@ export function withAuthFeature() {
                                         }
                                         return handleGetUser;
                                     }),
-                                    catchError((error) => {
+                                    catchError((error: HttpErrorResponse) => {
+                                        if (error.status === 401) {
+                                            patchState(store, {
+                                                codeLoginFailures:
+                                                    store.codeLoginFailures() +
+                                                    1,
+                                            });
+                                        }
                                         store.loggerService.error(
                                             '[UserStore] Error while logging in with code',
                                             error,

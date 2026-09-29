@@ -1,9 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    effect,
     inject,
     signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserStore } from '@common/data/user.store';
 import {
     FormControl,
@@ -48,6 +50,17 @@ export class CodeLoginComponent {
 
     constructor() {
         inject(TitleBarService).disableTitle();
+
+        // A rejected code shows the error (red slots + message) until the code is edited.
+        // The auth shell shakes the card on the same signal.
+        effect(() => {
+            if (this.userStore.codeLoginFailures() > 0) {
+                this.hasError.set(true);
+            }
+        });
+        this.form.controls.code.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.hasError.set(false));
 
         if (!this.userStore.loginMail.email()) {
             this.loggerService.log('redirect: no email stored');

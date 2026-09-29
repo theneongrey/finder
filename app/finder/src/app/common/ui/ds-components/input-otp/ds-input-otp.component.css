@@ -91,3 +91,11 @@
         opacity: 0;
     }
 }
+
+/* Invalid: red border on every slot, including the active one. The :has() matches the
+   specificity of the active/filled rules above, so this later rule wins. */
+:host(.ds-otp--invalid)
+    ::ng-deep
+    hlm-input-otp-slot.ds-otp-slot:has(brn-input-otp-slot) {
+    border-color: var(--negative) !important;
+}

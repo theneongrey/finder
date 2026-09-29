@@ -3,6 +3,7 @@ import {
     Component,
     effect,
     inject,
+    signal,
     untracked,
 } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -34,6 +35,7 @@ import { filter, map, startWith } from 'rxjs';
         AuthShellFirstLoginSidebarComponent,
     ],
     templateUrl: './shell.component.html',
+    styleUrl: './shell.component.css',
     host: { class: 'flex flex-col h-dvh bg-app-gradient' },
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
@@ -62,7 +64,16 @@ export class AuthShellComponent {
         { initialValue: false },
     );
 
+    /** Shakes the card once per rejected login code. */
+    protected readonly shaking = signal(false);
+
     constructor() {
+        effect(() => {
+            if (this.userStore.codeLoginFailures() > 0) {
+                this.shaking.set(true);
+            }
+        });
+
         effect(() => {
             const user = this.userStore.user();
             if (!user) {
@@ -100,5 +111,13 @@ export class AuthShellComponent {
         });
 
         this.userStore.getUser();
+    }
+
+    /** Reset after the shake so the next failure replays it. Child animations
+     *  (e.g. the code input's caret) bubble up here too, so only react to the card's own. */
+    protected onCardAnimationEnd(event: AnimationEvent): void {
+        if (event.target === event.currentTarget) {
+            this.shaking.set(false);
+        }
     }
 }

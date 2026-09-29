@@ -17,6 +17,10 @@ sources:
     resource: app/finder/src/app/features/polls/polls.routes.ts
   - title: PollDetailStore
     resource: app/finder/src/app/features/polls/_shared/data/poll-detail.store.ts
+  - title: "PR #444 — live collaboration on the poll detail page"
+    resource: https://github.com/theneongrey/finder/pull/444
+  - title: "PR #450 — live collaboration UX fine-tuning"
+    resource: https://github.com/theneongrey/finder/pull/450
 ---
 
 # Polling
@@ -48,6 +52,28 @@ Managing actions (End poll, Share) live behind a kebab (overflow) menu in the re
 toolbar. The detail column uses container queries (`@container/detail`) so it switches to a
 compact layout based on its own width — important because the comments sidebar narrows it
 well below the viewport width.
+
+## Live Collaboration
+
+Several people can work on the same poll at once:
+
+- **Presence.** Avatars in the results toolbar show who else is currently on the poll (you
+  are never shown; more than three collapse into a "+N" bubble; names appear on hover).
+- **Live updates.** Options, votes, comments, poll edits and close/reopen by others appear in
+  place without a reload or flicker. Changed items flash briefly — green when added, teal
+  when updated, red when removed (a removed card stays visible until its flash ends). A
+  comment on an option also flashes that option.
+- **Toasts.** While the tab is visible, each change by someone else shows a short translated
+  message naming who did what ("… added an option", "… closed the poll"). Votes don't toast;
+  they already show live on the cards.
+- **Your edits are safe.** A remote change to an option you are editing inline waits until you
+  save or cancel, then applies.
+- **Fewer emails.** While you are actively on the poll, you get no email about its changes (the
+  in-app notification is still created). See
+  [Notifications](notifications.md#active-presence-email-suppression).
+- The **Refresh** button stays as a manual fallback.
+
+Technical design: [Realtime Poll Sync](../architecture/realtime-poll-sync.md).
 
 ## Voting UX
 
@@ -102,4 +128,5 @@ All poll types support comments. Users can optionally quote another comment when
 - [Vote](../concepts/vote.md) — vote records
 - [Appointment Polls](appointment-polls.md) — the Date option type in detail
 - [Poll Detail Page Rebuild](../architecture/poll-detail-rebuild.md) — the results-as-detail + voting-overlay rework
+- [Realtime Poll Sync](../architecture/realtime-poll-sync.md) — live presence and change sync on the detail page
 - [Project](../concepts/project.md) — polls belong to projects

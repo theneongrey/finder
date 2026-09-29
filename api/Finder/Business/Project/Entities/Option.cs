@@ -15,4 +15,10 @@ public class Option : BaseEntity
 
     public required Person Creator { get; set; }
     public Guid CreatorId { get; set; }
+
+    /// <summary>
+    /// Optimistic-concurrency token: bumped on every edit. Clients echo the version they edited;
+    /// a mismatch means someone else changed it first (412).
+    /// </summary>
+    public int Version { get; set; }
 }

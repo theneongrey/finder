@@ -1,15 +1,18 @@
 using Finder.Business.Preview.Models;
-using Finder.Business.Shared;
+using HtmlAgilityPack;
 
 namespace Finder.Business.Preview.Services.PreviewHelper;
 
 public interface IPreviewImageCandidateService
 {
-    Task<Result<Models.Preview>> GetPreviewWithValidatedImageAsync(string htmlContent, Models.Preview? basePreview, string baseUrl);
+    /// <summary>The best image in the page's markup that is big enough and roughly card-shaped, or null.</summary>
+    Task<string?> FindImageAsync(HtmlDocument doc, string? title, Uri pageUrl);
 }
 
 public class PreviewImageCandidateService : IPreviewImageCandidateService
 {
+    private const int MaxCandidatesToCheck = 5;
+
     private readonly PreviewImageOnlyFinder _imageFinder;
     private readonly IImageSizeService _imageSizeService;
 
@@ -19,31 +22,22 @@ public class PreviewImageCandidateService : IPreviewImageCandidateService
         _imageSizeService = imageSizeService;
     }
 
-    public async Task<Result<Models.Preview>> GetPreviewWithValidatedImageAsync(string htmlContent, Models.Preview? basePreview, string baseUrl)
+    public async Task<string?> FindImageAsync(HtmlDocument doc, string? title, Uri pageUrl)
     {
-        var imageCandidate = _imageFinder.GetMostPromisingImage(htmlContent, basePreview?.Title);
-
-        if (string.IsNullOrWhiteSpace(imageCandidate))
+        var ranked = _imageFinder.GetRankedImages(doc, title, HtmlUrlResolver.GetBaseUri(doc, pageUrl));
+        if (ranked.IsSiteSpecific)
         {
-            return Result<Models.Preview>.Fail(404, "No image candidate found");
+            return ranked.Urls.FirstOrDefault();
         }
 
-        if (!imageCandidate.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-        {
-            imageCandidate = new Uri(new Uri(baseUrl), imageCandidate).ToString();
-        }
+        var candidates = ranked.Urls.Take(MaxCandidatesToCheck).ToList();
 
-        var sizeResult = await _imageSizeService.GetImageSizeAsync(imageCandidate);
-        if (!sizeResult.IsSuccess || !IsValidSize(sizeResult.Payload!))
-        {
-            return Result<Models.Preview>.Fail(422, "Image does not meet size criteria");
-        }
+        // Probe the top candidates in parallel, then keep the ranking order among the valid ones.
+        var sizes = await Task.WhenAll(candidates.Select(_imageSizeService.GetImageSizeAsync));
 
-        var preview = basePreview is not null
-            ? basePreview with { ImageUrl = imageCandidate }
-            : new Models.Preview("", "", imageCandidate, baseUrl);
-
-        return Result<Models.Preview>.Success(preview);
+        return candidates
+            .Where((_, index) => sizes[index].IsSuccess && sizes[index].Payload is { } size && IsValidSize(size))
+            .FirstOrDefault();
     }
 
     private static bool IsValidSize(ImageSize size) =>

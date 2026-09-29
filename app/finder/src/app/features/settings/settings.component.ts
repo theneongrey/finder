@@ -76,6 +76,8 @@ export class SettingsComponent {
     readonly notificationsLoading = this.userStore.notificationsLoading;
     readonly feedbackButtonEnabled = this.feedbackStore.buttonEnabled;
     readonly feedbackButtonHidden = this.feedbackStore.buttonHidden;
+    readonly feedbackPreferenceLoadFailed =
+        this.feedbackStore.preferenceLoadFailed;
     readonly feedbackDisabled = this.feedbackStore.feedbackDisabled;
     readonly feedbackDisabledUntil = this.feedbackStore.feedbackDisabledUntil;
 

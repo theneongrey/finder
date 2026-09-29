@@ -44,7 +44,7 @@ public sealed class PollHub : Hub
 
         var id = SlugHelper.ExtractId(pollId);
 
-        // Same read predicate as ProjectService.GetPoll: public project OR creator OR any permission.
+        // Same read predicate as PollQueryExtensions.WhereReadableBy: public project OR creator OR any permission.
         var hasAccess = await _dbContext.Polls
             .AnyAsync(p => p.Id == id && (
                 p.Project.VisibilityType == VisibilityType.VisibleForEverbody ||
@@ -82,6 +82,19 @@ public sealed class PollHub : Hub
         {
             await BroadcastRoster(id);
         }
+    }
+
+    /// <summary>
+    /// Client heartbeat: refreshes this connection's last-activity timestamp so the notification
+    /// path treats the user as actively watching (and suppresses their e-mail). No broadcast —
+    /// activity is only read when a notification is about to be sent. No-op if the connection
+    /// hasn't joined the poll, so no access check beyond the group membership is needed.
+    /// </summary>
+    public Task ReportActivity(string pollId)
+    {
+        var id = SlugHelper.ExtractId(pollId);
+        _registry.RecordActivity(id, Context.ConnectionId);
+        return Task.CompletedTask;
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)

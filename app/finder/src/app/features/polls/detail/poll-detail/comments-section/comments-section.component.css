@@ -5,3 +5,28 @@
     padding-bottom: 14px;
     line-height: 1.5;
 }
+
+/* Brief background flash on a comment posted by another collaborator. Colours come from
+   design tokens; the duration is bound inline from HIGHLIGHT_DURATION_MS. */
+.comment-changed {
+    border-radius: var(--radius-md);
+    margin: -6px -8px;
+    padding: 6px 8px;
+    animation-name: comment-flash;
+    animation-timing-function: ease-out;
+}
+
+@keyframes comment-flash {
+    0% {
+        background-color: var(--accent-tint);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .comment-changed {
+        animation: none;
+    }
+}

@@ -197,7 +197,10 @@
                                     }}
                                 </span>
                             </div>
-                            @if (feedbackButtonHidden() === undefined) {
+                            @if (
+                                feedbackButtonHidden() === undefined &&
+                                !feedbackPreferenceLoadFailed()
+                            ) {
                                 <div
                                     class="ds-skeleton h-6 w-11 shrink-0"
                                 ></div>

@@ -1,7 +1,12 @@
 <div class="flex pl-[7px]">
     @for (u of shown(); track $index) {
         <div class="-ml-[7px]">
-            <app-user-avatar [user]="u" [size]="px()" [voted]="u.voted" />
+            <app-user-avatar
+                [user]="u"
+                [size]="px()"
+                [voted]="u.voted"
+                [tooltip]="true"
+            />
         </div>
     }
     @if (extra() > 0) {

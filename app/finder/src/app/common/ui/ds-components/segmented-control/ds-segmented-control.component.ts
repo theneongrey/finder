@@ -12,6 +12,8 @@ export interface SegmentOption {
     value: string;
     label: string;
     icon?: string;
+    /** Optional counter shown as a badge next to the label. */
+    badge?: number;
 }
 
 @Component({

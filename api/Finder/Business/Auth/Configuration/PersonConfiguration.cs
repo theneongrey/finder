@@ -13,6 +13,10 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.Property(n => n.Email)
             .HasMaxLength(320);
 
+        // Emails are normalised to lower case on every write path; one account per address.
+        builder.HasIndex(n => n.Email)
+            .IsUnique();
+
         builder.Property(n => n.Name)
             .HasMaxLength(250);
 

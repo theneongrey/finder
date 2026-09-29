@@ -9,7 +9,8 @@ public interface IPollChangeNotifier
 {
     /// <summary>
     /// Pings the poll's presence group. <paramref name="actorUserId"/> is the user who caused
-    /// the change so the originating client can ignore its own echo.
+    /// the change so the originating client can ignore its own echo. <paramref name="change"/>
+    /// optionally describes what changed so present clients can show a specific message.
     /// </summary>
-    Task PollChanged(string pollId, Guid? actorUserId);
+    Task PollChanged(string pollId, Guid? actorUserId, PollChangeInfo? change = null);
 }

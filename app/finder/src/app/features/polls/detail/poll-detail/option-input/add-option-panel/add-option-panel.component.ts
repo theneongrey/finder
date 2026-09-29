@@ -71,6 +71,10 @@ export class AddOptionPanelComponent {
 
     readonly textDraft = signal<OptionEntry>({ text: '', description: '' });
     readonly dateDraft = signal<DateOptionEntry>({ type: 'date' });
+    /** A link preview is in flight — it will still rewrite textDraft when it lands. */
+    private readonly previewPending = signal(false);
+    /** "Add" was pressed while the preview was in flight; submit once it settles. */
+    protected readonly submitQueued = signal(false);
 
     constructor() {
         // (Re)initialise the date draft whenever the poll's date sub-type changes.
@@ -95,6 +99,13 @@ export class AddOptionPanelComponent {
     });
 
     submit(): void {
+        // Clicking "Add" blurs a URL title, which starts the preview fetch. Submitting now would
+        // add the bare URL and the preview would then refill the cleared draft, tempting a second
+        // add — so wait for the preview and add once, with its data.
+        if (this.previewPending()) {
+            this.submitQueued.set(true);
+            return;
+        }
         if (!this.isValid()) {
             return;
         }
@@ -112,6 +123,14 @@ export class AddOptionPanelComponent {
                 meta: draft.meta,
             });
             this.textDraft.set({ text: '', description: '' });
+        }
+    }
+
+    onPreviewPendingChange(pending: boolean): void {
+        this.previewPending.set(pending);
+        if (!pending && this.submitQueued()) {
+            this.submitQueued.set(false);
+            this.submit();
         }
     }
 

@@ -9,14 +9,16 @@
                 [canManage]="canManagePoll()"
                 [isClosed]="poll.isClosed"
                 [commentsHidden]="!showComments()"
-                [refreshing]="refreshing()"
+                [presence]="presence()"
+                [selfId]="selfId()"
+                [sortLabel]="sortLabel()"
                 (startVote)="startVote()"
-                (addOption)="showAddOption.set(true)"
+                (addOption)="openAddOption()"
                 (closePoll)="closePoll()"
                 (reopenPoll)="reopenPoll()"
                 (showComments)="showComments.set(true)"
-                (refresh)="refresh()"
                 (share)="sharePoll()"
+                (toggleSort)="toggleSort()"
             />
 
             @if (showShareBar()) {
@@ -38,6 +40,7 @@
                     [statusLabel]="statusLabel()"
                     [closeDateText]="closeDateText()"
                     [commentCount]="poll.comments.length"
+                    [commentHighlight]="pollCommentHighlight()"
                     [sortLabel]="sortLabel()"
                     (toggleSort)="toggleSort()"
                     (save)="savePollDetails($event)"
@@ -62,26 +65,31 @@
                     />
                 }
 
-                @if (poll.options.length === 0 && !showAddOption()) {
+                @if (displayOptions().length === 0 && !showAddOption()) {
                     <app-empty-options
                         [canManage]="canManagePoll()"
                         [isClosed]="poll.isClosed"
-                        (addOption)="showAddOption.set(true)"
+                        (addOption)="openAddOption()"
                     />
                 } @else {
                     <app-option-list
-                        [options]="poll.options"
+                        [options]="displayOptions()"
                         [optionType]="poll.optionType"
                         [members]="project()?.sharedWith ?? []"
                         [comments]="poll.comments"
                         [projectId]="project()?.id ?? ''"
                         [pollId]="pollId()"
                         [isClosed]="poll.isClosed"
+                        [canManage]="canManagePoll()"
                         [sort]="sortMode()"
+                        [changedOptions]="changedOptions()"
+                        [revealOptionId]="lastAddedOptionId()"
                         (openComments)="openOptionComments($event)"
                         (saveEdit)="saveOptionEdit($event)"
                         (deleteOption)="deleteOption($event)"
                         (startVote)="openVoteAt($event)"
+                        (editStart)="onEditStart($event)"
+                        (editEnd)="onEditEnd($event)"
                     />
                 }
             </div>
@@ -96,6 +104,7 @@
                 <app-comments-section
                     [comments]="poll.comments"
                     [submitting]="commentAdding()"
+                    [changedCommentIds]="changedCommentIds()"
                     (addComment)="addComment($event)"
                     (dismiss)="showComments.set(false)"
                 />
@@ -115,6 +124,7 @@
         <app-comments-section
             [comments]="poll.comments"
             [submitting]="commentAdding()"
+            [changedCommentIds]="changedCommentIds()"
             (addComment)="addComment($event)"
             (dismiss)="showMobileComments.set(false)"
         />
@@ -131,6 +141,7 @@
             [comments]="optionComments()"
             [optionTitle]="commentsOptionTitle()"
             [submitting]="commentAdding()"
+            [changedCommentIds]="changedCommentIds()"
             (addComment)="addOptionComment($event)"
             (dismiss)="commentsOption.set(undefined)"
         />

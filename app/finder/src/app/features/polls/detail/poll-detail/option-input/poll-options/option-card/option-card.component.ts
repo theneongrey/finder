@@ -11,6 +11,7 @@ import {
     signal,
     effect,
     viewChild,
+    WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime } from 'rxjs';
@@ -58,6 +59,9 @@ export class OptionCardComponent {
     optionChange = output<OptionEntry>();
     /** Emitted when the user presses Enter on a non-URL title while confirmOnEnter is set. */
     confirm = output<void>();
+    /** True while a link preview is being fetched. The preview rewrites the entry once it lands,
+     *  so a parent that submits the entry must wait for it to settle (see add-option panel). */
+    previewPendingChange = output<boolean>();
 
     protected readonly titleOverLimit = computed(
         () => this.option().text.length > POLL_LIMITS.optionTextLength,
@@ -180,7 +184,7 @@ export class OptionCardComponent {
             return;
         }
 
-        this.urlLoading.set(true);
+        this.setLoading(this.urlLoading, true);
         const normalized = this.urlValidation.normalize(text);
 
         this.previewService
@@ -212,12 +216,19 @@ export class OptionCardComponent {
                     this.previewData.set(preview);
                     this.showLink.set(true);
                     this.initialUrl = normalized;
-                    this.urlLoading.set(false);
+                    this.setLoading(this.urlLoading, false);
                 },
                 error: () => {
-                    this.urlLoading.set(false);
+                    this.setLoading(this.urlLoading, false);
                 },
             });
+    }
+
+    private setLoading(state: WritableSignal<boolean>, value: boolean) {
+        state.set(value);
+        this.previewPendingChange.emit(
+            this.urlLoading() || this.previewLoading(),
+        );
     }
 
     onUrlBlur() {
@@ -247,15 +258,12 @@ export class OptionCardComponent {
             return;
         }
 
-        this.previewLoading.set(true);
+        this.setLoading(this.previewLoading, true);
         this.previewService
             .getPreview(normalized)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (preview) => {
-                    // The API also answers with partial previews (e.g. no image), so the
-                    // loading state must end regardless of which fields came back.
-                    this.previewLoading.set(false);
                     this.initialUrl = normalized;
                     if (
                         preview.imageUrl ||
@@ -276,9 +284,13 @@ export class OptionCardComponent {
                         this.optionChange.emit(updatedEntry);
                         this.previewData.set(preview);
                     }
+                    // The API also answers with partial previews (e.g. no image), so the
+                    // loading state must end regardless of which fields came back. End it only
+                    // after the enriched entry is emitted, so a parent waiting on it sees the data.
+                    this.setLoading(this.previewLoading, false);
                 },
                 error: () => {
-                    this.previewLoading.set(false);
+                    this.setLoading(this.previewLoading, false);
                 },
             });
     }

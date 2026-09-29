@@ -1,6 +1,9 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
+    ElementRef,
+    afterNextRender,
     computed,
     inject,
     input,
@@ -26,6 +29,32 @@ import { PollParticipant } from '../../../_shared/models/poll-realtime.model';
 })
 export class ResultsToolbarComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly destroyRef = inject(DestroyRef);
+
+    constructor() {
+        // Publish the toolbar's rendered height so the poll header's sticky bar can pin exactly
+        // below it. Its height is fractional (text metrics), so a hardcoded offset left a subpixel
+        // seam where the scrolling content showed through.
+        afterNextRender(() => {
+            const bar = this.host.nativeElement.firstElementChild;
+            if (!bar) {
+                return;
+            }
+            const root = document.documentElement;
+            const observer = new ResizeObserver(() =>
+                root.style.setProperty(
+                    '--results-toolbar-height',
+                    `${bar.getBoundingClientRect().height}px`,
+                ),
+            );
+            observer.observe(bar);
+            this.destroyRef.onDestroy(() => {
+                observer.disconnect();
+                root.style.removeProperty('--results-toolbar-height');
+            });
+        });
+    }
 
     canManage = input(false);
     isClosed = input(false);

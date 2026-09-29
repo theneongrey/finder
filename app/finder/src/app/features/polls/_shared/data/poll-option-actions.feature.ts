@@ -56,7 +56,11 @@ export function withPollOptionActionsFeature() {
                 editConflictCount: number;
             }>(),
         },
-        withState({ optionAdding: false }),
+        withState({
+            optionAdding: false,
+            /** Id of the option this user added most recently — lets the view scroll to it. */
+            lastAddedOptionId: undefined as string | undefined,
+        }),
         withMethods((store) => {
             const pollService = inject(PollService);
             const loggerService = inject(LoggerService);
@@ -108,6 +112,7 @@ export function withPollOptionActionsFeature() {
                                                         newOption,
                                                     ],
                                                 },
+                                                lastAddedOptionId: option.id,
                                             });
                                         },
                                         error: (error) => {

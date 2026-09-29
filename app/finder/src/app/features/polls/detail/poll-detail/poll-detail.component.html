@@ -13,7 +13,7 @@
                 [selfId]="selfId()"
                 [sortLabel]="sortLabel()"
                 (startVote)="startVote()"
-                (addOption)="showAddOption.set(true)"
+                (addOption)="openAddOption()"
                 (closePoll)="closePoll()"
                 (reopenPoll)="reopenPoll()"
                 (showComments)="showComments.set(true)"
@@ -69,7 +69,7 @@
                     <app-empty-options
                         [canManage]="canManagePoll()"
                         [isClosed]="poll.isClosed"
-                        (addOption)="showAddOption.set(true)"
+                        (addOption)="openAddOption()"
                     />
                 } @else {
                     <app-option-list
@@ -83,6 +83,7 @@
                         [canManage]="canManagePoll()"
                         [sort]="sortMode()"
                         [changedOptions]="changedOptions()"
+                        [revealOptionId]="lastAddedOptionId()"
                         (openComments)="openOptionComments($event)"
                         (saveEdit)="saveOptionEdit($event)"
                         (deleteOption)="deleteOption($event)"

@@ -4,6 +4,7 @@
 >
     @for (option of sortedOptions(); track trackOption(option)) {
         <div
+            [attr.data-option-id]="trackOption(option)"
             [class.poll-item-added]="changeKind(option) === 'added'"
             [class.poll-item-updated]="changeKind(option) === 'updated'"
             [class.poll-item-removed]="changeKind(option) === 'removed'"

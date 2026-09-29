@@ -47,6 +47,7 @@ import {
     PollChangeInfo,
 } from '../../_shared/models/poll-realtime.model';
 import { toast } from '@spartan-ng/brain/sonner';
+import { preferredScrollBehavior } from '../../_shared/utils/scroll-behavior.utils';
 
 type SortMode = 'top' | 'original';
 
@@ -147,6 +148,7 @@ export class PollDetailComponent {
     project = this.projectDetailStore.currentProject;
 
     readonly optionAdding = this.projectDetailStore.optionAdding;
+    readonly lastAddedOptionId = this.projectDetailStore.lastAddedOptionId;
     readonly commentAdding = this.projectDetailStore.commentAdding;
 
     showShareDrawer = signal(false);
@@ -375,6 +377,13 @@ export class PollDetailComponent {
                 this.showShareBar.set(true);
             }
         });
+    }
+
+    /** Open the add-option panel. It renders at the top of the list, so scroll up to it — the
+     *  sticky toolbar's "Add" stays reachable long after the panel's spot has scrolled away. */
+    openAddOption() {
+        this.showAddOption.set(true);
+        window.scrollTo({ top: 0, behavior: preferredScrollBehavior() });
     }
 
     /** Toolbar entry: revote through every option. */

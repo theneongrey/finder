@@ -47,6 +47,7 @@
             [confirmOnEnter]="true"
             (optionChange)="textDraft.set($event)"
             (confirm)="submit()"
+            (previewPendingChange)="onPreviewPendingChange($event)"
         />
     }
 
@@ -59,7 +60,7 @@
             icon="plus"
             data-testid="add-option-submit"
             [disabled]="!isValid()"
-            [loading]="submitting()"
+            [loading]="submitting() || submitQueued()"
             (click)="submit()"
         >
             {{ 'project.results.add' | translate }}

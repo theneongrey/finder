@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { USER1, login } from './helpers';
+import { USER1 } from './helpers';
 
 test.describe('Auth: /auth/request-email', () => {
   test.beforeEach(async ({ page }) => {
@@ -100,9 +100,43 @@ test.describe('Auth: /auth/token-login', () => {
   });
 });
 
+// The only test that logs in through the UI; every other spec uses the faster API login helper.
+// Test users get the fixed dev code from Login:AuthCode (appsettings.Development.json).
+const DEV_LOGIN_CODE = '123456';
+
 test.describe('Auth: full end-to-end flow', () => {
-  test('email → code → token → polls', async ({ page }) => {
-    await login(page, USER1);
-    await expect(page).toHaveURL(/\/polls$/);
+  test('email → typed code → polls', async ({ page }) => {
+    await page.goto('/auth/request-email');
+    await page.locator('app-request-email ds-input input').fill(USER1);
+    await page.locator('[data-testid="request-email-submit"]').click();
+    await page.waitForURL('**/auth/code-login');
+
+    await page.locator('[data-testid="code-login-code"] input').pressSequentially(DEV_LOGIN_CODE);
+    await page.locator('[data-testid="code-login-submit"] button').click();
+
+    await page.waitForURL('**/polls');
+    await expect(page.locator('app-user-avatar').first()).toBeVisible();
+  });
+
+  test('a wrong code shakes the card and marks the code inputs red until edited', async ({ page }) => {
+    await page.goto('/auth/request-email');
+    await page.locator('app-request-email ds-input input').fill(USER1);
+    await page.locator('[data-testid="request-email-submit"]').click();
+    await page.waitForURL('**/auth/code-login');
+
+    const code = page.locator('[data-testid="code-login-code"]');
+    const card = page.locator('[data-testid="auth-card"]');
+    await code.locator('input').pressSequentially('000000');
+    await page.locator('[data-testid="code-login-submit"] button').click();
+
+    await expect(card).toHaveClass(/auth-card-shake/);
+    await expect(code).toHaveAttribute('aria-invalid', 'true');
+    await expect(code.locator('hlm-input-otp-slot').first()).toHaveCSS('border-top-color', 'rgb(193, 69, 63)');
+    // The shake class is removed once the animation ends, so the next failure can replay it.
+    await expect(card).not.toHaveClass(/auth-card-shake/);
+
+    await code.locator('input').focus();
+    await page.keyboard.press('Backspace');
+    await expect(code).not.toHaveAttribute('aria-invalid');
   });
 });

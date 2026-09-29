@@ -14,7 +14,13 @@
     </p>
 
     <div class="mt-[22px]">
-        <ds-input-otp formControlName="code" [length]="6" [groupSize]="3" />
+        <ds-input-otp
+            data-testid="code-login-code"
+            formControlName="code"
+            [invalid]="hasError()"
+            [length]="6"
+            [groupSize]="3"
+        />
     </div>
 
     @if (hasError()) {

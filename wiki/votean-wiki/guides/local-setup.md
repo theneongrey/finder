@@ -47,9 +47,9 @@ Steps:
 1. Navigate to `http://localhost:4200`
 2. Enter the email address and submit
 3. Instead of checking email, navigate directly to:  
-   `http://localhost:4200/auth/token-login?token=1234`
+   `http://localhost:4200/auth/token-login?token=1234` (or type the code `123456`)
 
-This works because test users (`Role.TestUser`) use a fixed token value in the development environment and never receive real emails. See [Authentication](../features/auth.md) for the full auth flow.
+This works because test users (`Role.TestUser`) use a fixed token and code in the development environment and never receive real emails. See [Authentication](../features/auth.md) for the full auth flow.
 
 If you are already logged in, log out first (avatar menu → Logout).
 

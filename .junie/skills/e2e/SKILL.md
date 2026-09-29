@@ -23,7 +23,7 @@ import { USER1, USER2, login, logout } from './helpers';
 ```
 
 - `USER1` = `testuser1@neongrey.de`, `USER2` = `testuser2@neongrey.de`
-- `login(page, email)` — submits the email form then bypasses the code step via `/auth/token-login?token=1234`
+- `login(page, email)` — logs in via the API (`requestLoginMail` + `tokenLogin` with the dev token `1234`), no UI. Only `auth-login.spec.ts` drives the real UI login (email → code `123456`)
 - `logout(page)` — clicks the avatar menu and follows the logout link
 
 Call `login` in `beforeEach` / `beforeAll` and `logout` in `afterEach`.

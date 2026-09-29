@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-2">
     <ds-calendar
         [date]="value().date"
         [min]="today()"
@@ -23,7 +23,7 @@
 
     @if (showTime()) {
         <div
-            class="flex flex-wrap items-center gap-2 rounded-[var(--radius-md)] bg-[var(--bg-panel)] p-3"
+            class="flex flex-wrap items-center gap-2 rounded-[var(--radius-md)] bg-[var(--bg-panel)] px-3 py-2"
         >
             <span
                 class="text-[length:var(--fs-caption)] font-bold text-[var(--text-secondary)]"

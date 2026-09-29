@@ -51,6 +51,8 @@ export class OptionCardComponent {
     option = input.required<OptionEntry>();
     index = input.required<number>();
     canRemove = input<boolean>(false);
+    /** Drop the card surface — used when embedded in the add-option panel. */
+    bare = input<boolean>(false);
     readonly = input<boolean>(false);
     /** When true, Enter in the title confirms the option (see confirm) — or, if the text is a
      *  URL, fetches its preview first instead of confirming. Used by the inline add-option panel. */

@@ -25,7 +25,6 @@ import {
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
 import { UrlValidationService } from '../../../../_shared/utils/url-validation.service';
 import { POLL_LIMITS } from '../../../../_shared/models/poll-limits';
-import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
 import { DateOptionPickerComponent } from './date-option-picker/date-option-picker.component';
 
 export interface NewOptionPayload {
@@ -45,7 +44,6 @@ export interface NewOptionPayload {
     imports: [
         TranslatePipe,
         DsButtonComponent,
-        DsBadgeComponent,
         DateOptionPickerComponent,
         OptionCardComponent,
         OptionCardWeekdayComponent,

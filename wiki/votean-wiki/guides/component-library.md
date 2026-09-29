@@ -255,6 +255,8 @@ White surface card — the foundation for poll cards, project cards, and most gr
 |---|---|---|---|
 | `padding` | `number` | `20` | Internal padding in px |
 | `accentBorder` | `boolean` | `false` | Adds 4px left teal border instead of hairline border |
+| `fill` | `boolean` | `false` | Flex column that fills its parent's height |
+| `bare` | `boolean` | `false` | Content only — no surface, border, shadow or padding (for cards embedded in another container, e.g. the add-option panel) |
 
 ```html
 <ds-card [accentBorder]="true">

@@ -1,4 +1,4 @@
-<ds-card [accentBorder]="false" [padding]="14">
+<ds-card [accentBorder]="false" [padding]="14" [bare]="bare()">
     <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between">
@@ -200,12 +200,22 @@
                             {{ 'project.pollInput.yesNo.addLink' | translate }}
                         </ds-button>
                     }
-                    <span
-                        class="ml-auto text-right text-[length:var(--fs-caption)] text-[color:var(--text-muted)]"
-                    >
-                        {{ 'project.pollInput.yesNo.linkHint' | translate }}
-                    </span>
                 </div>
+            }
+
+            @if (!readonly() && !showLink()) {
+                <p
+                    class="m-0 mt-2 flex items-center gap-2 rounded-[var(--radius-md)] bg-[var(--bg-panel)] px-3 py-2 text-[length:var(--fs-caption)] text-[color:var(--text-secondary)]"
+                    data-testid="option-link-hint"
+                >
+                    <ds-icon
+                        class="shrink-0"
+                        name="link"
+                        [size]="13"
+                        [color]="'var(--accent)'"
+                    />
+                    {{ 'project.pollInput.yesNo.linkHint' | translate }}
+                </p>
             }
         </div>
     </div>

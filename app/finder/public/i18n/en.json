@@ -538,7 +538,6 @@
             "vote": "Vote",
             "addOption": "Add option",
             "add": "Add",
-            "proposeDate": "Propose a date",
             "emptyOptionsHeading": "No options yet",
             "emptyOptionsText": "Add the first option so everyone can start voting in the poll.",
             "emptyOptionsTextVoter": "Once the first option is added, you can all vote together here.",

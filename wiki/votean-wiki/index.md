@@ -39,6 +39,7 @@ Product capabilities from a user perspective.
 - [Appointment Polls](features/appointment-polls.md) — date/time scheduling variant
 - [Public Sharing](features/public-sharing.md) — unauthenticated access via /p/:projectId
 - [Notifications](features/notifications.md) — in-app notification centre, settings, and multi-language email pipeline
+- [Feedback](features/feedback.md) — left-edge feedback tab that emails bug reports/ideas; hideable per user
 
 ## Architecture
 

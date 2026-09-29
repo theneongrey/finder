@@ -8,6 +8,16 @@ Pages touched: architecture/link-preview.md (5 s deadline covers body reads, sho
 
 ---
 
+## 2026-09-27 — ingest: feedback review fixes (PR #457)
+Pages touched: features/feedback.md (hide toast after confirmed save, ordered saves, Settings self-load + fallback, focus management and panel-scoped Esc, compact mobile tab, no HTML stripping, insert-race fallback), guides/component-library.md (ds-switch `label` input)
+
+---
+
+## 2026-09-27 — ingest: feedback feature (issue #326)
+Pages touched: features/feedback.md (created — left-edge tab, panel with inline disclosure + cancel, hide/re-enable via Settings, Business/Feedback endpoints, FeedbackPreference entity, feedback mail template, tests), features/index.md, index.md (added Feedback), architecture/backend.md (Feedback domain, per-domain rate-limit policies, enum JSON converter note for Minimal APIs), concepts/user.md (Related link), guides/component-library.md (ds-switch one-way usage + double-toggle fix)
+
+---
+
 ## 2026-09-27 — ingest: link preview pipeline rework (branch feature/preview-service-improvements)
 Pages touched: architecture/link-preview.md (created — pipeline, extraction sources, JSON-LD, image ranking + parallel probing, pooled browser, SSRF guard, bot protection, config), architecture/backend.md (Preview Service section replaced by summary + link), concepts/option.md (URL Preview section corrected: frontend fetches, fields may be partial), api/index.md (/api/preview contract), architecture/single-instance.md (preview cache + pooled browser as process-local state), architecture/index.md, index.md
 

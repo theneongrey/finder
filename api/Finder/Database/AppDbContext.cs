@@ -1,4 +1,5 @@
 using Finder.Business.Auth.Entities;
+using Finder.Business.Feedback.Entities;
 using Finder.Business.Permission.Entities;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared.Entities;
@@ -26,6 +27,7 @@ public class AppDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<NotificationSetting> NotificationSettings { get; set; }
     public DbSet<PersonNotificationSetting> PersonNotificationSettings { get; set; }
     public DbSet<UserNotification> UserNotifications { get; set; }
+    public DbSet<FeedbackPreference> FeedbackPreferences { get; set; }
     public DbSet<OutboxMail> OutboxMails { get; set; }
     public DbSet<PendingPollUpdate> PendingPollUpdates { get; set; }
 

@@ -1,0 +1,79 @@
+<div
+    data-testid="feedback-panel"
+    role="dialog"
+    aria-labelledby="feedback-panel-title"
+    class="flex flex-col gap-4 rounded-(--radius-4xl) border border-(--border-hairline-soft) bg-(--surface-card) p-5 shadow-(--shadow-overlay)"
+>
+    <div class="flex items-center justify-between gap-3">
+        <h2
+            id="feedback-panel-title"
+            class="[font-family:var(--font-display)] [font-size:var(--fs-display-2xs)] [font-weight:var(--weight-bold)] text-(--text-primary)"
+        >
+            {{ 'feedback.title' | translate }}
+        </h2>
+        <ds-button
+            data-testid="feedback-close"
+            variant="subtle"
+            size="sm"
+            icon="close"
+            [square]="true"
+            [label]="'feedback.close' | translate"
+            (click)="cancelled.emit()"
+        />
+    </div>
+
+    <ds-segmented-control
+        data-testid="feedback-type"
+        size="sm"
+        [options]="typeOptions()"
+        [value]="type()"
+        (valueChange)="onTypeChange($event)"
+    />
+
+    <ds-textarea
+        data-testid="feedback-comment"
+        [formControl]="comment"
+        [placeholder]="'feedback.placeholder' | translate"
+        [rows]="4"
+        [maxlength]="maxLength"
+    />
+
+    <p
+        data-testid="feedback-disclosure"
+        class="[font-size:var(--fs-caption)] leading-snug text-(--text-tertiary)"
+    >
+        {{
+            'feedback.disclosure' | translate: { email: email(), page: page() }
+        }}
+    </p>
+
+    <div class="grid grid-cols-2 gap-2">
+        <ds-button
+            data-testid="feedback-cancel"
+            variant="outline"
+            [fullWidth]="true"
+            (click)="cancelled.emit()"
+        >
+            {{ 'feedback.cancel' | translate }}
+        </ds-button>
+        <ds-button
+            data-testid="feedback-send"
+            variant="primary"
+            [fullWidth]="true"
+            [disabled]="!canSend()"
+            [loading]="submitting()"
+            (click)="submit()"
+        >
+            {{ 'feedback.send' | translate }}
+        </ds-button>
+    </div>
+
+    <button
+        data-testid="feedback-hide"
+        type="button"
+        class="self-center [font-size:var(--fs-caption)] [font-weight:var(--weight-semibold)] text-(--text-tertiary) transition-colors hover:text-(--text-secondary)"
+        (click)="hide.emit()"
+    >
+        {{ 'feedback.hide' | translate }}
+    </button>
+</div>

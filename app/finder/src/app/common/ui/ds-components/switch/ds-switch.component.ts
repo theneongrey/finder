@@ -24,14 +24,17 @@ export type SwitchSize = 'sm' | 'md';
             multi: true,
         },
     ],
+    // No host (click) toggle: hlm-switch already handles click + keyboard and reports via
+    // checkedChange; toggling here as well flipped the value twice per click.
     host: {
         style: 'display: inline-block; cursor: pointer',
-        '(click)': 'toggle()',
     },
 })
 export class DsSwitchComponent implements ControlValueAccessor {
     size = input<SwitchSize>('md');
     checked = model<boolean>(false);
+    /** Accessible name for the switch, forwarded to hlm-switch's aria-label. */
+    label = input<string | undefined>(undefined);
 
     protected readonly hlmSize = computed(() =>
         this.size() === 'sm' ? ('sm' as const) : ('default' as const),
@@ -46,19 +49,10 @@ export class DsSwitchComponent implements ControlValueAccessor {
         /* do nothing */
     };
 
-    toggle(): void {
-        if (this.isDisabled) {
-            return;
-        }
-        const next = !this.checked();
-        this.checked.set(next);
-        this.onChange(next);
-        this.onTouched();
-    }
-
     protected onCheckedChange(v: boolean): void {
         this.checked.set(v);
         this.onChange(v);
+        this.onTouched();
     }
 
     writeValue(val: boolean): void {

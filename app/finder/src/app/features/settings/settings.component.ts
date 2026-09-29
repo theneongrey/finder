@@ -35,7 +35,9 @@ import {
 } from '@ds/segmented-control/ds-segmented-control.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { DsSwitchComponent } from '@ds/switch/ds-switch.component';
 import { NotificationValue } from '@common/models/notification-setting.model';
+import { FeedbackStore } from '../feedback/_data/feedback.store';
 
 @Component({
     selector: 'app-settings',
@@ -49,6 +51,7 @@ import { NotificationValue } from '@common/models/notification-setting.model';
         DsSegmentedControlComponent,
         DsCardComponent,
         DsIconComponent,
+        DsSwitchComponent,
     ],
     templateUrl: './settings.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,6 +60,7 @@ export class SettingsComponent {
     private readonly userStore = inject(UserStore);
     private readonly translateService = inject(TranslateService);
     private readonly router = inject(Router);
+    private readonly feedbackStore = inject(FeedbackStore);
 
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
@@ -69,6 +73,9 @@ export class SettingsComponent {
     readonly selectedLanguage = signal<SupportedLanguage>(getStoredLanguage());
     readonly notifications = this.userStore.notifications;
     readonly notificationsLoading = this.userStore.notificationsLoading;
+    readonly feedbackButtonHidden = this.feedbackStore.buttonHidden;
+    readonly feedbackPreferenceLoadFailed =
+        this.feedbackStore.preferenceLoadFailed;
 
     protected readonly languageOptions = LANGUAGE_OPTIONS;
 
@@ -96,6 +103,7 @@ export class SettingsComponent {
         effect(() => titleService.setTitle(title()));
 
         this.userStore.loadNotifications();
+        this.feedbackStore.loadPreference();
 
         effect(() => {
             const user = this.user();
@@ -127,6 +135,10 @@ export class SettingsComponent {
             id,
             value: value as NotificationValue,
         });
+    }
+
+    onFeedbackButtonChange(visible: boolean): void {
+        this.feedbackStore.setButtonHidden({ buttonHidden: !visible });
     }
 
     logout(): void {

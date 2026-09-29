@@ -110,6 +110,11 @@
             "pollSharedSub": "Someone added you to one of their polls.",
             "pollUpdated": "Poll updated",
             "pollUpdatedSub": "Options or the question on a poll you're in changed."
+        },
+        "feedback": {
+            "title": "Feedback",
+            "show": "Show feedback button",
+            "showSub": "Small feedback tab at the screen edge for reporting bugs and ideas."
         }
     },
     "auth": {
@@ -826,5 +831,24 @@
         "shareNudge": "Missing someone? Share the link so everyone can join in.",
         "votedState": "voted",
         "openState": "pending"
+    },
+    "feedback": {
+        "tab": "Feedback",
+        "title": "Give feedback",
+        "close": "Close",
+        "types": {
+            "Bug": "Bug",
+            "Idea": "Idea",
+            "Other": "Other"
+        },
+        "placeholder": "What would you like to tell us?",
+        "disclosure": "Sent along with your message: the type, your comment, your name and email ({{email}}), the date and time, and the current page ({{page}}).",
+        "cancel": "Cancel",
+        "send": "Send",
+        "hide": "Hide button",
+        "sent": "Thanks! Your feedback has been sent.",
+        "sendError": "Your feedback could not be sent. Please try again.",
+        "hidden": "Feedback button hidden. You can show it again in the settings.",
+        "preferenceError": "The setting could not be saved. Please try again."
     }
 }

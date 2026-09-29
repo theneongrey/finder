@@ -10,6 +10,7 @@ import { UserStore } from '@common/data/user.store';
 import { TranslateService } from '@ngx-translate/core';
 import { SUPPORTED_LANGUAGES, getStoredLanguage } from '@common/i18n/languages';
 import { injectBrnCalendarI18n } from '@spartan-ng/brain/calendar';
+import { FeedbackTabComponent } from './features/feedback/feedback-tab/feedback-tab.component';
 
 function applyCalendarLocale(
     lang: string,
@@ -57,7 +58,7 @@ function applyCalendarLocale(
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, ...HlmToasterImports],
+    imports: [RouterOutlet, ...HlmToasterImports, FeedbackTabComponent],
     templateUrl: './app.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

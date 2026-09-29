@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.DataProtection;
 using Scalar.AspNetCore;
 using Finder.Business.Auth.Api;
 using Finder.Business.Auth.Setup;
+using Finder.Business.Feedback.Api;
+using Finder.Business.Feedback.Setup;
 using Finder.Business.Permission.Api;
 using Finder.Business.Permission.Setup;
 using Finder.Business.Preview.Api;
@@ -76,6 +78,7 @@ builder.Services.AddProjectServices(runBackgroundDispatchers);
 builder.Services.AddPermissionServices();
 builder.Services.AddUserServices();
 builder.Services.AddPreviewServices(builder.Configuration);
+builder.Services.AddFeedbackServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -102,6 +105,7 @@ app.WithProjectApi();
 app.WithPermissionApi();
 app.WithUserApi();
 app.WithUrlPreviewApi();
+app.WithFeedbackApi();
 app.MapProjectHubs();
 
 if (app.Environment.IsDevelopment())

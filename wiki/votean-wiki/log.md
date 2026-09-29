@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-29 — ingest: calendar picker for adding date options (feature/date-option-calendar)
+Pages touched: guides/component-library.md (new ds-calendar: Spartan BrnCalendar host directive, `highlightDays` for taken days, hidden arrow at `min`)
+
+---
+
 ## 2026-09-29 — ingest: feedback kill switch and UI polish (feature/326-feedback-digest-limits)
 Pages touched: features/feedback.md (tab at 3/4 height, `Feedback:ShowButton` + `GET /api/feedback/config`, Settings card gated on it), guides/component-library.md (ds-switch colours target the track button, `--ds-switch-off-bg` override)
 

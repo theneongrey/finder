@@ -409,6 +409,9 @@
                 "timePerOptionHintOff": "Aus: Optionen zählen ganztägig",
                 "endBeforeStart": "Das Enddatum muss nach dem {{date}} liegen.",
                 "addOption": "Termin hinzufügen",
+                "calendarHint": "Tag antippen · grau = schon vorhanden",
+                "calendarHintWithTime": "Tag antippen · grau = schon vorhanden, mit anderer Uhrzeit wählbar",
+                "duplicateDate": "Diesen Termin gibt es zu dieser Uhrzeit schon – wähle eine andere Uhrzeit.",
                 "appointmentTypeLabel": "Art der Terminoptionen",
                 "changeType": "Ändern",
                 "types": {
@@ -532,6 +535,7 @@
             "vote": "Abstimmen",
             "addOption": "Option hinzufügen",
             "add": "Hinzufügen",
+            "proposeDate": "Termin vorschlagen",
             "emptyOptionsHeading": "Noch keine Optionen",
             "emptyOptionsText": "Füge die erste Option hinzu, damit alle in der Umfrage abstimmen können.",
             "emptyOptionsTextVoter": "Sobald die erste Option hinzugefügt wurde, könnt ihr hier gemeinsam abstimmen.",

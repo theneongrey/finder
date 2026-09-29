@@ -59,6 +59,9 @@ export class OptionListComponent {
     sort = input<SortMode>('top');
     /** Id of an option to bring into view whenever it changes (the one the user just added). */
     revealOptionId = input<string | undefined>(undefined);
+    /** Top-align cards instead of stretching rows — set while a tall lead cell (the add
+     *  panel) is projected, so its row neighbours keep their natural height. */
+    alignStart = input(false);
 
     readonly isDateType = computed(() => isDateOptionType(this.optionType()));
     readonly dateType = computed(() => optionTypeToDateType(this.optionType()));

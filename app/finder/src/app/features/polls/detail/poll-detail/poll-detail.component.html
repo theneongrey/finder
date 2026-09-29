@@ -51,20 +51,6 @@
                 <!-- Separator between header and cards -->
                 <hr class="h-px border-0 bg-[var(--border-hairline)]" />
 
-                @if (canManagePoll() && !poll.isClosed && showAddOption()) {
-                    <app-add-option-panel
-                        class="add-option-animate block"
-                        animate.enter="add-option-enter"
-                        animate.leave="add-option-leave"
-                        [optionType]="poll.optionType"
-                        [dateType]="addPanelDateType()"
-                        [showTime]="addPanelShowTime()"
-                        [submitting]="optionAdding()"
-                        (add)="onAddOption($event)"
-                        (cancelled)="showAddOption.set(false)"
-                    />
-                }
-
                 @if (displayOptions().length === 0 && !showAddOption()) {
                     <app-empty-options
                         [canManage]="canManagePoll()"
@@ -84,13 +70,32 @@
                         [sort]="sortMode()"
                         [changedOptions]="changedOptions()"
                         [revealOptionId]="lastAddedOptionId()"
+                        [alignStart]="showAddOption()"
                         (openComments)="openOptionComments($event)"
                         (saveEdit)="saveOptionEdit($event)"
                         (deleteOption)="deleteOption($event)"
                         (startVote)="openVoteAt($event)"
                         (editStart)="onEditStart($event)"
                         (editEnd)="onEditEnd($event)"
-                    />
+                    >
+                        @if (
+                            canManagePoll() && !poll.isClosed && showAddOption()
+                        ) {
+                            <app-add-option-panel
+                                optionListLead
+                                class="add-option-animate block self-start"
+                                animate.enter="add-option-enter"
+                                animate.leave="add-option-leave"
+                                [optionType]="poll.optionType"
+                                [dateType]="addPanelDateType()"
+                                [showTime]="addPanelShowTime()"
+                                [submitting]="optionAdding()"
+                                [existingOptions]="optionTexts()"
+                                (add)="onAddOption($event)"
+                                (cancelled)="showAddOption.set(false)"
+                            />
+                        }
+                    </app-option-list>
                 }
             </div>
         </div>

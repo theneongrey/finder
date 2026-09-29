@@ -12,7 +12,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { OptionType } from '@common/models/option-type.model';
 import { OptionCardComponent } from '../poll-options/option-card/option-card.component';
-import { OptionCardDateComponent } from '../poll-options/option-card-date/option-card-date.component';
 import { OptionCardWeekdayComponent } from '../poll-options/option-card-weekday/option-card-weekday.component';
 import { OptionCardDateRangeComponent } from '../poll-options/option-card-date-range/option-card-date-range.component';
 import { OptionCardTimeComponent } from '../poll-options/option-card-time/option-card-time.component';
@@ -26,6 +25,8 @@ import {
 import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
 import { UrlValidationService } from '../../../../_shared/utils/url-validation.service';
 import { POLL_LIMITS } from '../../../../_shared/models/poll-limits';
+import { DsBadgeComponent } from '@ds/badge/ds-badge.component';
+import { DateOptionPickerComponent } from './date-option-picker/date-option-picker.component';
 
 export interface NewOptionPayload {
     text: string;
@@ -44,8 +45,9 @@ export interface NewOptionPayload {
     imports: [
         TranslatePipe,
         DsButtonComponent,
+        DsBadgeComponent,
+        DateOptionPickerComponent,
         OptionCardComponent,
-        OptionCardDateComponent,
         OptionCardWeekdayComponent,
         OptionCardDateRangeComponent,
         OptionCardTimeComponent,
@@ -63,8 +65,38 @@ export class AddOptionPanelComponent {
     dateType = input<DateOptionType | undefined>(undefined);
     showTime = input<boolean>(false);
     submitting = input<boolean>(false);
+    /** Raw texts of the poll's current options — marks taken days in the calendar. */
+    existingOptions = input<string[]>([]);
 
     readonly isDateType = computed(() => isDateOptionType(this.optionType()));
+    /** Calendar-day polls get the month-grid picker instead of the generic date card. */
+    readonly usesCalendar = computed(
+        () => this.isDateType() && this.dateType() === 'date',
+    );
+
+    readonly existingDates = computed<DateOptionEntry[]>(() =>
+        this.usesCalendar()
+            ? this.existingOptions().map((text) =>
+                  this.dateFormat.parse(text, 'date'),
+              )
+            : [],
+    );
+
+    /** The drafted day + time is already an option. */
+    readonly isDuplicate = computed(() => {
+        const draft = this.dateDraft();
+        if (!this.usesCalendar() || !draft.date) {
+            return false;
+        }
+        const time = (t?: Date) =>
+            t ? this.dateFormat.formatTimeInput(t) : undefined;
+        return this.existingDates().some(
+            (e) =>
+                !!e.date &&
+                e.date.toDateString() === draft.date!.toDateString() &&
+                time(e.startTime) === time(draft.startTime),
+        );
+    });
 
     add = output<NewOptionPayload>();
     cancelled = output<void>();
@@ -88,7 +120,9 @@ export class AddOptionPanelComponent {
 
     readonly isValid = computed(() => {
         if (isDateOptionType(this.optionType())) {
-            return this.dateFormat.isValid(this.dateDraft());
+            return (
+                this.dateFormat.isValid(this.dateDraft()) && !this.isDuplicate()
+            );
         }
         const draft = this.textDraft();
         return (
@@ -114,7 +148,13 @@ export class AddOptionPanelComponent {
                 text: this.dateFormat.serialize(this.dateDraft()),
                 description: '',
             });
-            this.dateDraft.set(this.freshDateEntry(this.dateType()!));
+            const fresh = this.freshDateEntry(this.dateType()!);
+            // Keep the calendar's time so several days at the same time are quick to add.
+            this.dateDraft.set(
+                this.usesCalendar()
+                    ? { ...fresh, startTime: this.dateDraft().startTime }
+                    : fresh,
+            );
         } else {
             const draft = this.textDraft();
             this.add.emit({

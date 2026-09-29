@@ -409,6 +409,9 @@
                 "timePerOptionHintOff": "Desactivado: las opciones son de todo el día",
                 "endBeforeStart": "La fecha de fin debe ser posterior al {{date}}.",
                 "addOption": "Añadir fecha",
+                "calendarHint": "Toca un día · gris = ya añadido",
+                "calendarHintWithTime": "Toca un día · gris = ya añadido, se puede elegir con otra hora",
+                "duplicateDate": "Esta fecha ya existe a esa hora: elige otra hora.",
                 "appointmentTypeLabel": "Tipo de opciones de fecha",
                 "changeType": "Cambiar",
                 "types": {
@@ -532,6 +535,7 @@
             "vote": "Votar",
             "addOption": "Añadir opción",
             "add": "Añadir",
+            "proposeDate": "Proponer fecha",
             "emptyOptionsHeading": "Aún no hay opciones",
             "emptyOptionsText": "Añade la primera opción para que todos puedan votar en la encuesta.",
             "emptyOptionsTextVoter": "En cuanto se añada la primera opción, podréis votar todos juntos aquí.",

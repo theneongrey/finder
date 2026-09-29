@@ -409,6 +409,9 @@
                 "timePerOptionHintOff": "Off: options count as all-day",
                 "endBeforeStart": "End date must be after {{date}}.",
                 "addOption": "Add date",
+                "calendarHint": "Tap a day · grey = already added",
+                "calendarHintWithTime": "Tap a day · grey = already added, still selectable with another time",
+                "duplicateDate": "This date already exists at that time – pick a different time.",
                 "appointmentTypeLabel": "Type of date options",
                 "changeType": "Change",
                 "types": {
@@ -532,6 +535,7 @@
             "vote": "Vote",
             "addOption": "Add option",
             "add": "Add",
+            "proposeDate": "Propose a date",
             "emptyOptionsHeading": "No options yet",
             "emptyOptionsText": "Add the first option so everyone can start voting in the poll.",
             "emptyOptionsTextVoter": "Once the first option is added, you can all vote together here.",

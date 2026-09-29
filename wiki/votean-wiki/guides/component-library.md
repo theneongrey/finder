@@ -265,6 +265,36 @@ White surface card — the foundation for poll cards, project cards, and most gr
 
 ---
 
+## ds-calendar
+
+**Selector:** `<ds-calendar>`
+**File:** `calendar/ds-calendar.component.ts`
+
+Single-day month calendar. Spartan's `BrnCalendar` is attached as a host directive (selection, keyboard navigation, a11y); ds-calendar only adds the styling. Month/weekday labels follow the locale configured in `app.component.ts`.
+
+| Input | Type | Default | Description |
+|---|---|---|---|
+| `date` | `Date \| undefined` (model) | `undefined` | Selected day; clicking it again clears it |
+| `min` / `max` | `Date` | — | Days outside the range are disabled; the prev/next arrow is hidden (space kept) when that month can't be reached |
+| `highlightDays` | `Date[]` | `[]` | "Already taken" days: muted fill + dot |
+| `dateDisabled` | `(d: Date) => boolean` | `() => false` | Extra unselectable days |
+| `weekStartsOn` | `number` | locale config | `1` = Monday |
+| `defaultFocusedDate` | `Date` | today | Month shown while nothing is selected |
+
+```html
+<ds-calendar
+  [date]="picked()"
+  [min]="today"
+  [weekStartsOn]="1"
+  [highlightDays]="takenDays()"
+  (dateChange)="picked.set($event)"
+/>
+```
+
+Used by the poll-detail add panel for calendar-day polls (`date-option-picker`).
+
+---
+
 ## ds-chip
 
 **Selector:** `<ds-chip>`

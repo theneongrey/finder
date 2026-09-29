@@ -14,7 +14,7 @@
     }
     to {
         opacity: 1;
-        max-height: 600px;
+        max-height: 900px;
         transform: translateY(0);
     }
 }
@@ -26,7 +26,7 @@
 @keyframes addOptionLeave {
     from {
         opacity: 1;
-        max-height: 600px;
+        max-height: 900px;
         transform: translateY(0);
     }
     to {

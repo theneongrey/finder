@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    afterRenderEffect,
     computed,
     forwardRef,
     inject,
@@ -25,11 +26,17 @@ import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
             multi: true,
         },
     ],
-    host: { style: 'display: block; cursor: text', '(click)': 'focus()' },
+    host: {
+        style: 'display: block; cursor: text',
+        '[class.ds-otp--invalid]': 'invalid()',
+        '(click)': 'focus()',
+    },
 })
 export class DsInputOtpComponent implements ControlValueAccessor {
     length = input(6);
     groupSize = input(3);
+    /** Marks every slot with a red border, e.g. after a rejected code. */
+    invalid = input(false);
 
     protected readonly value = signal('');
     protected readonly isDisabled = signal(false);
@@ -47,6 +54,21 @@ export class DsInputOtpComponent implements ControlValueAccessor {
     });
 
     private readonly el = inject(ElementRef);
+
+    constructor() {
+        // aria-invalid belongs on the focusable input (rendered by BrnInputOtp), not on the
+        // host, so screen readers report it.
+        afterRenderEffect(() => {
+            const input = this.el.nativeElement.querySelector(
+                'brn-input-otp input',
+            ) as HTMLInputElement | null;
+            if (this.invalid()) {
+                input?.setAttribute('aria-invalid', 'true');
+            } else {
+                input?.removeAttribute('aria-invalid');
+            }
+        });
+    }
 
     private onChange: (v: string) => void = () => {
         /* do nothing */

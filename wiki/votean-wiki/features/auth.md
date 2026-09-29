@@ -81,7 +81,7 @@ Users with `Role.TestUser` never receive real emails. For local development, nav
 http://localhost:4200/auth/token-login?token=1234
 ```
 
-after submitting any allowed email. This works because the backend sets a fixed token value (`1234`) in the testing environment.
+after submitting a test user's email, or type the code `123456`. This works because in development test users get the fixed token (`Login:AuthToken` = `1234`) and code (`Login:AuthCode` = `123456`). Real accounts always get random values, so test logins don't invalidate a real user's pending code.
 
 Test accounts: `testuser1@neongrey.de`, `testuser2@neongrey.de`.
 

@@ -1,10 +1,15 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
+    effect,
     inject,
     signal,
+    untracked,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserStore } from '@common/data/user.store';
+import { MAX_CODE_ATTEMPTS } from '@common/data/user-auth.feature';
 import {
     FormControl,
     FormGroup,
@@ -37,10 +42,35 @@ export class CodeLoginComponent {
     private userStore = inject(UserStore);
     private loggerService = new LoggerService();
     private router = inject(Router);
-    private attempts = 0;
 
     readonly email = this.userStore.loginMail.email;
-    readonly hasError = signal(false);
+
+    /** Submitted with fewer than 6 digits. */
+    private readonly incomplete = signal(false);
+    /** A login attempt made on this screen failed; cleared when the code is edited. */
+    private readonly failed = signal(false);
+
+    /** The backend voids the code after too many wrong tries — only a new code helps. */
+    readonly codeVoided = computed(
+        () => this.userStore.codeLoginRejections() >= MAX_CODE_ATTEMPTS,
+    );
+    readonly hasError = computed(
+        () => this.incomplete() || this.failed() || this.codeVoided(),
+    );
+    readonly errorKey = computed(() => {
+        if (this.codeVoided()) {
+            return 'auth.codeLogin.tooManyAttempts';
+        }
+        if (this.failed()) {
+            switch (this.userStore.codeLoginError()) {
+                case 'rate-limited':
+                    return 'auth.requestEmail.errorRateLimiter';
+                case 'error':
+                    return 'auth.codeLogin.error';
+            }
+        }
+        return 'auth.codeLogin.invalidCode';
+    });
 
     form = new FormGroup({
         code: new FormControl('', [Validators.required]),
@@ -49,30 +79,51 @@ export class CodeLoginComponent {
     constructor() {
         inject(TitleBarService).disableTitle();
 
+        // Only failures after this screen opened count, so returning to it later doesn't
+        // replay an old error. The auth shell shakes the card on the same counter.
+        let seenFailures = untracked(this.userStore.codeLoginFailures);
+        effect(() => {
+            const failures = this.userStore.codeLoginFailures();
+            if (failures > seenFailures) {
+                seenFailures = failures;
+                this.failed.set(true);
+            }
+        });
+        this.form.controls.code.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                this.incomplete.set(false);
+                this.failed.set(false);
+            });
+
         if (!this.userStore.loginMail.email()) {
             this.loggerService.log('redirect: no email stored');
             void this.router.navigate(['/']);
         }
     }
 
-    verifyCode(): void {
-        const code = this.form.get('code')!.value!;
+    submit(): void {
+        if (this.codeVoided()) {
+            this.requestNewCode();
+            return;
+        }
 
+        const code = this.form.controls.code.value ?? '';
         if (this.form.valid && code.length === 6) {
-            this.attempts++;
-            if (this.attempts >= 3) {
-                void this.router.navigate(['/logout']);
-                return;
-            }
-            this.hasError.set(false);
+            this.failed.set(false);
             this.userStore.loginByCode(code);
         } else {
-            this.hasError.set(true);
+            this.incomplete.set(true);
         }
     }
 
     editEmail(): void {
         this.userStore.resetLoginMail();
         void this.router.navigate(['/auth/request-email']);
+    }
+
+    private requestNewCode(): void {
+        this.form.reset();
+        this.userStore.requestLoginMail(this.email()!);
     }
 }

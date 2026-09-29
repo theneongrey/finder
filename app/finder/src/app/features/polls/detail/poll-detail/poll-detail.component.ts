@@ -1,10 +1,12 @@
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
     DestroyRef,
     effect,
     inject,
+    Injector,
     input,
     signal,
     untracked,
@@ -47,6 +49,7 @@ import {
     PollChangeInfo,
 } from '../../_shared/models/poll-realtime.model';
 import { toast } from '@spartan-ng/brain/sonner';
+import { extractSlugId } from '../../_shared/utils/slug.utils';
 
 type SortMode = 'top' | 'original';
 
@@ -89,6 +92,7 @@ export class PollDetailComponent {
     private readonly userStore = inject(UserStore);
     private readonly realtime = inject(PollRealtimeService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
 
     readonly OptionType = OptionType;
 
@@ -332,6 +336,30 @@ export class PollDetailComponent {
             });
         });
 
+        // The user added an option → bring its card into view (it may land anywhere in the
+        // list depending on the sort). Baseline on the current value so returning to a poll
+        // doesn't replay a scroll for an option added earlier.
+        let handledAddedOptionId = this.projectDetailStore.lastAddedOptionId();
+        effect(() => {
+            const id = this.projectDetailStore.lastAddedOptionId();
+            if (!id || id === handledAddedOptionId) {
+                return;
+            }
+            handledAddedOptionId = id;
+            afterNextRender(
+                () =>
+                    document
+                        .querySelector(
+                            `[data-option-id="${CSS.escape(extractSlugId(id))}"]`,
+                        )
+                        ?.scrollIntoView({
+                            behavior: this.scrollBehavior(),
+                            block: 'center',
+                        }),
+                { injector: this.injector },
+            );
+        });
+
         // Someone else changed the poll → pull the delta. Debounced so a burst of pings
         // (e.g. multi-option edits) collapses into a single fetch.
         this.realtime.pollChanged$
@@ -375,6 +403,19 @@ export class PollDetailComponent {
                 this.showShareBar.set(true);
             }
         });
+    }
+
+    /** Open the add-option panel. It renders at the top of the list, so scroll up to it — the
+     *  sticky toolbar's "Add" stays reachable long after the panel's spot has scrolled away. */
+    openAddOption() {
+        this.showAddOption.set(true);
+        window.scrollTo({ top: 0, behavior: this.scrollBehavior() });
+    }
+
+    private scrollBehavior(): ScrollBehavior {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            ? 'auto'
+            : 'smooth';
     }
 
     /** Toolbar entry: revote through every option. */

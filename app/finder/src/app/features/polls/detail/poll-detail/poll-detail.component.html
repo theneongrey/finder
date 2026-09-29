@@ -83,6 +83,7 @@
                         [canManage]="canManagePoll()"
                         [sort]="sortMode()"
                         [changedOptions]="changedOptions()"
+                        [revealOptionId]="lastAddedOptionId()"
                         (openComments)="openOptionComments($event)"
                         (saveEdit)="saveOptionEdit($event)"
                         (deleteOption)="deleteOption($event)"

@@ -1,7 +1,12 @@
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
+    effect,
+    ElementRef,
+    inject,
+    Injector,
     input,
     output,
 } from '@angular/core';
@@ -14,6 +19,7 @@ import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionType } from '@common/models/option-type.model';
 import { extractSlugId } from '../../../_shared/utils/slug.utils';
+import { preferredScrollBehavior } from '../../../_shared/utils/scroll-behavior.utils';
 import {
     isDateOptionType,
     optionTypeToDateType,
@@ -51,6 +57,8 @@ export class OptionListComponent {
     protected readonly highlightDurationMs = HIGHLIGHT_DURATION_MS;
 
     sort = input<SortMode>('top');
+    /** Id of an option to bring into view whenever it changes (the one the user just added). */
+    revealOptionId = input<string | undefined>(undefined);
 
     readonly isDateType = computed(() => isDateOptionType(this.optionType()));
     readonly dateType = computed(() => optionTypeToDateType(this.optionType()));
@@ -65,6 +73,41 @@ export class OptionListComponent {
     deleteOption = output<{ optionId: string }>();
     editStart = output<{ optionId: string }>();
     editEnd = output<{ optionId: string }>();
+
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
+
+    constructor() {
+        // Scroll to the revealed option once its card renders — it may land anywhere in the
+        // list depending on the sort. The first value is only a baseline, so returning to a poll
+        // doesn't replay the scroll for an option added on an earlier visit.
+        let baselined = false;
+        let handledId: string | undefined;
+        effect(() => {
+            const id = this.revealOptionId();
+            if (!baselined) {
+                baselined = true;
+                handledId = id;
+                return;
+            }
+            if (!id || id === handledId) {
+                return;
+            }
+            handledId = id;
+            afterNextRender(
+                () =>
+                    this.host.nativeElement
+                        .querySelector(
+                            `[data-option-id="${CSS.escape(extractSlugId(id))}"]`,
+                        )
+                        ?.scrollIntoView({
+                            behavior: preferredScrollBehavior(),
+                            block: 'center',
+                        }),
+                { injector: this.injector },
+            );
+        });
+    }
 
     changeKind(option: OptionDetail): OptionChangeKind | undefined {
         return this.changedOptions()[option.id];

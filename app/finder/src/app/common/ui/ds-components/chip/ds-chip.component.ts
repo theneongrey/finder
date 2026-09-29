@@ -19,6 +19,9 @@ export class DsChipComponent {
     active = model<boolean>(false);
     label = input.required<string>();
     icon = input<string | undefined>(undefined);
+    /** Ignore clicks/keys so the chip can't be toggled off, e.g. the current pick
+     *  in a single-select group. */
+    locked = input(false);
 
     // `!` modifiers override HlmButton's default-variant utilities
     // (bg-primary, text-primary-foreground, border-transparent, hover:bg-primary/80).
@@ -29,6 +32,9 @@ export class DsChipComponent {
     );
 
     toggle(): void {
+        if (this.locked()) {
+            return;
+        }
         this.active.set(!this.active());
     }
 }

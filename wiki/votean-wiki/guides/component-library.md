@@ -307,6 +307,7 @@ Toggleable filter chip with optional icon. Uses `model()` for two-way active sta
 | `label` | `string` | *(required)* | Chip label text |
 | `icon` | `string \| undefined` | `undefined` | Optional icon before the label |
 | `active` | `boolean` (model) | `false` | Two-way active/inactive state |
+| `locked` | `boolean` | `false` | Ignore clicks and keys so the chip can't toggle itself (e.g. the current pick in a single-select group) |
 
 ```html
 <!-- Standalone toggle -->

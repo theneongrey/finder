@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
     inject,
     input,
@@ -44,7 +45,8 @@ export class DateOptionPickerComponent {
     duplicate = input(false);
     valueChange = output<DateOptionEntry>();
 
-    protected readonly today = startOfDay(new Date());
+    /** Earliest selectable day — rolls over at midnight if the panel stays open. */
+    protected readonly today = signal(startOfDay(new Date()));
 
     /** Month to show when nothing is selected — stays on the last picked day's month
      *  after an add clears the selection, so adding several days in one month is quick. */
@@ -96,6 +98,22 @@ export class DateOptionPickerComponent {
                 );
             }
         });
+
+        let midnightTimer: ReturnType<typeof setTimeout>;
+        const scheduleMidnight = () => {
+            const now = new Date();
+            const next = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() + 1,
+            );
+            midnightTimer = setTimeout(() => {
+                this.today.set(startOfDay(new Date()));
+                scheduleMidnight();
+            }, next.getTime() - now.getTime());
+        };
+        scheduleMidnight();
+        inject(DestroyRef).onDestroy(() => clearTimeout(midnightTimer));
     }
 
     setDate(date: Date | undefined): void {
@@ -107,6 +125,11 @@ export class DateOptionPickerComponent {
     }
 
     setTime(value: string): void {
+        // A native time input emits '' while a segment is being cleared; keep the
+        // previous time instead of letting the default-time effect snap it back.
+        if (!value) {
+            return;
+        }
         this.valueChange.emit({
             ...this.value(),
             startTime: this.dateFormat.parseTimeInput(value),

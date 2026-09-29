@@ -11,12 +11,14 @@
 
 <div class="flex flex-col gap-2 p-5">
     <p
-        class="text-[length:var(--fs-body-sm)] leading-snug font-[var(--weight-semibold)] text-[var(--text-primary)]"
+        class="text-[length:var(--fs-body-sm)] leading-snug font-[var(--weight-semibold)] wrap-anywhere text-[var(--text-primary)]"
     >
         {{ text() }}
     </p>
     @if (description()) {
-        <p class="text-[length:var(--fs-body-xs)] text-[var(--text-secondary)]">
+        <p
+            class="text-[length:var(--fs-body-xs)] wrap-anywhere whitespace-pre-line text-[var(--text-secondary)]"
+        >
             {{ description() }}
         </p>
     }

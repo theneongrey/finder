@@ -8,8 +8,9 @@
     z-index: var(--z-sticky);
 }
 
-/* Hide the title bar while scrolling (mobile only); a page's own sticky
-   sub-bar takes over the top edge. On web (≥ 680px) it always stays. */
+/* Hide the title bar while scrolling down (mobile only) and bring it back on a
+   short scroll up; a page's own sticky sub-bar takes over the top edge while
+   it's hidden. On web (≥ 680px) it always stays. */
 @media (max-width: 679.98px) {
     :host {
         transition: transform var(--duration-fast) var(--ease-standard);

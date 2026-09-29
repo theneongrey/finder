@@ -89,9 +89,9 @@ public static class ProjectApi
 
         // Add poll
         app.MapPost("/api/project/poll",
-                async ([FromBody] AddPollRequest request, ProjectService projectService, UserService userService) =>
+                async ([FromBody] AddPollRequest request, PollService pollService, UserService userService) =>
                 {
-                    var result = await projectService.AddPoll(request);
+                    var result = await pollService.AddPoll(request);
                     return !result.IsSuccess
                         ? Results.BadRequest()
                         : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
@@ -100,22 +100,22 @@ public static class ProjectApi
 
         // Get poll
         app.MapGet("/api/project/poll/{slug}",
-                async (string slug, ProjectService projectService, UserService userService) =>
+                async (string slug, PollService pollService, UserService userService) =>
                 {
-                    var result = await projectService.GetPoll(slug);
+                    var result = await pollService.GetPoll(slug);
                     return !result.IsSuccess ? Results.NotFound() : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
 
         // Get poll delta — changes since the client's last sync token
         app.MapGet("/api/project/poll/{slug}/delta",
-                async (string slug, [FromQuery] string? since, ProjectService projectService, UserService userService) =>
+                async (string slug, [FromQuery] string? since, PollService pollService, UserService userService) =>
                 {
                     DateTime? sinceUtc = DateTimeOffset.TryParse(since, out var parsed)
                         ? parsed.UtcDateTime
                         : null;
 
-                    var result = await projectService.GetPollDelta(slug, sinceUtc);
+                    var result = await pollService.GetPollDelta(slug, sinceUtc);
                     return !result.IsSuccess
                         ? Results.StatusCode(result.Code)
                         : Results.Ok(result.Payload!.ToPollDeltaResponse(userService.GetUserId()));
@@ -124,23 +124,23 @@ public static class ProjectApi
 
         // Update poll
         app.MapPut("/api/project/poll/{slug}",
-                async (string slug, [FromBody] UpdatePollRequest request, ProjectService projectService, UserService userService) =>
+                async (string slug, [FromBody] UpdatePollRequest request, PollService pollService, UserService userService) =>
                 {
                     if (request.CloseDate.HasValue && request.CloseDate.Value <= DateTime.UtcNow)
                     {
                         return Results.BadRequest("closeDate must be in the future");
                     }
 
-                    var result = await projectService.UpdatePoll(slug, request.Name, request.Description, request.CloseDate, request.OptionType);
+                    var result = await pollService.UpdatePoll(slug, request.Name, request.Description, request.CloseDate, request.OptionType, request.Version);
                     return !result.IsSuccess ? Results.StatusCode(result.Code) : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();
 
         // Add option
         app.MapPost("/api/project/poll/option",
-                async ([FromBody] AddOptionToPollRequest request, ProjectService projectService, UserService userService) =>
+                async ([FromBody] AddOptionToPollRequest request, OptionService optionService, UserService userService) =>
                 {
-                    var result = await projectService.AddOptionToPoll(request);
+                    var result = await optionService.AddOptionToPoll(request);
                     return !result.IsSuccess
                         ? Results.StatusCode(result.Code)
                         : Results.Ok(result.Payload!.ToProjectResponseOption(userService.GetUserId()));
@@ -149,9 +149,9 @@ public static class ProjectApi
 
         // Update option
         app.MapPut("/api/project/poll/option/{slug}",
-                async (string slug, [FromBody] UpdateOptionRequest request, ProjectService projectService, UserService userService) =>
+                async (string slug, [FromBody] UpdateOptionRequest request, OptionService optionService, UserService userService) =>
                 {
-                    var result = await projectService.UpdateOption(slug, request);
+                    var result = await optionService.UpdateOption(slug, request);
                     return !result.IsSuccess
                         ? Results.StatusCode(result.Code)
                         : Results.Ok(result.Payload!.ToPollResponseOption(userService.GetUserId()));
@@ -160,9 +160,9 @@ public static class ProjectApi
 
         // Delete option
         app.MapDelete("/api/project/poll/option/{slug}",
-                async (string slug, ProjectService projectService) =>
+                async (string slug, OptionService optionService) =>
                 {
-                    var result = await projectService.DeleteOption(slug);
+                    var result = await optionService.DeleteOption(slug);
                     return !result.IsSuccess ? Results.StatusCode(result.Code) : Results.NoContent();
                 })
             .RequireAuthorization();
@@ -178,9 +178,9 @@ public static class ProjectApi
 
         // Close poll now (sets CloseDate = UtcNow, bypasses future-date validation)
         app.MapPost("/api/polls/{pollSlug}/close",
-                async (string pollSlug, ProjectService projectService, UserService userService) =>
+                async (string pollSlug, PollService pollService, UserService userService) =>
                 {
-                    var result = await projectService.ClosePollAsync(pollSlug);
+                    var result = await pollService.ClosePollAsync(pollSlug);
                     return !result.IsSuccess
                         ? Results.StatusCode(result.Code)
                         : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
@@ -189,9 +189,9 @@ public static class ProjectApi
 
         // Reopen poll (sets CloseDate = null)
         app.MapPost("/api/polls/{pollSlug}/reopen",
-                async (string pollSlug, ProjectService projectService, UserService userService) =>
+                async (string pollSlug, PollService pollService, UserService userService) =>
                 {
-                    var result = await projectService.ReopenPollAsync(pollSlug);
+                    var result = await pollService.ReopenPollAsync(pollSlug);
                     return !result.IsSuccess
                         ? Results.StatusCode(result.Code)
                         : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
@@ -217,9 +217,9 @@ public static class ProjectApi
 
         // Add comment
         app.MapPost("/api/project/poll/comment",
-                async ([FromBody] AddCommentRequest request, ProjectService projectService) =>
+                async ([FromBody] AddCommentRequest request, CommentService commentService) =>
                 {
-                    var result = await projectService.AddComment(request);
+                    var result = await commentService.AddComment(request);
                     return !result.IsSuccess
                         ? Results.NotFound()
                         : Results.Ok(result.Payload!.ToCommentResponse());

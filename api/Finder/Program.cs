@@ -16,6 +16,7 @@ using Finder.Business.Project.Api;
 using Finder.Business.Project.Setup;
 using Finder.Business.Shared;
 using Finder.Business.Shared.Services;
+using Finder.Business.Shared.Setup;
 using Finder.Business.User.Api;
 using Finder.Business.User.Setup;
 using Finder.Database;
@@ -29,6 +30,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddCors();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddProxyForwarding(builder.Configuration);
 builder.Services.AddSingleton(sp =>
     new NpgsqlDataSourceBuilder(sp.GetRequiredService<IConfiguration>().GetConnectionString("Database"))
         .EnableDynamicJson()
@@ -54,6 +56,14 @@ builder.Services.AddSingleton<ILookupClient, LookupClient>();
 builder.Services.AddSingleton<EmailValidationService>();
 builder.Services.AddSingleton<MailTemplateService>();
 builder.Services.AddSingleton<MailService>();
+// Integration tests drain the outbox and poll-update queue explicitly instead of via background loops.
+var runBackgroundDispatchers = !builder.Environment.IsEnvironment("Testing");
+builder.Services.AddScoped<MailOutbox>();
+builder.Services.AddSingleton<MailOutboxDispatcher>();
+if (runBackgroundDispatchers)
+{
+    builder.Services.AddHostedService(sp => sp.GetRequiredService<MailOutboxDispatcher>());
+}
 builder.Services.Configure<I18nOptions>(builder.Configuration.GetSection("I18n"));
 builder.Services.AddSingleton<LanguageService>();
 builder.Services.AddHttpClient("EmailValidation", client =>
@@ -64,10 +74,10 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<NotificationMailGuard>();
 
 builder.Services.AddAuthServices(builder.Configuration, builder.Environment.IsDevelopment());
-builder.Services.AddProjectServices();
+builder.Services.AddProjectServices(runBackgroundDispatchers);
 builder.Services.AddPermissionServices();
 builder.Services.AddUserServices();
-builder.Services.AddPreviewServices();
+builder.Services.AddPreviewServices(builder.Configuration);
 builder.Services.AddFeedbackServices(builder.Configuration);
 
 var app = builder.Build();
@@ -77,6 +87,14 @@ if (!app.Environment.IsEnvironment("Testing"))
     using var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
     var db = scope.ServiceProvider.GetService<AppDbContext>()!;
     db.Database.Migrate();
+}
+
+// Must run first so everything below (HSTS, cookies, rate limiting) sees the real client IP and scheme.
+app.UseForwardedHeaders();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
 }
 
 app.UseAuthentication();

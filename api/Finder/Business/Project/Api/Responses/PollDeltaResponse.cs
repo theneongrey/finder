@@ -12,6 +12,7 @@ public class PollDeltaPoll
     public required int OptionType { get; set; }
     public DateTime? CloseDate { get; set; }
     public required bool IsClosed { get; set; }
+    public required int Version { get; set; }
 }
 
 public class PollDeltaResponse
@@ -30,6 +31,13 @@ public class PollDeltaResponse
 
     /// <summary>Ids of every comment currently on the poll — used to reconcile hard-deletes.</summary>
     public required string[] CurrentCommentIds { get; set; }
+
+    /// <summary>Ids of options changed strictly after the token — the client flashes only these
+    /// (a superset in <see cref="Options"/> may be re-sent to cover the overlap window).</summary>
+    public required string[] HighlightedOptionIds { get; set; }
+
+    /// <summary>Ids of comments changed strictly after the token — the client flashes only these.</summary>
+    public required string[] HighlightedCommentIds { get; set; }
 
     /// <summary>Server UtcNow at query start; echo back as <c>since</c> on the next delta call.</summary>
     public required DateTime SyncToken { get; set; }
@@ -50,7 +58,8 @@ public static class PollDeltaMapper
                 CloseDate = delta.ChangedPoll.CloseDate.HasValue
                     ? DateTime.SpecifyKind(delta.ChangedPoll.CloseDate.Value, DateTimeKind.Utc)
                     : null,
-                IsClosed = delta.ChangedPoll.CloseDate != null && delta.ChangedPoll.CloseDate <= DateTime.UtcNow
+                IsClosed = delta.ChangedPoll.CloseDate != null && delta.ChangedPoll.CloseDate <= DateTime.UtcNow,
+                Version = delta.ChangedPoll.Version
             },
             Options = delta.ChangedOptions
                 .OrderBy(o => o.Created)
@@ -66,6 +75,8 @@ public static class PollDeltaMapper
             CurrentCommentIds = delta.CurrentComments
                 .Select(c => c.Id.ToString())
                 .ToArray(),
+            HighlightedOptionIds = delta.HighlightedOptionIds.ToArray(),
+            HighlightedCommentIds = delta.HighlightedCommentIds.ToArray(),
             SyncToken = delta.SyncToken
         };
     }

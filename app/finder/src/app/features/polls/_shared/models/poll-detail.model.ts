@@ -37,6 +37,8 @@ export interface OptionDetail {
     votes: Vote[];
     choice: string | null;
     creator: CommentAuthor;
+    /** Optimistic-concurrency token; echo it back when editing. */
+    version?: number;
 }
 
 export interface CommentAuthor {
@@ -62,6 +64,8 @@ export interface PollDetail {
     comments: Comment[];
     closeDate?: string;
     isClosed: boolean;
+    /** Optimistic-concurrency token; echo it back when editing. */
+    version?: number;
 }
 
 export interface Option {
@@ -71,6 +75,8 @@ export interface Option {
     meta?: OptionMeta;
     votes: number;
     choice: string | null;
+    /** Optimistic-concurrency token; echo it back when editing. */
+    version?: number;
 }
 
 export interface SharedWith {

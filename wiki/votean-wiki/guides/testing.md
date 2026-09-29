@@ -5,8 +5,8 @@ description: Backend xUnit integration tests, Playwright E2E, and Angular Karma 
 tags: [testing, xunit, playwright, e2e, karma]
 status: stable
 generated:
-  actor: claude-sonnet-4-6
-  date: 2026-08-03
+  actor: claude-opus-5-5
+  date: 2026-09-27
 stale_after: 2027-02-03
 sources:
   - title: Finder.Tests
@@ -113,9 +113,21 @@ test.afterEach(async ({ page }) => {
 })
 ```
 
-## Frontend Unit Tests
+## Frontend Unit Tests — none, by design
 
-The Angular project is configured with Karma + Jasmine (`ng test`) but **no `.spec.ts` files currently exist**. The test runner is wired up and ready if unit tests are added.
+**Decision (2026-09-27):** the frontend is tested **end-to-end only** for now. There are no Angular
+unit tests (`.spec.ts`), and this is deliberate, not a gap waiting to be filled.
+
+- **Why:** most frontend bugs that reached review were integration issues (store ↔ API ↔
+  template, routing, i18n, realtime sync). Playwright covers those against the real backend. A
+  unit-test suite would add upkeep for a small team without covering them.
+- **What this means in practice:** every view change updates or adds Playwright specs in
+  `e2e/tests/` (see the `/e2e` skill). Complex pure logic (e.g. `mergePollDelta`, date-option
+  formatting) is exercised through the E2E flows that use it.
+- **Revisit when:** a pure utility grows complex enough that E2E can't reach its edge cases
+  cheaply. Then add targeted unit tests for that utility only.
+
+The Karma + Jasmine runner (`ng test`) is still configured, so adding a spec later needs no setup.
 
 ## Related
 

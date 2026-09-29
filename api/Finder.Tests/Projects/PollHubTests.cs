@@ -184,5 +184,34 @@ public class PollHubTests : IClassFixture<FinderApiFactory>
         await WaitForAsync(() => received is not null);
         Assert.Equal(poll.Id, received!.PollId);
         Assert.Equal(userA.Id, received.ActorUserId);
+        // Name and description both changed — the rename wins as the more visible edit.
+        Assert.Equal(PollChangeKind.PollRenamed, received.Change?.Kind);
+        Assert.Equal("Renamed", received.Change?.Target);
+    }
+
+    [Fact]
+    public async Task OptionDelete_PingsChangeDescriptorWithOptionText()
+    {
+        var userA = await _factory.SeedUser();
+        var userB = await _factory.SeedUser();
+        var project = await _factory.SeedProject(userA.Id);
+        await _factory.SeedPermission(project.Id, userB.Id, PermissionType.Voter);
+        var poll = await _factory.SeedPoll(project.Id);
+        var option = await _factory.SeedOption(poll.Id, "Pizza");
+
+        PollChangedNotification? received = null;
+        await using var conn = CreateHubConnection(userB.Id);
+        conn.On<PollChangedNotification>(PollHub.PollChanged, n => received = n);
+
+        await conn.StartAsync();
+        await conn.InvokeAsync("JoinPoll", poll.Id);
+
+        using var client = _factory.CreateAuthenticatedClient(userA.Id);
+        var response = await client.DeleteAsync($"/api/project/poll/option/{option.Id}");
+        response.EnsureSuccessStatusCode();
+
+        await WaitForAsync(() => received is not null);
+        Assert.Equal(PollChangeKind.OptionRemoved, received!.Change?.Kind);
+        Assert.Equal("Pizza", received.Change?.Target);
     }
 }

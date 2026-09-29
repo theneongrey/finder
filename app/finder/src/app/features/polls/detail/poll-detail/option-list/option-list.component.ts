@@ -1,7 +1,12 @@
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
+    effect,
+    ElementRef,
+    inject,
+    Injector,
     input,
     output,
 } from '@angular/core';
@@ -13,17 +18,24 @@ import {
 import { OptionCardComponent } from './option-card/option-card.component';
 import { OptionCardDateComponent } from './option-card-date/option-card-date.component';
 import { OptionType } from '@common/models/option-type.model';
+import { extractSlugId } from '../../../_shared/utils/slug.utils';
+import { preferredScrollBehavior } from '../../../_shared/utils/scroll-behavior.utils';
 import {
     isDateOptionType,
     optionTypeToDateType,
 } from '../../../_shared/models/date-option.model';
 import * as voteTally from '../../../_shared/utils/vote-tally.utils';
+import {
+    HIGHLIGHT_DURATION_MS,
+    OptionChangeKind,
+} from '../../../_shared/data/poll-realtime-sync.feature';
 
 type SortMode = 'top' | 'original';
 
 @Component({
     selector: 'app-option-list',
     templateUrl: './option-list.component.html',
+    styleUrl: './option-list.component.css',
     imports: [OptionCardComponent, OptionCardDateComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,8 +50,15 @@ export class OptionListComponent {
     optionType = input(OptionType.YesNo);
     hideResults = input(false);
     isClosed = input(false);
+    /** Whether the current user may edit/delete options (Maintainer+); gates the per-card edit UI. */
+    canManage = input(false);
+    /** Options changed by a recent remote update, keyed by id → change kind (added/updated/removed). */
+    changedOptions = input<Record<string, OptionChangeKind>>({});
+    protected readonly highlightDurationMs = HIGHLIGHT_DURATION_MS;
 
     sort = input<SortMode>('top');
+    /** Id of an option to bring into view whenever it changes (the one the user just added). */
+    revealOptionId = input<string | undefined>(undefined);
 
     readonly isDateType = computed(() => isDateOptionType(this.optionType()));
     readonly dateType = computed(() => optionTypeToDateType(this.optionType()));
@@ -52,6 +71,53 @@ export class OptionListComponent {
         description: string;
     }>();
     deleteOption = output<{ optionId: string }>();
+    editStart = output<{ optionId: string }>();
+    editEnd = output<{ optionId: string }>();
+
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
+
+    constructor() {
+        // Scroll to the revealed option once its card renders — it may land anywhere in the
+        // list depending on the sort. The first value is only a baseline, so returning to a poll
+        // doesn't replay the scroll for an option added on an earlier visit.
+        let baselined = false;
+        let handledId: string | undefined;
+        effect(() => {
+            const id = this.revealOptionId();
+            if (!baselined) {
+                baselined = true;
+                handledId = id;
+                return;
+            }
+            if (!id || id === handledId) {
+                return;
+            }
+            handledId = id;
+            afterNextRender(
+                () =>
+                    this.host.nativeElement
+                        .querySelector(
+                            `[data-option-id="${CSS.escape(extractSlugId(id))}"]`,
+                        )
+                        ?.scrollIntoView({
+                            behavior: preferredScrollBehavior(),
+                            block: 'center',
+                        }),
+                { injector: this.injector },
+            );
+        });
+    }
+
+    changeKind(option: OptionDetail): OptionChangeKind | undefined {
+        return this.changedOptions()[option.id];
+    }
+
+    /** Track by the stable slug id so a title edit updates the card in place (the full slug, which
+     *  encodes the title, changes on rename and would otherwise remount the card). */
+    trackOption(option: OptionDetail): string {
+        return extractSlugId(option.id);
+    }
 
     private readonly commentCountByOption = computed(() => {
         const counts = new Map<string, number>();

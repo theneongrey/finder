@@ -53,6 +53,9 @@ For every changed `.component.ts` file:
 **Signal null/undefined**
 - `signal<Foo | null>` → should be `signal<Foo | undefined>` (project convention: prefer `undefined` over `null` for unset signal values)
 
+**Zone.js (app is zoneless)**
+- `NgZone`, `runOutsideAngular` / `zone.run`, `onStable` / `onMicrotaskEmpty`, `provideZoneChangeDetection`, `fakeAsync` / `tick` / `flush`, or `zone.js` in polyfills → flag; zone.js is not installed, so these are no-ops or break. Change detection is signal-driven, so plain `addEventListener` callbacks need no zone wrapper
+
 **Angular template patterns**
 - `@for` without `track` expression → always required; flag missing ones
 - `*ngFor` / `*ngIf` (old directive syntax) → should be `@for` / `@if` (Angular 17+ control flow)

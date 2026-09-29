@@ -18,3 +18,4 @@ Product capabilities documented from a user and developer perspective.
 - [Appointment Polls](appointment-polls.md)
 - [Public Sharing](public-sharing.md)
 - [Feedback](feedback.md)
+- [Notifications](notifications.md)

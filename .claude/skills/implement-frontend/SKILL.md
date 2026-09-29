@@ -29,6 +29,8 @@ A `.component.css` file is added **only** when Tailwind cannot express the styli
 
 All components must use `changeDetection: ChangeDetectionStrategy.OnPush`.
 
+**The app is zoneless** — `zone.js` is not installed and no zone change detection is provided. Never use zone.js features: no `NgZone` injection, `runOutsideAngular` / `run`, `onStable` / `onMicrotaskEmpty`, `provideZoneChangeDetection`, `fakeAsync` / `tick` / `flush`, or adding `zone.js` to polyfills. They are no-ops or break here. Change detection is driven by signals and template events; plain `addEventListener` callbacks never trigger it, so no "run outside the zone" wrapper is needed.
+
 ---
 
 ## State Management
@@ -172,6 +174,7 @@ Does it import a domain type (OptionType, PollItem, User, …)?
 - No `signal<Foo | null>` — use `| undefined`.
 - `@for` blocks all have `track`.
 - No `*ngIf` / `*ngFor` (use `@if` / `@for`).
+- No zone.js features (`NgZone`, `runOutsideAngular`, `fakeAsync`, `provideZoneChangeDetection`) — the app is zoneless.
 - **Run prettier** on all changed frontend files before committing:
 
 ```bash

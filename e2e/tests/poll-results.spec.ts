@@ -113,6 +113,86 @@ test.describe('Poll detail page (#255)', () => {
     await expect(sortBtn).toHaveText(before);
   });
 
+  test('sort choice is remembered for the poll across reloads', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 820 });
+    await page.goto(detailUrl());
+    const sortBtn = () => page.locator('[data-testid="results-sort-btn"]').filter({ visible: true }).first();
+    const before = (await sortBtn().innerText()).trim();
+    await sortBtn().click();
+    await expect(sortBtn()).not.toHaveText(before);
+    const after = (await sortBtn().innerText()).trim();
+
+    await page.reload();
+    await expect(sortBtn()).toHaveText(after);
+
+    // Restore the default so other tests start from the same state.
+    await sortBtn().click();
+    await expect(sortBtn()).toHaveText(before);
+  });
+
+  test('mobile: overflow menu leads with the sort toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(detailUrl());
+    const menuBtn = page.locator('[data-testid="poll-menu-btn"]').filter({ visible: true }).first();
+    await menuBtn.click();
+    const firstItem = page.locator('[data-testid="menu-item"]').first();
+    await expect(firstItem).toHaveText(/approval|order|zustimmung|reihenfolge|aprobación|orden/i);
+    const before = (await firstItem.innerText()).trim();
+
+    await firstItem.click();
+    await menuBtn.click();
+    await expect(page.locator('[data-testid="menu-item"]').first()).not.toHaveText(before);
+
+    // Toggle back to the default order.
+    await page.locator('[data-testid="menu-item"]').first().click();
+  });
+
+  // ── Mobile scroll behaviour ───────────────────────────────────
+
+  // The test poll is short, so pad the content column to make the page scrollable.
+  async function makeScrollable(page: import('@playwright/test').Page) {
+    await page.locator('app-poll-header').waitFor();
+    await page.evaluate(() => {
+      const spacer = document.createElement('div');
+      spacer.style.height = '3000px';
+      document.querySelector('app-poll-header')!.parentElement!.appendChild(spacer);
+    });
+  }
+
+  const titleBarBottom = (page: import('@playwright/test').Page) =>
+    page.evaluate(() => Math.round(document.querySelector('app-title-bar')!.getBoundingClientRect().bottom));
+
+  test('mobile: title bar hides on scroll down and reappears on a short scroll up', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(detailUrl());
+    await makeScrollable(page);
+    const toolbar = page.locator('[data-testid="results-toolbar"]');
+
+    await page.mouse.wheel(0, 600);
+    await expect.poll(() => titleBarBottom(page)).toBeLessThanOrEqual(0);
+    await expect.poll(async () => Math.round((await toolbar.boundingBox())!.y)).toBe(0);
+
+    // A short scroll up (well away from the top) brings it back, pushing the toolbar below it.
+    await page.mouse.wheel(0, -100);
+    await expect.poll(() => titleBarBottom(page)).toBe(60);
+    await expect.poll(async () => Math.round((await toolbar.boundingBox())!.y)).toBe(60);
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(300);
+  });
+
+  test('mobile: pinned compact header drops the edit button', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(detailUrl());
+    const editBtn = page.locator('[data-testid="poll-edit-btn"]');
+    await expect(editBtn).toBeVisible();
+
+    await makeScrollable(page);
+    await page.mouse.wheel(0, 600);
+    await expect(editBtn).toHaveCount(0);
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(editBtn).toBeVisible();
+  });
+
   // ── Close poll confirm (mobile toolbar) ───────────────────────
 
   test('mobile: close poll shows inline confirm; cancel restores the menu', async ({ page }) => {

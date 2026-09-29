@@ -78,10 +78,10 @@ The `UserService` caches the authenticated user per HTTP request (`_cachedId`, `
 
 ## Preview Service
 
-The `PreviewService` fetches OpenGraph metadata from URLs provided for image-type options:
-- 5-second HTTP timeout per URL
-- Fallback chain: `og:` properties → `twitter:` properties → standard `<meta>` tags
-- Relative image URLs are resolved to absolute before storing
+`GET /api/preview` turns a URL into title, description, image and site name for option
+pre-filling: plain HTTP first, a pooled headless Chromium second, the URL slug last, with an
+SSRF guard on every connection and an in-memory result cache. It answers with whatever it could
+find and only fails for URLs it must not fetch. Details: [Link Preview](link-preview.md).
 
 ## Rate Limiting
 
@@ -92,6 +92,11 @@ Each domain registers its own fixed-window policy in its `Setup/`: `"preview"` (
 ## Enum JSON in Minimal APIs
 
 `Program.cs` adds `JsonStringEnumConverter` only via `AddControllers().AddJsonOptions(...)`, which Minimal API endpoints don't use. Enums exchanged as strings therefore carry their own attribute, e.g. `[JsonConverter(typeof(JsonStringEnumConverter<FeedbackType>))]` (same for `NotificationValue`).
+
+## Deployment Model
+
+The API deliberately runs as a single instance. In-memory presence, SignalR groups and rate-limiter
+counters depend on that. See [Single-Instance Deployment](single-instance.md).
 
 ## Related
 

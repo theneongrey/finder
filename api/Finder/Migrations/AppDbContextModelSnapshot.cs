@@ -102,6 +102,9 @@ namespace Finder.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Persons");
                 });
 
@@ -249,6 +252,10 @@ namespace Finder.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
@@ -300,6 +307,32 @@ namespace Finder.Migrations
                     b.ToTable("OptionMetas");
                 });
 
+            modelBuilder.Entity("Finder.Business.Project.Entities.PendingPollUpdate", b =>
+                {
+                    b.Property<string>("PollId")
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)");
+
+                    b.Property<string>("Changes")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DueAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Edited")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("PollId");
+
+                    b.HasIndex("DueAt");
+
+                    b.ToTable("PendingPollUpdates");
+                });
+
             modelBuilder.Entity("Finder.Business.Project.Entities.Poll", b =>
                 {
                     b.Property<string>("Id")
@@ -331,6 +364,10 @@ namespace Finder.Migrations
                     b.Property<string>("ProjectId")
                         .IsRequired()
                         .HasColumnType("character varying(8)");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -448,11 +485,45 @@ namespace Finder.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OptionId");
-
                     b.HasIndex("PersonId");
 
+                    b.HasIndex("OptionId", "PersonId")
+                        .IsUnique();
+
                     b.ToTable("Votes");
+                });
+
+            modelBuilder.Entity("Finder.Business.Shared.Entities.OutboxMail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Edited")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTime>("NextAttemptAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NextAttemptAt");
+
+                    b.ToTable("OutboxMails");
                 });
 
             modelBuilder.Entity("Finder.Business.User.Entities.NotificationSetting", b =>
@@ -666,7 +737,8 @@ namespace Finder.Migrations
                 {
                     b.HasOne("Finder.Business.Project.Entities.Option", "Option")
                         .WithMany()
-                        .HasForeignKey("OptionId");
+                        .HasForeignKey("OptionId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Finder.Business.Auth.Entities.Person", "Person")
                         .WithMany()

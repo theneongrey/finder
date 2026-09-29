@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Finder.Business.Permission.Services;
 
-public class PermissionMailService(MailService mailService, LanguageService languageService, IOptions<AppOptions> appOptions)
+public class PermissionMailService(MailOutbox mailOutbox, LanguageService languageService, IOptions<AppOptions> appOptions)
 {
     public async Task SendPermissionMailAsync(Person recipient, string actionUserName, Project.Entities.Project project,
         PermissionType permissionType, bool isExistingPermission, bool isNewUser)
@@ -63,13 +63,6 @@ public class PermissionMailService(MailService mailService, LanguageService lang
             }, preheader)
         );
 
-        try
-        {
-            await mailService.SendAsync(mail);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error while sending mail: " + ex.Message);
-        }
+        await mailOutbox.EnqueueAsync(mail);
     }
 }

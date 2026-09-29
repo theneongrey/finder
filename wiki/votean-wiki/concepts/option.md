@@ -32,12 +32,13 @@ voting and result views can attribute options. Added in PR #393.
 
 ## URL Preview (OptionMeta)
 
-If a URL is provided when creating an option, the backend fetches its OpenGraph metadata and stores it as `OptionMeta`:
+If a URL is entered for an option, the frontend fetches a preview from `GET /api/preview` and
+sends it along as `OptionMeta` when the option is saved:
 
-- **Extracted fields**: Title, Description, ImageUrl, SiteName
-- **Fallback chain**: `og:` properties → `twitter:` properties → standard `<meta>` tags
-- **Timeout**: 5 seconds per URL fetch
-- **Relative image URLs** are resolved to absolute before storing
+- **Fields**: Title, Description, ImageUrl, SiteName — each may be empty; the preview is partial
+  when a site does not provide (or blocks) some of them
+- **How it is built**: Open Graph / Twitter / JSON-LD metadata, image guessing, a headless-browser
+  fallback and a URL-slug fallback — see [Link Preview](../architecture/link-preview.md)
 
 OptionMeta shares the option's ID (1:1 relationship). If no URL is provided, no OptionMeta record is created.
 
@@ -52,4 +53,4 @@ The backend's `SlugHelper` extracts the human-readable part of a date option's s
 - [Poll](poll.md) — the poll this option belongs to
 - [Vote](vote.md) — user selections on this option
 - [Appointment Polls](../features/appointment-polls.md) — date/time encoding format for Date poll options
-- [Backend](../architecture/backend.md) — PreviewService that fetches URL metadata
+- [Link Preview](../architecture/link-preview.md) — how the URL preview is built

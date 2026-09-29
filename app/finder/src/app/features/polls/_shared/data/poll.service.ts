@@ -9,6 +9,7 @@ import {
     Project,
     PublicProjectInfo,
 } from '../models/poll-detail.model';
+import { PollDelta } from '../models/poll-delta.model';
 import { environment } from '@common/env/environment';
 import { LoggerService } from '@common/services/logger.service';
 import { OptionType } from '@common/models/option-type.model';
@@ -69,17 +70,29 @@ export class PollService {
         );
     }
 
+    getPollDelta(slug: string, since?: string) {
+        this.loggerService.debug(
+            `[PollService] fetching poll delta for ${slug} since ${since ?? 'start'}`,
+        );
+        const params = since ? { params: { since } } : {};
+        return this.httpClient.get<PollDelta>(
+            `${this.baseUrl}/api/project/poll/${slug}/delta`,
+            params,
+        );
+    }
+
     updatePoll(
         pollId: string,
         name: string,
         description: string,
         closeDate?: string,
         optionType?: OptionType,
+        version?: number,
     ) {
         this.loggerService.debug(`[PollService] updating poll ${pollId}`);
         return this.httpClient.put<PollDetail>(
             `${this.baseUrl}/api/project/poll/${pollId}`,
-            { name, description, closeDate, optionType },
+            { name, description, closeDate, optionType, version },
         );
     }
 
@@ -117,11 +130,13 @@ export class PollService {
         text: string,
         description: string,
         meta?: OptionMeta,
+        version?: number,
     ) {
         this.loggerService.debug(`[PollService] updating option ${optionId}`);
+        // `version` is the one the user edited; the API answers 412 if someone saved in between.
         return this.httpClient.put<Option>(
             `${this.baseUrl}/api/project/poll/option/${optionId}`,
-            { text, description, meta },
+            { text, description, meta, version },
         );
     }
 

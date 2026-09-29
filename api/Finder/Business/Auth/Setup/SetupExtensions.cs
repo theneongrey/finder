@@ -18,6 +18,10 @@ public static class SetupExtensions
         services.AddAuthentication().AddCookie(o =>
         {
             o.Cookie.Name = "login";
+            o.Cookie.HttpOnly = true;
+            o.Cookie.SameSite = SameSiteMode.Lax;
+            // Production is always served over HTTPS (TLS terminates at the proxy); local dev runs on plain http.
+            o.Cookie.SecurePolicy = isDevelopment ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
             o.ExpireTimeSpan = TimeSpan.FromDays(30);
             o.SlidingExpiration = true;
             o.Events.OnRedirectToAccessDenied =
@@ -32,7 +36,7 @@ public static class SetupExtensions
         {
             options.AddPolicy("auth", httpContext =>
                 RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    partitionKey: Shared.Setup.SetupExtensions.ClientIpPartitionKey(httpContext),
                     factory: _ => new FixedWindowRateLimiterOptions
                     {
                         PermitLimit = isDevelopment ? 1000 : 5,

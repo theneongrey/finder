@@ -11,6 +11,7 @@ import {
     signal,
     effect,
     viewChild,
+    WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime } from 'rxjs';
@@ -51,8 +52,16 @@ export class OptionCardComponent {
     index = input.required<number>();
     canRemove = input<boolean>(false);
     readonly = input<boolean>(false);
+    /** When true, Enter in the title confirms the option (see confirm) — or, if the text is a
+     *  URL, fetches its preview first instead of confirming. Used by the inline add-option panel. */
+    confirmOnEnter = input<boolean>(false);
     remove = output<void>();
     optionChange = output<OptionEntry>();
+    /** Emitted when the user presses Enter on a non-URL title while confirmOnEnter is set. */
+    confirm = output<void>();
+    /** True while a link preview is being fetched. The preview rewrites the entry once it lands,
+     *  so a parent that submits the entry must wait for it to settle (see add-option panel). */
+    previewPendingChange = output<boolean>();
 
     protected readonly titleOverLimit = computed(
         () => this.option().text.length > POLL_LIMITS.optionTextLength,
@@ -120,6 +129,26 @@ export class OptionCardComponent {
         this.onTitleBlur();
     }
 
+    /**
+     * Enter in the title (add-option panel only): if the text is a URL, fetch its preview
+     * instead of creating the option; otherwise confirm and let the parent create it.
+     */
+    onTitleEnter(event: Event) {
+        if (!this.confirmOnEnter() || this.readonly() || this.urlLoading()) {
+            return;
+        }
+        event.preventDefault();
+        const text = this.option().text.trim();
+        if (!text) {
+            return;
+        }
+        if (this.urlValidation.isValid(text)) {
+            this.applyTitleUrl();
+            return;
+        }
+        this.confirm.emit();
+    }
+
     toggleDescription() {
         this.showDescription.set(true);
         afterNextRender(() => this.descriptionInput().focus(), {
@@ -155,7 +184,7 @@ export class OptionCardComponent {
             return;
         }
 
-        this.urlLoading.set(true);
+        this.setLoading(this.urlLoading, true);
         const normalized = this.urlValidation.normalize(text);
 
         this.previewService
@@ -187,12 +216,19 @@ export class OptionCardComponent {
                     this.previewData.set(preview);
                     this.showLink.set(true);
                     this.initialUrl = normalized;
-                    this.urlLoading.set(false);
+                    this.setLoading(this.urlLoading, false);
                 },
                 error: () => {
-                    this.urlLoading.set(false);
+                    this.setLoading(this.urlLoading, false);
                 },
             });
+    }
+
+    private setLoading(state: WritableSignal<boolean>, value: boolean) {
+        state.set(value);
+        this.previewPendingChange.emit(
+            this.urlLoading() || this.previewLoading(),
+        );
     }
 
     onUrlBlur() {
@@ -222,13 +258,18 @@ export class OptionCardComponent {
             return;
         }
 
-        this.previewLoading.set(true);
+        this.setLoading(this.previewLoading, true);
         this.previewService
             .getPreview(normalized)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (preview) => {
-                    if (preview.imageUrl) {
+                    this.initialUrl = normalized;
+                    if (
+                        preview.imageUrl ||
+                        preview.title ||
+                        preview.description
+                    ) {
                         const entry = this.option();
                         const updatedEntry: OptionEntry = {
                             ...entry,
@@ -242,12 +283,14 @@ export class OptionCardComponent {
                         }
                         this.optionChange.emit(updatedEntry);
                         this.previewData.set(preview);
-                        this.previewLoading.set(false);
-                        this.initialUrl = normalized;
                     }
+                    // The API also answers with partial previews (e.g. no image), so the
+                    // loading state must end regardless of which fields came back. End it only
+                    // after the enriched entry is emitted, so a parent waiting on it sees the data.
+                    this.setLoading(this.previewLoading, false);
                 },
                 error: () => {
-                    this.previewLoading.set(false);
+                    this.setLoading(this.previewLoading, false);
                 },
             });
     }

@@ -51,6 +51,7 @@ sources:
 | `GET` | `/api/project/public/:id` | Public project info (no auth) — returns `{ projectId, isStandalone, pollId? }` |
 | `POST` | `/api/project/poll` | Create a poll in a project |
 | `GET` | `/api/project/poll/:id` | Get poll detail (options, votes, comments) |
+| `GET` | `/api/project/poll/:slug/delta?since=` | Changes since a sync token — changed poll fields, options, comments, current id sets, new `syncToken` (see [Realtime Poll Sync](../architecture/realtime-poll-sync.md#delta-endpoint)) |
 | `PUT` | `/api/project/poll/:id` | Update poll name/description/options |
 | `DELETE` | `/api/project/poll/:id` | Delete poll |
 | `POST` | `/api/project/poll/option` | Add option to a poll |
@@ -79,10 +80,18 @@ sources:
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/api/preview` | Fetch OpenGraph metadata for a URL (query param: `url`) |
+| `GET` | `/api/preview` | Link preview for a URL (query param: `url`; honours `Accept-Language`) → `{ title, description, imageUrl, siteName }`. 200 with partial data when a site is uncooperative; 400 only for unsafe URLs. See [Link Preview](../architecture/link-preview.md) |
+
+## Realtime hub (`/hub/poll`)
+
+SignalR hub for presence and change pings on the poll detail page — no poll data travels over
+it. Cookie-authenticated like the REST API; the dev proxy forwards `/hub/**` with WebSocket
+support. Client → server: `JoinPoll`, `LeavePoll`, `ReportActivity`. Server → client:
+`PresenceChanged`, `PollChanged`. See [Realtime Poll Sync](../architecture/realtime-poll-sync.md).
 
 ## Related
 
+- [Realtime Poll Sync](../architecture/realtime-poll-sync.md) — hub + delta endpoint design
 - [Backend](../architecture/backend.md) — how endpoints are registered and how auth/mapping works
 - [Authentication](../features/auth.md) — auth flow and cookie details
 - [Permissions](../features/permissions.md) — role requirements per endpoint

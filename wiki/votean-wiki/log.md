@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-28 — ingest: PR #498 review follow-ups (link preview)
+Pages touched: architecture/link-preview.md (5 s deadline covers body reads, short TTL for incomplete previews + dedicated size-limited cache, browser recycling with leases, site isolation re-enabled, new config keys)
+
+---
+
 ## 2026-09-27 — ingest: feedback review fixes (PR #457)
 Pages touched: features/feedback.md (hide toast after confirmed save, ordered saves, Settings self-load + fallback, focus management and panel-scoped Esc, compact mobile tab, no HTML stripping, insert-race fallback), guides/component-library.md (ds-switch `label` input)
 
@@ -10,6 +15,31 @@ Pages touched: features/feedback.md (hide toast after confirmed save, ordered sa
 
 ## 2026-09-27 — ingest: feedback feature (issue #326)
 Pages touched: features/feedback.md (created — left-edge tab, panel with inline disclosure + cancel, hide/re-enable via Settings, Business/Feedback endpoints, FeedbackPreference entity, feedback mail template, tests), features/index.md, index.md (added Feedback), architecture/backend.md (Feedback domain, per-domain rate-limit policies, enum JSON converter note for Minimal APIs), concepts/user.md (Related link), guides/component-library.md (ds-switch one-way usage + double-toggle fix)
+
+---
+
+## 2026-09-27 — ingest: link preview pipeline rework (branch feature/preview-service-improvements)
+Pages touched: architecture/link-preview.md (created — pipeline, extraction sources, JSON-LD, image ranking + parallel probing, pooled browser, SSRF guard, bot protection, config), architecture/backend.md (Preview Service section replaced by summary + link), concepts/option.md (URL Preview section corrected: frontend fetches, fields may be partial), api/index.md (/api/preview contract), architecture/single-instance.md (preview cache + pooled browser as process-local state), architecture/index.md, index.md
+
+---
+
+## 2026-09-27 — ingest: atomic poll-update claim (PR #463 follow-up)
+Pages touched: features/notifications.md (claim + in-app + outbox commit in one transaction, 1 min retry; link to single-instance), architecture/single-instance.md (debounce/mail row updated to post-#463 DB-backed queues)
+
+---
+
+## 2026-09-27 — ingest: persisted mail outbox + poll-update queue
+Pages touched: features/notifications.md (added "Delivery: persisted queues, never inline" — OutboxMails + MailOutboxDispatcher with retry/backoff, PendingPollUpdates + PollUpdateDispatcher, single-instance assumption, explicit draining in tests)
+
+---
+
+## 2026-09-27 — ingest: architecture review decisions (single instance, E2E-only frontend)
+Pages touched: architecture/single-instance.md (created — decision record, process-local state table, scale-out checklist), guides/testing.md (frontend unit tests: none by design, rationale, revisit trigger), architecture/ci-cd.md (link to the testing decision), architecture/realtime-poll-sync.md (presence process-local by design → link), architecture/backend.md (Deployment Model section), architecture/index.md, index.md
+
+---
+
+## 2026-09-27 — ingest: realtime collaboration (#411 — PRs #439, #440, #444, #447, #450; issue #446)
+Pages touched: architecture/realtime-poll-sync.md (created — signalling-only SignalR decision, PollHub + auth over WS, presence registry, change descriptors, delta endpoint with overlap/highlight sets, PollRealtimeService + heartbeat, store mergeDelta / baseline / highlight / edit-guard, presence UI + toasts), features/notifications.md (added active-presence email suppression + idle config; gate order now via ShouldSendMailAsync), features/polling.md (added Live Collaboration section), architecture/poll-detail-rebuild.md (live-collaboration supporting change), api/index.md (delta endpoint + /hub/poll), index.md, architecture/index.md (added realtime page + missing component-architecture / poll-detail-rebuild entries), features/index.md (added missing notifications entry)
 
 ---
 

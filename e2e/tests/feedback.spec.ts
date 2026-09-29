@@ -69,7 +69,7 @@ test.describe('Feedback tab (issue #326)', () => {
 
   test('hiding the tab persists and it can be re-enabled in settings', async ({ page }) => {
     await page.getByTestId('feedback-tab').click();
-    await page.getByTestId('feedback-hide').click();
+    await page.getByTestId('feedback-hide').locator('button').click();
     await expect(page.getByTestId('feedback-tab')).toBeHidden();
 
     await page.reload();

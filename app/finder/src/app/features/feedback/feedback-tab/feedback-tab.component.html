@@ -1,13 +1,15 @@
 @if (visible()) {
+    <!-- Only the tab is in flow, so the wrapper (and the tab) stay centred on 3/4 of the screen
+         height whether or not the panel is open. -->
     <div
-        class="pointer-events-none fixed top-1/2 left-0 z-(--z-dropdown) flex -translate-y-1/2 items-center gap-3"
+        class="pointer-events-none fixed top-3/4 left-0 z-(--z-dropdown) flex -translate-y-1/2"
     >
         <!-- Icon-only below sm so the tab covers less page content on phones. -->
         <button
             #tabButton
             data-testid="feedback-tab"
             type="button"
-            class="pointer-events-auto flex flex-col items-center gap-2 rounded-r-(--radius-sm) border border-l-0 border-(--ink-900) bg-(--accent) px-1.5 py-2.5 text-(--text-on-accent) shadow-(--shadow-accent-btn) transition-[padding] hover:pl-3 sm:px-2 sm:py-3"
+            class="pointer-events-auto flex cursor-pointer flex-col items-center gap-2 rounded-r-(--radius-sm) bg-(--accent) px-1.5 py-2.5 text-(--text-on-accent) shadow-(--shadow-accent-btn) transition-[padding] hover:pl-3 sm:px-2 sm:py-3"
             [attr.aria-label]="'feedback.tab' | translate"
             [attr.aria-expanded]="panelOpen()"
             (click)="toggle()"
@@ -22,8 +24,10 @@
         </button>
 
         @if (panelOpen()) {
+            <!-- Bottom-aligned with the tab and growing upward: centring it on the tab would push
+                 it off the bottom of the screen now that the tab sits low. -->
             <app-feedback-panel
-                class="pointer-events-auto w-[min(320px,calc(100vw-56px))] sm:w-[min(320px,calc(100vw-68px))]"
+                class="pointer-events-auto absolute bottom-0 left-full ml-3 w-[min(320px,calc(100vw-56px))] sm:w-[min(320px,calc(100vw-68px))]"
                 [page]="page()"
                 [email]="user()?.email ?? ''"
                 [submitting]="submitting()"

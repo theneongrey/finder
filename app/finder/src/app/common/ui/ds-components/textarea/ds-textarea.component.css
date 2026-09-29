@@ -13,6 +13,8 @@
     color: var(--text-primary);
     background: var(--bg-input);
     outline: none;
+    /* Drop SpartanNG's focus ring: focus is shown by the accent border (see :focus). */
+    box-shadow: none;
     resize: vertical;
 }
 .ds-ta--has-clear {
@@ -27,8 +29,6 @@
     /* Override SpartanNG Tailwind defaults */
     min-height: unset;
     height: auto;
-    shadow: none;
-    box-shadow: none;
     field-sizing: unset;
 }
 .ds-ta::-webkit-scrollbar {

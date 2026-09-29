@@ -5,6 +5,7 @@ import {
     signalStoreFeature,
     type,
     withMethods,
+    withState,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { forkJoin, of, pipe, switchMap } from 'rxjs';
@@ -14,11 +15,15 @@ import { OptionType } from '@common/models/option-type.model';
 import { PollService } from './poll.service';
 import { PollDetail } from '../models/poll-detail.model';
 import { OptionMetaInput, toOptionMeta } from '../utils/option-meta.utils';
+import { isEditConflict } from '../utils/edit-conflict.utils';
 
 /** Poll-level edits: the full edit wizard (poll + options) and inline name/description edits. */
 export function withPollEditingFeature() {
     return signalStoreFeature(
         { state: type<{ currentPoll: PollDetail | undefined }>() },
+        // Bumped whenever a save is rejected because someone else edited first (HTTP 412);
+        // the page reacts by telling the user and pulling the latest state.
+        withState({ editConflictCount: 0 }),
         withMethods((store) => {
             const pollService = inject(PollService);
             const loggerService = inject(LoggerService);
@@ -115,6 +120,8 @@ export function withPollEditingFeature() {
                                     // Preserve the existing close date — omitting it makes
                                     // the backend clear CloseDate (see UpdatePoll).
                                     store.currentPoll()?.closeDate,
+                                    undefined,
+                                    store.currentPoll()?.version,
                                 )
                                 .pipe(
                                     tapResponse({
@@ -132,10 +139,20 @@ export function withPollEditingFeature() {
                                                     name: updatedPoll.name,
                                                     description:
                                                         updatedPoll.description,
+                                                    version:
+                                                        updatedPoll.version,
                                                 },
                                             });
                                         },
                                         error: (error) => {
+                                            if (isEditConflict(error)) {
+                                                patchState(store, {
+                                                    editConflictCount:
+                                                        store.editConflictCount() +
+                                                        1,
+                                                });
+                                                return;
+                                            }
                                             loggerService.log(
                                                 '[PollDetailStore] Error while updating poll details',
                                                 error,

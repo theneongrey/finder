@@ -122,6 +122,7 @@ export function mergePollDelta(
               optionType: delta.poll.optionType,
               closeDate: delta.poll.closeDate,
               isClosed: delta.poll.isClosed,
+              version: delta.poll.version,
           }
         : {};
 

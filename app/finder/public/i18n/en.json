@@ -545,6 +545,7 @@
             "hideComments": "Hide comments",
             "commentsFilterPoll": "Poll",
             "commentsFilterAll": "All",
+            "editConflict": "Someone else changed this at the same time, so your edit wasn’t saved. You’re now seeing the latest version.",
             "updateToast": {
                 "optionAdded": "{{name}} added an option",
                 "optionRemoved": "{{name}} removed the option “{{target}}”",

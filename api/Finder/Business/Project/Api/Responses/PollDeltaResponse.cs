@@ -12,6 +12,7 @@ public class PollDeltaPoll
     public required int OptionType { get; set; }
     public DateTime? CloseDate { get; set; }
     public required bool IsClosed { get; set; }
+    public required int Version { get; set; }
 }
 
 public class PollDeltaResponse
@@ -57,7 +58,8 @@ public static class PollDeltaMapper
                 CloseDate = delta.ChangedPoll.CloseDate.HasValue
                     ? DateTime.SpecifyKind(delta.ChangedPoll.CloseDate.Value, DateTimeKind.Utc)
                     : null,
-                IsClosed = delta.ChangedPoll.CloseDate != null && delta.ChangedPoll.CloseDate <= DateTime.UtcNow
+                IsClosed = delta.ChangedPoll.CloseDate != null && delta.ChangedPoll.CloseDate <= DateTime.UtcNow,
+                Version = delta.ChangedPoll.Version
             },
             Options = delta.ChangedOptions
                 .OrderBy(o => o.Created)

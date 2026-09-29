@@ -545,6 +545,7 @@
             "hideComments": "Kommentare ausblenden",
             "commentsFilterPoll": "Umfrage",
             "commentsFilterAll": "Alle",
+            "editConflict": "Jemand anderes hat das gleichzeitig geändert, deshalb wurde deine Änderung nicht gespeichert. Du siehst jetzt die aktuelle Version.",
             "updateToast": {
                 "optionAdded": "{{name}} hat eine Option hinzugefügt",
                 "optionRemoved": "{{name}} hat die Option „{{target}}“ entfernt",

@@ -3,6 +3,7 @@ using System;
 using Finder.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Finder.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260927182730_AddOptimisticConcurrencyVersions")]
+    partial class AddOptimisticConcurrencyVersions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,9 +104,6 @@ namespace Finder.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("Persons");
                 });
@@ -286,32 +286,6 @@ namespace Finder.Migrations
                     b.ToTable("OptionMetas");
                 });
 
-            modelBuilder.Entity("Finder.Business.Project.Entities.PendingPollUpdate", b =>
-                {
-                    b.Property<string>("PollId")
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
-
-                    b.Property<string>("Changes")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DueAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Edited")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("PollId");
-
-                    b.HasIndex("DueAt");
-
-                    b.ToTable("PendingPollUpdates");
-                });
-
             modelBuilder.Entity("Finder.Business.Project.Entities.Poll", b =>
                 {
                     b.Property<string>("Id")
@@ -464,45 +438,11 @@ namespace Finder.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OptionId");
+
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("OptionId", "PersonId")
-                        .IsUnique();
-
                     b.ToTable("Votes");
-                });
-
-            modelBuilder.Entity("Finder.Business.Shared.Entities.OutboxMail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Attempts")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Edited")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LastError")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<DateTime>("NextAttemptAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Payload")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NextAttemptAt");
-
-                    b.ToTable("OutboxMails");
                 });
 
             modelBuilder.Entity("Finder.Business.User.Entities.NotificationSetting", b =>

@@ -9,6 +9,7 @@ export interface PollDeltaPoll {
     optionType: OptionType;
     closeDate?: string;
     isClosed: boolean;
+    version?: number;
 }
 
 /**

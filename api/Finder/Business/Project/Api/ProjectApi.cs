@@ -131,7 +131,7 @@ public static class ProjectApi
                         return Results.BadRequest("closeDate must be in the future");
                     }
 
-                    var result = await pollService.UpdatePoll(slug, request.Name, request.Description, request.CloseDate, request.OptionType);
+                    var result = await pollService.UpdatePoll(slug, request.Name, request.Description, request.CloseDate, request.OptionType, request.Version);
                     return !result.IsSuccess ? Results.StatusCode(result.Code) : Results.Ok(result.Payload!.ToPollResponse(userService.GetUserId()));
                 })
             .RequireAuthorization();

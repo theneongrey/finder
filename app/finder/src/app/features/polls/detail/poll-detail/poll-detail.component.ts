@@ -310,6 +310,28 @@ export class PollDetailComponent {
             });
         });
 
+        // A save was rejected because someone else edited the same poll/option first (HTTP 412):
+        // tell the user their edit didn't stick and show them the current version.
+        let handledConflicts = this.projectDetailStore.editConflictCount();
+        effect(() => {
+            const conflicts = this.projectDetailStore.editConflictCount();
+            if (conflicts === handledConflicts) {
+                return;
+            }
+            handledConflicts = conflicts;
+            untracked(() => {
+                toast(
+                    this.translateService.instant(
+                        'project.results.editConflict',
+                    ),
+                );
+                const id = this.pollId();
+                if (id) {
+                    this.projectDetailStore.mergeDelta(id);
+                }
+            });
+        });
+
         // Someone else changed the poll → pull the delta. Debounced so a burst of pings
         // (e.g. multi-option edits) collapses into a single fetch.
         this.realtime.pollChanged$

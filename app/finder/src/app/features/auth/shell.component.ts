@@ -68,8 +68,13 @@ export class AuthShellComponent {
     protected readonly shaking = signal(false);
 
     constructor() {
+        // Only new failures shake the card; a stale count from before the shell was
+        // (re)created must not replay on arrival.
+        let seenFailures = untracked(this.userStore.codeLoginFailures);
         effect(() => {
-            if (this.userStore.codeLoginFailures() > 0) {
+            const failures = this.userStore.codeLoginFailures();
+            if (failures > seenFailures) {
+                seenFailures = failures;
                 this.shaking.set(true);
             }
         });

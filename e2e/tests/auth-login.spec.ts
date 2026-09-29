@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { USER1 } from './helpers';
 
 test.describe('Auth: /auth/request-email', () => {
@@ -104,39 +104,64 @@ test.describe('Auth: /auth/token-login', () => {
 // Test users get the fixed dev code from Login:AuthCode (appsettings.Development.json).
 const DEV_LOGIN_CODE = '123456';
 
+const card = (page: Page) => page.locator('[data-testid="auth-card"]');
+const codeInput = (page: Page) => page.locator('[data-testid="code-login-code"] input');
+const submitCode = (page: Page) => page.locator('[data-testid="code-login-submit"] button');
+
+async function openCodeScreen(page: Page): Promise<void> {
+  await page.goto('/auth/request-email');
+  await page.locator('app-request-email ds-input input').fill(USER1);
+  await page.locator('[data-testid="request-email-submit"]').click();
+  await page.waitForURL('**/auth/code-login');
+}
+
+async function enterCode(page: Page, value: string): Promise<void> {
+  await codeInput(page).fill('');
+  await codeInput(page).pressSequentially(value);
+  await submitCode(page).click();
+}
+
 test.describe('Auth: full end-to-end flow', () => {
   test('email → typed code → polls', async ({ page }) => {
-    await page.goto('/auth/request-email');
-    await page.locator('app-request-email ds-input input').fill(USER1);
-    await page.locator('[data-testid="request-email-submit"]').click();
-    await page.waitForURL('**/auth/code-login');
-
-    await page.locator('[data-testid="code-login-code"] input').pressSequentially(DEV_LOGIN_CODE);
-    await page.locator('[data-testid="code-login-submit"] button').click();
+    await openCodeScreen(page);
+    await enterCode(page, DEV_LOGIN_CODE);
 
     await page.waitForURL('**/polls');
     await expect(page.locator('app-user-avatar').first()).toBeVisible();
   });
 
   test('a wrong code shakes the card and marks the code inputs red until edited', async ({ page }) => {
-    await page.goto('/auth/request-email');
-    await page.locator('app-request-email ds-input input').fill(USER1);
-    await page.locator('[data-testid="request-email-submit"]').click();
-    await page.waitForURL('**/auth/code-login');
+    await openCodeScreen(page);
+    await enterCode(page, '000000');
 
-    const code = page.locator('[data-testid="code-login-code"]');
-    const card = page.locator('[data-testid="auth-card"]');
-    await code.locator('input').pressSequentially('000000');
-    await page.locator('[data-testid="code-login-submit"] button').click();
-
-    await expect(card).toHaveClass(/auth-card-shake/);
-    await expect(code).toHaveAttribute('aria-invalid', 'true');
-    await expect(code.locator('hlm-input-otp-slot').first()).toHaveCSS('border-top-color', 'rgb(193, 69, 63)');
+    await expect(card(page)).toHaveClass(/auth-card-shake/);
+    await expect(codeInput(page)).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.locator('[data-testid="code-login-code"] hlm-input-otp-slot').first())
+      .toHaveCSS('border-top-color', 'rgb(193, 69, 63)');
+    await expect(page.locator('[data-testid="code-login-error"]')).not.toBeEmpty();
     // The shake class is removed once the animation ends, so the next failure can replay it.
-    await expect(card).not.toHaveClass(/auth-card-shake/);
+    await expect(card(page)).not.toHaveClass(/auth-card-shake/);
 
-    await code.locator('input').focus();
+    await codeInput(page).focus();
     await page.keyboard.press('Backspace');
-    await expect(code).not.toHaveAttribute('aria-invalid');
+    await expect(codeInput(page)).not.toHaveAttribute('aria-invalid');
+  });
+
+  test('after too many wrong codes, a new code can be requested and used', async ({ page }) => {
+    await openCodeScreen(page);
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      await enterCode(page, '000000');
+      await expect(card(page)).toHaveClass(/auth-card-shake/);
+      await expect(card(page)).not.toHaveClass(/auth-card-shake/);
+    }
+
+    // The backend voided the code: the button now requests a new one instead of logging out.
+    await expect(page).toHaveURL(/\/auth\/code-login/);
+    const requestNew = page.waitForResponse('**/api/auth/requestLoginMail');
+    await submitCode(page).click();
+    await requestNew;
+
+    await enterCode(page, DEV_LOGIN_CODE);
+    await page.waitForURL('**/polls');
   });
 });

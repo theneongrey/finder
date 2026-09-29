@@ -22,6 +22,18 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
 
+/** Why the last code login failed. */
+export type CodeLoginError = 'invalid' | 'rate-limited' | 'error';
+
+/** Wrong codes the backend accepts before it voids the code (LoginService.MaxRetries). */
+export const MAX_CODE_ATTEMPTS = 3;
+
+const CODE_LOGIN_RESET = {
+    codeLoginFailures: 0,
+    codeLoginRejections: 0,
+    codeLoginError: undefined as CodeLoginError | undefined,
+};
+
 export function withAuthFeature() {
     return signalStoreFeature(
         withState({
@@ -37,6 +49,11 @@ export function withAuthFeature() {
                     | 'rate-limiter',
                 email: undefined as string | undefined,
             },
+            /** Failed code logins for the current login mail (any reason); each increment is one failure. */
+            codeLoginFailures: 0,
+            /** Codes the backend rejected as wrong (401) for the current login mail. */
+            codeLoginRejections: 0,
+            codeLoginError: undefined as CodeLoginError | undefined,
         }),
         withProps(() => ({
             userService: inject(UserService),
@@ -76,6 +93,7 @@ export function withAuthFeature() {
                 resetLoginMail() {
                     patchState(store, {
                         loginMail: { email: undefined, state: 'init' },
+                        ...CODE_LOGIN_RESET,
                     });
                 },
 
@@ -90,6 +108,7 @@ export function withAuthFeature() {
                                     state: 'sent',
                                     email,
                                 },
+                                ...CODE_LOGIN_RESET,
                             }),
                         ),
                         switchMap((email) => {
@@ -170,7 +189,6 @@ export function withAuthFeature() {
 
                 loginByCode: rxMethod<string>(
                     pipe(
-                        distinctUntilChanged(),
                         filter(
                             (loginCode) =>
                                 !!store.loginMail.email() && !!loginCode,
@@ -191,7 +209,20 @@ export function withAuthFeature() {
                                         }
                                         return handleGetUser;
                                     }),
-                                    catchError((error) => {
+                                    catchError((error: HttpErrorResponse) => {
+                                        const rejected = error.status === 401;
+                                        patchState(store, {
+                                            codeLoginFailures:
+                                                store.codeLoginFailures() + 1,
+                                            codeLoginRejections:
+                                                store.codeLoginRejections() +
+                                                (rejected ? 1 : 0),
+                                            codeLoginError: rejected
+                                                ? 'invalid'
+                                                : error.status === 429
+                                                  ? 'rate-limited'
+                                                  : 'error',
+                                        });
                                         store.loggerService.error(
                                             '[UserStore] Error while logging in with code',
                                             error,

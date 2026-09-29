@@ -29,6 +29,9 @@
         <div class="w-full max-w-[400px]">
             <div
                 class="rounded-[var(--radius-4xl)] border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] px-[22px] pt-[26px] pb-[24px] shadow-[0_6px_24px_rgba(35,40,45,0.08)]"
+                data-testid="auth-card"
+                [class.auth-card-shake]="shaking()"
+                (animationend)="onCardAnimationEnd($event)"
             >
                 <router-outlet />
             </div>

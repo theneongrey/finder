@@ -87,7 +87,7 @@ The user record. Role is an enum (`Admin`, `Upgraded`, `Free`) stored as an inte
 Thin wrapper around MailKit. Builds the HTML body from `LoginOptions` templates and sends via SMTP with SSL. All exceptions are caught and logged to stdout — the caller always receives a successful result even if the email was not delivered.
 
 ### `LoginOptions` / `SmtpOptions` (`Setup/`)
-Bound from `appsettings.json`. `AuthToken` is a development escape hatch: when set, every login request uses the same static token and the generated code is printed to stdout, bypassing the email step entirely.
+Bound from `appsettings.json`. `AuthToken` / `AuthCode` are development escape hatches for `Role.TestUser` accounts only: when set, a test user's login uses that fixed token (magic link) and code, and the code is printed to stdout. Real accounts always get a random token and code, so a test-user login never clears a real user's pending code.
 
 ### `AuthApi` (`Api/AuthApi.cs`)
 Minimal API endpoint registrations. All endpoints in this file are public — none require an authenticated session. Profile management (display name, language) lives in the `User` feature (`PUT /api/user`, `RequireAuthorization()`).
@@ -99,7 +99,8 @@ Minimal API endpoint registrations. All endpoints in this file are public — no
 | Key | Description |
 |---|---|
 | `Login:LoginLink` | URL template. Must contain `{{token}}` and `{{redirecturl}}`. |
-| `Login:AuthToken` | Dev only. Fixes the magic-link token and skips email. |
+| `Login:AuthToken` | Dev only. Fixed magic-link token for test users. |
+| `Login:AuthCode` | Dev only. Fixed 6-digit login code for test users. |
 | `Login:Subject` / `Login:Text` | Email content for returning users. |
 | `Login:SubjectNew` / `Login:TextNew` | Email content for first-time registrations. |
 | `Smtp:Host/Port/User/Password` | SMTP credentials for outbound email. |

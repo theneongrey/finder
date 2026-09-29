@@ -20,6 +20,8 @@ export const FeedbackStore = signalStore(
     withState({
         /** undefined until the preference has been loaded for the current user. */
         buttonHidden: undefined as boolean | undefined,
+        /** The last preference load failed; Settings then renders the switch instead of a skeleton. */
+        preferenceLoadFailed: false,
         panelOpen: false,
         submitting: false,
     }),
@@ -48,17 +50,28 @@ export const FeedbackStore = signalStore(
                         store.feedbackService.getPreference().pipe(
                             tapResponse({
                                 next: ({ buttonHidden }) => {
+                                    // While saves are queued they own the state; this response may
+                                    // predate them and would flip the switch back.
+                                    if (pendingSaves > 0) {
+                                        return;
+                                    }
                                     confirmedButtonHidden = buttonHidden;
-                                    patchState(store, { buttonHidden });
+                                    patchState(store, {
+                                        buttonHidden,
+                                        preferenceLoadFailed: false,
+                                    });
                                 },
                                 error: (error) => {
                                     store.loggerService.error(
                                         '[FeedbackStore] Error loading preference',
                                         error,
                                     );
-                                    // Fall back to the default (shown) so Settings isn't stuck on a skeleton.
-                                    confirmedButtonHidden = false;
-                                    patchState(store, { buttonHidden: false });
+                                    // Leave buttonHidden unknown: the tab only shows for an explicit
+                                    // `false`, so a failed load doesn't bring it back for users who hid
+                                    // it. The flag lets Settings render the switch instead.
+                                    patchState(store, {
+                                        preferenceLoadFailed: true,
+                                    });
                                 },
                             }),
                         ),
@@ -164,6 +177,7 @@ export const FeedbackStore = signalStore(
                 confirmedButtonHidden = undefined;
                 patchState(store, {
                     buttonHidden: undefined,
+                    preferenceLoadFailed: false,
                     panelOpen: false,
                     submitting: false,
                 });

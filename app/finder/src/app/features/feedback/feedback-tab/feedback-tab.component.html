@@ -11,6 +11,7 @@
             [attr.aria-label]="'feedback.tab' | translate"
             [attr.aria-expanded]="panelOpen()"
             (click)="toggle()"
+            (keydown.escape)="close()"
         >
             <ds-icon name="comment" [size]="16" />
             <span

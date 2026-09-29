@@ -40,11 +40,12 @@ repeated scripted bursts block the account.
 ## User flow
 
 1. The tab (`app-feedback-tab`) is mounted once in `app.component.html`, so it appears on every
-   screen while the user is authenticated. It stays hidden on the landing pages (`/`, `/de`,
-   `/en`, `/es`), `/auth/*` and `/logout`, when the user has hidden it, and while feedback is
-   disabled for the user (see [Limits and blocking](#limits-and-blocking)). Below the `sm`
-   breakpoint it shrinks to an icon-only handle (with an `aria-label`) so it covers less of
-   the page.
+   screen while the user is authenticated. It is fixed to the left edge at 3/4 of the viewport
+   height. It stays hidden on the landing pages (`/`, `/de`, `/en`, `/es`), `/auth/*` and
+   `/logout`, when it is switched off server-wide (`Feedback:ShowButton`, see Backend), when the
+   user has hidden it, and while feedback is disabled for the user (see
+   [Limits and blocking](#limits-and-blocking)). Below the `sm` breakpoint it shrinks to an
+   icon-only handle (with an `aria-label`) so it covers less of the page.
 2. Clicking the tab opens a panel (`app-feedback-panel`) next to it:
    - type: **Bug / Idea / Other** (`ds-segmented-control`)
    - comment (`ds-textarea`, max 2000 characters)
@@ -67,7 +68,8 @@ The "page" is the router URL without query string or fragment (e.g. `/polls/abc`
 
 The "hidden" flag is stored per person in the `FeedbackPreferences` table (see Backend below).
 A missing row means the default: the tab is shown. The Settings page has a **Feedback** card with
-a `ds-switch` labelled "Show feedback button" to switch it back on.
+a `ds-switch` labelled "Show feedback button" to switch it back on. The card is only rendered
+while the tab is enabled server-wide.
 
 `FeedbackStore.setButtonHidden` is optimistic: the tab reacts immediately. Saves run in order
 (`concatMap`). Once the last queued save settles, the state is set to the last value the server
@@ -86,6 +88,7 @@ leaving the switch on a skeleton.
 
 | Endpoint | Purpose |
 |---|---|
+| `GET /api/feedback/config` | `{ showButton }` from `Feedback:ShowButton`; the frontend hides the tab and the Settings card when `false` (and on a load error — it is a kill switch) |
 | `GET /api/feedback/preference` | `{ buttonHidden, feedbackDisabledUntil }`; `buttonHidden` defaults to `false` when no row exists, and `feedbackDisabledUntil` is only set while the lock is active |
 | `PUT /api/feedback/preference` | Upserts `{ buttonHidden }` |
 | `POST /api/feedback` | `{ type, comment, page }` → 204 (stored for the digest). 400 on invalid input, 403 while disabled or when the request completes a scripted burst, 429 when a limit is reached |
@@ -122,7 +125,8 @@ All three require authentication. `POST` also uses the `"feedback"` rate-limit p
 
   Sent rows are deleted after 2 days, since the limits only look back 24 h. The worker isn't
   registered in the `Testing` environment; tests call the service directly.
-- **Config:** `FeedbackOptions` is bound from `Feedback`: `RecipientEmail` (empty in
+- **Config:** `FeedbackOptions` is bound from `Feedback`: `ShowButton` (`true`; global switch
+  for the tab, exposed via `GET /api/feedback/config`), `RecipientEmail` (empty in
   `appsettings.json`, must be set per environment), `DigestTime` (`17:00`), `DigestTimeZone`
   (`Europe/Berlin`) and `DigestCheckIntervalMinutes` (`5`).
 

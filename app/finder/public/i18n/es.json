@@ -403,6 +403,7 @@
                 "startDate": "Fecha",
                 "endDate": "Fecha de fin",
                 "startTime": "Hora",
+                "selectTime": "Seleccionar hora",
                 "endTime": "Hora de fin",
                 "selectDate": "Seleccionar fecha",
                 "addTime": "Añadir hora",

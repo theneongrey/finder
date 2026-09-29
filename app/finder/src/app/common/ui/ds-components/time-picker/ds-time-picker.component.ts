@@ -8,18 +8,27 @@ import {
 } from '@angular/core';
 import type { BrnOverlayState } from '@spartan-ng/brain/overlay';
 import { HlmPopoverImports } from '@spartan-ng/helm/popover';
+import { DsButtonComponent } from '../button/ds-button.component';
 import { DsIconComponent } from '../icon/ds-icon.component';
+import { DsTimeWheelComponent } from './ds-time-wheel.component';
 
 /**
  * Time picker in the ds-* style: a field-like trigger showing `HH:MM` that opens a
- * popover with an hour grid and the minute steps. Wraps Spartan's popover.
+ * popover with scroll wheels for hour and minute. The wheels edit a draft; Save
+ * commits it, Cancel (or closing the popover) discards it. Wraps Spartan's popover.
  *
  * - `[(value)]` — `HH:MM` (24h) or undefined.
- * - `stepMinutes` — minute granularity (default 15 → :00 :15 :30 :45).
+ * - `stepMinutes` — minute granularity (default 15 → 00 15 30 45).
+ * - `title` / `cancelLabel` / `saveLabel` — translated by the caller.
  */
 @Component({
     selector: 'ds-time-picker',
-    imports: [HlmPopoverImports, DsIconComponent],
+    imports: [
+        HlmPopoverImports,
+        DsButtonComponent,
+        DsIconComponent,
+        DsTimeWheelComponent,
+    ],
     templateUrl: './ds-time-picker.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { class: 'inline-block' },
@@ -28,6 +37,9 @@ export class DsTimePickerComponent {
     value = model<string | undefined>(undefined);
     stepMinutes = input(15);
     placeholder = input('--:--');
+    title = input('');
+    cancelLabel = input.required<string>();
+    saveLabel = input.required<string>();
 
     protected readonly hours = Array.from({ length: 24 }, (_, h) => pad(h));
     protected readonly minutes = computed(() => {
@@ -37,23 +49,37 @@ export class DsTimePickerComponent {
         );
     });
 
-    protected readonly hour = computed(() => this.value()?.split(':')[0]);
-    protected readonly minute = computed(() => this.value()?.split(':')[1]);
-
+    protected readonly draftHour = signal('12');
+    protected readonly draftMinute = signal('00');
     protected readonly popoverState = signal<BrnOverlayState | null>(null);
 
-    protected selectHour(hour: string): void {
-        this.value.set(`${hour}:${this.snapMinute(this.minute())}`);
+    protected onStateChanged(state: BrnOverlayState): void {
+        if (state === 'open') {
+            const [hour, minute] = (this.value() ?? '12:00').split(':');
+            this.draftHour.set(hour);
+            this.draftMinute.set(this.snapMinute(minute));
+        }
+        this.popoverState.set(state);
     }
 
-    protected selectMinute(minute: string): void {
-        this.value.set(`${this.hour() ?? '00'}:${minute}`);
+    protected save(): void {
+        this.value.set(`${this.draftHour()}:${this.draftMinute()}`);
         this.popoverState.set('closed');
     }
 
-    /** Keep the current minute when it's on the grid, else fall back to :00. */
-    private snapMinute(minute: string | undefined): string {
-        return minute && this.minutes().includes(minute) ? minute : '00';
+    protected cancel(): void {
+        this.popoverState.set('closed');
+    }
+
+    /** Round an off-grid minute (e.g. 10:10 from an old option) to the nearest step. */
+    private snapMinute(minute: string): string {
+        const minutes = this.minutes();
+        const target = Number(minute);
+        return minutes.reduce((best, m) =>
+            Math.abs(Number(m) - target) < Math.abs(Number(best) - target)
+                ? m
+                : best,
+        );
     }
 }
 

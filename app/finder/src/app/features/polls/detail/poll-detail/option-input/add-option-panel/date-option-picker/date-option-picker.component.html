@@ -31,6 +31,9 @@
                 {{ 'project.pollInput.date.startTime' | translate }}
             </span>
             <ds-time-picker
+                [title]="'project.pollInput.date.selectTime' | translate"
+                [cancelLabel]="'project.common.cancel' | translate"
+                [saveLabel]="'project.results.save' | translate"
                 [value]="timeValue()"
                 (valueChange)="setTime($event)"
                 data-testid="date-option-time"

@@ -99,8 +99,13 @@ test.describe('Poll detail: add date option via calendar', () => {
     await expect(submit(page)).toBeDisabled();
 
     await panel(page).locator('[data-testid="time-picker-trigger"]').click();
-    await page.locator('[data-testid="time-picker-hour"]', { hasText: '20' }).click();
-    await page.locator('[data-testid="time-picker-minute"]', { hasText: ':00' }).click();
+    await page
+      .locator('[data-testid="time-wheel-hour"] [data-testid="time-wheel-item"]', { hasText: '20' })
+      .click();
+    await expect(
+      page.locator('[data-testid="time-wheel-hour"] [aria-selected="true"]'),
+    ).toHaveText('20');
+    await page.locator('[data-testid="time-picker-save"] button').click();
     await expect(panel(page).locator('[data-testid="date-option-duplicate"]')).toBeHidden();
     await submit(page).click();
 

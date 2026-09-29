@@ -403,6 +403,7 @@
                 "startDate": "Date",
                 "endDate": "End date",
                 "startTime": "Time",
+                "selectTime": "Select time",
                 "endTime": "End time",
                 "selectDate": "Select date",
                 "addTime": "Add time",

@@ -403,6 +403,7 @@
                 "startDate": "Datum",
                 "endDate": "Enddatum",
                 "startTime": "Uhrzeit",
+                "selectTime": "Uhrzeit wählen",
                 "endTime": "Endzeit",
                 "selectDate": "Datum auswählen",
                 "addTime": "Uhrzeit hinzufügen",

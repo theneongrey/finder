@@ -11,16 +11,22 @@ public class MailService(IOptions<SmtpOptions> smtpOptions, MailTemplateService 
 
     public virtual async Task SendAsync(Mail mail)
     {
-        var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("Finder", _smtpOptions.User));
-        message.To.Add(new MailboxAddress(mail.RecipientName, mail.RecipientEmail));
-        message.Subject = mail.Subject;
-        message.Body = new TextPart("html") { Text = mail.Template.Build(mailTemplateService) };
+        var message = BuildMessage(mail);
 
         using var client = new SmtpClient();
-        await client.ConnectAsync(_smtpOptions.Host, _smtpOptions.Port, true);
+        await client.ConnectAsync(_smtpOptions.Host, _smtpOptions.Port, _smtpOptions.SecureSocketOptions);
         await client.AuthenticateAsync(_smtpOptions.User, _smtpOptions.Password);
         await client.SendAsync(message);
         await client.DisconnectAsync(true);
+    }
+
+    public MimeMessage BuildMessage(Mail mail)
+    {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(_smtpOptions.FromName, _smtpOptions.User));
+        message.To.Add(new MailboxAddress(mail.RecipientName, mail.RecipientEmail));
+        message.Subject = mail.Subject;
+        message.Body = new TextPart("html") { Text = mail.Template.Build(mailTemplateService) };
+        return message;
     }
 }

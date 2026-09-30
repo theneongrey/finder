@@ -27,6 +27,8 @@ Migrations are auto-applied at startup — no manual `dotnet ef database update`
 
 ## Frontend
 
+Use the Node.js version from `app/finder/.nvmrc` (`nvm use` picks it up) — CI and the Docker image build with the same version (see [CI/CD](../architecture/ci-cd.md#nodejs-version)).
+
 Run from `app/finder/`:
 
 ```bash

@@ -104,6 +104,8 @@ Minimal API endpoint registrations. All endpoints in this file are public — no
 | `Login:Subject` / `Login:Text` | Email content for returning users. |
 | `Login:SubjectNew` / `Login:TextNew` | Email content for first-time registrations. |
 | `Smtp:Host/Port/User/Password` | SMTP credentials for outbound email. |
+| `Smtp:SecureSocketOptions` | TLS mode: `SslOnConnect` (default, implicit TLS, port 465), `StartTls` (port 587) or `Auto`. |
+| `Smtp:FromName` | Sender display name on outgoing mails (default `Votean`). |
 
 ---
 

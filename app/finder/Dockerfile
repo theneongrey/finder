@@ -1,4 +1,5 @@
 ﻿# Build-Stage / Verwende Node.js als Basis-Image
+# Node-Version muss mit app/finder/.nvmrc übereinstimmen (wird in CI geprüft)
 FROM node:24.14-alpine AS build
 WORKDIR /app
 # Kopiere package.json und package-lock.json

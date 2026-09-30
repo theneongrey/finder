@@ -9,9 +9,6 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Entities.Permiss
     {
         builder.HasKey(p => new { p.PersonKey, p.ProjectKey });
 
-        builder.HasIndex(p => new { p.PersonKey, p.ProjectKey })
-            .IsUnique();
-
         builder.HasOne(p => p.Person)
             .WithMany(p => p.Permissions)
             .HasForeignKey(p => p.PersonKey);

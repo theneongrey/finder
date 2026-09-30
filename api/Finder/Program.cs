@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Npgsql;
 using DnsClient;
 using Microsoft.AspNetCore.DataProtection;
@@ -43,12 +42,8 @@ builder.Services.AddDbContext<AppDbContext>((sp, opt) =>
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<AppDbContext>();
 
-// Enums are serialized as numbers (the frontend relies on it); opt individual enums into strings via [JsonConverter].
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.PropertyNameCaseInsensitive = true;
-    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-});
+// JSON uses the Minimal API web defaults (camelCase, case-insensitive). Enums are serialized as numbers
+// (the frontend relies on it); opt individual enums into strings via [JsonConverter].
 
 builder.Services.Configure<AppOptions>(builder.Configuration.GetSection("App"));
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));

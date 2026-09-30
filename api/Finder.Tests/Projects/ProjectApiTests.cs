@@ -66,6 +66,7 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
 
         var response = await client.GetAsync($"/api/project/{project.Id}");
 
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
         Assert.Equal(JsonValueKind.Number, json["role"]!.GetValueKind());
         Assert.Equal((int)ProjectRole.Creator, json["role"]!.GetValue<int>());

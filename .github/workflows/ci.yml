@@ -40,10 +40,22 @@ jobs:
         with:
           dotnet-version: '9.x'
 
+      - name: Check Node version matches Dockerfile
+        run: |
+          nvmrc=$(tr -d '[:space:]' < app/finder/.nvmrc)
+          docker=$(sed -nE 's/^FROM node:([0-9.]+).*/\1/p' app/finder/Dockerfile | head -n1)
+          echo ".nvmrc: $nvmrc | Dockerfile: $docker"
+          if [ "$nvmrc" != "$docker" ]; then
+            echo "::error file=app/finder/Dockerfile::Node version mismatch: .nvmrc=$nvmrc, Dockerfile=node:$docker"
+            exit 1
+          fi
+
       - name: Set up Node.js version
         uses: actions/setup-node@v4
         with:
-          node-version: '24.14'
+          node-version-file: app/finder/.nvmrc
+          cache: npm
+          cache-dependency-path: app/finder/package-lock.json
 
       - name: npm ci, build
         working-directory: ./app/finder

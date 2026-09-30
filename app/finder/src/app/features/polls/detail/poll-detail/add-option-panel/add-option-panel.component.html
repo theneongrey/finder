@@ -7,46 +7,32 @@
             [value]="dateDraft()"
             [existing]="existingDates()"
             [showTime]="showTime()"
-            [duplicate]="isDuplicate()"
             (valueChange)="dateDraft.set($event)"
         />
-    } @else if (isDateType()) {
-        @switch (dateType()) {
-            @case ('weekday') {
-                <app-option-card-weekday
-                    [option]="dateDraft()"
-                    [index]="0"
-                    [bare]="true"
-                    [initialShowTime]="showTime()"
-                    (optionChange)="dateDraft.set($event)"
-                />
-            }
-            @case ('date-range') {
-                <app-option-card-date-range
-                    [option]="dateDraft()"
-                    [index]="0"
-                    [bare]="true"
-                    [initialShowTime]="showTime()"
-                    (optionChange)="dateDraft.set($event)"
-                />
-            }
-            @case ('time') {
-                <app-option-card-time
-                    [option]="dateDraft()"
-                    [index]="0"
-                    [bare]="true"
-                    (optionChange)="dateDraft.set($event)"
-                />
-            }
-            @case ('time-range') {
-                <app-option-card-time-range
-                    [option]="dateDraft()"
-                    [index]="0"
-                    [bare]="true"
-                    (optionChange)="dateDraft.set($event)"
-                />
-            }
-        }
+    } @else if (usesWeekdayPicker()) {
+        <app-weekday-option-picker
+            [value]="dateDraft()"
+            [existing]="existingDates()"
+            [showTime]="showTime()"
+            (valueChange)="dateDraft.set($event)"
+        />
+    } @else if (usesRangePicker()) {
+        <app-date-range-option-picker
+            [value]="dateDraft()"
+            [showTime]="showTime()"
+            (valueChange)="dateDraft.set($event)"
+        />
+    } @else if (usesTimePicker()) {
+        <app-option-time-row
+            [value]="dateDraft()"
+            [quickPicks]="false"
+            (valueChange)="dateDraft.set($event)"
+        />
+    } @else if (usesTimeRangePicker()) {
+        <app-option-time-range-row
+            [value]="dateDraft()"
+            (valueChange)="dateDraft.set($event)"
+        />
     } @else {
         <app-option-card
             [option]="textDraft()"
@@ -57,6 +43,15 @@
             (confirm)="submit()"
             (previewPendingChange)="onPreviewPendingChange($event)"
         />
+    }
+
+    @if (isDuplicate()) {
+        <p
+            class="-mt-1 text-[length:var(--fs-caption-sm)] font-bold text-[var(--negative)]"
+            data-testid="date-option-duplicate"
+        >
+            {{ 'project.pollInput.date.duplicateDate' | translate }}
+        </p>
     }
 
     <div class="grid grid-cols-[auto_1fr] gap-2">

@@ -17,18 +17,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { OptionEntry } from '../poll-options.component';
+import { OptionEntry } from '../option-entry.model';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
-import { POLL_LIMITS } from '../../../../../_shared/models/poll-limits';
-import {
-    PreviewData,
-    PreviewService,
-} from '../../../../../_shared/data/preview.service';
-import { UrlValidationService } from '../../../../../_shared/utils/url-validation.service';
+import { POLL_LIMITS } from '../../../../_shared/models/poll-limits';
+import { PreviewData, PreviewService } from '../preview.service';
+import { UrlValidationService } from '../url-validation.service';
 
 @Component({
     selector: 'app-option-card',

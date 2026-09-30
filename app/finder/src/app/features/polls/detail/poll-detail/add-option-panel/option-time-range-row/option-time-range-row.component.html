@@ -1,0 +1,45 @@
+<div
+    class="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[var(--radius-md)] bg-[var(--bg-panel)] px-3 py-2"
+>
+    <div class="flex items-center gap-2">
+        <span
+            class="text-[length:var(--fs-caption)] font-bold text-[var(--text-secondary)]"
+        >
+            {{ 'project.pollInput.date.rangeStartTime' | translate }}
+        </span>
+        <ds-time-picker
+            [title]="'project.pollInput.date.selectTime' | translate"
+            [cancelLabel]="'project.common.cancel' | translate"
+            [saveLabel]="'project.results.save' | translate"
+            [ariaLabel]="'project.pollInput.date.rangeStartTime' | translate"
+            [value]="startTimeValue()"
+            (valueChange)="setTime('startTime', $event)"
+            data-testid="option-range-start-time"
+        />
+    </div>
+    <div class="flex items-center gap-2">
+        <span
+            class="text-[length:var(--fs-caption)] font-bold text-[var(--text-secondary)]"
+        >
+            {{ 'project.pollInput.date.rangeEndTime' | translate }}
+        </span>
+        <ds-time-picker
+            [title]="'project.pollInput.date.selectTime' | translate"
+            [cancelLabel]="'project.common.cancel' | translate"
+            [saveLabel]="'project.results.save' | translate"
+            [ariaLabel]="'project.pollInput.date.rangeEndTime' | translate"
+            [value]="endTimeValue()"
+            (valueChange)="setTime('endTime', $event)"
+            data-testid="option-range-end-time"
+        />
+    </div>
+</div>
+
+@if (endTimeNotAfterStart()) {
+    <p
+        class="text-[length:var(--fs-caption-sm)] font-bold text-[var(--negative)]"
+        data-testid="option-range-time-error"
+    >
+        {{ 'project.pollInput.date.endTimeBeforeStart' | translate }}
+    </p>
+}

@@ -415,6 +415,10 @@
                 "addOption": "Add date",
                 "calendarHint": "Tap a day · grey = already added",
                 "calendarHintWithTime": "Tap a day · grey = already added, still selectable with another time",
+                "calendarRangeHint": "Tap the start and end date",
+                "rangeStartTime": "From",
+                "rangeEndTime": "To",
+                "endTimeBeforeStart": "The end time must be after the start time.",
                 "duplicateDate": "This date already exists at that time – pick a different time.",
                 "appointmentTypeLabel": "Type of date options",
                 "changeType": "Change",
@@ -581,6 +585,7 @@
             "openUntil": "Open until {{date}}",
             "sortByApproval": "By approval",
             "sortByOrder": "By order",
+            "sortByDate": "By date",
             "shareBarTitle": "Your poll is ready — share the link:",
             "status": {
                 "active": "Active",

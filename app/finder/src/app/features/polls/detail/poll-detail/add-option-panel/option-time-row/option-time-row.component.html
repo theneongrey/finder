@@ -1,0 +1,29 @@
+<div
+    class="flex flex-wrap items-center gap-2 rounded-[var(--radius-md)] bg-[var(--bg-panel)] px-3 py-2"
+>
+    <span
+        class="text-[length:var(--fs-caption)] font-bold text-[var(--text-secondary)]"
+    >
+        {{ 'project.pollInput.date.startTime' | translate }}
+    </span>
+    <ds-time-picker
+        [title]="'project.pollInput.date.selectTime' | translate"
+        [cancelLabel]="'project.common.cancel' | translate"
+        [saveLabel]="'project.results.save' | translate"
+        [ariaLabel]="'project.pollInput.date.startTime' | translate"
+        [value]="timeValue()"
+        (valueChange)="setTime($event)"
+        data-testid="date-option-time"
+    />
+    @for (time of quickPicks() ? quickTimes() : []; track time) {
+        <!-- The active chip is locked: ds-chip toggles itself off on click,
+             which would un-highlight a time that's still selected. -->
+        <ds-chip
+            data-testid="quick-time"
+            [label]="time"
+            [active]="time === timeValue()"
+            [locked]="time === timeValue()"
+            (activeChange)="setTime(time)"
+        />
+    }
+</div>

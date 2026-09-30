@@ -1,0 +1,31 @@
+<div class="flex flex-col gap-2">
+    <ds-calendar
+        [date]="value().date"
+        [min]="today()"
+        [weekStartsOn]="1"
+        [highlightDays]="takenDays()"
+        [dateDisabled]="isDayDisabled()"
+        [defaultFocusedDate]="viewAnchor()"
+        (dateChange)="setDate($event)"
+        data-testid="date-option-calendar"
+    />
+
+    <p
+        class="text-center text-[length:var(--fs-caption-sm)] text-[var(--text-secondary)]"
+    >
+        {{
+            (showTime()
+                ? 'project.pollInput.date.calendarHintWithTime'
+                : 'project.pollInput.date.calendarHint'
+            ) | translate
+        }}
+    </p>
+
+    @if (showTime()) {
+        <app-option-time-row
+            [value]="value()"
+            [existing]="existing()"
+            (valueChange)="valueChange.emit($event)"
+        />
+    }
+</div>

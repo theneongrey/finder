@@ -24,13 +24,14 @@ import {
     isDateOptionType,
     optionTypeToDateType,
 } from '../../../_shared/models/date-option.model';
+import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
 import * as voteTally from '../../../_shared/utils/vote-tally.utils';
 import {
     HIGHLIGHT_DURATION_MS,
     OptionChangeKind,
 } from '../../../_shared/data/poll-realtime-sync.feature';
 
-type SortMode = 'top' | 'original';
+export type SortMode = 'top' | 'original' | 'date';
 
 @Component({
     selector: 'app-option-list',
@@ -79,6 +80,7 @@ export class OptionListComponent {
 
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
+    private readonly dateFormat = inject(DateOptionFormatService);
 
     constructor() {
         // Scroll to the revealed option once its card renders — it may land anywhere in the
@@ -143,6 +145,15 @@ export class OptionListComponent {
         const opts = [...this.options()];
         if (this.hideResults()) {
             return opts;
+        }
+        // "Nach Datum" orders date options chronologically (date ranges by their start).
+        const dateType = this.dateType();
+        if (this.sort() === 'date' && dateType) {
+            const key = (o: OptionDetail) =>
+                this.dateFormat.sortKey(
+                    this.dateFormat.parse(o.text, dateType),
+                );
+            return opts.sort((a, b) => key(a) - key(b));
         }
         // "Nach Reihenfolge" shows the options in reverse (newest first).
         if (this.sort() !== 'top') {

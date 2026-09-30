@@ -32,13 +32,16 @@ export class DateOptionFormatService {
                 return (
                     entry.date !== undefined &&
                     entry.endDate !== undefined &&
-                    entry.endDate >= entry.date
+                    entry.endDate >= entry.date &&
+                    this.hasValidRangeTimes(entry)
                 );
             case 'time':
                 return entry.startTime !== undefined;
             case 'time-range':
                 return (
-                    entry.startTime !== undefined && entry.endTime !== undefined
+                    entry.startTime !== undefined &&
+                    entry.endTime !== undefined &&
+                    this.hasValidRangeTimes(entry)
                 );
         }
     }
@@ -63,6 +66,52 @@ export class DateOptionFormatService {
         return d;
     }
 
+    /** A time range, or a single-day date range with times, must end after it starts. */
+    hasValidRangeTimes(entry: DateOptionEntry): boolean {
+        const { date, endDate, startTime, endTime } = entry;
+        if (!startTime || !endTime) {
+            return true;
+        }
+        if (
+            entry.type === 'date-range' &&
+            (!date ||
+                !endDate ||
+                date.toDateString() !== endDate.toDateString())
+        ) {
+            return true;
+        }
+        const minutes = (t: Date) => t.getHours() * 60 + t.getMinutes();
+        return minutes(endTime) > minutes(startTime);
+    }
+
+    /** Default end for a range starting at `start`: an hour later, but on the same day. */
+    defaultEndTime(start: Date): Date {
+        const end = new Date(start);
+        if (start.getHours() === 23) {
+            end.setMinutes(59);
+        } else {
+            end.setHours(start.getHours() + 1);
+        }
+        return end;
+    }
+
+    /** Chronological sort key: weekdays Monday first, date ranges by their start. */
+    sortKey(entry: DateOptionEntry): number {
+        const minutes = entry.startTime
+            ? entry.startTime.getHours() * 60 + entry.startTime.getMinutes()
+            : 0;
+        switch (entry.type) {
+            case 'weekday':
+                return ((entry.weekday! + 6) % 7) * 24 * 60 + minutes;
+            case 'date':
+            case 'date-range':
+                return (entry.date?.getTime() ?? 0) + minutes * 60_000;
+            case 'time':
+            case 'time-range':
+                return minutes;
+        }
+    }
+
     formatLabel(text: string, dateType: DateOptionType): string {
         return this.labelFromEntry(parseDateOptionText(text, dateType));
     }
@@ -74,7 +123,9 @@ export class DateOptionFormatService {
     labelFromEntry(p: DateOptionEntry): string {
         switch (p.type) {
             case 'weekday':
-                return this.weekdayName(p.weekday!);
+                return p.startTime
+                    ? `${this.weekdayName(p.weekday!)} · ${this.formatLocaleTime(p.startTime)}`
+                    : this.weekdayName(p.weekday!);
             case 'date':
                 return this.formatDate(p.date!);
             case 'date-range':
@@ -90,7 +141,7 @@ export class DateOptionFormatService {
     }
 
     subLabelFromEntry(p: DateOptionEntry): string | null {
-        if ((p.type === 'weekday' || p.type === 'date') && p.startTime) {
+        if (p.type === 'date' && p.startTime) {
             return this.formatLocaleTime(p.startTime);
         }
         if (p.type === 'date-range' && p.startTime) {

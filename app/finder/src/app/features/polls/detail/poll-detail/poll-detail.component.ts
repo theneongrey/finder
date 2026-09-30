@@ -13,7 +13,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime } from 'rxjs';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { TranslateService } from '@ngx-translate/core';
-import { OptionListComponent } from './option-list/option-list.component';
+import {
+    OptionListComponent,
+    SortMode,
+} from './option-list/option-list.component';
 import { ResultsSkeletonComponent } from './results-skeleton/results-skeleton.component';
 import { CommentsSectionComponent } from './comments-section/comments-section.component';
 import { ResultsToolbarComponent } from './results-toolbar/results-toolbar.component';
@@ -29,7 +32,7 @@ import { ShareContentComponent } from '../../_shared/ui/share-content/share-cont
 import {
     AddOptionPanelComponent,
     NewOptionPayload,
-} from './option-input/add-option-panel/add-option-panel.component';
+} from './add-option-panel/add-option-panel.component';
 import { EmptyOptionsComponent } from './empty-options/empty-options.component';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
 import {
@@ -48,8 +51,6 @@ import {
 } from '../../_shared/models/poll-realtime.model';
 import { toast } from '@spartan-ng/brain/sonner';
 import { preferredScrollBehavior } from '../../_shared/utils/scroll-behavior.utils';
-
-type SortMode = 'top' | 'original';
 
 /** localStorage key prefix for the per-poll sort choice. */
 const POLL_SORT_STORAGE_PREFIX = 'poll-sort:';
@@ -209,12 +210,34 @@ export class PollDetailComponent {
     private readonly sortByOrder = this.translateService.translate(
         'project.results.sortByOrder',
     );
-    readonly sortLabel = computed(() =>
-        this.sortMode() === 'top' ? this.sortByApproval() : this.sortByOrder(),
+    private readonly sortByDate = this.translateService.translate(
+        'project.results.sortByDate',
     );
 
+    /** Date polls offer "by date" as the alternative to "by approval", other polls "by order". */
+    private readonly alternativeSort = computed<SortMode>(() =>
+        optionTypeToDateType(this.poll()?.optionType) ? 'date' : 'original',
+    );
+
+    /** The stored choice, mapped onto what this poll's type offers. */
+    readonly effectiveSort = computed<SortMode>(() =>
+        this.sortMode() === 'top' ? 'top' : this.alternativeSort(),
+    );
+
+    readonly sortLabel = computed(() => {
+        switch (this.effectiveSort()) {
+            case 'top':
+                return this.sortByApproval();
+            case 'date':
+                return this.sortByDate();
+            default:
+                return this.sortByOrder();
+        }
+    });
+
     toggleSort() {
-        const next: SortMode = this.sortMode() === 'top' ? 'original' : 'top';
+        const next: SortMode =
+            this.effectiveSort() === 'top' ? this.alternativeSort() : 'top';
         this.sortMode.set(next);
         this.persistSortMode(next);
     }
@@ -290,7 +313,9 @@ export class PollDetailComponent {
                 ? localStorage.getItem(this.sortStorageKey(id))
                 : null;
             untracked(() =>
-                this.sortMode.set(stored === 'original' ? 'original' : 'top'),
+                this.sortMode.set(
+                    stored === 'original' || stored === 'date' ? stored : 'top',
+                ),
             );
         });
 

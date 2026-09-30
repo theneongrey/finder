@@ -2,21 +2,20 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
-    DestroyRef,
-    inject,
     input,
     output,
     signal,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsCalendarComponent } from '@ds/calendar/ds-calendar.component';
-import { DateOptionEntry } from '../../../../../_shared/models/date-option.model';
+import { DateOptionEntry } from '../../../../_shared/models/date-option.model';
 import { OptionTimeRowComponent } from '../option-time-row/option-time-row.component';
+import { injectToday, startOfDay } from '../today';
 
 /**
  * Calendar picker for adding a single calendar-day option (optionally with a time).
  * Days that already have an option are marked; without a time they can't be picked
- * again, with a time they can (the parent rejects an exact date + time duplicate).
+ * again, with a time they can.
  */
 @Component({
     selector: 'app-date-option-picker',
@@ -28,11 +27,10 @@ export class DateOptionPickerComponent {
     value = input.required<DateOptionEntry>();
     existing = input<DateOptionEntry[]>([]);
     showTime = input(false);
-    duplicate = input(false);
     valueChange = output<DateOptionEntry>();
 
     /** Earliest selectable day — rolls over at midnight if the panel stays open. */
-    protected readonly today = signal(startOfDay(new Date()));
+    protected readonly today = injectToday();
 
     /** Month to show when nothing is selected — stays on the last picked day's month
      *  after an add clears the selection, so adding several days in one month is quick. */
@@ -53,24 +51,6 @@ export class DateOptionPickerComponent {
         return (d: Date) => taken.has(dayKey(d));
     });
 
-    constructor() {
-        let midnightTimer: ReturnType<typeof setTimeout>;
-        const scheduleMidnight = () => {
-            const now = new Date();
-            const next = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate() + 1,
-            );
-            midnightTimer = setTimeout(() => {
-                this.today.set(startOfDay(new Date()));
-                scheduleMidnight();
-            }, next.getTime() - now.getTime());
-        };
-        scheduleMidnight();
-        inject(DestroyRef).onDestroy(() => clearTimeout(midnightTimer));
-    }
-
     setDate(date: Date | undefined): void {
         const day = date ? startOfDay(date) : undefined;
         if (day) {
@@ -78,10 +58,6 @@ export class DateOptionPickerComponent {
         }
         this.valueChange.emit({ ...this.value(), date: day });
     }
-}
-
-function startOfDay(d: Date): Date {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 function dayKey(d: Date): string {

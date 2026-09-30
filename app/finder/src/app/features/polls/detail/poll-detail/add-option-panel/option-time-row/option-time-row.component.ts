@@ -11,8 +11,8 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsChipComponent } from '@ds/chip/ds-chip.component';
 import { DsTimePickerComponent } from '@ds/time-picker/ds-time-picker.component';
-import { DateOptionEntry } from '../../../../../_shared/models/date-option.model';
-import { DateOptionFormatService } from '../../../../../_shared/utils/date-option-format.service';
+import { DateOptionEntry } from '../../../../_shared/models/date-option.model';
+import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
 
 /**
  * Time row of the add-option pickers: a time picker plus the times of the

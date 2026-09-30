@@ -11,16 +11,16 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { OptionType } from '@common/models/option-type.model';
-import { OptionCardComponent } from '../poll-options/option-card/option-card.component';
-import { OptionEntry } from '../poll-options/poll-options.component';
+import { OptionCardComponent } from './option-card/option-card.component';
+import { OptionEntry } from './option-entry.model';
 import {
     DateOptionEntry,
     DateOptionType,
     isDateOptionType,
-} from '../../../../_shared/models/date-option.model';
-import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
-import { UrlValidationService } from '../../../../_shared/utils/url-validation.service';
-import { POLL_LIMITS } from '../../../../_shared/models/poll-limits';
+} from '../../../_shared/models/date-option.model';
+import { DateOptionFormatService } from '../../../_shared/utils/date-option-format.service';
+import { UrlValidationService } from './url-validation.service';
+import { POLL_LIMITS } from '../../../_shared/models/poll-limits';
 import { DateOptionPickerComponent } from './date-option-picker/date-option-picker.component';
 import { DateRangeOptionPickerComponent } from './date-range-option-picker/date-range-option-picker.component';
 import { OptionTimeRangeRowComponent } from './option-time-range-row/option-time-range-row.component';
@@ -67,25 +67,26 @@ export class AddOptionPanelComponent {
     existingOptions = input<string[]>([]);
 
     readonly isDateType = computed(() => isDateOptionType(this.optionType()));
-    /** Calendar-day polls get the month-grid picker instead of the generic date card. */
+    // Each date sub-type gets its own picker.
+    /** Calendar-day polls: month grid. */
     readonly usesCalendar = computed(
         () => this.isDateType() && this.dateType() === 'date',
     );
-    /** Weekday polls get the weekday-tile picker. */
+    /** Weekday polls: weekday tiles. */
     readonly usesWeekdayPicker = computed(
         () => this.isDateType() && this.dateType() === 'weekday',
     );
-    /** Date-range polls get the range calendar. */
-    /** Time polls get the plain time picker. */
+    /** Date-range polls: range calendar. */
+    readonly usesRangePicker = computed(
+        () => this.isDateType() && this.dateType() === 'date-range',
+    );
+    /** Time polls: a single time picker. */
     readonly usesTimePicker = computed(
         () => this.isDateType() && this.dateType() === 'time',
     );
-    /** Time-range polls get the from/to time pickers. */
+    /** Time-range polls: from/to time pickers. */
     readonly usesTimeRangePicker = computed(
         () => this.isDateType() && this.dateType() === 'time-range',
-    );
-    readonly usesRangePicker = computed(
-        () => this.isDateType() && this.dateType() === 'date-range',
     );
 
     readonly existingDates = computed<DateOptionEntry[]>(() => {
@@ -101,13 +102,7 @@ export class AddOptionPanelComponent {
     readonly isDuplicate = computed(() => {
         const type = this.dateType();
         const draft = this.dateDraft();
-        const checked =
-            this.usesCalendar() ||
-            this.usesWeekdayPicker() ||
-            this.usesRangePicker() ||
-            this.usesTimePicker() ||
-            this.usesTimeRangePicker();
-        if (!checked || !type || !this.dateFormat.isValid(draft)) {
+        if (!this.isDateType() || !type || !this.dateFormat.isValid(draft)) {
             return false;
         }
         const text = this.dateFormat.serialize(draft);

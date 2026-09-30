@@ -32,7 +32,7 @@ import { ShareContentComponent } from '../../_shared/ui/share-content/share-cont
 import {
     AddOptionPanelComponent,
     NewOptionPayload,
-} from './option-input/add-option-panel/add-option-panel.component';
+} from './add-option-panel/add-option-panel.component';
 import { EmptyOptionsComponent } from './empty-options/empty-options.component';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
 import {

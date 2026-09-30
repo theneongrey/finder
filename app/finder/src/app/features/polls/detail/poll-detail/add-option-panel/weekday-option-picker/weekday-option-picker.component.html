@@ -30,14 +30,5 @@
             [existing]="existing()"
             (valueChange)="valueChange.emit($event)"
         />
-
-        @if (duplicate()) {
-            <p
-                class="text-[length:var(--fs-caption-sm)] font-bold text-[var(--negative)]"
-                data-testid="date-option-duplicate"
-            >
-                {{ 'project.pollInput.date.duplicateDate' | translate }}
-            </p>
-        }
     }
 </div>

@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DsTimePickerComponent } from '@ds/time-picker/ds-time-picker.component';
-import { DateOptionEntry } from '../../../../../_shared/models/date-option.model';
-import { DateOptionFormatService } from '../../../../../_shared/utils/date-option-format.service';
+import { DateOptionEntry } from '../../../../_shared/models/date-option.model';
+import { DateOptionFormatService } from '../../../../_shared/utils/date-option-format.service';
 
 /**
  * "From / to" time row of the add-option pickers (date ranges with times and

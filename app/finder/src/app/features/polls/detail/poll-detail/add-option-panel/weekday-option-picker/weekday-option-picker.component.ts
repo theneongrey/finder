@@ -7,13 +7,13 @@ import {
     output,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { DateOptionEntry } from '../../../../../_shared/models/date-option.model';
+import { DateOptionEntry } from '../../../../_shared/models/date-option.model';
 import { OptionTimeRowComponent } from '../option-time-row/option-time-row.component';
 
 /**
  * Weekday tiles for adding a single weekday option (optionally with a time).
  * Weekdays that already have an option are greyed; without a time they can't be
- * picked again, with a time they can (the parent rejects an exact day + time duplicate).
+ * picked again, with a time they can.
  */
 @Component({
     selector: 'app-weekday-option-picker',
@@ -27,7 +27,6 @@ export class WeekdayOptionPickerComponent {
     value = input.required<DateOptionEntry>();
     existing = input<DateOptionEntry[]>([]);
     showTime = input(false);
-    duplicate = input(false);
     valueChange = output<DateOptionEntry>();
 
     protected readonly days = computed(() => {

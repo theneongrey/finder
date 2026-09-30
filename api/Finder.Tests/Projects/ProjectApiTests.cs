@@ -1,7 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Finder.Business.Permission.Entities;
+using Finder.Business.Project.Api.Responses;
 using Finder.Business.Project.Entities;
 using Finder.Business.Shared;
 using Finder.Tests.Infrastructure;
@@ -53,6 +55,21 @@ public class ProjectApiTests : IClassFixture<FinderApiFactory>
         var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
         Assert.Equal(SlugHelper.ToSlug("Specific Project", project.Id), json["id"]!.GetValue<string>());
         Assert.Equal("Specific Project", json["name"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task GetProject_SerializesEnumsAsNumbers()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id);
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+
+        var response = await client.GetAsync($"/api/project/{project.Id}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+        Assert.Equal(JsonValueKind.Number, json["role"]!.GetValueKind());
+        Assert.Equal((int)ProjectRole.Creator, json["role"]!.GetValue<int>());
     }
 
     [Fact]

@@ -12,10 +12,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { OptionType } from '@common/models/option-type.model';
 import { OptionCardComponent } from '../poll-options/option-card/option-card.component';
-import { OptionCardWeekdayComponent } from '../poll-options/option-card-weekday/option-card-weekday.component';
-import { OptionCardDateRangeComponent } from '../poll-options/option-card-date-range/option-card-date-range.component';
-import { OptionCardTimeComponent } from '../poll-options/option-card-time/option-card-time.component';
-import { OptionCardTimeRangeComponent } from '../poll-options/option-card-time-range/option-card-time-range.component';
 import { OptionEntry } from '../poll-options/poll-options.component';
 import {
     DateOptionEntry,
@@ -26,6 +22,10 @@ import { DateOptionFormatService } from '../../../../_shared/utils/date-option-f
 import { UrlValidationService } from '../../../../_shared/utils/url-validation.service';
 import { POLL_LIMITS } from '../../../../_shared/models/poll-limits';
 import { DateOptionPickerComponent } from './date-option-picker/date-option-picker.component';
+import { DateRangeOptionPickerComponent } from './date-range-option-picker/date-range-option-picker.component';
+import { OptionTimeRangeRowComponent } from './option-time-range-row/option-time-range-row.component';
+import { OptionTimeRowComponent } from './option-time-row/option-time-row.component';
+import { WeekdayOptionPickerComponent } from './weekday-option-picker/weekday-option-picker.component';
 
 export interface NewOptionPayload {
     text: string;
@@ -46,10 +46,10 @@ export interface NewOptionPayload {
         DsButtonComponent,
         DateOptionPickerComponent,
         OptionCardComponent,
-        OptionCardWeekdayComponent,
-        OptionCardDateRangeComponent,
-        OptionCardTimeComponent,
-        OptionCardTimeRangeComponent,
+        WeekdayOptionPickerComponent,
+        DateRangeOptionPickerComponent,
+        OptionTimeRowComponent,
+        OptionTimeRangeRowComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -71,28 +71,50 @@ export class AddOptionPanelComponent {
     readonly usesCalendar = computed(
         () => this.isDateType() && this.dateType() === 'date',
     );
-
-    readonly existingDates = computed<DateOptionEntry[]>(() =>
-        this.usesCalendar()
-            ? this.existingOptions().map((text) =>
-                  this.dateFormat.parse(text, 'date'),
-              )
-            : [],
+    /** Weekday polls get the weekday-tile picker. */
+    readonly usesWeekdayPicker = computed(
+        () => this.isDateType() && this.dateType() === 'weekday',
+    );
+    /** Date-range polls get the range calendar. */
+    /** Time polls get the plain time picker. */
+    readonly usesTimePicker = computed(
+        () => this.isDateType() && this.dateType() === 'time',
+    );
+    /** Time-range polls get the from/to time pickers. */
+    readonly usesTimeRangePicker = computed(
+        () => this.isDateType() && this.dateType() === 'time-range',
+    );
+    readonly usesRangePicker = computed(
+        () => this.isDateType() && this.dateType() === 'date-range',
     );
 
-    /** The drafted day + time is already an option. */
+    readonly existingDates = computed<DateOptionEntry[]>(() => {
+        const type = this.dateType();
+        return this.usesCalendar() || this.usesWeekdayPicker()
+            ? this.existingOptions().map((text) =>
+                  this.dateFormat.parse(text, type!),
+              )
+            : [];
+    });
+
+    /** The drafted option is already an option (compared in normalised form). */
     readonly isDuplicate = computed(() => {
+        const type = this.dateType();
         const draft = this.dateDraft();
-        if (!this.usesCalendar() || !draft.date) {
+        const checked =
+            this.usesCalendar() ||
+            this.usesWeekdayPicker() ||
+            this.usesRangePicker() ||
+            this.usesTimePicker() ||
+            this.usesTimeRangePicker();
+        if (!checked || !type || !this.dateFormat.isValid(draft)) {
             return false;
         }
-        const time = (t?: Date) =>
-            t ? this.dateFormat.formatTimeInput(t) : undefined;
-        return this.existingDates().some(
-            (e) =>
-                !!e.date &&
-                e.date.toDateString() === draft.date!.toDateString() &&
-                time(e.startTime) === time(draft.startTime),
+        const text = this.dateFormat.serialize(draft);
+        return this.existingOptions().some(
+            (t) =>
+                this.dateFormat.serialize(this.dateFormat.parse(t, type)) ===
+                text,
         );
     });
 
@@ -147,10 +169,13 @@ export class AddOptionPanelComponent {
                 description: '',
             });
             const fresh = this.freshDateEntry(this.dateType()!);
-            // Keep the calendar's time so several days at the same time are quick to add.
+            // Keep the picked times so several days at the same time are quick to add.
+            const { startTime, endTime } = this.dateDraft();
             this.dateDraft.set(
-                this.usesCalendar()
-                    ? { ...fresh, startTime: this.dateDraft().startTime }
+                this.usesCalendar() ||
+                    this.usesWeekdayPicker() ||
+                    this.usesRangePicker()
+                    ? { ...fresh, startTime, endTime }
                     : fresh,
             );
         } else {
@@ -178,9 +203,11 @@ export class AddOptionPanelComponent {
         }
         if (type === 'time-range') {
             const start = this.dateFormat.nextFullHour();
-            const end = new Date(start);
-            end.setHours(end.getHours() + 1);
-            return { type, startTime: start, endTime: end };
+            return {
+                type,
+                startTime: start,
+                endTime: this.dateFormat.defaultEndTime(start),
+            };
         }
         return { type };
     }

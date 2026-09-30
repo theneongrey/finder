@@ -1,57 +1,48 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    computed,
     DestroyRef,
     inject,
     input,
+    linkedSignal,
     output,
     signal,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DsCalendarComponent } from '@ds/calendar/ds-calendar.component';
+import { DsRangeCalendarComponent } from '@ds/calendar/ds-range-calendar.component';
 import { DateOptionEntry } from '../../../../../_shared/models/date-option.model';
-import { OptionTimeRowComponent } from '../option-time-row/option-time-row.component';
+import { OptionTimeRangeRowComponent } from '../option-time-range-row/option-time-range-row.component';
 
 /**
- * Calendar picker for adding a single calendar-day option (optionally with a time).
- * Days that already have an option are marked; without a time they can't be picked
- * again, with a time they can (the parent rejects an exact date + time duplicate).
+ * Calendar picker for adding a single date-range option (optionally with a
+ * start and end time). The first tapped day is the start, the second the end.
  */
 @Component({
-    selector: 'app-date-option-picker',
-    templateUrl: './date-option-picker.component.html',
-    imports: [TranslatePipe, DsCalendarComponent, OptionTimeRowComponent],
+    selector: 'app-date-range-option-picker',
+    templateUrl: './date-range-option-picker.component.html',
+    imports: [
+        TranslatePipe,
+        DsRangeCalendarComponent,
+        OptionTimeRangeRowComponent,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateOptionPickerComponent {
+export class DateRangeOptionPickerComponent {
     value = input.required<DateOptionEntry>();
-    existing = input<DateOptionEntry[]>([]);
     showTime = input(false);
     duplicate = input(false);
     valueChange = output<DateOptionEntry>();
 
+    /** Local copy of `value`: one calendar click can change start and end
+     *  back to back, before the parent's new value flows back in. */
+    protected readonly draft = linkedSignal(() => this.value());
+
     /** Earliest selectable day — rolls over at midnight if the panel stays open. */
     protected readonly today = signal(startOfDay(new Date()));
 
-    /** Month to show when nothing is selected — stays on the last picked day's month
-     *  after an add clears the selection, so adding several days in one month is quick. */
+    /** Month to show when nothing is selected — stays on the last picked month
+     *  after an add clears the selection. */
     protected readonly viewAnchor = signal<Date | undefined>(undefined);
-
-    protected readonly takenDays = computed(() =>
-        this.existing()
-            .map((e) => e.date)
-            .filter((d): d is Date => !!d),
-    );
-
-    /** Without a time, a day can only be proposed once. */
-    protected readonly isDayDisabled = computed(() => {
-        if (this.showTime()) {
-            return () => false;
-        }
-        const taken = new Set(this.takenDays().map((d) => dayKey(d)));
-        return (d: Date) => taken.has(dayKey(d));
-    });
 
     constructor() {
         let midnightTimer: ReturnType<typeof setTimeout>;
@@ -71,19 +62,25 @@ export class DateOptionPickerComponent {
         inject(DestroyRef).onDestroy(() => clearTimeout(midnightTimer));
     }
 
-    setDate(date: Date | undefined): void {
+    setStartDate(date: Date | undefined): void {
         const day = date ? startOfDay(date) : undefined;
         if (day) {
             this.viewAnchor.set(day);
         }
-        this.valueChange.emit({ ...this.value(), date: day });
+        this.update({ date: day });
+    }
+
+    setEndDate(date: Date | undefined): void {
+        this.update({ endDate: date ? startOfDay(date) : undefined });
+    }
+
+    protected update(change: Partial<DateOptionEntry>): void {
+        const next = { ...this.draft(), ...change };
+        this.draft.set(next);
+        this.valueChange.emit(next);
     }
 }
 
 function startOfDay(d: Date): Date {
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-function dayKey(d: Date): string {
-    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 }

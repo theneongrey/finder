@@ -116,6 +116,7 @@ Wait for direction before proceeding.
 | Input | `<ds-input>` | `type` (text/date/time), `label`, `error`, `placeholder`, `background`; ControlValueAccessor |
 | Progress bar | `<ds-progress-bar>` | `percent` (0–100), `height` (px) |
 | Calendar | `<ds-calendar>` | `[(date)]`, `min`, `highlightDays: Date[]`, `dateDisabled`, `weekStartsOn`, `defaultFocusedDate` (wraps Spartan BrnCalendar) |
+| Range calendar | `<ds-range-calendar>` | `[(startDate)]`, `[(endDate)]`, `min`, `dateDisabled`, `weekStartsOn`, `defaultFocusedDate` — 1st click = start, 2nd = end (a day before the start moves the start) |
 | Time picker | `<ds-time-picker>` | `[(value)]` (`HH:MM`), `stepMinutes` (default 15), `title`, `cancelLabel`, `saveLabel` — field-like trigger + popover with hour/minute scroll wheels, Save/Cancel (wraps Spartan popover) |
 | Segmented control | `<ds-segmented-control>` | `options: SegmentOption[]`, `[(value)]` two-way, `size` (sm/md) |
 | Tabs | `<ds-tabs>` | `items: TabItem[]`, `[(value)]` two-way, `size` (sm/md) |

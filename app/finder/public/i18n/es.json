@@ -415,6 +415,10 @@
                 "addOption": "Añadir fecha",
                 "calendarHint": "Toca un día · gris = ya añadido",
                 "calendarHintWithTime": "Toca un día · gris = ya añadido, se puede elegir con otra hora",
+                "calendarRangeHint": "Toca la fecha de inicio y de fin",
+                "rangeStartTime": "Desde",
+                "rangeEndTime": "Hasta",
+                "endTimeBeforeStart": "La hora de fin debe ser posterior a la de inicio.",
                 "duplicateDate": "Esta fecha ya existe a esa hora: elige otra hora.",
                 "appointmentTypeLabel": "Tipo de opciones de fecha",
                 "changeType": "Cambiar",
@@ -581,6 +585,7 @@
             "openUntil": "Abierta hasta {{date}}",
             "sortByApproval": "Por aprobación",
             "sortByOrder": "Por orden",
+            "sortByDate": "Por fecha",
             "shareBarTitle": "Tu encuesta está lista — comparte el enlace:",
             "status": {
                 "active": "Activo",

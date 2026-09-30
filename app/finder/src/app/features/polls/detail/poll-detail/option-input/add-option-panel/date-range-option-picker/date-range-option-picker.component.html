@@ -1,0 +1,34 @@
+<div class="flex flex-col gap-2">
+    <ds-range-calendar
+        [startDate]="draft().date"
+        [endDate]="draft().endDate"
+        [min]="today()"
+        [weekStartsOn]="1"
+        [defaultFocusedDate]="viewAnchor()"
+        (startDateChange)="setStartDate($event)"
+        (endDateChange)="setEndDate($event)"
+        data-testid="date-range-option-calendar"
+    />
+
+    <p
+        class="text-center text-[length:var(--fs-caption-sm)] text-[var(--text-secondary)]"
+    >
+        {{ 'project.pollInput.date.calendarRangeHint' | translate }}
+    </p>
+
+    @if (showTime()) {
+        <app-option-time-range-row
+            [value]="draft()"
+            (valueChange)="update($event)"
+        />
+    }
+
+    @if (duplicate()) {
+        <p
+            class="text-[length:var(--fs-caption-sm)] font-bold text-[var(--negative)]"
+            data-testid="date-option-duplicate"
+        >
+            {{ 'project.pollInput.date.duplicateDate' | translate }}
+        </p>
+    }
+</div>

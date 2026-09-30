@@ -1,0 +1,43 @@
+<div class="flex flex-col gap-3">
+    <div class="grid grid-cols-7 gap-1">
+        @for (day of days(); track day.value) {
+            <button
+                type="button"
+                data-testid="weekday-option-day"
+                class="relative flex h-11 w-full items-center justify-center rounded-[10px] border text-[length:var(--fs-body-sm)] font-bold transition-colors outline-none select-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)]"
+                [class]="
+                    day.selected
+                        ? 'cursor-pointer border-[var(--accent)] bg-[var(--accent)] text-[var(--text-on-accent)]'
+                        : day.disabled
+                          ? 'cursor-default border-transparent bg-[var(--sand-300)] text-[var(--text-muted)]'
+                          : day.taken
+                            ? 'cursor-pointer border-transparent bg-[var(--sand-300)] text-[var(--text-tertiary)] hover:bg-[var(--bg-panel)]'
+                            : 'cursor-pointer border-[var(--border-hairline)] bg-[var(--surface-card)] text-[var(--text-primary)] hover:bg-[var(--bg-panel)]'
+                "
+                [disabled]="day.disabled"
+                [attr.aria-label]="day.ariaLabel"
+                [attr.aria-pressed]="day.selected"
+                (click)="selectWeekday(day.value)"
+            >
+                {{ day.label }}
+            </button>
+        }
+    </div>
+
+    @if (showTime()) {
+        <app-option-time-row
+            [value]="value()"
+            [existing]="existing()"
+            (valueChange)="valueChange.emit($event)"
+        />
+
+        @if (duplicate()) {
+            <p
+                class="text-[length:var(--fs-caption-sm)] font-bold text-[var(--negative)]"
+                data-testid="date-option-duplicate"
+            >
+                {{ 'project.pollInput.date.duplicateDate' | translate }}
+            </p>
+        }
+    }
+</div>

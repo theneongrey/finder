@@ -415,6 +415,10 @@
                 "addOption": "Termin hinzufügen",
                 "calendarHint": "Tag antippen · grau = schon vorhanden",
                 "calendarHintWithTime": "Tag antippen · grau = schon vorhanden, mit anderer Uhrzeit wählbar",
+                "calendarRangeHint": "Start- und Enddatum antippen",
+                "rangeStartTime": "Von",
+                "rangeEndTime": "Bis",
+                "endTimeBeforeStart": "Die Endzeit muss nach der Startzeit liegen.",
                 "duplicateDate": "Diesen Termin gibt es zu dieser Uhrzeit schon – wähle eine andere Uhrzeit.",
                 "appointmentTypeLabel": "Art der Terminoptionen",
                 "changeType": "Ändern",
@@ -581,6 +585,7 @@
             "openUntil": "Offen bis {{date}}",
             "sortByApproval": "Nach Zustimmung",
             "sortByOrder": "Nach Reihenfolge",
+            "sortByDate": "Nach Datum",
             "shareBarTitle": "Deine Umfrage ist bereit — teile den Link:",
             "status": {
                 "active": "Aktiv",

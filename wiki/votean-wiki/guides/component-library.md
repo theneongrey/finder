@@ -310,6 +310,7 @@ Time selection in the ds style instead of the native `type="time"` input. A fiel
 | `stepMinutes` | `number` | `15` | Minute granularity (15 → `00 15 30 45`) |
 | `title` | `string` | `''` | Popover heading (translated by the caller) |
 | `cancelLabel` / `saveLabel` | `string` | *(required)* | Button labels (translated by the caller) |
+| `ariaLabel` | `string \| undefined` | `undefined` | Accessible name of the trigger, announced as `<label>: HH:MM` |
 | `placeholder` | `string` | `'--:--'` | Shown while no time is set |
 
 ```html

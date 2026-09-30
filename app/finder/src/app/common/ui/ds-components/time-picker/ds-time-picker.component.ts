@@ -10,7 +10,10 @@ import type { BrnOverlayState } from '@spartan-ng/brain/overlay';
 import { HlmPopoverImports } from '@spartan-ng/helm/popover';
 import { DsButtonComponent } from '../button/ds-button.component';
 import { DsIconComponent } from '../icon/ds-icon.component';
-import { DsTimeWheelComponent } from './ds-time-wheel.component';
+import {
+    DsTimeWheelComponent,
+    TIME_WHEEL_ITEM_HEIGHT,
+} from './ds-time-wheel.component';
 
 /**
  * Time picker in the ds-* style: a field-like trigger showing `HH:MM` that opens a
@@ -19,7 +22,7 @@ import { DsTimeWheelComponent } from './ds-time-wheel.component';
  *
  * - `[(value)]` — `HH:MM` (24h) or undefined.
  * - `stepMinutes` — minute granularity (default 15 → 00 15 30 45).
- * - `title` / `cancelLabel` / `saveLabel` — translated by the caller.
+ * - `title` / `cancelLabel` / `saveLabel` / `ariaLabel` — translated by the caller.
  */
 @Component({
     selector: 'ds-time-picker',
@@ -40,6 +43,17 @@ export class DsTimePickerComponent {
     title = input('');
     cancelLabel = input.required<string>();
     saveLabel = input.required<string>();
+    /** Accessible name of the trigger, e.g. "Time" — announced together with the value. */
+    ariaLabel = input<string | undefined>(undefined);
+
+    protected readonly bandHeight = TIME_WHEEL_ITEM_HEIGHT;
+    protected readonly triggerLabel = computed(() => {
+        const label = this.ariaLabel();
+        if (!label) {
+            return null;
+        }
+        return this.value() ? `${label}: ${this.value()}` : label;
+    });
 
     protected readonly hours = Array.from({ length: 24 }, (_, h) => pad(h));
     protected readonly minutes = computed(() => {

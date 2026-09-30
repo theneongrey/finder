@@ -9,7 +9,7 @@
     [style.height.px]="height"
     [style.padding-block.px]="padding"
     [attr.aria-label]="label() || null"
-    [attr.aria-activedescendant]="'wheel-' + label() + '-' + value()"
+    [attr.aria-activedescendant]="idPrefix + '-' + value()"
     (scroll)="onScroll()"
     (wheel)="onWheel($event)"
     (pointerdown)="onPointerDown($event)"
@@ -23,7 +23,7 @@
         <div
             role="option"
             class="flex snap-center items-center justify-center tabular-nums transition-[color,font-size] duration-150 select-none"
-            [id]="'wheel-' + label() + '-' + item"
+            [id]="idPrefix + '-' + item"
             [class]="rowClass(i)"
             [style.height.px]="itemHeight"
             [attr.aria-selected]="i === selectedIndex()"

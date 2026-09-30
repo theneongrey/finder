@@ -12,8 +12,10 @@ import {
     viewChild,
 } from '@angular/core';
 
-/** Row height in px — the scroll position maps to the selected index through it. */
-const ITEM_HEIGHT = 40;
+/** Row height in px — the scroll position maps to the selected index through it.
+ *  ds-time-picker sizes its selection band with it too. */
+export const TIME_WHEEL_ITEM_HEIGHT = 40;
+const ITEM_HEIGHT = TIME_WHEEL_ITEM_HEIGHT;
 /** Rows visible above and below the selected one. */
 const VISIBLE_AROUND = 2;
 /** Wheel delta (px) that moves one row — a mouse notch is ~100, trackpads send many
@@ -43,10 +45,14 @@ interface DragState {
     host: { class: 'block' },
 })
 export class DsTimeWheelComponent {
+    private static nextId = 0;
+
     items = input.required<string[]>();
     value = model.required<string>();
     label = input<string>('');
 
+    /** Unique per instance, so row ids don't collide when several pickers share a page. */
+    protected readonly idPrefix = `ds-time-wheel-${DsTimeWheelComponent.nextId++}`;
     protected readonly itemHeight = ITEM_HEIGHT;
     protected readonly padding = ITEM_HEIGHT * VISIBLE_AROUND;
     protected readonly height = ITEM_HEIGHT * (VISIBLE_AROUND * 2 + 1);

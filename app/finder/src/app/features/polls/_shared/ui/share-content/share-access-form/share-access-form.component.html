@@ -1,6 +1,7 @@
 <p class="label mb-2">{{ 'project.share.whoCanJoin' | translate }}</p>
 
 <ds-segmented-control
+    data-testid="share-visibility"
     [options]="visibilityOptions()"
     [value]="selectedVisibility()"
     (valueChange)="visibilityChange.emit($event)"

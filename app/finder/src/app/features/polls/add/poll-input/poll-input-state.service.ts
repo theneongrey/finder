@@ -227,8 +227,12 @@ export class PollInputStateService {
         this.sharesApplied = true;
         this.pollCreating.set(false);
 
+        const isOpen =
+            this.shareTiming() === 'now' &&
+            this.visibility() === VisibilityType.VisibleForEverybody;
+
         if (this.shareTiming() === 'now') {
-            if (this.visibility() === VisibilityType.VisibleForEverybody) {
+            if (isOpen) {
                 this.sharingStore.updateVisibilityType({
                     projectId: created.projectId,
                     type: this.visibility(),
@@ -243,9 +247,12 @@ export class PollInputStateService {
             }
         }
 
-        this.router.navigate(['/polls', created.projectId, created.pollId], {
-            queryParams: { created: 1 },
-        });
+        // Only an open poll ("Offen") has a link worth sharing right away —
+        // ?created=1 makes the detail page show the share-link bar.
+        this.router.navigate(
+            ['/polls', created.projectId, created.pollId],
+            isOpen ? { queryParams: { created: 1 } } : {},
+        );
     }
 
     loadSharingContacts(): void {

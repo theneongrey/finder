@@ -10,6 +10,8 @@
         <button
             hlmToggleGroupItem
             [value]="opt.value"
+            data-testid="segment-option"
+            [attr.data-value]="opt.value"
             class="ds-seg-btn"
             [class.ds-seg-btn--sm]="size() === 'sm'"
         >

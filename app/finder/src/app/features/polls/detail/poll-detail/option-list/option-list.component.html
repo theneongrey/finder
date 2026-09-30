@@ -1,7 +1,10 @@
 <div
     class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,430px),1fr))] gap-4"
     data-testid="results-option-list"
+    [class.items-start]="alignStart()"
 >
+    <!-- Leading grid cell, e.g. the add-option panel — takes one card's slot. -->
+    <ng-content select="[optionListLead]" />
     @for (option of sortedOptions(); track trackOption(option)) {
         <div
             [attr.data-option-id]="trackOption(option)"

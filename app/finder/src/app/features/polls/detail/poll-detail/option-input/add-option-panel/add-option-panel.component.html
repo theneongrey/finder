@@ -1,18 +1,22 @@
-<div class="flex flex-col gap-2" data-testid="add-option-panel">
-    @if (isDateType()) {
+<div
+    class="flex flex-col gap-3 rounded-[var(--radius-3xl)] border-[1.5px] border-dashed border-[var(--border-dashed)] bg-[var(--surface-card)] p-3"
+    data-testid="add-option-panel"
+>
+    @if (usesCalendar()) {
+        <app-date-option-picker
+            [value]="dateDraft()"
+            [existing]="existingDates()"
+            [showTime]="showTime()"
+            [duplicate]="isDuplicate()"
+            (valueChange)="dateDraft.set($event)"
+        />
+    } @else if (isDateType()) {
         @switch (dateType()) {
             @case ('weekday') {
                 <app-option-card-weekday
                     [option]="dateDraft()"
                     [index]="0"
-                    [initialShowTime]="showTime()"
-                    (optionChange)="dateDraft.set($event)"
-                />
-            }
-            @case ('date') {
-                <app-option-card-date
-                    [option]="dateDraft()"
-                    [index]="0"
+                    [bare]="true"
                     [initialShowTime]="showTime()"
                     (optionChange)="dateDraft.set($event)"
                 />
@@ -21,6 +25,7 @@
                 <app-option-card-date-range
                     [option]="dateDraft()"
                     [index]="0"
+                    [bare]="true"
                     [initialShowTime]="showTime()"
                     (optionChange)="dateDraft.set($event)"
                 />
@@ -29,6 +34,7 @@
                 <app-option-card-time
                     [option]="dateDraft()"
                     [index]="0"
+                    [bare]="true"
                     (optionChange)="dateDraft.set($event)"
                 />
             }
@@ -36,6 +42,7 @@
                 <app-option-card-time-range
                     [option]="dateDraft()"
                     [index]="0"
+                    [bare]="true"
                     (optionChange)="dateDraft.set($event)"
                 />
             }
@@ -44,6 +51,7 @@
         <app-option-card
             [option]="textDraft()"
             [index]="0"
+            [bare]="true"
             [confirmOnEnter]="true"
             (optionChange)="textDraft.set($event)"
             (confirm)="submit()"
@@ -51,19 +59,24 @@
         />
     }
 
-    <div class="flex items-center justify-end gap-2 px-1">
-        <ds-button variant="ghost" (click)="cancelled.emit()">
+    <div class="grid grid-cols-[auto_1fr] gap-2">
+        <ds-button variant="outline" (click)="cancelled.emit()">
             {{ 'project.common.cancel' | translate }}
         </ds-button>
         <ds-button
             variant="primary"
-            icon="plus"
             data-testid="add-option-submit"
+            [fullWidth]="true"
             [disabled]="!isValid()"
             [loading]="submitting() || submitQueued()"
             (click)="submit()"
         >
-            {{ 'project.results.add' | translate }}
+            {{
+                (isDateType()
+                    ? 'project.pollInput.date.addOption'
+                    : 'project.results.addOption'
+                ) | translate
+            }}
         </ds-button>
     </div>
 </div>

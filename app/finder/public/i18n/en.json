@@ -403,6 +403,7 @@
                 "startDate": "Date",
                 "endDate": "End date",
                 "startTime": "Time",
+                "selectTime": "Select time",
                 "endTime": "End time",
                 "selectDate": "Select date",
                 "addTime": "Add time",
@@ -412,6 +413,9 @@
                 "timePerOptionHintOff": "Off: options count as all-day",
                 "endBeforeStart": "End date must be after {{date}}.",
                 "addOption": "Add date",
+                "calendarHint": "Tap a day · grey = already added",
+                "calendarHintWithTime": "Tap a day · grey = already added, still selectable with another time",
+                "duplicateDate": "This date already exists at that time – pick a different time.",
                 "appointmentTypeLabel": "Type of date options",
                 "changeType": "Change",
                 "types": {

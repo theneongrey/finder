@@ -1,0 +1,36 @@
+<div
+    #scroller
+    role="listbox"
+    tabindex="0"
+    class="cursor-grab [scrollbar-width:none] overflow-y-auto overscroll-contain rounded-[var(--radius-sm)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] [&::-webkit-scrollbar]:hidden"
+    [class.snap-y]="!dragging()"
+    [class.snap-mandatory]="!dragging()"
+    [class.cursor-grabbing]="dragging()"
+    [style.height.px]="height"
+    [style.padding-block.px]="padding"
+    [attr.aria-label]="label() || null"
+    [attr.aria-activedescendant]="idPrefix + '-' + value()"
+    (scroll)="onScroll()"
+    (wheel)="onWheel($event)"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp($event)"
+    (pointercancel)="onPointerUp($event)"
+    (touchstart)="onTouchStart()"
+    (keydown)="onKeydown($event)"
+>
+    @for (item of items(); track item; let i = $index) {
+        <div
+            role="option"
+            class="flex snap-center items-center justify-center tabular-nums transition-[color,font-size] duration-150 select-none"
+            [id]="idPrefix + '-' + item"
+            [class]="rowClass(i)"
+            [style.height.px]="itemHeight"
+            [attr.aria-selected]="i === selectedIndex()"
+            data-testid="time-wheel-item"
+            (click)="select(i)"
+        >
+            {{ item }}
+        </div>
+    }
+</div>

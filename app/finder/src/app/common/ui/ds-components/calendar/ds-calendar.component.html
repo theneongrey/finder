@@ -1,0 +1,54 @@
+<div class="flex flex-col gap-2">
+    <div class="flex items-center justify-between gap-2">
+        <!-- A disabled arrow (no earlier month allowed) is hidden but keeps its space. -->
+        <button
+            brnCalendarPreviousButton
+            data-testid="calendar-prev"
+            class="flex size-7 cursor-pointer items-center justify-center rounded-[10px] bg-[var(--bg-panel)] text-[var(--text-primary)] transition-colors outline-none hover:bg-[var(--sand-300)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] aria-disabled:invisible"
+        >
+            <ds-icon name="chevron-left" [size]="14" />
+        </button>
+        <div
+            brnCalendarHeader
+            class="text-[length:var(--fs-body-lg)] font-extrabold text-[var(--text-primary)]"
+        >
+            {{ heading() }}
+        </div>
+        <button
+            brnCalendarNextButton
+            data-testid="calendar-next"
+            class="flex size-7 cursor-pointer items-center justify-center rounded-[10px] bg-[var(--bg-panel)] text-[var(--text-primary)] transition-colors outline-none hover:bg-[var(--sand-300)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] aria-disabled:invisible"
+        >
+            <ds-icon name="chevron-right" [size]="14" />
+        </button>
+    </div>
+
+    <div brnCalendarGrid class="flex flex-col gap-1">
+        <div class="grid grid-cols-7 gap-1" aria-hidden="true">
+            <div
+                *brnCalendarWeekday="let weekday"
+                class="text-center text-[length:var(--fs-micro)] font-bold text-[var(--text-muted)] select-none"
+            >
+                {{ i18n.config().formatWeekdayName(weekday) }}
+            </div>
+        </div>
+        <div
+            *brnCalendarWeek="let week"
+            role="row"
+            class="grid grid-cols-7 gap-1"
+        >
+            @for (date of week; track dateAdapter.getTime(date)) {
+                <div brnCalendarCell>
+                    <button
+                        brnCalendarCellButton
+                        data-testid="calendar-day"
+                        [date]="date"
+                        class="relative flex h-9 w-full cursor-pointer items-center justify-center rounded-[10px] border border-[var(--border-hairline)] bg-[var(--surface-card)] text-[length:var(--fs-body-sm)] font-bold text-[var(--text-primary)] transition-colors outline-none select-none hover:bg-[var(--bg-panel)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] data-[disabled=true]:cursor-default data-[disabled=true]:border-[var(--border-hairline-soft)] data-[disabled=true]:text-[var(--text-muted)] data-[disabled=true]:hover:bg-[var(--surface-card)] data-[highlighted=true]:border-transparent data-[highlighted=true]:bg-[var(--sand-300)] data-[highlighted=true]:before:absolute data-[highlighted=true]:before:bottom-0.5 data-[highlighted=true]:before:size-1 data-[highlighted=true]:before:rounded-full data-[highlighted=true]:before:bg-[var(--text-tertiary)] data-[highlighted=true]:before:content-[''] data-[outside=true]:invisible data-[selected-single=true]:border-[var(--accent)] data-[selected-single=true]:bg-[var(--accent)] data-[selected-single=true]:text-[var(--text-on-accent)] data-[selected-single=true]:before:bg-[var(--text-on-accent)]"
+                    >
+                        {{ dateAdapter.getDate(date) }}
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

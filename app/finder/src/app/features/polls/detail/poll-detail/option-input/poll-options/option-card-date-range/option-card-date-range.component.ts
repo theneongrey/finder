@@ -37,6 +37,8 @@ export class OptionCardDateRangeComponent {
     option = input.required<DateOptionEntry>();
     index = input.required<number>();
     canRemove = input<boolean>(false);
+    /** Drop the card surface — used when embedded in the add-option panel. */
+    bare = input<boolean>(false);
     initialShowTime = input<boolean>(false);
     readonly = input<boolean>(false);
     remove = output<void>();

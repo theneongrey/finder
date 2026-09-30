@@ -255,6 +255,8 @@ White surface card — the foundation for poll cards, project cards, and most gr
 |---|---|---|---|
 | `padding` | `number` | `20` | Internal padding in px |
 | `accentBorder` | `boolean` | `false` | Adds 4px left teal border instead of hairline border |
+| `fill` | `boolean` | `false` | Flex column that fills its parent's height |
+| `bare` | `boolean` | `false` | Content only — no surface, border, shadow or padding (for cards embedded in another container, e.g. the add-option panel) |
 
 ```html
 <ds-card [accentBorder]="true">
@@ -262,6 +264,66 @@ White surface card — the foundation for poll cards, project cards, and most gr
   <p>Inhalt …</p>
 </ds-card>
 ```
+
+---
+
+## ds-calendar
+
+**Selector:** `<ds-calendar>`
+**File:** `calendar/ds-calendar.component.ts`
+
+Single-day month calendar. Spartan's `BrnCalendar` is attached as a host directive (selection, keyboard navigation, a11y); ds-calendar only adds the styling. Month/weekday labels follow the locale configured in `app.component.ts`.
+
+| Input | Type | Default | Description |
+|---|---|---|---|
+| `date` | `Date \| undefined` (model) | `undefined` | Selected day; clicking it again clears it |
+| `min` / `max` | `Date` | — | Days outside the range are disabled; the prev/next arrow is hidden (space kept) when that month can't be reached |
+| `highlightDays` | `Date[]` | `[]` | "Already taken" days: muted fill + dot |
+| `dateDisabled` | `(d: Date) => boolean` | `() => false` | Extra unselectable days |
+| `weekStartsOn` | `number` | locale config | `1` = Monday |
+| `defaultFocusedDate` | `Date` | today | Month shown while nothing is selected |
+
+```html
+<ds-calendar
+  [date]="picked()"
+  [min]="today"
+  [weekStartsOn]="1"
+  [highlightDays]="takenDays()"
+  (dateChange)="picked.set($event)"
+/>
+```
+
+Used by the poll-detail add panel for calendar-day polls (`date-option-picker`).
+
+---
+
+## ds-time-picker
+
+**Selector:** `<ds-time-picker>`
+**File:** `time-picker/ds-time-picker.component.ts` (+ internal `ds-time-wheel`)
+
+Time selection in the ds style instead of the native `type="time"` input. A field-like trigger (clock icon + `HH:MM`) opens a Spartan popover with two scroll wheels (hour 00–23, minute in `stepMinutes`), a highlighted middle band and fading neighbour rows. The wheels edit a draft: **Save** commits it, **Cancel** or closing the popover discards it. Wheels move one row per mouse-wheel notch (trackpad deltas are summed, 40px per row), can be dragged with mouse/pen (pointer captured only once the drag starts, so a tap still clicks the row) and use native snapping scroll on touch; a row click or ArrowUp/ArrowDown also moves them. An off-grid value (e.g. `10:10` from an older option) opens on the nearest step.
+
+| Input | Type | Default | Description |
+|---|---|---|---|
+| `value` | `string \| undefined` (model) | `undefined` | `HH:MM`, 24h |
+| `stepMinutes` | `number` | `15` | Minute granularity (15 → `00 15 30 45`) |
+| `title` | `string` | `''` | Popover heading (translated by the caller) |
+| `cancelLabel` / `saveLabel` | `string` | *(required)* | Button labels (translated by the caller) |
+| `ariaLabel` | `string \| undefined` | `undefined` | Accessible name of the trigger, announced as `<label>: HH:MM` |
+| `placeholder` | `string` | `'--:--'` | Shown while no time is set |
+
+```html
+<ds-time-picker
+  [title]="'project.pollInput.date.selectTime' | translate"
+  [cancelLabel]="'project.common.cancel' | translate"
+  [saveLabel]="'project.results.save' | translate"
+  [value]="time()"
+  (valueChange)="time.set($event)"
+/>
+```
+
+The `hlm-popover` host is `display: contents` — as an inline wrapper around the block trigger it otherwise intercepts pointer hit-testing (Playwright clicks fail). Used by `date-option-picker` for timed calendar-day polls.
 
 ---
 
@@ -277,6 +339,7 @@ Toggleable filter chip with optional icon. Uses `model()` for two-way active sta
 | `label` | `string` | *(required)* | Chip label text |
 | `icon` | `string \| undefined` | `undefined` | Optional icon before the label |
 | `active` | `boolean` (model) | `false` | Two-way active/inactive state |
+| `locked` | `boolean` | `false` | Ignore clicks and keys so the chip can't toggle itself (e.g. the current pick in a single-select group) |
 
 ```html
 <!-- Standalone toggle -->

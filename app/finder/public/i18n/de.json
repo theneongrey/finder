@@ -403,6 +403,7 @@
                 "startDate": "Datum",
                 "endDate": "Enddatum",
                 "startTime": "Uhrzeit",
+                "selectTime": "Uhrzeit wählen",
                 "endTime": "Endzeit",
                 "selectDate": "Datum auswählen",
                 "addTime": "Uhrzeit hinzufügen",
@@ -412,6 +413,9 @@
                 "timePerOptionHintOff": "Aus: Optionen zählen ganztägig",
                 "endBeforeStart": "Das Enddatum muss nach dem {{date}} liegen.",
                 "addOption": "Termin hinzufügen",
+                "calendarHint": "Tag antippen · grau = schon vorhanden",
+                "calendarHintWithTime": "Tag antippen · grau = schon vorhanden, mit anderer Uhrzeit wählbar",
+                "duplicateDate": "Diesen Termin gibt es zu dieser Uhrzeit schon – wähle eine andere Uhrzeit.",
                 "appointmentTypeLabel": "Art der Terminoptionen",
                 "changeType": "Ändern",
                 "types": {

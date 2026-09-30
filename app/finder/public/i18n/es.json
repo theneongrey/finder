@@ -403,6 +403,7 @@
                 "startDate": "Fecha",
                 "endDate": "Fecha de fin",
                 "startTime": "Hora",
+                "selectTime": "Seleccionar hora",
                 "endTime": "Hora de fin",
                 "selectDate": "Seleccionar fecha",
                 "addTime": "Añadir hora",
@@ -412,6 +413,9 @@
                 "timePerOptionHintOff": "Desactivado: las opciones son de todo el día",
                 "endBeforeStart": "La fecha de fin debe ser posterior al {{date}}.",
                 "addOption": "Añadir fecha",
+                "calendarHint": "Toca un día · gris = ya añadido",
+                "calendarHintWithTime": "Toca un día · gris = ya añadido, se puede elegir con otra hora",
+                "duplicateDate": "Esta fecha ya existe a esa hora: elige otra hora.",
                 "appointmentTypeLabel": "Tipo de opciones de fecha",
                 "changeType": "Cambiar",
                 "types": {

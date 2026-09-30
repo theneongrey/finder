@@ -1,0 +1,80 @@
+<!-- `contents`: as an inline wrapper around the block trigger, hlm-popover otherwise
+     intercepts pointer hit-testing. -->
+<hlm-popover
+    class="contents"
+    align="start"
+    sideOffset="6"
+    [state]="popoverState()"
+    (stateChanged)="onStateChanged($event)"
+>
+    <button
+        hlmPopoverTrigger
+        type="button"
+        data-testid="time-picker-trigger"
+        [attr.aria-label]="triggerLabel()"
+        class="flex h-[42px] cursor-pointer items-center gap-2 rounded-[var(--radius-sm)] border border-[var(--border-hairline-strong)] bg-[var(--surface-card)] px-3.5 [font-family:var(--font-body)] text-[length:var(--fs-body-xs)] font-bold text-[var(--text-primary)] tabular-nums transition-colors outline-none hover:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)]"
+    >
+        <ds-icon name="clock" [size]="14" [color]="'var(--accent)'" />
+        @if (value()) {
+            {{ value() }}
+        } @else {
+            <span class="text-[var(--text-muted)]">{{ placeholder() }}</span>
+        }
+    </button>
+
+    <hlm-popover-content
+        class="w-[248px]! gap-3! rounded-[var(--radius-3xl)]! border border-[var(--border-hairline)] bg-[var(--surface-card)]! p-4! text-[var(--text-primary)]! shadow-[var(--shadow-overlay)]! ring-0!"
+        data-testid="time-picker-panel"
+        *hlmPopoverPortal="let ctx"
+    >
+        @if (title()) {
+            <div
+                class="text-center text-[length:var(--fs-body)] font-extrabold text-[var(--text-primary)]"
+            >
+                {{ title() }}
+            </div>
+        }
+
+        <div class="relative">
+            <!-- Selection band behind the middle row of both wheels -->
+            <div
+                class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 rounded-[var(--radius-md)] border border-[var(--border-hairline)] bg-[var(--bg-panel)]"
+                aria-hidden="true"
+                [style.height.px]="bandHeight"
+            ></div>
+            <div class="relative grid grid-cols-[1fr_auto_1fr] items-center">
+                <ds-time-wheel
+                    label="hour"
+                    data-testid="time-wheel-hour"
+                    [items]="hours"
+                    [(value)]="draftHour"
+                />
+                <span
+                    class="text-[length:var(--fs-body-lg)] font-extrabold text-[var(--text-tertiary)]"
+                    aria-hidden="true"
+                    >:</span
+                >
+                <ds-time-wheel
+                    label="minute"
+                    data-testid="time-wheel-minute"
+                    [items]="minutes()"
+                    [(value)]="draftMinute"
+                />
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+            <ds-button variant="ghost" [fullWidth]="true" (click)="cancel()">
+                {{ cancelLabel() }}
+            </ds-button>
+            <ds-button
+                variant="primary"
+                data-testid="time-picker-save"
+                [fullWidth]="true"
+                (click)="save()"
+            >
+                {{ saveLabel() }}
+            </ds-button>
+        </div>
+    </hlm-popover-content>
+</hlm-popover>

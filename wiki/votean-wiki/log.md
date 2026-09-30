@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-09-29 — ingest: calendar picker for adding date options (feature/date-option-calendar)
+Pages touched: guides/component-library.md (new ds-calendar: Spartan BrnCalendar host directive, `highlightDays` for taken days, hidden arrow at `min`; new ds-time-picker with 15-min steps; ds-card `bare`; ds-chip `locked`)
+
+---
+
 ## 2026-09-29 — ingest: dev login shortcuts limited to test users (fix/dev-login-test-users)
 Pages touched: features/auth.md, guides/local-setup.md (fixed token/code only for Role.TestUser, new `Login:AuthCode` = 123456), guides/testing.md (API login helper, one UI login test), guides/component-library.md (ds-input-otp `invalid`)
 

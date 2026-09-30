@@ -144,6 +144,11 @@ export class PollDetailComponent {
         optionTypeHasTime(this.poll()?.optionType),
     );
 
+    /** Existing option texts — the add panel marks their days and blocks duplicates. */
+    readonly optionTexts = computed(
+        () => this.poll()?.options.map((o) => o.text) ?? [],
+    );
+
     poll = this.projectDetailStore.currentPoll;
     project = this.projectDetailStore.currentProject;
 

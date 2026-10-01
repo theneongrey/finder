@@ -44,15 +44,24 @@ test.describe('Poll voting progress on overview', () => {
   test('creator avatar shows its tooltip on hover, unclipped by the card', async ({ page }) => {
     await page.goto('/polls');
     const testPoll = page.locator('app-poll-item').filter({ hasText: 'Voting Progress Test Poll' }).first();
+    // Let the entry animation finish — the check below is about the card's resting state.
+    await testPoll.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)));
     await testPoll.locator('[data-testid="option-creator"] hlm-avatar').hover();
     const tooltip = page.locator('[role="tooltip"]');
     await expect(tooltip).toBeVisible();
-    // toBeVisible ignores overflow clipping — make sure the tooltip is actually the topmost element.
-    const onTop = await tooltip.evaluate((el) => {
-      const r = el.getBoundingClientRect();
-      return el.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2));
+    // toBeVisible ignores overflow clipping. The tooltip is position: fixed, so it only escapes the
+    // card's overflow-hidden when no ancestor becomes its containing block (e.g. a leftover transform).
+    const trappingAncestors = await tooltip.evaluate((el) => {
+      const found: string[] = [];
+      for (let a = el.parentElement; a; a = a.parentElement) {
+        const cs = getComputedStyle(a);
+        if (cs.transform !== 'none' || cs.filter !== 'none' || cs.contain !== 'none') {
+          found.push(a.tagName.toLowerCase());
+        }
+      }
+      return found;
     });
-    expect(onTop).toBe(true);
+    expect(trappingAncestors).toEqual([]);
   });
 
   test('starting a vote opens the overlay on the detail page and it can be dismissed', async ({ page }) => {

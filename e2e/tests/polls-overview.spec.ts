@@ -213,9 +213,9 @@ test.describe('Overview redesign (#242)', () => {
 
   test('poll card: an invited voter gets no ⋮ menu', async ({ page }) => {
     test.setTimeout(90_000);
-    await page.setViewportSize({ width: 390, height: 844 });
     const name = `Voter Menu E2E ${Date.now()}`;
     await createStandalonePoll(page, name);
+    await page.setViewportSize({ width: 390, height: 844 });
 
     // Invite USER2 with the default (voter) role from the overview card's menu.
     await page.goto('/polls');
@@ -226,6 +226,8 @@ test.describe('Overview redesign (#242)', () => {
     await expect(
       page.locator('.ds-sheet-panel ds-tabs button.ds-tab').filter({ hasText: /zugriff|access|members/i }),
     ).toBeVisible({ timeout: 10_000 });
+    await page.locator('.ds-sheet-panel [data-testid="sheet-close-btn"] button').click();
+    await expect(page.locator('.ds-sheet-panel')).not.toBeVisible();
     await logout(page);
 
     await login(page, USER2);

@@ -32,3 +32,8 @@
     border: 2.5px solid var(--negative);
     transform: rotate(11deg);
 }
+
+:host(.is-dragging) {
+    cursor: grabbing;
+    user-select: none;
+}

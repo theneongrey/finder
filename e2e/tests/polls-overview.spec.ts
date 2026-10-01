@@ -211,6 +211,39 @@ test.describe('Overview redesign (#242)', () => {
     await expect(pollCard.locator('[data-testid="delete-confirm-btn"]')).toBeVisible();
   });
 
+  test('poll card: an invited voter gets no ⋮ menu', async ({ page }) => {
+    test.setTimeout(90_000);
+    await page.setViewportSize({ width: 390, height: 844 });
+    const name = `Voter Menu E2E ${Date.now()}`;
+    await createStandalonePoll(page, name);
+
+    // Invite USER2 with the default (voter) role from the overview card's menu.
+    await page.goto('/polls');
+    const ownerCard = page.locator('app-poll-item').filter({ hasText: name });
+    await clickPollMenuItem(page, ownerCard, 'share');
+    await page.locator('.ds-sheet-panel ds-input input').fill(USER2);
+    await page.locator('.ds-sheet-panel app-share-invite-form').getByRole('button', { name: /einladen|invite/i }).click();
+    await expect(
+      page.locator('.ds-sheet-panel ds-tabs button.ds-tab').filter({ hasText: /zugriff|access|members/i }),
+    ).toBeVisible({ timeout: 10_000 });
+    await logout(page);
+
+    await login(page, USER2);
+    await page.goto('/polls');
+    const voterCard = page.locator('app-poll-item').filter({ hasText: name });
+    await expect(voterCard).toBeVisible();
+    await expect(voterCard.locator('[data-testid="poll-menu"]')).toHaveCount(0);
+    await logout(page);
+
+    // Clean up as the owner.
+    await login(page, USER1);
+    await page.goto('/polls');
+    const cleanupCard = page.locator('app-poll-item').filter({ hasText: name });
+    await clickPollMenuItem(page, cleanupCard, 'delete');
+    await cleanupCard.locator('[data-testid="delete-confirm-btn"] button').click();
+    await expect(cleanupCard).toHaveCount(0);
+  });
+
   test('no Hlm* alert dialog on page', async ({ page }) => {
     await page.goto('/polls');
     await expect(page.locator('hlm-alert-dialog')).not.toBeVisible();

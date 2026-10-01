@@ -276,7 +276,7 @@ input.invalid {
 }
 
 .vt-stagger > * {
-    animation: ds-fade-up 0.42s cubic-bezier(0.22, 0.7, 0.3, 1) both;
+    animation: ds-fade-up 0.42s cubic-bezier(0.22, 0.7, 0.3, 1) backwards;
 }
 .vt-stagger > *:nth-child(1) {
     animation-delay: 0.01s;

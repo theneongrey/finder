@@ -39,7 +39,9 @@
                         name="heart"
                         [size]="18"
                         [color]="
-                            _poll.isFavorite ? '#c1453f' : 'var(--text-muted)'
+                            _poll.isFavorite
+                                ? 'var(--red-900)'
+                                : 'var(--text-muted)'
                         "
                     />
                 </ds-button>

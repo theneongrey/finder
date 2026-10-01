@@ -57,55 +57,50 @@ export class PollItemComponent {
     shareRequested = output();
     favoriteToggled = output<string>();
 
-    readonly canDelete = computed(
-        () => this.poll().role >= PollRole.Maintainer,
-    );
-    readonly canShare = computed(() => this.poll().role >= PollRole.Owner);
+    /** Only owners (and the creator) may share or delete, so only they get the ⋮ menu. */
+    readonly canManage = computed(() => this.poll().role >= PollRole.Owner);
 
-    /** Items of the ⋮ menu: Share, then Delete. */
-    readonly menuItems = computed((): MenuItem[] => {
-        const items: MenuItem[] = [];
-        if (this.canShare()) {
-            items.push({
-                icon: 'share',
-                label: this.translateService.instant('project.share.title'),
-                onClick: () => this.shareRequested.emit(),
-            });
-        }
-        if (this.canDelete()) {
-            items.push({
-                icon: 'trash',
-                label: this.translateService.instant(
-                    'project.results.deletePoll',
-                ),
-                danger: true,
-                separatorBefore: true,
-                onClick: () => this.requestDelete(),
-            });
-        }
-        return items;
-    });
+    /** Items of the ⋮ menu: Share, then Delete; empty when the user can't manage the poll. */
+    readonly menuItems = computed((): MenuItem[] =>
+        this.canManage()
+            ? [
+                  {
+                      icon: 'share',
+                      label: this.translateService.instant(
+                          'project.share.title',
+                      ),
+                      onClick: () => this.shareRequested.emit(),
+                  },
+                  {
+                      icon: 'trash',
+                      label: this.translateService.instant(
+                          'project.results.deletePoll',
+                      ),
+                      danger: true,
+                      separatorBefore: true,
+                      onClick: () => this.requestDelete(),
+                  },
+              ]
+            : [],
+    );
 
     readonly resultsRoute = computed(() => {
         const poll = this.poll();
         return ['/polls', poll.projectId, poll.pollId];
     });
 
-    /** Undefined when the creator is unknown or not among the participants. */
+    /** Undefined when the creator isn't among the participants. */
     readonly creatorVoted = computed(() => {
-        const name = this.poll().creator?.name;
-        const creator = this.poll().participants.find((p) => p.name === name);
+        const { participants, creatorId } = this.poll();
+        const creator = participants.find((p) => p.userId === creatorId);
         return creator && creator.votingStatus !== PollVotingStatus.None;
     });
 
     /** Everyone but the creator, who is shown separately with a crown. */
     readonly avatarUsers = computed<AvatarUser[]>(() => {
-        const { participants, creator } = this.poll();
-        const creatorIndex = creator
-            ? participants.findIndex((p) => p.name === creator.name)
-            : -1;
+        const { participants, creatorId } = this.poll();
         return participants
-            .filter((_, i) => i !== creatorIndex)
+            .filter((p) => p.userId !== creatorId)
             .map((p) => ({
                 name: p.name,
                 voted: p.votingStatus !== PollVotingStatus.None,

@@ -13,7 +13,6 @@ import { filter, pairwise } from 'rxjs';
 import { PollListStore } from '../../_shared/data/poll-list.store';
 import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.component';
 import { PollItem } from '../../_shared/models/poll-item.model';
-import { PollRole } from '../../_shared/models/poll-role.enum';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
@@ -66,8 +65,8 @@ export class StandalonePollTabComponent {
 
     private readonly allPolls = computed(() =>
         this.projectListStore.standalonePolls().map((t) => {
-            const creator = t.sharedWith.find(
-                (s) => s.role === PollRole.Creator,
+            const creator = t.participants.find(
+                (p) => p.userId === t.creatorId,
             );
             return {
                 ...t,

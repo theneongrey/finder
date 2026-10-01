@@ -17,7 +17,7 @@
 /* Animate the inner card, not the host — changing the host's `animation`
    property causes vt-stagger's ds-fade-up to restart when the class is removed. */
 :host.is-settling ::ng-deep .ds-card {
-    animation: poll-settle 300ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+    animation: poll-settle 300ms cubic-bezier(0.22, 0.7, 0.3, 1) backwards;
 }
 
 @keyframes poll-exit {

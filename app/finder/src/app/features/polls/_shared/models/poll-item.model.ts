@@ -21,6 +21,7 @@ export interface PollItem {
     isFavorite: boolean;
     closeDate?: string;
     isClosed: boolean;
-    /** Who created the poll; undefined when unknown. */
+    creatorId: string;
+    /** Who created the poll; undefined when they aren't among the participants. */
     creator?: CommentAuthor;
 }

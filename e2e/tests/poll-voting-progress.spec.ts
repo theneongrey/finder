@@ -41,6 +41,20 @@ test.describe('Poll voting progress on overview', () => {
     await expect(testPoll.locator('[data-testid="voted-count"]')).toHaveCount(0);
   });
 
+  test('creator avatar shows its tooltip on hover, unclipped by the card', async ({ page }) => {
+    await page.goto('/polls');
+    const testPoll = page.locator('app-poll-item').filter({ hasText: 'Voting Progress Test Poll' }).first();
+    await testPoll.locator('[data-testid="option-creator"] hlm-avatar').hover();
+    const tooltip = page.locator('[role="tooltip"]');
+    await expect(tooltip).toBeVisible();
+    // toBeVisible ignores overflow clipping — make sure the tooltip is actually the topmost element.
+    const onTop = await tooltip.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return el.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2));
+    });
+    expect(onTop).toBe(true);
+  });
+
   test('starting a vote opens the overlay on the detail page and it can be dismissed', async ({ page }) => {
     // Create a fresh poll with one option → deterministic open, owned poll.
     await createStandalonePoll(page, `Voting Flow E2E ${Date.now()}`);

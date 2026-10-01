@@ -1,146 +1,43 @@
-@if (!hideResults()) {
-    <!-- Results mode -->
+<app-swipe-vote-card
+    [enabled]="!deleteConfirm() && !isClosed()"
+    mode="date"
+    (swiped)="onSwiped($event)"
+>
     <div class="group h-full">
         <ds-card [fill]="true" [padding]="0">
-            <!-- Preview image -->
-            @if (option().meta?.imageUrl) {
-                <img
-                    [src]="option().meta!.imageUrl"
-                    [alt]="label()"
-                    class="h-[150px] w-full object-cover"
-                />
-            }
-
             <!-- Body -->
             <div class="flex flex-1 flex-col p-4">
-                <!-- Title -->
-                <div class="min-w-0">
-                    <span
-                        class="font-display block text-[19px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty text-[color:var(--text-primary)]"
-                        >{{ label() }}</span
-                    >
-                    @if (subLabel(); as sub) {
+                <!-- Title + menu -->
+                <div class="flex items-start gap-2">
+                    <div class="min-w-0 flex-1 pt-1">
                         <span
-                            class="mt-0.5 block text-[13px] text-[color:var(--text-secondary)]"
-                            >{{ sub }}</span
+                            class="font-display block text-[19px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty text-[color:var(--text-primary)]"
+                            >{{ label() }}</span
                         >
-                    }
-                </div>
-
-                <!-- Creator -->
-                <div class="mt-1 flex items-center gap-2">
-                    <app-user-avatar
-                        [user]="option().creator"
-                        [size]="22"
-                        [tooltip]="true"
-                    />
-                    <span
-                        class="min-w-0 truncate text-[13px] text-[color:var(--text-secondary)]"
-                    >
-                        {{ 'project.results.addedBy' | translate }}
-                        {{ option().creator.name }}
-                    </span>
-                </div>
-
-                <!-- Summary row (pinned to bottom) -->
-                <div class="mt-auto flex items-center gap-2 pt-3">
-                    @if (avatarUsers().length) {
-                        <app-avatar-stack
-                            [users]="avatarUsers()"
-                            [max]="3"
-                            size="sm"
-                        />
-                    }
-                    <span
-                        class="min-w-0 flex-1 truncate text-[12.5px] font-semibold text-[color:var(--text-secondary)]"
-                    >
-                        {{ voteLine() }}
-                    </span>
-                </div>
-
-                <!-- Progress bar -->
-                <div class="mt-2.5">
-                    <app-results-progress-bar
-                        [segments]="segments()"
-                        [height]="8"
-                    />
-                </div>
-
-                <!-- Divider before actions -->
-                <hr
-                    class="mt-4 border-t border-[color:var(--border-hairline)]"
-                />
-
-                <!-- Action row -->
-                <div class="flex items-center gap-2 pt-4">
-                    <div class="flex-1">
-                        <ds-button
-                            variant="outline"
-                            size="sm"
-                            [fullWidth]="true"
-                            (click)="
-                                startVote.emit({
-                                    optionId: option().id,
-                                    revote: true,
-                                })
-                            "
-                        >
-                            {{ 'project.results.vote' | translate }}
-                        </ds-button>
+                        @if (subLabel(); as sub) {
+                            <span
+                                class="mt-0.5 block text-[13px] text-[color:var(--text-secondary)]"
+                                >{{ sub }}</span
+                            >
+                        }
                     </div>
-                    <ds-button
-                        variant="outline"
-                        size="sm"
-                        icon="comment"
-                        [label]="'project.results.comments' | translate"
-                        (click)="commentsClick.emit()"
-                    >
-                        {{ commentCount() }}
-                    </ds-button>
+                    <app-option-card-menu [items]="menuItems()" />
                 </div>
+
+                <app-option-card-footer
+                    [option]="option()"
+                    [members]="members()"
+                    [summary]="voteLine()"
+                    [commentCount]="commentCount()"
+                    [isClosed]="isClosed()"
+                    [showVoters]="!hideResults()"
+                    [deleteConfirm]="deleteConfirm()"
+                    (vote)="castVote($event)"
+                    (commentsClick)="commentsClick.emit()"
+                    (deleteCancelled)="deleteConfirm.set(false)"
+                    (deleteConfirmed)="confirmDelete()"
+                />
             </div>
         </ds-card>
     </div>
-} @else {
-    <!-- Overview mode -->
-    <div
-        class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card-soft)]"
-    >
-        <div class="mb-3 flex flex-col gap-1">
-            <p class="text-[15px] font-bold text-[color:var(--text-primary)]">
-                {{ label() }}
-            </p>
-            @if (subLabel(); as sub) {
-                <p class="text-[13px] text-[color:var(--text-secondary)]">
-                    {{ sub }}
-                </p>
-            }
-        </div>
-        @if (+(option().choice ?? '0') > 0) {
-            <div class="flex justify-end">
-                <ds-button
-                    variant="ghost"
-                    size="sm"
-                    (click)="
-                        startVote.emit({
-                            optionId: option().id,
-                            revote: false,
-                        })
-                    "
-                >
-                    {{ 'project.results.revote' | translate }}
-                </ds-button>
-            </div>
-        } @else {
-            <ds-button
-                variant="primary"
-                [fullWidth]="true"
-                (click)="
-                    startVote.emit({ optionId: option().id, revote: false })
-                "
-            >
-                {{ 'project.results.vote' | translate }}
-            </ds-button>
-        }
-    </div>
-}
+</app-swipe-vote-card>

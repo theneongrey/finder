@@ -123,8 +123,6 @@ export class PollDetailComponent {
 
     /** Vote overlay state. */
     readonly voteOpen = signal(false);
-    readonly voteStartOptionId = signal<string | undefined>(undefined);
-    readonly voteRevote = signal(false);
 
     /** Share-link bar shown once, right after the poll was created. */
     readonly showShareBar = signal(false);
@@ -418,16 +416,12 @@ export class PollDetailComponent {
 
     /** Toolbar entry: revote through every option. */
     startVote() {
-        this.voteStartOptionId.set(undefined);
-        this.voteRevote.set(true);
         this.voteOpen.set(true);
     }
 
-    /** Option-card entry: start voting at a specific option. */
-    openVoteAt(request: { optionId: string; revote: boolean }) {
-        this.voteStartOptionId.set(request.optionId);
-        this.voteRevote.set(request.revote);
-        this.voteOpen.set(true);
+    /** Option-card entry: vote inline (buttons, stars, swipe or reset). */
+    castVote(vote: { optionId: string; choice: string }) {
+        this.projectDetailStore.vote(vote);
     }
 
     closeVote() {

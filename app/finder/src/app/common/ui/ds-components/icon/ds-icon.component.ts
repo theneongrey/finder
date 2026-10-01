@@ -190,6 +190,10 @@ const ICONS: Record<string, IconDef> = {
             },
         ],
     },
+    crown: {
+        fill: true,
+        paths: [{ d: 'M3 7.5l4.6 4.1L12 4.5l4.4 7.1L21 7.5 19.2 18H4.8z' }],
+    },
     star: {
         strokeWidth: 2,
         paths: [

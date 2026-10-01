@@ -1,13 +1,16 @@
-@if (!hideResults()) {
-    <!-- Results mode -->
+<app-swipe-vote-card
+    [enabled]="!editing() && !deleteConfirm() && !isClosed()"
+    [mode]="pollType()"
+    (swiped)="onSwiped($event)"
+>
     <div class="group h-full">
         <ds-card [fill]="true" [padding]="0">
             <!-- Preview image -->
-            @if (option().meta?.imageUrl) {
+            @if (!hideResults() && option().meta?.imageUrl) {
                 <img
                     [src]="option().meta!.imageUrl"
                     [alt]="option().text"
-                    class="h-[150px] w-full object-cover"
+                    class="pointer-events-none h-[150px] w-full object-cover select-none"
                 />
             }
 
@@ -33,310 +36,90 @@
                             [maxlength]="limits.optionDescriptionLength"
                         />
                     </div>
-                } @else if (isTextOnly()) {
-                    <!-- Text-only option: hero title, centered -->
-                    @if (canManage()) {
-                        <span
-                            class="absolute top-3 right-3 z-[1] @min-[900px]/detail:opacity-0 @min-[900px]/detail:transition-opacity @min-[900px]/detail:group-focus-within:opacity-100 @min-[900px]/detail:group-hover:opacity-100"
-                        >
-                            <ds-button
-                                variant="ghost"
-                                [size]="32"
-                                icon="edit"
-                                [label]="'project.results.edit' | translate"
-                                (click)="startEdit()"
-                            />
-                        </span>
-                    }
-                    <div
-                        class="flex flex-1 items-center justify-center px-2 py-4"
-                    >
-                        <p
-                            class="font-display text-center text-[23px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty wrap-anywhere text-[color:var(--text-primary)]"
-                        >
-                            {{ option().text }}
-                        </p>
-                    </div>
-                } @else {
-                    <!-- Title + edit -->
-                    <div class="flex items-center gap-2">
-                        <p
-                            class="font-display min-w-0 flex-1 text-[19px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty wrap-anywhere text-[color:var(--text-primary)]"
-                        >
-                            {{ option().text }}
-                        </p>
-                        @if (canManage()) {
-                            <span
-                                class="@min-[900px]/detail:opacity-0 @min-[900px]/detail:transition-opacity @min-[900px]/detail:group-focus-within:opacity-100 @min-[900px]/detail:group-hover:opacity-100"
-                            >
-                                <ds-button
-                                    variant="ghost"
-                                    [size]="32"
-                                    icon="edit"
-                                    [label]="'project.results.edit' | translate"
-                                    (click)="startEdit()"
-                                />
-                            </span>
-                        }
-                    </div>
-                }
-
-                @if (editing()) {
-                    <!-- Edit action row -->
-                    @if (deleteConfirm()) {
-                        <div class="mt-4 flex items-center gap-2">
-                            <span
-                                class="min-w-0 flex-1 text-[13px] text-[color:var(--text-secondary)]"
-                            >
-                                {{
-                                    'project.results.deleteOptionPrompt'
-                                        | translate
-                                }}
-                            </span>
-                            <ds-button
-                                variant="ghost"
-                                size="sm"
-                                (click)="deleteConfirm.set(false)"
-                            >
-                                {{ 'project.results.cancel' | translate }}
-                            </ds-button>
-                            <ds-button
-                                variant="danger"
-                                size="sm"
-                                data-testid="option-delete-confirm"
-                                (click)="confirmDelete()"
-                            >
-                                {{ 'project.results.delete' | translate }}
-                            </ds-button>
-                        </div>
-                    } @else {
-                        <div class="mt-4 flex items-center gap-2">
-                            <ds-button
-                                variant="danger"
-                                size="sm"
-                                icon="trash"
-                                [label]="
-                                    'project.results.deleteOption' | translate
-                                "
-                                data-testid="option-delete"
-                                (click)="deleteConfirm.set(true)"
-                            />
-                            <div class="ml-auto flex items-center gap-2">
-                                <ds-button
-                                    variant="neutral"
-                                    size="sm"
-                                    data-testid="option-edit-cancel"
-                                    (click)="cancelEdit()"
-                                >
-                                    {{ 'project.results.cancel' | translate }}
-                                </ds-button>
-                                <ds-button
-                                    variant="primary"
-                                    size="sm"
-                                    [disabled]="!editText().trim()"
-                                    data-testid="option-edit-save"
-                                    (click)="submitEdit()"
-                                >
-                                    {{ 'project.results.save' | translate }}
-                                </ds-button>
-                            </div>
-                        </div>
-                    }
-                }
-
-                <!-- Creator -->
-                <div class="mt-1 mb-2 flex items-center gap-2">
-                    <app-user-avatar
-                        [user]="option().creator"
-                        [size]="22"
-                        [tooltip]="true"
-                    />
-                    <span
-                        class="min-w-0 truncate text-[13px] text-[color:var(--text-secondary)]"
-                    >
-                        {{
-                            editing()
-                                ? ('project.results.originallyAddedBy'
-                                  | translate)
-                                : ('project.results.addedBy' | translate)
-                        }}
-                        {{ option().creator.name }}
-                    </span>
-                </div>
-
-                <!-- Description -->
-                @if (!editing() && option().description) {
-                    <p
-                        class="mt-3 text-[14px] leading-[1.5] wrap-anywhere whitespace-pre-line text-[color:var(--text-secondary)]"
-                    >
-                        {{ option().description }}
-                    </p>
-                }
-
-                <!-- Link chip -->
-                @if (!editing() && option().meta?.url) {
-                    <div class="mt-3">
-                        <button
-                            type="button"
-                            class="inline-flex max-w-full cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border-hairline)] px-3 py-1.5 text-[12.5px] font-semibold text-[color:var(--accent)]"
-                            (click)="openUrl(option().meta!.url)"
-                        >
-                            <ds-icon name="link" [size]="13" />
-                            <span class="truncate">{{
-                                option().meta!.siteName || option().meta!.url
-                            }}</span>
-                        </button>
-                    </div>
-                }
-
-                @if (!editing()) {
-                    <!-- Divider before results summary (pinned to bottom) -->
-                    <hr
-                        class="mt-auto border-t border-[color:var(--border-hairline)]"
-                    />
-
-                    <!-- Voted count + percentage -->
-                    <div class="mt-3.5 flex items-center justify-between gap-2">
-                        <span
-                            class="text-[13px] leading-none font-bold text-[color:var(--text-primary)]"
-                        >
-                            {{
-                                'project.lastVote.voted'
-                                    | translate
-                                        : {
-                                              count: votedCount(),
-                                              total: totalParticipants(),
-                                          }
-                            }}
-                        </span>
-                        <span
-                            class="text-[12.5px] leading-none font-semibold text-[color:var(--text-muted)]"
-                        >
-                            {{ votedPercent() }}%
-                        </span>
-                    </div>
-
-                    <!-- Progress bar -->
-                    <div class="mt-2">
-                        <app-results-progress-bar
-                            [segments]="segments()"
-                            [height]="8"
-                        />
-                    </div>
-
-                    <!-- Avatars + summary line -->
-                    <div class="mt-2.5 flex items-center gap-2">
-                        @if (avatarUsers().length) {
-                            <app-avatar-stack
-                                [users]="avatarUsers()"
-                                [max]="5"
-                                size="sm"
-                            />
-                        }
-                        <span
-                            class="min-w-0 flex-1 truncate text-[12.5px] font-semibold text-[color:var(--text-secondary)]"
-                        >
-                            @if (pollType() === 'rating') {
-                                @if (ratingsCount()) {
-                                    {{
-                                        'project.results.ratingsAvgLine'
-                                            | translate
-                                                : {
-                                                      avg: avgLabel(),
-                                                      count: ratingsCount(),
-                                                  }
-                                    }}
-                                } @else {
-                                    {{
-                                        'project.results.noRatings' | translate
-                                    }}
-                                }
-                            } @else {
-                                {{ voteLine() }}
-                            }
-                        </span>
-                    </div>
-
-                    <!-- Action row -->
-                    <div class="flex items-center gap-2 pt-4">
-                        <div class="flex-1">
-                            <ds-button
-                                variant="outline"
-                                size="sm"
-                                [fullWidth]="true"
-                                (click)="
-                                    startVote.emit({
-                                        optionId: option().id,
-                                        revote: true,
-                                    })
-                                "
-                            >
-                                {{
-                                    (pollType() === 'rating'
-                                        ? 'project.results.rate'
-                                        : 'project.results.vote'
-                                    ) | translate
-                                }}
-                            </ds-button>
-                        </div>
+                    <div class="mt-4 flex items-center justify-end gap-2">
                         <ds-button
-                            variant="outline"
+                            variant="neutral"
                             size="sm"
-                            icon="comment"
-                            [label]="'project.results.comments' | translate"
-                            (click)="commentsClick.emit()"
+                            data-testid="option-edit-cancel"
+                            (click)="cancelEdit()"
                         >
-                            {{ commentCount() }}
+                            {{ 'project.results.cancel' | translate }}
+                        </ds-button>
+                        <ds-button
+                            variant="primary"
+                            size="sm"
+                            [disabled]="!editText().trim()"
+                            data-testid="option-edit-save"
+                            (click)="submitEdit()"
+                        >
+                            {{ 'project.results.save' | translate }}
                         </ds-button>
                     </div>
+                } @else {
+                    <!-- Title + menu -->
+                    <div class="flex items-start gap-2">
+                        @if (isTextOnly() && !hideResults()) {
+                            <!-- Text-only option: hero title, centered -->
+                            <div
+                                class="flex min-w-0 flex-1 items-center justify-center px-2 py-4"
+                            >
+                                <p
+                                    class="font-display text-center text-[23px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty wrap-anywhere text-[color:var(--text-primary)]"
+                                >
+                                    {{ option().text }}
+                                </p>
+                            </div>
+                        } @else {
+                            <p
+                                class="font-display min-w-0 flex-1 pt-1 text-[19px] leading-[1.2] font-bold tracking-[-0.3px] text-pretty wrap-anywhere text-[color:var(--text-primary)]"
+                            >
+                                {{ option().text }}
+                            </p>
+                        }
+                        <app-option-card-menu [items]="menuItems()" />
+                    </div>
+
+                    <!-- Description -->
+                    @if (option().description) {
+                        <p
+                            class="mt-2 text-[14px] leading-[1.5] wrap-anywhere whitespace-pre-line text-[color:var(--text-secondary)]"
+                        >
+                            {{ option().description }}
+                        </p>
+                    }
+
+                    <!-- Link chip -->
+                    @if (option().meta?.url; as url) {
+                        <div class="mt-3">
+                            <button
+                                type="button"
+                                class="inline-flex max-w-full cursor-pointer items-center gap-1.5 rounded-[var(--radius-xs)] border border-[var(--border-hairline)] bg-[var(--surface-card)] px-3 py-1.5 text-[12.5px] font-semibold text-[color:var(--accent)]"
+                                [title]="url"
+                                data-testid="option-link"
+                                (click)="openUrl(url)"
+                            >
+                                <ds-icon name="link" [size]="13" />
+                                <span class="truncate">{{ linkDomain() }}</span>
+                            </button>
+                        </div>
+                    }
+
+                    <app-option-card-footer
+                        [option]="option()"
+                        [members]="members()"
+                        [summary]="voteLine()"
+                        [mode]="pollType()"
+                        [commentCount]="commentCount()"
+                        [isClosed]="isClosed()"
+                        [showVoters]="!hideResults()"
+                        [deleteConfirm]="deleteConfirm()"
+                        (vote)="castVote($event)"
+                        (commentsClick)="commentsClick.emit()"
+                        (deleteCancelled)="deleteConfirm.set(false)"
+                        (deleteConfirmed)="confirmDelete()"
+                    />
                 }
             </div>
         </ds-card>
     </div>
-} @else {
-    <!-- Overview mode -->
-    <div
-        class="rounded-[22px] border border-[var(--border-hairline-soft)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card-soft)]"
-    >
-        <div class="mb-3 flex flex-col gap-1">
-            <p
-                class="text-[15px] font-bold wrap-anywhere text-[color:var(--text-primary)]"
-            >
-                {{ option().text }}
-            </p>
-            @if (option().description) {
-                <p
-                    class="text-[13px] wrap-anywhere whitespace-pre-line text-[color:var(--text-secondary)]"
-                >
-                    {{ option().description }}
-                </p>
-            }
-        </div>
-        @if (option().choice) {
-            <div class="flex justify-end">
-                <ds-button
-                    variant="ghost"
-                    size="sm"
-                    (click)="
-                        startVote.emit({
-                            optionId: option().id,
-                            revote: false,
-                        })
-                    "
-                >
-                    {{ 'project.results.revote' | translate }}
-                </ds-button>
-            </div>
-        } @else {
-            <ds-button
-                variant="primary"
-                [fullWidth]="true"
-                (click)="
-                    startVote.emit({ optionId: option().id, revote: false })
-                "
-            >
-                {{ 'project.results.vote' | translate }}
-            </ds-button>
-        }
-    </div>
-}
+</app-swipe-vote-card>

@@ -13,22 +13,19 @@ import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
-import { POLL_LIMITS } from '../../../../_shared/models/poll-limits';
-import {
-    ResultsProgressBarComponent,
-    ProgressSegment,
-} from '../results-progress-bar/results-progress-bar.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
-import {
-    AvatarStackComponent,
-    AvatarUser,
-} from '@smart/avatar-stack/avatar-stack.component';
-import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
+import { MenuItem } from '@ds/menu/ds-menu.component';
+import { POLL_LIMITS } from '../../../../_shared/models/poll-limits';
 import {
     OptionDetail,
     SharedWith,
 } from '../../../../_shared/models/poll-detail.model';
 import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
+import { urlDomain } from '../../../../_shared/utils/url.utils';
+import { SwipeVoteCardComponent } from '../swipe-vote-card/swipe-vote-card.component';
+import { OptionCardFooterComponent } from '../option-card-footer/option-card-footer.component';
+import { OptionCardMenuComponent } from '../option-card-menu/option-card-menu.component';
+import { optionMenuItems } from '../option-card-menu/option-menu-items';
 
 @Component({
     selector: 'app-option-card',
@@ -40,10 +37,10 @@ import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
         DsCardComponent,
         DsInputComponent,
         DsTextareaComponent,
-        ResultsProgressBarComponent,
-        AvatarStackComponent,
-        UserAvatarComponent,
         DsIconComponent,
+        SwipeVoteCardComponent,
+        OptionCardFooterComponent,
+        OptionCardMenuComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -57,12 +54,14 @@ export class OptionCardComponent {
     projectId = input('');
     pollId = input('');
     hideResults = input(false);
+    /** Closed polls take no votes: inline voting, swiping and reset are disabled. */
+    isClosed = input(false);
     pollType = input<'yesno' | 'rating'>('yesno');
-    /** Whether the current user may edit/delete this option (Maintainer+); gates the edit affordance. */
+    /** Whether the current user may edit/delete this option (Maintainer+); gates those menu items. */
     canManage = input(false);
 
     commentsClick = output<void>();
-    startVote = output<{ optionId: string; revote: boolean }>();
+    vote = output<{ optionId: string; choice: string }>();
     saveEdit = output<{
         optionId: string;
         text: string;
@@ -97,8 +96,6 @@ export class OptionCardComponent {
     protected confirmDelete(): void {
         this.deleteOption.emit({ optionId: this.option().id });
         this.deleteConfirm.set(false);
-        this.editing.set(false);
-        this.editEnd.emit({ optionId: this.option().id });
     }
 
     protected submitEdit(): void {
@@ -121,81 +118,28 @@ export class OptionCardComponent {
         return !o.description && !o.meta?.imageUrl && !o.meta?.url;
     });
 
-    // ── Yes/No ──────────────────────────────────────────────────────
-    readonly yesVotes = computed(() => voteTally.yesVotes(this.option()));
-
-    readonly noVotes = computed(() => voteTally.noVotes(this.option()));
-
-    readonly totalVoters = computed(() => voteTally.totalVoters(this.option()));
-
-    // ── Participation (shared with overview card) ───────────────────
-    readonly totalParticipants = computed(() => {
-        const members = this.members().length;
-        return members > 0 ? members : this.option().votes.length;
-    });
-
-    readonly votedCount = computed(() =>
-        this.pollType() === 'rating' ? this.ratingsCount() : this.totalVoters(),
+    readonly linkDomain = computed(() =>
+        urlDomain(this.option().meta?.url ?? ''),
     );
 
-    readonly votedPercent = computed(() => {
-        const total = this.totalParticipants();
-        return total > 0 ? Math.round((this.votedCount() / total) * 100) : 0;
-    });
-
-    // ── Rating ──────────────────────────────────────────────────────
-    readonly averageRating = computed(() =>
-        voteTally.averageRating(this.option()),
-    );
-
-    readonly ratingsCount = computed(() =>
-        voteTally.ratingsCount(this.option()),
-    );
-
-    readonly avgLabel = computed(() => {
-        const avg = this.averageRating();
-        return avg > 0 ? avg.toFixed(1).replace('.', ',') : '—';
-    });
-
-    // ── Shared / switched ───────────────────────────────────────────
-    readonly segments = computed((): ProgressSegment[] => {
-        if (this.pollType() === 'rating') {
-            return [
-                {
-                    percent: Math.round((this.averageRating() / 5) * 100),
-                    color: 'var(--star)',
-                },
-            ];
-        }
-        const total = this.totalVoters();
-        if (!total) {
-            return [];
-        }
-        return [
-            {
-                percent: (this.yesVotes().length / total) * 100,
-                color: 'var(--positive-strong)',
-            },
-            {
-                percent: (this.noVotes().length / total) * 100,
-                color: 'var(--negative-soft)',
-            },
-        ].filter((s) => s.percent > 0);
-    });
-
+    // ── Tally ───────────────────────────────────────────────────────
     readonly voteLine = computed(() => {
+        const option = this.option();
         if (this.pollType() === 'rating') {
-            const count = this.ratingsCount();
+            const count = voteTally.ratingsCount(option);
             if (!count) {
                 return this.translate.instant('project.results.noRatings');
             }
-            return this.translate.instant('project.results.ratingSummary', {
+            return this.translate.instant('project.results.ratingsAvgLine', {
                 count,
-                avg: this.averageRating().toFixed(1).replace('.', ','),
+                avg: voteTally
+                    .averageRating(option)
+                    .toFixed(1)
+                    .replace('.', ','),
             });
         }
-        const yes = this.yesVotes().length;
-        const no = this.noVotes().length;
+        const yes = voteTally.yesVotes(option).length;
+        const no = voteTally.noVotes(option).length;
         if (!yes && !no) {
             return this.translate.instant('project.results.noVotes');
         }
@@ -205,9 +149,34 @@ export class OptionCardComponent {
         });
     });
 
-    readonly avatarUsers = computed((): AvatarUser[] =>
-        voteTally.avatarUsers(this.option(), this.members()),
+    // ── Menu ────────────────────────────────────────────────────────
+    readonly menuItems = computed((): MenuItem[] =>
+        optionMenuItems(this.translate, {
+            edit: this.canManage() ? () => this.startEdit() : undefined,
+            resetVote:
+                !this.isClosed() && voteTally.hasVoted(this.option().choice)
+                    ? () => this.resetVote()
+                    : undefined,
+            delete: this.canManage()
+                ? () => this.deleteConfirm.set(true)
+                : undefined,
+        }),
     );
+
+    // ── Voting ──────────────────────────────────────────────────────
+    protected castVote(choice: string): void {
+        this.vote.emit({ optionId: this.option().id, choice });
+    }
+
+    /** Swipe right = yes / five stars, left = no / one star — as in the vote overlay. */
+    protected onSwiped(right: boolean): void {
+        const isRating = this.pollType() === 'rating';
+        this.castVote(isRating ? (right ? '5' : '1') : right ? '1' : '2');
+    }
+
+    private resetVote(): void {
+        this.castVote(voteTally.resetChoice(this.option().choice));
+    }
 
     protected openUrl(url: string) {
         window.open(url, '_blank', 'noopener noreferrer');

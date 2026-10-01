@@ -1,0 +1,35 @@
+@if (showVoters()) {
+    <div class="mt-4">
+        <app-option-voters
+            [creator]="option().creator"
+            [creatorVoted]="creatorVoted()"
+            [users]="avatarUsers()"
+        >
+            <span
+                class="block truncate text-[12.5px] font-semibold text-[color:var(--text-secondary)]"
+            >
+                {{ summary() }}
+            </span>
+        </app-option-voters>
+    </div>
+}
+
+<hr class="mt-4 border-t border-[color:var(--border-hairline)]" />
+
+<div class="pt-4">
+    @if (deleteConfirm()) {
+        <app-option-delete-confirm
+            (cancelled)="deleteCancelled.emit()"
+            (confirmed)="deleteConfirmed.emit()"
+        />
+    } @else {
+        <app-option-card-actions
+            [mode]="mode()"
+            [choice]="option().choice"
+            [commentCount]="commentCount()"
+            [disabled]="isClosed()"
+            (vote)="vote.emit($event)"
+            (commentsClick)="commentsClick.emit()"
+        />
+    }
+</div>

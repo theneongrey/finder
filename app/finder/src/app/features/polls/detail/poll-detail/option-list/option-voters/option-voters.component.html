@@ -1,0 +1,30 @@
+<div class="flex min-w-0 items-center gap-2">
+    <div class="flex shrink-0 items-center gap-1.5">
+        <!-- Creator: the crown is painted after the avatar (on top of it) and the gap keeps the
+             group clear of it. No z-index, so it stays below sticky bars and the tooltip isn't
+             trapped in a stacking context. -->
+        <div class="relative" data-testid="option-creator">
+            <app-user-avatar
+                [user]="creator()"
+                [size]="27"
+                [voted]="creatorVoted()"
+                [tooltip]="
+                    'project.results.createdBy'
+                        | translate: { name: creator().name }
+                "
+            />
+            <span
+                class="pointer-events-none absolute -top-[5px] -left-[3px] flex h-[14px] w-[14px] items-center justify-center rounded-full border-[1.5px] border-[var(--surface-card)] bg-[var(--star-bg)]"
+                data-testid="option-creator-crown"
+            >
+                <ds-icon name="crown" [size]="8" color="var(--star)" />
+            </span>
+        </div>
+        @if (users().length) {
+            <app-avatar-stack [users]="users()" [max]="max()" size="sm" />
+        }
+    </div>
+    <div class="min-w-0 flex-1">
+        <ng-content />
+    </div>
+</div>

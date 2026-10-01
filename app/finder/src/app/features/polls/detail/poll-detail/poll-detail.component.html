@@ -75,7 +75,7 @@
                         (openComments)="openOptionComments($event)"
                         (saveEdit)="saveOptionEdit($event)"
                         (deleteOption)="deleteOption($event)"
-                        (startVote)="openVoteAt($event)"
+                        (vote)="castVote($event)"
                         (editStart)="onEditStart($event)"
                         (editEnd)="onEditEnd($event)"
                     >
@@ -176,8 +176,7 @@
         animate.enter="vote-overlay-enter"
         animate.leave="vote-overlay-leave"
         [pollId]="pollId()"
-        [startOptionId]="voteStartOptionId()"
-        [revote]="voteRevote()"
+        [revote]="true"
         (finished)="closeVote()"
         (dismissed)="closeVote()"
     />

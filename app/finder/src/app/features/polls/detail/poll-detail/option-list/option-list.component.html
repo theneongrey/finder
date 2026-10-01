@@ -23,8 +23,11 @@
                     [projectId]="projectId()"
                     [pollId]="pollId()"
                     [hideResults]="hideResults()"
+                    [isClosed]="isClosed()"
+                    [canManage]="canManage()"
                     (commentsClick)="openComments.emit(option)"
-                    (startVote)="startVote.emit($event)"
+                    (vote)="vote.emit($event)"
+                    (deleteOption)="deleteOption.emit($event)"
                 />
             } @else {
                 <app-option-card
@@ -35,6 +38,7 @@
                     [projectId]="projectId()"
                     [pollId]="pollId()"
                     [hideResults]="hideResults()"
+                    [isClosed]="isClosed()"
                     [canManage]="canManage()"
                     [pollType]="
                         optionType() === OptionType.Rating ? 'rating' : 'yesno'
@@ -42,7 +46,7 @@
                     (commentsClick)="openComments.emit(option)"
                     (saveEdit)="saveEdit.emit($event)"
                     (deleteOption)="deleteOption.emit($event)"
-                    (startVote)="startVote.emit($event)"
+                    (vote)="vote.emit($event)"
                     (editStart)="editStart.emit($event)"
                     (editEnd)="editEnd.emit($event)"
                 />

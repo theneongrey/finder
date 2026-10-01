@@ -606,16 +606,15 @@
             "deletePoll": "Eliminar encuesta",
             "deleteOption": "Eliminar opción",
             "deleteOptionPrompt": "¿Eliminar esta opción?",
-            "addedBy": "Añadido por",
-            "originallyAddedBy": "Añadido originalmente por",
-            "revote": "Votar de nuevo",
             "rate": "Valorar",
             "noVotes": "Sin votos",
             "noRatings": "Sin valoraciones",
-            "ratingSummary": "{{count}} valoraciones · Ø {{avg}} de 5",
             "ratingsAvgLine": "Ø {{avg}} ★ · {{count}} valoraciones",
             "voteLineYesNo": "{{yes}} × sí · {{no}} × no",
-            "voteLineDate": "{{yes}} × puede · {{maybe}} × quizás · {{no}} × no puede"
+            "voteLineDate": "{{yes}} × puede · {{maybe}} × quizás · {{no}} × no puede",
+            "discuss": "Comentar",
+            "resetVote": "Restablecer voto",
+            "createdBy": "Creado por {{name}}"
         },
         "lastVote": {
             "label": "Último voto",

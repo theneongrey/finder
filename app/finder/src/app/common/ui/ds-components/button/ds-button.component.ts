@@ -19,7 +19,9 @@ export type ButtonVariant =
     | 'soft'
     | 'danger'
     | 'danger-ghost'
-    | 'danger-outline';
+    | 'danger-outline'
+    | 'vote-yes'
+    | 'vote-no';
 export type ButtonSize = 'sm' | 'md';
 
 @Component({
@@ -43,6 +45,8 @@ export class DsButtonComponent {
     disabled = input<boolean>(false);
     noGlow = input<boolean>(true);
     square = input<boolean>(false);
+    /** Marks a toggle-style button (e.g. the user's current vote) as chosen. */
+    selected = input<boolean>(false);
 
     protected readonly isIconOnly = computed(
         () => typeof this.size() === 'number',

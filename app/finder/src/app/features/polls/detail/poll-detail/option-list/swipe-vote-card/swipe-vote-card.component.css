@@ -1,0 +1,39 @@
+:host {
+    position: relative;
+    display: block;
+    height: 100%;
+}
+
+/* Swipe stamps — same look as the vote overlay's (vote-swipe-card), scaled to the grid card */
+.swipe-stamp {
+    position: absolute;
+    top: 16px;
+    z-index: 20;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: var(--weight-heavy);
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--white) 90%, transparent);
+    pointer-events: none;
+}
+
+.swipe-stamp--yes {
+    left: 16px;
+    color: var(--positive-strong);
+    border: 2.5px solid var(--positive-strong);
+    transform: rotate(-11deg);
+}
+
+.swipe-stamp--no {
+    right: 16px;
+    color: var(--negative);
+    border: 2.5px solid var(--negative);
+    transform: rotate(11deg);
+}
+
+:host(.is-dragging) {
+    cursor: grabbing;
+    user-select: none;
+}

@@ -14,6 +14,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { PollDetailStore } from '../../_shared/data/poll-detail.store';
 import { DateOptionFormatService } from '../../_shared/utils/date-option-format.service';
+import * as voteTally from '../../_shared/utils/vote-tally.utils';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VoteProgressHeaderComponent } from './vote-progress-header/vote-progress-header.component';
 import { VoteSwipeCardComponent } from './vote-swipe-card/vote-swipe-card.component';
@@ -58,8 +59,6 @@ export class PollVoteComponent implements OnDestroy {
     ctaAreaRef = viewChild.required(VoteCtaAreaComponent);
 
     pollId = input('');
-    /** Option to start voting at; when unset the first pending option is chosen. */
-    startOptionId = input<string | undefined>(undefined);
     /** Revote mode cycles through every option once, regardless of prior choice. */
     revote = input(false);
 
@@ -138,18 +137,10 @@ export class PollVoteComponent implements OnDestroy {
         effect(() => {
             this.projectDetailStore.getPoll(this.pollId());
         });
-        // Pick the first option to show once the poll is loaded. Honour an
-        // explicit start option (single-option / revote-from-card), otherwise
-        // fall back to the standard "next pending option" selection.
+        // Pick the first option to show once the poll is loaded: the next pending one.
         effect(() => {
-            const poll = this.poll();
-            if (poll && !this.currentOptionId()) {
-                const start = this.startOptionId();
-                if (start) {
-                    this.currentOptionId.set(start);
-                } else {
-                    this.goToNextOption(undefined);
-                }
+            if (this.poll() && !this.currentOptionId()) {
+                this.goToNextOption(undefined);
             }
         });
     }
@@ -177,11 +168,9 @@ export class PollVoteComponent implements OnDestroy {
 
     skip(): void {
         const optionId = this.currentOptionId();
-        const currentChoice = parseInt(this.option()?.choice ?? '0') || 0;
-        const skipValue = Math.min(currentChoice, 0) - 1;
         this.projectDetailStore.vote({
             optionId,
-            choice: skipValue.toString(),
+            choice: voteTally.resetChoice(this.option()?.choice),
         });
 
         if (this.revote()) {

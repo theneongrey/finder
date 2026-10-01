@@ -23,6 +23,7 @@
 
             @if (showShareBar()) {
                 <app-results-share-bar
+                    data-testid="results-share-bar"
                     [shareLink]="shareLink()"
                     (dismiss)="showShareBar.set(false)"
                 />

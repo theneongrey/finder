@@ -1,10 +1,12 @@
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
     ElementRef,
     computed,
     inject,
+    Injector,
     input,
     signal,
     viewChild,
@@ -20,6 +22,8 @@ const TOOLTIP_CLICK_VISIBLE_MS = 2500;
 // Gap between the avatar and the tooltip, and the tooltip's rough height used for flip detection.
 const TOOLTIP_GAP = 7;
 const TOOLTIP_APPROX_HEIGHT = 30;
+// Minimum distance between the tooltip and the viewport's left/right edge.
+const TOOLTIP_EDGE_MARGIN = 8;
 
 @Component({
     selector: 'ds-avatar',
@@ -54,6 +58,8 @@ export class DsAvatarComponent {
     // `#circle` is on <hlm-avatar> (a component), so we must read the ElementRef explicitly —
     // the default viewChild would hand back the component instance, which has no nativeElement.
     private readonly circle = viewChild('circle', { read: ElementRef });
+    private readonly tip = viewChild<ElementRef<HTMLElement>>('tip');
+    private readonly injector = inject(Injector);
 
     // Lightweight tooltip: shows on hover and on click/tap. It is rendered with `position: fixed`
     // and positioned from the avatar's bounding rect so it escapes any clipping ancestor (e.g. a
@@ -62,6 +68,8 @@ export class DsAvatarComponent {
     protected readonly tipTop = signal(0);
     protected readonly tipLeft = signal(0);
     protected readonly tipPlacement = signal<'below' | 'above'>('below');
+    /** Arrow offset inside the tooltip; moves off-centre when the tooltip is shifted to fit. */
+    protected readonly tipArrowX = signal('50%');
     private hideTimer?: ReturnType<typeof setTimeout>;
     private minVisibleUntil = 0;
 
@@ -127,6 +135,12 @@ export class DsAvatarComponent {
             window.innerHeight - rect.bottom >
             TOOLTIP_GAP + TOOLTIP_APPROX_HEIGHT;
         this.tipLeft.set(Math.round(centerX));
+        this.tipArrowX.set('50%');
+        // Once rendered (and measurable), shift the tooltip back inside the viewport — e.g. a long
+        // label on an avatar at the screen edge — keeping the arrow on the avatar.
+        afterNextRender(() => this.clampTooltip(centerX), {
+            injector: this.injector,
+        });
         if (roomBelow) {
             this.tipPlacement.set('below');
             this.tipTop.set(Math.round(rect.bottom + TOOLTIP_GAP));
@@ -134,6 +148,23 @@ export class DsAvatarComponent {
             this.tipPlacement.set('above');
             this.tipTop.set(Math.round(rect.top - TOOLTIP_GAP));
         }
+    }
+
+    private clampTooltip(centerX: number): void {
+        const width = this.tip()?.nativeElement.offsetWidth;
+        if (!width) {
+            return;
+        }
+        const half = width / 2;
+        const min = TOOLTIP_EDGE_MARGIN + half;
+        const max = window.innerWidth - TOOLTIP_EDGE_MARGIN - half;
+        const center = Math.round(
+            max < min
+                ? window.innerWidth / 2
+                : Math.min(Math.max(centerX, min), max),
+        );
+        this.tipLeft.set(center);
+        this.tipArrowX.set(`${Math.round(centerX - center + half)}px`);
     }
 
     private scheduleHide(delayMs: number): void {

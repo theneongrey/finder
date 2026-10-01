@@ -32,10 +32,12 @@
     }
     @if (tooltip() && tooltipOpen()) {
         <span
+            #tip
             class="ds-avatar-tooltip"
             [class.is-above]="tipPlacement() === 'above'"
             [style.top.px]="tipTop()"
             [style.left.px]="tipLeft()"
+            [style.--tip-arrow-x]="tipArrowX()"
             role="tooltip"
             >{{ tooltip() }}</span
         >

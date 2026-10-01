@@ -21,6 +21,8 @@ sources:
     resource: https://github.com/theneongrey/finder/pull/447
   - title: "PR #450 — realtime collaboration UX fine-tuning"
     resource: https://github.com/theneongrey/finder/pull/450
+  - title: "Issue #467 — compute poll delta in SQL"
+    resource: https://github.com/theneongrey/finder/issues/467
   - title: PollHub / PollPresenceRegistry / PollChangeNotifier
     resource: api/Finder/Business/Project/RealTime/
   - title: PollService.GetPollDelta
@@ -153,6 +155,23 @@ automatically — **no tombstone tables, no extra columns**:
   boundary aren't missed. The client upserts by id, so re-delivery is harmless.
 - **`highlightedOptionIds` / `highlightedCommentIds`** are the stricter "changed strictly after
   `since`" subset. Items re-sent only because of the overlap are upserted but don't flash again.
+
+**Query shape.** One ping makes every viewer fetch a delta within ~300 ms, so the endpoint runs
+one delta per viewer per change. To keep that cheap it never loads the full poll graph. Instead
+it runs small, separate queries, all `AsNoTracking`:
+
+1. **Access check:** the poll row alone (`WhereReadableBy`). This also yields the poll-level fields.
+2. **Changed options:** filtered in SQL (`Edited > cutoff` OR `EXISTS` a vote with
+   `Edited > cutoff`), with creator, meta and votes + voters included (split query).
+3. **Changed comments:** filtered in SQL on `Edited > cutoff`, with author and option.
+4. **Id sets:** projections only (`Id, Text` for options, needed for the slug; `Id` for comments).
+
+Children are filtered on the shadow `PollId` foreign key, so no query joins `Polls`. A delta
+with no changes reads only the poll row and the two id sets. The response contract is unchanged.
+
+The full poll read (`IncludeDetails()`, used by `GET /api/project/poll/{slug}` and close/reopen)
+uses `AsSplitQuery()`. Options and comments are sibling collections, so a single JOIN would return
+options × votes × comments rows.
 
 ## Frontend
 

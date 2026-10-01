@@ -1,0 +1,21 @@
+<!-- Same height as the action row it replaces, so the card doesn't jump. -->
+<div
+    class="flex min-h-[46px] items-center gap-2"
+    data-testid="option-delete-prompt"
+>
+    <span
+        class="min-w-0 flex-1 text-[14px] font-semibold text-[color:var(--text-primary)]"
+    >
+        {{ 'project.results.deleteOptionPrompt' | translate }}
+    </span>
+    <ds-button variant="neutral" (click)="cancelled.emit()">
+        {{ 'project.results.cancel' | translate }}
+    </ds-button>
+    <ds-button
+        variant="danger"
+        data-testid="option-delete-confirm"
+        (click)="confirmed.emit()"
+    >
+        {{ 'project.results.delete' | translate }}
+    </ds-button>
+</div>

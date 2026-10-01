@@ -1,5 +1,5 @@
 <app-swipe-vote-card
-    [enabled]="!isClosed()"
+    [enabled]="!deleteConfirm() && !isClosed()"
     mode="date"
     (swiped)="onSwiped($event)"
 >
@@ -39,33 +39,6 @@
                     }
                 </div>
 
-                @if (deleteConfirm()) {
-                    <div class="mt-3 flex items-center gap-2">
-                        <span
-                            class="min-w-0 flex-1 text-[13px] text-[color:var(--text-secondary)]"
-                        >
-                            {{
-                                'project.results.deleteOptionPrompt' | translate
-                            }}
-                        </span>
-                        <ds-button
-                            variant="ghost"
-                            size="sm"
-                            (click)="deleteConfirm.set(false)"
-                        >
-                            {{ 'project.results.cancel' | translate }}
-                        </ds-button>
-                        <ds-button
-                            variant="danger"
-                            size="sm"
-                            data-testid="option-delete-confirm"
-                            (click)="confirmDelete()"
-                        >
-                            {{ 'project.results.delete' | translate }}
-                        </ds-button>
-                    </div>
-                }
-
                 <div class="mt-auto">
                     @if (!hideResults()) {
                         <!-- Voters + summary -->
@@ -90,14 +63,21 @@
 
                     <!-- Actions -->
                     <div class="pt-4">
-                        <app-option-card-actions
-                            mode="yesno"
-                            [choice]="option().choice"
-                            [commentCount]="commentCount()"
-                            [disabled]="isClosed()"
-                            (vote)="castVote($event)"
-                            (commentsClick)="commentsClick.emit()"
-                        />
+                        @if (deleteConfirm()) {
+                            <app-option-delete-confirm
+                                (cancelled)="deleteConfirm.set(false)"
+                                (confirmed)="confirmDelete()"
+                            />
+                        } @else {
+                            <app-option-card-actions
+                                mode="yesno"
+                                [choice]="option().choice"
+                                [commentCount]="commentCount()"
+                                [disabled]="isClosed()"
+                                (vote)="castVote($event)"
+                                (commentsClick)="commentsClick.emit()"
+                            />
+                        }
                     </div>
                 </div>
             </div>

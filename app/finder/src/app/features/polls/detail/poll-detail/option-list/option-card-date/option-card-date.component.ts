@@ -22,6 +22,7 @@ import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
 import { OptionVotersComponent } from '../option-voters/option-voters.component';
 import { OptionCardActionsComponent } from '../option-card-actions/option-card-actions.component';
 import { SwipeVoteCardComponent } from '../swipe-vote-card/swipe-vote-card.component';
+import { OptionDeleteConfirmComponent } from '../option-delete-confirm/option-delete-confirm.component';
 
 @Component({
     selector: 'app-option-card-date',
@@ -34,6 +35,7 @@ import { SwipeVoteCardComponent } from '../swipe-vote-card/swipe-vote-card.compo
         OptionVotersComponent,
         OptionCardActionsComponent,
         SwipeVoteCardComponent,
+        OptionDeleteConfirmComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -123,8 +123,6 @@ export class PollDetailComponent {
 
     /** Vote overlay state. */
     readonly voteOpen = signal(false);
-    readonly voteStartOptionId = signal<string | undefined>(undefined);
-    readonly voteRevote = signal(false);
 
     /** Share-link bar shown once, right after the poll was created. */
     readonly showShareBar = signal(false);
@@ -418,8 +416,6 @@ export class PollDetailComponent {
 
     /** Toolbar entry: revote through every option. */
     startVote() {
-        this.voteStartOptionId.set(undefined);
-        this.voteRevote.set(true);
         this.voteOpen.set(true);
     }
 

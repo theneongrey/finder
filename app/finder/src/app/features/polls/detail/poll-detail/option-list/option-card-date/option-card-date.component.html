@@ -21,65 +21,22 @@
                             >
                         }
                     </div>
-                    @if (menuItems().length) {
-                        <span class="-mr-1.5 shrink-0">
-                            <ds-menu [items]="menuItems()">
-                                <ds-button
-                                    variant="ghost"
-                                    [size]="32"
-                                    icon="kebab"
-                                    [label]="
-                                        'project.results.moreActions'
-                                            | translate
-                                    "
-                                    data-testid="option-menu"
-                                />
-                            </ds-menu>
-                        </span>
-                    }
+                    <app-option-card-menu [items]="menuItems()" />
                 </div>
 
-                <div class="mt-auto">
-                    @if (!hideResults()) {
-                        <!-- Voters + summary -->
-                        <div class="mt-4">
-                            <app-option-voters
-                                [creator]="option().creator"
-                                [creatorVoted]="creatorVoted()"
-                                [users]="avatarUsers()"
-                            >
-                                <span
-                                    class="block truncate text-[12.5px] font-semibold text-[color:var(--text-secondary)]"
-                                >
-                                    {{ voteLine() }}
-                                </span>
-                            </app-option-voters>
-                        </div>
-                    }
-
-                    <hr
-                        class="mt-4 border-t border-[color:var(--border-hairline)]"
-                    />
-
-                    <!-- Actions -->
-                    <div class="pt-4">
-                        @if (deleteConfirm()) {
-                            <app-option-delete-confirm
-                                (cancelled)="deleteConfirm.set(false)"
-                                (confirmed)="confirmDelete()"
-                            />
-                        } @else {
-                            <app-option-card-actions
-                                mode="yesno"
-                                [choice]="option().choice"
-                                [commentCount]="commentCount()"
-                                [disabled]="isClosed()"
-                                (vote)="castVote($event)"
-                                (commentsClick)="commentsClick.emit()"
-                            />
-                        }
-                    </div>
-                </div>
+                <app-option-card-footer
+                    [option]="option()"
+                    [members]="members()"
+                    [summary]="voteLine()"
+                    [commentCount]="commentCount()"
+                    [isClosed]="isClosed()"
+                    [showVoters]="!hideResults()"
+                    [deleteConfirm]="deleteConfirm()"
+                    (vote)="castVote($event)"
+                    (commentsClick)="commentsClick.emit()"
+                    (deleteCancelled)="deleteConfirm.set(false)"
+                    (deleteConfirmed)="confirmDelete()"
+                />
             </div>
         </ds-card>
     </div>

@@ -41,7 +41,7 @@ const SPRING_BACK = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
         '(pointerdown)': 'onPointerDown($event)',
         '(window:pointermove)': 'onPointerMove($event)',
         '(window:pointerup)': 'onPointerUp()',
-        '(window:pointercancel)': 'reset()',
+        '(window:pointercancel)': 'onPointerCancel($event)',
     },
 })
 export class SwipeVoteCardComponent {
@@ -82,15 +82,17 @@ export class SwipeVoteCardComponent {
     private axis: 'x' | 'y' | undefined;
     /** Set when a horizontal drag ends so the click that follows it is swallowed. */
     private suppressClick = false;
+    private suppressTimer?: ReturnType<typeof setTimeout>;
 
     constructor() {
         // Capture phase: the card's buttons handle clicks before a bubbling host listener would.
         const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
         const onClick = (event: MouseEvent) => this.onClickCapture(event);
         host.addEventListener('click', onClick, { capture: true });
-        inject(DestroyRef).onDestroy(() =>
-            host.removeEventListener('click', onClick, { capture: true }),
-        );
+        inject(DestroyRef).onDestroy(() => {
+            host.removeEventListener('click', onClick, { capture: true });
+            clearTimeout(this.suppressTimer);
+        });
     }
 
     protected onPointerDown(event: PointerEvent): void {
@@ -138,7 +140,11 @@ export class SwipeVoteCardComponent {
         }
         const dx = this.dx();
         if (this.axis === 'x') {
+            // The click synthesised from this pointerup is dispatched before the timer fires;
+            // a drag ending off the card never clicks it, so don't let the flag outlive it.
             this.suppressClick = true;
+            clearTimeout(this.suppressTimer);
+            this.suppressTimer = setTimeout(() => (this.suppressClick = false));
             if (Math.abs(dx) > SWIPE_THRESHOLD) {
                 this.swiped.emit(dx > 0);
             }
@@ -155,7 +161,13 @@ export class SwipeVoteCardComponent {
         }
     }
 
-    protected reset(): void {
+    protected onPointerCancel(event: PointerEvent): void {
+        if (event.pointerId === this.pointerId) {
+            this.reset();
+        }
+    }
+
+    private reset(): void {
         this.pointerId = undefined;
         this.axis = undefined;
         this.dragging.set(false);

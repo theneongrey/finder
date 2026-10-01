@@ -14,8 +14,7 @@ import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsInputComponent } from '@ds/input/ds-input.component';
 import { DsTextareaComponent } from '@ds/textarea/ds-textarea.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
-import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
-import { AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
+import { MenuItem } from '@ds/menu/ds-menu.component';
 import { POLL_LIMITS } from '../../../../_shared/models/poll-limits';
 import {
     OptionDetail,
@@ -23,10 +22,10 @@ import {
 } from '../../../../_shared/models/poll-detail.model';
 import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
 import { urlDomain } from '../../../../_shared/utils/url.utils';
-import { OptionVotersComponent } from '../option-voters/option-voters.component';
-import { OptionCardActionsComponent } from '../option-card-actions/option-card-actions.component';
 import { SwipeVoteCardComponent } from '../swipe-vote-card/swipe-vote-card.component';
-import { OptionDeleteConfirmComponent } from '../option-delete-confirm/option-delete-confirm.component';
+import { OptionCardFooterComponent } from '../option-card-footer/option-card-footer.component';
+import { OptionCardMenuComponent } from '../option-card-menu/option-card-menu.component';
+import { optionMenuItems } from '../option-card-menu/option-menu-items';
 
 @Component({
     selector: 'app-option-card',
@@ -39,11 +38,9 @@ import { OptionDeleteConfirmComponent } from '../option-delete-confirm/option-de
         DsInputComponent,
         DsTextareaComponent,
         DsIconComponent,
-        DsMenuComponent,
-        OptionVotersComponent,
-        OptionCardActionsComponent,
         SwipeVoteCardComponent,
-        OptionDeleteConfirmComponent,
+        OptionCardFooterComponent,
+        OptionCardMenuComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -152,47 +149,19 @@ export class OptionCardComponent {
         });
     });
 
-    /** Everyone but the creator, who is shown separately with a crown. */
-    readonly avatarUsers = computed((): AvatarUser[] =>
-        voteTally.avatarUsers(
-            this.option(),
-            this.members(),
-            this.option().creator.name,
-        ),
-    );
-
-    readonly creatorVoted = computed(() =>
-        voteTally.personVoted(this.option(), this.option().creator.name),
-    );
-
     // ── Menu ────────────────────────────────────────────────────────
-    readonly menuItems = computed((): MenuItem[] => {
-        const items: MenuItem[] = [];
-        if (this.canManage()) {
-            items.push({
-                icon: 'edit',
-                label: this.translate.instant('project.results.edit'),
-                onClick: () => this.startEdit(),
-            });
-        }
-        if (!this.isClosed() && voteTally.hasVoted(this.option().choice)) {
-            items.push({
-                icon: 'refresh',
-                label: this.translate.instant('project.results.resetVote'),
-                onClick: () => this.resetVote(),
-            });
-        }
-        if (this.canManage()) {
-            items.push({
-                icon: 'trash',
-                label: this.translate.instant('project.results.deleteOption'),
-                danger: true,
-                separatorBefore: true,
-                onClick: () => this.deleteConfirm.set(true),
-            });
-        }
-        return items;
-    });
+    readonly menuItems = computed((): MenuItem[] =>
+        optionMenuItems(this.translate, {
+            edit: this.canManage() ? () => this.startEdit() : undefined,
+            resetVote:
+                !this.isClosed() && voteTally.hasVoted(this.option().choice)
+                    ? () => this.resetVote()
+                    : undefined,
+            delete: this.canManage()
+                ? () => this.deleteConfirm.set(true)
+                : undefined,
+        }),
+    );
 
     // ── Voting ──────────────────────────────────────────────────────
     protected castVote(choice: string): void {

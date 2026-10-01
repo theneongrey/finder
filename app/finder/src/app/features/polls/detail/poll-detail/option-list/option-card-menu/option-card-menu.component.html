@@ -1,0 +1,13 @@
+@if (items().length) {
+    <span class="-mr-1.5 shrink-0">
+        <ds-menu [items]="items()">
+            <ds-button
+                variant="ghost"
+                [size]="32"
+                icon="kebab"
+                [label]="'project.results.moreActions' | translate"
+                data-testid="option-menu"
+            />
+        </ds-menu>
+    </span>
+}

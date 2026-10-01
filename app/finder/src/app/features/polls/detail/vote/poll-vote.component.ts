@@ -59,8 +59,6 @@ export class PollVoteComponent implements OnDestroy {
     ctaAreaRef = viewChild.required(VoteCtaAreaComponent);
 
     pollId = input('');
-    /** Option to start voting at; when unset the first pending option is chosen. */
-    startOptionId = input<string | undefined>(undefined);
     /** Revote mode cycles through every option once, regardless of prior choice. */
     revote = input(false);
 
@@ -139,18 +137,10 @@ export class PollVoteComponent implements OnDestroy {
         effect(() => {
             this.projectDetailStore.getPoll(this.pollId());
         });
-        // Pick the first option to show once the poll is loaded. Honour an
-        // explicit start option (single-option / revote-from-card), otherwise
-        // fall back to the standard "next pending option" selection.
+        // Pick the first option to show once the poll is loaded: the next pending one.
         effect(() => {
-            const poll = this.poll();
-            if (poll && !this.currentOptionId()) {
-                const start = this.startOptionId();
-                if (start) {
-                    this.currentOptionId.set(start);
-                } else {
-                    this.goToNextOption(undefined);
-                }
+            if (this.poll() && !this.currentOptionId()) {
+                this.goToNextOption(undefined);
             }
         });
     }

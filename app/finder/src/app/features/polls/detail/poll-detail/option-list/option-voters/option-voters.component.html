@@ -1,7 +1,9 @@
-<div class="isolate flex min-w-0 items-center gap-2">
+<div class="flex min-w-0 items-center gap-2">
     <div class="flex shrink-0 items-center gap-1.5">
-        <!-- Creator, stacked above the group so the crown is never covered -->
-        <div class="relative z-10" data-testid="option-creator">
+        <!-- Creator: the crown is painted after the avatar (on top of it) and the gap keeps the
+             group clear of it. No z-index, so it stays below sticky bars and the tooltip isn't
+             trapped in a stacking context. -->
+        <div class="relative" data-testid="option-creator">
             <app-user-avatar
                 [user]="creator()"
                 [size]="27"

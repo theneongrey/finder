@@ -3,6 +3,11 @@
 Append-only chronological record of all ingest, query, and lint operations.
 Do not edit past entries.
 
+## 2026-10-01 — ingest: poll delta computed with filtered queries (fix/467-poll-delta-sql)
+Pages touched: architecture/realtime-poll-sync.md (delta "Query shape": access check, SQL-filtered changed options/comments, projected id sets, `PollId` FK filter; `IncludeDetails()` split query)
+
+---
+
 ## 2026-09-30 — ingest: align Node.js versions between CI and Docker (chore/489-align-node-versions)
 Pages touched: architecture/ci-cd.md (pipeline diagram: `npm ci`, Node from `.nvmrc`; new "Node.js Version" section — `.nvmrc` as single source, npm cache, Dockerfile match check), guides/local-setup.md (use Node from `.nvmrc`)
 

@@ -69,12 +69,8 @@ public static class PollDeltaMapper
                 .OrderBy(c => c.Created)
                 .Select(c => c.ToCommentResponse())
                 .ToArray(),
-            CurrentOptionIds = delta.CurrentOptions
-                .Select(o => SlugHelper.ToSlug(SlugHelper.OptionSlugName(o.Text), o.Id))
-                .ToArray(),
-            CurrentCommentIds = delta.CurrentComments
-                .Select(c => c.Id.ToString())
-                .ToArray(),
+            CurrentOptionIds = delta.CurrentOptionIds.ToArray(),
+            CurrentCommentIds = delta.CurrentCommentIds.ToArray(),
             HighlightedOptionIds = delta.HighlightedOptionIds.ToArray(),
             HighlightedCommentIds = delta.HighlightedCommentIds.ToArray(),
             SyncToken = delta.SyncToken

@@ -223,6 +223,42 @@ public class PollDeltaApiTests : IClassFixture<FinderApiFactory>
     }
 
     [Fact]
+    public async Task GetDelta_ExcludesOptionsAndCommentsOfOtherPolls()
+    {
+        var user = await _factory.SeedUser();
+        var project = await _factory.SeedProject(user.Id);
+        var poll = await _factory.SeedPoll(project.Id, "Poll A");
+        var otherPoll = await _factory.SeedPoll(project.Id, "Poll B");
+        var option = await _factory.SeedOption(poll.Id, "Option A");
+        var otherOption = await _factory.SeedOption(otherPoll.Id, "Option B");
+
+        using var client = _factory.CreateAuthenticatedClient(user.Id);
+        var comment = await client.PostAsJsonAsync("/api/project/poll/comment",
+            new { pollId = poll.Id, content = "On A" });
+        Assert.Equal(HttpStatusCode.OK, comment.StatusCode);
+        var otherComment = await client.PostAsJsonAsync("/api/project/poll/comment",
+            new { pollId = otherPoll.Id, content = "On B" });
+        Assert.Equal(HttpStatusCode.OK, otherComment.StatusCode);
+
+        var response = await client.GetAsync(DeltaUrl(poll.Id, null));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = JsonNode.Parse(await response.Content.ReadAsStringAsync())!;
+
+        var options = json["options"]!.AsArray();
+        Assert.Single(options);
+        Assert.EndsWith(option.Id, options[0]!["id"]!.GetValue<string>());
+        var currentOptionIds = json["currentOptionIds"]!.AsArray().Select(n => n!.GetValue<string>()).ToList();
+        Assert.Single(currentOptionIds);
+        Assert.DoesNotContain(currentOptionIds, id => id.EndsWith(otherOption.Id));
+
+        var comments = json["comments"]!.AsArray();
+        Assert.Single(comments);
+        Assert.Equal("On A", comments[0]!["content"]!.GetValue<string>());
+        Assert.Single(json["currentCommentIds"]!.AsArray());
+    }
+
+    [Fact]
     public async Task GetDelta_WhenNoAccess_Returns404()
     {
         var owner = await _factory.SeedUser();

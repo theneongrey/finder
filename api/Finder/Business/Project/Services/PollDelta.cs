@@ -5,7 +5,7 @@ namespace Finder.Business.Project.Services;
 /// <summary>
 /// The changes to a poll since a client's last sync token. Options and comments are the full
 /// entities that changed (mapped to their usual response shapes by the caller); the current id
-/// sets let the client reconcile hard-deletes without tombstone tables.
+/// sets (option slugs, comment ids) let the client reconcile hard-deletes without tombstone tables.
 ///
 /// ChangedOptions/ChangedComments are widened by the overlap window so no row committed near the
 /// token boundary is missed (the client upserts by id, so overlap is harmless for data). The
@@ -16,8 +16,8 @@ public sealed record PollDelta(
     Poll? ChangedPoll,
     IReadOnlyList<Option> ChangedOptions,
     IReadOnlyList<Comment> ChangedComments,
-    IReadOnlyList<Option> CurrentOptions,
-    IReadOnlyList<Comment> CurrentComments,
+    IReadOnlyList<string> CurrentOptionIds,
+    IReadOnlyList<string> CurrentCommentIds,
     IReadOnlyList<string> HighlightedOptionIds,
     IReadOnlyList<string> HighlightedCommentIds,
     DateTime SyncToken);

@@ -25,6 +25,9 @@ public class PollService
     // re-delivered row is harmless.
     private static readonly TimeSpan DeltaOverlap = TimeSpan.FromSeconds(2);
 
+    // Shadow foreign key from Option/Comment to their poll.
+    private const string PollForeignKey = "PollId";
+
     public PollService(AppDbContext dbContext, UserService userService,
         ProjectNotificationService projectNotificationService, PollUpdateNotificationQueue pollUpdateQueue,
         IPollChangeNotifier pollChangeNotifier)
@@ -156,8 +159,10 @@ public class PollService
         // right at the boundary aren't missed (the client upserts by id, so overlap is harmless).
         var sinceCutoff = since.HasValue ? since.Value.ToUniversalTime() - DeltaOverlap : DateTime.MinValue;
 
+        // Access check + poll-level fields only; children are read below as separate, filtered
+        // queries so a no-change delta touches no option/vote/comment rows beyond the id sets.
         var poll = await _dbContext.Polls
-            .IncludeDetails()
+            .AsNoTracking()
             .WhereReadableBy(slug, UserId)
             .SingleOrDefaultAsync();
 
@@ -166,15 +171,42 @@ public class PollService
             return Result<PollDelta>.Fail(404);
         }
 
+        // Children are filtered on their PollId foreign key (a shadow property) rather than
+        // o.Poll.Id, which would JOIN Polls on every query just to read the same key.
         // A vote change stamps Vote.Edited but not Option.Edited, so an option counts as changed
         // when the option itself or any of its votes changed. The delta re-sends the whole option
         // (votes included), so the client sees the new tally.
-        var changedOptions = poll.Options
-            .Where(o => o.Edited > sinceCutoff || o.Votes.Any(v => v.Edited > sinceCutoff))
+        var changedOptions = await _dbContext.Options
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(o => o.Creator)
+            .Include(o => o.Meta)
+            .Include(o => o.Votes)
+            .ThenInclude(v => v.Person)
+            .Where(o => EF.Property<string>(o, PollForeignKey) == poll.Id &&
+                        (o.Edited > sinceCutoff || o.Votes.Any(v => v.Edited > sinceCutoff)))
+            .ToListAsync();
+
+        var changedComments = await _dbContext.Comments
+            .AsNoTracking()
+            .Include(c => c.Person)
+            .Include(c => c.Option)
+            .Where(c => EF.Property<string>(c, PollForeignKey) == poll.Id && c.Edited > sinceCutoff)
+            .ToListAsync();
+
+        // Id sets for hard-delete reconciliation — projected, so no full rows are read.
+        var currentOptionIds = (await _dbContext.Options
+                .Where(o => EF.Property<string>(o, PollForeignKey) == poll.Id)
+                .Select(o => new { o.Id, o.Text })
+                .ToListAsync())
+            .Select(o => SlugHelper.ToSlug(SlugHelper.OptionSlugName(o.Text), o.Id))
             .ToList();
 
-        var changedComments = poll.Comments
-            .Where(c => c.Edited > sinceCutoff)
+        var currentCommentIds = (await _dbContext.Comments
+                .Where(c => EF.Property<string>(c, PollForeignKey) == poll.Id)
+                .Select(c => c.Id)
+                .ToListAsync())
+            .Select(id => id.ToString())
             .ToList();
 
         var changedPoll = poll.Edited > sinceCutoff ? poll : null;
@@ -195,8 +227,8 @@ public class PollService
             changedPoll,
             changedOptions,
             changedComments,
-            poll.Options,
-            poll.Comments,
+            currentOptionIds,
+            currentCommentIds,
             highlightedOptionIds,
             highlightedCommentIds,
             syncToken));

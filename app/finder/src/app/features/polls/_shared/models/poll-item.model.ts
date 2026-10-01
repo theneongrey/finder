@@ -1,6 +1,7 @@
 import { PollRole } from './poll-role.enum';
 import { PollParticipant } from './standalone-poll-overview.model';
 import { OptionType } from '@common/models/option-type.model';
+import { CommentAuthor } from './poll-detail.model';
 
 export interface PollItem {
     pollId: string;
@@ -20,4 +21,7 @@ export interface PollItem {
     isFavorite: boolean;
     closeDate?: string;
     isClosed: boolean;
+    creatorId: string;
+    /** Who created the poll; undefined when they aren't among the participants. */
+    creator?: CommentAuthor;
 }

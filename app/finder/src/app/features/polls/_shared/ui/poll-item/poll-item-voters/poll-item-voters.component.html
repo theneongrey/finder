@@ -1,0 +1,25 @@
+<div class="mt-[15px] pt-[14px] [border-top:1px_solid_var(--border-hairline)]">
+    @if (creator(); as creator) {
+        <app-option-voters
+            [creator]="creator"
+            [creatorVoted]="creatorVoted()"
+            [users]="avatarUsers()"
+            [max]="5"
+        >
+            <span
+                class="block truncate text-[var(--fs-caption)] text-[var(--text-muted)]"
+            >
+                {{ missingVotersText() }}
+            </span>
+        </app-option-voters>
+    } @else if (avatarUsers().length > 0) {
+        <div class="flex items-center gap-2">
+            <app-avatar-stack [users]="avatarUsers()" [max]="5" size="sm" />
+            <span
+                class="min-w-0 flex-1 truncate text-[var(--fs-caption)] text-[var(--text-muted)]"
+            >
+                {{ missingVotersText() }}
+            </span>
+        </div>
+    }
+</div>

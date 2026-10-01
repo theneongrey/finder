@@ -11,7 +11,7 @@ import {
     SharedWith,
 } from '../../../../_shared/models/poll-detail.model';
 import * as voteTally from '../../../../_shared/utils/vote-tally.utils';
-import { OptionVotersComponent } from '../option-voters/option-voters.component';
+import { OptionVotersComponent } from '../../../../_shared/ui/option-voters/option-voters.component';
 import { OptionCardActionsComponent } from '../option-card-actions/option-card-actions.component';
 import { OptionDeleteConfirmComponent } from '../option-delete-confirm/option-delete-confirm.component';
 

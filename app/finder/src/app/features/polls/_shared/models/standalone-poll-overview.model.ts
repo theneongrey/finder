@@ -8,6 +8,7 @@ export enum PollVotingStatus {
 }
 
 export interface PollParticipant {
+    userId: string;
     name: string;
     picture?: string;
     votingStatus: PollVotingStatus;
@@ -30,6 +31,7 @@ export interface StandalonePollOverview {
     totalParticipants: number;
     votedCount: number;
     currentUserVoted: boolean;
+    creatorId: string;
     participants: PollParticipant[];
     isFavorite: boolean;
     closeDate?: string;

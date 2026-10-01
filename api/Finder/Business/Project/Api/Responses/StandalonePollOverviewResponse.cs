@@ -4,6 +4,7 @@ namespace Finder.Business.Project.Api.Responses;
 
 public class PollParticipant
 {
+    public required Guid UserId { get; init; }
     public required string Name { get; init; }
     public string? Picture { get; init; }
     public required int VotingStatus { get; init; } // 0 = None, 1 = Partial, 2 = Full
@@ -27,6 +28,7 @@ public class StandalonePollOverviewResponse
     public required int TotalParticipants { get; init; }
     public required int VotedCount { get; init; }
     public required bool CurrentUserVoted { get; init; }
+    public required Guid CreatorId { get; init; }
     public required ICollection<PollParticipant> Participants { get; init; }
     public required bool IsFavorite { get; init; }
     public DateTime? CloseDate { get; init; }
@@ -88,7 +90,7 @@ public static class StandalonePollOverviewMapper
         {
             var voted = votesByPerson.GetValueOrDefault(m.Id, 0);
             var status = voted == 0 ? 0 : (optionCount > 0 && voted >= optionCount) ? 2 : 1;
-            return new PollParticipant { Name = m.Name, Picture = m.Picture, VotingStatus = status };
+            return new PollParticipant { UserId = m.Id, Name = m.Name, Picture = m.Picture, VotingStatus = status };
         }).ToArray();
 
         return new StandalonePollOverviewResponse
@@ -109,6 +111,7 @@ public static class StandalonePollOverviewMapper
             TotalParticipants = project.Permissions.Count(p => p.PersonKey != project.Creator.Id) + 1,
             VotedCount = votedCount,
             CurrentUserVoted = currentUserVoted,
+            CreatorId = project.Creator.Id,
             Participants = participants,
             IsFavorite = userId.HasValue && project.Favorites.Any(f => f.UserId == userId.Value),
             CloseDate = poll.CloseDate.HasValue ? DateTime.SpecifyKind(poll.CloseDate.Value, DateTimeKind.Utc) : null,

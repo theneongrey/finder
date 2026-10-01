@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { USER1, USER2, login, logout, createStandalonePoll } from './helpers';
+import { USER1, USER2, login, logout, createStandalonePoll, clickPollMenuItem } from './helpers';
 
 // ---------------------------------------------------------------------------
 // #241 — ShareDrawer (BottomSheet) — Einladen / Mitglieder / Sichtbarkeit
@@ -19,8 +19,8 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
     // Wait for the Angular app to finish loading the polls list before checking
     await page.waitForLoadState('networkidle');
 
-    const shareBtn = page.locator('[data-testid="share-btn"]').first();
-    if (await shareBtn.count() === 0) {
+    const pollMenu = page.locator('[data-testid="poll-menu"]').first();
+    if (await pollMenu.count() === 0) {
       await createStandalonePoll(page, 'E2E Share Drawer Poll');
     }
 
@@ -31,11 +31,8 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
   // ── helpers ────────────────────────────────────────────────────────────────
 
   async function openShareDrawer(page: import('@playwright/test').Page) {
-    // :visible filters to the correct button for the current viewport
-    // (poll-item renders both mobile and desktop share-btn; only one is visible)
-    const shareBtn = page.locator('[data-testid="share-btn"]:visible').first();
-    await expect(shareBtn).toBeVisible();
-    await shareBtn.click();
+    const pollCard = page.locator('app-poll-item').filter({ has: page.locator('[data-testid="poll-menu"]') }).first();
+    await clickPollMenuItem(page, pollCard, 'share');
     await expect(page.locator('.ds-sheet-panel')).toBeVisible();
   }
 
@@ -54,7 +51,11 @@ test.describe('#241 ShareDrawer — Einladen / Mitglieder / Sichtbarkeit', () =>
   async function removeUser2IfMember(page: import('@playwright/test').Page) {
     await page.goto('/polls');
     await page.waitForLoadState('networkidle');
-    await page.locator('[data-testid="share-btn"]:visible').first().click();
+    await clickPollMenuItem(
+      page,
+      page.locator('app-poll-item').filter({ has: page.locator('[data-testid="poll-menu"]') }).first(),
+      'share',
+    );
     await expect(page.locator('.ds-sheet-panel')).toBeVisible();
 
     const membersTab = page.locator('.ds-sheet-panel ds-tabs button.ds-tab')

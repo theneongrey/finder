@@ -242,7 +242,6 @@
             "filterClosed": "Ended",
             "filterTodo": "Open for me",
             "filterFav": "Favorites",
-            "editModeDone": "Done",
             "emptyFiltered": "No poll found",
             "emptyFilteredHint": "Nothing matches these filters.",
             "emptyFilteredHintSearch": "No results for \"{{q}}\".",
@@ -618,8 +617,7 @@
         },
         "lastVote": {
             "label": "Last vote",
-            "none": "No votes so far",
-            "voted": "{{count}} of {{total}} voted"
+            "none": "No votes so far"
         },
         "timeAgo": {
             "justNow": "just now",

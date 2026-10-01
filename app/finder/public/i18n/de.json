@@ -242,7 +242,6 @@
             "filterClosed": "Beendet",
             "filterTodo": "Offen für mich",
             "filterFav": "Favoriten",
-            "editModeDone": "Fertig",
             "emptyFiltered": "Keine Umfrage gefunden",
             "emptyFilteredHint": "Mit diesen Filtern ist gerade nichts dabei.",
             "emptyFilteredHintSearch": "Für \"{{q}}\" gibt es keine Treffer.",
@@ -618,8 +617,7 @@
         },
         "lastVote": {
             "label": "Letzte Stimme",
-            "none": "Bisher keine Stimmen",
-            "voted": "{{count}} von {{total}} haben abgestimmt"
+            "none": "Bisher keine Stimmen"
         },
         "timeAgo": {
             "justNow": "gerade jetzt",

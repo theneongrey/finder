@@ -242,7 +242,6 @@
             "filterClosed": "Finalizada",
             "filterTodo": "Abierta para mí",
             "filterFav": "Favoritos",
-            "editModeDone": "Listo",
             "emptyFiltered": "Sin encuestas",
             "emptyFilteredHint": "Nada coincide con estos filtros.",
             "emptyFilteredHintSearch": "Sin resultados para \"{{q}}\".",
@@ -618,8 +617,7 @@
         },
         "lastVote": {
             "label": "Último voto",
-            "none": "Sin votos hasta ahora",
-            "voted": "{{count}} de {{total}} han votado"
+            "none": "Sin votos hasta ahora"
         },
         "timeAgo": {
             "justNow": "justo ahora",

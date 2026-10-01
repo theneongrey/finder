@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { USER1, USER2, login, logout, createStandalonePoll, addTextOption } from './helpers';
+import { USER1, USER2, login, logout, createStandalonePoll, addTextOption, clickPollMenuItem } from './helpers';
 
 test.describe('Polls-only overview (simplified MVP)', () => {
   let testProjectId: string;
@@ -79,14 +79,9 @@ test.describe('Polls-only overview (simplified MVP)', () => {
       // .first() avoids strict-mode violation if a stale "E2E Created Poll" exists from a previous run
       await expect(page.getByText('E2E Created Poll').first()).toBeVisible();
 
-      // Enable edit mode to reveal delete buttons, then delete the created poll
-      await page.locator('[data-testid="edit-mode-btn"]').click();
+      // Delete the created poll via the card's ⋮ menu
       const pollCard = page.locator('app-poll-item').filter({ hasText: 'E2E Created Poll' }).first();
-      // delete-btn has 2 ds-button instances (desktop hover + mobile edit-mode); filter to the visible one
-      await pollCard.locator('[data-testid="delete-btn"]')
-        .filter({ has: page.locator('button:visible') })
-        .locator('button')
-        .click();
+      await clickPollMenuItem(page, pollCard, 'delete');
       await pollCard.locator('[data-testid="delete-confirm-btn"]').locator('button').click();
     });
   });
@@ -152,7 +147,7 @@ test.describe('Overview redesign (#242)', () => {
     await logout(page);
   });
 
-  test('mobile (390px): poll cards render with type badge, status dot, avatar stack', async ({ page }) => {
+  test('mobile (390px): poll cards render with type badge, status dot, crowned creator', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/polls');
 
@@ -160,7 +155,8 @@ test.describe('Overview redesign (#242)', () => {
     await expect(card).toBeVisible();
     await expect(card.locator('app-poll-type-badge')).toBeVisible();
     await expect(card.locator('ds-status-dot')).toBeVisible();
-    await expect(card.locator('ds-progress-bar')).toBeVisible();
+    await expect(card.locator('[data-testid="option-creator-crown"]')).toBeVisible();
+    await expect(card.locator('ds-progress-bar')).toHaveCount(0);
     await expect(card.locator('[data-testid="open-poll-btn"]')).toBeVisible();
   });
 
@@ -196,25 +192,58 @@ test.describe('Overview redesign (#242)', () => {
     }
   });
 
-  test('poll card: share button triggers share drawer for owners', async ({ page }) => {
+  test('poll card: menu share item opens the share drawer for owners', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/polls');
 
-    const shareBtn = page.locator('app-poll-item [data-testid="share-btn"]').first();
-    if (await shareBtn.isVisible()) {
-      await shareBtn.click();
+    const pollCard = page.locator('app-poll-item').filter({ has: page.locator('[data-testid="poll-menu"]') }).first();
+    if (await pollCard.count()) {
+      await clickPollMenuItem(page, pollCard, 'share');
       await expect(page.locator('app-share-drawer')).toBeVisible();
     }
   });
 
-  test('poll card: delete button is visible for maintainers in edit mode', async ({ page }) => {
+  test('poll card: menu delete item asks for confirmation', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/polls');
-    await page.locator('[data-testid="edit-mode-btn"]').click();
-    const deleteBtn = page.locator('app-poll-item [data-testid="delete-btn"]')
-      .filter({ visible: true })
-      .first();
-    await expect(deleteBtn).toBeVisible();
+    const pollCard = page.locator('app-poll-item').filter({ has: page.locator('[data-testid="poll-menu"]') }).first();
+    await clickPollMenuItem(page, pollCard, 'delete');
+    await expect(pollCard.locator('[data-testid="delete-confirm-btn"]')).toBeVisible();
+  });
+
+  test('poll card: an invited voter gets no ⋮ menu', async ({ page }) => {
+    test.setTimeout(90_000);
+    const name = `Voter Menu E2E ${Date.now()}`;
+    await createStandalonePoll(page, name);
+    await page.setViewportSize({ width: 390, height: 844 });
+
+    // Invite USER2 with the default (voter) role from the overview card's menu.
+    await page.goto('/polls');
+    const ownerCard = page.locator('app-poll-item').filter({ hasText: name });
+    await clickPollMenuItem(page, ownerCard, 'share');
+    await page.locator('.ds-sheet-panel ds-input input').fill(USER2);
+    await page.locator('.ds-sheet-panel app-share-invite-form').getByRole('button', { name: /einladen|invite/i }).click();
+    await expect(
+      page.locator('.ds-sheet-panel ds-tabs button.ds-tab').filter({ hasText: /zugriff|access|members/i }),
+    ).toBeVisible({ timeout: 10_000 });
+    await page.locator('.ds-sheet-panel [data-testid="sheet-close-btn"] button').click();
+    await expect(page.locator('.ds-sheet-panel')).not.toBeVisible();
+    await logout(page);
+
+    await login(page, USER2);
+    await page.goto('/polls');
+    const voterCard = page.locator('app-poll-item').filter({ hasText: name });
+    await expect(voterCard).toBeVisible();
+    await expect(voterCard.locator('[data-testid="poll-menu"]')).toHaveCount(0);
+    await logout(page);
+
+    // Clean up as the owner.
+    await login(page, USER1);
+    await page.goto('/polls');
+    const cleanupCard = page.locator('app-poll-item').filter({ hasText: name });
+    await clickPollMenuItem(page, cleanupCard, 'delete');
+    await cleanupCard.locator('[data-testid="delete-confirm-btn"] button').click();
+    await expect(cleanupCard).toHaveCount(0);
   });
 
   test('no Hlm* alert dialog on page', async ({ page }) => {

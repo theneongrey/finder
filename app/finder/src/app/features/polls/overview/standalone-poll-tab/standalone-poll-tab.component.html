@@ -348,8 +348,8 @@
      MOBILE LAYOUT  (hidden on lg+)
      ═══════════════════════════════════════════════════════════ -->
 
-    <!-- Mobile: Page heading + edit mode toggle -->
-    <div class="mb-4 flex items-end justify-between gap-3 lg:hidden">
+    <!-- Mobile: Page heading -->
+    <div class="mb-4 lg:hidden">
         <div>
             <h1
                 style="
@@ -376,19 +376,6 @@
                 }}
             </p>
         </div>
-        <ds-button
-            [variant]="editMode() ? 'primary' : 'neutral'"
-            size="sm"
-            [icon]="editMode() ? 'check' : 'edit'"
-            data-testid="edit-mode-btn"
-            (click)="toggleEditMode()"
-            >{{
-                (editMode()
-                    ? 'project.pollsTab.editModeDone'
-                    : 'project.common.edit'
-                ) | translate
-            }}</ds-button
-        >
     </div>
 
     <!-- Mobile: Search input -->
@@ -590,13 +577,11 @@
      ═══════════════════════════════════════════════════════════ -->
         <div
             data-testid="polls-list"
-            class="vt-stagger grid grid-cols-1 gap-4 min-[830px]:grid-cols-2 min-[1600px]:grid-cols-3 lg:-mx-[22px] lg:px-8"
-            [class.pb-8]="!editMode()"
+            class="vt-stagger grid grid-cols-1 gap-4 pb-8 min-[830px]:grid-cols-2 min-[1600px]:grid-cols-3 lg:-mx-[22px] lg:px-8"
         >
             @for (poll of filteredPolls(); track poll.pollId) {
                 <app-poll-item
                     [poll]="poll"
-                    [editMode]="editMode()"
                     [isRemoving]="removingPollId() === poll.projectId"
                     [isSettling]="listSettling()"
                     (deletionRequested)="startRemoval(poll)"
@@ -604,34 +589,6 @@
                     (favoriteToggled)="projectListStore.toggleFavorite($event)"
                 />
             }
-        </div>
-
-        <!-- Mobile: Done button (blends in below cards when in edit mode) -->
-        <div
-            class="overflow-hidden lg:hidden"
-            style="
-                display: grid;
-                transition:
-                    grid-template-rows 240ms cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity 200ms ease;
-            "
-            [style.grid-template-rows]="editMode() ? '1fr' : '0fr'"
-            [style.opacity]="editMode() ? '1' : '0'"
-        >
-            <div class="overflow-hidden">
-                <div class="pt-3 pb-8">
-                    <ds-button
-                        variant="primary"
-                        [fullWidth]="true"
-                        icon="check"
-                        data-testid="edit-mode-done-btn"
-                        (click)="toggleEditMode()"
-                        >{{
-                            'project.pollsTab.editModeDone' | translate
-                        }}</ds-button
-                    >
-                </div>
-            </div>
         </div>
     }
     <!-- end @else !isLoading -->

@@ -7,7 +7,6 @@ import {
     output,
     signal,
 } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PollItem } from '../../models/poll-item.model';
@@ -15,24 +14,22 @@ import { PollRole } from '../../models/poll-role.enum';
 import { PollVotingStatus } from '../../models/standalone-poll-overview.model';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
+import { DsMenuComponent, MenuItem } from '@ds/menu/ds-menu.component';
 import { DsCardComponent } from '@ds/card/ds-card.component';
 import { DsStatusDotComponent } from '@ds/badge/ds-status-dot.component';
 import { OptionTypeBadgeComponent } from '@smart/option-type-badge/option-type-badge.component';
 import { PollItemTimeComponent } from './poll-item-time/poll-item-time.component';
-import { PollItemProgressComponent } from './poll-item-progress/poll-item-progress.component';
+import { PollItemVotersComponent } from './poll-item-voters/poll-item-voters.component';
 import { AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
 
 @Component({
     selector: 'app-poll-item',
     host: {
-        '(mouseenter)': 'isHovered.set(true)',
-        '(mouseleave)': 'isHovered.set(false)',
         '[class.is-confirming]': 'showDeleteConfirm()',
         '[class.is-removing]': 'isRemoving()',
         '[class.is-settling]': 'isSettling()',
     },
     imports: [
-        NgClass,
         RouterLink,
         TranslatePipe,
         DsCardComponent,
@@ -41,7 +38,8 @@ import { AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
         DsStatusDotComponent,
         OptionTypeBadgeComponent,
         PollItemTimeComponent,
-        PollItemProgressComponent,
+        PollItemVotersComponent,
+        DsMenuComponent,
     ],
     templateUrl: './poll-item.component.html',
     styleUrl: './poll-item.component.css',
@@ -51,46 +49,68 @@ export class PollItemComponent {
     private readonly translateService = inject(TranslateService);
 
     poll = input.required<PollItem>();
-    editMode = input<boolean>(false);
     previewMode = input<boolean>(false);
     isRemoving = input<boolean>(false);
     isSettling = input<boolean>(false);
-    isHovered = signal(false);
     showDeleteConfirm = signal(false);
     deletionRequested = output();
     shareRequested = output();
     favoriteToggled = output<string>();
 
-    readonly showActions = computed(
+    readonly canDelete = computed(
         () => this.poll().role >= PollRole.Maintainer,
     );
     readonly canShare = computed(() => this.poll().role >= PollRole.Owner);
+
+    /** Items of the ⋮ menu: Share, then Delete. */
+    readonly menuItems = computed((): MenuItem[] => {
+        const items: MenuItem[] = [];
+        if (this.canShare()) {
+            items.push({
+                icon: 'share',
+                label: this.translateService.instant('project.share.title'),
+                onClick: () => this.shareRequested.emit(),
+            });
+        }
+        if (this.canDelete()) {
+            items.push({
+                icon: 'trash',
+                label: this.translateService.instant(
+                    'project.results.deletePoll',
+                ),
+                danger: true,
+                separatorBefore: true,
+                onClick: () => this.requestDelete(),
+            });
+        }
+        return items;
+    });
 
     readonly resultsRoute = computed(() => {
         const poll = this.poll();
         return ['/polls', poll.projectId, poll.pollId];
     });
 
-    readonly votedCountByStatus = computed(
-        () =>
-            this.poll().participants.filter(
-                (p) => p.votingStatus !== PollVotingStatus.None,
-            ).length,
-    );
-
-    readonly progressPercent = computed(() => {
-        const { totalParticipants } = this.poll();
-        return totalParticipants > 0
-            ? Math.round((this.votedCountByStatus() / totalParticipants) * 100)
-            : 0;
+    /** Undefined when the creator is unknown or not among the participants. */
+    readonly creatorVoted = computed(() => {
+        const name = this.poll().creator?.name;
+        const creator = this.poll().participants.find((p) => p.name === name);
+        return creator && creator.votingStatus !== PollVotingStatus.None;
     });
 
-    readonly avatarUsers = computed<AvatarUser[]>(() =>
-        this.poll().participants.map((p) => ({
-            name: p.name,
-            voted: p.votingStatus !== PollVotingStatus.None,
-        })),
-    );
+    /** Everyone but the creator, who is shown separately with a crown. */
+    readonly avatarUsers = computed<AvatarUser[]>(() => {
+        const { participants, creator } = this.poll();
+        const creatorIndex = creator
+            ? participants.findIndex((p) => p.name === creator.name)
+            : -1;
+        return participants
+            .filter((_, i) => i !== creatorIndex)
+            .map((p) => ({
+                name: p.name,
+                voted: p.votingStatus !== PollVotingStatus.None,
+            }));
+    });
 
     readonly missingVotersText = computed(() => {
         const missing = this.poll()

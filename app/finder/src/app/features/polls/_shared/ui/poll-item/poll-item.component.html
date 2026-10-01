@@ -1,200 +1,111 @@
 @let _poll = poll();
 
 <ds-card [fill]="true">
-    <!-- ── Header row: type badge · status dot · share · fav (animates out in edit mode) -->
-    <div
-        class="grid overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
-        [ngClass]="
-            editMode() ? '[grid-template-rows:0fr]' : '[grid-template-rows:1fr]'
-        "
-    >
-        <div class="overflow-hidden">
-            <div class="flex items-center gap-2 pb-3">
-                <app-poll-type-badge [type]="_poll.optionType" />
+    <!-- ── Header row: type badge · status dot · fav · ⋮ menu ───────────── -->
+    <div class="flex items-center gap-2 pb-3">
+        <app-poll-type-badge [type]="_poll.optionType" />
 
-                <span data-testid="poll-status-badge">
-                    <ds-status-dot
-                        [tone]="_poll.isClosed ? 'muted' : 'positive'"
-                    >
-                        {{
-                            (_poll.isClosed
-                                ? 'project.detail.item.statusClosed'
-                                : 'project.detail.item.statusOpen'
-                            ) | translate
-                        }}
-                    </ds-status-dot>
-                </span>
+        <span data-testid="poll-status-badge">
+            <ds-status-dot [tone]="_poll.isClosed ? 'muted' : 'positive'">
+                {{
+                    (_poll.isClosed
+                        ? 'project.detail.item.statusClosed'
+                        : 'project.detail.item.statusOpen'
+                    ) | translate
+                }}
+            </ds-status-dot>
+        </span>
 
-                @if (!previewMode()) {
-                    <span class="ml-auto flex items-center gap-1">
-                        @if (canShare()) {
-                            <!-- Mobile: ghost circle share button -->
-                            <span class="lg:hidden">
-                                <ds-button
-                                    variant="ghost"
-                                    [size]="30"
-                                    icon="share"
-                                    [color]="'var(--ink-900)'"
-                                    data-testid="share-btn"
-                                    (click)="
-                                        $event.stopPropagation();
-                                        shareRequested.emit()
-                                    "
-                                />
-                            </span>
-                            <!-- Web: pill share button with label, always visible -->
-                            <span class="hidden lg:flex">
-                                <ds-button
-                                    variant="neutral"
-                                    size="sm"
-                                    icon="share"
-                                    data-testid="share-btn"
-                                    (click)="
-                                        $event.stopPropagation();
-                                        shareRequested.emit()
-                                    "
-                                    [title]="'project.share.title' | translate"
-                                    >{{
-                                        'project.share.title' | translate
-                                    }}</ds-button
-                                >
-                            </span>
-                        }
+        @if (!previewMode()) {
+            <span class="ml-auto flex items-center gap-1">
+                <!-- Favorite button -->
+                <ds-button
+                    variant="ghost"
+                    [size]="32"
+                    [label]="
+                        (_poll.isFavorite
+                            ? 'project.detail.item.unfavorite'
+                            : 'project.detail.item.favorite'
+                        ) | translate
+                    "
+                    data-testid="favorite-btn"
+                    [attr.data-favorited]="_poll.isFavorite ? '' : null"
+                    (click)="
+                        $event.stopPropagation();
+                        favoriteToggled.emit(_poll.projectId)
+                    "
+                >
+                    <ds-icon
+                        name="heart"
+                        [size]="18"
+                        [color]="
+                            _poll.isFavorite ? '#c1453f' : 'var(--text-muted)'
+                        "
+                    />
+                </ds-button>
 
-                        <!-- Favorite button -->
-                        <ds-button
-                            variant="ghost"
-                            [size]="32"
-                            [label]="
-                                (_poll.isFavorite
-                                    ? 'project.detail.item.unfavorite'
-                                    : 'project.detail.item.favorite'
-                                ) | translate
-                            "
-                            data-testid="favorite-btn"
-                            [attr.data-favorited]="_poll.isFavorite ? '' : null"
-                            (click)="
-                                $event.stopPropagation();
-                                favoriteToggled.emit(_poll.projectId)
-                            "
-                        >
-                            <ds-icon
-                                name="heart"
-                                [size]="18"
-                                [color]="
-                                    _poll.isFavorite
-                                        ? '#c1453f'
-                                        : 'var(--text-muted)'
+                @if (menuItems().length) {
+                    <span class="-mr-1.5 shrink-0">
+                        <ds-menu [items]="menuItems()">
+                            <ds-button
+                                variant="ghost"
+                                [size]="32"
+                                icon="kebab"
+                                [label]="
+                                    'project.results.moreActions' | translate
                                 "
+                                data-testid="poll-menu"
                             />
-                        </ds-button>
-
-                        <!-- Web: hover-reveal edit + delete (animated slide-in, ghost circles) -->
-                        @if (showActions()) {
-                            <span
-                                class="hidden items-center gap-1 overflow-hidden [transition:max-width_220ms_cubic-bezier(0.4,0,0.2,1),opacity_160ms_ease] lg:flex"
-                                [ngClass]="
-                                    isHovered()
-                                        ? 'max-w-[80px] opacity-100'
-                                        : 'max-w-0 opacity-0'
-                                "
-                            >
-                                <span
-                                    class="mx-[3px] h-[18px] w-px flex-none bg-[rgba(20,24,28,0.1)]"
-                                ></span>
-                                <ds-button
-                                    variant="danger"
-                                    [size]="30"
-                                    icon="trash"
-                                    (click)="
-                                        $event.stopPropagation();
-                                        requestDelete()
-                                    "
-                                    [title]="
-                                        'project.common.delete' | translate
-                                    "
-                                    [label]="
-                                        'project.common.delete' | translate
-                                    "
-                                    data-testid="delete-btn"
-                                />
-                            </span>
-                        }
+                        </ds-menu>
                     </span>
                 }
-                <!-- /previewMode -->
-            </div>
-        </div>
-    </div>
-
-    <!-- ── Title row + inline edit/delete in edit mode (mobile only) ─────────── -->
-    <div class="flex items-center gap-2">
-        <h3 class="flex-1 text-pretty">{{ _poll.name }}</h3>
-
-        <!-- Mobile: edit-mode actions -->
-        @if (!previewMode() && showActions() && editMode()) {
-            <div class="flex shrink-0 gap-2 lg:hidden">
-                <ds-button
-                    variant="danger"
-                    [size]="36"
-                    icon="trash"
-                    data-testid="delete-btn"
-                    [label]="'project.common.delete' | translate"
-                    (click)="$event.stopPropagation(); requestDelete()"
-                />
-            </div>
+            </span>
         }
     </div>
 
-    <!-- ── Body: description, time, progress, CTA (animates out in edit mode) ── -->
-    <div
-        class="grid flex-1 overflow-hidden [transition:grid-template-rows_220ms_cubic-bezier(0.4,0,0.2,1)]"
-        [ngClass]="
-            editMode() ? '[grid-template-rows:0fr]' : '[grid-template-rows:1fr]'
-        "
-    >
-        <div class="flex h-full flex-col overflow-hidden">
-            @if (_poll.description) {
-                <p
-                    class="mt-1.5 leading-[1.4] text-pretty text-[var(--fs-ui)] text-[var(--text-secondary)]"
+    <h3 class="text-pretty">{{ _poll.name }}</h3>
+
+    <!-- ── Body: description, time, voters, CTA ────────────────── -->
+    <div class="flex flex-1 flex-col">
+        @if (_poll.description) {
+            <p
+                class="mt-1.5 leading-[1.4] text-pretty text-[var(--fs-ui)] text-[var(--text-secondary)]"
+            >
+                {{ _poll.description }}
+            </p>
+        }
+
+        <app-poll-item-time
+            class="mt-auto block"
+            [closeDate]="_poll.closeDate"
+            [isClosed]="_poll.isClosed"
+            [lastVoteAt]="_poll.lastVoteAt"
+        />
+
+        <app-poll-item-voters
+            [creator]="_poll.creator"
+            [creatorVoted]="creatorVoted()"
+            [avatarUsers]="avatarUsers()"
+            [missingVotersText]="missingVotersText()"
+        />
+
+        @if (!previewMode()) {
+            <div class="mt-4">
+                <ds-button
+                    [variant]="_poll.isClosed ? 'subtle' : 'primary'"
+                    [fullWidth]="true"
+                    [routerLink]="resultsRoute()"
+                    data-testid="open-poll-btn"
                 >
-                    {{ _poll.description }}
-                </p>
-            }
-
-            <app-poll-item-time
-                class="mt-auto block"
-                [closeDate]="_poll.closeDate"
-                [isClosed]="_poll.isClosed"
-                [lastVoteAt]="_poll.lastVoteAt"
-            />
-
-            <app-poll-item-progress
-                [progressPercent]="progressPercent()"
-                [votedCount]="votedCountByStatus()"
-                [totalParticipants]="_poll.totalParticipants"
-                [avatarUsers]="avatarUsers()"
-                [missingVotersText]="missingVotersText()"
-            />
-
-            @if (!previewMode()) {
-                <div class="mt-4">
-                    <ds-button
-                        [variant]="_poll.isClosed ? 'subtle' : 'primary'"
-                        [fullWidth]="true"
-                        [routerLink]="resultsRoute()"
-                        data-testid="open-poll-btn"
-                    >
-                        {{
-                            (_poll.isClosed
-                                ? 'project.detail.item.openClosed'
-                                : 'project.detail.item.open'
-                            ) | translate
-                        }}
-                    </ds-button>
-                </div>
-            }
-        </div>
+                    {{
+                        (_poll.isClosed
+                            ? 'project.detail.item.openClosed'
+                            : 'project.detail.item.open'
+                        ) | translate
+                    }}
+                </ds-button>
+            </div>
+        }
     </div>
 
     <!-- ── Delete confirmation overlay ──────────────────────────── -->

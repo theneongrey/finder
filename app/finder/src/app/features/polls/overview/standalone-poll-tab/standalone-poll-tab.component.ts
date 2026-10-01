@@ -10,10 +10,10 @@ import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { filter, pairwise } from 'rxjs';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { PollListStore } from '../../_shared/data/poll-list.store';
 import { PollItemComponent } from '../../_shared/ui/poll-item/poll-item.component';
 import { PollItem } from '../../_shared/models/poll-item.model';
+import { PollRole } from '../../_shared/models/poll-role.enum';
 import { DsIconComponent } from '@ds/icon/ds-icon.component';
 import { DsButtonComponent } from '@ds/button/ds-button.component';
 import { DsPollCardSkeletonComponent } from '@ds/poll-card-skeleton/ds-poll-card-skeleton.component';
@@ -47,20 +47,10 @@ export class StandalonePollTabComponent {
     readonly showClosed = signal(true);
     readonly favOnly = signal(false);
     readonly todoOnly = signal(false);
-    readonly editMode = signal(false);
     readonly removingPollId = signal<string | undefined>(undefined);
     readonly listSettling = signal(false);
 
     constructor() {
-        inject(BreakpointObserver)
-            .observe('(min-width: 680px)')
-            .pipe(takeUntilDestroyed())
-            .subscribe(({ matches }) => {
-                if (matches) {
-                    this.editMode.set(false);
-                }
-            });
-
         toObservable(this.projectListStore.standalonePolls)
             .pipe(
                 pairwise(),
@@ -75,10 +65,18 @@ export class StandalonePollTabComponent {
     }
 
     private readonly allPolls = computed(() =>
-        this.projectListStore.standalonePolls().map((t) => ({
-            ...t,
-            optionType: t.optionType as OptionType,
-        })),
+        this.projectListStore.standalonePolls().map((t) => {
+            const creator = t.sharedWith.find(
+                (s) => s.role === PollRole.Creator,
+            );
+            return {
+                ...t,
+                optionType: t.optionType as OptionType,
+                creator: creator
+                    ? { name: creator.name, picture: creator.picture ?? '' }
+                    : undefined,
+            };
+        }),
     );
 
     readonly openCount = computed(
@@ -144,10 +142,6 @@ export class StandalonePollTabComponent {
         }
         this.removingPollId.set(poll.projectId);
         setTimeout(() => this.deletionRequested.emit(poll), 300);
-    }
-
-    toggleEditMode(): void {
-        this.editMode.update((v) => !v);
     }
 
     clearQuery(): void {

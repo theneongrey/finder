@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 export const USER1 = 'testuser1@neongrey.de';
 export const USER2 = 'testuser2@neongrey.de';
@@ -82,4 +82,19 @@ export async function addTextOption(page: Page, text: string): Promise<void> {
   await expect(
     page.locator('[data-testid="results-option-list"]'),
   ).toContainText(text);
+}
+
+const POLL_MENU_ITEMS = {
+  share: /share|teilen|compartir/i,
+  delete: /delete poll|abstimmung löschen|eliminar encuesta/i,
+};
+
+/** Opens a poll card's ⋮ menu on the overview and clicks the given item. */
+export async function clickPollMenuItem(
+  page: Page,
+  pollCard: Locator,
+  item: keyof typeof POLL_MENU_ITEMS,
+): Promise<void> {
+  await pollCard.locator('[data-testid="poll-menu"] button').click();
+  await page.locator('[data-testid="menu-item"]').filter({ hasText: POLL_MENU_ITEMS[item] }).click();
 }

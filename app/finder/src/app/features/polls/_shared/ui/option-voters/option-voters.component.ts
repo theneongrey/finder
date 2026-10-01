@@ -6,9 +6,9 @@ import {
     AvatarUser,
 } from '@smart/avatar-stack/avatar-stack.component';
 import { UserAvatarComponent } from '@smart/user-avatar/user-avatar.component';
-import { CommentAuthor } from '../../../../_shared/models/poll-detail.model';
+import { CommentAuthor } from '../../models/poll-detail.model';
 
-/** Avatar row of an option card: the option's creator (crowned) followed by the other voters. */
+/** Avatar row of an option or poll card: its creator (crowned) followed by the other voters. */
 @Component({
     selector: 'app-option-voters',
     templateUrl: './option-voters.component.html',

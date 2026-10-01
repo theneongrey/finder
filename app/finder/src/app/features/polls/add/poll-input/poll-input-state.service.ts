@@ -215,9 +215,9 @@ export class PollInputStateService {
 
     /**
      * Runs once the poll has been created. When the user chose "share now",
-     * the remembered visibility and invites are applied. Either way we route
-     * to the poll's results page, flagging a fresh creation so the share-link
-     * bar can be shown.
+     * the remembered visibility and invites are applied. Then we route to the
+     * poll's results page; only an open poll gets ?created=1 so the detail
+     * page shows the share-link bar.
      */
     applySharesAndNavigate(): void {
         const created = this.createdProject();
@@ -231,13 +231,13 @@ export class PollInputStateService {
             this.shareTiming() === 'now' &&
             this.visibility() === VisibilityType.VisibleForEverybody;
 
+        if (isOpen) {
+            this.sharingStore.updateVisibilityType({
+                projectId: created.projectId,
+                type: this.visibility(),
+            });
+        }
         if (this.shareTiming() === 'now') {
-            if (isOpen) {
-                this.sharingStore.updateVisibilityType({
-                    projectId: created.projectId,
-                    type: this.visibility(),
-                });
-            }
             for (const invite of this.pendingInvites()) {
                 this.sharingStore.share({
                     email: invite.email,
@@ -247,8 +247,6 @@ export class PollInputStateService {
             }
         }
 
-        // Only an open poll ("Offen") has a link worth sharing right away —
-        // ?created=1 makes the detail page show the share-link bar.
         this.router.navigate(
             ['/polls', created.projectId, created.pollId],
             isOpen ? { queryParams: { created: 1 } } : {},

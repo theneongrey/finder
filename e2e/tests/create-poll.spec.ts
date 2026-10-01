@@ -55,6 +55,7 @@ test.describe('CreatePoll', () => {
   test('share-link bar is not shown for a poll that is not open', async ({ page }) => {
     await createStandalonePoll(page, `Share later E2E ${Date.now()}`);
     await expect(page.locator('[data-testid="results-empty-options"]')).toBeVisible();
+    await expect(page).not.toHaveURL(/created=1/);
     await expect(page.locator('[data-testid="results-share-bar"]')).toHaveCount(0);
   });
 
@@ -67,7 +68,7 @@ test.describe('CreatePoll', () => {
       .locator('[data-testid="share-visibility"] [data-testid="segment-option"][data-value="open"]')
       .click();
     await page.locator('[data-testid="wizard-cta"] button').filter({ visible: true }).first().click();
-    await page.waitForURL(/\/polls\/[^/]+\/[^/]+/);
+    await page.waitForURL(/\/polls\/[^/]+\/[^/?]+\?created=1/);
     await expect(page.locator('[data-testid="results-share-bar"]')).toBeVisible();
   });
 

@@ -1,0 +1,31 @@
+<ng-content />
+
+@if (enabled()) {
+    <!-- YES stamp -->
+    <span
+        class="swipe-stamp swipe-stamp--yes"
+        [style.opacity]="yesOpacity()"
+        aria-hidden="true"
+    >
+        @if (mode() === 'rating') {
+            <ds-icon name="star" [size]="18" color="var(--positive-strong)" />
+        } @else if (mode() === 'date') {
+            {{ 'project.vote.stampCan' | translate }}
+        } @else {
+            {{ 'project.votesOverview.voteLabel.yes' | translate }}
+        }
+    </span>
+
+    <!-- NO stamp -->
+    <span
+        class="swipe-stamp swipe-stamp--no"
+        [style.opacity]="noOpacity()"
+        aria-hidden="true"
+    >
+        @if (mode() === 'rating') {
+            <ds-icon name="star" [size]="18" color="var(--negative)" />
+        } @else {
+            {{ 'project.votesOverview.voteLabel.no' | translate }}
+        }
+    </span>
+}

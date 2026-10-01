@@ -1,0 +1,83 @@
+<div class="flex items-center gap-2">
+    <div class="min-w-0 flex-1">
+        <ds-button
+            variant="neutral"
+            icon="comment"
+            [fullWidth]="true"
+            data-testid="option-discuss"
+            (click)="commentsClick.emit()"
+        >
+            {{ 'project.results.discuss' | translate }}
+            @if (commentCount()) {
+                <span
+                    class="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--accent)] px-1.5 text-[11px] leading-none text-[color:var(--text-on-accent)]"
+                    >{{ commentCount() }}</span
+                >
+            }
+        </ds-button>
+    </div>
+
+    @if (mode() === 'rating') {
+        <div
+            class="flex shrink-0 items-center"
+            role="group"
+            data-testid="option-rating"
+            [attr.aria-label]="'project.results.rate' | translate"
+            (mouseleave)="hoveredStar.set(undefined)"
+        >
+            @for (star of stars; track star) {
+                <button
+                    type="button"
+                    class="flex h-10 w-8 cursor-pointer items-center justify-center rounded-[var(--radius-xs)] border-0 bg-transparent p-0 transition-colors enabled:hover:bg-[var(--bg-panel)] disabled:cursor-default"
+                    [disabled]="disabled()"
+                    [attr.aria-label]="
+                        'project.vote.ratingLabel.' + star | translate
+                    "
+                    [attr.aria-pressed]="star === rating()"
+                    [attr.data-testid]="'option-star-' + star"
+                    (mouseenter)="disabled() || hoveredStar.set(star)"
+                    (click)="vote.emit(star.toString())"
+                >
+                    <!-- Inline (not ds-icon): needs independent fill + stroke colours, like the vote overlay's stars. -->
+                    <svg
+                        class="h-[22px] w-[22px]"
+                        viewBox="0 0 24 24"
+                        [attr.fill]="
+                            isStarFilled(star) ? 'var(--star)' : 'none'
+                        "
+                        [attr.stroke]="
+                            isStarFilled(star)
+                                ? 'var(--star)'
+                                : 'var(--border-hairline-strong)'
+                        "
+                        stroke-width="1.8"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 16.9 6.7 19.7l1.1-5.9-4.3-4.1 5.9-.8z"
+                        />
+                    </svg>
+                </button>
+            }
+        </div>
+    } @else {
+        <ds-button
+            variant="vote-yes"
+            [selected]="isYes()"
+            [disabled]="disabled()"
+            data-testid="option-vote-yes"
+            (click)="vote.emit('1')"
+        >
+            {{ 'project.votesOverview.voteLabel.yes' | translate }}
+        </ds-button>
+        <ds-button
+            variant="vote-no"
+            [selected]="isNo()"
+            [disabled]="disabled()"
+            data-testid="option-vote-no"
+            (click)="vote.emit('2')"
+        >
+            {{ 'project.votesOverview.voteLabel.no' | translate }}
+        </ds-button>
+    }
+</div>

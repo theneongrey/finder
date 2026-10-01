@@ -2,8 +2,17 @@ import type { AvatarUser } from '@smart/avatar-stack/avatar-stack.component';
 import { OptionDetail, SharedWith } from '../models/poll-detail.model';
 
 /** A vote counts as "voted" when its choice is a positive number. */
-function hasVoted(choice: string | null | undefined): boolean {
+export function hasVoted(choice: string | null | undefined): boolean {
     return parseInt(choice ?? '0') > 0;
+}
+
+/**
+ * The choice that clears a vote: a negative "skipped" value, one lower than any previous skip,
+ * so the option is offered again in the vote flow (see `poll-vote.component.ts`).
+ */
+export function resetChoice(current: string | null | undefined): string {
+    const choice = parseInt(current ?? '0') || 0;
+    return (Math.min(choice, 0) - 1).toString();
 }
 
 export function yesVotes(option: OptionDetail) {
@@ -48,20 +57,29 @@ function votedNames(option: OptionDetail): Set<string> {
     );
 }
 
+/** Whether `person` has cast a real (positive) vote on the option. */
+export function personVoted(option: OptionDetail, person: string): boolean {
+    return votedNames(option).has(person);
+}
+
 /**
  * Avatar list for an option: falls back to the members list (marking who voted)
- * when the poll is shared, otherwise the raw voters.
+ * when the poll is shared, otherwise the raw voters. `exclude` drops one person
+ * (the option's creator, who is rendered separately).
  */
 export function avatarUsers(
     option: OptionDetail,
     members: SharedWith[],
+    exclude?: string,
 ): AvatarUser[] {
     const voted = votedNames(option);
-    if (members.length) {
-        return members.map((m) => ({ name: m.name, voted: voted.has(m.name) }));
-    }
-    return option.votes.map((v) => ({
-        name: v.person,
-        voted: hasVoted(v.choice),
-    }));
+    const users = members.length
+        ? members.map((m) => ({ name: m.name, voted: voted.has(m.name) }))
+        : option.votes.map((v) => ({
+              name: v.person,
+              voted: hasVoted(v.choice),
+          }));
+    return exclude === undefined
+        ? users
+        : users.filter((u) => u.name !== exclude);
 }

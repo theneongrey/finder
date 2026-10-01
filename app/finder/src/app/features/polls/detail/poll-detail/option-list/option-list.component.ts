@@ -68,7 +68,8 @@ export class OptionListComponent {
     readonly dateType = computed(() => optionTypeToDateType(this.optionType()));
 
     openComments = output<OptionDetail>();
-    startVote = output<{ optionId: string; revote: boolean }>();
+    /** Inline vote from a card (buttons, stars, swipe or reset). */
+    vote = output<{ optionId: string; choice: string }>();
     saveEdit = output<{
         optionId: string;
         text: string;

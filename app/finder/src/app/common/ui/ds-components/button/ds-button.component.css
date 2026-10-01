@@ -139,6 +139,52 @@
     font-size: var(--fs-ui-sm);
 }
 
+/* Vote toggle buttons � outlined yes/no that fill with a tint when chosen */
+.ds-btn.ds-btn--vote-yes,
+.ds-btn.ds-btn--vote-no {
+    background: var(--surface-card);
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    font-size: var(--fs-body-xs);
+    transition:
+        background-color 120ms var(--ease-standard),
+        border-color 120ms var(--ease-standard);
+}
+.ds-btn.ds-btn--vote-yes:not(.ds-btn--sm):not(.ds-btn--icon-only),
+.ds-btn.ds-btn--vote-no:not(.ds-btn--sm):not(.ds-btn--icon-only) {
+    min-height: 46px;
+}
+.ds-btn.ds-btn--vote-yes {
+    color: var(--positive);
+    border: 1.5px solid var(--green-100);
+}
+.ds-btn.ds-btn--vote-yes:hover {
+    border-color: var(--positive-strong);
+}
+.ds-btn.ds-btn--vote-yes.ds-btn--selected {
+    background: var(--positive-strong);
+    border-color: var(--positive-strong);
+    color: var(--white);
+}
+.ds-btn.ds-btn--vote-no {
+    color: var(--negative);
+    border: 1.5px solid var(--red-200);
+}
+.ds-btn.ds-btn--vote-no:hover {
+    border-color: var(--negative);
+}
+.ds-btn.ds-btn--vote-no.ds-btn--selected {
+    background: var(--negative);
+    border-color: var(--negative);
+    color: var(--white);
+}
+.ds-btn.ds-btn--vote-yes.ds-btn--sm,
+.ds-btn.ds-btn--vote-no.ds-btn--sm {
+    padding: 6px 12px;
+    border-radius: var(--radius-xs);
+    font-size: var(--fs-ui-sm);
+}
+
 /* Icon-only mode (size is a pixel number) */
 .ds-btn.ds-btn--icon-only {
     flex-shrink: 0;

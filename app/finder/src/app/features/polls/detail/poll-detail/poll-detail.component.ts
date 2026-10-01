@@ -423,11 +423,9 @@ export class PollDetailComponent {
         this.voteOpen.set(true);
     }
 
-    /** Option-card entry: start voting at a specific option. */
-    openVoteAt(request: { optionId: string; revote: boolean }) {
-        this.voteStartOptionId.set(request.optionId);
-        this.voteRevote.set(request.revote);
-        this.voteOpen.set(true);
+    /** Option-card entry: vote inline (buttons, stars, swipe or reset). */
+    castVote(vote: { optionId: string; choice: string }) {
+        this.projectDetailStore.vote(vote);
     }
 
     closeVote() {

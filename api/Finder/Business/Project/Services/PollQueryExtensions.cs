@@ -11,10 +11,15 @@ namespace Finder.Business.Project.Services;
 /// </summary>
 public static class PollQueryExtensions
 {
-    /// <summary>Options (creator, meta, votes + voters) and comments (author, option).</summary>
+    /// <summary>
+    /// Options (creator, meta, votes + voters) and comments (author, option). Split into one query
+    /// per collection — options and comments are sibling collections, so a single JOIN would return
+    /// options × votes × comments rows.
+    /// </summary>
     public static IQueryable<Poll> IncludeDetails(this IQueryable<Poll> query)
     {
         return query
+            .AsSplitQuery()
             .Include(t => t.Options)
             .ThenInclude(o => o.Creator)
             .Include(t => t.Options)

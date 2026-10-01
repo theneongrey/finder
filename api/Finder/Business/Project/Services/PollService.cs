@@ -134,6 +134,7 @@ public class PollService
     public async Task<Result<Poll>> GetPoll(string slug)
     {
         var poll = await _dbContext.Polls
+            .AsNoTracking()
             .IncludeDetails()
             .WhereReadableBy(slug, UserId)
             .SingleOrDefaultAsync();

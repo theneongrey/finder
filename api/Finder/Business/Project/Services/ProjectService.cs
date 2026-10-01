@@ -31,6 +31,8 @@ public class ProjectService
     public async Task<List<Entities.Project>> GetAll()
     {
         return await _dbContext.Projects
+            .AsNoTracking()
+            .AsSplitQuery()
             .Include(p => p.Polls)
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
@@ -43,6 +45,8 @@ public class ProjectService
     public async Task<List<Entities.Project>> GetAllStandalonePolls()
     {
         return await _dbContext.Projects
+            .AsNoTracking()
+            .AsSplitQuery()
             .Include(p => p.Polls)
             .ThenInclude(t => t.Options)
             .Include(p => p.Polls)
@@ -159,6 +163,8 @@ public class ProjectService
     public async Task<Result<Entities.Project>> GetPublicInfo(string slug)
     {
         var project = await _dbContext.Projects
+            .AsNoTracking()
+            .AsSplitQuery()
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
@@ -186,7 +192,9 @@ public class ProjectService
 
     public async Task<Result<Entities.Project>> Get(string slug)
     {
+        // Tracked: an unseen visitor is added to the project's permissions below.
         var project = await _dbContext.Projects
+            .AsSplitQuery()
             .Include(p => p.Creator)
             .Include(p => p.Permissions)
             .ThenInclude(p => p.Person)
